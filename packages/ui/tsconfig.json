@@ -6,6 +6,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "../../apps/web/components/ui/notification-bell.tsx"],
   "exclude": ["node_modules", "dist"]
 }

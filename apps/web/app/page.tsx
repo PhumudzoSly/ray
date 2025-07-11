@@ -1,12 +1,10 @@
-import { Button } from "@workspace/ui/components/button"
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-  return (
-    <div className="flex items-center justify-center min-h-svh">
-      <div className="flex flex-col items-center justify-center gap-4">
-        <h1 className="text-2xl font-bold">Hello World</h1>
-        <Button size="sm">Button</Button>
-      </div>
-    </div>
-  )
+export default async function Page() {
+  const headersList = await headers();
+  const session = await auth.api.getSession({ headers: headersList });
+  if (!session) redirect("/auth/sign-in");
+  return redirect("/dashboard");
 }

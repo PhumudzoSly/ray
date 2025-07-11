@@ -2,10 +2,15 @@
 @source "../../../apps/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
+@source "../../node_modules/@daveyplate/better-auth-ui";
 
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+@utility container {
+  @apply mx-auto max-w-[1800px] p-0;
+}
 
 :root {
   --background: oklch(0.9940 0 0);
@@ -163,11 +168,79 @@
   --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+body {
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Base theme */
+/* Start of Selection */
+.bn-container[data-theming-css-variables-demo][data-color-scheme] {
+  --bn-colors-editor-text: var(--foreground);
+  --bn-colors-editor-background: var(--background);
+  --bn-colors-menu-text: var(--popover-foreground);
+  --bn-colors-menu-background: var(--popover);
+  --bn-colors-tooltip-text: var(--popover-foreground);
+  --bn-colors-tooltip-background: var(--popover);
+  --bn-colors-hovered-text: var(--accent-foreground);
+  --bn-colors-hovered-background: var(--accent);
+  --bn-colors-selected-text: var(--accent-foreground);
+  --bn-colors-selected-background: var(--accent);
+  --bn-colors-disabled-text: var(--muted-foreground);
+  --bn-colors-disabled-background: var(--muted);
+  --bn-colors-shadow: var(--shadow);
+  --bn-colors-border: var(--border);
+  --bn-colors-side-menu: var(--muted-foreground);
+  --bn-color-highlight-colors: var(--accent);
+  --bn-border-radius: 4px;
+  --bn-font-family: var(--font-sans);
+}
+
+/* Changes for dark mode */
+.bn-container[data-theming-css-variables-demo][data-color-scheme="dark"] {
+  --bn-colors-editor-text: var(--foreground);
+  --bn-colors-editor-background: var(--background);
+  --bn-colors-side-menu: var(--muted-foreground);
+}
+
+/* End of Selection */
+
+* {
+  @apply border-border;
+  @apply transition-colors duration-200;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-size: 15px;
+  scroll-behavior: smooth;
+  font-weight: 400
+}
+
+html {
+  @apply bg-background text-foreground;
+  font-size: 15px;
+  scroll-behavior: smooth;
+  font-weight: 400
+}
+
+@layer components {
+  .container {
+    @apply mx-auto max-w-[1800px] p-0;
   }
-  body {
-    @apply bg-background text-foreground;
+}
+
+/* Improved scroll behavior */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
+}
+
+/* Emoji picker adjustments */
+em-emoji-picker {
+  --rgb-background: hsl(var(--popover));
+  --rgb-color: hsl(var(--popover-foreground));
+  --rgb-accent: hsl(var(--accent));
+  --rgb-input: hsl(var(--input));
+  --rgb-border: hsl(var(--border));
 }

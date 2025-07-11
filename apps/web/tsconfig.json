@@ -18,6 +18,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "../../packages/ui/src/components/command-search-examples.tsx", "../../packages/ui/src/components/animated-tabs.tsx", "../../packages/ui/src/components/command-search.tsx", "../../packages/ui/src/components/command-select.tsx", "../../packages/ui/src/components/confirm-dialog.tsx", "../../packages/ui/src/components/grouped-list.tsx", "../../packages/ui/src/components/info-card.tsx", "../../packages/ui/src/components/inline-edit.tsx", "../../packages/ui/src/components/inline-editor.tsx", "../../packages/ui/src/components/inline-field.tsx", "../../packages/ui/src/components/inline-textarea.tsx", "../../packages/ui/src/components/loading-spinner.tsx", "../../packages/ui/src/components/markdown-renderer.tsx", "components/ui/notification-bell.tsx", "../../packages/ui/src/components/simple-grid.tsx"  ],
   "exclude": ["node_modules"]
 }

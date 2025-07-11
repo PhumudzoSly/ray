@@ -1,0 +1,47 @@
+"use client";
+import { NewIssue } from "@/components/project/issues/new-issue";
+import { Separator } from "@workspace/ui/components/separator";
+import React from "react";
+import AllIssues from "@/components/project/issues/all-issues";
+import { useSession } from "@/context/session-context";
+import { useData } from "@/hooks/use-data";
+import { api } from "@workspace/backend";
+import PageHeader from "@/components/shared/page-header";
+import { IssuesSkeleton } from "@/components/project/issues/issue-skeleton";
+import NoData from "@/components/shared/no-data";
+
+const IssuesPage = () => {
+  const { token } = useSession();
+
+  const { data: issues, isPending } = useData(api.issue.index.getIssues, {
+    token,
+  });
+
+  if (isPending) {
+    return <IssuesSkeleton />;
+  }
+
+  return (
+    <div className="container space-y-4">
+      <PageHeader title="Issues" />
+      <div className="flex items-center flex-wrap gap-4 justify-between mb-2">
+        <div className="space-y-0.5">
+          <h2 className="text-2xl font-bold tracking-tight">Issues</h2>
+          <p className="text-muted-foreground">
+            Find and solve your project issues
+          </p>
+        </div>
+        <NewIssue />
+      </div>
+
+      <Separator />
+      {issues === undefined ? (
+        <NoData title="Failed to get issues" />
+      ) : (
+        <AllIssues issues={issues || []} />
+      )}
+    </div>
+  );
+};
+
+export default IssuesPage;

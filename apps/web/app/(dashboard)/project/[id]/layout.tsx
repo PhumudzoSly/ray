@@ -1,0 +1,305 @@
+"use client";
+
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@workspace/backend";
+import { Button } from "@workspace/ui/components/button";
+import { Separator } from "@workspace/ui/components/separator";
+import { Database, Lock, Trash, Bot } from "lucide-react";
+import { Id } from "@workspace/backend";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+import { techStackOptions } from "@/lib/types";
+import { useSession } from "@/context/session-context";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
+import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
+import { ProjectInfo } from "./_components/project-info";
+import { CommandSelect } from "@workspace/ui/components/command-select";
+import { toast } from "sonner";
+import { DATABASE_PROVIDERS } from "@/utils/constants/sources/database";
+import { AUTH_PROVIDERS } from "@/utils/constants/sources/auth";
+import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-selector";
+import { status, StatusIcon } from "@/utils/constants/projects/status";
+import { ImConnection } from "react-icons/im";
+import PageHeader from "@/components/shared/page-header";
+import { ProjectTabs } from "./_components/tabs";
+import { ReactNode } from "react";
+import Header from "@/components/shared/header";
+
+export default function ProjectPage({ children }: { children: ReactNode }) {
+  //
+
+  const params = useParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const id = params.id as string;
+  const { token } = useSession();
+
+  const project = useQuery(api.projects.get, {
+    id: id as Id<"projects">,
+    token,
+  });
+
+  const updateProject = useMutation(api.projects.update);
+  const deleteProject = useMutation(api.projects.deleteProject);
+
+  if (project === undefined) {
+    return <LoadingSpinner />;
+  }
+
+  if (project === null) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-3">Project not found</h1>
+          <p className="text-muted-foreground max-w-md">
+            We couldn't find the project you're looking for. It may have been
+            deleted or you may not have access.
+          </p>
+          <Button className="mt-4" asChild>
+            <Link href="/projects">Back to Projects</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (pathname === `/project/${project._id}/flow`) return children;
+
+  return (
+    <>
+      <Header
+        crumb={[
+          {
+            title: "Projects",
+            url: "/project",
+          },
+          {
+            title: project.name,
+            url: `/project/${project._id}`,
+          },
+        ]}
+      >
+        {null}
+      </Header>
+      <ExpandedLayoutContainer
+        sidebar={
+          <div className="p-4">
+            <div className="flex justify-between items-center gap-4 mb-6">
+              <h1 className="text-lg font-medium ">Properties</h1>
+              <Button
+                size="icon"
+                variant="destructive"
+                onClick={async () => {
+                  try {
+                    await deleteProject({ id: project._id, token });
+                    router.push("/projects");
+                  } catch (error) {
+                    toast.error("Failed to delete project");
+                  }
+                }}
+              >
+                <Trash />
+              </Button>
+            </div>
+            <div className="space-y-3">
+              <h3 className="font-medium text-muted-foreground mb-6">
+                Project Info
+              </h3>
+              <div className="grid grid-cols-[120px_1fr] gap-y-4">
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Status
+                </h3>
+                <CommandSelect
+                  value={project.status}
+                  options={status.map((option) => ({
+                    value: option.id,
+                    label: option.name,
+                    icon: (
+                      <StatusIcon statusId={option.id} className="w-4 h-4" />
+                    ),
+                  }))}
+                  variant="status"
+                  placeholder="Select Status"
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          status: value as any,
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                />
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Platform
+                </h3>
+                <ProjectTypeSelector
+                  selectedType={project.platform}
+                  onChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          platform: value as any,
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                />
+
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Added
+                </h3>
+                <span className="text-sm">
+                  {formatDistanceToNow(new Date(project.createdAt), {
+                    addSuffix: true,
+                  })}
+                </span>
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Last Updated
+                </h3>
+                <span className="text-sm">
+                  {formatDistanceToNow(new Date(project.updatedAt), {
+                    addSuffix: true,
+                  })}
+                </span>
+              </div>
+            </div>
+            <Separator className="my-3" />
+            <div className="space-y-3">
+              <h3 className="font-medium text-muted-foreground mb-6">
+                Tech Stack
+              </h3>
+              <div className="grid grid-cols-[120px_1fr] gap-y-4">
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  ORM
+                </h3>
+                <CommandSelect
+                  options={techStackOptions.orm.map((option) => ({
+                    value: option,
+                    label: option,
+                    icon: <ImConnection />,
+                  }))}
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          techStack: { ...project.techStack, orm: value },
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  value={project.techStack.orm}
+                  placeholder="Select ORM"
+                />
+
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Database
+                </h3>
+                <CommandSelect
+                  options={DATABASE_PROVIDERS.map((option) => ({
+                    value: option.name,
+                    label: option.name,
+                    icon: <Database />,
+                  }))}
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          techStack: { ...project.techStack, database: value },
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  value={project.techStack.database}
+                  placeholder="Select Database"
+                />
+
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Auth
+                </h3>
+                <CommandSelect
+                  options={AUTH_PROVIDERS.map((option) => ({
+                    value: option.name,
+                    label: option.name,
+                    icon: <Lock />,
+                  }))}
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          techStack: { ...project.techStack, auth: value },
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  value={project.techStack.auth}
+                  placeholder="Select Auth provider"
+                />
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  AI
+                </h3>
+                <CommandSelect
+                  options={techStackOptions.ai.map((option) => ({
+                    value: option,
+                    label: option,
+                    icon: <Bot />,
+                  }))}
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          techStack: { ...project.techStack, ai: value },
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  value={project.techStack.ai}
+                  placeholder="Select AI provider"
+                />
+              </div>
+            </div>
+          </div>
+        }
+      >
+        <PageHeader title="Project" />
+        <div className="container space-y-4 p-4">
+          <ProjectInfo
+            title={project.name}
+            description={project?.description || ""}
+            platform={project?.platform || ""}
+            id={project._id}
+            token={token}
+          />
+        </div>
+        <ProjectTabs projectId={project._id} />
+
+        <div className="p-6">{children}</div>
+      </ExpandedLayoutContainer>
+    </>
+  );
+}
