@@ -2,9 +2,9 @@
 
 import { MessageSquare, FolderIcon } from "lucide-react";
 import Link from "next/link";
-import { IssuePriorityField } from "@workspace/ui/components/issue-fields/issue-priority-field";
-import { IssueLabelField } from "@workspace/ui/components/issue-fields/issue-label-field";
-import { IssueDueDateField } from "@workspace/ui/components/issue-fields/issue-due-date-field";
+import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
+import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
+import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CustomIssue } from "@/types/project";

@@ -13,7 +13,7 @@ import { Id } from "@workspace/backend";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { BlockEditor } from "@/components/shared/block-editor";
-import { GitBranch, Clock, ListOrdered, Code } from "lucide-react";
+import { GitBranch, Clock, ListOrdered, Code, Plug } from "lucide-react";
 import { NewFeature } from "@/components/project/features/new-feature";
 import { ActivityFeed } from "@/components/shared/activity-feed";
 import {
@@ -105,23 +105,13 @@ const FeatureDetails = ({ id }: { id: string }) => {
         />
       </div>
 
-      <Tabs defaultValue="plan">
-        <TabsList>
-          <TabsTrigger value="plan" className="flex items-center gap-2">
-            <Code className="h-4 w-4" />
-            Implementation Plan
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="plan" className="mt-4">
-          <BlockEditor id={`feature-implementation-${feature._id}`} />
-        </TabsContent>
-      </Tabs>
+      <BlockEditor id={`feature-implementation-${feature._id}`} />
 
       <Tabs defaultValue="details">
         <TabsList>
           <TabsTrigger value="details" className="flex gap-2 items-center">
-            <ListOrdered size={18} />
-            Details
+            <Plug size={18} />
+            Relationship
           </TabsTrigger>
           <TabsTrigger value="dependencies" className="flex gap-2 items-center">
             <GitBranch size={18} />

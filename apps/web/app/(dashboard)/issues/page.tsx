@@ -9,6 +9,7 @@ import { api } from "@workspace/backend";
 import PageHeader from "@/components/shared/page-header";
 import { IssuesSkeleton } from "@/components/project/issues/issue-skeleton";
 import NoData from "@/components/shared/no-data";
+import Header from "@/components/shared/header";
 
 const IssuesPage = () => {
   const { token } = useSession();
@@ -22,25 +23,17 @@ const IssuesPage = () => {
   }
 
   return (
-    <div className="container space-y-4">
-      <PageHeader title="Issues" />
-      <div className="flex items-center flex-wrap gap-4 justify-between mb-2">
-        <div className="space-y-0.5">
-          <h2 className="text-2xl font-bold tracking-tight">Issues</h2>
-          <p className="text-muted-foreground">
-            Find and solve your project issues
-          </p>
-        </div>
+    <>
+      <Header crumb={[{ title: "Issues", url: "/issues" }]}>
         <NewIssue />
-      </div>
+      </Header>
 
-      <Separator />
       {issues === undefined ? (
         <NoData title="Failed to get issues" />
       ) : (
         <AllIssues issues={issues || []} />
       )}
-    </div>
+    </>
   );
 };
 

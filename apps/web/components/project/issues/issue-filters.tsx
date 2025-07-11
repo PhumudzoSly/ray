@@ -41,7 +41,7 @@ import { Calendar } from "@workspace/ui/components/calendar";
 import { format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import { labels, LabelIcon } from "@/utils/constants/projects/labels";
-import { issueLabel } from "@/schemas/enums";
+// import { issueLabel } from "@workspace/backend";
 
 // Filter category definitions
 const filterCategories = [
@@ -412,37 +412,38 @@ export function IssuesFilters() {
           </FilterGroup>
         );
 
-      case "label":
-        return (
-          <FilterGroup heading="Label" onBack={() => setSelectedCategory(null)}>
-            <FilterCommandItem
-              icon={Tag}
-              name="All Labels"
-              onSelect={() => {
-                handleFilterChange("label", "All");
-                setSelectedCategory(null);
-              }}
-            />
-            {Object.values(issueLabel).map((label) => {
-              const labelData = labels.find((l) => l.id === label);
-              const Icon = labelData?.icon || Tag;
+      // TODO Come back to this
+      // case "label":
+      //   return (
+      //     <FilterGroup heading="Label" onBack={() => setSelectedCategory(null)}>
+      //       <FilterCommandItem
+      //         icon={Tag}
+      //         name="All Labels"
+      //         onSelect={() => {
+      //           handleFilterChange("label", "All");
+      //           setSelectedCategory(null);
+      //         }}
+      //       />
+      //       {Object.values(issueLabel).map((label) => {
+      //         const labelData = labels.find((l) => l.id === label);
+      //         const Icon = labelData?.icon || Tag;
 
-              return (
-                <FilterCommandItem
-                  key={label}
-                  icon={Icon}
-                  name={labelData?.name || label}
-                  colorClass={labelData?.colorClass}
-                  isSelected={label === label}
-                  onSelect={() => {
-                    handleFilterChange("label", label.toString());
-                    setSelectedCategory(null);
-                  }}
-                />
-              );
-            })}
-          </FilterGroup>
-        );
+      //         return (
+      //           <FilterCommandItem
+      //             key={label}
+      //             icon={Icon}
+      //             name={labelData?.name || label}
+      //             colorClass={labelData?.colorClass}
+      //             isSelected={label === label}
+      //             onSelect={() => {
+      //               handleFilterChange("label", label.toString());
+      //               setSelectedCategory(null);
+      //             }}
+      //           />
+      //         );
+      //       })}
+      //     </FilterGroup>
+      //   );
 
       case "dueDate":
         return (

@@ -15,6 +15,7 @@ import React from "react";
 import { IssuesKanban } from "@/components/project/issues/issue-kanbab";
 import { IssueCard } from "@/components/project/issues/issue-card";
 import { CustomIssue } from "@/types/project";
+import { Separator } from "@workspace/ui/components/separator";
 
 type ViewMode = "list" | "kanban";
 
@@ -57,7 +58,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 my-4">
+      <div className="flex items-center justify-between gap-4 p-2">
         <IssuesFilters />
         <div className="flex items-center gap-2 ">
           <Button
@@ -76,9 +77,12 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
           </Button>
         </div>
       </div>
+      <Separator />
 
       {viewMode === "kanban" ? (
-        <IssuesKanban issues={issues} showProject={true} />
+        <div className="p-2">
+          <IssuesKanban issues={issues} showProject={true} />
+        </div>
       ) : (
         <div className="flex flex-col gap-4">
           <ScrollArea className="flex-1">
