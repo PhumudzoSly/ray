@@ -1,182 +1,172 @@
 "use client";
 
-import React from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Badge } from "@workspace/ui/components/badge";
 import { cn } from "@/lib/utils";
-import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { IssueKanbanCard } from "./issue-kanbab-card";
 import { status as issueStatuses } from "@/utils/constants/issues/status";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 import { CustomIssue } from "@/types/project";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
-type IssuesKanbanProps = {
+interface IssuesKanbanProps {
   issues: CustomIssue[];
   showProject?: boolean;
-};
+}
 
 export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
-  const searchParams = useSearchParams();
-
-  // Function to group issues by status
-  const groupIssuesByStatus = React.useCallback((issues: any[]) => {
-    return issueStatuses.reduce(
-      (acc: Record<string, any[]>, status) => {
-        acc[status.id] = issues.filter((issue) => issue.status === status.id);
-        return acc;
-      },
-      {} as Record<string, any[]>
-    );
-  }, []);
-
-  const [groupedIssues, setGroupedIssues] = React.useState(() =>
-    groupIssuesByStatus(issues)
-  );
-
-  // Update grouped issues when issues prop changes
-  React.useEffect(() => {
-    setGroupedIssues(groupIssuesByStatus(issues));
-  }, [issues, groupIssuesByStatus]);
-
+  // Local state for optimistic updates
+  const [optimisticIssues, setOptimisticIssues] = useState<CustomIssue[]>([]);
+  const { token } = useSession();
   const updateStatus = useMutation(api.issue.quickAction.changeIssueStatus);
 
-  const onDragEnd = async (result: any) => {
+  // Use optimistic issues if available, otherwise use props
+  const displayIssues = optimisticIssues.length > 0 ? optimisticIssues : issues;
+
+  // Group issues by status
+  const issuesByStatus = issueStatuses.reduce(
+    (acc, status) => {
+      acc[status.id] = displayIssues.filter(
+        (issue) => issue.status === status.id
+      );
+      return acc;
+    },
+    {} as Record<string, CustomIssue[]>
+  );
+
+  // Update status counts
+  const statusesWithCounts = issueStatuses.map((status) => ({
+    ...status,
+    count: issuesByStatus[status.id]?.length || 0,
+  }));
+
+  // Handle drag end with optimistic updates
+  const handleDragEnd = async (result: any) => {
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
 
     const sourceStatus = source.droppableId;
     const destinationStatus = destination.droppableId;
 
-    // If dropped in the same column and same position
-    if (
-      sourceStatus === destinationStatus &&
-      source.index === destination.index
-    ) {
-      return;
-    }
-
-    const issue = issues.find((i) => i._id === draggableId);
-
-    if (!issue) return;
-
-    // Store original state for rollback
-    const originalGroupedIssues = { ...groupedIssues };
-    const { token } = useSession();
-
-    // Optimistically update the state
-    setGroupedIssues((prev) => {
-      const newGroups = { ...prev };
-      const sourceIssues = [...newGroups[sourceStatus]];
-      const [removed] = sourceIssues.splice(source.index, 1);
-
-      if (sourceStatus === destinationStatus) {
-        sourceIssues.splice(destination.index, 0, removed);
-        newGroups[sourceStatus] = sourceIssues;
-      } else {
-        const destinationIssues = [...newGroups[destinationStatus]];
-        destinationIssues.splice(destination.index, 0, {
-          ...removed,
-          status: destinationStatus,
-        });
-        newGroups[sourceStatus] = sourceIssues;
-        newGroups[destinationStatus] = destinationIssues;
-      }
-
-      return newGroups;
-    });
-
-    // Update issue status if column changed
+    // Only update status if column changed
     if (sourceStatus !== destinationStatus) {
+      // Optimistic update
+      const currentIssues =
+        optimisticIssues.length > 0 ? optimisticIssues : issues;
+      const updatedIssues = currentIssues.map((issue) =>
+        issue._id === draggableId
+          ? { ...issue, status: destinationStatus }
+          : issue
+      );
+      setOptimisticIssues(updatedIssues);
+
       try {
-        // TODO Update status
-        const result = await updateStatus({
+        await updateStatus({
           issueId: draggableId,
           status: destinationStatus,
           token: token,
         });
+        // Clear optimistic state on success
+        setOptimisticIssues([]);
       } catch (error) {
         console.error("Failed to update issue status:", error);
-        // Revert to original state on error
-        setGroupedIssues(originalGroupedIssues);
+        // Revert optimistic update on error
+        setOptimisticIssues([]);
         toast.error("Failed to update issue status");
       }
     }
   };
 
-  return (
-    <div className="flex flex-col gap-4">
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex">
-          <ScrollArea className="flex-1 w-1">
-            <div className="flex gap-4 pb-8">
-              {issueStatuses.map((status) => (
-                <div
-                  key={status.id}
-                  className="w-[350px] flex-shrink-0 flex flex-col gap-3 bg-muted/30 p-3 rounded-lg"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <status.icon
-                        className={cn("h-4 w-4", status.colorClass)}
-                      />
-                      <h3 className="font-medium">{status.name}</h3>
-                    </div>
-                    <span className="text-muted-foreground text-sm">
-                      {groupedIssues[status.id]?.length || 0}
-                    </span>
-                  </div>
-
-                  <Droppable droppableId={status.id}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={cn(
-                          "flex-1 space-y-3 min-h-[200px] overflow-y-auto",
-                          snapshot.isDraggingOver &&
-                            "bg-muted/50 rounded-lg p-2"
-                        )}
-                        style={{ maxHeight: "calc(100vh - 350px)" }}
-                      >
-                        {groupedIssues[status.id]?.map((issue, index) => (
-                          <Draggable
-                            key={issue._id}
-                            draggableId={issue._id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={cn(
-                                  "bg-card rounded-lg border",
-                                  snapshot.isDragging && "shadow-lg"
-                                )}
-                              >
-                                <IssueKanbanCard
-                                  issue={issue}
-                                  showProject={showProject}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </div>
-              ))}
-            </div>
-            <ScrollBar orientation="horizontal" className="h-3" />
-          </ScrollArea>
+  const StatusColumn = ({
+    status,
+    issues,
+  }: {
+    status: any;
+    issues: CustomIssue[];
+  }) => (
+    <div className="flex-1 min-w-[350px]">
+      <div className="bg-card p-3 rounded-lg mb-3 border">
+        <div className="flex items-center gap-2 justify-between">
+          <div className="flex items-center gap-2">
+            <status.icon className={cn("h-4 w-4", status.colorClass)} />
+            <h3 className="font-medium">{status.name}</h3>
+          </div>
+          <Badge variant="secondary" className="text-xs">
+            {status.count}
+          </Badge>
         </div>
-      </DragDropContext>
+      </div>
+
+      <Droppable droppableId={status.id}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={cn(
+              "min-h-[200px] p-2 rounded-lg border-2 border-dashed transition-colors space-y-3",
+              snapshot.isDraggingOver
+                ? "border-primary bg-primary/5"
+                : "border-muted bg-muted/20"
+            )}
+            style={{ maxHeight: "calc(100vh - 350px)", overflowY: "auto" }}
+          >
+            {issues.map((issue, index) => (
+              <Draggable key={issue._id} draggableId={issue._id} index={index}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    className={cn(
+                      "bg-card rounded-lg border",
+                      snapshot.isDragging && "rotate-1 shadow-lg"
+                    )}
+                  >
+                    <IssueKanbanCard
+                      issue={issue}
+                      showProject={showProject}
+                      isDragging={snapshot.isDragging}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+
+            {issues.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <div className="text-sm">
+                  No issues in {status.name.toLowerCase()}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Droppable>
     </div>
+  );
+
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="flex gap-4 h-full p-2 overflow-x-auto pb-4">
+        {statusesWithCounts.map((status) => (
+          <StatusColumn
+            key={status.id}
+            status={status}
+            issues={issuesByStatus[status.id] || []}
+          />
+        ))}
+      </div>
+    </DragDropContext>
   );
 }

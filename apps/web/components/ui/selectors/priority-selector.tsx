@@ -22,12 +22,14 @@ interface PrioritySelectorProps {
   priority: string;
   onChange?: (priority: string) => void;
   disabled?: boolean;
+  iconOnly?: boolean;
 }
 
 export function PrioritySelector({
   priority,
   onChange,
   disabled = false,
+  iconOnly = false,
 }: PrioritySelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
@@ -60,11 +62,13 @@ export function PrioritySelector({
               }
               return null;
             })()}
-            <span>
-              {value
-                ? priorities.find((p) => p.id === value)?.name
-                : "No priority"}
-            </span>
+            {iconOnly ? null : (
+              <span>
+                {value
+                  ? priorities.find((p) => p.id === value)?.name
+                  : "No priority"}
+              </span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent
