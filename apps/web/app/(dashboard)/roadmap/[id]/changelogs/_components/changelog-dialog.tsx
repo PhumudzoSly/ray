@@ -17,7 +17,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { toast } from "sonner";
 import { Id } from "@workspace/backend";
-import { DateSelector } from "@workspace/ui/components/selectors";
+import { DateSelector } from "@/components/ui/selectors";
 
 interface ChangelogDialogProps {
   isOpen: boolean;

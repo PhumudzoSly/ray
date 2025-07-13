@@ -9,8 +9,8 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb";
 import Link from "next/link";
-import { NotificationBell } from "../ui/notification-bell";
 import { ModeToggle } from "./mode-switcher";
+import { NotificationBell } from "../ui/notification-bell";
 
 type HeaderProps = {
   crumb: {

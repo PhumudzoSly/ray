@@ -28,7 +28,7 @@ import { Id } from "@workspace/backend";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { IssueSelector } from "@/components/ui/selectors/issue-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
-import { DateSelector } from "@workspace/ui/components/selectors";
+import { DateSelector } from "@/components/ui/selectors";
 import { CommandSelect } from "@workspace/ui/components/command-select";
 import {
   Bug,

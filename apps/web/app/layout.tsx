@@ -7,10 +7,16 @@ import { ConvexClientProvider } from "@/context/convex-provider";
 import { AuthProvider } from "@/context/auth-provider";
 import { cn } from "@/lib/utils";
 import { ConfirmDialogProvider } from "@workspace/ui/components/confirm-dialog";
+import { Geist, Geist_Mono } from "next/font/google";
 
-const inter = Plus_Jakarta_Sans({
+const fontSans = Geist({
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "700", "800"],
+  variable: "--font-sans",
+});
+
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -25,7 +31,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, "antialiased")}>
+      <body
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+      >
         <AuthProvider>
           <ThemeProvider
             storageKey="rayai-theme"

@@ -12,8 +12,8 @@ import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { DateInput } from "@workspace/ui/components/date-input";
 import { Separator } from "@workspace/ui/components/separator";
-import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import { useState } from "react";
+import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 
 const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
   const { token } = useSession();

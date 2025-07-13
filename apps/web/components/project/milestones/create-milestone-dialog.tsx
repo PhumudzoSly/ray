@@ -156,36 +156,36 @@ export function CreateMilestoneDialog({
             />
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Date Range</Label>
-              <DateRangeSelector
-                startDate={form.startDate}
-                endDate={form.endDate}
-                onRangeChange={(startDate, endDate) =>
-                  setForm({ ...form, startDate, endDate })
-                }
-                placeholder="Select milestone duration"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Owner</Label>
-              <AssigneeSelector
-                assignee={form.ownerId as Id<"user">}
-                onChange={(value) =>
-                  setForm({ ...form, ownerId: value as Id<"user"> })
-                }
-              />
-            </div>
+          <div className="flex items-center gap-4">
+            <AssigneeSelector
+              assignee={form.ownerId as Id<"user">}
+              onChange={(value) =>
+                setForm({ ...form, ownerId: value as Id<"user"> })
+              }
+            />
+            <DateRangeSelector
+              startDate={form.startDate}
+              endDate={form.endDate}
+              onRangeChange={(startDate, endDate) =>
+                setForm({ ...form, startDate, endDate })
+              }
+              placeholder="Select milestone duration"
+            />
           </div>
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={close}>
+          <Button
+            className="mb-2"
+            type="button"
+            variant="outline"
+            onClick={close}
+          >
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Create Milestone</Button>
+          <Button className="mb-2" onClick={handleSubmit}>
+            Create Milestone
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

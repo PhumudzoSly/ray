@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
-import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
-import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
-import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
-import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
+import { IssueStatusField } from "@workspace/ui/components/issue-fields/issue-status-field";
+import { IssueLabelField } from "@workspace/ui/components/issue-fields/issue-label-field";
+import { IssueDueDateField } from "@workspace/ui/components/issue-fields/issue-due-date-field";
+import { IssuePriorityField } from "@workspace/ui/components/issue-fields/issue-priority-field";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useSession } from "@/context/session-context";
 import { useData } from "@/hooks/use-data";

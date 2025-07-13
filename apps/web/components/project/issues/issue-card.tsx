@@ -2,10 +2,10 @@
 
 import { FolderIcon } from "lucide-react";
 import Link from "next/link";
-import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
-import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
-import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
-import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
+import { IssueStatusField } from "@workspace/ui/components/issue-fields/issue-status-field";
+import { IssuePriorityField } from "@workspace/ui/components/issue-fields/issue-priority-field";
+import { IssueLabelField } from "@workspace/ui/components/issue-fields/issue-label-field";
+import { IssueDueDateField } from "@workspace/ui/components/issue-fields/issue-due-date-field";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
 import { useRouter } from "next/navigation";
 //TODO come back this

@@ -2,22 +2,10 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import { AppSidebar } from "./app-sidebar";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@workspace/ui/components/breadcrumb";
-import { Separator } from "@workspace/ui/components/separator";
-import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
 } from "@workspace/ui/components/sidebar";
 import { usePathname } from "next/navigation";
-import { ModeToggle } from "../shared/mode-switcher";
-import { NotificationBell } from "../ui/notification-bell";
-import { Badge } from "@workspace/ui/components/badge";
 
 const Appbar = ({ children }: { children: ReactNode }) => {
   //

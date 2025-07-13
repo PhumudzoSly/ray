@@ -78,19 +78,17 @@ export function DateRangeSelector({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
-          className={cn(
-            "justify-start text-left font-normal h-9 px-3",
-            !startDate && !endDate && "text-muted-foreground",
-            className
-          )}
+          className="flex items-center"
+          size="xs"
+          variant="secondary"
+          role="combobox"
           disabled={disabled}
         >
-          <CalendarIcon className="mr-2 h-4 w-4 flex-shrink-0" />
+          <CalendarIcon className="size-5" />
           <span className="truncate">{formatDateRange()}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="end">
         <div className="p-3 border-b">
           <div className="flex items-center gap-2 mb-3">
             <Button
