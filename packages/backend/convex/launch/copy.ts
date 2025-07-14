@@ -26,11 +26,19 @@ export const upsertCopy = mutation({
       callToAction: v.optional(v.string()),
       hashtags: v.optional(v.array(v.string())),
       mentions: v.optional(v.array(v.string())),
-      media: v.optional(v.array(v.object({
-        type: v.union(v.literal("image"), v.literal("video"), v.literal("gif")),
-        url: v.string(),
-        alt: v.optional(v.string())
-      }))),
+      media: v.optional(
+        v.array(
+          v.object({
+            type: v.union(
+              v.literal("image"),
+              v.literal("video"),
+              v.literal("gif")
+            ),
+            url: v.string(),
+            alt: v.optional(v.string()),
+          })
+        )
+      ),
     }),
   },
   handler: async (ctx, args) => {
@@ -46,7 +54,7 @@ export const upsertCopy = mutation({
     // Check if copy already exists for this platform
     const existing = await ctx.db
       .query("launchCopy")
-      .withIndex("by_platform", (q) => 
+      .withIndex("by_platform", (q) =>
         q.eq("launchPlanId", args.launchPlanId).eq("platform", args.platform)
       )
       .first();
@@ -122,14 +130,19 @@ export const getByLaunchPlan = query({
 
     const copies = await ctx.db
       .query("launchCopy")
-      .withIndex("by_launch_plan", (q) => q.eq("launchPlanId", args.launchPlanId))
+      .withIndex("by_launch_plan", (q) =>
+        q.eq("launchPlanId", args.launchPlanId)
+      )
       .collect();
 
     // Group by platform for easier access
-    const copyByPlatform = copies.reduce((acc, copy) => {
-      acc[copy.platform] = copy;
-      return acc;
-    }, {} as Record<string, any>);
+    const copyByPlatform = copies.reduce(
+      (acc, copy) => {
+        acc[copy.platform] = copy;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
 
     return {
       copies,
@@ -167,7 +180,7 @@ export const getByPlatform = query({
 
     const copy = await ctx.db
       .query("launchCopy")
-      .withIndex("by_platform", (q) => 
+      .withIndex("by_platform", (q) =>
         q.eq("launchPlanId", args.launchPlanId).eq("platform", args.platform)
       )
       .first();
@@ -215,17 +228,22 @@ export const getApprovalStatus = query({
 
     const copies = await ctx.db
       .query("launchCopy")
-      .withIndex("by_launch_plan", (q) => q.eq("launchPlanId", args.launchPlanId))
+      .withIndex("by_launch_plan", (q) =>
+        q.eq("launchPlanId", args.launchPlanId)
+      )
       .collect();
 
     const total = copies.length;
-    const approved = copies.filter(copy => copy.isApproved).length;
+    const approved = copies.filter((copy) => copy.isApproved).length;
     const pending = total - approved;
 
-    const approvalByPlatform = copies.reduce((acc, copy) => {
-      acc[copy.platform] = copy.isApproved;
-      return acc;
-    }, {} as Record<string, boolean>);
+    const approvalByPlatform = copies.reduce(
+      (acc, copy) => {
+        acc[copy.platform] = copy.isApproved;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
 
     return {
       total,

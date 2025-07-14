@@ -297,7 +297,6 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
           </div>
         }
       >
-        <PageHeader title="Project" />
         <div className="container space-y-4 p-4">
           <ProjectInfo
             title={project.name}

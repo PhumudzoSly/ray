@@ -14,39 +14,19 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import {
   MoreVertical,
-  Workflow,
-  BarChart3,
   Clock,
   Bug,
-  FileText,
   Rocket,
   CheckCircle,
   Star,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-
-const PROJECT_STATUSES = [
-  { id: "planning", label: "Planning", color: "bg-blue-500" },
-  { id: "in-progress", label: "In Progress", color: "bg-yellow-500" },
-  { id: "review", label: "Review", color: "bg-purple-500" },
-  { id: "completed", label: "Completed", color: "bg-green-500" },
-];
-
-const getStatusColorClass = (status: string) => {
-  switch (status) {
-    case "planning":
-      return "bg-blue-100 text-blue-800 border-blue-200";
-    case "in-progress":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "review":
-      return "bg-purple-100 text-purple-800 border-purple-200";
-    case "completed":
-      return "bg-green-100 text-green-800 border-green-200";
-    default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
-  }
-};
+import { ProjectTypeSelector } from "../ui/selectors/project-type-selector";
+import { useMutation } from "convex/react";
+import { api } from "@workspace/backend";
+import { useSession } from "@/context/session-context";
+import { toast } from "sonner";
 
 interface ProjectCardProps {
   project: any;
@@ -63,16 +43,12 @@ export function ProjectCard({
   onEdit,
   onDelete,
 }: ProjectCardProps) {
-  const nodeCount = project.flowData?.nodes?.length || 0;
-  const edgeCount = project.flowData?.edges?.length || 0;
-
   // Enhanced metrics from database
   const metrics = project.metrics || {};
   const totalIssues = metrics.totalIssues || 0;
   const openIssues = metrics.openIssues || 0;
   const totalFeatures = metrics.totalFeatures || 0;
   const completedFeatures = metrics.completedFeatures || 0;
-  const totalPrds = metrics.totalPrds || 0;
   const hasLaunchPlan = metrics.hasLaunchPlan || false;
   const launchReadinessScore = metrics.launchReadinessScore || 0;
 
@@ -82,6 +58,9 @@ export function ProjectCard({
     if (score >= 40) return "text-orange-600";
     return "text-red-600";
   };
+
+  const { token } = useSession();
+  const updateProject = useMutation(api.projects.update);
 
   return (
     <Card
@@ -93,49 +72,36 @@ export function ProjectCard({
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center justify-between gap-2 mb-2">
-              <CardTitle className="text-sm font-medium line-clamp-1">
-                {project.name}
-              </CardTitle>
-              <Badge variant="outline" className="text-xs">
-                {project.platform}
-              </Badge>
+              <div className="text-sm flex items-center gap-2 font-medium whitespace-pre-line line-clamp-1">
+                <ProjectTypeSelector
+                  selectedType={project.platform}
+                  onChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          platform: value as any,
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  iconOnly
+                />{" "}
+                <p className="text-sm font-medium whitespace-pre-line line-clamp-1">
+                  {project.name}
+                </p>
+              </div>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                <MoreVertical className="w-3 h-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href={`/project/${project._id}`}>Open Project</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onEdit?.(project)}>
-                Edit Project
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={() => onDelete?.(project)}
-              >
-                Delete Project
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-3">
           {/* Project Stats - Enhanced */}
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center gap-1">
-              <Workflow className="w-3 h-3 text-muted-foreground" />
-              <span>{nodeCount} nodes</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <BarChart3 className="w-3 h-3 text-muted-foreground" />
-              <span>{edgeCount} connections</span>
-            </div>
             <div className="flex items-center gap-1">
               <Star className="w-3 h-3 text-muted-foreground" />
               <span>{totalFeatures} features</span>
@@ -154,16 +120,8 @@ export function ProjectCard({
             </div>
           </div>
 
-          {/* Additional Stats */}
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1">
-              <FileText className="w-3 h-3 text-muted-foreground" />
-              <span>{totalPrds} PRDs</span>
-            </div>
-          </div>
-
           {/* Launch Readiness */}
-          <div className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
+          <div className="flex items-center justify-between p-2 bg-muted dark:bg-muted/30 rounded-md">
             <div className="flex items-center gap-2">
               <Rocket className="w-3 h-3 text-muted-foreground" />
               <span className="text-xs font-medium">Launch Readiness</span>

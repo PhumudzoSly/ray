@@ -58,7 +58,6 @@ import {
   launchChecklistItems,
   launchCopy,
   launchStrategy,
-  launchMetrics,
 } from "../schemas/launch";
 import { document } from "../schemas/document";
 import {
@@ -130,7 +129,6 @@ export default defineSchema({
   launchChecklistItems,
   launchCopy,
   launchStrategy,
-  launchMetrics,
   issueLink,
   featureLink,
   document,

@@ -25,8 +25,8 @@ export function LaunchHeader({
   onGenerateLaunchPlan,
 }: LaunchHeaderProps) {
   return (
-    <div className="border-b bg-background/95 backdrop-blur supports-backdrop-blur:bg-background/60">
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="bg-background/95 backdrop-blur supports-backdrop-blur:bg-background/60">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
             <div>
@@ -37,7 +37,6 @@ export function LaunchHeader({
             </div>
 
             <div className="flex items-center gap-2">
-              <Badge variant="outline">{project.platform}</Badge>
               {launchPlan && (
                 <Badge
                   variant={

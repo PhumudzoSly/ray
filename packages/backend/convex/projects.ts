@@ -168,11 +168,96 @@ export const update = mutation({
       throw Error("Unauthorized");
     }
 
+    // Get current project data before updating
+    const currentProject = await ctx.db.get(projectId);
+    if (!currentProject) {
+      throw Error("Project not found");
+    }
+
     // Filter out undefined values
     const filteredUpdates = Object.fromEntries(
       Object.entries(updates).filter(([_, value]) => value !== undefined)
     );
 
+    // Generate descriptive activity message based on what changed
+    const changes: string[] = [];
+    const metadata: { oldValue?: string; newValue?: string; field?: string } =
+      {};
+
+    if (filteredUpdates.name && filteredUpdates.name !== currentProject.name) {
+      changes.push(
+        `name from "${currentProject.name}" to "${filteredUpdates.name}"`
+      );
+      metadata.oldValue = currentProject.name;
+      metadata.newValue = filteredUpdates.name as string;
+      metadata.field = "name";
+    }
+
+    if (
+      filteredUpdates.description &&
+      filteredUpdates.description !== currentProject.description
+    ) {
+      changes.push("description");
+      metadata.field = "description";
+    }
+
+    if (
+      filteredUpdates.platform &&
+      filteredUpdates.platform !== currentProject.platform
+    ) {
+      changes.push(
+        `platform from "${currentProject.platform}" to "${filteredUpdates.platform}"`
+      );
+      metadata.oldValue = currentProject.platform;
+      metadata.newValue = filteredUpdates.platform as string;
+      metadata.field = "platform";
+    }
+
+    if (
+      filteredUpdates.status &&
+      filteredUpdates.status !== currentProject.status
+    ) {
+      changes.push(
+        `status from "${currentProject.status}" to "${filteredUpdates.status}"`
+      );
+      metadata.oldValue = currentProject.status;
+      metadata.newValue = filteredUpdates.status as string;
+      metadata.field = "status";
+    }
+
+    if (filteredUpdates.techStack) {
+      const currentTechStack = currentProject.techStack;
+      const newTechStack = filteredUpdates.techStack as typeof currentTechStack;
+
+      const techChanges: string[] = [];
+      if (newTechStack.auth !== currentTechStack.auth) {
+        techChanges.push(
+          `auth from "${currentTechStack.auth}" to "${newTechStack.auth}"`
+        );
+      }
+      if (newTechStack.orm !== currentTechStack.orm) {
+        techChanges.push(
+          `ORM from "${currentTechStack.orm}" to "${newTechStack.orm}"`
+        );
+      }
+      if (newTechStack.database !== currentTechStack.database) {
+        techChanges.push(
+          `database from "${currentTechStack.database}" to "${newTechStack.database}"`
+        );
+      }
+      if (newTechStack.ai !== currentTechStack.ai) {
+        techChanges.push(
+          `AI from "${currentTechStack.ai}" to "${newTechStack.ai}"`
+        );
+      }
+
+      if (techChanges.length > 0) {
+        changes.push(`tech stack (${techChanges.join(", ")})`);
+        metadata.field = "techStack";
+      }
+    }
+
+    // Update the project
     await ctx.db.patch(projectId, {
       ...filteredUpdates,
       updatedAt: Date.now(),
@@ -180,16 +265,25 @@ export const update = mutation({
 
     const updatedProject = await ctx.db.get(projectId);
 
+    // Generate activity description
+    let description = "Project updated";
+    if (changes.length === 1) {
+      description = `Updated ${changes[0]}`;
+    } else if (changes.length > 1) {
+      description = `Updated ${changes.slice(0, -1).join(", ")} and ${changes[changes.length - 1]}`;
+    }
+
     await ctx.runMutation(internal.activities.trackActivity, {
       organizationId: session.activeOrganizationId as Id<"organization">,
       userId: session.userId as Id<"user">,
       title: `Updated project "${updatedProject?.name || "Unknown project"}"`,
-      description: `Project updated`,
+      description,
       activity: "updated",
       entityType: "project",
       entityId: projectId.toString(),
       entityName: updatedProject?.name || "Unknown project",
       projectId,
+      metadata: Object.keys(metadata).length > 0 ? metadata : undefined,
     });
   },
 });
@@ -213,7 +307,7 @@ export const list = query({
     const projects = await ctx.db.query("projects").order("desc").collect();
 
     // For each project, get the main flow data for display
-    const projectsWithFlowData = await Promise.all(
+    const projectsWithMetrics = await Promise.all(
       projects.map(async (project) => {
         const mainFlow = await ctx.db
           .query("flows")
@@ -225,46 +319,6 @@ export const list = query({
         if (!mainFlow) {
           return { ...project, flowData: null };
         }
-
-        const [nodes, edges] = await Promise.all([
-          ctx.db
-            .query("flowNodes")
-            .withIndex("by_flow", (q) => q.eq("flowId", mainFlow._id))
-            .collect(),
-          ctx.db
-            .query("flowEdges")
-            .withIndex("by_flow", (q) => q.eq("flowId", mainFlow._id))
-            .collect(),
-        ]);
-
-        // Format for React Flow
-        const formattedNodes = nodes.map((node: any) => ({
-          id: node.nodeId,
-          type: "flowNode",
-          position: node.position,
-          data: {
-            type: node.type,
-            label: node.label,
-            description: node.description,
-            priority: node.data.priority,
-            features: node.data.features,
-            dependencies: node.data.dependencies,
-            hasSubFlow: node.data.hasSubFlow,
-          },
-        }));
-
-        const formattedEdges = edges.map((edge) => ({
-          id: edge.edgeId,
-          source: edge.source,
-          target: edge.target,
-          type: edge.type,
-          animated: edge.animated,
-          style: edge.style,
-        }));
-
-        // Calculate project health metrics
-        const totalNodes = formattedNodes.length;
-        const totalEdges = formattedEdges.length;
 
         // Get issues for this project
         const issues = await ctx.db
@@ -283,14 +337,6 @@ export const list = query({
         const openIssues = issues.filter(
           (issue) => issue.status !== "DONE"
         ).length;
-
-        // Get PRDs for this project
-        const prds = await ctx.db
-          .query("prds")
-          .withIndex("by_project", (q) => q.eq("projectId", project._id))
-          .collect();
-
-        const totalPrds = prds.length;
 
         // Get features for this project
         const features = await ctx.db
@@ -325,13 +371,8 @@ export const list = query({
         let launchReadinessScore = 0;
 
         // Weight factors
-        const nodeWeight = 0.3; // 30% of score
         const issueWeight = 0.3; // 30% of score
-        const prdWeight = 0.2; // 20% of score
         const launchPlanWeight = 0.2; // 20% of score
-
-        // Node score (more nodes = better, up to a reasonable limit)
-        const nodeScore = Math.min(totalNodes / 10, 1) * 100; // Max score at 10+ nodes
 
         // Issue score (fewer open issues = better)
         const issueScore =
@@ -339,18 +380,12 @@ export const list = query({
             ? ((totalIssues - openIssues) / totalIssues) * 100
             : 0;
 
-        // PRD score (more PRDs = better, up to a reasonable limit)
-        const prdScore = Math.min(totalPrds / 5, 1) * 100; // Max score at 5+ PRDs
-
         // Launch plan score (having a plan = 100, no plan = 0)
         const launchPlanScore = hasLaunchPlan ? 100 : 0;
 
         // Calculate weighted score
         launchReadinessScore = Math.round(
-          nodeScore * nodeWeight +
-            issueScore * issueWeight +
-            prdScore * prdWeight +
-            launchPlanScore * launchPlanWeight
+          issueScore * issueWeight + launchPlanScore * launchPlanWeight
         );
 
         // Ensure score is between 0-100
@@ -358,20 +393,13 @@ export const list = query({
 
         return {
           ...project,
-          flowData: {
-            nodes: formattedNodes,
-            edges: formattedEdges,
-          },
           metrics: {
-            totalNodes,
-            totalEdges,
             totalIssues,
             openIssues,
             completedIssues: totalIssues - openIssues,
             totalFeatures,
             completedFeatures,
             inProgressFeatures,
-            totalPrds,
             hasLaunchPlan,
             launchReadinessScore,
           },
@@ -379,7 +407,7 @@ export const list = query({
       })
     );
 
-    return projectsWithFlowData;
+    return projectsWithMetrics;
   },
 });
 
@@ -412,46 +440,6 @@ export const get = query({
       return { ...project, flowData: null };
     }
 
-    const [nodes, edges] = await Promise.all([
-      ctx.db
-        .query("flowNodes")
-        .withIndex("by_flow", (q) => q.eq("flowId", mainFlow._id))
-        .collect(),
-      ctx.db
-        .query("flowEdges")
-        .withIndex("by_flow", (q) => q.eq("flowId", mainFlow._id))
-        .collect(),
-    ]);
-
-    // Format for React Flow
-    const formattedNodes = nodes.map((node) => ({
-      id: node.nodeId,
-      type: "flowNode",
-      position: node.position,
-      data: {
-        type: node.type,
-        label: node.label,
-        description: node.description,
-        priority: node.data.priority,
-        features: node.data.features,
-        dependencies: node.data.dependencies,
-        hasSubFlow: node.data.hasSubFlow,
-      },
-    }));
-
-    const formattedEdges = edges.map((edge) => ({
-      id: edge.edgeId,
-      source: edge.source,
-      target: edge.target,
-      type: edge.type,
-      animated: edge.animated,
-      style: edge.style,
-    }));
-
-    // Calculate project health metrics
-    const totalNodes = formattedNodes.length;
-    const totalEdges = formattedEdges.length;
-
     // Get issues for this project
     const issues = await ctx.db
       .query("issues")
@@ -467,14 +455,6 @@ export const get = query({
 
     const totalIssues = issues.length;
     const openIssues = issues.filter((issue) => issue.status !== "DONE").length;
-
-    // Get PRDs for this project
-    const prds = await ctx.db
-      .query("prds")
-      .withIndex("by_project", (q) => q.eq("projectId", id))
-      .collect();
-
-    const totalPrds = prds.length;
 
     // Get features for this project
     const features = await ctx.db
@@ -509,30 +489,21 @@ export const get = query({
     let launchReadinessScore = 0;
 
     // Weight factors
-    const nodeWeight = 0.3; // 30% of score
     const issueWeight = 0.3; // 30% of score
-    const prdWeight = 0.2; // 20% of score
     const launchPlanWeight = 0.2; // 20% of score
-
-    // Node score (more nodes = better, up to a reasonable limit)
-    const nodeScore = Math.min(totalNodes / 10, 1) * 100; // Max score at 10+ nodes
 
     // Issue score (fewer open issues = better)
     const issueScore =
       totalIssues > 0 ? ((totalIssues - openIssues) / totalIssues) * 100 : 0;
 
     // PRD score (more PRDs = better, up to a reasonable limit)
-    const prdScore = Math.min(totalPrds / 5, 1) * 100; // Max score at 5+ PRDs
 
     // Launch plan score (having a plan = 100, no plan = 0)
     const launchPlanScore = hasLaunchPlan ? 100 : 0;
 
     // Calculate weighted score
     launchReadinessScore = Math.round(
-      nodeScore * nodeWeight +
-        issueScore * issueWeight +
-        prdScore * prdWeight +
-        launchPlanScore * launchPlanWeight
+      issueScore * issueWeight + launchPlanScore * launchPlanWeight
     );
 
     // Ensure score is between 0-100
@@ -540,20 +511,13 @@ export const get = query({
 
     return {
       ...project,
-      flowData: {
-        nodes: formattedNodes,
-        edges: formattedEdges,
-      },
       metrics: {
-        totalNodes,
-        totalEdges,
         totalIssues,
         openIssues,
         completedIssues: totalIssues - openIssues,
         totalFeatures,
         completedFeatures,
         inProgressFeatures,
-        totalPrds,
         hasLaunchPlan,
         launchReadinessScore,
       },

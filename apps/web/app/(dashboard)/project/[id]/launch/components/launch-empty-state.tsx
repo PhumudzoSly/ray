@@ -44,7 +44,7 @@ export function LaunchEmptyState({
         checklists, platform-specific copy, and timeline management.
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-6xl mb-8">
         <div className="flex flex-col items-center p-4 border rounded-lg">
           <CheckSquare className="h-8 w-8 text-primary mb-2" />
           <h3 className="font-medium text-sm">Smart Checklist</h3>
@@ -74,11 +74,6 @@ export function LaunchEmptyState({
           </p>
         </div>
       </div>
-
-      <Button size="lg" onClick={onGenerate} className="gap-2">
-        <Rocket className="h-4 w-4" />
-        Generate Launch Plan
-      </Button>
     </div>
   );
 }

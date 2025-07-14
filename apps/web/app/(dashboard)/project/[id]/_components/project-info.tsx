@@ -21,6 +21,7 @@ import { Id } from "@workspace/backend";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
+import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-selector";
 
 export const ProjectInfo = ({
   title,
@@ -35,41 +36,18 @@ export const ProjectInfo = ({
   platform: string;
   token: string;
 }) => {
-  // Get platform icon
-  const getPlatformIcon = (platform: string) => {
-    const platformType = projectTypes.find((type) => type.id === platform);
-    if (!platformType) return Globe;
-
-    switch (platformType.icon) {
-      case "Globe":
-        return Globe;
-      case "Smartphone":
-        return Smartphone;
-      case "Devices":
-        return Devices;
-      case "Server":
-        return Server;
-      case "Puzzle":
-        return Puzzle;
-      case "Monitor":
-        return Monitor;
-      case "Terminal":
-        return Terminal;
-      default:
-        return Globe;
-    }
-  };
-
-  const PlatformIcon = getPlatformIcon(platform);
   const updateProject = useMutation(api.projects.update);
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="p-3 rounded-lg bg-primary/10">
-            <PlatformIcon className="w-6 h-6 text-primary" />
-          </div>
+          <ProjectTypeSelector
+            iconOnly
+            selectedType={platform}
+            size="lg"
+            disabled={true}
+          />
           <div>
             <InlineEditField
               displayValue={

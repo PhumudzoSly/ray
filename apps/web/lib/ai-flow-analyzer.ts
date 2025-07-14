@@ -1,9 +1,8 @@
 "use server";
 import { google } from "@ai-sdk/google";
-import { generateText, generateObject } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
-import env from "./env";
-import { Project, FlowNode } from "./types";
+import { Project } from "./types";
 
 // Define schemas for structured output
 const MissingFlowSchema = z.object({

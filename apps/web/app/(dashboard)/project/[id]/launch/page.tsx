@@ -19,6 +19,7 @@ import { LaunchOverview } from "./components/launch-overview";
 import { LaunchChecklist } from "./components/launch-checklist";
 import { LaunchCopy } from "./components/launch-copy";
 import { LaunchStrategy } from "./components/launch-strategy";
+import { Separator } from "@workspace/ui/components/separator";
 
 // Type definitions for launch plan data
 interface ChecklistItem {
@@ -134,21 +135,17 @@ export default function ProjectLaunchPage() {
         isGenerating={isGenerating}
         onGenerateLaunchPlan={handleGenerateLaunchPlan}
       />
-
+      <Separator className="my-4" />
       <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto px-6 py-8">
-          {!launchPlan ? (
-            <LaunchEmptyState
-              isGenerating={isGenerating}
-              onGenerate={handleGenerateLaunchPlan}
-            />
-          ) : (
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-4">
+        {!launchPlan ? (
+          <LaunchEmptyState
+            isGenerating={isGenerating}
+            onGenerate={handleGenerateLaunchPlan}
+          />
+        ) : (
+          <div className="container mx-auto px-6 py-8">
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList>
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="checklist">Checklist</TabsTrigger>
                 <TabsTrigger value="copy">Launch Copy</TabsTrigger>
@@ -180,8 +177,8 @@ export default function ProjectLaunchPage() {
                 />
               </TabsContent>
             </Tabs>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -214,7 +214,7 @@ export const getProjectAssets = query({
       query = ctx.db
         .query("assets")
         .withIndex("by_project_and_type", (q) =>
-          q.eq("projectId", args.projectId).eq("type", args.type)
+          q.eq("projectId", args.projectId).eq("type", args.type as any)
         );
     }
 

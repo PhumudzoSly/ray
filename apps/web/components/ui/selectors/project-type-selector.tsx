@@ -23,18 +23,24 @@ import {
 
 interface ProjectTypeSelectorProps {
   selectedType: string;
-  onChange: (type: string) => void;
+  onChange?: (type: string) => void;
+  iconOnly?: boolean;
+  size?: "xs" | "sm" | "lg";
+  disabled?: boolean;
 }
 
 export function ProjectTypeSelector({
   selectedType,
   onChange,
+  iconOnly = false,
+  size = "xs",
+  disabled = false,
 }: ProjectTypeSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
 
   const handleTypeChange = (typeId: string) => {
-    onChange(typeId);
+    onChange?.(typeId);
     setOpen(false);
   };
 
@@ -49,16 +55,21 @@ export function ProjectTypeSelector({
           <Button
             id={id}
             className="flex items-center justify-center"
-            size="xs"
+            size={size}
             variant="secondary"
             role="combobox"
             aria-expanded={open}
+            disabled={disabled}
           >
             {selectedProjectType ? (
-              <div className="flex items-center gap-2">
+              iconOnly ? (
                 <selectedProjectType.icon className="text-muted-foreground size-4" />
-                <span>{selectedProjectType.name}</span>
-              </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <selectedProjectType.icon className="text-muted-foreground size-4" />
+                  <span>{selectedProjectType.name}</span>
+                </div>
+              )
             ) : (
               <span>Select Project Type</span>
             )}
