@@ -19,6 +19,8 @@ export const projects = defineTable({
     database: v.string(),
     ai: v.string(),
   }),
+  infrastructure: v.optional(v.string()),
+  dueDate: v.optional(v.string()),
   status: v.optional(
     v.union(
       v.literal("planning"),
@@ -33,7 +35,9 @@ export const projects = defineTable({
   organizationId: v.optional(v.id("organization")),
 })
   .index("by_idea", ["ideaId"])
-  .index("byOrg", ["organizationId"]);
+  .index("byOrg", ["organizationId"])
+  .index("byOrgStatus", ["organizationId", "status"])
+  .index("byOrgDueDate", ["organizationId", "dueDate"]);
 
 export const milestones = defineTable({
   name: v.string(),

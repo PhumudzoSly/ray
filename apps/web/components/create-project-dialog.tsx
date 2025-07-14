@@ -23,6 +23,8 @@ import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-sele
 import { IdeaSelector } from "./ui/selectors/idea-selector";
 import { CommandSelect } from "../../../packages/ui/src/components/command-select";
 import { techStackOptions } from "@/lib/types";
+import { DATABASE_PROVIDERS } from "@/utils/constants/sources/database";
+import { AUTH_PROVIDERS } from "@/utils/constants/sources/auth";
 
 type CreateProjectDialogProps = {
   ideaId?: Id<"idea">;
@@ -152,9 +154,9 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               placeholder="Select AI provider"
             />
             <CommandSelect
-              options={techStackOptions.auth.map((option) => ({
-                value: option,
-                label: option,
+              options={AUTH_PROVIDERS.map((option) => ({
+                value: option.name,
+                label: option.name,
               }))}
               onValueChange={(value) =>
                 setForm({
@@ -166,9 +168,9 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               placeholder="Select Auth provider"
             />
             <CommandSelect
-              options={techStackOptions.database.map((option) => ({
-                value: option,
-                label: option,
+              options={DATABASE_PROVIDERS.map((option) => ({
+                value: option.name,
+                label: option.name,
               }))}
               onValueChange={(value) =>
                 setForm({

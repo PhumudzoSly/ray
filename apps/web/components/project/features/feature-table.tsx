@@ -24,7 +24,6 @@ import {
   GroupedListGroup,
 } from "@workspace/ui/components/grouped-list";
 import { phases } from "@/utils/constants/features/phases";
-import { priorities } from "@/utils/constants/features/priority";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
@@ -133,23 +132,19 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
       );
 
       const items: GroupedListItem[] = phaseFeatures.map((feature: any) => {
-        const priority = priorities.find((p) => p.id === feature.priority);
-        const PriorityIcon = priority?.icon;
-
         return {
           id: feature._id,
           title: feature.name,
           subtitle: feature.description || undefined,
           avatar: feature.user ? (
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="text-xs">
+            <Avatar>
+              <AvatarFallback>
                 {feature.user.name?.charAt(0) || "?"}
               </AvatarFallback>
             </Avatar>
           ) : undefined,
-          status: priority?.name,
           metadata: (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="flex  items-center gap-2 text-xs text-muted-foreground">
               {feature.estimatedEffort && (
                 <div className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
@@ -165,7 +160,6 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
               {feature.isSubFeature && <GitBranch className="h-3 w-3" />}
             </div>
           ),
-          onClick: () => router.push(`/features/${feature._id}`),
         };
       });
 
@@ -286,6 +280,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
         <GroupedList
           groups={groupedFeatures}
           onItemMove={handleItemMove}
+          onItemClick={(item) => router.push(`/features/${item.id}`)}
           enableDragAndDrop={true}
           className="space-y-6"
         />

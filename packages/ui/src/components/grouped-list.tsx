@@ -149,6 +149,7 @@ function GroupedListItemComponent({
           {...provided.dragHandleProps}
         >
           {React.cloneElement(itemContent as React.ReactElement, {
+            // @ts-ignore
             className: cn(
               itemContent.props.className,
               snapshot.isDragging && "opacity-50 shadow-lg scale-[1.02] z-50"
@@ -193,7 +194,7 @@ function GroupedListGroupComponent({
   return (
     <div className={cn("space-y-3", className)}>
       {/* Group Header - Sticky like Linear */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 py-2 -mx-4 px-4">
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 py-2  px-4">
         <div className="flex items-center gap-2">
           {group.icon && <div className="flex-shrink-0">{group.icon}</div>}
           <div

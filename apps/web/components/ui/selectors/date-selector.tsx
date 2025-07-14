@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 interface DateSelectorProps {
   value?: Date | null;
   onChange: (date: Date | null) => void;
-  variant?: "default" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   placeholder?: string;
   disabled?: boolean;
@@ -34,7 +33,6 @@ interface DateSelectorProps {
 export function DateSelector({
   value,
   onChange,
-  variant = "secondary",
   placeholder = "Select date",
   disabled = false,
   className,
@@ -60,6 +58,7 @@ export function DateSelector({
   };
 
   const displayValue = value ? format(value, dateFormat) : placeholder;
+  const isOld = value && new Date(value) < new Date();
 
   return (
     <div className="*:not-first:mt-2">
@@ -73,7 +72,7 @@ export function DateSelector({
               className
             )}
             size={"xs"}
-            variant={variant}
+            variant={isOld ? "error" : "secondary"}
             role="combobox"
             aria-expanded={open}
             disabled={disabled}

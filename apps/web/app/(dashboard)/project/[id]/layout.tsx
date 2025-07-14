@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Separator } from "@workspace/ui/components/separator";
-import { Database, Lock, Trash, Bot } from "lucide-react";
+import { Database, Lock, Trash, Bot, Globe, Server   } from "lucide-react";
 import { Id } from "@workspace/backend";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
@@ -26,6 +26,8 @@ import { ProjectTabs } from "./_components/tabs";
 import { ReactNode } from "react";
 import Header from "@/components/shared/header";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
+import { DateSelector } from "@/components/ui/selectors";
+import { INFRASTRUCTURE_PROVIDERS } from "@/utils/constants/sources/infrastructure";
 
 export default function ProjectPage({ children }: { children: ReactNode }) {
   //
@@ -167,6 +169,26 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                 />
 
                 <h3 className="text-xs font-medium text-muted-foreground">
+                  Due date
+                </h3>
+                <DateSelector
+                  value={project?.dueDate ? new Date(project?.dueDate) : null}
+                  onChange={async (e) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          dueDate: e?.toDateString(),
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update due date");
+                    }
+                  }}
+                />
+
+                <h3 className="text-xs font-medium text-muted-foreground">
                   Added
                 </h3>
                 <span className="text-sm">
@@ -291,6 +313,32 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   }}
                   value={project.techStack.ai}
                   placeholder="Select AI provider"
+                />
+
+                <h3 className="text-xs font-medium text-muted-foreground">
+                  Infrastructure
+                </h3>
+                <CommandSelect
+                  options={INFRASTRUCTURE_PROVIDERS.map((option) => ({
+                    value: option.name,
+                    label: option.name,
+                    icon: <Server />,
+                  }))}
+                  onValueChange={async (value) => {
+                    try {
+                      await updateProject({
+                        project: {
+                          projectId: project._id,
+                          infrastructure: value,
+                        },
+                        token,
+                      });
+                    } catch (error) {
+                      toast.error("Failed to update project");
+                    }
+                  }}
+                  value={project?.infrastructure}
+                  placeholder="Select infrastructure"
                 />
               </div>
             </div>

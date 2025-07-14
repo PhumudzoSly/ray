@@ -153,6 +153,8 @@ export const update = mutation({
           ai: v.string(),
         })
       ),
+      infrastructure: v.optional(v.string()),
+      dueDate: v.optional(v.string()),
     }),
     token: v.string(),
   },
@@ -255,6 +257,48 @@ export const update = mutation({
         changes.push(`tech stack (${techChanges.join(", ")})`);
         metadata.field = "techStack";
       }
+    }
+
+    if (
+      filteredUpdates.infrastructure &&
+      filteredUpdates.infrastructure !== currentProject.infrastructure
+    ) {
+      changes.push(
+        `infrastructure from "${currentProject.infrastructure || "none"}" to "${filteredUpdates.infrastructure}"`
+      );
+      metadata.oldValue = currentProject.infrastructure || "none";
+      metadata.newValue = filteredUpdates.infrastructure as string;
+      metadata.field = "infrastructure";
+    }
+
+    if (
+      filteredUpdates.dueDate &&
+      filteredUpdates.dueDate !== currentProject.dueDate
+    ) {
+      const formatDate = (dateString: string) => {
+        try {
+          const date = new Date(dateString);
+          return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        } catch {
+          return dateString;
+        }
+      };
+
+      const oldDateFormatted = currentProject.dueDate
+        ? formatDate(currentProject.dueDate)
+        : "none";
+      const newDateFormatted = formatDate(filteredUpdates.dueDate as string);
+
+      changes.push(
+        `due date from "${oldDateFormatted}" to "${newDateFormatted}"`
+      );
+      metadata.oldValue = currentProject.dueDate || "none";
+      metadata.newValue = filteredUpdates.dueDate as string;
+      metadata.field = "dueDate";
     }
 
     // Update the project

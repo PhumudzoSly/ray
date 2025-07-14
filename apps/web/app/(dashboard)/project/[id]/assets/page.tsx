@@ -192,7 +192,7 @@ const AssetsPage = () => {
         <Card className="p-1">
           <CardContent>
             <div className="flex items-center gap-3">
-              <Button disabled size="icon" variant={"fancy"}>
+              <Button disabled size="icon" variant={"outline"}>
                 <FolderOpen />
               </Button>
               <div>
@@ -206,7 +206,7 @@ const AssetsPage = () => {
         <Card className="p-1">
           <CardContent>
             <div className="flex items-center gap-3">
-              <Button disabled size="icon" variant={"fancy"}>
+              <Button disabled size="icon" variant={"outline"}>
                 <Image />
               </Button>
               <div>
@@ -220,7 +220,7 @@ const AssetsPage = () => {
         <Card className="p-1">
           <CardContent>
             <div className="flex items-center gap-3">
-              <Button disabled size="icon" variant={"fancy"}>
+              <Button disabled size="icon" variant={"outline"}>
                 <Link />
               </Button>
               <div>
@@ -234,7 +234,7 @@ const AssetsPage = () => {
         <Card className="p-1">
           <CardContent>
             <div className="flex items-center gap-3">
-              <Button disabled size="icon" variant={"fancy"}>
+              <Button disabled size="icon" variant={"outline"}>
                 <File />
               </Button>
               <div>

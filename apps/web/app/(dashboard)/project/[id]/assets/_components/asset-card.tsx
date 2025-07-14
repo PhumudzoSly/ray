@@ -18,12 +18,6 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@workspace/ui/components/dialog";
-import {
   MoreHorizontal,
   Eye,
   Download,
@@ -47,6 +41,7 @@ import { cn } from "@/lib/utils";
 interface AssetCardProps {
   asset: any;
   onDelete: (assetId: string) => void;
+  onUpdate?: (assetId: string) => void;
   className?: string;
 }
 
@@ -80,9 +75,13 @@ const LINK_TYPE_ICONS = {
   external: "🔗",
 };
 
-export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
-  const { session } = useSession();
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+export function AssetCard({
+  asset,
+  onDelete,
+  onUpdate,
+  className,
+}: AssetCardProps) {
+  const { token } = useSession();
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Mutations
@@ -111,12 +110,17 @@ export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
     if (asset.type === "link") {
       window.open(asset.url, "_blank");
     } else {
-      setIsPreviewOpen(true);
+      // For file assets, open in a new tab using the storage URL
+      if (asset.storageId) {
+        const fileUrl = `https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${asset.storageId}`;
+        window.open(fileUrl, "_blank");
+      }
+
       // Increment view count
-      if (session?.token) {
+      if (token) {
         try {
           await incrementViewCount({
-            token: session.token,
+            token: token,
             assetId: asset._id,
           });
         } catch (error) {
@@ -127,24 +131,28 @@ export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
   };
 
   const handleDownload = async () => {
-    if (!session?.token || asset.type === "link") return;
+    if (!token || asset.type === "link") return;
 
     setIsDownloading(true);
     try {
       const downloadUrl = await getDownloadUrl({
-        token: session.token,
+        token: token,
         assetId: asset._id,
       });
 
-      // Create a temporary link and trigger download
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = asset.fileName || asset.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (downloadUrl) {
+        // Create a temporary link and trigger download
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = asset.fileName || asset.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-      toast.success("Download started");
+        toast.success("Download started");
+      } else {
+        toast.error("Failed to get download URL");
+      }
     } catch (error) {
       console.error("Download failed:", error);
       toast.error("Failed to download file");
@@ -155,6 +163,12 @@ export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
 
   const handleDelete = () => {
     onDelete(asset._id);
+  };
+
+  const handleUpdate = () => {
+    if (onUpdate) {
+      onUpdate(asset._id);
+    }
   };
 
   const renderPreview = () => {
@@ -178,9 +192,6 @@ export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
         <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
           <div className="text-center space-y-2">
             <div className="text-4xl">{linkIcon}</div>
-            {/* <div className="text-sm whitespace-pre-wrap line-clamp-1 text-muted-foreground truncate  px-2">
-              {asset.url}
-            </div> */}
           </div>
         </div>
       );
@@ -194,198 +205,172 @@ export function AssetCard({ asset, onDelete, className }: AssetCardProps) {
   };
 
   return (
-    <>
-      <Card
-        className={cn(
-          "group hover:shadow-md transition-all duration-200",
-          className
-        )}
-      >
-        <CardContent className="p-4">
-          {/* Preview */}
-          <div className="relative mb-4">
-            {renderPreview()}
+    <Card
+      className={cn(
+        "group hover:shadow-md transition-all duration-200",
+        className
+      )}
+    >
+      <CardContent className="p-4">
+        {/* Preview */}
+        <div className="relative mb-4">
+          {renderPreview()}
 
-            {/* Overlay Actions */}
-            <div className="absolute px-1.5 inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center gap-2">
+          {/* Overlay Actions */}
+          <div className="absolute px-1.5 inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex flex-col items-center justify-center gap-2">
+            <Button
+              size="xs"
+              variant="secondary"
+              onClick={handlePreview}
+              className="bg-white/90 hover:bg-white text-black"
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              {asset.type === "link" ? "Open" : "Preview"}
+            </Button>
+
+            {asset.type !== "link" && (
               <Button
                 size="xs"
                 variant="secondary"
-                onClick={handlePreview}
+                onClick={handleDownload}
+                disabled={isDownloading}
                 className="bg-white/90 hover:bg-white text-black"
               >
-                <Eye className="w-4 h-4 mr-1" />
-                {asset.type === "link" ? "Open" : "Preview"}
+                <Download className="w-4 h-4 mr-1" />
+                Download
               </Button>
+            )}
+          </div>
+        </div>
 
-              {asset.type !== "link" && (
-                <Button
-                  size="xs"
-                  variant="secondary"
-                  onClick={handleDownload}
-                  disabled={isDownloading}
-                  className="bg-white/90 hover:bg-white text-black"
-                >
-                  <Download className="w-4 h-4 mr-1" />
-                  Download
-                </Button>
+        {/* Content */}
+        <div className="space-y-3">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h3
+                className="font-medium text-sm line-clamp-1 whitespace-pre-wrap truncate"
+                title={asset.name}
+              >
+                {asset.name}
+              </h3>
+              {asset.description && (
+                <p className="text-xs text-muted-foreground whitespace-pre-wrap  line-clamp-2 mt-1">
+                  {asset.description}
+                </p>
               )}
             </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="opacity-0 group-hover:opacity-100"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handlePreview}>
+                  <Eye className="w-4 h-4 mr-2" />
+                  {asset.type === "link" ? "Open Link" : "Preview"}
+                </DropdownMenuItem>
+                {asset.type !== "link" && (
+                  <DropdownMenuItem
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={handleUpdate}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleDelete}
+                  className="text-destructive"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* Content */}
-          <div className="space-y-3">
-            {/* Header */}
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <h3
-                  className="font-medium text-sm line-clamp-1 whitespace-pre-wrap truncate"
-                  title={asset.name}
-                >
-                  {asset.name}
-                </h3>
-                {asset.description && (
-                  <p className="text-xs text-muted-foreground whitespace-pre-wrap  line-clamp-2 mt-1">
-                    {asset.description}
-                  </p>
-                )}
-              </div>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="opacity-0 group-hover:opacity-100"
-                  >
-                    <MoreHorizontal className="w-4 h-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={handlePreview}>
-                    <Eye className="w-4 h-4 mr-2" />
-                    {asset.type === "link" ? "Open Link" : "Preview"}
-                  </DropdownMenuItem>
-                  {asset.type !== "link" && (
-                    <DropdownMenuItem
-                      onClick={handleDownload}
-                      disabled={isDownloading}
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem>
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleDelete}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+          {/* Metadata */}
+          <div className="space-y-2">
+            {/* Type and Category */}
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className={cn("text-xs", typeColor)}>
+                <TypeIcon className="w-3 h-3 mr-1" />
+                {asset.type}
+              </Badge>
+              {asset.category && (
+                <Badge variant="secondary" className="text-xs">
+                  {asset.category}
+                </Badge>
+              )}
             </div>
 
-            {/* Metadata */}
-            <div className="space-y-2">
-              {/* Type and Category */}
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className={cn("text-xs", typeColor)}>
-                  <TypeIcon className="w-3 h-3 mr-1" />
-                  {asset.type}
-                </Badge>
-                {asset.category && (
-                  <Badge variant="secondary" className="text-xs">
-                    {asset.category}
+            {/* Tags */}
+            {asset.tags && asset.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {asset.tags.slice(0, 3).map((tag: string) => (
+                  <Badge key={tag} variant="outline" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+                {asset.tags.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{asset.tags.length - 3}
                   </Badge>
                 )}
               </div>
+            )}
 
-              {/* Tags */}
-              {asset.tags && asset.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {asset.tags.slice(0, 3).map((tag: string) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {asset.tags.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{asset.tags.length - 3}
-                    </Badge>
-                  )}
-                </div>
-              )}
-
-              {/* File Info */}
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  {asset.fileSize && (
-                    <span>{formatFileSize(asset.fileSize)}</span>
-                  )}
-                  <span>{formatDate(asset.uploadedAt)}</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {asset.viewCount !== undefined && (
-                    <span className="flex items-center gap-1">
-                      <Eye className="w-3 h-3" />
-                      {asset.viewCount}
-                    </span>
-                  )}
-                  {asset.downloadCount !== undefined &&
-                    asset.type !== "link" && (
-                      <span className="flex items-center gap-1">
-                        <Download className="w-3 h-3" />
-                        {asset.downloadCount}
-                      </span>
-                    )}
-                </div>
+            {/* File Info */}
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center gap-4">
+                {asset.fileSize && (
+                  <span>{formatFileSize(asset.fileSize)}</span>
+                )}
+                <span>{formatDate(asset.uploadedAt)}</span>
               </div>
 
-              {/* Uploader */}
-              {asset.uploadedByUser && (
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Avatar className="w-4 h-4">
-                    <AvatarImage src={asset.uploadedByUser.image} />
-                    <AvatarFallback className="text-xs">
-                      {asset.uploadedByUser.name?.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span>{asset.uploadedByUser.name}</span>
-                </div>
-              )}
+              <div className="flex items-center gap-2">
+                {asset.viewCount !== undefined && (
+                  <span className="flex items-center gap-1">
+                    <Eye className="w-3 h-3" />
+                    {asset.viewCount}
+                  </span>
+                )}
+                {asset.downloadCount !== undefined && asset.type !== "link" && (
+                  <span className="flex items-center gap-1">
+                    <Download className="w-3 h-3" />
+                    {asset.downloadCount}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
 
-      {/* Preview Dialog */}
-      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>{asset.name}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            {asset.type === "image" && asset.storageId && (
-              <div className="flex justify-center">
-                <img
-                  src={`https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${asset.storageId}`}
-                  alt={asset.name}
-                  className="max-w-full max-h-[70vh] object-contain rounded-lg"
-                />
+            {/* Uploader */}
+            {asset.uploadedByUser && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Avatar className="w-4 h-4">
+                  <AvatarImage src={asset.uploadedByUser.image} />
+                  <AvatarFallback className="text-xs">
+                    {asset.uploadedByUser.name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+                <span>{asset.uploadedByUser.name}</span>
               </div>
             )}
-            {asset.description && (
-              <p className="text-muted-foreground">{asset.description}</p>
-            )}
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -34,7 +34,7 @@ const SingleFeaturePage = async ({
           { title: "Feature", url: `/features/${id}` },
         ]}
       >
-        <NewFeature parentFeatureId={id as Id<"feature">} />
+        {null}
       </Header>
       <ExpandedLayoutContainer
         sidebar={<FeatureSidebar featureId={id as Id<"feature">} />}
