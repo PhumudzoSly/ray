@@ -38,7 +38,6 @@ import {
   DialogClose,
   DialogDescription,
 } from "@workspace/ui/components/dialog";
-import { FeatureSelector } from "@/components/ui/selectors/feature-selector";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
 import DependencyGraphVisualization from "./dependency-graph-visualization";

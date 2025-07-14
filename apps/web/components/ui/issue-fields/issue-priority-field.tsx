@@ -7,7 +7,7 @@ import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Id } from "@workspace/backend";
-import { importance } from "@/schemas/enums";
+import { toast } from "sonner";
 
 interface IssuePriorityFieldProps {
   issueId: string;
@@ -32,11 +32,15 @@ export function IssuePriorityField({
     <IssueFieldBase
       value={value}
       onSave={async (newValue: string) => {
-        await changeIssuePriority({
-          issueId: issueId as Id<"issues">,
-          token,
-          priority: newValue as any,
-        });
+        try {
+          await changeIssuePriority({
+            issueId: issueId as Id<"issues">,
+            token,
+            priority: newValue as any,
+          });
+        } catch (error) {
+          toast.error("Failed to update priority");
+        }
       }}
       options={priorities.map((p) => ({
         id: p.id,

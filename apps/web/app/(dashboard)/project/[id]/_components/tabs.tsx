@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@workspace/ui/components/button";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 
 interface Tab {

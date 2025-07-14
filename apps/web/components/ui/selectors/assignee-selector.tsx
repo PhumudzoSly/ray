@@ -24,15 +24,20 @@ import {
 import { useSession } from "@/context/session-context";
 import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
+import { getInitials } from "@/utils/helpers";
 
 interface AssigneeSelectorProps {
   assignee: string | null;
-  onChange: (assignee: string) => void;
+  onChange?: (assignee: string) => void;
+  disabled?: boolean;
+  iconOnly?: boolean;
 }
 
 export function AssigneeSelector({
   assignee,
   onChange,
+  disabled,
+  iconOnly,
 }: AssigneeSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
@@ -50,12 +55,12 @@ export function AssigneeSelector({
   const handleAssigneeChange = (userId: string) => {
     if (userId === "unassigned") {
       setValue(null);
-      onChange(userId);
+      onChange?.(userId);
     } else {
       setValue(userId);
       const newAssignee = members?.find((u) => u?._id === userId);
       if (newAssignee) {
-        onChange(newAssignee._id);
+        onChange?.(newAssignee._id);
       }
     }
     setOpen(false);
@@ -70,6 +75,7 @@ export function AssigneeSelector({
           size="xs"
           variant="secondary"
           role="combobox"
+          disabled={disabled}
           aria-expanded={open}
         >
           {value ? (
@@ -83,7 +89,7 @@ export function AssigneeSelector({
                       alt={selectedUser.name}
                     />
                     <AvatarFallback>
-                      {selectedUser.name.charAt(0)}
+                      {getInitials(selectedUser?.name || "")}
                     </AvatarFallback>
                   </Avatar>
                 );
@@ -93,14 +99,15 @@ export function AssigneeSelector({
           ) : (
             <UserCircle className="size-5" />
           )}
-
-          <span>
-            {value
-              ? members
-                  ?.find((user) => user?._id === value)
-                  ?.name?.slice(0, 16) + "..."
-              : "No lead assigned"}
-          </span>
+          {iconOnly ? null : (
+            <span>
+              {value
+                ? members
+                    ?.find((user) => user?._id === value)
+                    ?.name?.slice(0, 16) + "..."
+                : "No lead assigned"}
+            </span>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent

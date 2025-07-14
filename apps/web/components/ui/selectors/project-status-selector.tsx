@@ -16,16 +16,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
-import { status as allStatus } from "@/utils/constants/issues/status";
+import { status as allStatus } from "@/utils/constants/projects/status";
 
 interface StatusSelectorProps {
-  status: string;
+  status: string | undefined;
   onChange?: (status: string) => void;
   disabled?: boolean;
   iconOnly?: boolean;
 }
 
-export function StatusSelector({
+export function ProjectStatusSelector({
   status,
   onChange,
   disabled,
@@ -33,7 +33,7 @@ export function StatusSelector({
 }: StatusSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>(status);
+  const [value, setValue] = useState<string | undefined>(status);
 
   const handleStatusChange = (statusId: string) => {
     setValue(statusId);

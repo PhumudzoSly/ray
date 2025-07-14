@@ -20,16 +20,23 @@ import { cn } from "@/lib/utils";
 import { LabelInterface, labels } from "@/utils/constants/issues/labels";
 
 interface LabelSelectorProps {
-  selectedLabel?: LabelInterface;
-  onChange: (label: LabelInterface) => void;
+  selectedLabel?: any;
+  onChange?: (label: any) => void;
+  disabled?: boolean;
+  iconOnly?: boolean;
 }
 
-export function LabelSelector({ selectedLabel, onChange }: LabelSelectorProps) {
+export function LabelSelector({
+  selectedLabel,
+  onChange,
+  disabled,
+  iconOnly,
+}: LabelSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
 
   const handleLabelSelect = (label: LabelInterface) => {
-    onChange(label);
+    onChange?.(label);
     setOpen(false);
   };
 
@@ -39,28 +46,29 @@ export function LabelSelector({ selectedLabel, onChange }: LabelSelectorProps) {
         <PopoverTrigger asChild>
           <Button
             id={id}
-            className={cn(
-              "flex items-center justify-center gap-1.5",
-              !selectedLabel && "size-7"
-            )}
-            size={selectedLabel ? "sm" : "icon"}
+            disabled={disabled}
+            className="flex items-center justify-center"
+            size="xs"
             variant="secondary"
             role="combobox"
             aria-expanded={open}
           >
-            <TagIcon className="size-4" />
-            {selectedLabel ? (
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="size-3 rounded-full"
-                  style={{ backgroundColor: selectedLabel.color }}
-                />
-                <span className="text-sm font-medium">
-                  {selectedLabel.name}
-                </span>
-              </div>
-            ) : (
-              <span className="sr-only">Select label</span>
+            {(() => {
+              const selectedItem = labels.find(
+                (item) => item.id === selectedLabel
+              );
+              if (selectedItem) {
+                const Icon = selectedItem.icon;
+                return <Icon className={`size-4 ${selectedItem.colorClass}`} />;
+              }
+              return null;
+            })()}
+            {iconOnly ? null : (
+              <span>
+                {selectedLabel
+                  ? labels.find((p) => p.id === selectedLabel)?.name
+                  : "No phase"}
+              </span>
             )}
           </Button>
         </PopoverTrigger>

@@ -123,7 +123,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between gap-4 p-2 border-b">
+      <div className="flex items-center justify-between gap-4 p-2 bg-background z-50 border-b sticky top-[50px]">
         <IssuesFilters />
         <div className="flex items-center gap-2">
           <Button

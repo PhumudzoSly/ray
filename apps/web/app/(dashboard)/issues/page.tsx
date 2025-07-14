@@ -1,12 +1,10 @@
 "use client";
 import { NewIssue } from "@/components/project/issues/new-issue";
-import { Separator } from "@workspace/ui/components/separator";
 import React from "react";
 import AllIssues from "@/components/project/issues/all-issues";
 import { useSession } from "@/context/session-context";
 import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
-import PageHeader from "@/components/shared/page-header";
 import { IssuesSkeleton } from "@/components/project/issues/issue-skeleton";
 import NoData from "@/components/shared/no-data";
 import Header from "@/components/shared/header";
@@ -18,20 +16,21 @@ const IssuesPage = () => {
     token,
   });
 
-  if (isPending) {
-    return <IssuesSkeleton />;
-  }
-
   return (
     <>
       <Header crumb={[{ title: "Issues", url: "/issues" }]}>
         <NewIssue />
       </Header>
-
-      {issues === undefined ? (
-        <NoData title="Failed to get issues" />
+      {isPending ? (
+        <IssuesSkeleton />
       ) : (
-        <AllIssues issues={issues || []} />
+        <>
+          {issues === undefined ? (
+            <NoData title="Failed to get issues" />
+          ) : (
+            <AllIssues issues={issues || []} />
+          )}
+        </>
       )}
     </>
   );

@@ -9,12 +9,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Calendar } from "@workspace/ui/components/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@workspace/ui/components/popover";
 import {
   Dialog,
   DialogContent,
@@ -22,15 +16,6 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@workspace/ui/components/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 import { toast } from "sonner";
 import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";

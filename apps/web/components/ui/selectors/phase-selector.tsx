@@ -17,16 +17,7 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { Badge } from "@workspace/ui/components/badge";
-
-const phases = [
-  { id: "DISCOVERY", name: "Discovery", color: "bg-purple-500" },
-  { id: "PLANNING", name: "Planning", color: "bg-blue-500" },
-  { id: "DEVELOPMENT", name: "Development", color: "bg-yellow-500" },
-  { id: "TESTING", name: "Testing", color: "bg-orange-500" },
-  { id: "RELEASE", name: "Release", color: "bg-green-500" },
-  { id: "LIVE", name: "Live", color: "bg-emerald-500" },
-  { id: "DEPRECATED", name: "Deprecated", color: "bg-gray-500" },
-];
+import { phases } from "@/utils/constants/features/phases";
 
 interface PhaseSelectorProps {
   phase: string;
@@ -34,6 +25,7 @@ interface PhaseSelectorProps {
   blockedPhases?: string[];
   onBlockedPhaseAttempt?: (phase: string, blockers: string[]) => void;
   disabled?: boolean;
+  iconOnly?: boolean;
 }
 
 export function PhaseSelector({
@@ -42,6 +34,7 @@ export function PhaseSelector({
   blockedPhases = [],
   onBlockedPhaseAttempt,
   disabled = false,
+  iconOnly,
 }: PhaseSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
@@ -73,17 +66,16 @@ export function PhaseSelector({
             {(() => {
               const selectedItem = phases.find((item) => item.id === value);
               if (selectedItem) {
-                return (
-                  <div
-                    className={`w-2 h-2 rounded-full ${selectedItem.color}`}
-                  />
-                );
+                const Icon = selectedItem.icon;
+                return <Icon className={`size-4 ${selectedItem.colorClass}`} />;
               }
               return null;
             })()}
-            <span>
-              {value ? phases.find((p) => p.id === value)?.name : "No phase"}
-            </span>
+            {iconOnly ? null : (
+              <span>
+                {value ? phases.find((p) => p.id === value)?.name : "No phase"}
+              </span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -108,7 +100,7 @@ export function PhaseSelector({
                       disabled={isBlocked}
                     >
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                        <item.icon className={item.colorClass} />
                         {item.name}
                         {isBlocked && (
                           <span className="text-xs text-red-500">
@@ -155,7 +147,7 @@ export function getPhaseBadge(phase: string) {
   return (
     <Badge
       variant="secondary"
-      className={`${colorClasses[phaseData.color as keyof typeof colorClasses]} text-xs`}
+      className={`${colorClasses[phaseData.colorClass as keyof typeof colorClasses]} text-xs`}
     >
       {phaseData.name}
     </Badge>

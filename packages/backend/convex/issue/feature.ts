@@ -104,57 +104,6 @@ export const addFeature = mutation({
   },
 });
 
-export const getFeatures = query({
-  args: { token: v.string() },
-  handler: async (ctx, { token }) => {
-    const session: ConvexSession = await ctx.runQuery(
-      internal.betterAuth.getSession,
-      {
-        sessionToken: token,
-      }
-    );
-
-    if (!session) {
-      throw Error("Unauthorized");
-    }
-
-    const features = await ctx.db
-      .query("feature")
-      .withIndex("byOrg", (q) =>
-        q.eq("organizationId", session.activeOrganizationId as any)
-      )
-      .order("desc")
-      .collect();
-
-    const finalFeatures = Promise.all(
-      features.map(async (feature) => {
-        const [user, project, phaseHistory] = await Promise.all([
-          feature.assignedTo
-            ? ctx.db.get(feature.assignedTo as Id<"user">)
-            : null,
-          feature.projectId
-            ? ctx.db.get(feature.projectId as Id<"projects">)
-            : null,
-          ctx.db
-            .query("featurePhaseHistory")
-            .withIndex("byFeature", (q) => q.eq("featureId", feature._id))
-            .order("desc")
-            .collect(),
-        ]);
-
-        return {
-          ...feature,
-          user,
-          project,
-          phaseHistory,
-        };
-      })
-    );
-
-    return finalFeatures;
-  },
-});
-
 export const getFeaturesByProject = query({
   args: { token: v.string(), projectId: v.id("projects") },
   handler: async (ctx, { token, projectId }) => {
@@ -423,7 +372,9 @@ export const updateFeature = mutation({
         description: updates.milestoneId
           ? `Assigned to milestone "${newMilestone?.name || "Unknown milestone"}"`
           : `Unassigned from milestone "${oldMilestone?.name || "Unknown milestone"}"`,
-        activity: updates.milestoneId ? "milestone_assigned" : "milestone_unassigned",
+        activity: updates.milestoneId
+          ? "milestone_assigned"
+          : "milestone_unassigned",
         entityType: "feature",
         entityId: featureId.toString(),
         entityName: feature.name,
@@ -520,56 +471,6 @@ export const getFeatureById = query({
     ]);
 
     return { ...feature, project, user: user || null };
-  },
-});
-
-export const changeFeaturePhase = mutation({
-  args: {
-    token: v.string(),
-    featureId: v.id("feature"),
-    phase: featurePhase,
-  },
-  handler: async (ctx, { featureId, phase, token }) => {
-    const session: ConvexSession = await ctx.runQuery(
-      internal.betterAuth.getSession,
-      {
-        sessionToken: token,
-      }
-    );
-
-    if (!session) {
-      throw Error("Unauthorized");
-    }
-
-    const oldFeature = await ctx.db.get(featureId);
-
-    await ctx.db.patch(featureId, { phase });
-
-    await ctx.db.insert("featurePhaseHistory", {
-      featureId,
-      from: oldFeature?.phase!,
-      to: phase,
-      userId: session.userId as Id<"user">,
-    });
-
-    // Track activity
-    await ctx.runMutation(internal.activities.trackActivity, {
-      organizationId: session.activeOrganizationId as Id<"organization">,
-      userId: session.userId as Id<"user">,
-      title: `Changed phase of feature "${oldFeature?.name || "Unknown feature"}"`,
-      description: `Changed from "${oldFeature?.phase}" to "${phase}"`,
-      activity: "phase_changed",
-      entityType: "feature",
-      entityId: featureId.toString(),
-      entityName: oldFeature?.name || "Unknown feature",
-      projectId: oldFeature?.projectId,
-      featureId: featureId,
-      metadata: {
-        oldValue: oldFeature?.phase,
-        newValue: phase,
-        field: "phase",
-      },
-    });
   },
 });
 
@@ -966,97 +867,6 @@ export const getProjectDependencyStats = query({
   },
 });
 
-export const getSubFeatures = query({
-  args: {
-    token: v.string(),
-    parentFeatureId: v.id("feature"),
-  },
-  handler: async (ctx, { token, parentFeatureId }) => {
-    const session: ConvexSession = await ctx.runQuery(
-      internal.betterAuth.getSession,
-      {
-        sessionToken: token,
-      }
-    );
-
-    if (!session) {
-      throw Error("Unauthorized");
-    }
-
-    const subFeatures = await ctx.db
-      .query("feature")
-      .withIndex("byParentFeature", (q) =>
-        q.eq("parentFeatureId", parentFeatureId)
-      )
-      .collect();
-
-    const enrichedSubFeatures = await Promise.all(
-      subFeatures.map(async (feature) => {
-        const [user, project] = await Promise.all([
-          feature.assignedTo
-            ? ctx.db.get(feature.assignedTo as Id<"user">)
-            : null,
-          feature.projectId
-            ? ctx.db.get(feature.projectId as Id<"projects">)
-            : null,
-        ]);
-
-        return {
-          ...feature,
-          user,
-          project,
-        };
-      })
-    );
-
-    return enrichedSubFeatures;
-  },
-});
-
-export const getParentFeature = query({
-  args: {
-    token: v.string(),
-    featureId: v.id("feature"),
-  },
-  handler: async (ctx, { token, featureId }) => {
-    const session: ConvexSession = await ctx.runQuery(
-      internal.betterAuth.getSession,
-      {
-        sessionToken: token,
-      }
-    );
-
-    if (!session) {
-      throw Error("Unauthorized");
-    }
-
-    const feature = await ctx.db.get(featureId);
-    if (!feature || !feature.parentFeatureId) {
-      return null;
-    }
-
-    const parentFeature = await ctx.db.get(feature.parentFeatureId);
-    if (!parentFeature) {
-      return null;
-    }
-
-    const [user, project] = await Promise.all([
-      parentFeature.assignedTo
-        ? ctx.db.get(parentFeature.assignedTo as Id<"user">)
-        : null,
-      parentFeature.projectId
-        ? ctx.db.get(parentFeature.projectId as Id<"projects">)
-        : null,
-    ]);
-
-    return {
-      ...parentFeature,
-      user,
-      project,
-    };
-  },
-});
-
 export const getFeatureHierarchy = query({
   args: {
     token: v.string(),
@@ -1119,68 +929,6 @@ export const getFeatureHierarchy = query({
       parentFeature: enrichedParent,
       subFeatures: enrichedSubFeatures,
     };
-  },
-});
-
-export const getTopLevelFeatures = query({
-  args: {
-    token: v.string(),
-    projectId: v.id("projects"),
-  },
-  handler: async (ctx, { token, projectId }) => {
-    const session: ConvexSession = await ctx.runQuery(
-      internal.betterAuth.getSession,
-      {
-        sessionToken: token,
-      }
-    );
-
-    if (!session) {
-      throw Error("Unauthorized");
-    }
-
-    // Get features that don't have a parent (top-level features)
-    const features = await ctx.db
-      .query("feature")
-      .withIndex("byOrgProject", (q) => q.eq("projectId", projectId))
-      .filter((q) => q.eq(q.field("parentFeatureId"), undefined))
-      .order("desc")
-      .collect();
-
-    const finalFeatures = Promise.all(
-      features.map(async (feature) => {
-        const [user, project, phaseHistory, subFeatures] = await Promise.all([
-          feature.assignedTo
-            ? ctx.db.get(feature.assignedTo as Id<"user">)
-            : null,
-          feature.projectId
-            ? ctx.db.get(feature.projectId as Id<"projects">)
-            : null,
-          ctx.db
-            .query("featurePhaseHistory")
-            .withIndex("byFeature", (q) => q.eq("featureId", feature._id))
-            .order("desc")
-            .collect(),
-          ctx.db
-            .query("feature")
-            .withIndex("byParentFeature", (q) =>
-              q.eq("parentFeatureId", feature._id)
-            )
-            .collect(),
-        ]);
-
-        return {
-          ...feature,
-          user,
-          project,
-          phaseHistory,
-          subFeatureCount: subFeatures.length,
-          hasSubFeatures: subFeatures.length > 0,
-        };
-      })
-    );
-
-    return finalFeatures;
   },
 });
 

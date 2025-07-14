@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Separator } from "@workspace/ui/components/separator";
-import { Database, Lock, Trash, Bot, Globe, Server   } from "lucide-react";
+import { Database, Lock, Trash, Bot, Globe, Server } from "lucide-react";
 import { Id } from "@workspace/backend";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
@@ -28,6 +28,7 @@ import Header from "@/components/shared/header";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { DateSelector } from "@/components/ui/selectors";
 import { INFRASTRUCTURE_PROVIDERS } from "@/utils/constants/sources/infrastructure";
+import { ProjectStatusSelector } from "@/components/ui/selectors/project-status-selector";
 
 export default function ProjectPage({ children }: { children: ReactNode }) {
   //
@@ -123,18 +124,8 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                 <h3 className="text-xs font-medium text-muted-foreground">
                   Status
                 </h3>
-                <CommandSelect
-                  value={project.status}
-                  options={status.map((option) => ({
-                    value: option.id,
-                    label: option.name,
-                    icon: (
-                      <StatusIcon statusId={option.id} className="w-4 h-4" />
-                    ),
-                  }))}
-                  variant="status"
-                  placeholder="Select Status"
-                  onValueChange={async (value) => {
+                <ProjectStatusSelector
+                  onChange={async (value) => {
                     try {
                       await updateProject({
                         project: {
@@ -147,7 +138,9 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       toast.error("Failed to update project");
                     }
                   }}
+                  status={project.status}
                 />
+
                 <h3 className="text-xs font-medium text-muted-foreground">
                   Platform
                 </h3>

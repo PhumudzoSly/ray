@@ -1,16 +1,6 @@
 "use client";
 import * as React from "react";
-import {
-  CalendarDays,
-  LayoutDashboard,
-  Lightbulb,
-  UsersRound,
-  Bot,
-  FileText,
-  CalendarCheck,
-  ReplyAll,
-  Stars,
-} from "lucide-react";
+import { LayoutDashboard, Lightbulb, UsersRound, Bot } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -24,6 +14,7 @@ import { NavMenu } from "./nav-menu";
 import { TbListDetails, TbRoad } from "react-icons/tb";
 import { BiError } from "react-icons/bi";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { NavProjects } from "./nav-projects";
 
 type NavGroup = {
   name: string;
@@ -71,28 +62,17 @@ const data: NavData = {
       icon: BiError,
     },
     {
-      name: "Milestones",
-      url: "/milestones",
-      icon: CalendarCheck,
-    },
-    {
       name: "Waitlist",
       url: "/waitlist",
       icon: UsersRound,
     },
-  ],
-  grow: [
     {
       name: "Roadmap",
       url: "/roadmap",
       icon: TbRoad,
     },
-    {
-      name: "Feedback",
-      url: "/feedback",
-      icon: ReplyAll,
-    },
   ],
+  grow: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -113,8 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="grow">
             <NavMenu items={data.platform} title="Platform" />
             <NavMenu items={data.build} title="Build" />
-            <NavMenu items={data.grow} title="Grow" />
-            {/* <NavProjects /> */}
+            <NavProjects />
           </div>
         </ScrollArea>
       </SidebarContent>

@@ -6,6 +6,9 @@ import {
   FolderKanban,
   Settings,
   AlertCircle,
+  GitBranch,
+  FolderArchive,
+  LoaderPinwheel,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -28,6 +31,8 @@ import { Card } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useSession } from "@/context/session-context";
 import { useSidebarProjects } from "@/hooks/use-sidebar-projects";
+import { StatusSelector } from "../ui/selectors/status-selector";
+import { ProjectStatusSelector } from "../ui/selectors/project-status-selector";
 
 export function NavProjects() {
   const session = useSession();
@@ -60,36 +65,6 @@ export function NavProjects() {
     return null; // or render an error state
   }
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return CircleCheck;
-      case "in-progress":
-        return AlertCircle;
-      case "review":
-        return Settings;
-      case "planning":
-        return Building;
-      default:
-        return FolderKanban;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "text-green-500";
-      case "in-progress":
-        return "text-blue-500";
-      case "review":
-        return "text-yellow-500";
-      case "planning":
-        return "text-gray-500";
-      default:
-        return "text-gray-500";
-    }
-  };
-
   return (
     <SidebarGroup>
       <div className="flex w-full justify-between items-center">
@@ -119,7 +94,6 @@ export function NavProjects() {
       ) : (
         <SidebarMenu>
           {projects?.map((project, index) => {
-            const StatusIcon = getStatusIcon(project.status || "planning");
             return (
               <Collapsible
                 key={project._id}
@@ -140,15 +114,7 @@ export function NavProjects() {
                         <div className="text-sm text-muted-foreground line-clamp-1">
                           {project.name}
                         </div>
-                        {/* <div className="text-xs text-muted-foreground/70">
-                          {formatDistanceToNow(new Date(project.updatedAt), {
-                            addSuffix: true,
-                          })}
-                        </div> */}
                       </div>
-                      <StatusIcon
-                        className={`h-3 w-3 ${getStatusColor(project.status || "planning")}`}
-                      />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-2">
@@ -163,28 +129,31 @@ export function NavProjects() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/flow`}>
-                            <Globe size={12} className="text-blue-500" />
-                            <span>Flow Editor</span>
+                          <Link href={`/project/${project._id}/features`}>
+                            <GitBranch size={12} className="text-blue-500" />
+                            <span>Features</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/issues`}>
-                            <AlertCircle
+                          <Link href={`/project/${project._id}/assets`}>
+                            <FolderArchive
                               size={12}
                               className="text-yellow-500"
                             />
-                            <span>Issues</span>
+                            <span>Assets</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/launch`}>
-                            <Building size={12} className="text-gray-500" />
-                            <span>Launch Plan</span>
+                          <Link href={`/project/${project._id}/milestones`}>
+                            <LoaderPinwheel
+                              size={12}
+                              className="text-gray-500"
+                            />
+                            <span>Milestones</span>
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

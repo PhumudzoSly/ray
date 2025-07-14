@@ -1,5 +1,4 @@
 "use client";
-
 import { Id } from "@workspace/backend";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
@@ -12,8 +11,8 @@ import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { DateInput } from "@workspace/ui/components/date-input";
 import { Separator } from "@workspace/ui/components/separator";
-import { useState } from "react";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
+import FeatureLinks from "./feature-links";
 
 const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
   const { token } = useSession();
@@ -47,8 +46,8 @@ const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
   };
 
   return (
-    <div className="p-4 space-y-6">
-      <div className="space-y-3">
+    <div>
+      <div className="p-4 space-y-4">
         <h3 className="font-medium text-muted-foreground">Properties</h3>
         <div className="grid grid-cols-[120px_1fr] gap-y-4">
           <h3 className="text-xs font-medium text-muted-foreground">
@@ -168,6 +167,10 @@ const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
       </div>
 
       <Separator />
+
+      <div className="p-4">
+        <FeatureLinks featureId={featureId} />
+      </div>
     </div>
   );
 };

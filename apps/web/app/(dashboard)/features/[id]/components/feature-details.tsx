@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import Link from "next/link";
 import { Badge } from "@workspace/ui/components/badge";
@@ -23,9 +23,17 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import FeatureDependencyManager from "@/components/project/features/feature-dependency-manager";
+import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
+import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { cn } from "@/lib/utils";
 
 const FeatureDetails = ({ id }: { id: string }) => {
   const { token } = useSession();
+
+  const [view, setView] = useState<"details" | "dependencies" | "activity">(
+    "details"
+  );
 
   const updateFeature = useMutation(api.issue.feature.updateFeature);
 
@@ -107,33 +115,62 @@ const FeatureDetails = ({ id }: { id: string }) => {
 
       <BlockEditor id={`feature-implementation-${feature._id}`} />
 
-      <Tabs defaultValue="details">
-        <TabsList>
-          <TabsTrigger value="details" className="flex gap-2 items-center">
-            <Plug size={18} />
-            Relationship
-          </TabsTrigger>
-          <TabsTrigger value="dependencies" className="flex gap-2 items-center">
-            <GitBranch size={18} />
-            Dependencies
-          </TabsTrigger>
-          <TabsTrigger value="activity" className="flex gap-2 items-center">
-            <Clock size={18} />
-            Activity
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="details" className="py-6">
+      <div className="w-full border-y">
+        <ScrollArea className="w-full whitespace-nowrap">
+          <div className="flex flex-wrap w-full gap-4 p-4">
+            <button
+              onClick={() => setView("details")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "details"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <Plug size={18} />
+              Relationship
+            </button>
+            <button
+              onClick={() => setView("dependencies")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "dependencies"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <GitBranch size={18} />
+              Dependencies
+            </button>
+            <button
+              onClick={() => setView("activity")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "activity"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <Clock size={18} />
+              Activity
+            </button>
+          </div>
+        </ScrollArea>
+      </div>
+
+      {view === "details" ? (
+        <div className="py-6">
           {featureHierarchy?.parentFeature && (
             <div className="space-y-2">
               <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <GitBranch className="h-4 w-4" />
+                <Plug className="h-4 w-4" />
                 Parent Feature
               </h3>
               <Link
                 href={`/features/${featureHierarchy.parentFeature._id}`}
                 className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div>
                     <h4 className="font-medium">
                       {featureHierarchy.parentFeature.name}
@@ -144,9 +181,16 @@ const FeatureDetails = ({ id }: { id: string }) => {
                       </p>
                     )}
                   </div>
-                  <Badge variant="secondary">
-                    {featureHierarchy.parentFeature.phase}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <PhaseSelector
+                      disabled
+                      phase={featureHierarchy.parentFeature.phase}
+                    />
+                    <PrioritySelector
+                      priority={featureHierarchy.parentFeature.priority}
+                      disabled
+                    />
+                  </div>
                 </div>
               </Link>
             </div>
@@ -168,7 +212,7 @@ const FeatureDetails = ({ id }: { id: string }) => {
               <div className="space-y-3 mt-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <h3 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                    <GitBranch className="h-4 w-4" />
+                    <Plug className="h-4 w-4" />
                     Sub-Features ({featureHierarchy.subFeatures.length})
                   </h3>
                   <NewFeature
@@ -193,8 +237,11 @@ const FeatureDetails = ({ id }: { id: string }) => {
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant="secondary">{subFeature.phase}</Badge>
-                          <Badge variant="outline">{subFeature.priority}</Badge>
+                          <PhaseSelector disabled phase={subFeature.phase} />
+                          <PrioritySelector
+                            priority={subFeature.priority}
+                            disabled
+                          />
                         </div>
                       </div>
                     </Link>
@@ -202,24 +249,27 @@ const FeatureDetails = ({ id }: { id: string }) => {
                 </div>
               </div>
             )}
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent value="dependencies" className="py-6">
-          {/* <FeatureDependencies featureId={id as Id<"feature">} /> */}
+      {view === "dependencies" ? (
+        <div className="py-6">
           <FeatureDependencyManager
             featureId={id as Id<"feature">}
             projectId={feature.projectId}
           />
-        </TabsContent>
+        </div>
+      ) : null}
 
-        <TabsContent value="activity" className="py-6">
+      {view === "activity" ? (
+        <div className="py-6">
           <ActivityFeed
             entityType="feature"
             entityId={id}
             emptyMessage="No feature activity yet"
           />
-        </TabsContent>
-      </Tabs>
+        </div>
+      ) : null}
     </div>
   );
 };

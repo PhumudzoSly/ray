@@ -86,7 +86,7 @@ export function IssueDueDateField({
           disabled={isLoading || disabled}
         >
           <Calendar className="h-4 w-4 text-sm opacity-50 mr-2" />
-          {value ? format(value, "MMM d yyyy") : "Set due date"}
+          {value ? format(value, "MMM d, yy") : "Set due date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent

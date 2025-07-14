@@ -158,6 +158,7 @@ export default function ProjectsPage() {
           onFilterOrmChange={setFilterOrm}
           filterAi={filterAi}
           onFilterAiChange={setFilterAi}
+          // @ts-ignore
           availableOptions={availableOptions}
           view={view}
           onViewChange={setView}

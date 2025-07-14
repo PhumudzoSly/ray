@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
-import { IssueStatusField } from "@workspace/ui/components/issue-fields/issue-status-field";
-import { IssueLabelField } from "@workspace/ui/components/issue-fields/issue-label-field";
-import { IssueDueDateField } from "@workspace/ui/components/issue-fields/issue-due-date-field";
-import { IssuePriorityField } from "@workspace/ui/components/issue-fields/issue-priority-field";
+import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
+import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
+import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
+import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useSession } from "@/context/session-context";
 import { useData } from "@/hooks/use-data";
@@ -147,26 +147,6 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
     } catch (error) {
       console.error("Error removing dependency:", error);
       toast.error("Failed to remove dependency");
-    }
-  };
-
-  const handleParentChange = async (parentIssueId: string) => {
-    try {
-      await updateIssue({
-        token,
-        issueId,
-        updates: {
-          parentIssueId: parentIssueId as Id<"issues">,
-        },
-      });
-      toast.success("Issue parent updated");
-    } catch (error: any) {
-      console.error("Error updating parent:", error);
-      if (error.message?.includes("circular dependency")) {
-        toast.error("Cannot set parent: would create circular dependency");
-      } else {
-        toast.error("Failed to update issue parent");
-      }
     }
   };
 

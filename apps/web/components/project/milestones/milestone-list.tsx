@@ -43,21 +43,6 @@ interface MilestoneListProps {
 
 type ViewMode = "list" | "timeline";
 
-const getMilestoneIcon = (status: string) => {
-  switch (status) {
-    case "completed":
-      return <CheckCircle className="h-4 w-4 text-green-600" />;
-    case "at-risk":
-      return <AlertTriangle className="h-4 w-4 text-orange-600" />;
-    case "delayed":
-      return <Clock className="h-4 w-4 text-red-600" />;
-    case "in-progress":
-      return <Target className="h-4 w-4 text-blue-600" />;
-    default:
-      return <Circle className="h-4 w-4 text-gray-400" />;
-  }
-};
-
 const getStatusColor = (status: string) => {
   switch (status) {
     case "completed":

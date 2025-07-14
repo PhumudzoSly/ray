@@ -52,13 +52,9 @@ export function FeatureSelector({
       : "skip"
   );
 
-  const { data: allFeatures, isPending: allPending } = useData(
-    api.issue.feature.getFeatures,
-    !projectId ? { token } : "skip"
-  );
+  const features = projectFeatures;
 
-  const features = projectId ? projectFeatures : allFeatures;
-  const isPending = projectId ? projectPending : allPending;
+  const isPending = projectPending;
 
   const currentValue = value || selectedFeatureId;
   const filteredFeatures =
