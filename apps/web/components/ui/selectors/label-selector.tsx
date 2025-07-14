@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { CheckIcon, TagIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
   Command,
@@ -16,7 +16,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
-import { cn } from "@/lib/utils";
 import { LabelInterface, labels } from "@/utils/constants/issues/labels";
 
 interface LabelSelectorProps {
@@ -40,6 +39,23 @@ export function LabelSelector({
     setOpen(false);
   };
 
+  // Helper function to get the selected label ID
+  const getSelectedLabelId = () => {
+    if (typeof selectedLabel === "string") {
+      return selectedLabel;
+    }
+    if (
+      selectedLabel &&
+      typeof selectedLabel === "object" &&
+      "id" in selectedLabel
+    ) {
+      return selectedLabel.id;
+    }
+    return null;
+  };
+
+  const selectedLabelId = getSelectedLabelId();
+
   return (
     <div className="*:not-first:mt-2">
       <Popover open={open} onOpenChange={setOpen}>
@@ -55,7 +71,7 @@ export function LabelSelector({
           >
             {(() => {
               const selectedItem = labels.find(
-                (item) => item.id === selectedLabel
+                (item) => item.id === selectedLabelId
               );
               if (selectedItem) {
                 const Icon = selectedItem.icon;
@@ -65,9 +81,9 @@ export function LabelSelector({
             })()}
             {iconOnly ? null : (
               <span>
-                {selectedLabel
-                  ? labels.find((p) => p.id === selectedLabel)?.name
-                  : "No phase"}
+                {selectedLabelId
+                  ? labels.find((p) => p.id === selectedLabelId)?.name
+                  : "No label"}
               </span>
             )}
           </Button>
@@ -82,7 +98,7 @@ export function LabelSelector({
               <CommandEmpty>No labels found.</CommandEmpty>
               <CommandGroup>
                 {labels.map((label) => {
-                  const isSelected = selectedLabel?.id === label.id;
+                  const isSelected = selectedLabelId === label.id;
                   return (
                     <CommandItem
                       key={label.id}

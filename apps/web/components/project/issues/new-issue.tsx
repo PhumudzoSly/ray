@@ -28,6 +28,8 @@ type NewIssueProps = {
   projectId?: string;
   parentIssueId?: string;
   variant?: "default" | "sub-issue";
+  size?: "default" | "sm";
+  defaultStatus?: string;
 };
 
 type FormState = {
@@ -44,6 +46,8 @@ export function NewIssue({
   projectId: initialProjectId,
   parentIssueId,
   variant = "default",
+  size = "default",
+  defaultStatus,
 }: NewIssueProps) {
   const { token, org } = useSession();
   const createIssue = useMutation(api.issue.index.addIssue);
@@ -53,7 +57,7 @@ export function NewIssue({
   const [form, setForm] = useState<FormState>({
     title: "",
     description: "",
-    status: "REVIEW",
+    status: defaultStatus || "REVIEW",
     priority: "MEDIUM",
     label: "FEATURE",
     projectId: initialProjectId || "",
@@ -86,8 +90,7 @@ export function NewIssue({
     setOpen(false);
 
     try {
-      // Create the issue first
-      const issue = await createIssue({
+      await createIssue({
         issue: {
           label: form.label,
           organizationId: org as any,
@@ -121,13 +124,21 @@ export function NewIssue({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {variant === "sub-issue" ? (
-          <Button size="sm" variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Sub-Issue
+          <Button
+            size={size === "sm" ? "icon-sm" : "default"}
+            variant="outline"
+            className="flex items-center gap-1.5"
+          >
+            <Plus />
+            {size === "sm" ? "Add Sub-Issue" : "Add Sub-Issue"}
           </Button>
         ) : (
-          <Button className="shrink-0" variant="fancy">
-            <Plus /> New Issue
+          <Button
+            className="shrink-0 flex items-center gap-1.5"
+            variant={size === "sm" ? "outline" : "fancy"}
+            size={size === "sm" ? "icon-sm" : "default"}
+          >
+            <Plus /> {size === "sm" ? "" : "New Issue"}
           </Button>
         )}
       </DialogTrigger>
@@ -185,13 +196,6 @@ export function NewIssue({
               />
             )}
           </div>
-          {/* {form.projectId && (
-            <DependencySelector
-              projectId={form.projectId!}
-              selectedDependencies={form.dependencies}
-              onChange={(dependencies) => setForm({ ...form, dependencies })}
-            />
-          )} */}
         </div>
         <div className="flex items-center justify-end py-2.5 px-4 w-full border-t">
           <Button onClick={handleSubmit}>Create Issue</Button>

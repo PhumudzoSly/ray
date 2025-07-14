@@ -14,8 +14,8 @@ import {
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
+import { NewIssue } from "./new-issue";
 
 interface IssueItem {
   _id: string;
@@ -127,6 +127,7 @@ function IssueItemComponent({
       </div>
 
       <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
+        <Badge variant="neutral">{item.project?.name}</Badge>
         <IssueLabelField issueId={item._id} value={item?.label} />
         <AssigneeSelector assignee={item.assignedTo} iconOnly />
       </div>
@@ -170,7 +171,7 @@ function IssueGroupComponent({
               {group.count}
             </Badge>
           </div>
-          <Plus className="h-4 w-4 text-muted-foreground hover:text-foreground cursor-pointer" />
+          <NewIssue size="sm" defaultStatus={group.id} />
         </div>
       </div>
 
