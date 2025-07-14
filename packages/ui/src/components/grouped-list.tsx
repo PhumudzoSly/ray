@@ -67,7 +67,7 @@ function GroupedListItemComponent({
   const itemContent = (
     <div
       className={cn(
-        "group relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
+        "group relative flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg transition-all duration-200",
         "bg-card border border-border hover:border-border/80",
         "hover:shadow-sm hover:bg-accent/50",
         "cursor-pointer select-none",
@@ -82,12 +82,15 @@ function GroupedListItemComponent({
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
           <h3 className="font-medium text-foreground truncate text-sm">
             {item.title}
           </h3>
           {item.status && (
-            <Badge variant="outline" className="text-xs font-medium">
+            <Badge
+              variant="outline"
+              className="text-xs font-medium self-start sm:self-auto"
+            >
               {item.status}
             </Badge>
           )}
@@ -106,7 +109,7 @@ function GroupedListItemComponent({
         {/* Progress bar */}
         {item.progress !== undefined && (
           <div className="mt-2">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 text-xs text-muted-foreground mb-1">
               <span>Progress</span>
               <span>{Math.round(item.progress)}%</span>
             </div>
@@ -120,16 +123,16 @@ function GroupedListItemComponent({
         )}
       </div>
 
-      {/* Metadata */}
+      {/* Metadata - hidden on mobile to prevent overflow */}
       {item.metadata && (
-        <div className="flex-shrink-0 text-xs text-muted-foreground">
+        <div className="hidden sm:block flex-shrink-0 text-xs text-muted-foreground">
           {item.metadata}
         </div>
       )}
 
-      {/* Drag indicator - only show when drag and drop is enabled */}
+      {/* Drag indicator - only show when drag and drop is enabled and on desktop */}
       {enableDragAndDrop && (
-        <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="hidden sm:block flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="w-1 h-4 bg-muted-foreground/30 rounded-full" />
         </div>
       )}
@@ -177,7 +180,7 @@ function GroupedListGroupComponent({
   enableDragAndDrop = true,
 }: GroupedListGroupProps) {
   const itemsContent = (
-    <div className={cn("space-y-2 min-h-[2px] pt-2")}>
+    <div className={cn("space-y-1 sm:space-y-2 min-h-[2px] pt-2")}>
       {group.items.map((item, index) => (
         <GroupedListItemComponent
           key={item.id}
@@ -194,15 +197,22 @@ function GroupedListGroupComponent({
   return (
     <div className={cn("space-y-3", className)}>
       {/* Group Header - Sticky like Linear */}
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 py-2  px-4">
-        <div className="flex items-center gap-2">
-          {group.icon && <div className="flex-shrink-0">{group.icon}</div>}
-          <div
-            className="w-2 h-2 rounded-full flex-shrink-0"
-            style={{ backgroundColor: group.color }}
-          />
-          <h2 className="font-medium text-foreground text-sm">{group.title}</h2>
-          <Badge variant="secondary" className="text-xs font-medium">
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 py-2 px-2 sm:px-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-2">
+            {group.icon && <div className="flex-shrink-0">{group.icon}</div>}
+            <div
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: group.color }}
+            />
+            <h2 className="font-medium text-foreground text-sm truncate">
+              {group.title}
+            </h2>
+          </div>
+          <Badge
+            variant="secondary"
+            className="text-xs font-medium self-start sm:self-auto"
+          >
             {group.count ?? group.items.length}
           </Badge>
         </div>
@@ -216,7 +226,7 @@ function GroupedListGroupComponent({
               ref={provided.innerRef}
               {...provided.droppableProps}
               className={cn(
-                "space-y-2 min-h-[2px] pt-2",
+                "space-y-1 sm:space-y-2 min-h-[2px] pt-2",
                 snapshot.isDraggingOver && "bg-accent/20 rounded-lg p-2 -m-2"
               )}
             >
@@ -271,7 +281,7 @@ export function GroupedList({
   };
 
   const content = (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn("space-y-3 sm:space-y-4", className)}>
       {groups.map((group) => (
         <GroupedListGroupComponent
           key={group.id}

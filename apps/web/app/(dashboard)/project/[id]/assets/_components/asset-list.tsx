@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 interface AssetListProps {
   assets: any[];
   onDelete: (assetId: string) => void;
+  onUpdate?: (assetId: string) => void;
 }
 
 const ASSET_TYPE_ICONS = {
@@ -72,7 +73,7 @@ const LINK_TYPE_ICONS = {
   external: "🔗",
 };
 
-export function AssetList({ assets, onDelete }: AssetListProps) {
+export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
   const { token } = useSession();
   const [isDownloading, setIsDownloading] = useState(false);
 
@@ -126,15 +127,19 @@ export function AssetList({ assets, onDelete }: AssetListProps) {
         assetId: asset._id,
       });
 
-      // Create a temporary link and trigger download
-      const link = document.createElement("a");
-      link.href = downloadUrl;
-      link.download = asset.fileName || asset.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (downloadUrl) {
+        // Create a temporary link and trigger download
+        const link = document.createElement("a");
+        link.href = downloadUrl;
+        link.download = asset.fileName || asset.name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
-      toast.success("Download started");
+        toast.success("Download started");
+      } else {
+        toast.error("Failed to get download URL");
+      }
     } catch (error) {
       console.error("Download failed:", error);
       toast.error("Failed to download file");
@@ -230,7 +235,7 @@ export function AssetList({ assets, onDelete }: AssetListProps) {
                           Download
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => onUpdate?.(asset._id)}>
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
                       </DropdownMenuItem>

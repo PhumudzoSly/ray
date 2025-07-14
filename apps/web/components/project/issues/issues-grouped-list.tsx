@@ -100,14 +100,14 @@ function IssueItemComponent({
   };
 
   return (
-    <ScrollArea className="w-full overflow-x-auto">
-      <div
-        className={cn(
-          "group flex items-center gap-3 py-2 px-3 hover:bg-accent/50 cursor-pointer transition-colors duration-150",
-          className
-        )}
-        onClick={() => onItemClick?.(item)}
-      >
+    <div
+      className={cn(
+        "group flex justify-between w-full items-center gap-3 py-2 px-3 hover:bg-accent/50 cursor-pointer transition-colors duration-150",
+        className
+      )}
+      onClick={() => onItemClick?.(item)}
+    >
+      <div className="flex items-center gap-2">
         <div onClick={handleInteractiveClick}>
           <PrioritySelector iconOnly={true} priority={item.priority} />
         </div>
@@ -119,21 +119,18 @@ function IssueItemComponent({
         <div onClick={handleInteractiveClick}>
           <StatusSelector iconOnly status={item.status} />
         </div>
-        <div className="flex-1 min-w-0">
-          <span className="text-sm whitespace-nowrap font-medium text-foreground">
+        <div className="flex-1 min-w-0 max-w-lg">
+          <span className="text-sm whitespace-nowrap font-medium text-foreground truncate block">
             {item.title}
           </span>
         </div>
-
-        <div
-          className="flex items-center gap-2"
-          onClick={handleInteractiveClick}
-        >
-          <IssueLabelField issueId={item._id} value={item?.label} />
-          <AssigneeSelector assignee={item.assignedTo} iconOnly />
-        </div>
       </div>
-    </ScrollArea>
+
+      <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
+        <IssueLabelField issueId={item._id} value={item?.label} />
+        <AssigneeSelector assignee={item.assignedTo} iconOnly />
+      </div>
+    </div>
   );
 }
 
@@ -178,14 +175,16 @@ function IssueGroupComponent({
       </div>
 
       {/* Issues list */}
-      <div className="space-y-0">
-        {group.items.map((item) => (
-          <IssueItemComponent
-            key={item._id}
-            item={item}
-            onItemClick={onItemClick}
-          />
-        ))}
+      <div className="w-full overflow-x-auto">
+        <div className="space-y-0 min-w-max">
+          {group.items.map((item) => (
+            <IssueItemComponent
+              key={item._id}
+              item={item}
+              onItemClick={onItemClick}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

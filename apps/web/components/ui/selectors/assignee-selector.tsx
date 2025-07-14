@@ -14,6 +14,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 import { CheckIcon, UserCircle } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import {
@@ -71,8 +77,8 @@ export function AssigneeSelector({
       <PopoverTrigger asChild>
         <Button
           id={id}
-          className="flex items-center"
-          size="xs"
+          className="flex items-center max-w-[200px] truncate"
+          size={iconOnly ? "icon-sm" : "xs"}
           variant="secondary"
           role="combobox"
           disabled={disabled}
@@ -83,30 +89,56 @@ export function AssigneeSelector({
               const selectedUser = members?.find((user) => user?._id === value);
               if (selectedUser) {
                 return (
-                  <Avatar className="size-5">
-                    <AvatarImage
-                      src={selectedUser.image || ""}
-                      alt={selectedUser.name}
-                    />
-                    <AvatarFallback>
-                      {getInitials(selectedUser?.name || "")}
-                    </AvatarFallback>
-                  </Avatar>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Avatar className="rounded-none size-5">
+                          <AvatarImage
+                            src={selectedUser.image || ""}
+                            alt={selectedUser.name}
+                            className="rounded-none size-5"
+                          />
+                          <AvatarFallback className="rounded-none size-5">
+                            {getInitials(selectedUser?.name || "")}
+                          </AvatarFallback>
+                        </Avatar>
+                      </TooltipTrigger>
+                      <TooltipContent className="p-3">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="size-8">
+                            <AvatarImage
+                              src={selectedUser.image || ""}
+                              alt={selectedUser.name}
+                            />
+                            <AvatarFallback>
+                              {getInitials(selectedUser?.name || "")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="space-y-1">
+                            <p className="font-medium text-sm">
+                              {selectedUser.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {selectedUser.email}
+                            </p>
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 );
               }
               return <UserCircle className="size-5" />;
             })()
           ) : (
-            <UserCircle className="size-5" />
+            <UserCircle />
           )}
           {iconOnly ? null : (
-            <span>
+            <div>
               {value
-                ? members
-                    ?.find((user) => user?._id === value)
-                    ?.name?.slice(0, 16) + "..."
+                ? members?.find((user) => user?._id === value)?.name
                 : "No lead assigned"}
-            </span>
+            </div>
           )}
         </Button>
       </PopoverTrigger>

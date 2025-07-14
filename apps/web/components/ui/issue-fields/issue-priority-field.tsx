@@ -46,7 +46,7 @@ export function IssuePriorityField({
         id: p.id,
         name: p.name,
         icon: p.icon,
-        colorClass: p.colorClass,
+        // colorClass: p.colorClass,
       }))}
       displayValue={<IssuePriorityBadge priority={value} />}
       placeholder="Set priority"

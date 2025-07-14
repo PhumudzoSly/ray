@@ -12,6 +12,7 @@ import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
+import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 
 interface IssueKanbanCardProps {
   issue: CustomIssue;
@@ -47,10 +48,11 @@ export function IssueKanbanCard({
     >
       {/* Title and Project */}
       <div className="space-y-1">
-        <div className="group-hover:opacity-70 transition-opacity">
-          <span className="text-sm font-medium text-foreground break-words line-clamp-2">
+        <div className="group-hover:opacity-70 flex gap-2 items-center transition-opacity">
+          <PrioritySelector priority={issue.priority} iconOnly />
+          <div className="text-sm font-medium text-foreground break-words line-clamp-1">
             {issue.title}
-          </span>
+          </div>
         </div>
 
         {showProject && issue.project && (
@@ -71,16 +73,9 @@ export function IssueKanbanCard({
         className="flex items-center flex-wrap gap-2"
         onClick={handleInteractiveClick}
       >
-        <IssuePriorityField
-          value={issue.priority}
-          issueId={issue._id}
-          align="end"
-        />
-
-        <IssueLabelField issueId={issue._id} value={issue.label} align="end" />
-
         <AssigneeSelector
           assignee={(issue.assignedTo as string) || ""}
+          iconOnly
           onChange={async (userId) => {
             try {
               await changeLeader({
@@ -93,16 +88,7 @@ export function IssueKanbanCard({
             }
           }}
         />
-      </div>
-
-      {/* Footer with Due Date */}
-      <div
-        className="flex items-center justify-between"
-        onClick={handleInteractiveClick}
-      >
-        <div className="flex items-center gap-1.5">
-          {/* Future: Add dependencies count or other metadata */}
-        </div>
+        <IssueLabelField issueId={issue._id} value={issue.label} align="end" />
 
         <IssueDueDateField
           value={issue.dueDate ? new Date(issue.dueDate) : null}

@@ -8,11 +8,12 @@ import { api } from "@workspace/backend";
 import { IssuesSkeleton } from "@/components/project/issues/issue-skeleton";
 import NoData from "@/components/shared/no-data";
 import Header from "@/components/shared/header";
+import { useQuery } from "convex/react";
 
 const IssuesPage = () => {
   const { token } = useSession();
 
-  const { data: issues, isPending } = useData(api.issue.index.getIssues, {
+  const issues = useQuery(api.issue.index.getIssues, {
     token,
   });
 
@@ -21,15 +22,11 @@ const IssuesPage = () => {
       <Header crumb={[{ title: "Issues", url: "/issues" }]}>
         <NewIssue />
       </Header>
-      {isPending ? (
+      {issues === undefined ? (
         <IssuesSkeleton />
       ) : (
         <>
-          {issues === undefined ? (
-            <NoData title="Failed to get issues" />
-          ) : (
-            <AllIssues issues={issues || []} />
-          )}
+          <AllIssues issues={issues || []} />
         </>
       )}
     </>

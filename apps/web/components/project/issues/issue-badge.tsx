@@ -57,8 +57,8 @@ export function IssueLabelBadge({ label }: IssueLabelBadgeProps) {
 
   const Icon = labelData.icon;
   return (
-    <Badge className={cn("gap-1.5", labelData.colorClass)}>
-      <Icon className="h-3.5 w-3.5" />
+    <Badge className={cn("gap-1.5")}>
+      <Icon className={cn("h-3.5 w-3.5", labelData.colorClass)} />
       {labelData.name}
     </Badge>
   );

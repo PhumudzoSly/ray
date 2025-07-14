@@ -118,7 +118,6 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
                 ? "border-primary bg-primary/5"
                 : "border-muted bg-muted/20"
             )}
-            style={{ maxHeight: "calc(100vh - 350px)", overflowY: "auto" }}
           >
             {issues.map((issue, index) => (
               <Draggable key={issue._id} draggableId={issue._id} index={index}>

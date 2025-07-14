@@ -206,19 +206,44 @@ export const getProjectAssets = query({
       throw new Error("Unauthorized");
     }
 
-    let query = ctx.db
-      .query("assets")
-      .withIndex("by_project", (q) => q.eq("projectId", args.projectId));
+    let assets;
 
-    if (args.type) {
-      query = ctx.db
+    // Use appropriate index based on filters
+    if (args.type && args.category) {
+      // Both type and category filters
+      assets = await ctx.db
+        .query("assets")
+        .withIndex("by_project", (q) => q.eq("projectId", args.projectId))
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("type"), args.type),
+            q.eq(q.field("category"), args.category)
+          )
+        )
+        .collect();
+    } else if (args.type) {
+      // Only type filter
+      assets = await ctx.db
         .query("assets")
         .withIndex("by_project_and_type", (q) =>
           q.eq("projectId", args.projectId).eq("type", args.type as any)
-        );
+        )
+        .collect();
+    } else if (args.category) {
+      // Only category filter
+      assets = await ctx.db
+        .query("assets")
+        .withIndex("by_project_and_category", (q) =>
+          q.eq("projectId", args.projectId).eq("category", args.category as any)
+        )
+        .collect();
+    } else {
+      // No filters
+      assets = await ctx.db
+        .query("assets")
+        .withIndex("by_project", (q) => q.eq("projectId", args.projectId))
+        .collect();
     }
-
-    const assets = await query.collect();
 
     // Get user info for each asset
     const assetsWithUsers = await Promise.all(
@@ -466,6 +491,12 @@ export const getAssetDownloadUrl = mutation({
       downloadCount: (asset.downloadCount || 0) + 1,
     });
 
-    return await ctx.storage.getUrl(asset.storageId);
+    const downloadUrl = await ctx.storage.getUrl(asset.storageId);
+
+    if (!downloadUrl) {
+      throw new Error("Failed to generate download URL");
+    }
+
+    return downloadUrl;
   },
 });

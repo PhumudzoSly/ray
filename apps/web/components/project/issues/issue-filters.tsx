@@ -412,38 +412,36 @@ export function IssuesFilters() {
           </FilterGroup>
         );
 
-      // TODO Come back to this
-      // case "label":
-      //   return (
-      //     <FilterGroup heading="Label" onBack={() => setSelectedCategory(null)}>
-      //       <FilterCommandItem
-      //         icon={Tag}
-      //         name="All Labels"
-      //         onSelect={() => {
-      //           handleFilterChange("label", "All");
-      //           setSelectedCategory(null);
-      //         }}
-      //       />
-      //       {Object.values(issueLabel).map((label) => {
-      //         const labelData = labels.find((l) => l.id === label);
-      //         const Icon = labelData?.icon || Tag;
+      case "label":
+        return (
+          <FilterGroup heading="Label" onBack={() => setSelectedCategory(null)}>
+            <FilterCommandItem
+              icon={Tag}
+              name="All Labels"
+              onSelect={() => {
+                handleFilterChange("label", "All");
+                setSelectedCategory(null);
+              }}
+            />
+            {labels.map((labelData) => {
+              const Icon = labelData.icon;
 
-      //         return (
-      //           <FilterCommandItem
-      //             key={label}
-      //             icon={Icon}
-      //             name={labelData?.name || label}
-      //             colorClass={labelData?.colorClass}
-      //             isSelected={label === label}
-      //             onSelect={() => {
-      //               handleFilterChange("label", label.toString());
-      //               setSelectedCategory(null);
-      //             }}
-      //           />
-      //         );
-      //       })}
-      //     </FilterGroup>
-      //   );
+              return (
+                <FilterCommandItem
+                  key={labelData.id}
+                  icon={Icon}
+                  name={labelData.name}
+                  colorClass={labelData.colorClass}
+                  isSelected={label === labelData.id}
+                  onSelect={() => {
+                    handleFilterChange("label", labelData.id);
+                    setSelectedCategory(null);
+                  }}
+                />
+              );
+            })}
+          </FilterGroup>
+        );
 
       case "dueDate":
         return (
@@ -515,7 +513,15 @@ export function IssuesFilters() {
                 setSelectedCategory(null);
               }}
             />
-            {/* Add your assignee list here */}
+            <FilterCommandItem
+              icon={User}
+              name="Unassigned"
+              onSelect={() => {
+                handleFilterChange("assignee", "unassigned");
+                setSelectedCategory(null);
+              }}
+            />
+            {/* TODO: Add organization members list here when available */}
           </FilterGroup>
         );
     }
@@ -569,7 +575,7 @@ export function IssuesFilters() {
     if (assignee) {
       filters.push({
         name: "Assigned To",
-        value: assignee,
+        value: assignee === "unassigned" ? "Unassigned" : assignee,
         icon: User,
         colorClass: "text-cyan-500",
       });

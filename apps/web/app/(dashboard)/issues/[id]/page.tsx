@@ -7,6 +7,7 @@ import IssueDetails from "./components/issue-details";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
+import Header from "@/components/shared/header";
 
 const SingleIssuePage = async ({
   params,
@@ -27,15 +28,20 @@ const SingleIssuePage = async ({
   }
 
   return (
-    <div>
+    <>
+      <Header
+        crumb={[{ title: "Issues", url: "/issues" }, { title: "Manage issue" }]}
+      >
+        {null}
+      </Header>
       <ExpandedLayoutContainer
         sidebar={<IssueSidebar issueId={id as Id<"issues">} />}
       >
-        <div>
+        <div className="p-4">
           <IssueDetails id={id} />
         </div>
       </ExpandedLayoutContainer>
-    </div>
+    </>
   );
 };
 
