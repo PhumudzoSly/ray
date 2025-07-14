@@ -30,6 +30,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface ActivityFeedProps {
   stats: any;
@@ -286,7 +287,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({ stats }) => {
             {recentProjects.map((project: any) => (
               <Link
                 key={project._id}
-                href={`/projects/${project._id}`}
+                href={`/project/${project._id}`}
                 className="block p-3 rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <p className="text-sm font-medium">{project.name}</p>

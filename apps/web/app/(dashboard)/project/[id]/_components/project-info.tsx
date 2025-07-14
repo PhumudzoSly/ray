@@ -93,12 +93,6 @@ export const ProjectInfo = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" asChild>
-            <Link href={`/waitlist?project=${id}`}>
-              <Users className="w-4 h-4 mr-2" />
-              Waitlist
-            </Link>
-          </Button>
           <Button variant={"fancy"} asChild>
             <Link href={`/project/${id}/flow`}>Project Flow</Link>
           </Button>

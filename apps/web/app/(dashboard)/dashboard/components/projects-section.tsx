@@ -118,7 +118,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-normal">Projects</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/projects">
+            <Link href="">
               View All
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

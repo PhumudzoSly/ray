@@ -48,7 +48,7 @@ const IssueDetails = ({ id }: { id: string }) => {
           Issue
         </Badge>
         <Link
-          href={`/projects/${issue.projectId}`}
+          href={`/project/${issue.projectId}`}
           className="text-sm text-muted-foreground hover:text-primary hover:underline transition-colors flex items-center gap-1"
         >
           <span>{issue?.project?.name}</span>

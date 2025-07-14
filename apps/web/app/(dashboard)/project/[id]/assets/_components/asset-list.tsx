@@ -1,0 +1,338 @@
+"use client";
+import React, { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "@workspace/backend";
+import { useSession } from "@/context/session-context";
+import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog";
+import {
+  MoreHorizontal,
+  Eye,
+  Download,
+  ExternalLink,
+  Edit,
+  Trash2,
+  File,
+  Image,
+  Video,
+  Code,
+  Link,
+  Palette,
+  Calendar,
+  User,
+  Tag,
+  Clock,
+} from "lucide-react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { handleDownloadClick } from "@/utils/helpers";
+
+interface AssetListProps {
+  assets: any[];
+  onDelete: (assetId: string) => void;
+}
+
+const ASSET_TYPE_ICONS = {
+  image: Image,
+  document: File,
+  video: Video,
+  link: Link,
+  code: Code,
+  design: Palette,
+  other: File,
+};
+
+const ASSET_TYPE_COLORS = {
+  image: "text-green-600 bg-green-100 dark:bg-green-900/20",
+  document: "text-blue-600 bg-blue-100 dark:bg-blue-900/20",
+  video: "text-purple-600 bg-purple-100 dark:bg-purple-900/20",
+  link: "text-orange-600 bg-orange-100 dark:bg-orange-900/20",
+  code: "text-indigo-600 bg-indigo-100 dark:bg-indigo-900/20",
+  design: "text-pink-600 bg-pink-100 dark:bg-pink-900/20",
+  other: "text-gray-600 bg-gray-100 dark:bg-gray-900/20",
+};
+
+const LINK_TYPE_ICONS = {
+  youtube: "🎥",
+  figma: "🎨",
+  github: "💻",
+  notion: "📝",
+  dribbble: "🎨",
+  behance: "🎨",
+  external: "🔗",
+};
+
+export function AssetList({ assets, onDelete }: AssetListProps) {
+  const { token } = useSession();
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [selectedAsset, setSelectedAsset] = useState<any>(null);
+
+  // Mutations
+  const getDownloadUrl = useMutation(api.assets.getAssetDownloadUrl);
+  const incrementViewCount = useMutation(api.assets.incrementViewCount);
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
+
+  const formatDate = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleDateString();
+  };
+
+  const handlePreview = async (asset: any) => {
+    if (asset.type === "link") {
+      window.open(asset.url, "_blank");
+    } else {
+      setSelectedAsset(asset);
+      setIsPreviewOpen(true);
+      // Increment view count
+      if (token) {
+        try {
+          await incrementViewCount({
+            token: token,
+            assetId: asset._id,
+          });
+        } catch (error) {
+          console.error("Failed to increment view count:", error);
+        }
+      }
+    }
+  };
+
+
+  const getAssetIcon = (asset: any) => {
+    if (asset.type === "link") {
+      const linkIcon =
+        LINK_TYPE_ICONS[asset.linkType as keyof typeof LINK_TYPE_ICONS] ||
+        LINK_TYPE_ICONS.external;
+      return <span className="text-2xl">{linkIcon}</span>;
+    }
+
+    const TypeIcon =
+      ASSET_TYPE_ICONS[asset.type as keyof typeof ASSET_TYPE_ICONS] || File;
+    return <TypeIcon className="w-6 h-6" />;
+  };
+
+  return (
+    <>
+      <div className="space-y-2">
+        {assets.map((asset) => {
+          const TypeIcon =
+            ASSET_TYPE_ICONS[asset.type as keyof typeof ASSET_TYPE_ICONS] ||
+            File;
+          const typeColor =
+            ASSET_TYPE_COLORS[asset.type as keyof typeof ASSET_TYPE_COLORS] ||
+            ASSET_TYPE_COLORS.other;
+
+          return (
+            <div
+              key={asset._id}
+              className="flex items-center gap-4 p-4 bg-card border rounded-lg hover:shadow-sm transition-shadow group"
+            >
+              {/* Icon */}
+              <div className="flex-shrink-0 w-12 h-12 bg-muted rounded-lg flex items-center justify-center">
+                {getAssetIcon(asset)}
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3
+                      className="font-medium truncate whitespace-pre-wrap line-clamp-1"
+                      title={asset.name}
+                    >
+                      {asset.name}
+                    </h3>
+                    {asset.description && (
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-1 mt-1">
+                        {asset.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handlePreview(asset)}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+
+                    {asset.type !== "link" && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleDownloadClick(asset)}
+                        disabled={isDownloading}
+                      >
+                        <Download className="w-4 h-4" />
+                      </Button>
+                    )}
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handlePreview(asset)}>
+                          <Eye className="w-4 h-4 mr-2" />
+                          {asset.type === "link" ? "Open Link" : "Preview"}
+                        </DropdownMenuItem>
+                        {asset.type !== "link" && (
+                          <DropdownMenuItem
+                            onClick={() => handleDownloadClick(asset)}
+                            disabled={isDownloading}
+                          >
+                            <Download className="w-4 h-4 mr-2" />
+                            Download
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => onDelete(asset._id)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+
+                {/* Metadata */}
+                <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                  {/* Type and Category */}
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className={cn("text-xs", typeColor)}
+                    >
+                      <TypeIcon className="w-3 h-3 mr-1" />
+                      {asset.type}
+                    </Badge>
+                    {asset.category && (
+                      <Badge variant="secondary" className="text-xs">
+                        {asset.category}
+                      </Badge>
+                    )}
+                  </div>
+
+                  {/* File Info */}
+                  <div className="flex items-center gap-4">
+                    {asset.fileSize && (
+                      <span className="flex items-center gap-1">
+                        <File className="w-3 h-3" />
+                        {formatFileSize(asset.fileSize)}
+                      </span>
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {formatDate(asset.uploadedAt)}
+                    </span>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="flex items-center gap-4">
+                    {asset.viewCount !== undefined && (
+                      <span className="flex items-center gap-1">
+                        <Eye className="w-3 h-3" />
+                        {asset.viewCount}
+                      </span>
+                    )}
+                    {asset.downloadCount !== undefined &&
+                      asset.type !== "link" && (
+                        <span className="flex items-center gap-1">
+                          <Download className="w-3 h-3" />
+                          {asset.downloadCount}
+                        </span>
+                      )}
+                  </div>
+
+                  {/* Uploader */}
+                  {asset.uploadedByUser && (
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-5 h-5">
+                        <AvatarImage src={asset.uploadedByUser.image} />
+                        <AvatarFallback className="text-xs">
+                          {asset.uploadedByUser.name?.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{asset.uploadedByUser.name}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Tags */}
+                {asset.tags && asset.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {asset.tags.map((tag: string) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Preview Dialog */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{selectedAsset?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {selectedAsset?.type === "image" && selectedAsset?.storageId && (
+              <div className="flex justify-center">
+                <img
+                  src={`https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${selectedAsset.storageId}`}
+                  alt={selectedAsset.name}
+                  className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                />
+              </div>
+            )}
+            {selectedAsset?.description && (
+              <p className="text-muted-foreground">
+                {selectedAsset.description}
+              </p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}

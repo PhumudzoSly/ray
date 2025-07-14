@@ -17,6 +17,7 @@ import type * as agentTools_index from "../agentTools/index.js";
 import type * as agentTools_searchTools from "../agentTools/searchTools.js";
 import type * as analysisReports from "../analysisReports.js";
 import type * as apiKeys from "../apiKeys.js";
+import type * as assets from "../assets.js";
 import type * as betterAuth from "../betterAuth.js";
 import type * as chats from "../chats.js";
 import type * as dashboard from "../dashboard.js";
@@ -79,6 +80,7 @@ declare const fullApi: ApiFromModules<{
   "agentTools/searchTools": typeof agentTools_searchTools;
   analysisReports: typeof analysisReports;
   apiKeys: typeof apiKeys;
+  assets: typeof assets;
   betterAuth: typeof betterAuth;
   chats: typeof chats;
   dashboard: typeof dashboard;

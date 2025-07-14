@@ -62,7 +62,7 @@ export default function Navbar() {
               <Link
                 key={item.link}
                 href={item.link}
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-semibold transition-colors hover:text-primary ${
                   pathname === item.link
                     ? "text-primary"
                     : "text-muted-foreground"
@@ -74,10 +74,14 @@ export default function Navbar() {
           </nav>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <Button asChild className="hidden md:flex" variant={"outline"}>
+          <Button
+            asChild
+            className="hidden md:flex font-semibold"
+            variant={"outline"}
+          >
             <Link href="https://app.rayai.dev/auth/sign-in">Sign In</Link>
           </Button>
-          <Button asChild className="hidden md:flex">
+          <Button asChild className="hidden md:flex font-semibold">
             <Link href="https://app.rayai.dev/auth/sign-up">Get Started</Link>
           </Button>
           <Sheet>
@@ -121,10 +125,19 @@ export default function Navbar() {
                   ))}
                 </div>
                 <div className="flex flex-col gap-2 pt-4">
-                  <Button asChild className="w-full">
-                    <a href="https://getwaitlist.com/waitlist/25597">
+                  <Button
+                    asChild
+                    className="w-full font-semibold"
+                    variant={"outline"}
+                  >
+                    <Link href="https://app.rayai.dev/auth/sign-in">
+                      Sign In
+                    </Link>
+                  </Button>
+                  <Button asChild className="w-full font-semibold">
+                    <Link href="https://app.rayai.dev/auth/sign-up">
                       Get Started
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </div>

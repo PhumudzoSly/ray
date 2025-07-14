@@ -99,7 +99,7 @@ export default function ApiKeysPage() {
     try {
       const result = await listApiKeys();
       if (result.success) {
-        setApiKeys(result.apiKeys);
+        setApiKeys(result?.apiKeys || []);
       } else {
         toast.error(result.error);
       }
@@ -124,7 +124,7 @@ export default function ApiKeysPage() {
       });
 
       if (result.success) {
-        setCreatedKey(result.apiKey);
+        setCreatedKey(result?.apiKey || "");
         setNewKeyName("");
         setSelectedPermissions(["read"]);
         await loadApiKeys();

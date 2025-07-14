@@ -32,10 +32,6 @@ export function ProjectTabs({ projectId }: ProjectTabsProps) {
       href: `/project/${projectId}/milestones`,
     },
     {
-      title: "Waitlist",
-      href: `/waitlist?project=${projectId}`,
-    },
-    {
       title: "Assets & Files",
       href: `/project/${projectId}/assets`,
     },

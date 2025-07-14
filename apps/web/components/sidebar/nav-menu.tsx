@@ -72,7 +72,7 @@ export function NavMenu({ items, title, collapsible = false }: NavMenuProps) {
                   />
                   <span
                     className={cn(
-                      "font-medium",
+                      "font-normal",
                       isActive
                         ? "text-foreground font-semibold"
                         : "text-foreground"

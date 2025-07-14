@@ -2,14 +2,13 @@
 
 import { FolderIcon } from "lucide-react";
 import Link from "next/link";
-import { IssueStatusField } from "@workspace/ui/components/issue-fields/issue-status-field";
-import { IssuePriorityField } from "@workspace/ui/components/issue-fields/issue-priority-field";
-import { IssueLabelField } from "@workspace/ui/components/issue-fields/issue-label-field";
-import { IssueDueDateField } from "@workspace/ui/components/issue-fields/issue-due-date-field";
+import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
+import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
+import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
+import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
 import { useRouter } from "next/navigation";
-//TODO come back this
-// import { CustomIssue } from "@/types/project";
+import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
@@ -21,7 +20,7 @@ export function IssueCard({
   showProject = false,
   index,
 }: {
-  issue: any;
+  issue: CustomIssue;
   showProject?: boolean;
   index: number;
 }) {
@@ -53,7 +52,7 @@ export function IssueCard({
               {showProject && issue.project && (
                 <div onClick={handleInteractiveClick}>
                   <Link
-                    href={`/projects/${issue.project._id}`}
+                    href={`/project/${issue.project._id}`}
                     className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <FolderIcon className="h-3 w-3" />

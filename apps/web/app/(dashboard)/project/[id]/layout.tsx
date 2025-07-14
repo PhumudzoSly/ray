@@ -25,6 +25,7 @@ import PageHeader from "@/components/shared/page-header";
 import { ProjectTabs } from "./_components/tabs";
 import { ReactNode } from "react";
 import Header from "@/components/shared/header";
+import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 
 export default function ProjectPage({ children }: { children: ReactNode }) {
   //
@@ -34,6 +35,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
   const router = useRouter();
   const id = params.id as string;
   const { token } = useSession();
+  const confirm = useConfirm();
 
   const project = useQuery(api.projects.get, {
     id: id as Id<"projects">,
@@ -57,7 +59,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
             deleted or you may not have access.
           </p>
           <Button className="mt-4" asChild>
-            <Link href="/projects">Back to Projects</Link>
+            <Link href="/project">Back to Projects</Link>
           </Button>
         </div>
       </div>
@@ -65,6 +67,22 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
   }
 
   if (pathname === `/project/${project._id}/flow`) return children;
+
+  const handleDeleteProject = async () => {
+    try {
+      const isConfirmed = await confirm({
+        description: "Are you sure you want to delete this project?",
+        title: "Delete Project",
+      });
+
+      if (isConfirmed) {
+        await deleteProject({ id: project?._id, token });
+        router.push("/project");
+      }
+    } catch (error) {
+      toast.error("Failed to delete project");
+    }
+  };
 
   return (
     <>
@@ -90,14 +108,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
               <Button
                 size="icon"
                 variant="destructive"
-                onClick={async () => {
-                  try {
-                    await deleteProject({ id: project._id, token });
-                    router.push("/projects");
-                  } catch (error) {
-                    toast.error("Failed to delete project");
-                  }
-                }}
+                onClick={handleDeleteProject}
               >
                 <Trash />
               </Button>

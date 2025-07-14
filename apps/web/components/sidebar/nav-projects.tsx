@@ -102,7 +102,7 @@ export function NavProjects() {
           size="sm"
           className="text-xs text-primary"
         >
-          <Link href="/projects">View All</Link>
+          <Link href="/project">View All</Link>
         </Button>
       </div>
       {!projects || projects.length === 0 ? (

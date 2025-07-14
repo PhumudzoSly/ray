@@ -67,6 +67,7 @@ import {
   notificationTemplates,
 } from "../schemas/notifications";
 import { agentConversations, agentMessages } from "../schemas/agent";
+import { assets } from "../schemas/assets";
 
 // Files table for file uploads
 const files = defineTable({
@@ -138,6 +139,7 @@ export default defineSchema({
   notificationPreferences,
   notificationTemplates,
   activities,
+  assets,
   agentConversations,
   agentMessages,
 });

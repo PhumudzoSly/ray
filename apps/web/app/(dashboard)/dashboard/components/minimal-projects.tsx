@@ -38,7 +38,7 @@ export const MinimalProjects: React.FC<MinimalProjectsProps> = ({
           Projects
         </CardTitle>
         <Link
-          href="/projects"
+          href="/project"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           View all →
@@ -56,7 +56,7 @@ export const MinimalProjects: React.FC<MinimalProjectsProps> = ({
               return (
                 <Link
                   key={project._id}
-                  href={`/projects/${project._id}`}
+                  href={`/project/${project._id}`}
                   className="block group"
                 >
                   <div className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
@@ -70,8 +70,8 @@ export const MinimalProjects: React.FC<MinimalProjectsProps> = ({
                         </p>
                       )}
                     </div>
-                    <Badge variant={status.variant} className="ml-2">
-                      {status.label}
+                    <Badge variant={status?.variant} className="ml-2">
+                      {status?.label}
                     </Badge>
                   </div>
                 </Link>
