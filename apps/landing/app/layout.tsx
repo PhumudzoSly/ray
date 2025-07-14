@@ -27,7 +27,25 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
-          <Footer data={[]} />
+          <Footer
+            data={[
+              {
+                title: "Product",
+                links: [
+                  { label: "Home", link: "/" },
+                  { label: "Features", link: "/features" },
+                  { label: "Pricing", link: "/pricing" },
+                ],
+              },
+              {
+                title: "Help",
+                links: [
+                  { label: "Help Center", link: "/help" },
+                  { label: "Docs", link: "https://docs.rayai.dev" },
+                ],
+              },
+            ]}
+          />
         </Providers>
       </body>
     </html>

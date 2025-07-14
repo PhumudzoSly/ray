@@ -45,8 +45,8 @@ const Footer = ({ data }: FooterLinksProps) => {
   return (
     <footer className="relative overflow-hidden border-t border-t-card">
       <div className="absolute inset-0 bg-grid-white/10 " />
-      <div className="container relative px-4 py-16 md:px-6">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
+      <div className="max-w-7xl mx-auto relative px-4 py-16 md:px-6">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <img src="/icon.png" alt="Ray AI Logo" className="h-8 w-auto" />

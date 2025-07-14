@@ -15,11 +15,19 @@ import * as React from "react";
 const mainLinks = [
   {
     label: "Features",
-    link: "/#features",
+    link: "/features",
   },
   {
-    label: "How it works",
-    link: "/#how-it-works",
+    label: "Pricing",
+    link: "/pricing",
+  },
+  {
+    label: "Help",
+    link: "/help",
+  },
+  {
+    label: "Docs",
+    link: "https://docs.rayai.dev",
   },
 ];
 
@@ -66,8 +74,11 @@ export default function Navbar() {
           </nav>
         </div>
         <div className="ml-auto flex items-center space-x-4">
+          <Button asChild className="hidden md:flex" variant={"outline"}>
+            <Link href="https://app.rayai.dev/auth/sign-in">Sign In</Link>
+          </Button>
           <Button asChild className="hidden md:flex">
-            <a href="https://getwaitlist.com/waitlist/25597">Get Started</a>
+            <Link href="https://app.rayai.dev/auth/sign-up">Get Started</Link>
           </Button>
           <Sheet>
             <SheetTrigger asChild>
