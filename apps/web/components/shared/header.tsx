@@ -9,8 +9,6 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb";
 import Link from "next/link";
-import { ModeToggle } from "./mode-switcher";
-import { NotificationBell } from "../ui/notification-bell";
 import { InboxPopover } from "./inbox";
 
 type HeaderProps = {
@@ -57,7 +55,7 @@ const Header = ({ children, crumb }: HeaderProps) => {
         {children}
         <InboxPopover />
         {/* <NotificationBell /> */}
-        <ModeToggle />
+        {/* <ModeToggle /> */}
       </div>
     </header>
   );

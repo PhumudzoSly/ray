@@ -43,8 +43,6 @@ export const commentReactions = defineTable({
   commentId: v.id("comments"),
   userId: v.id("user"),
   organizationId: v.id("organization"),
-
-  // Reaction data
   emoji: v.string(), // Unicode emoji character
 
   // Timestamps

@@ -8,6 +8,7 @@ export function Comments({ id }: { id: string }) {
 
   return (
     <div>
+      <Composer className="bg-background border border-border text-foreground" />
       {threads.map((thread) => (
         <Thread
           className="bg-background text-foreground"
@@ -15,7 +16,6 @@ export function Comments({ id }: { id: string }) {
           thread={thread}
         />
       ))}
-      <Composer className="bg-background text-foreground" />
     </div>
   );
 }

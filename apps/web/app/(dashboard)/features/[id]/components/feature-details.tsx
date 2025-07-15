@@ -12,28 +12,24 @@ import NoData from "@/components/shared/no-data";
 import { Id } from "@workspace/backend";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
-import { BlockEditor } from "@/components/shared/block-editor";
-import { GitBranch, Clock, ListOrdered, Code, Plug } from "lucide-react";
+import { GitBranch, Clock, Plug, Inbox, File } from "lucide-react";
 import { NewFeature } from "@/components/project/features/new-feature";
 import { ActivityFeed } from "@/components/shared/activity-feed";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@workspace/ui/components/tabs";
 import FeatureDependencyManager from "@/components/project/features/feature-dependency-manager";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { cn } from "@/lib/utils";
+import { Room } from "@/components/liveblocks/room";
+import Editor from "@/components/shared/editor";
+import { Comments } from "@/components/liveblocks/comments";
 
 const FeatureDetails = ({ id }: { id: string }) => {
   const { token } = useSession();
 
-  const [view, setView] = useState<"details" | "dependencies" | "activity">(
-    "details"
-  );
+  const [view, setView] = useState<
+    "details" | "dependencies" | "prd" | "activity"
+  >("prd");
 
   const updateFeature = useMutation(api.issue.feature.updateFeature);
 
@@ -100,10 +96,7 @@ const FeatureDetails = ({ id }: { id: string }) => {
           }}
         />
       </div>
-      <div className="space-y-2 mt-4">
-        <h3 className="text-sm font-medium text-muted-foreground">
-          Description
-        </h3>
+      <div className="mt-2">
         <InlineEditTextArea
           value={feature.description || ""}
           placeholder="Add a description..."
@@ -113,11 +106,21 @@ const FeatureDetails = ({ id }: { id: string }) => {
         />
       </div>
 
-      <BlockEditor id={`feature-implementation-${feature._id}`} />
-
       <div className="w-full border-y">
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex flex-wrap w-full gap-4 p-4">
+            <button
+              onClick={() => setView("prd")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "prd"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <File size={18} />
+              Feature PRD
+            </button>
             <button
               onClick={() => setView("details")}
               className={cn(
@@ -157,6 +160,21 @@ const FeatureDetails = ({ id }: { id: string }) => {
           </div>
         </ScrollArea>
       </div>
+
+      {view === "prd" ? (
+        <>
+          <Room id={id}>
+            <div>
+              <Editor />
+              <div className="flex items-center gap-2 mt-10 mb-4">
+                <Inbox size={18} />
+                <h6>Comments</h6>
+              </div>
+              <Comments id={id} />
+            </div>
+          </Room>
+        </>
+      ) : null}
 
       {view === "details" ? (
         <div className="py-6">
