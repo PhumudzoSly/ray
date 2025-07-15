@@ -8,18 +8,14 @@ import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
-
 import { Id } from "@workspace/backend";
 import { useMutation } from "convex/react";
-
 import { GitBranch, Clock } from "lucide-react";
 import { NewIssue } from "@/components/project/issues/new-issue";
-import {
-  ActivityFeed,
-  CommentsThread,
-  BlockEditor,
-  NoData,
-} from "@/components/shared";
+import { ActivityFeed, BlockEditor, NoData } from "@/components/shared";
+import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
+import { StatusSelector } from "@/components/ui/selectors/status-selector";
+import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 
 const IssueDetails = ({ id }: { id: string }) => {
   const { token } = useSession();
@@ -168,15 +164,13 @@ const IssueDetails = ({ id }: { id: string }) => {
                     )}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="secondary">{subIssue.status}</Badge>
-                    <Badge variant="outline">{subIssue.priority}</Badge>
-                    {subIssue.user && (
-                      <div className="flex items-center">
-                        <span className="text-xs text-muted-foreground">
-                          {subIssue.user.name}
-                        </span>
-                      </div>
-                    )}
+                    <PrioritySelector priority={subIssue.priority} disabled />
+                    <StatusSelector status={subIssue.status} disabled />
+                    <AssigneeSelector
+                      assignee={(subIssue.assignedTo as any) || null}
+                      iconOnly
+                      disabled
+                    />
                   </div>
                 </div>
               </Link>
@@ -196,17 +190,6 @@ const IssueDetails = ({ id }: { id: string }) => {
           />
         </div>
       )}
-
-      {/* Comments Section */}
-      <div className="mt-8 space-y-4">
-        <div className="border-t pt-4">
-          <CommentsThread
-            entityType="issue"
-            entityId={id}
-            emptyMessage="No comments yet"
-          />
-        </div>
-      </div>
 
       {/* Activity Feed Section */}
       <div className="mt-8 space-y-4">

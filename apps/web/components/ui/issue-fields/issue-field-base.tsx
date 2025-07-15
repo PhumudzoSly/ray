@@ -24,6 +24,7 @@ export interface IssueFieldOption {
   icon?: React.ComponentType<{ className?: string }>;
   colorClass?: string;
   description?: string;
+  disabled?: boolean;
 }
 
 interface IssueFieldBaseProps {
@@ -65,6 +66,12 @@ export function IssueFieldBase({
         return;
       }
 
+      // Check if the selected option is disabled
+      const selectedOption = options.find((opt) => opt.id === currentValue);
+      if (selectedOption?.disabled) {
+        return; // Don't proceed with selection
+      }
+
       setIsLoading(true);
       setOpen(false);
 
@@ -77,7 +84,7 @@ export function IssueFieldBase({
         setIsLoading(false);
       }
     },
-    [value, onSave, errorMessage]
+    [value, onSave, errorMessage, options]
   );
 
   return (
@@ -122,8 +129,10 @@ export function IssueFieldBase({
                   onSelect={() => handleSelect(option.id)}
                   className={cn(
                     "flex items-center gap-2 cursor-pointer py-1.5",
-                    option.id === value && "aria-selected:bg-accent"
+                    option.id === value && "aria-selected:bg-accent",
+                    option.disabled && "opacity-50 cursor-not-allowed"
                   )}
+                  disabled={option.disabled}
                 >
                   <div className="flex items-center gap-2 flex-1">
                     {Icon && (

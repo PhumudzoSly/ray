@@ -37,6 +37,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useSession } from "@/context/session-context";
+import { startTransition } from "react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -161,7 +162,11 @@ export function NavUser() {
             <DropdownMenuSeparator className="my-2" />
             <DropdownMenuItem
               onClick={async () => {
-                await signOut();
+                startTransition(async () => {
+                  await signOut();
+                  router.replace("/auth/sign-in");
+                });
+
                 router.refresh();
               }}
               className="w-full cursor-pointer gap-2 rounded-md bg-destructive px-2 py-1.5 text-destructive-foreground hover:bg-destructive/90"

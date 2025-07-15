@@ -37,6 +37,20 @@ export const changeIssueStatus = mutation({
       throw Error("Issue not found");
     }
 
+    // Validate that issue can be marked as DONE
+    if (status === "DONE") {
+      const validationResult = await ctx.runQuery(
+        api.issue.dependency.validateIssueCompletion,
+        { token, issueId }
+      );
+      
+      if (validationResult && !validationResult.canComplete) {
+        throw new Error(
+          `Cannot mark issue as DONE: blocked by ${validationResult.blockers.length} uncompleted dependencies`
+        );
+      }
+    }
+
     await ctx.db.patch(issueId, { status });
 
     // Track activity

@@ -78,11 +78,15 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
         });
         // Clear optimistic state on success
         setOptimisticIssues([]);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to update issue status:", error);
         // Revert optimistic update on error
         setOptimisticIssues([]);
-        toast.error("Failed to update issue status");
+        if (error.message?.includes("Cannot mark issue as DONE")) {
+          toast.error(error.message);
+        } else {
+          toast.error("Failed to update issue status");
+        }
       }
     }
   };

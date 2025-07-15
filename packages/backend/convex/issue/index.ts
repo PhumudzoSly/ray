@@ -259,6 +259,20 @@ export const updateIssue = mutation({
       throw Error("Issue not found");
     }
 
+    // Validate that issue can be marked as DONE
+    if (updates.status === "DONE") {
+      const validationResult = await ctx.runQuery(
+        api.issue.dependency.validateIssueCompletion,
+        { token, issueId }
+      );
+
+      if (validationResult && !validationResult.canComplete) {
+        throw new Error(
+          `Cannot mark issue as DONE: blocked by ${validationResult.blockers.length} uncompleted dependencies`
+        );
+      }
+    }
+
     // If parentIssueId is changing, handle dependency updates
     if (updates.parentIssueId !== undefined) {
       // Remove existing parent dependency if any

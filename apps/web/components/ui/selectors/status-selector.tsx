@@ -35,6 +35,11 @@ export function StatusSelector({
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>(status);
 
+  // Filter out "DONE" option when disabled (blocked by dependencies)
+  const availableStatuses = disabled
+    ? allStatus.filter((s) => s.id !== "DONE")
+    : allStatus;
+
   const handleStatusChange = (statusId: string) => {
     setValue(statusId);
     setOpen(false);
@@ -84,7 +89,7 @@ export function StatusSelector({
             <CommandList>
               <CommandEmpty>No status found.</CommandEmpty>
               <CommandGroup>
-                {allStatus.map((item) => (
+                {availableStatuses.map((item) => (
                   <CommandItem
                     key={item.id}
                     value={item.id}

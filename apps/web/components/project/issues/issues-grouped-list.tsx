@@ -16,6 +16,10 @@ import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field"
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { NewIssue } from "./new-issue";
+import { useMutation } from "convex/react";
+import { api, Id } from "@workspace/backend";
+import { useSession } from "@/context/session-context";
+import { toast } from "sonner";
 
 interface IssueItem {
   _id: string;
@@ -94,10 +98,15 @@ function IssueItemComponent({
   onItemClick?: (item: IssueItem) => void;
   className?: string;
 }) {
+  //
+
+  const { token } = useSession();
   const handleInteractiveClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
+
+  const updateIssue = useMutation(api.issue.index.updateIssue);
 
   return (
     <div
@@ -109,7 +118,23 @@ function IssueItemComponent({
     >
       <div className="flex items-center gap-2">
         <div onClick={handleInteractiveClick}>
-          <PrioritySelector iconOnly={true} priority={item.priority} />
+          <PrioritySelector
+            onChange={async (e) => {
+              try {
+                await updateIssue({
+                  issueId: item._id as Id<"issues">,
+                  updates: {
+                    priority: e as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
+                  },
+                  token,
+                });
+              } catch (error) {
+                toast.error("Failed to update issue priority");
+              }
+            }}
+            iconOnly={true}
+            priority={item.priority}
+          />
         </div>
 
         {/* Issue ID */}
@@ -117,7 +142,33 @@ function IssueItemComponent({
           {item._id.slice(-6).toUpperCase()}
         </div>
         <div onClick={handleInteractiveClick}>
-          <StatusSelector iconOnly status={item.status} />
+          <StatusSelector
+            onChange={async (e) => {
+              try {
+                await updateIssue({
+                  issueId: item._id as Id<"issues">,
+                  updates: {
+                    status: e as
+                      | "BACKLOG"
+                      | "IN_PROGRESS"
+                      | "REVIEW"
+                      | "DONE"
+                      | "BLOCKED"
+                      | "CANCELLED",
+                  },
+                  token,
+                });
+              } catch (error: any) {
+                if (error.message?.includes("Cannot mark issue as DONE")) {
+                  toast.error(error.message);
+                } else {
+                  toast.error("Failed to update issue status");
+                }
+              }
+            }}
+            iconOnly
+            status={item.status}
+          />
         </div>
         <div className="flex-1 min-w-0 max-w-lg">
           <span className="text-sm whitespace-nowrap font-medium text-foreground truncate block">
@@ -129,7 +180,23 @@ function IssueItemComponent({
       <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
         <Badge variant="neutral">{item.project?.name}</Badge>
         <IssueLabelField issueId={item._id} value={item?.label} />
-        <AssigneeSelector assignee={item.assignedTo} iconOnly />
+        <AssigneeSelector
+          onChange={async (e) => {
+            try {
+              await updateIssue({
+                issueId: item._id as Id<"issues">,
+                updates: {
+                  assignedTo: e as any,
+                },
+                token,
+              });
+            } catch (error) {
+              toast.error("Failed to update issue assignee");
+            }
+          }}
+          assignee={item.assignedTo}
+          iconOnly
+        />
       </div>
     </div>
   );

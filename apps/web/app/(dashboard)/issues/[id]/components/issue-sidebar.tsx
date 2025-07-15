@@ -48,6 +48,12 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 
 function IssueSidebarSkeleton() {
   return (
@@ -254,7 +260,23 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
           />
 
           <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
-          <IssueStatusField issueId={issueId} value={issue?.status} />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <IssueStatusField issueId={issueId} value={issue?.status} />
+                </div>
+              </TooltipTrigger>
+              {validationResult && !validationResult.canComplete && (
+                <TooltipContent>
+                  <p className="text-xs">
+                    Cannot mark as done: blocked by{" "}
+                    {validationResult.blockers.length} uncompleted dependencies
+                  </p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
 
           <h3 className="text-sm font-medium text-muted-foreground">
             Priority
@@ -373,6 +395,21 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
             </AlertDescription>
           </Alert>
         )}
+
+        {/* Warning for DONE issues that are blocked */}
+        {validationResult &&
+          !validationResult.canComplete &&
+          issue?.status === "DONE" && (
+            <Alert className="border-orange-200 bg-orange-50">
+              <AlertDescription className="text-xs">
+                <span className="text-orange-800 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  Warning: Issue is marked as DONE but has uncompleted
+                  dependencies
+                </span>
+              </AlertDescription>
+            </Alert>
+          )}
 
         {/* Dependencies Tabs */}
         <Tabs defaultValue="dependencies" className="w-full">
