@@ -21,6 +21,7 @@
     "@blocknote/mantine": "^0.32.0",
     "@blocknote/react": "^0.32.0",
     "@blocknote/shadcn": "^0.32.0",
+    "@convex-dev/agent": "^0.1.14",
     "@convex-dev/prosemirror-sync": "^0.1.24",
     "@daveyplate/better-auth-ui": "^2.0.12",
     "@emoji-mart/data": "^1.2.1",

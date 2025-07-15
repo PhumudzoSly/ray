@@ -271,6 +271,9 @@ importers:
       '@blocknote/shadcn':
         specifier: ^0.32.0
         version: 0.32.0(@types/hast@3.0.4)(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(highlight.js@11.11.1)(lowlight@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(ts-node@10.9.2(@types/node@24.0.7)(typescript@5.8.3))
+      '@convex-dev/agent':
+        specifier: ^0.1.14
+        version: 0.1.14(ai@4.3.17(react@19.1.0)(zod@3.25.76))(convex-helpers@0.1.99(@standard-schema/spec@1.0.0)(convex@1.25.2(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(zod@3.25.76))(convex@1.25.2(react@19.1.0))(react@19.1.0)
       '@convex-dev/prosemirror-sync':
         specifier: ^0.1.24
         version: 0.1.25(@blocknote/core@0.32.0(@types/hast@3.0.4)(highlight.js@11.11.1)(lowlight@3.3.0))(@blocknote/mantine@0.32.0(@types/hast@3.0.4)(@types/react@19.1.8)(highlight.js@11.11.1)(lowlight@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@blocknote/react@0.32.0(@types/hast@3.0.4)(highlight.js@11.11.1)(lowlight@3.3.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tiptap/core@2.25.1(@tiptap/pm@2.25.1))(convex@1.25.2(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

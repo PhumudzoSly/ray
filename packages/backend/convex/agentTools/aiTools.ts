@@ -1,6 +1,6 @@
 import { v } from "convex/values";
 import { action } from "../_generated/server";
-import { api } from "../_generated/api";
+import { api, internal } from "../_generated/api";
 import { google } from "@ai-sdk/google";
 import { generateText } from "ai";
 
@@ -45,19 +45,17 @@ export const generateResponse = action({
       });
 
       // Search database for relevant context
-      const searchResults = await ctx.runAction(api.agent.searchDatabase, {
+      const searchResults = await ctx.runAction(internal.rag.search, {
         query: args.userMessage,
-        organizationId: args.organizationId,
-        limit: 5,
+        token: conversation.token,
       });
 
       // Build context from search results
       const context =
-        searchResults.length > 0
-          ? `\n\nRelevant information from your database:\n${searchResults
+        searchResults.results.length > 0
+          ? `\n\nRelevant information from your database:\n${searchResults.results
               .map(
-                (result: any) =>
-                  `- ${result.type}: ${result.title} - ${result.content}`
+                (result) => `- ${JSON.parse(JSON.stringify(result.content))}`
               )
               .join("\n")}`
           : "";
@@ -102,11 +100,6 @@ When database context is provided, format your response to clearly reference the
 
 Always be helpful, accurate, and reference the specific data provided when relevant.`;
 
-      // Use Google AI provider
-      if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
-        throw new Error("Google Generative AI API key is not configured");
-      }
-
       const aiProvider = google("gemini-2.0-flash");
 
       // Generate response
@@ -117,6 +110,7 @@ Always be helpful, accurate, and reference the specific data provided when relev
           ...messageHistory,
         ],
         maxTokens: 1000,
+        
       });
 
       // Add AI response to conversation

@@ -1,10 +1,11 @@
 import React, { ReactNode } from "react";
-import { SidebarTrigger } from "@workspace/ui/components/sidebar";
+// import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { Separator } from "@workspace/ui/components/separator";
 import { Badge } from "@workspace/ui/components/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
+  
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb";
@@ -23,7 +24,7 @@ const Header = ({ children, crumb }: HeaderProps) => {
   return (
     <header className="flex pr-3.5  h-14 shrink-0 w-full justify-between border-b border-border items-center gap-2 sticky top-0 bg-card z-50">
       <div className="flex items-center gap-2 rounded-2xl px-4">
-        <SidebarTrigger className="-ml-1 md:hidden" />
+        {/* <SidebarTrigger className="-ml-1 md:hidden" /> */}
         <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
         <Badge variant="info" className="hidden md:block">
           Beta

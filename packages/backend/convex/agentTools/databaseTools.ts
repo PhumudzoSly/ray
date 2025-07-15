@@ -49,14 +49,11 @@ export const searchDatabase = action({
 
       // Search projects if relevant
       if (searchProjects) {
-        const projects = await ctx.runQuery(
-          api.agent.searchProjects,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 2),
-          }
-        );
+        const projects = await ctx.runQuery(api.agent.searchProjects, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 2),
+        });
         console.log(
           `Found ${projects.length} projects for query: "${args.query}"`
         );
@@ -65,42 +62,33 @@ export const searchDatabase = action({
 
       // Search ideas if relevant
       if (searchIdeas) {
-        const ideas = await ctx.runQuery(
-          api.agent.searchIdeas,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 2),
-          }
-        );
+        const ideas = await ctx.runQuery(api.agent.searchIdeas, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 2),
+        });
         console.log(`Found ${ideas.length} ideas for query: "${args.query}"`);
         results.push(...ideas);
       }
 
       // Search issues if relevant
       if (searchIssues) {
-        const issues = await ctx.runQuery(
-          api.agent.searchIssues,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 2),
-          }
-        );
+        const issues = await ctx.runQuery(api.agent.searchIssues, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 2),
+        });
         console.log(`Found ${issues.length} issues for query: "${args.query}"`);
         results.push(...issues);
       }
 
       // Search features if relevant
       if (searchFeatures) {
-        const features = await ctx.runQuery(
-          api.agent.searchFeatures,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 2),
-          }
-        );
+        const features = await ctx.runQuery(api.agent.searchFeatures, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 2),
+        });
         console.log(
           `Found ${features.length} features for query: "${args.query}"`
         );
@@ -109,44 +97,32 @@ export const searchDatabase = action({
 
       // If no specific type was detected, search everything
       if (!searchProjects && !searchIdeas && !searchIssues && !searchFeatures) {
-        const projects = await ctx.runQuery(
-          api.agent.searchProjects,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 4),
-          }
-        );
+        const projects = await ctx.runQuery(api.agent.searchProjects, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 4),
+        });
         results.push(...projects);
 
-        const ideas = await ctx.runQuery(
-          api.agent.searchIdeas,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 4),
-          }
-        );
+        const ideas = await ctx.runQuery(api.agent.searchIdeas, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 4),
+        });
         results.push(...ideas);
 
-        const issues = await ctx.runQuery(
-          api.agent.searchIssues,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 4),
-          }
-        );
+        const issues = await ctx.runQuery(api.agent.searchIssues, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 4),
+        });
         results.push(...issues);
 
-        const features = await ctx.runQuery(
-          api.agent.searchFeatures,
-          {
-            query: args.query,
-            organizationId: args.organizationId,
-            limit: Math.ceil(limit / 4),
-          }
-        );
+        const features = await ctx.runQuery(api.agent.searchFeatures, {
+          query: args.query,
+          organizationId: args.organizationId,
+          limit: Math.ceil(limit / 4),
+        });
         results.push(...features);
       }
 

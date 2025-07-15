@@ -98,7 +98,14 @@ export const addIssue = mutation({
       });
     }
 
+    await ctx.scheduler.runAfter(0, internal.rag.add, {
+      text: JSON.stringify(issue),
+      token: token,
+      key: newIssue,
+    });
+
     return newIssue;
+
   },
 });
 
