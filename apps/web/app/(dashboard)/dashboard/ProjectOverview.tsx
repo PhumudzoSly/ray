@@ -17,7 +17,7 @@ import {
   Terminal,
   Puzzle,
 } from "lucide-react";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 const statusIcons = {
   planning: Clock,

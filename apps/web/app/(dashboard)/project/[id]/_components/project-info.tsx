@@ -70,7 +70,10 @@ export const ProjectInfo = ({
             />
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center  gap-4">
+          <Button variant={"dark"} asChild>
+            <Link href={`/project/${id}/board`}>Project Board</Link>
+          </Button>
           <Button variant={"fancy"} asChild>
             <Link href={`/project/${id}/flow`}>Project Flow</Link>
           </Button>

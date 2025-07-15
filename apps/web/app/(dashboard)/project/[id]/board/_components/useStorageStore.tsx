@@ -45,6 +45,7 @@ export function useStorageStore({
 
   const [storeWithStatus, setStoreWithStatus] = useState<TLStoreWithStatus>({
     status: "loading",
+    
   });
 
   useEffect(() => {

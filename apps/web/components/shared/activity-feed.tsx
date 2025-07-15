@@ -1,12 +1,12 @@
 import React from "react";
 import { Clock, User, Plus, GitBranch } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Badge } from "@workspace/ui/components/badge";
-
+import { Separator } from "@workspace/ui/components/separator";
 interface ActivityItem {
   _id: string;
   activity: string;
@@ -108,7 +108,13 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 mt-6">
+      <Separator />
+      <div className="flex items-center gap-2">
+        <Clock className="h-4 w-4  opacity-50" />
+        <p className="text-sm">Recent Activity</p>
+      </div>
+      <Separator />
       {activities.map((activity, index) => (
         <div
           key={activity._id}
@@ -128,11 +134,18 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <p className="text-sm text-foreground leading-tight">
-                  <span className="font-medium">
-                    {activity.user?.name || "Someone"}
-                  </span>
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm text-foreground line-clamp-1 whitespace-pre-wrap leading-tight">
+                    <span className="font-medium">
+                      {activity.user?.name || "Someone"}
+                    </span>
+                  </p>
+                  <time className="text-xs text-muted-foreground/70 flex-shrink-0 ml-3">
+                    {formatDistanceToNow(new Date(activity.createdAt), {
+                      addSuffix: true,
+                    })}
+                  </time>
+                </div>
                 <p className="text-muted-foreground mt-0.5 text-sm">
                   {activity.title}
                 </p>

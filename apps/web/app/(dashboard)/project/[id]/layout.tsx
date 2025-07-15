@@ -333,7 +333,6 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   />
                 </div>
               </div>
-              <Separator className="my-3" />
               <ActivityFeed
                 entityId={project?._id}
                 entityType="project"

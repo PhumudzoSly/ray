@@ -34,7 +34,7 @@ import {
   GroupedListItem,
 } from "@workspace/ui/components/grouped-list";
 import { formatDate } from "@/lib/format";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 
 interface MilestoneListProps {

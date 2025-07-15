@@ -5,6 +5,7 @@ import { Tldraw, DefaultStylePanel } from "tldraw";
 import { useStorageStore } from "./useStorageStore";
 import { Badge } from "./Badge";
 import { useSession } from "@/context/session-context";
+import { useTheme } from "next-themes";
 
 export function StorageTldraw({ id }: { id: string }) {
   const { userId, name } = useSession();
@@ -12,8 +13,10 @@ export function StorageTldraw({ id }: { id: string }) {
     user: { id: userId || "", name, color: "#f7f7" },
   });
 
+  const { theme } = useTheme();
+
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh" }} className="tldraw__editor">
       <Tldraw
         store={store}
         maxAssetSize={2 * 1024 * 1024}
@@ -32,8 +35,8 @@ export function StorageTldraw({ id }: { id: string }) {
                 marginTop: 4,
               }}
             >
-              <DefaultStylePanel />
               <Badge id={id} />
+              <DefaultStylePanel />
             </div>
           ),
         }}

@@ -15,7 +15,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Clock, AlertCircle } from "lucide-react";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 const priorityColors = {
   LOW: "bg-blue-100 text-blue-800",

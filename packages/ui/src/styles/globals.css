@@ -164,23 +164,23 @@
 /* Base theme */
 /* Start of Selection */
 .bn-container[data-theming-css-variables-demo][data-color-scheme] {
-  --bn-colors-editor-text: var(--foreground);
+  /* --bn-colors-editor-text: var(--foreground); */
   --bn-colors-editor-background: var(--background);
-  --bn-colors-menu-text: var(--popover-foreground);
+  /* --bn-colors-menu-text: var(--popover-foreground); */
   --bn-colors-menu-background: var(--popover);
-  --bn-colors-tooltip-text: var(--popover-foreground);
-  --bn-colors-tooltip-background: var(--popover);
-  --bn-colors-hovered-text: var(--accent-foreground);
-  --bn-colors-hovered-background: var(--accent);
-  --bn-colors-selected-text: var(--accent-foreground);
-  --bn-colors-selected-background: var(--accent);
-  --bn-colors-disabled-text: var(--muted-foreground);
-  --bn-colors-disabled-background: var(--muted);
-  --bn-colors-shadow: var(--shadow);
-  --bn-colors-border: var(--border);
-  --bn-colors-side-menu: var(--muted-foreground);
+  /* --bn-colors-tooltip-text: var(--popover-foreground); */
+  /* --bn-colors-tooltip-background: var(--popover); */
+  /* --bn-colors-hovered-text: var(--accent-foreground); */
+  /* --bn-colors-hovered-background: var(--accent); */
+  /* --bn-colors-selected-text: var(--accent-foreground); */
+  /* --bn-colors-selected-background: var(--accent); */
+  /* --bn-colors-disabled-text: var(--muted-foreground); */
+  /* --bn-colors-disabled-background: var(--muted); */
+  /* --bn-colors-shadow: var(--shadow); */
+  /* --bn-colors-border: var(--border); */
+  /* --bn-colors-side-menu: var(--muted-foreground); */
   --bn-color-highlight-colors: var(--accent);
-  --bn-border-radius: 4px;
+  --bn-border-radius: 0px;
   --bn-font-family: var(--font-sans);
 }
 
@@ -188,7 +188,7 @@
 .bn-container[data-theming-css-variables-demo][data-color-scheme="dark"] {
   --bn-colors-editor-text: var(--foreground);
   --bn-colors-editor-background: var(--background);
-  --bn-colors-side-menu: var(--muted-foreground);
+  /* --bn-colors-side-menu: var(--muted-foreground); */
 }
 
 /* End of Selection */

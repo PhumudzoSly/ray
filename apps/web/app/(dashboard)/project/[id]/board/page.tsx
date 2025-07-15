@@ -17,12 +17,12 @@ const BoardPage = () => {
     <div>
       <BoardContainer
         sidebar={
-          <div className="space-y-4">
+          <div className="gap-3">
             <div className="flex items-center gap-2 p-3 bg-background  border-b text-foreground z-50 sticky top-0">
               <Inbox size={18} />
               <h1 className="font-medium text-lg text-foreground">Comments</h1>
             </div>
-            <div className="overflow-y-auto h-[calc(100vh-64px)]">
+            <div className="overflow-y-auto p-2 h-[calc(100vh-64px)]">
               <Room roomId={`${id}-board-comments`}>
                 <Comments id={`${id}-board-comments`} />
               </Room>

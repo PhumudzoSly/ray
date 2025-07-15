@@ -7,7 +7,7 @@ import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import NoData from "@/components/shared/no-data";
 import { Id } from "@workspace/backend";
 import { useMutation } from "convex/react";

@@ -39,7 +39,7 @@ import {
   DialogDescription,
 } from "@workspace/ui/components/dialog";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import DependencyGraphVisualization from "./dependency-graph-visualization";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 

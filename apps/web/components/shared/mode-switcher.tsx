@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import { Label } from "@workspace/ui/components/label";
 import { Switch } from "@workspace/ui/components/switch";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 
 export function ModeToggle() {
   const id = useId();
@@ -16,6 +16,20 @@ export function ModeToggle() {
   const handleToggle = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
+
+  // Add keyboard shortcut (Ctrl/Cmd + K)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if Ctrl (Windows) or Cmd (Mac) + K is pressed
+      if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+        event.preventDefault();
+        handleToggle();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [theme]); // Re-run effect when theme changes
 
   return (
     <div className="hidden md:block">

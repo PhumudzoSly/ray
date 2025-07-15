@@ -22,7 +22,7 @@ import {
   TrendingUp,
   Clock,
 } from "lucide-react";
-import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 interface DependencyOverviewProps {
   projectId: Id<"projects">;
