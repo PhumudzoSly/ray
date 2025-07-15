@@ -4,8 +4,8 @@ import Appbar from "@/components/sidebar/app-bar";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import { LayoutContainer } from "@/components/layout-container";
+import { LiveBlockProvider } from "@/components/liveblocks/provider";
 
 export default async function DashboardLayout({
   children,
@@ -22,11 +22,13 @@ export default async function DashboardLayout({
 
   return (
     <SessionProvider sessionData={sessionData}>
-      <Appbar>
-        <LayoutContainer>
-          <main className="scrollbar-hide">{children}</main>
-        </LayoutContainer>
-      </Appbar>
+      <LiveBlockProvider>
+        <Appbar>
+          <LayoutContainer>
+            <main className="scrollbar-hide">{children}</main>
+          </LayoutContainer>
+        </Appbar>
+      </LiveBlockProvider>
     </SessionProvider>
   );
 }

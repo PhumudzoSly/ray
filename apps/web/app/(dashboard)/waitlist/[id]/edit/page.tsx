@@ -237,17 +237,12 @@ export default function EditWaitlistPage() {
               placeholder="Beta Access Waitlist"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="border-0 bg-muted/50"
             />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium">URL Slug</label>
-            <Input
-              value={waitlist.slug}
-              disabled
-              className="border-0 bg-muted/30 text-muted-foreground"
-            />
+            <Input value={waitlist.slug} disabled />
             <p className="text-xs text-muted-foreground">
               URL slug cannot be changed after creation
             </p>
@@ -262,7 +257,6 @@ export default function EditWaitlistPage() {
                 setForm({ ...form, description: e.target.value })
               }
               rows={3}
-              className="border-0 bg-muted/50 resize-none"
             />
           </div>
 
@@ -287,7 +281,6 @@ export default function EditWaitlistPage() {
                 setForm({ ...form, customMessage: e.target.value })
               }
               rows={2}
-              className="border-0 bg-muted/50 resize-none"
             />
           </div>
         </div>

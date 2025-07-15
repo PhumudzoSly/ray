@@ -84,7 +84,7 @@ export default function WaitlistPage() {
         ) : (
           waitlists?.map((waitlist: any) => {
             return (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
                 <Card key={waitlist._id}>
                   <CardHeader className="pb-3">
                     <CardTitle className="text-xl">

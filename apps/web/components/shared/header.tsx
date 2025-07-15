@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { ModeToggle } from "./mode-switcher";
 import { NotificationBell } from "../ui/notification-bell";
+import { InboxPopover } from "./inbox";
 
 type HeaderProps = {
   crumb: {
@@ -54,7 +55,8 @@ const Header = ({ children, crumb }: HeaderProps) => {
       </div>
       <div className="flex items-center gap-2">
         {children}
-        <NotificationBell />
+        <InboxPopover />
+        {/* <NotificationBell /> */}
         <ModeToggle />
       </div>
     </header>

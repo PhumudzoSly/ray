@@ -127,21 +127,15 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
+              <div className="flex-1">
                 <p className="text-sm text-foreground leading-tight">
                   <span className="font-medium">
                     {activity.user?.name || "Someone"}
                   </span>
-                  <span className="text-muted-foreground ml-1">
-                    {activity.title}
-                  </span>
                 </p>
-
-                {activity.description && (
-                  <p className="text-sm text-muted-foreground mt-0.5 leading-tight">
-                    {activity.description}
-                  </p>
-                )}
+                <p className="text-muted-foreground mt-0.5 text-sm">
+                  {activity.title}
+                </p>
 
                 {activity.metadata && (
                   <div className="mt-2 text-xs">
@@ -180,12 +174,6 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                   </div>
                 )}
               </div>
-
-              <time className="text-xs text-muted-foreground/70 flex-shrink-0 ml-3">
-                {formatDistanceToNow(new Date(activity.createdAt), {
-                  addSuffix: true,
-                })}
-              </time>
             </div>
           </div>
         </div>

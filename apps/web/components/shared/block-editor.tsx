@@ -22,8 +22,8 @@ export function BlockEditor({ id }: { id: string }) {
     <div className="py-8">
       <BlockNoteView
         theme={theme === "dark" ? "dark" : "light"}
-        editor={sync.editor}
         className="px-0"
+        editor={sync.editor}
         slashMenu={true}
         data-theming-css-variables-demo
       />

@@ -1,7 +1,9 @@
+"use client";
 import { Facebook, Twitter } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Separator } from "@workspace/ui/components/separator";
+import { usePathname } from "next/navigation";
 
 interface FooterLinksProps {
   data: {
@@ -24,6 +26,10 @@ const socialLinks = [
 ];
 
 const Footer = ({ data }: FooterLinksProps) => {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/rm/") || pathname.startsWith("/wl/")) return null;
+
   const footerGroups = data.map((group) => (
     <div key={group.title} className="space-y-3">
       <h3 className="font-semibold tracking-tight">{group.title}</h3>

@@ -7,15 +7,12 @@ import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
-interface ExpandedLayoutContainerProps {
+interface BoardContainerProps {
   children: React.ReactNode;
   sidebar: React.ReactNode;
 }
 
-export function ExpandedLayoutContainer({
-  children,
-  sidebar,
-}: ExpandedLayoutContainerProps) {
+export function BoardContainer({ children, sidebar }: BoardContainerProps) {
   const isLargeScreen = useMediaQuery("(min-width: 1280px)");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -28,14 +25,14 @@ export function ExpandedLayoutContainer({
     <div
       className={cn(
         "w-full relative",
-        "grid xl:grid-cols-[1fr_380px]", // Only show sidebar on xl screens
+        "grid xl:grid-cols-[1fr_320px]", // Only show sidebar on xl screens
         isCollapsed && "grid-cols-[1fr_0px]" // Collapsed state
       )}
-      style={{ height: "calc(100vh - 54px)" }}
+      style={{ height: "calc(100vh - 0px)" }}
     >
       <ScrollArea
         className="w-full overflow-y-auto"
-        style={{ height: "calc(100vh - 54px)" }}
+        style={{ height: "calc(100vh - 0px)" }}
       >
         {children}
       </ScrollArea>
@@ -61,10 +58,10 @@ export function ExpandedLayoutContainer({
           "transition-all border-l overflow-y-auto border-border duration-300 ease-in-out relative",
           "fixed xl:relative", // Fixed position below xl, relative on xl
           "top-16 xl:top-0 right-0", // Account for app bar height on mobile
-          "h-[calc(100vh-54px)] xl:h-auto", // Adjust height to account for app bar
+          "h-[calc(100vh-0px)] xl:h-auto", // Adjust height to account for app bar
           "bg-background xl:bg-transparent", // Background below xl
           "z-40 xl:z-auto", // Higher z-index below xl
-          isCollapsed ? "w-0" : "w-full xl:w-[380px]"
+          isCollapsed ? "w-0" : "w-full xl:w-[320px]"
         )}
       >
         <div

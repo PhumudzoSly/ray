@@ -220,6 +220,13 @@ export default function NewWaitlistPage() {
     <div className="max-w-2xl mx-auto">
       <div className="space-y-8 p-6">
         <div className="space-y-6">
+          <div>
+            <h1 className="text-2xl font-bold">Create waitlist</h1>
+            <p className="text-sm text-muted-foreground">
+              You can collect waitlist users via API or hosted URLs
+            </p>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Name</label>
@@ -227,7 +234,6 @@ export default function NewWaitlistPage() {
                 placeholder="Beta Access Waitlist"
                 value={form.name}
                 onChange={(e) => handleNameChange(e.target.value)}
-                className="border-0 bg-muted/50"
               />
             </div>
             <div className="space-y-2">
@@ -236,7 +242,6 @@ export default function NewWaitlistPage() {
                 placeholder="beta-access-waitlist"
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                className="border-0 bg-muted/50"
               />
             </div>
           </div>
@@ -250,7 +255,6 @@ export default function NewWaitlistPage() {
                 setForm({ ...form, description: e.target.value })
               }
               rows={3}
-              className="border-0 bg-muted/50 resize-none"
             />
           </div>
 
@@ -271,7 +275,6 @@ export default function NewWaitlistPage() {
                 setForm({ ...form, customMessage: e.target.value })
               }
               rows={2}
-              className="border-0 bg-muted/50 resize-none"
             />
           </div>
         </div>

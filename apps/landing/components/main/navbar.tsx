@@ -55,6 +55,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (pathname.startsWith("/rm/") || pathname.startsWith("/wl/")) return null;
+
   return (
     <header
       className={`sticky top-0 z-50 w-full border-b transition-all ${

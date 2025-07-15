@@ -45,6 +45,7 @@ export function MilestoneSelector({
     projectId,
     token,
   });
+
   const selectedMilestone = milestones?.find(
     (milestone) => milestone._id === value
   );
@@ -82,18 +83,6 @@ export function MilestoneSelector({
             <CommandInput placeholder="Search milestones..." />
             <CommandEmpty>No milestones found.</CommandEmpty>
             <CommandGroup>
-              {value && (
-                <CommandItem
-                  onSelect={() => {
-                    onValueChange(undefined);
-                    setOpen(false);
-                  }}
-                  className="text-red-600"
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Clear milestone
-                </CommandItem>
-              )}
               {milestones?.map((milestone) => (
                 <CommandItem
                   key={milestone._id}

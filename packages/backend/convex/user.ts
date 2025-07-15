@@ -56,3 +56,23 @@ export const orgMembers = query({
     return users;
   },
 });
+
+export const getUserById = query({
+  args: { token: v.string(), id: v.id("user") },
+  handler: async (ctx, { token, id }) => {
+    const session: ConvexSession = await ctx.runQuery(
+      internal.betterAuth.getSession,
+      {
+        sessionToken: token,
+      }
+    );
+
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await ctx.db.get(id);
+
+    return user;
+  },
+});

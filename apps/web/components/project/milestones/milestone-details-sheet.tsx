@@ -56,59 +56,14 @@ import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { DateInput } from "@workspace/ui/components/date-input";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
+import { StatusSelector } from "@/components/ui/selectors/status-selector";
+import { MilestoneStatusSelector } from "@/components/ui/selectors/milestone-status-selector";
 
 interface MilestoneDetailsSheetProps {
   milestoneId: Id<"milestones">;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case "completed":
-      return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-    case "at-risk":
-      return <AlertTriangle className="h-4 w-4 text-amber-600" />;
-    case "delayed":
-      return <Clock className="h-4 w-4 text-red-600" />;
-    case "in-progress":
-      return <Target className="h-4 w-4 text-blue-600" />;
-    default:
-      return <Circle className="h-4 w-4 text-muted-foreground" />;
-  }
-};
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "completed":
-      return "text-green-700 bg-green-50 border-green-200";
-    case "at-risk":
-      return "text-amber-700 bg-amber-50 border-amber-200";
-    case "delayed":
-      return "text-red-700 bg-red-50 border-red-200";
-    case "in-progress":
-      return "text-blue-700 bg-blue-50 border-blue-200";
-    default:
-      return "text-muted-foreground bg-muted border-border";
-  }
-};
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case "completed":
-      return "Completed";
-    case "at-risk":
-      return "At Risk";
-    case "delayed":
-      return "Delayed";
-    case "in-progress":
-      return "In Progress";
-    case "not-started":
-      return "Not Started";
-    default:
-      return "Unknown";
-  }
-};
 
 export function MilestoneDetailsSheet({
   milestoneId,
@@ -209,15 +164,7 @@ export function MilestoneDetailsSheet({
                   disabled={isUpdating}
                 />
                 <div className="flex items-center gap-2 mt-3">
-                  <Badge
-                    variant="outline"
-                    className={`text-xs font-medium ${getStatusColor(milestone.status)}`}
-                  >
-                    {getStatusIcon(milestone.status)}
-                    <span className="ml-1.5">
-                      {getStatusText(milestone.status)}
-                    </span>
-                  </Badge>
+                  <MilestoneStatusSelector status={milestone.status} disabled />
                   {(milestone.startDate || milestone.endDate) && (
                     <Badge
                       variant="outline"

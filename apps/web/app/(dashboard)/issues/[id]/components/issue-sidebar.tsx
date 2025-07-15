@@ -17,12 +17,6 @@ import { IssueSelector } from "@/components/ui/selectors/issue-selector";
 import { toast } from "sonner";
 import { useMutation } from "convex/react";
 import { Button } from "@workspace/ui/components/button";
-import { Badge } from "@workspace/ui/components/badge";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@workspace/ui/components/avatar";
 import { Separator } from "@workspace/ui/components/separator";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import {
@@ -54,6 +48,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
+import { StatusSelector } from "@/components/ui/selectors/status-selector";
 
 function IssueSidebarSkeleton() {
   return (
@@ -91,11 +86,6 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
 
   const { data: validationResult } = useData(
     api.issue.dependency.validateIssueCompletion,
-    { token, issueId }
-  );
-
-  const { data: issueHierarchy } = useData(
-    api.issue.dependency.getIssueHierarchy,
     { token, issueId }
   );
 
@@ -156,23 +146,6 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "BACKLOG":
-        return "bg-gray-100 text-gray-800";
-      case "TODO":
-        return "bg-blue-100 text-blue-800";
-      case "IN_PROGRESS":
-        return "bg-yellow-100 text-yellow-800";
-      case "REVIEW":
-        return "bg-orange-100 text-orange-800";
-      case "DONE":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   const DependencyCard = ({
     dep,
     showRemove = false,
@@ -184,38 +157,23 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
   }) => (
     <div className="flex items-center justify-between p-3 border rounded-lg bg-card hover:bg-muted/30 transition-colors">
       <div className="gap-3 min-w-0 flex-1">
-        <Badge
-          className={`${getStatusColor(dep.status || "")} mb-2 text-xs shrink-0`}
-        >
-          {dep.status}
-        </Badge>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium truncate">{dep.title}</p>
-          {dep.user && (
-            <div className="flex items-center gap-2 mt-1">
-              <Avatar className="h-4 w-4">
-                <AvatarImage src={dep.user.image} />
-                <AvatarFallback className="text-xs">
-                  {dep.user.name?.charAt(0) || "U"}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-xs text-muted-foreground">
-                {dep.user.name}
-              </span>
-            </div>
+        <div className="flex items-center justify-between gap-2">
+          <StatusSelector status={dep.status} disabled />
+          {showRemove && onRemove && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={onRemove}
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
           )}
         </div>
+        <div className="min-w-0 mt-1 flex-1">
+          <p className="text-sm font-medium line-clamp-2">{dep.title}</p>
+        </div>
       </div>
-      {showRemove && onRemove && (
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={onRemove}
-          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      )}
     </div>
   );
 
@@ -341,10 +299,10 @@ const IssueSidebar = ({ issueId }: { issueId: Id<"issues"> }) => {
                   Select an issue that this issue depends on. This issue will be
                   blocked until the selected issue is completed.
                 </p>
-                <p className="text-xs text-muted-foreground">
+                {/* <p className="text-xs text-muted-foreground">
                   Note: You cannot select this issue's sub-issues or issues that
                   would create circular dependencies.
-                </p>
+                </p> */}
                 <IssueSelector
                   projectId={issue.projectId}
                   value={selectedIssue || ""}

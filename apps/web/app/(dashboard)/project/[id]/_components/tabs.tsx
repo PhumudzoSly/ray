@@ -34,10 +34,11 @@ export function ProjectTabs({ projectId }: ProjectTabsProps) {
       title: "Assets & Files",
       href: `/project/${projectId}/assets`,
     },
-    {
-      title: "Launch AI",
-      href: `/project/${projectId}/launch`,
-    },
+    // TODO Come back to this
+    // {
+    //   title: "Launch AI",
+    //   href: `/project/${projectId}/launch`,
+    // },
   ];
 
   return (

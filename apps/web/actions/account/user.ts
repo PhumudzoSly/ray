@@ -300,3 +300,20 @@ export async function deactivateApiKey(keyId: Id<"apiKeys">) {
     };
   }
 }
+
+export async function getConvexUser({
+  userId,
+  token,
+}: {
+  userId: string;
+  token: string;
+}) {
+
+
+  const user = await fetchQuery(api.user.getUserById, {
+    token,
+    id: userId as Id<"user">,
+  });
+
+  return user;
+}
