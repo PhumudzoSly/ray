@@ -31,6 +31,18 @@ const mainLinks = [
   },
 ];
 
+const featureLinks = [
+  { label: "Idea Validation", link: "/features/idea-validation" },
+  { label: "Visual Flow Builder", link: "/features/visual-flow-builder" },
+  { label: "Project Management", link: "/features/project-management" },
+  { label: "AI Assistant", link: "/features/ai-assistant" },
+  { label: "Launch Orchestration", link: "/features/launch-orchestration" },
+  { label: "Public Roadmaps", link: "/features/public-roadmaps" },
+  { label: "Analytics & Insights", link: "/features/analytics-insights" },
+  { label: "Tech Stack Integration", link: "/features/tech-stack-integration" },
+  { label: "Issue Tracking", link: "/features/issue-tracking" },
+];
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = React.useState(false);
@@ -58,19 +70,46 @@ export default function Navbar() {
             <Badge variant="info">Beta</Badge>
           </Link>
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
-            {mainLinks.map((item) => (
+            <div className="relative group">
               <Link
-                key={item.link}
-                href={item.link}
+                href="/features"
                 className={`text-sm font-semibold transition-colors hover:text-primary ${
-                  pathname === item.link
+                  pathname === "/features"
                     ? "text-primary"
                     : "text-muted-foreground"
                 }`}
               >
-                {item.label}
+                Features
               </Link>
-            ))}
+              <div className="absolute left-0 mt-2 w-56 bg-background border border-border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
+                <div className="py-2">
+                  {featureLinks.map((item) => (
+                    <Link
+                      key={item.link}
+                      href={item.link}
+                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {mainLinks
+              .filter((item) => item.label !== "Features")
+              .map((item) => (
+                <Link
+                  key={item.link}
+                  href={item.link}
+                  className={`text-sm font-semibold transition-colors hover:text-primary ${
+                    pathname === item.link
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
           </nav>
         </div>
         <div className="ml-auto flex items-center space-x-4">
@@ -110,19 +149,42 @@ export default function Navbar() {
                   <span className="text-lg font-bold">Ray AI</span>
                 </Link>
                 <div className="flex flex-col space-y-3">
-                  {mainLinks.map((item) => (
-                    <Link
-                      key={item.link}
-                      href={item.link}
-                      className={`text-sm transition-colors hover:text-primary ${
-                        pathname === item.link
-                          ? "text-primary"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  <Link
+                    href="/features"
+                    className={`text-sm transition-colors hover:text-primary ${
+                      pathname === "/features"
+                        ? "text-primary"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    Features
+                  </Link>
+                  <div className="pl-4 flex flex-col space-y-1">
+                    {featureLinks.map((item) => (
+                      <Link
+                        key={item.link}
+                        href={item.link}
+                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                  {mainLinks
+                    .filter((item) => item.label !== "Features")
+                    .map((item) => (
+                      <Link
+                        key={item.link}
+                        href={item.link}
+                        className={`text-sm transition-colors hover:text-primary ${
+                          pathname === item.link
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                 </div>
                 <div className="flex flex-col gap-2 pt-4">
                   <Button

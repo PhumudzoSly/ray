@@ -8,28 +8,77 @@ import {
   Rocket,
   Users,
   BarChart3,
-  Link,
+  Link as LinkIcon,
 } from "lucide-react";
+import Link from "next/link";
 
-import IdeaValidationFeature from "../../components/features/idea-validation";
-import VisualFlowBuilderFeature from "../../components/features/visual-flow-builder";
-import ProjectManagementFeature from "../../components/features/project-management";
-import AIAssistantFeature from "../../components/features/ai-assistant";
-import LaunchOrchestrationFeature from "../../components/features/launch-orchestration";
-import PublicRoadmapsFeature from "../../components/features/public-roadmaps";
-import AnalyticsInsightsFeature from "../../components/features/analytics-insights";
-import TechStackIntegrationFeature from "../../components/features/tech-stack-integration";
-import IssueTracking from "@/components/features/issue-tracking";
-
-const categories = [
-  { id: "validation", name: "Validation", icon: Target },
-  { id: "design", name: "Design", icon: Palette },
-  { id: "management", name: "Management", icon: FolderOpen },
-  { id: "ai", name: "AI", icon: Bot },
-  { id: "launch", name: "Launch", icon: Rocket },
-  { id: "community", name: "Community", icon: Users },
-  { id: "analytics", name: "Analytics", icon: BarChart3 },
-  { id: "integration", name: "Integration", icon: Link },
+const features = [
+  {
+    id: "idea-validation",
+    name: "Idea Validation",
+    icon: Target,
+    description:
+      "Validate your SaaS idea with market and competitor research tools.",
+    href: "/features/idea-validation",
+  },
+  {
+    id: "visual-flow-builder",
+    name: "Visual Flow Builder",
+    icon: Palette,
+    description:
+      "Design user journeys and app flows visually with drag-and-drop.",
+    href: "/features/visual-flow-builder",
+  },
+  {
+    id: "project-management",
+    name: "Project Management",
+    icon: FolderOpen,
+    description:
+      "Organize tasks, track progress, and collaborate with your team.",
+    href: "/features/project-management",
+  },
+  {
+    id: "ai-assistant",
+    name: "AI Assistant",
+    icon: Bot,
+    description: "Get intelligent help throughout your development process.",
+    href: "/features/ai-assistant",
+  },
+  {
+    id: "launch-orchestration",
+    name: "Launch Orchestration",
+    icon: Rocket,
+    description: "Plan, coordinate, and execute your SaaS launch with ease.",
+    href: "/features/launch-orchestration",
+  },
+  {
+    id: "public-roadmaps",
+    name: "Public Roadmaps",
+    icon: Users,
+    description: "Share your product vision and roadmap with your community.",
+    href: "/features/public-roadmaps",
+  },
+  {
+    id: "analytics-insights",
+    name: "Analytics & Insights",
+    icon: BarChart3,
+    description: "Gain actionable insights from your SaaS data.",
+    href: "/features/analytics-insights",
+  },
+  {
+    id: "tech-stack-integration",
+    name: "Tech Stack Integration",
+    icon: LinkIcon,
+    description: "Integrate Ray AI with your favorite tools and services.",
+    href: "/features/tech-stack-integration",
+  },
+  {
+    id: "issue-tracking",
+    name: "Issue Tracking",
+    icon: FolderOpen,
+    description: "Track bugs and issues with an integrated system.",
+    href: "/features/issue-tracking",
+  },
 ];
 
 export default function FeaturesPage() {
@@ -57,39 +106,32 @@ export default function FeaturesPage() {
         </div>
       </div>
 
-      {/* Category Navigation */}
-      <div className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {categories.map((category) => {
-              const IconComponent = category.icon;
-              return (
-                <Badge
-                  key={category.id}
-                  variant="outline"
-                  className="px-4 py-2 hover:bg-black hover:text-white transition-colors cursor-pointer flex items-center gap-2"
-                >
-                  <IconComponent className="w-4 h-4" />
-                  {category.name}
-                </Badge>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Features */}
+      {/* Features Grid */}
       <div className="max-w-7xl mx-auto px-4 py-20">
-        <div className="space-y-20">
-          <IdeaValidationFeature />
-          {/* <IssueTracking /> */}
-          <VisualFlowBuilderFeature />
-          <ProjectManagementFeature />
-          <AIAssistantFeature />
-          <LaunchOrchestrationFeature />
-          <PublicRoadmapsFeature />
-          <AnalyticsInsightsFeature />
-          <TechStackIntegrationFeature />
+        <div className="grid md:grid-cols-3 gap-8">
+          {features.map((feature) => {
+            const IconComponent = feature.icon;
+            return (
+              <Link
+                key={feature.id}
+                href={feature.href}
+                className="block border border-border rounded-xl p-8 hover:shadow-lg transition-shadow bg-background hover:bg-muted"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center text-foreground">
+                    <IconComponent className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {feature.name}
+                  </h3>
+                </div>
+                <p className="text-muted-foreground mb-2">
+                  {feature.description}
+                </p>
+                <span className="text-primary font-medium">Learn more →</span>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

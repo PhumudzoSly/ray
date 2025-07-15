@@ -20,6 +20,7 @@ import type * as apiKeys from "../apiKeys.js";
 import type * as assets from "../assets.js";
 import type * as betterAuth from "../betterAuth.js";
 import type * as chats from "../chats.js";
+import type * as comments from "../comments.js";
 import type * as dashboard from "../dashboard.js";
 import type * as doc from "../doc.js";
 import type * as files from "../files.js";
@@ -83,6 +84,7 @@ declare const fullApi: ApiFromModules<{
   assets: typeof assets;
   betterAuth: typeof betterAuth;
   chats: typeof chats;
+  comments: typeof comments;
   dashboard: typeof dashboard;
   doc: typeof doc;
   files: typeof files;

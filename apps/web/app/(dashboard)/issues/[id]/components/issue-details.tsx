@@ -8,13 +8,18 @@ import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/LoadingSpinner";
-import NoData from "@/components/shared/no-data";
+
 import { Id } from "@workspace/backend";
 import { useMutation } from "convex/react";
-import { BlockEditor } from "@/components/shared/block-editor";
+
 import { GitBranch, Clock } from "lucide-react";
 import { NewIssue } from "@/components/project/issues/new-issue";
-import { ActivityFeed } from "@/components/shared/activity-feed";
+import {
+  ActivityFeed,
+  CommentsThread,
+  BlockEditor,
+  NoData,
+} from "@/components/shared";
 
 const IssueDetails = ({ id }: { id: string }) => {
   const { token } = useSession();
@@ -191,6 +196,17 @@ const IssueDetails = ({ id }: { id: string }) => {
           />
         </div>
       )}
+
+      {/* Comments Section */}
+      <div className="mt-8 space-y-4">
+        <div className="border-t pt-4">
+          <CommentsThread
+            entityType="issue"
+            entityId={id}
+            emptyMessage="No comments yet"
+          />
+        </div>
+      </div>
 
       {/* Activity Feed Section */}
       <div className="mt-8 space-y-4">

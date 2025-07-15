@@ -8,6 +8,7 @@ import {
   milestones,
   milestoneDependencies,
 } from "../schemas/project";
+import { comments, commentReactions } from "../schemas/comments";
 import { waitlists, waitlistEntries } from "../schemas/waitlist";
 import { flows, flowNodes, flowEdges } from "../schemas/flows";
 import { chats, messages } from "../schemas/chat";
@@ -140,4 +141,6 @@ export default defineSchema({
   assets,
   agentConversations,
   agentMessages,
+  comments,
+  commentReactions,
 });

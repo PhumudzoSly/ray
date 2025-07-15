@@ -34,6 +34,36 @@ export default function RootLayout({
                 links: [
                   { label: "Home", link: "/" },
                   { label: "Features", link: "/features" },
+                  {
+                    label: "Idea Validation",
+                    link: "/features/idea-validation",
+                  },
+                  {
+                    label: "Visual Flow Builder",
+                    link: "/features/visual-flow-builder",
+                  },
+                  {
+                    label: "Project Management",
+                    link: "/features/project-management",
+                  },
+                  { label: "AI Assistant", link: "/features/ai-assistant" },
+                  {
+                    label: "Launch Orchestration",
+                    link: "/features/launch-orchestration",
+                  },
+                  {
+                    label: "Public Roadmaps",
+                    link: "/features/public-roadmaps",
+                  },
+                  {
+                    label: "Analytics & Insights",
+                    link: "/features/analytics-insights",
+                  },
+                  {
+                    label: "Tech Stack Integration",
+                    link: "/features/tech-stack-integration",
+                  },
+                  { label: "Issue Tracking", link: "/features/issue-tracking" },
                   { label: "Pricing", link: "/pricing" },
                 ],
               },
