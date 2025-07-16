@@ -1,12 +1,12 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "packageRules": [
-    {
-      "matchPackagePatterns": ["^@workspace/"],
-      "groupName": "workspace packages"
-    }
-  ],
-  "labels": ["dependencies"],
-  "dependencyDashboard": true
-} 
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:base"],
+	"packageRules": [
+		{
+			"matchPackagePatterns": ["^@workspace/"],
+			"groupName": "workspace packages"
+		}
+	],
+	"labels": ["dependencies"],
+	"dependencyDashboard": true
+}

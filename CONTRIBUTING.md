@@ -114,7 +114,6 @@ function getUserProfile(id: any): any {
 ```
 packages/
 ├── ui/                   # Shared UI components
-├── tiptap-editor/        # Custom editor package
 ├── backend/              # Convex backend
 └── typescript-config/    # Shared TS configs
 

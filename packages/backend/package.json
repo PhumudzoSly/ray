@@ -1,40 +1,28 @@
 {
-  "name": "@workspace/backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "vitest run",
-    "dev": "npx convex dev",
-    "typecheck": "tsc --noEmit"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@ai-sdk/google": "^1.2.22",
-    "@better-auth-kit/convex": "^1.2.2",
-    "@blocknote/core": "^0.32.0",
-    "@convex-dev/agent": "^0.1.14",
-    "@convex-dev/aggregate": "^0.1.21",
-    "@convex-dev/crons": "^0.1.9",
-    "@convex-dev/presence": "^0.1.5",
-    "@convex-dev/prosemirror-sync": "^0.1.24",
-    "@convex-dev/rag": "^0.3.2",
-    "@convex-dev/sharded-counter": "^0.1.8",
-    "@convex-dev/workflow": "^0.2.5",
-    "@hello-pangea/dnd": "^18.0.1",
-    "@tiptap/core": "^2.24.2",
-    "@tiptap/extension-task-item": "^2.24.2",
-    "@tiptap/extension-task-list": "^2.24.2",
-    "@tiptap/extension-typography": "^2.24.2",
-    "@tiptap/extension-underline": "^2.24.2",
-    "@tiptap/pm": "^2.24.2",
-    "@tiptap/starter-kit": "^2.24.2",
-    "ai": "^4.3.17",
-    "convex": "^1.25.2",
-    "convex-helpers": "^0.1.96",
-    "resend": "^4.6.0",
-    "zod": "^3.24.2"
-  }
+	"name": "@workspace/backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit",
+		"prisma:generate": "prisma generate",
+		"prisma:migrate": "prisma migrate dev",
+		"prisma:studio": "prisma studio"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@ai-sdk/google": "^1.2.22",
+		"@better-auth-kit/convex": "^1.2.2",
+		"@prisma/client": "^6.12.0",
+		"ai": "^4.3.17",
+		"resend": "^4.6.0",
+		"zod": "^3.25.76",
+		"zod-prisma-types": "^3.2.4"
+	},
+	"devDependencies": {
+		"prisma": "^6.12.0"
+	}
 }

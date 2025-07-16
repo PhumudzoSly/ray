@@ -1,17 +1,17 @@
 import { createAuthClient } from "better-auth/client";
-import { polarClient } from "@polar-sh/better-auth";
 import {
   organizationClient,
   passkeyClient,
-  magicLinkClient,
+  twoFactorClient,
 } from "better-auth/client/plugins";
+import { polarClient } from "@polar-sh/better-auth";
 
 export const client = createAuthClient({
   plugins: [
-    polarClient(),
-    organizationClient(),
     passkeyClient(),
-    magicLinkClient(),
+    organizationClient(),
+    twoFactorClient(),
+    polarClient(),
   ],
 });
 
@@ -25,6 +25,8 @@ export const {
   listSessions,
   signOut,
   signUp,
+  organization,
+  passkey,
   resetPassword,
   revokeOtherSessions,
   revokeSession,
@@ -32,18 +34,16 @@ export const {
   sendVerificationEmail,
   signIn,
   updateUser,
-  verifyEmail,
-  organization,
-  unlinkAccount,
-  $Infer,
-  polar,
-  usage,
-  customer,
-  checkout,
-  useSession: useBetterAuthSession,
+  useActiveMember,
   useActiveOrganization,
   useListOrganizations,
-  useActiveMember,
-  refreshToken,
-  magicLink,
+  useListPasskeys,
+  useSession,
+  verifyEmail,
+  unlinkAccount,
+  twoFactor,
+  $Infer,
+  polar,
+  checkout,
+  customer,
 } = client;

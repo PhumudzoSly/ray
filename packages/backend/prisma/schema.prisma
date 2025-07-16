@@ -1,0 +1,812 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+generator zod {
+  provider                         = "zod-prisma-types"
+  createOptionalDefaultValuesTypes = "true"
+  writeNullishInModelTypes         = "true"
+  createInputTypes                 = "false"
+  output                           = "./generated/zod"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  role          String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  twoFactorEnabled Boolean?
+
+  sessions     Session[]
+  accounts     Account[]
+  members      Member[]
+  invitations  Invitation[]
+  passkeys     Passkey[]
+  twofactors   TwoFactor[]
+  subscription Subscription?
+  project      Project[]     @relation("CreatedProjects")
+  idea         Idea[]        @relation("IdeaOwner")
+  issue        Issue[]       @relation("AssignedIssues")
+  asset        Asset[]       @relation("UploadedAssets")
+  waitlist     Waitlist[]    @relation("CreatedWaitlists")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  activeOrganizationId String?
+
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id           String    @id
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Organization {
+  id           String         @id @default(uuid())
+  name         String
+  slug         String?
+  logo         String?
+  createdAt    DateTime       @default(now())
+  metadata     String?
+  members      Member[]
+  invitations  Invitation[]
+  subscription Subscription[]
+  project      Project[]
+  idea         Idea[]
+  issue        Issue[]
+  asset        Asset[]
+  waitlist     Waitlist[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  createdAt      DateTime
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([inviterId])
+  @@map("invitation")
+}
+
+model Passkey {
+  id             String    @id
+  name           String?
+  publicKey      String
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webauthnUserID String
+  counter        Int
+  deviceType     String
+  backedUp       Boolean
+  transports     String?
+  createdAt      DateTime?
+  credentialID   String
+
+  @@index([userId])
+  @@map("passkey")
+}
+
+model TwoFactor {
+  id          String @id
+  secret      String
+  backupCodes String
+  userId      String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+model Subscription {
+  id              String       @id @default(cuid())
+  status          String?
+  organisation_id String       @unique
+  organization    Organization @relation(fields: [organisation_id], references: [id], onDelete: Cascade)
+  subscription_id String?
+  product_id      String?
+  userId          String?      @unique
+  user            User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organisation_id])
+  @@map("subscription")
+}
+
+model Project {
+  id             String          @id @default(uuid())
+  name           String
+  description    String?
+  platform       ProjectPlatform
+  techStack      Json
+  infrastructure String?
+  dueDate        DateTime?
+  status         ProjectStatus?
+  idea           Idea?           @relation(fields: [ideaId], references: [id])
+  ideaId         String?
+  createdAt      DateTime
+  updatedAt      DateTime
+  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  organizationId String?
+  issues         Issue[]
+  createdBy      User?           @relation("CreatedProjects", fields: [createdById], references: [id])
+  createdById    String?
+  assets         Asset[]
+  launchPlans    LaunchPlan[]
+  publicRoadmaps PublicRoadmap[]
+  waitlists      Waitlist[]
+
+  @@index([ideaId])
+  @@index([organizationId])
+  @@index([organizationId, status])
+  @@index([organizationId, dueDate])
+  @@index([createdById])
+}
+
+model Idea {
+  id                  String       @id @default(uuid())
+  name                String
+  description         String
+  industry            String
+  owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id])
+  ownerId             String?
+  organization        Organization @relation(fields: [organizationId], references: [id])
+  organizationId      String
+  internal            Boolean
+  openSource          Boolean
+  status              IdeaStatus
+  aiOverallValidation Json?
+  problemSolved       String?
+  solutionOffered     String?
+  projects            Project[]
+}
+
+model Issue {
+  id               String       @id @default(uuid())
+  title            String
+  description      String?
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  organizationId   String
+  project          Project      @relation(fields: [projectId], references: [id])
+  projectId        String
+  milestoneId      String?
+  featureId        String?
+  parentIssueId    String?
+  status           IssueStatus
+  priority         Importance
+  label            IssueLabel
+  dueDate          DateTime?
+  assignedTo       User?        @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  assignedToId     String?
+  achieved         Boolean?
+  isPublic         Boolean?
+  sourceType       String?
+  sourceFeedbackId String?
+
+  @@index([organizationId, achieved])
+  @@index([projectId, organizationId, achieved])
+  @@index([milestoneId])
+  @@index([parentIssueId])
+  @@index([assignedToId])
+}
+
+model Asset {
+  id             String         @id @default(uuid())
+  name           String
+  description    String?
+  type           AssetType
+  project        Project        @relation(fields: [projectId], references: [id])
+  projectId      String
+  organization   Organization   @relation(fields: [organizationId], references: [id])
+  organizationId String
+  storageId      String?
+  fileName       String?
+  fileSize       Int?
+  mimeType       String?
+  url            String?
+  linkType       LinkType?
+  tags           Json?
+  category       AssetCategory?
+  thumbnailUrl   String?
+  isPublic       Boolean?
+  uploadedBy     User?          @relation("UploadedAssets", fields: [uploadedById], references: [id])
+  uploadedById   String?
+  uploadedAt     DateTime
+  updatedAt      DateTime
+  viewCount      Int?
+  downloadCount  Int?
+
+  @@index([projectId])
+  @@index([organizationId])
+  @@index([type])
+  @@index([category])
+  @@index([uploadedById])
+  @@index([uploadedAt])
+  @@index([projectId, type])
+  @@index([projectId, category])
+}
+
+model ApiKey {
+  id             String    @id @default(uuid())
+  organizationId String
+  name           String
+  keyHash        String
+  keyPreview     String
+  permissions    Json?
+  createdBy      String
+  createdAt      DateTime
+  lastUsed       DateTime?
+  isActive       Boolean
+  expiresAt      DateTime?
+
+  @@index([organizationId])
+  @@index([organizationId, isActive])
+  @@index([createdBy])
+  @@index([keyHash])
+}
+
+model LaunchPlan {
+  id               String                @id @default(uuid())
+  project          Project               @relation(fields: [projectId], references: [id])
+  projectId        String
+  status           LaunchPlanStatus
+  targetLaunchDate DateTime?
+  actualLaunchDate DateTime?
+  createdAt        DateTime
+  updatedAt        DateTime
+  checklistItems   LaunchChecklistItem[]
+  copies           LaunchCopy[]
+  strategies       LaunchStrategy[]
+
+  @@index([projectId])
+}
+
+model LaunchChecklistItem {
+  id           String                  @id @default(uuid())
+  launchPlan   LaunchPlan              @relation(fields: [launchPlanId], references: [id])
+  launchPlanId String
+  category     LaunchChecklistCategory
+  title        String
+  description  String?
+  priority     LaunchChecklistPriority
+  status       LaunchChecklistStatus
+  isRequired   Boolean
+  dependsOn    Json?
+  assignedTo   String?
+  dueDate      DateTime?
+  notes        String?
+  order        Int
+  createdAt    DateTime
+  updatedAt    DateTime
+
+  @@index([launchPlanId])
+  @@index([launchPlanId, category])
+  @@index([launchPlanId, status])
+}
+
+model LaunchCopy {
+  id           String             @id @default(uuid())
+  launchPlan   LaunchPlan         @relation(fields: [launchPlanId], references: [id])
+  launchPlanId String
+  platform     LaunchCopyPlatform
+  title        String
+  tagline      String?
+  description  String
+  callToAction String?
+  hashtags     Json?
+  mentions     Json?
+  media        Json?
+  isApproved   Boolean
+  version      Int
+  createdAt    DateTime
+  updatedAt    DateTime
+
+  @@index([launchPlanId])
+  @@index([launchPlanId, platform])
+}
+
+model LaunchStrategy {
+  id             String              @id @default(uuid())
+  launchPlan     LaunchPlan          @relation(fields: [launchPlanId], references: [id])
+  launchPlanId   String
+  phase          LaunchStrategyPhase
+  name           String
+  description    String
+  startDate      DateTime
+  endDate        DateTime
+  platforms      Json
+  targetAudience Json
+  keyMetrics     Json
+  tasks          Json
+  order          Int
+  createdAt      DateTime
+  updatedAt      DateTime
+
+  @@index([launchPlanId])
+  @@index([launchPlanId, phase])
+}
+
+model PublicRoadmap {
+  id              String             @id @default(uuid())
+  project         Project            @relation(fields: [projectId], references: [id])
+  projectId       String
+  name            String
+  slug            String
+  description     String
+  isPublic        Boolean
+  customDomain    String?
+  theme           String?
+  logoUrl         String?
+  accentColor     String?
+  allowVoting     Boolean
+  allowFeedback   Boolean
+  showChangelog   Boolean
+  createdAt       DateTime
+  updatedAt       DateTime
+  items           RoadmapItem[]
+  changelogs      RoadmapChangelog[]
+  featureRequests FeatureRequest[]
+
+  @@index([projectId])
+  @@index([slug])
+}
+
+model RoadmapItem {
+  id            String            @id @default(uuid())
+  roadmap       PublicRoadmap     @relation(fields: [roadmapId], references: [id])
+  roadmapId     String
+  issueId       String?
+  nodeId        String?
+  title         String
+  description   String
+  status        String
+  category      String
+  isPublic      Boolean
+  priority      String
+  targetDate    DateTime?
+  order         Int
+  voteCount     Int
+  feedbackCount Int
+  createdAt     DateTime
+  updatedAt     DateTime
+  votes         RoadmapVote[]
+  feedback      RoadmapFeedback[]
+
+  @@index([roadmapId])
+  @@index([issueId])
+  @@index([nodeId])
+  @@index([roadmapId, status])
+  @@index([roadmapId, category])
+}
+
+model RoadmapVote {
+  id            String      @id @default(uuid())
+  roadmapItem   RoadmapItem @relation(fields: [roadmapItemId], references: [id])
+  roadmapItemId String
+  userId        String?
+  ipAddress     String
+  createdAt     DateTime
+
+  @@index([roadmapItemId])
+  @@index([roadmapItemId, ipAddress])
+  @@index([roadmapItemId, userId])
+}
+
+model RoadmapFeedback {
+  id                   String                   @id @default(uuid())
+  roadmapItem          RoadmapItem              @relation(fields: [roadmapItemId], references: [id])
+  roadmapItemId        String
+  userId               String?
+  ipAddress            String
+  content              String
+  sentiment            RoadmapFeedbackSentiment
+  isApproved           Boolean
+  convertedToFeatureId String?
+  convertedToIssueId   String?
+  convertedAt          DateTime?
+  convertedBy          String?
+  conversionNotes      String?
+  createdAt            DateTime
+
+  @@index([roadmapItemId])
+  @@index([roadmapItemId, ipAddress])
+  @@index([roadmapItemId, userId])
+  @@index([convertedToFeatureId])
+  @@index([convertedToIssueId])
+}
+
+model RoadmapChangelog {
+  id          String        @id @default(uuid())
+  roadmap     PublicRoadmap @relation(fields: [roadmapId], references: [id])
+  roadmapId   String
+  title       String
+  description String
+  items       Json
+  publishDate DateTime
+  isPublished Boolean
+  createdAt   DateTime
+  updatedAt   DateTime
+
+  @@index([roadmapId])
+  @@index([publishDate])
+}
+
+model FeatureRequest {
+  id          String                 @id @default(uuid())
+  roadmap     PublicRoadmap          @relation(fields: [roadmapId], references: [id])
+  roadmapId   String
+  title       String
+  description String
+  category    String
+  email       String
+  name        String?
+  ipAddress   String
+  status      FeatureRequestStatus
+  priority    FeatureRequestPriority
+  upvotes     Int
+  isPublic    Boolean
+  adminNotes  String?
+  createdAt   DateTime
+  updatedAt   DateTime
+
+  @@index([roadmapId])
+  @@index([email])
+  @@index([status])
+  @@index([roadmapId, status])
+}
+
+model Waitlist {
+  id               String          @id @default(uuid())
+  project          Project         @relation(fields: [projectId], references: [id])
+  projectId        String
+  name             String
+  slug             String
+  description      String
+  isPublic         Boolean
+  allowNameCapture Boolean
+  showPosition     Boolean
+  showSocialProof  Boolean
+  customMessage    String?
+  organization     Organization    @relation(fields: [organizationId], references: [id])
+  organizationId   String
+  createdAt        DateTime
+  updatedAt        DateTime
+  createdBy        User            @relation("CreatedWaitlists", fields: [createdById], references: [id])
+  createdById      String
+  entries          WaitlistEntry[]
+
+  @@index([projectId])
+  @@index([organizationId])
+  @@index([slug])
+}
+
+model WaitlistEntry {
+  id                String    @id @default(uuid())
+  waitlist          Waitlist  @relation(fields: [waitlistId], references: [id])
+  waitlistId        String
+  email             String
+  name              String?
+  status            String
+  position          Int
+  referralCode      String
+  referredBy        String?
+  referralCount     Int
+  verificationToken String?
+  verifiedAt        DateTime?
+  invitedAt         DateTime?
+  joinedAt          DateTime?
+  ipAddress         String
+  userAgent         String?
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  createdAt         DateTime
+  updatedAt         DateTime
+
+  @@index([waitlistId])
+  @@index([email])
+  @@index([referralCode])
+  @@index([referredBy])
+  @@index([status])
+  @@index([waitlistId, status])
+  @@index([waitlistId, position])
+  @@index([verificationToken])
+}
+
+// Enums
+
+enum IdeaStatus {
+  INVALIDATED
+  VALIDATED
+  FAILED
+  IN_PROGRESS
+  LAUNCHED
+}
+
+enum Importance {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum Category {
+  PRODUCT
+  MARKETING
+  FINANCIAL
+  LEGAL
+  OTHER
+}
+
+enum FinancialResources {
+  LIMITED
+  ADEQUATE
+  ABUNDANT
+}
+
+enum ProjectPlatform {
+  web
+  mobile
+  both
+  api
+  plugin
+  desktop
+  cli
+}
+
+enum ProjectStatus {
+  planning
+  in_progress
+  review
+  completed
+}
+
+enum IssueStatus {
+  BACKLOG
+  IN_PROGRESS
+  REVIEW
+  DONE
+  BLOCKED
+  CANCELLED
+}
+
+enum IssueLabel {
+  UI
+  BUG
+  FEATURE
+  DOCUMENTATION
+  REFACTOR
+  PERFORMANCE
+  DESIGN
+  SECURITY
+  ACCESSIBILITY
+  TESTING
+  INTERNATIONALIZATION
+}
+
+enum AgentMessageRole {
+  user
+  assistant
+  system
+}
+
+enum AssetType {
+  image
+  document
+  video
+  link
+  code
+  design
+  other
+}
+
+enum LinkType {
+  youtube
+  figma
+  notion
+  github
+  dribbble
+  behance
+  external
+}
+
+enum AssetCategory {
+  branding
+  ui_design
+  mockups
+  documentation
+  inspiration
+  code_snippets
+  presentations
+  tutorials
+  other
+}
+
+enum ChatType {
+  general
+  flow_analysis
+  recommendations
+}
+
+enum MessageRole {
+  user
+  assistant
+}
+
+enum PrdStatus {
+  draft
+  approved
+  archived
+}
+
+enum ImplementationPromptCategory {
+  implementation
+  testing
+  documentation
+  debugging
+  optimization
+  deployment
+}
+
+enum AnalysisReportType {
+  flow_analysis
+  missing_flows
+  recommendations
+}
+
+enum LaunchPlanStatus {
+  draft
+  in_progress
+  ready
+  launched
+}
+
+enum LaunchChecklistCategory {
+  technical
+  content
+  legal
+  marketing
+  analytics
+  support
+}
+
+enum LaunchChecklistPriority {
+  high
+  medium
+  low
+}
+
+enum LaunchChecklistStatus {
+  pending
+  in_progress
+  completed
+  skipped
+}
+
+enum LaunchCopyPlatform {
+  product_hunt
+  twitter
+  linkedin
+  reddit
+  hackernews
+  readme
+  website
+  press_release
+  email
+}
+
+enum LaunchStrategyPhase {
+  pre_launch
+  soft_launch
+  public_launch
+  post_launch
+}
+
+enum NotificationDigestFrequency {
+  IMMEDIATE
+  HOURLY
+  DAILY
+  WEEKLY
+  NEVER
+}
+
+enum RoadmapFeedbackSentiment {
+  positive
+  neutral
+  negative
+}
+
+enum FeatureRequestStatus {
+  pending
+  under_review
+  approved
+  rejected
+  implemented
+}
+
+enum FeatureRequestPriority {
+  low
+  medium
+  high
+  urgent
+}
