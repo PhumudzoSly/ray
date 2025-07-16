@@ -22,8 +22,10 @@ import { IdeaSelector } from "./ui/selectors/idea-selector";
 import { CommandSelect } from "../../../packages/ui/src/components/command-select";
 import { DATABASE_PROVIDERS } from "@/utils/constants/sources/database";
 import { AUTH_PROVIDERS } from "@/utils/constants/sources/auth";
+import { ORM_PLATFORMS } from "@/utils/constants/sources/orms";
 import { createProject } from "@/actions/project";
 import { JsonValueType, ProjectOptionalDefaults } from "@workspace/backend";
+import { AI_PLATFORMS } from "@/utils/constants/sources/ai";
 
 type CreateProjectDialogProps = {
   ideaId?: string;
@@ -45,11 +47,6 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
       }
     }
   );
-  const techStackOptions = {
-    ai: ["OpenAI", "Anthropic", "Google"],
-    orm: ["Prisma", "Drizzle", "TypeORM"],
-    database: ["PostgreSQL", "MySQL", "SQLite"],
-  };
   const [open, setOpen] = useState(false);
 
   // Fetch idea details if ideaId is provided
@@ -137,9 +134,9 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
           </h6>
           <div className="flex items-center mb-2 flex-wrap gap-2">
             <CommandSelect
-              options={techStackOptions.ai.map((option) => ({
-                value: option,
-                label: option,
+              options={AI_PLATFORMS.map((option) => ({
+                value: option.name,
+                label: option.name,
               }))}
               onValueChange={(value) =>
                 setForm({
@@ -179,9 +176,9 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               placeholder="Select Database provider"
             />
             <CommandSelect
-              options={techStackOptions.orm.map((option) => ({
-                value: option,
-                label: option,
+              options={ORM_PLATFORMS.map((option) => ({
+                value: option.name,
+                label: option.name,
               }))}
               onValueChange={(value) =>
                 setForm({

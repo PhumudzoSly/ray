@@ -5,6 +5,7 @@ import { getSession } from "@/actions/account/user";
 import { getStats } from "@/actions/dashboard/analytics";
 import Stat from "./Stat";
 import { Lightbulb, Server } from "lucide-react";
+import { CreateProjectDialog } from "@/components/create-project-dialog";
 
 const DashboardPage = async () => {
 
@@ -24,35 +25,30 @@ const DashboardPage = async () => {
             Hi, {session?.name?.split(" ")[0]}. What are we building today?
           </p>
         </div>
-        {/* <CreateProjectDialog /> */}
+        <CreateProjectDialog />
       </div>
       <Separator />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
         <Stat
           icon={() => <Server color="orange" />}
-          message="Saas Ideas"
+          message="currently used"
           title={stats.totalStorage.label}
-          value={stats?.totalStorage?.value || 0}
-        />
-        {/* <Stat
-          icon={() => <Users color="pink" />}
-          title="Team members"
-          message="Total users"
-          value={stats?.members?.length || 0}
+          value={parseFloat(stats?.totalStorage?.value.toFixed(1)) || 0}
         />
         <Stat
-          icon={() => <Bug className="text-red-400" />}
-          title="Active issues"
-          message="Total issues"
-          value={stats?.issues?.length || 0}
+          icon={() => <Server color="orange" />}
+          message="active"
+          title={stats.totalWaitlists.label}
+          value={parseFloat(stats?.totalWaitlists?.value.toFixed(1)) || 0}
         />
         <Stat
-          icon={() => <TbListDetails size={20} className="text-emerald-400" />}
-          title="My Projects"
-          message="Shared with team"
-          value={stats?.projects?.length || 0}
-        /> */}
+          icon={() => <Server color="orange" />}
+          message="across all projects"
+          title={stats.totalRoadmaps.label}
+          value={parseFloat(stats?.totalRoadmaps?.value.toFixed(1)) || 0}
+        />
+
       </div>
     </>
   );

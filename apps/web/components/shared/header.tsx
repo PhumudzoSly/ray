@@ -5,12 +5,10 @@ import { Badge } from "@workspace/ui/components/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb";
 import Link from "next/link";
-import { InboxPopover } from "./inbox";
 
 type HeaderProps = {
   crumb: {
@@ -54,9 +52,7 @@ const Header = ({ children, crumb }: HeaderProps) => {
       </div>
       <div className="flex items-center gap-2">
         {children}
-        <InboxPopover />
         {/* <NotificationBell /> */}
-        {/* <ModeToggle /> */}
       </div>
     </header>
   );

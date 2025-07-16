@@ -15,8 +15,6 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { useSession } from "@/context/session-context";
-import { api } from "@workspace/backend";
-import { useData } from "@/hooks/use-data";
 import {
   Box,
   CheckIcon,
@@ -25,6 +23,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getAllIdeas } from "@/actions/idea";
 
 interface IdeaSelectorProps {
   idea: string | undefined;
@@ -36,9 +36,11 @@ export function IdeaSelector({ idea, onChange }: IdeaSelectorProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string | undefined>(idea);
 
-  const { token } = useSession();
-  const { data: ideas, isPending } = useData(api.idea.getIdeas, {
-    token,
+  const { data: ideas, isPending } = useQuery({
+    queryKey: ['all-ideas'],
+    queryFn: async () => {
+      return await getAllIdeas()
+    }
   });
 
   useEffect(() => {
@@ -51,9 +53,9 @@ export function IdeaSelector({ idea, onChange }: IdeaSelectorProps) {
       onChange("");
     } else {
       setValue(ideaId);
-      const newIdea = ideas?.find((p) => p._id === ideaId);
+      const newIdea = ideas?.find((p) => p.id === ideaId);
       if (newIdea) {
-        onChange(newIdea._id);
+        onChange(newIdea.id);
       }
     }
     setOpen(false);
@@ -81,7 +83,7 @@ export function IdeaSelector({ idea, onChange }: IdeaSelectorProps) {
               <>
                 {value ? (
                   (() => {
-                    const selectedIdea = ideas?.find((p) => p._id === value);
+                    const selectedIdea = ideas?.find((p) => p.id === value);
                     if (selectedIdea) {
                       return <ListCollapse className="size-4" />;
                     }
@@ -92,7 +94,7 @@ export function IdeaSelector({ idea, onChange }: IdeaSelectorProps) {
                 )}
                 <span>
                   {value
-                    ? ideas?.find((p) => p._id === value)?.name
+                    ? ideas?.find((p) => p.id === value)?.name
                     : "No idea selected"}
                 </span>
               </>
@@ -123,17 +125,16 @@ export function IdeaSelector({ idea, onChange }: IdeaSelectorProps) {
                 </CommandItem>
                 {ideas?.map((idea) => (
                   <CommandItem
-                    key={idea._id}
-                    value={idea._id}
-                    onSelect={() => handleIdeaChange(idea._id)}
+                    key={idea.id}
+                    value={idea.id}
+                    onSelect={() => handleIdeaChange(idea.id)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">{idea.name}</div>
-                    {value === idea._id && (
+                    {value === idea.id && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}
                     <span className="text-muted-foreground text-xs">
-                      {/* {filterByIdea(idea._id).length} */}
                     </span>
                   </CommandItem>
                 ))}

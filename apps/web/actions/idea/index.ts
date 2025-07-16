@@ -3,6 +3,7 @@
 import { prisma, IdeaOptionalDefaults } from "@workspace/backend";
 import { getSession } from "../account/user";
 
+
 export const createIdea = async (data: IdeaOptionalDefaults) => {
 	const { org } = await getSession();
 
@@ -22,6 +23,16 @@ export const createIdea = async (data: IdeaOptionalDefaults) => {
 
 	return idea;
 };
+
+export const getAllIdeas = async () => {
+
+
+	const { org } = await getSession();
+
+	const ideas = await prisma.idea.findMany({ where: { organizationId: org } })
+	return ideas
+}
+
 
 export const updateIdea = async (data: IdeaOptionalDefaults) => {
 	await getSession();
@@ -62,7 +73,7 @@ export const updateName = async ({ id, name }: { id: string; name: string }) => 
 	});
 };
 
-export const updateDescription = async ({id, description}:{id:string, description:string}) => {
+export const updateDescription = async ({ id, description }: { id: string, description: string }) => {
 	await getSession();
 
 	await prisma.idea.update({
@@ -78,7 +89,7 @@ export const updateDescription = async ({id, description}:{id:string, descriptio
 export const updateIndustry = async ({ id, industry }: { id: string; industry: string }) => {
 	await getSession();
 
-	await prisma.idea.update({	
+	await prisma.idea.update({
 		where: {
 			id,
 		},
