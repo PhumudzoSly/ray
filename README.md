@@ -11,7 +11,7 @@ apps/
   landing/  # Marketing/landing app (Next.js)
 packages/
   ui/       # Shared UI components
-  backend/  # Convex backend
+  backend/  # Prisma + Postgres backend
   typescript-config/ # Shared TS configs
   eslint-config/     # (removed, replaced by Biome)
 ```

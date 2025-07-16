@@ -114,7 +114,7 @@ function getUserProfile(id: any): any {
 ```
 packages/
 ├── ui/                   # Shared UI components
-├── backend/              # Convex backend
+├── backend/              # Prisma + Postgres backend
 └── typescript-config/    # Shared TS configs
 
 apps/
