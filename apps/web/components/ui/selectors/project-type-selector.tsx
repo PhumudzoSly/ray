@@ -18,12 +18,13 @@ import { CheckIcon } from "lucide-react";
 import { useId, useState } from "react";
 import {
   projectTypes,
-  ProjectType,
+  ProjectType
 } from "@/utils/constants/projects/projectTypes"; // Import the project types
+import { ProjectPlatformType } from "@workspace/backend";
 
 interface ProjectTypeSelectorProps {
-  selectedType: string;
-  onChange?: (type: string) => void;
+  selectedType: ProjectPlatformType;
+  onChange?: (type: ProjectPlatformType) => void;
   iconOnly?: boolean;
   size?: "xs" | "sm" | "lg";
   disabled?: boolean;
@@ -39,7 +40,7 @@ export function ProjectTypeSelector({
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleTypeChange = (typeId: string) => {
+  const handleTypeChange = (typeId: ProjectPlatformType) => {
     onChange?.(typeId);
     setOpen(false);
   };
@@ -47,6 +48,8 @@ export function ProjectTypeSelector({
   const selectedProjectType: ProjectType | undefined = projectTypes.find(
     (type) => type.id === selectedType
   );
+
+
 
   return (
     <div className="*:not-first:mt-2">
@@ -88,7 +91,7 @@ export function ProjectTypeSelector({
                   <CommandItem
                     key={type.id}
                     value={type.id}
-                    onSelect={() => handleTypeChange(type.id)}
+                    onSelect={() => handleTypeChange(type.id as ProjectPlatformType)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">

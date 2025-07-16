@@ -50,8 +50,8 @@ model Session {
   expiresAt DateTime
   ipAddress String?
   userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   activeOrganizationId String?
 
@@ -68,8 +68,8 @@ model Account {
   id           String    @id
   accountId    String
   providerId   String
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String?
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   accessToken  String?
   refreshToken String?
   idToken      String?
@@ -87,12 +87,12 @@ model Account {
 }
 
 model Verification {
-  id         String    @id
+  id         String   @id
   identifier String
   value      String
   expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@map("verification")
 }
@@ -121,8 +121,8 @@ model Member {
   id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
   role           String
   createdAt      DateTime
 
@@ -139,8 +139,8 @@ model Invitation {
   role           String?
   status         String
   expiresAt      DateTime
-  inviterId      String
-  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+  inviterId      String?
+  user           User?        @relation(fields: [inviterId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
   @@index([inviterId])
@@ -151,8 +151,8 @@ model Passkey {
   id             String    @id
   name           String?
   publicKey      String
-  userId         String
-  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   webauthnUserID String
   counter        Int
   deviceType     String
@@ -166,11 +166,11 @@ model Passkey {
 }
 
 model TwoFactor {
-  id          String @id
+  id          String  @id
   secret      String
   backupCodes String
-  userId      String
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@map("twoFactor")
@@ -184,7 +184,7 @@ model Subscription {
   subscription_id String?
   product_id      String?
   userId          String?      @unique
-  user            User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -198,18 +198,18 @@ model Project {
   name           String
   description    String?
   platform       ProjectPlatform
-  techStack      Json
+  techStack      Json?
   infrastructure String?
   dueDate        DateTime?
   status         ProjectStatus?
-  idea           Idea?           @relation(fields: [ideaId], references: [id])
+  idea           Idea?           @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   ideaId         String?
-  createdAt      DateTime
-  updatedAt      DateTime
-  organization   Organization?   @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String?
   issues         Issue[]
-  createdBy      User?           @relation("CreatedProjects", fields: [createdById], references: [id])
+  createdBy      User?           @relation("CreatedProjects", fields: [createdById], references: [id], onDelete: SetNull)
   createdById    String?
   assets         Asset[]
   launchPlans    LaunchPlan[]
@@ -228,9 +228,9 @@ model Idea {
   name                String
   description         String
   industry            String
-  owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id])
+  owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId             String?
-  organization        Organization @relation(fields: [organizationId], references: [id])
+  organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId      String
   internal            Boolean
   openSource          Boolean
@@ -245,9 +245,9 @@ model Issue {
   id               String       @id @default(uuid())
   title            String
   description      String?
-  organization     Organization @relation(fields: [organizationId], references: [id])
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId   String
-  project          Project      @relation(fields: [projectId], references: [id])
+  project          Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId        String
   milestoneId      String?
   featureId        String?
@@ -256,7 +256,7 @@ model Issue {
   priority         Importance
   label            IssueLabel
   dueDate          DateTime?
-  assignedTo       User?        @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  assignedTo       User?        @relation("AssignedIssues", fields: [assignedToId], references: [id], onDelete: SetNull)
   assignedToId     String?
   achieved         Boolean?
   isPublic         Boolean?
@@ -275,9 +275,9 @@ model Asset {
   name           String
   description    String?
   type           AssetType
-  project        Project        @relation(fields: [projectId], references: [id])
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId      String
-  organization   Organization   @relation(fields: [organizationId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   storageId      String?
   fileName       String?
@@ -289,10 +289,10 @@ model Asset {
   category       AssetCategory?
   thumbnailUrl   String?
   isPublic       Boolean?
-  uploadedBy     User?          @relation("UploadedAssets", fields: [uploadedById], references: [id])
+  uploadedBy     User?          @relation("UploadedAssets", fields: [uploadedById], references: [id], onDelete: SetNull)
   uploadedById   String?
-  uploadedAt     DateTime
-  updatedAt      DateTime
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
   viewCount      Int?
   downloadCount  Int?
 
@@ -301,7 +301,7 @@ model Asset {
   @@index([type])
   @@index([category])
   @@index([uploadedById])
-  @@index([uploadedAt])
+  @@index([createdAt])
   @@index([projectId, type])
   @@index([projectId, category])
 }
@@ -327,13 +327,13 @@ model ApiKey {
 
 model LaunchPlan {
   id               String                @id @default(uuid())
-  project          Project               @relation(fields: [projectId], references: [id])
+  project          Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId        String
   status           LaunchPlanStatus
   targetLaunchDate DateTime?
   actualLaunchDate DateTime?
-  createdAt        DateTime
-  updatedAt        DateTime
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
   checklistItems   LaunchChecklistItem[]
   copies           LaunchCopy[]
   strategies       LaunchStrategy[]
@@ -343,7 +343,7 @@ model LaunchPlan {
 
 model LaunchChecklistItem {
   id           String                  @id @default(uuid())
-  launchPlan   LaunchPlan              @relation(fields: [launchPlanId], references: [id])
+  launchPlan   LaunchPlan              @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
   launchPlanId String
   category     LaunchChecklistCategory
   title        String
@@ -356,8 +356,8 @@ model LaunchChecklistItem {
   dueDate      DateTime?
   notes        String?
   order        Int
-  createdAt    DateTime
-  updatedAt    DateTime
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
 
   @@index([launchPlanId])
   @@index([launchPlanId, category])
@@ -366,7 +366,7 @@ model LaunchChecklistItem {
 
 model LaunchCopy {
   id           String             @id @default(uuid())
-  launchPlan   LaunchPlan         @relation(fields: [launchPlanId], references: [id])
+  launchPlan   LaunchPlan         @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
   launchPlanId String
   platform     LaunchCopyPlatform
   title        String
@@ -378,8 +378,8 @@ model LaunchCopy {
   media        Json?
   isApproved   Boolean
   version      Int
-  createdAt    DateTime
-  updatedAt    DateTime
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 
   @@index([launchPlanId])
   @@index([launchPlanId, platform])
@@ -387,20 +387,20 @@ model LaunchCopy {
 
 model LaunchStrategy {
   id             String              @id @default(uuid())
-  launchPlan     LaunchPlan          @relation(fields: [launchPlanId], references: [id])
+  launchPlan     LaunchPlan          @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
   launchPlanId   String
   phase          LaunchStrategyPhase
   name           String
   description    String
   startDate      DateTime
   endDate        DateTime
-  platforms      Json
-  targetAudience Json
-  keyMetrics     Json
-  tasks          Json
+  platforms      Json?
+  targetAudience Json?
+  keyMetrics     Json?
+  tasks          Json?
   order          Int
-  createdAt      DateTime
-  updatedAt      DateTime
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 
   @@index([launchPlanId])
   @@index([launchPlanId, phase])
@@ -408,7 +408,7 @@ model LaunchStrategy {
 
 model PublicRoadmap {
   id              String             @id @default(uuid())
-  project         Project            @relation(fields: [projectId], references: [id])
+  project         Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId       String
   name            String
   slug            String
@@ -421,8 +421,8 @@ model PublicRoadmap {
   allowVoting     Boolean
   allowFeedback   Boolean
   showChangelog   Boolean
-  createdAt       DateTime
-  updatedAt       DateTime
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
   items           RoadmapItem[]
   changelogs      RoadmapChangelog[]
   featureRequests FeatureRequest[]
@@ -433,7 +433,7 @@ model PublicRoadmap {
 
 model RoadmapItem {
   id            String            @id @default(uuid())
-  roadmap       PublicRoadmap     @relation(fields: [roadmapId], references: [id])
+  roadmap       PublicRoadmap     @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
   roadmapId     String
   issueId       String?
   nodeId        String?
@@ -447,8 +447,8 @@ model RoadmapItem {
   order         Int
   voteCount     Int
   feedbackCount Int
-  createdAt     DateTime
-  updatedAt     DateTime
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   votes         RoadmapVote[]
   feedback      RoadmapFeedback[]
 
@@ -461,7 +461,7 @@ model RoadmapItem {
 
 model RoadmapVote {
   id            String      @id @default(uuid())
-  roadmapItem   RoadmapItem @relation(fields: [roadmapItemId], references: [id])
+  roadmapItem   RoadmapItem @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
   roadmapItemId String
   userId        String?
   ipAddress     String
@@ -474,7 +474,7 @@ model RoadmapVote {
 
 model RoadmapFeedback {
   id                   String                   @id @default(uuid())
-  roadmapItem          RoadmapItem              @relation(fields: [roadmapItemId], references: [id])
+  roadmapItem          RoadmapItem              @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
   roadmapItemId        String
   userId               String?
   ipAddress            String
@@ -497,15 +497,15 @@ model RoadmapFeedback {
 
 model RoadmapChangelog {
   id          String        @id @default(uuid())
-  roadmap     PublicRoadmap @relation(fields: [roadmapId], references: [id])
+  roadmap     PublicRoadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
   roadmapId   String
   title       String
   description String
-  items       Json
+  items       Json?
   publishDate DateTime
   isPublished Boolean
-  createdAt   DateTime
-  updatedAt   DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([roadmapId])
   @@index([publishDate])
@@ -513,7 +513,7 @@ model RoadmapChangelog {
 
 model FeatureRequest {
   id          String                 @id @default(uuid())
-  roadmap     PublicRoadmap          @relation(fields: [roadmapId], references: [id])
+  roadmap     PublicRoadmap          @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
   roadmapId   String
   title       String
   description String
@@ -526,8 +526,8 @@ model FeatureRequest {
   upvotes     Int
   isPublic    Boolean
   adminNotes  String?
-  createdAt   DateTime
-  updatedAt   DateTime
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
 
   @@index([roadmapId])
   @@index([email])
@@ -537,7 +537,7 @@ model FeatureRequest {
 
 model Waitlist {
   id               String          @id @default(uuid())
-  project          Project         @relation(fields: [projectId], references: [id])
+  project          Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId        String
   name             String
   slug             String
@@ -547,12 +547,12 @@ model Waitlist {
   showPosition     Boolean
   showSocialProof  Boolean
   customMessage    String?
-  organization     Organization    @relation(fields: [organizationId], references: [id])
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId   String
-  createdAt        DateTime
-  updatedAt        DateTime
-  createdBy        User            @relation("CreatedWaitlists", fields: [createdById], references: [id])
-  createdById      String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  createdBy        User?           @relation("CreatedWaitlists", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById      String?
   entries          WaitlistEntry[]
 
   @@index([projectId])
@@ -562,7 +562,7 @@ model Waitlist {
 
 model WaitlistEntry {
   id                String    @id @default(uuid())
-  waitlist          Waitlist  @relation(fields: [waitlistId], references: [id])
+  waitlist          Waitlist  @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
   waitlistId        String
   email             String
   name              String?
@@ -580,8 +580,8 @@ model WaitlistEntry {
   utmSource         String?
   utmMedium         String?
   utmCampaign       String?
-  createdAt         DateTime
-  updatedAt         DateTime
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@index([waitlistId])
   @@index([email])

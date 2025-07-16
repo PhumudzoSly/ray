@@ -298,7 +298,7 @@ exports.Prisma.AssetScalarFieldEnum = {
   thumbnailUrl: 'thumbnailUrl',
   isPublic: 'isPublic',
   uploadedById: 'uploadedById',
-  uploadedAt: 'uploadedAt',
+  createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   viewCount: 'viewCount',
   downloadCount: 'downloadCount'
@@ -514,10 +514,6 @@ exports.Prisma.WaitlistEntryScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
-};
-
-exports.Prisma.JsonNullValueInput = {
-  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullableJsonNullValueInput = {

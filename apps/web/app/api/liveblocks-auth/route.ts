@@ -1,10 +1,9 @@
 import { getSession } from "@/actions/account/user";
 import { Liveblocks } from "@liveblocks/node";
 import { NextRequest, NextResponse } from "next/server";
-import env from "@/lib/env";
 
 const liveblocks = new Liveblocks({
-  secret: env.LIVEBLOCKS_SECRET_KEY!,
+  secret: process.env.LIVEBLOCKS_SECRET_KEY!,
 });
 
 export async function POST(request: NextRequest) {

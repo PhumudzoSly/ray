@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -16,57 +15,60 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/context/session-context";
 import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-selector";
 import { IdeaSelector } from "./ui/selectors/idea-selector";
 import { CommandSelect } from "../../../packages/ui/src/components/command-select";
-import { techStackOptions } from "@/lib/types";
 import { DATABASE_PROVIDERS } from "@/utils/constants/sources/database";
 import { AUTH_PROVIDERS } from "@/utils/constants/sources/auth";
+import { createProject } from "@/actions/project";
+import { JsonValueType, ProjectOptionalDefaults } from "@workspace/backend";
 
 type CreateProjectDialogProps = {
-  ideaId?: Id<"idea">;
+  ideaId?: string;
 };
 
-type FormState = {
-  name: string;
-  description: string;
-  platform: string;
-  priority: string;
-  techStack: {
-    auth: string;
-    orm: string;
-    database: string;
-    ai: string;
-  };
-  ideaId?: Id<"idea">;
-};
 
 export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
   const { token, org } = useSession();
   const router = useRouter();
-  const createProject = useMutation(api.projects.create);
+  const createProjectMutation = useMutation(
+    {
+      mutationFn: createProject,
+      onSuccess: () => {
+        toast.success("Project created successfully!");
+        //  router.push(`/project/${projectId}`);
+      },
+      onError: () => {
+        toast.error("Failed to create project. Please try again.");
+      }
+    }
+  );
+  const techStackOptions = {
+    ai: ["OpenAI", "Anthropic", "Google"],
+    orm: ["Prisma", "Drizzle", "TypeORM"],
+    database: ["PostgreSQL", "MySQL", "SQLite"],
+  };
   const [open, setOpen] = useState(false);
 
   // Fetch idea details if ideaId is provided
 
-  const [form, setForm] = useState<FormState>({
+  const [form, setForm] = useState<ProjectOptionalDefaults>({
     name: "",
-    description: "",
-    platform: "web",
-    priority: "MEDIUM",
+    description: "", // Ensure always string
+    platform: "web", // Must match allowed types
+    status: "review",
     techStack: {
       auth: "",
       orm: "",
       database: "",
       ai: "",
     },
-    ideaId: ideaId,
+    ideaId: ideaId ?? undefined, // Ensure string | undefined
   });
 
-  const validateForm = (form: FormState) => {
+  const validateForm = (form: ProjectOptionalDefaults) => {
     const requiredFields = ["name", "platform", "ideaId"] as const;
     for (const field of requiredFields) {
       if (!form[field]?.trim()) {
@@ -85,15 +87,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
     }
 
     try {
-      const projectId = await createProject({
-        project: {
-          name: form.name,
-          description: form.description,
-          platform: form.platform as any,
-          techStack: form.techStack,
-          ideaId: form.ideaId,
-        },
-        token: token,
+      const projectId = await createProjectMutation.mutateAsync({
+        ...form,
+        techStack: JSON.parse(JSON.stringify(form.techStack)) as JsonValueType,
+        platform: form.platform as any,
       });
 
       setOpen(false);
@@ -131,7 +128,7 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
 
           <Textarea
             placeholder="Project description..."
-            value={form.description}
+            value={form.description ?? ""} // Ensure string
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
 
@@ -147,10 +144,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...form.techStack, ai: value },
+                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), ai: value },
                 })
               }
-              value={form.techStack.ai}
+              value={typeof form.techStack === "object" && form.techStack !== null && "ai" in form.techStack ? (form.techStack as any).ai : ""}
               placeholder="Select AI provider"
             />
             <CommandSelect
@@ -161,10 +158,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...form.techStack, auth: value },
+                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), auth: value },
                 })
               }
-              value={form.techStack.auth}
+              value={typeof form.techStack === "object" && form.techStack !== null && "auth" in form.techStack ? (form.techStack as any).auth : ""}
               placeholder="Select Auth provider"
             />
             <CommandSelect
@@ -175,10 +172,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...form.techStack, database: value },
+                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), database: value },
                 })
               }
-              value={form.techStack.database}
+              value={typeof form.techStack === "object" && form.techStack !== null && "database" in form.techStack ? (form.techStack as any).database : ""}
               placeholder="Select Database provider"
             />
             <CommandSelect
@@ -189,10 +186,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...form.techStack, orm: value },
+                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), orm: value },
                 })
               }
-              value={form.techStack.orm}
+              value={typeof form.techStack === "object" && form.techStack !== null && "orm" in form.techStack ? (form.techStack as any).orm : ""}
               placeholder="Select ORM provider"
             />
           </div>
@@ -202,14 +199,14 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
           </h6>
           <div className="w-full flex items-center justify-start gap-1.5 flex-wrap">
             <ProjectTypeSelector
-              selectedType={form.platform}
+              selectedType={form.platform as "web" | "mobile" | "both" | "api" | "plugin" | "desktop" | "cli"}
               onChange={(type) => setForm({ ...form, platform: type })}
             />
 
             <IdeaSelector
-              idea={form.ideaId}
+              idea={form.ideaId ?? undefined}
               onChange={(ideaId) =>
-                setForm({ ...form, ideaId: ideaId as Id<"idea"> })
+                setForm({ ...form, ideaId: ideaId as string })
               }
             />
           </div>

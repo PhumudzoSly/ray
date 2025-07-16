@@ -1,9 +1,16 @@
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { prisma } from "@workspace/backend";
 
-export function useSidebarProjects(token: string) {
-  const projects = useQuery(api.projects.list, {
-    token,
+export function useSidebarProjects(org: string) {
+  const projects = useQuery({
+    queryKey: ["projects-sidebar", org],
+    queryFn: async () => {
+      const projects = await prisma.idea.findMany({
+        where: {
+          orgId: orgId,
+        },
+      });
+    },
   });
 
   // Filter projects by org if needed (assuming projects have org field)

@@ -52,7 +52,6 @@ export const getStats = async () => {
 	});
 
 	return {
-		totalStorage: { value: totalStorageMB, label: "Total Storage (MB)" },
 		projectsByStatus: projectsByStatus.map((p) => ({
 			value: p._count._all,
 			label: p.status ?? "Unknown",
@@ -65,6 +64,7 @@ export const getStats = async () => {
 			value: i._count._all,
 			label: i.label ?? "Unknown",
 		})),
+		totalStorage: { value: totalStorageMB, label: "Total Storage (MB)" },
 		totalRoadmaps: { value: totalRoadmaps, label: "Total Roadmaps" },
 		totalWaitlists: { value: totalWaitlists, label: "Total Waitlists" },
 		totalAssets: { value: totalAssets, label: "Total Assets" },

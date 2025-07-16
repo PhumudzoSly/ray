@@ -93,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="grow">
             <NavMenu items={data.platform} title="Platform" />
             <NavMenu items={data.build} title="Build" />
-            <NavProjects />
+            {/* <NavProjects /> */}
           </div>
         </ScrollArea>
       </SidebarContent>

@@ -6,11 +6,11 @@ import type { z } from "zod";
 import type { bugReportSchema } from "@/app/report-bugs/_components/bug-report-form";
 import type { supportFormSchema } from "@/app/support/_components/support-form";
 import { auth, polarClient } from "@/lib/auth";
-import {
-	generateApiKey,
-	getApiKeyPreview,
-	hashApiKey,
-} from "@/lib/crypto-node";
+// import {
+// 	generateApiKey,
+// 	getApiKeyPreview,
+// 	hashApiKey,
+// } from "@/lib/crypto-node";
 
 export async function createOrg({ name }: { name: string }) {
 	const headersList = await headers();
@@ -187,56 +187,56 @@ export async function contactSuppport({
 	await getSession();
 }
 
-export async function createApiKey({
-	name,
-	permissions,
-}: {
-	name: string;
-	permissions: string[];
-}) {
-	const { userId, org } = await getSession();
+// export async function createApiKey({
+// 	name,
+// 	permissions,
+// }: {
+// 	name: string;
+// 	permissions: string[];
+// }) {
+// 	const { userId, org } = await getSession();
 
-	const apiKey = generateApiKey();
-	const keyHash = hashApiKey(apiKey);
-	const keyPreview = getApiKeyPreview(apiKey);
+// 	const apiKey = generateApiKey();
+// 	const keyHash = hashApiKey(apiKey);
+// 	const keyPreview = getApiKeyPreview(apiKey);
 
-	const api = await prisma.apiKey.create({
-		data: {
-			organizationId: org,
-			name,
-			permissions,
-			keyHash,
-			isActive: true,
-			keyPreview,
-			createdAt: new Date(),
-			createdBy: userId,
-		},
-	});
+// 	const api = await prisma.apiKey.create({
+// 		data: {
+// 			organizationId: org,
+// 			name,
+// 			permissions,
+// 			keyHash,
+// 			isActive: true,
+// 			keyPreview,
+// 			createdAt: new Date(),
+// 			createdBy: userId,
+// 		},
+// 	});
 
-	return api;
-}
+// 	return api;
+// }
 
-export async function listApiKeys() {
-	const { userId, org } = await getSession();
+// export async function listApiKeys() {
+// 	const { userId, org } = await getSession();
 
-	try {
-		const apiKeys = await prisma.apiKey.findMany({
-			where: {
-				organizationId: org,
-			},
-		});
+// 	try {
+// 		const apiKeys = await prisma.apiKey.findMany({
+// 			where: {
+// 				organizationId: org,
+// 			},
+// 		});
 
-		return {
-			success: true,
-			apiKeys,
-		};
-	} catch (error) {
-		return {
-			success: false,
-			error: error instanceof Error ? error.message : "Failed to list API keys",
-		};
-	}
-}
+// 		return {
+// 			success: true,
+// 			apiKeys,
+// 		};
+// 	} catch (error) {
+// 		return {
+// 			success: false,
+// 			error: error instanceof Error ? error.message : "Failed to list API keys",
+// 		};
+// 	}
+// }
 
 export async function deleteApiKey(keyId: string) {
 	const { userId, org } = await getSession();
@@ -283,4 +283,16 @@ export async function deactivateApiKey(keyId: string) {
 				error instanceof Error ? error.message : "Failed to deactivate API key",
 		};
 	}
+}
+
+export async function getUser(id: string) {
+	await getSession();
+
+	const user = await prisma.user.findFirst({
+		where: {
+			id,
+		},
+	})
+
+	return user
 }

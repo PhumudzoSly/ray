@@ -1,0 +1,31 @@
+---
+title: RayAI API
+description: RayAI API allow you to collect data needed by Ray, such as waitlist users, feedback, feature requests and more.
+---
+
+All API endpoints requires to pass the API key that you can get from your settings.
+ <Card title="Get API Key 🔒" href="https://app.rayai.dev/settings/api-keys" description="Visit your settings and create a new API to get started" />
+
+## API URL
+
+All APIs are routed over the app's API url `https://app.rayai.dev/api/v1`.
+Even if the API changes in the future, the core API version will continue to work as usual.
+
+## Example requests
+
+```js
+await fetch("https://app.rayai.dev/api/v1/test", {
+  method: "POST",
+  headers: { 
+    "Content-Type": "application/json", 
+    "Authorization": `Bearer ${token}` 
+    },
+  body: JSON.stringify({ 
+   // Data here
+  })
+});
+```
+
+
+
+

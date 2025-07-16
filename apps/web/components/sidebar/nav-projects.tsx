@@ -1,11 +1,7 @@
 "use client";
 import {
-  Building,
   CircleCheck,
-  Globe,
   FolderKanban,
-  Settings,
-  AlertCircle,
   GitBranch,
   FolderArchive,
   LoaderPinwheel,
@@ -31,8 +27,6 @@ import { Card } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useSession } from "@/context/session-context";
 import { useSidebarProjects } from "@/hooks/use-sidebar-projects";
-import { StatusSelector } from "../ui/selectors/status-selector";
-import { ProjectStatusSelector } from "../ui/selectors/project-status-selector";
 
 export function NavProjects() {
   const session = useSession();

@@ -69,7 +69,7 @@ export const auth = betterAuth({
 			],
 		}),
 		organization({
-			sendInvitationEmail: async ({ email }) => {},
+			sendInvitationEmail: async ({ email }) => { },
 			organizationDeletion: {
 				disabled: true,
 			},
@@ -78,11 +78,11 @@ export const auth = betterAuth({
 		twoFactor({
 			issuer: APP_NAME,
 			otpOptions: {
-				sendOTP: async ({ user }) => {},
+				sendOTP: async ({ user }) => { },
 			},
 		}),
 		magicLink({
-			sendMagicLink: async ({ email, url }) => {},
+			sendMagicLink: async ({ email, url }) => { },
 		}),
 	],
 	account: {
@@ -92,7 +92,7 @@ export const auth = betterAuth({
 	},
 	appName: APP_NAME,
 	emailAndPassword: {
-		async sendResetPassword({ user, token, url }) {},
+		async sendResetPassword({ user, token, url }) { },
 		enabled: true,
 		autoSignIn: true,
 	},
@@ -105,10 +105,10 @@ export const auth = betterAuth({
 	databaseHooks: {
 		user: {
 			create: {
-				after: async (user) => {},
+				after: async (user) => { },
 			},
 			update: {
-				after: async (user) => {},
+				after: async (user) => { },
 			},
 		},
 	},

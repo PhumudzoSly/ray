@@ -1,0 +1,79 @@
+---
+title: Waitlist
+description: RayAI waitlist allows you to launch waitlists and collect users for your projects.
+---
+
+RayAI is a SaaS management tool, offering you all the tools to build, grow, launch and scale high quality software.
+
+## How it works
+
+1. **User joins waitlist:** Users submit their email and (optionally) other details via your waitlist form.
+2. **Data is stored securely:** Submissions are stored in your RayAI project database.
+3. **Manage your waitlist:** View, export, or contact users from your dashboard.
+4. **Integrate anywhere:** Use the API to connect your waitlist to any frontend or service.
+
+---
+
+## Quick Start: Join the Waitlist via API
+
+You can add users to your waitlist programmatically using the API route:
+
+```bash
+curl -X POST https://your-domain.com/api/waitlist/join \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com"}'
+```
+
+Or with JavaScript:
+
+```js
+await fetch("/api/waitlist/join", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email: "user@example.com" })
+});
+```
+
+---
+
+## API Reference
+
+### POST `/api/waitlist/join`
+
+Add a user to your project's waitlist.
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  // Optionally, add more fields as needed
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Added to waitlist."
+}
+```
+
+**Errors:**
+- `400 Bad Request` if email is missing or invalid
+- `409 Conflict` if the email is already on the waitlist
+
+---
+
+## Usage in RayAI
+
+- **Dashboard:** View and manage your waitlist entries from the RayAI dashboard.
+- **Notifications:** Set up notifications for new signups.
+- **Export:** Download your waitlist as CSV for marketing or onboarding.
+- **Integrations:** Connect with other tools using the API.
+
+---
+
+<Cards>
+  <Card title="Learn more about RayAI" href="/docs/test" />
+  <Card title="Our Pricing" href="https://rayai.dev/pricing" />
+</Cards>

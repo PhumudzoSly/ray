@@ -3,8 +3,7 @@
 import { ReactNode } from "react";
 import { LiveblocksProvider } from "@liveblocks/react/suspense";
 import { useSession } from "@/context/session-context";
-import { getConvexUser, getOrgMembers } from "@/actions/account/user";
-import env from "@/lib/env";
+import { getOrgMembers, getUser } from "@/actions/account/user";
 
 export function LiveBlockProvider({ children }: { children: ReactNode }) {
   const user = useSession();
@@ -13,18 +12,18 @@ export function LiveBlockProvider({ children }: { children: ReactNode }) {
 
   return (
     <LiveblocksProvider
-      publicApiKey={env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!}
+      // publicApiKey={env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!}
       authEndpoint="/api/liveblocks-auth"
-    
+
       resolveUsers={async ({ userIds }) => {
         const users = await Promise.all(
           userIds.map((userId) => {
-            return getConvexUser({ userId, token: user.token });
+            return getUser(userId);
           })
         );
         const finalUsers = users.map((user) => {
           return {
-            id: (user?._id as string) || "",
+            id: (user?.id) || "",
             name: user?.name || "",
             avatar: user?.image || "",
           };
