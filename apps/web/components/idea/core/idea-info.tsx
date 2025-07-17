@@ -15,20 +15,22 @@ import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { Button } from "@workspace/ui/components/button";
 import IdeaEditModal from "./idea-edit-modal";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
+import { useQuery } from "@tanstack/react-query";
+import { getSingleIdea } from "@/actions/idea";
 
 const IdeaInfo = ({ id }: { id: string }) => {
   //
 
   const { token } = useSession();
-  const { data: idea, isPending } = api.idea.getSingleIdea({
-    id: id as Id<"idea">,
-    token,
-  });
+  const { data: idea, isPending } = useQuery({
+    queryKey: ["idea", id],
+    queryFn: async () => {
+      return await getSingleIdea(id)
+    }
+  })
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -55,7 +57,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
 
   return (
     <div className="h-full flex flex-col p-6">
-      {/* Header with Title and Status */}
       <div className="flex justify-between w-full flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-start justify-between w-full">
           <div>
@@ -65,7 +66,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
               className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
             />
             <div className="text-muted-foreground text-sm">
-              Added {moment(idea?._creationTime).fromNow()}
+              Added {moment(idea?.createdAt).fromNow()}
             </div>
           </div>
           <div className="flex items-center gap-2">

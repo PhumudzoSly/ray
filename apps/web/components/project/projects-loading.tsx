@@ -14,7 +14,7 @@ interface ProjectsLoadingProps {
 export function ProjectsLoading({ view }: ProjectsLoadingProps) {
   if (view === "table") {
     return (
-      <div className="border rounded-lg">
+      <div className="border rounded-lg p-2">
         <div className="p-4">
           <div className="space-y-4">
             {[...Array(5)].map((_, i) => (

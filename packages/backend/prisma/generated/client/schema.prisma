@@ -35,11 +35,12 @@ model User {
   passkeys     Passkey[]
   twofactors   TwoFactor[]
   subscription Subscription?
-  project      Project[]     @relation("CreatedProjects")
-  idea         Idea[]        @relation("IdeaOwner")
-  issue        Issue[]       @relation("AssignedIssues")
-  asset        Asset[]       @relation("UploadedAssets")
-  waitlist     Waitlist[]    @relation("CreatedWaitlists")
+  project      Project[]      @relation("CreatedProjects")
+  idea         Idea[]         @relation("IdeaOwner")
+  issue        Issue[]        @relation("AssignedIssues")
+  asset        Asset[]        @relation("UploadedAssets")
+  waitlist     Waitlist[]     @relation("CreatedWaitlists")
+  ActivityFeed ActivityFeed[]
 
   @@unique([email])
   @@map("user")
@@ -112,6 +113,7 @@ model Organization {
   issue        Issue[]
   asset        Asset[]
   waitlist     Waitlist[]
+  ActivityFeed ActivityFeed[]
 
   @@unique([slug])
   @@map("organization")
@@ -198,7 +200,11 @@ model Project {
   name           String
   description    String?
   platform       ProjectPlatform
-  techStack      Json?
+  ai             String?
+  orm            String?
+  database       String?
+  auth           String?
+  framework      String?
   infrastructure String?
   dueDate        DateTime?
   status         ProjectStatus?
@@ -212,7 +218,6 @@ model Project {
   createdBy      User?           @relation("CreatedProjects", fields: [createdById], references: [id], onDelete: SetNull)
   createdById    String?
   assets         Asset[]
-  launchPlans    LaunchPlan[]
   publicRoadmaps PublicRoadmap[]
   waitlists      Waitlist[]
 
@@ -235,10 +240,12 @@ model Idea {
   internal            Boolean
   openSource          Boolean
   status              IdeaStatus
-  aiOverallValidation Json?
+  aiOverallValidation Float?
   problemSolved       String?
   solutionOffered     String?
   projects            Project[]
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
 }
 
 model Issue {
@@ -285,7 +292,7 @@ model Asset {
   mimeType       String?
   url            String?
   linkType       LinkType?
-  tags           Json?
+  tags           String[]
   category       AssetCategory?
   thumbnailUrl   String?
   isPublic       Boolean?
@@ -312,7 +319,6 @@ model ApiKey {
   name           String
   keyHash        String
   keyPreview     String
-  permissions    Json?
   createdBy      String
   createdAt      DateTime
   lastUsed       DateTime?
@@ -325,85 +331,27 @@ model ApiKey {
   @@index([keyHash])
 }
 
-model LaunchPlan {
-  id               String                @id @default(uuid())
-  project          Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId        String
-  status           LaunchPlanStatus
-  targetLaunchDate DateTime?
-  actualLaunchDate DateTime?
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  checklistItems   LaunchChecklistItem[]
-  copies           LaunchCopy[]
-  strategies       LaunchStrategy[]
+model ActivityFeed {
+  id             String       @id @default(uuid())
+  type           ActivityType
+  title          String
+  description    String?
+  entityType     EntityType
+  entityId       String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId         String?
+  oldValue       String?
+  newValue       String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
-  @@index([projectId])
-}
-
-model LaunchChecklistItem {
-  id           String                  @id @default(uuid())
-  launchPlan   LaunchPlan              @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
-  launchPlanId String
-  category     LaunchChecklistCategory
-  title        String
-  description  String?
-  priority     LaunchChecklistPriority
-  status       LaunchChecklistStatus
-  isRequired   Boolean
-  dependsOn    Json?
-  assignedTo   String?
-  dueDate      DateTime?
-  notes        String?
-  order        Int
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-
-  @@index([launchPlanId])
-  @@index([launchPlanId, category])
-  @@index([launchPlanId, status])
-}
-
-model LaunchCopy {
-  id           String             @id @default(uuid())
-  launchPlan   LaunchPlan         @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
-  launchPlanId String
-  platform     LaunchCopyPlatform
-  title        String
-  tagline      String?
-  description  String
-  callToAction String?
-  hashtags     Json?
-  mentions     Json?
-  media        Json?
-  isApproved   Boolean
-  version      Int
-  createdAt    DateTime           @default(now())
-  updatedAt    DateTime           @updatedAt
-
-  @@index([launchPlanId])
-  @@index([launchPlanId, platform])
-}
-
-model LaunchStrategy {
-  id             String              @id @default(uuid())
-  launchPlan     LaunchPlan          @relation(fields: [launchPlanId], references: [id], onDelete: Cascade)
-  launchPlanId   String
-  phase          LaunchStrategyPhase
-  name           String
-  description    String
-  startDate      DateTime
-  endDate        DateTime
-  platforms      Json?
-  targetAudience Json?
-  keyMetrics     Json?
-  tasks          Json?
-  order          Int
-  createdAt      DateTime            @default(now())
-  updatedAt      DateTime            @updatedAt
-
-  @@index([launchPlanId])
-  @@index([launchPlanId, phase])
+  @@index([entityType, entityId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([entityType, entityId, createdAt])
 }
 
 model PublicRoadmap {
@@ -501,7 +449,8 @@ model RoadmapChangelog {
   roadmapId   String
   title       String
   description String
-  items       Json?
+  fixes       String[]
+  newFeatures String[]
   publishDate DateTime
   isPublished Boolean
   createdAt   DateTime      @default(now())
@@ -593,7 +542,27 @@ model WaitlistEntry {
   @@index([verificationToken])
 }
 
-// Enums
+enum ActivityType {
+  CREATED
+  UPDATED
+  PHASE_CHANGED
+  ASSIGNED
+  UNASSIGNED
+  DEPENDENCY_ADDED
+  DEPENDENCY_REMOVED
+  LINK_ADDED
+  LINK_REMOVED
+  PARENT_CHANGED
+}
+
+enum EntityType {
+  PROJECT
+  FEATURE
+  ISSUE
+  IDEA
+  ROADMAP
+  MILESTONE
+}
 
 enum IdeaStatus {
   INVALIDATED
@@ -664,12 +633,6 @@ enum IssueLabel {
   INTERNATIONALIZATION
 }
 
-enum AgentMessageRole {
-  user
-  assistant
-  system
-}
-
 enum AssetType {
   image
   document
@@ -702,17 +665,6 @@ enum AssetCategory {
   other
 }
 
-enum ChatType {
-  general
-  flow_analysis
-  recommendations
-}
-
-enum MessageRole {
-  user
-  assistant
-}
-
 enum PrdStatus {
   draft
   approved
@@ -732,54 +684,6 @@ enum AnalysisReportType {
   flow_analysis
   missing_flows
   recommendations
-}
-
-enum LaunchPlanStatus {
-  draft
-  in_progress
-  ready
-  launched
-}
-
-enum LaunchChecklistCategory {
-  technical
-  content
-  legal
-  marketing
-  analytics
-  support
-}
-
-enum LaunchChecklistPriority {
-  high
-  medium
-  low
-}
-
-enum LaunchChecklistStatus {
-  pending
-  in_progress
-  completed
-  skipped
-}
-
-enum LaunchCopyPlatform {
-  product_hunt
-  twitter
-  linkedin
-  reddit
-  hackernews
-  readme
-  website
-  press_release
-  email
-}
-
-enum LaunchStrategyPhase {
-  pre_launch
-  soft_launch
-  public_launch
-  post_launch
 }
 
 enum NotificationDigestFrequency {

@@ -1,20 +1,24 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboard, Lightbulb, UsersRound, Bot } from "lucide-react";
+import { LayoutDashboard, Lightbulb, UsersRound, Bot, Inbox, MessageCircleCode, InfoIcon, Lock, List, Users } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
 import { NavMenu } from "./nav-menu";
-import { TbListDetails, TbRoad } from "react-icons/tb";
+import { TbListDetails, TbProgressCheck, TbRoad } from "react-icons/tb";
 import { BiError } from "react-icons/bi";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { NavProjects } from "./nav-projects";
+import { Separator } from "@workspace/ui/components/separator";
+import Link from "next/link";
+import { Badge } from "@workspace/ui/components/badge";
+
 
 type NavGroup = {
   name: string;
@@ -40,17 +44,21 @@ const data: NavData = {
       icon: LayoutDashboard,
     },
     {
-      name: "Agent",
-      url: "/agent",
-      icon: Bot,
+      name: "Inbox",
+      url: "/inbox",
+      icon: MessageCircleCode,
+      badge: {
+        text: "Coming Soon",
+        variant: 'success'
+      }
     },
-  ],
-  build: [
     {
       name: "Ideas",
       url: "/ideas",
       icon: Lightbulb,
     },
+  ],
+  build: [
     {
       name: "Projects",
       url: "/project",
@@ -71,6 +79,16 @@ const data: NavData = {
       url: "/roadmap",
       icon: TbRoad,
     },
+    {
+      name: "Milestones",
+      url: "/milestones",
+      icon: TbProgressCheck,
+    },
+    {
+      name: "Feedback",
+      url: "/feedback",
+      icon: Inbox,
+    },
   ],
   grow: [],
 };
@@ -83,7 +101,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="sm" asChild>
-              <NavUser />
+              <div className='flex items-center gap-4'>
+                <div className="relative border border-border h-9 w-9 overflow-hidden rounded-lg">
+                  <img
+                    src="/icon.png"
+                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110"
+                    alt=""
+                  />
+                </div>
+                <Badge>Beta</Badge>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -92,11 +119,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <ScrollArea>
           <div className="grow">
             <NavMenu items={data.platform} title="Platform" />
+            <Separator />
             <NavMenu items={data.build} title="Build" />
-            {/* <NavProjects /> */}
+            <Separator />
           </div>
         </ScrollArea>
       </SidebarContent>
+      <SidebarFooter>
+        <div className="flex flex-col gap-4 p-3">
+          <Link href='/settings/teams' className="flex  text-xs items-center gap-2">
+            <Users className="text-muted-foreground" size={15} /> Teams
+          </Link>
+          <Link href='/settings/api-keys' className="flex  text-xs items-center gap-2">
+            <Lock className="text-muted-foreground" size={15} /> API Keys
+          </Link>
+          <Link href='https://docs.rayai.dev' className="flex  text-xs items-center gap-2">
+            <List className="text-muted-foreground" size={15} /> Documentation
+          </Link>
+          <Link href='/support' className="flex  text-xs items-center gap-2">
+            <InfoIcon className="text-muted-foreground" size={15} /> Help & Support
+          </Link>
+          <NavUser />
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

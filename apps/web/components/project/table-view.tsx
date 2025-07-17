@@ -118,7 +118,7 @@ export function TableView({
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline" className="text-xs">
-                    {project.platform}
+                    {project.platform === "both" ? "Web & Mobile" : project?.platform}
                   </Badge>
                 </TableCell>
                 <TableCell>

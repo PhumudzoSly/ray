@@ -1,26 +1,12 @@
 "use client";
 
-import { projectTypes } from "@/lib/types";
-import {
-  Globe,
-  Smartphone,
-  Dices as Devices,
-  Server,
-  Puzzle,
-  Monitor,
-  Terminal,
-  Users,
-} from "lucide-react";
-import { Badge } from "@workspace/ui/components/badge";
-import React from "react";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { api } from "@workspace/backend";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-selector";
+import { ProjectPlatform } from "@workspace/backend/prisma/generated/client/client";
 
 export const ProjectInfo = ({
   title,
@@ -32,10 +18,9 @@ export const ProjectInfo = ({
   title: string;
   description: string;
   id: string;
-  platform: string;
+  platform: ProjectPlatform;
   token: string;
 }) => {
-  // Removed: const updateProject = useMutation(api.projects.update);
 
   return (
     <div>

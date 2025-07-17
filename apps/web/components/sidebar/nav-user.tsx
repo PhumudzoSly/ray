@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useSession } from "@/context/session-context";
 import { startTransition } from "react";
+import { getInitials } from "@/utils/helpers";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -53,11 +54,11 @@ export function NavUser() {
               <div className="absolute inset-0 bg-linear-to-r to-primary/10 from-secondary/10 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
               <div className="relative flex items-center gap-3">
                 <div className="relative h-9 w-9 overflow-hidden rounded-lg">
-                  <img
-                    src="/icon.png"
-                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110"
-                    alt="Organization Icon"
-                  />
+                  <Avatar>
+                    <AvatarFallback>
+                      {getInitials(session.orgName)}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">

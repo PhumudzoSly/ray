@@ -1,14 +1,13 @@
 'use server'
 
-import { prisma } from "@workspace/backend/prisma/prisma";
-import { AssetType, AssetCategory } from "@prisma/client";
+import { prisma, AssetTypeType, AssetCategoryType } from "@workspace/backend";
 
 // Asset type for client and server
 export type Asset = {
     id: string;
     name: string;
     description?: string;
-    type: AssetType;
+    type: AssetTypeType;
     projectId: string;
     organizationId: string;
     storageId?: string;
@@ -18,7 +17,7 @@ export type Asset = {
     url?: string;
     linkType?: string;
     tags?: string[];
-    category?: AssetCategory;
+    category?: AssetCategoryType;
     thumbnailUrl?: string;
     isPublic?: boolean;
     uploadedById?: string;
@@ -35,8 +34,8 @@ export async function getProjectAssets({
     category,
 }: {
     projectId: string;
-    type?: AssetType;
-    category?: AssetCategory;
+    type?: AssetTypeType;
+    category?: AssetCategoryType;
 }): Promise<Asset[]> {
     const where: any = { projectId };
     if (type) where.type = type;

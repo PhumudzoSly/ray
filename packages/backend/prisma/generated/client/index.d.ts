@@ -89,25 +89,10 @@ export type Asset = $Result.DefaultSelection<Prisma.$AssetPayload>
  */
 export type ApiKey = $Result.DefaultSelection<Prisma.$ApiKeyPayload>
 /**
- * Model LaunchPlan
+ * Model ActivityFeed
  * 
  */
-export type LaunchPlan = $Result.DefaultSelection<Prisma.$LaunchPlanPayload>
-/**
- * Model LaunchChecklistItem
- * 
- */
-export type LaunchChecklistItem = $Result.DefaultSelection<Prisma.$LaunchChecklistItemPayload>
-/**
- * Model LaunchCopy
- * 
- */
-export type LaunchCopy = $Result.DefaultSelection<Prisma.$LaunchCopyPayload>
-/**
- * Model LaunchStrategy
- * 
- */
-export type LaunchStrategy = $Result.DefaultSelection<Prisma.$LaunchStrategyPayload>
+export type ActivityFeed = $Result.DefaultSelection<Prisma.$ActivityFeedPayload>
 /**
  * Model PublicRoadmap
  * 
@@ -153,7 +138,35 @@ export type WaitlistEntry = $Result.DefaultSelection<Prisma.$WaitlistEntryPayloa
  * Enums
  */
 export namespace $Enums {
-  export const IdeaStatus: {
+  export const ActivityType: {
+  CREATED: 'CREATED',
+  UPDATED: 'UPDATED',
+  PHASE_CHANGED: 'PHASE_CHANGED',
+  ASSIGNED: 'ASSIGNED',
+  UNASSIGNED: 'UNASSIGNED',
+  DEPENDENCY_ADDED: 'DEPENDENCY_ADDED',
+  DEPENDENCY_REMOVED: 'DEPENDENCY_REMOVED',
+  LINK_ADDED: 'LINK_ADDED',
+  LINK_REMOVED: 'LINK_REMOVED',
+  PARENT_CHANGED: 'PARENT_CHANGED'
+};
+
+export type ActivityType = (typeof ActivityType)[keyof typeof ActivityType]
+
+
+export const EntityType: {
+  PROJECT: 'PROJECT',
+  FEATURE: 'FEATURE',
+  ISSUE: 'ISSUE',
+  IDEA: 'IDEA',
+  ROADMAP: 'ROADMAP',
+  MILESTONE: 'MILESTONE'
+};
+
+export type EntityType = (typeof EntityType)[keyof typeof EntityType]
+
+
+export const IdeaStatus: {
   INVALIDATED: 'INVALIDATED',
   VALIDATED: 'VALIDATED',
   FAILED: 'FAILED',
@@ -246,15 +259,6 @@ export const IssueLabel: {
 export type IssueLabel = (typeof IssueLabel)[keyof typeof IssueLabel]
 
 
-export const AgentMessageRole: {
-  user: 'user',
-  assistant: 'assistant',
-  system: 'system'
-};
-
-export type AgentMessageRole = (typeof AgentMessageRole)[keyof typeof AgentMessageRole]
-
-
 export const AssetType: {
   image: 'image',
   document: 'document',
@@ -296,23 +300,6 @@ export const AssetCategory: {
 export type AssetCategory = (typeof AssetCategory)[keyof typeof AssetCategory]
 
 
-export const ChatType: {
-  general: 'general',
-  flow_analysis: 'flow_analysis',
-  recommendations: 'recommendations'
-};
-
-export type ChatType = (typeof ChatType)[keyof typeof ChatType]
-
-
-export const MessageRole: {
-  user: 'user',
-  assistant: 'assistant'
-};
-
-export type MessageRole = (typeof MessageRole)[keyof typeof MessageRole]
-
-
 export const PrdStatus: {
   draft: 'draft',
   approved: 'approved',
@@ -341,72 +328,6 @@ export const AnalysisReportType: {
 };
 
 export type AnalysisReportType = (typeof AnalysisReportType)[keyof typeof AnalysisReportType]
-
-
-export const LaunchPlanStatus: {
-  draft: 'draft',
-  in_progress: 'in_progress',
-  ready: 'ready',
-  launched: 'launched'
-};
-
-export type LaunchPlanStatus = (typeof LaunchPlanStatus)[keyof typeof LaunchPlanStatus]
-
-
-export const LaunchChecklistCategory: {
-  technical: 'technical',
-  content: 'content',
-  legal: 'legal',
-  marketing: 'marketing',
-  analytics: 'analytics',
-  support: 'support'
-};
-
-export type LaunchChecklistCategory = (typeof LaunchChecklistCategory)[keyof typeof LaunchChecklistCategory]
-
-
-export const LaunchChecklistPriority: {
-  high: 'high',
-  medium: 'medium',
-  low: 'low'
-};
-
-export type LaunchChecklistPriority = (typeof LaunchChecklistPriority)[keyof typeof LaunchChecklistPriority]
-
-
-export const LaunchChecklistStatus: {
-  pending: 'pending',
-  in_progress: 'in_progress',
-  completed: 'completed',
-  skipped: 'skipped'
-};
-
-export type LaunchChecklistStatus = (typeof LaunchChecklistStatus)[keyof typeof LaunchChecklistStatus]
-
-
-export const LaunchCopyPlatform: {
-  product_hunt: 'product_hunt',
-  twitter: 'twitter',
-  linkedin: 'linkedin',
-  reddit: 'reddit',
-  hackernews: 'hackernews',
-  readme: 'readme',
-  website: 'website',
-  press_release: 'press_release',
-  email: 'email'
-};
-
-export type LaunchCopyPlatform = (typeof LaunchCopyPlatform)[keyof typeof LaunchCopyPlatform]
-
-
-export const LaunchStrategyPhase: {
-  pre_launch: 'pre_launch',
-  soft_launch: 'soft_launch',
-  public_launch: 'public_launch',
-  post_launch: 'post_launch'
-};
-
-export type LaunchStrategyPhase = (typeof LaunchStrategyPhase)[keyof typeof LaunchStrategyPhase]
 
 
 export const NotificationDigestFrequency: {
@@ -451,6 +372,14 @@ export type FeatureRequestPriority = (typeof FeatureRequestPriority)[keyof typeo
 
 }
 
+export type ActivityType = $Enums.ActivityType
+
+export const ActivityType: typeof $Enums.ActivityType
+
+export type EntityType = $Enums.EntityType
+
+export const EntityType: typeof $Enums.EntityType
+
 export type IdeaStatus = $Enums.IdeaStatus
 
 export const IdeaStatus: typeof $Enums.IdeaStatus
@@ -483,10 +412,6 @@ export type IssueLabel = $Enums.IssueLabel
 
 export const IssueLabel: typeof $Enums.IssueLabel
 
-export type AgentMessageRole = $Enums.AgentMessageRole
-
-export const AgentMessageRole: typeof $Enums.AgentMessageRole
-
 export type AssetType = $Enums.AssetType
 
 export const AssetType: typeof $Enums.AssetType
@@ -499,14 +424,6 @@ export type AssetCategory = $Enums.AssetCategory
 
 export const AssetCategory: typeof $Enums.AssetCategory
 
-export type ChatType = $Enums.ChatType
-
-export const ChatType: typeof $Enums.ChatType
-
-export type MessageRole = $Enums.MessageRole
-
-export const MessageRole: typeof $Enums.MessageRole
-
 export type PrdStatus = $Enums.PrdStatus
 
 export const PrdStatus: typeof $Enums.PrdStatus
@@ -518,30 +435,6 @@ export const ImplementationPromptCategory: typeof $Enums.ImplementationPromptCat
 export type AnalysisReportType = $Enums.AnalysisReportType
 
 export const AnalysisReportType: typeof $Enums.AnalysisReportType
-
-export type LaunchPlanStatus = $Enums.LaunchPlanStatus
-
-export const LaunchPlanStatus: typeof $Enums.LaunchPlanStatus
-
-export type LaunchChecklistCategory = $Enums.LaunchChecklistCategory
-
-export const LaunchChecklistCategory: typeof $Enums.LaunchChecklistCategory
-
-export type LaunchChecklistPriority = $Enums.LaunchChecklistPriority
-
-export const LaunchChecklistPriority: typeof $Enums.LaunchChecklistPriority
-
-export type LaunchChecklistStatus = $Enums.LaunchChecklistStatus
-
-export const LaunchChecklistStatus: typeof $Enums.LaunchChecklistStatus
-
-export type LaunchCopyPlatform = $Enums.LaunchCopyPlatform
-
-export const LaunchCopyPlatform: typeof $Enums.LaunchCopyPlatform
-
-export type LaunchStrategyPhase = $Enums.LaunchStrategyPhase
-
-export const LaunchStrategyPhase: typeof $Enums.LaunchStrategyPhase
 
 export type NotificationDigestFrequency = $Enums.NotificationDigestFrequency
 
@@ -835,44 +728,14 @@ export class PrismaClient<
   get apiKey(): Prisma.ApiKeyDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.launchPlan`: Exposes CRUD operations for the **LaunchPlan** model.
+   * `prisma.activityFeed`: Exposes CRUD operations for the **ActivityFeed** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more LaunchPlans
-    * const launchPlans = await prisma.launchPlan.findMany()
+    * // Fetch zero or more ActivityFeeds
+    * const activityFeeds = await prisma.activityFeed.findMany()
     * ```
     */
-  get launchPlan(): Prisma.LaunchPlanDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.launchChecklistItem`: Exposes CRUD operations for the **LaunchChecklistItem** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more LaunchChecklistItems
-    * const launchChecklistItems = await prisma.launchChecklistItem.findMany()
-    * ```
-    */
-  get launchChecklistItem(): Prisma.LaunchChecklistItemDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.launchCopy`: Exposes CRUD operations for the **LaunchCopy** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more LaunchCopies
-    * const launchCopies = await prisma.launchCopy.findMany()
-    * ```
-    */
-  get launchCopy(): Prisma.LaunchCopyDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.launchStrategy`: Exposes CRUD operations for the **LaunchStrategy** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more LaunchStrategies
-    * const launchStrategies = await prisma.launchStrategy.findMany()
-    * ```
-    */
-  get launchStrategy(): Prisma.LaunchStrategyDelegate<ExtArgs, ClientOptions>;
+  get activityFeed(): Prisma.ActivityFeedDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.publicRoadmap`: Exposes CRUD operations for the **PublicRoadmap** model.
@@ -1408,10 +1271,7 @@ export namespace Prisma {
     Issue: 'Issue',
     Asset: 'Asset',
     ApiKey: 'ApiKey',
-    LaunchPlan: 'LaunchPlan',
-    LaunchChecklistItem: 'LaunchChecklistItem',
-    LaunchCopy: 'LaunchCopy',
-    LaunchStrategy: 'LaunchStrategy',
+    ActivityFeed: 'ActivityFeed',
     PublicRoadmap: 'PublicRoadmap',
     RoadmapItem: 'RoadmapItem',
     RoadmapVote: 'RoadmapVote',
@@ -1438,7 +1298,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "launchPlan" | "launchChecklistItem" | "launchCopy" | "launchStrategy" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2552,299 +2412,77 @@ export namespace Prisma {
           }
         }
       }
-      LaunchPlan: {
-        payload: Prisma.$LaunchPlanPayload<ExtArgs>
-        fields: Prisma.LaunchPlanFieldRefs
+      ActivityFeed: {
+        payload: Prisma.$ActivityFeedPayload<ExtArgs>
+        fields: Prisma.ActivityFeedFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.LaunchPlanFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload> | null
+            args: Prisma.ActivityFeedFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.LaunchPlanFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           findFirst: {
-            args: Prisma.LaunchPlanFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload> | null
+            args: Prisma.ActivityFeedFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.LaunchPlanFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           findMany: {
-            args: Prisma.LaunchPlanFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>[]
+            args: Prisma.ActivityFeedFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>[]
           }
           create: {
-            args: Prisma.LaunchPlanCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           createMany: {
-            args: Prisma.LaunchPlanCreateManyArgs<ExtArgs>
+            args: Prisma.ActivityFeedCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.LaunchPlanCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>[]
+            args: Prisma.ActivityFeedCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>[]
           }
           delete: {
-            args: Prisma.LaunchPlanDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           update: {
-            args: Prisma.LaunchPlanUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           deleteMany: {
-            args: Prisma.LaunchPlanDeleteManyArgs<ExtArgs>
+            args: Prisma.ActivityFeedDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.LaunchPlanUpdateManyArgs<ExtArgs>
+            args: Prisma.ActivityFeedUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.LaunchPlanUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>[]
+            args: Prisma.ActivityFeedUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>[]
           }
           upsert: {
-            args: Prisma.LaunchPlanUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchPlanPayload>
+            args: Prisma.ActivityFeedUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ActivityFeedPayload>
           }
           aggregate: {
-            args: Prisma.LaunchPlanAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateLaunchPlan>
+            args: Prisma.ActivityFeedAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateActivityFeed>
           }
           groupBy: {
-            args: Prisma.LaunchPlanGroupByArgs<ExtArgs>
-            result: $Utils.Optional<LaunchPlanGroupByOutputType>[]
+            args: Prisma.ActivityFeedGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ActivityFeedGroupByOutputType>[]
           }
           count: {
-            args: Prisma.LaunchPlanCountArgs<ExtArgs>
-            result: $Utils.Optional<LaunchPlanCountAggregateOutputType> | number
-          }
-        }
-      }
-      LaunchChecklistItem: {
-        payload: Prisma.$LaunchChecklistItemPayload<ExtArgs>
-        fields: Prisma.LaunchChecklistItemFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.LaunchChecklistItemFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.LaunchChecklistItemFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          findFirst: {
-            args: Prisma.LaunchChecklistItemFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.LaunchChecklistItemFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          findMany: {
-            args: Prisma.LaunchChecklistItemFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>[]
-          }
-          create: {
-            args: Prisma.LaunchChecklistItemCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          createMany: {
-            args: Prisma.LaunchChecklistItemCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.LaunchChecklistItemCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>[]
-          }
-          delete: {
-            args: Prisma.LaunchChecklistItemDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          update: {
-            args: Prisma.LaunchChecklistItemUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          deleteMany: {
-            args: Prisma.LaunchChecklistItemDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.LaunchChecklistItemUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LaunchChecklistItemUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>[]
-          }
-          upsert: {
-            args: Prisma.LaunchChecklistItemUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchChecklistItemPayload>
-          }
-          aggregate: {
-            args: Prisma.LaunchChecklistItemAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateLaunchChecklistItem>
-          }
-          groupBy: {
-            args: Prisma.LaunchChecklistItemGroupByArgs<ExtArgs>
-            result: $Utils.Optional<LaunchChecklistItemGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.LaunchChecklistItemCountArgs<ExtArgs>
-            result: $Utils.Optional<LaunchChecklistItemCountAggregateOutputType> | number
-          }
-        }
-      }
-      LaunchCopy: {
-        payload: Prisma.$LaunchCopyPayload<ExtArgs>
-        fields: Prisma.LaunchCopyFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.LaunchCopyFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.LaunchCopyFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          findFirst: {
-            args: Prisma.LaunchCopyFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.LaunchCopyFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          findMany: {
-            args: Prisma.LaunchCopyFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>[]
-          }
-          create: {
-            args: Prisma.LaunchCopyCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          createMany: {
-            args: Prisma.LaunchCopyCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.LaunchCopyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>[]
-          }
-          delete: {
-            args: Prisma.LaunchCopyDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          update: {
-            args: Prisma.LaunchCopyUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          deleteMany: {
-            args: Prisma.LaunchCopyDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.LaunchCopyUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LaunchCopyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>[]
-          }
-          upsert: {
-            args: Prisma.LaunchCopyUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchCopyPayload>
-          }
-          aggregate: {
-            args: Prisma.LaunchCopyAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateLaunchCopy>
-          }
-          groupBy: {
-            args: Prisma.LaunchCopyGroupByArgs<ExtArgs>
-            result: $Utils.Optional<LaunchCopyGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.LaunchCopyCountArgs<ExtArgs>
-            result: $Utils.Optional<LaunchCopyCountAggregateOutputType> | number
-          }
-        }
-      }
-      LaunchStrategy: {
-        payload: Prisma.$LaunchStrategyPayload<ExtArgs>
-        fields: Prisma.LaunchStrategyFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.LaunchStrategyFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.LaunchStrategyFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          findFirst: {
-            args: Prisma.LaunchStrategyFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.LaunchStrategyFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          findMany: {
-            args: Prisma.LaunchStrategyFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>[]
-          }
-          create: {
-            args: Prisma.LaunchStrategyCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          createMany: {
-            args: Prisma.LaunchStrategyCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.LaunchStrategyCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>[]
-          }
-          delete: {
-            args: Prisma.LaunchStrategyDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          update: {
-            args: Prisma.LaunchStrategyUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          deleteMany: {
-            args: Prisma.LaunchStrategyDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.LaunchStrategyUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.LaunchStrategyUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>[]
-          }
-          upsert: {
-            args: Prisma.LaunchStrategyUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$LaunchStrategyPayload>
-          }
-          aggregate: {
-            args: Prisma.LaunchStrategyAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateLaunchStrategy>
-          }
-          groupBy: {
-            args: Prisma.LaunchStrategyGroupByArgs<ExtArgs>
-            result: $Utils.Optional<LaunchStrategyGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.LaunchStrategyCountArgs<ExtArgs>
-            result: $Utils.Optional<LaunchStrategyCountAggregateOutputType> | number
+            args: Prisma.ActivityFeedCountArgs<ExtArgs>
+            result: $Utils.Optional<ActivityFeedCountAggregateOutputType> | number
           }
         }
       }
@@ -3539,10 +3177,7 @@ export namespace Prisma {
     issue?: IssueOmit
     asset?: AssetOmit
     apiKey?: ApiKeyOmit
-    launchPlan?: LaunchPlanOmit
-    launchChecklistItem?: LaunchChecklistItemOmit
-    launchCopy?: LaunchCopyOmit
-    launchStrategy?: LaunchStrategyOmit
+    activityFeed?: ActivityFeedOmit
     publicRoadmap?: PublicRoadmapOmit
     roadmapItem?: RoadmapItemOmit
     roadmapVote?: RoadmapVoteOmit
@@ -3656,6 +3291,7 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
+    ActivityFeed: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3670,6 +3306,7 @@ export namespace Prisma {
     issue?: boolean | UserCountOutputTypeCountIssueArgs
     asset?: boolean | UserCountOutputTypeCountAssetArgs
     waitlist?: boolean | UserCountOutputTypeCountWaitlistArgs
+    ActivityFeed?: boolean | UserCountOutputTypeCountActivityFeedArgs
   }
 
   // Custom InputTypes
@@ -3760,6 +3397,13 @@ export namespace Prisma {
     where?: WaitlistWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityFeedWhereInput
+  }
+
 
   /**
    * Count Type OrganizationCountOutputType
@@ -3774,6 +3418,7 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
+    ActivityFeed: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3785,6 +3430,7 @@ export namespace Prisma {
     issue?: boolean | OrganizationCountOutputTypeCountIssueArgs
     asset?: boolean | OrganizationCountOutputTypeCountAssetArgs
     waitlist?: boolean | OrganizationCountOutputTypeCountWaitlistArgs
+    ActivityFeed?: boolean | OrganizationCountOutputTypeCountActivityFeedArgs
   }
 
   // Custom InputTypes
@@ -3854,6 +3500,13 @@ export namespace Prisma {
     where?: WaitlistWhereInput
   }
 
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityFeedWhereInput
+  }
+
 
   /**
    * Count Type ProjectCountOutputType
@@ -3862,7 +3515,6 @@ export namespace Prisma {
   export type ProjectCountOutputType = {
     issues: number
     assets: number
-    launchPlans: number
     publicRoadmaps: number
     waitlists: number
   }
@@ -3870,7 +3522,6 @@ export namespace Prisma {
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     issues?: boolean | ProjectCountOutputTypeCountIssuesArgs
     assets?: boolean | ProjectCountOutputTypeCountAssetsArgs
-    launchPlans?: boolean | ProjectCountOutputTypeCountLaunchPlansArgs
     publicRoadmaps?: boolean | ProjectCountOutputTypeCountPublicRoadmapsArgs
     waitlists?: boolean | ProjectCountOutputTypeCountWaitlistsArgs
   }
@@ -3898,13 +3549,6 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountAssetsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetWhereInput
-  }
-
-  /**
-   * ProjectCountOutputType without action
-   */
-  export type ProjectCountOutputTypeCountLaunchPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchPlanWhereInput
   }
 
   /**
@@ -3950,55 +3594,6 @@ export namespace Prisma {
    */
   export type IdeaCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
-  }
-
-
-  /**
-   * Count Type LaunchPlanCountOutputType
-   */
-
-  export type LaunchPlanCountOutputType = {
-    checklistItems: number
-    copies: number
-    strategies: number
-  }
-
-  export type LaunchPlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    checklistItems?: boolean | LaunchPlanCountOutputTypeCountChecklistItemsArgs
-    copies?: boolean | LaunchPlanCountOutputTypeCountCopiesArgs
-    strategies?: boolean | LaunchPlanCountOutputTypeCountStrategiesArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * LaunchPlanCountOutputType without action
-   */
-  export type LaunchPlanCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlanCountOutputType
-     */
-    select?: LaunchPlanCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * LaunchPlanCountOutputType without action
-   */
-  export type LaunchPlanCountOutputTypeCountChecklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchChecklistItemWhereInput
-  }
-
-  /**
-   * LaunchPlanCountOutputType without action
-   */
-  export type LaunchPlanCountOutputTypeCountCopiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchCopyWhereInput
-  }
-
-  /**
-   * LaunchPlanCountOutputType without action
-   */
-  export type LaunchPlanCountOutputTypeCountStrategiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchStrategyWhereInput
   }
 
 
@@ -4334,6 +3929,7 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
+    ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4387,6 +3983,7 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
+    ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4407,6 +4004,7 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
+      ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4824,6 +4422,7 @@ export namespace Prisma {
     issue<T extends User$issueArgs<ExtArgs> = {}>(args?: Subset<T, User$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends User$assetArgs<ExtArgs> = {}>(args?: Subset<T, User$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends User$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, User$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ActivityFeed<T extends User$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, User$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5530,6 +5129,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaitlistScalarFieldEnum | WaitlistScalarFieldEnum[]
+  }
+
+  /**
+   * User.ActivityFeed
+   */
+  export type User$ActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityFeed
+     */
+    select?: ActivityFeedSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityFeed
+     */
+    omit?: ActivityFeedOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityFeedInclude<ExtArgs> | null
+    where?: ActivityFeedWhereInput
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
+    cursor?: ActivityFeedWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
   }
 
   /**
@@ -9062,6 +8685,7 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
+    ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -9102,6 +8726,7 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
+    ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9118,6 +8743,7 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
+      ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9528,6 +9154,7 @@ export namespace Prisma {
     issue<T extends Organization$issueArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends Organization$assetArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends Organization$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, Organization$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ActivityFeed<T extends Organization$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10140,6 +9767,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaitlistScalarFieldEnum | WaitlistScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.ActivityFeed
+   */
+  export type Organization$ActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ActivityFeed
+     */
+    select?: ActivityFeedSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ActivityFeed
+     */
+    omit?: ActivityFeedOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ActivityFeedInclude<ExtArgs> | null
+    where?: ActivityFeedWhereInput
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
+    cursor?: ActivityFeedWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
   }
 
   /**
@@ -15749,6 +15400,11 @@ export namespace Prisma {
     name: string | null
     description: string | null
     platform: $Enums.ProjectPlatform | null
+    ai: string | null
+    orm: string | null
+    database: string | null
+    auth: string | null
+    framework: string | null
     infrastructure: string | null
     dueDate: Date | null
     status: $Enums.ProjectStatus | null
@@ -15764,6 +15420,11 @@ export namespace Prisma {
     name: string | null
     description: string | null
     platform: $Enums.ProjectPlatform | null
+    ai: string | null
+    orm: string | null
+    database: string | null
+    auth: string | null
+    framework: string | null
     infrastructure: string | null
     dueDate: Date | null
     status: $Enums.ProjectStatus | null
@@ -15779,7 +15440,11 @@ export namespace Prisma {
     name: number
     description: number
     platform: number
-    techStack: number
+    ai: number
+    orm: number
+    database: number
+    auth: number
+    framework: number
     infrastructure: number
     dueDate: number
     status: number
@@ -15797,6 +15462,11 @@ export namespace Prisma {
     name?: true
     description?: true
     platform?: true
+    ai?: true
+    orm?: true
+    database?: true
+    auth?: true
+    framework?: true
     infrastructure?: true
     dueDate?: true
     status?: true
@@ -15812,6 +15482,11 @@ export namespace Prisma {
     name?: true
     description?: true
     platform?: true
+    ai?: true
+    orm?: true
+    database?: true
+    auth?: true
+    framework?: true
     infrastructure?: true
     dueDate?: true
     status?: true
@@ -15827,7 +15502,11 @@ export namespace Prisma {
     name?: true
     description?: true
     platform?: true
-    techStack?: true
+    ai?: true
+    orm?: true
+    database?: true
+    auth?: true
+    framework?: true
     infrastructure?: true
     dueDate?: true
     status?: true
@@ -15916,7 +15595,11 @@ export namespace Prisma {
     name: string
     description: string | null
     platform: $Enums.ProjectPlatform
-    techStack: JsonValue | null
+    ai: string | null
+    orm: string | null
+    database: string | null
+    auth: string | null
+    framework: string | null
     infrastructure: string | null
     dueDate: Date | null
     status: $Enums.ProjectStatus | null
@@ -15949,7 +15632,11 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     platform?: boolean
-    techStack?: boolean
+    ai?: boolean
+    orm?: boolean
+    database?: boolean
+    auth?: boolean
+    framework?: boolean
     infrastructure?: boolean
     dueDate?: boolean
     status?: boolean
@@ -15963,7 +15650,6 @@ export namespace Prisma {
     issues?: boolean | Project$issuesArgs<ExtArgs>
     createdBy?: boolean | Project$createdByArgs<ExtArgs>
     assets?: boolean | Project$assetsArgs<ExtArgs>
-    launchPlans?: boolean | Project$launchPlansArgs<ExtArgs>
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -15974,7 +15660,11 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     platform?: boolean
-    techStack?: boolean
+    ai?: boolean
+    orm?: boolean
+    database?: boolean
+    auth?: boolean
+    framework?: boolean
     infrastructure?: boolean
     dueDate?: boolean
     status?: boolean
@@ -15993,7 +15683,11 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     platform?: boolean
-    techStack?: boolean
+    ai?: boolean
+    orm?: boolean
+    database?: boolean
+    auth?: boolean
+    framework?: boolean
     infrastructure?: boolean
     dueDate?: boolean
     status?: boolean
@@ -16012,7 +15706,11 @@ export namespace Prisma {
     name?: boolean
     description?: boolean
     platform?: boolean
-    techStack?: boolean
+    ai?: boolean
+    orm?: boolean
+    database?: boolean
+    auth?: boolean
+    framework?: boolean
     infrastructure?: boolean
     dueDate?: boolean
     status?: boolean
@@ -16023,14 +15721,13 @@ export namespace Prisma {
     createdById?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "platform" | "techStack" | "infrastructure" | "dueDate" | "status" | "ideaId" | "createdAt" | "updatedAt" | "organizationId" | "createdById", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "platform" | "ai" | "orm" | "database" | "auth" | "framework" | "infrastructure" | "dueDate" | "status" | "ideaId" | "createdAt" | "updatedAt" | "organizationId" | "createdById", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     idea?: boolean | Project$ideaArgs<ExtArgs>
     organization?: boolean | Project$organizationArgs<ExtArgs>
     issues?: boolean | Project$issuesArgs<ExtArgs>
     createdBy?: boolean | Project$createdByArgs<ExtArgs>
     assets?: boolean | Project$assetsArgs<ExtArgs>
-    launchPlans?: boolean | Project$launchPlansArgs<ExtArgs>
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
@@ -16054,7 +15751,6 @@ export namespace Prisma {
       issues: Prisma.$IssuePayload<ExtArgs>[]
       createdBy: Prisma.$UserPayload<ExtArgs> | null
       assets: Prisma.$AssetPayload<ExtArgs>[]
-      launchPlans: Prisma.$LaunchPlanPayload<ExtArgs>[]
       publicRoadmaps: Prisma.$PublicRoadmapPayload<ExtArgs>[]
       waitlists: Prisma.$WaitlistPayload<ExtArgs>[]
     }
@@ -16063,7 +15759,11 @@ export namespace Prisma {
       name: string
       description: string | null
       platform: $Enums.ProjectPlatform
-      techStack: Prisma.JsonValue | null
+      ai: string | null
+      orm: string | null
+      database: string | null
+      auth: string | null
+      framework: string | null
       infrastructure: string | null
       dueDate: Date | null
       status: $Enums.ProjectStatus | null
@@ -16471,7 +16171,6 @@ export namespace Prisma {
     issues<T extends Project$issuesArgs<ExtArgs> = {}>(args?: Subset<T, Project$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdBy<T extends Project$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Project$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assets<T extends Project$assetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    launchPlans<T extends Project$launchPlansArgs<ExtArgs> = {}>(args?: Subset<T, Project$launchPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publicRoadmaps<T extends Project$publicRoadmapsArgs<ExtArgs> = {}>(args?: Subset<T, Project$publicRoadmapsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublicRoadmapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlists<T extends Project$waitlistsArgs<ExtArgs> = {}>(args?: Subset<T, Project$waitlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -16507,7 +16206,11 @@ export namespace Prisma {
     readonly name: FieldRef<"Project", 'String'>
     readonly description: FieldRef<"Project", 'String'>
     readonly platform: FieldRef<"Project", 'ProjectPlatform'>
-    readonly techStack: FieldRef<"Project", 'Json'>
+    readonly ai: FieldRef<"Project", 'String'>
+    readonly orm: FieldRef<"Project", 'String'>
+    readonly database: FieldRef<"Project", 'String'>
+    readonly auth: FieldRef<"Project", 'String'>
+    readonly framework: FieldRef<"Project", 'String'>
     readonly infrastructure: FieldRef<"Project", 'String'>
     readonly dueDate: FieldRef<"Project", 'DateTime'>
     readonly status: FieldRef<"Project", 'ProjectStatus'>
@@ -17017,30 +16720,6 @@ export namespace Prisma {
   }
 
   /**
-   * Project.launchPlans
-   */
-  export type Project$launchPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    where?: LaunchPlanWhereInput
-    orderBy?: LaunchPlanOrderByWithRelationInput | LaunchPlanOrderByWithRelationInput[]
-    cursor?: LaunchPlanWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LaunchPlanScalarFieldEnum | LaunchPlanScalarFieldEnum[]
-  }
-
-  /**
    * Project.publicRoadmaps
    */
   export type Project$publicRoadmapsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17113,8 +16792,18 @@ export namespace Prisma {
 
   export type AggregateIdea = {
     _count: IdeaCountAggregateOutputType | null
+    _avg: IdeaAvgAggregateOutputType | null
+    _sum: IdeaSumAggregateOutputType | null
     _min: IdeaMinAggregateOutputType | null
     _max: IdeaMaxAggregateOutputType | null
+  }
+
+  export type IdeaAvgAggregateOutputType = {
+    aiOverallValidation: number | null
+  }
+
+  export type IdeaSumAggregateOutputType = {
+    aiOverallValidation: number | null
   }
 
   export type IdeaMinAggregateOutputType = {
@@ -17127,8 +16816,11 @@ export namespace Prisma {
     internal: boolean | null
     openSource: boolean | null
     status: $Enums.IdeaStatus | null
+    aiOverallValidation: number | null
     problemSolved: string | null
     solutionOffered: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type IdeaMaxAggregateOutputType = {
@@ -17141,8 +16833,11 @@ export namespace Prisma {
     internal: boolean | null
     openSource: boolean | null
     status: $Enums.IdeaStatus | null
+    aiOverallValidation: number | null
     problemSolved: string | null
     solutionOffered: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type IdeaCountAggregateOutputType = {
@@ -17158,9 +16853,19 @@ export namespace Prisma {
     aiOverallValidation: number
     problemSolved: number
     solutionOffered: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
+
+  export type IdeaAvgAggregateInputType = {
+    aiOverallValidation?: true
+  }
+
+  export type IdeaSumAggregateInputType = {
+    aiOverallValidation?: true
+  }
 
   export type IdeaMinAggregateInputType = {
     id?: true
@@ -17172,8 +16877,11 @@ export namespace Prisma {
     internal?: true
     openSource?: true
     status?: true
+    aiOverallValidation?: true
     problemSolved?: true
     solutionOffered?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type IdeaMaxAggregateInputType = {
@@ -17186,8 +16894,11 @@ export namespace Prisma {
     internal?: true
     openSource?: true
     status?: true
+    aiOverallValidation?: true
     problemSolved?: true
     solutionOffered?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type IdeaCountAggregateInputType = {
@@ -17203,6 +16914,8 @@ export namespace Prisma {
     aiOverallValidation?: true
     problemSolved?: true
     solutionOffered?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -17244,6 +16957,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: IdeaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IdeaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: IdeaMinAggregateInputType
@@ -17274,6 +16999,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: IdeaCountAggregateInputType | true
+    _avg?: IdeaAvgAggregateInputType
+    _sum?: IdeaSumAggregateInputType
     _min?: IdeaMinAggregateInputType
     _max?: IdeaMaxAggregateInputType
   }
@@ -17288,10 +17015,14 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation: JsonValue | null
+    aiOverallValidation: number | null
     problemSolved: string | null
     solutionOffered: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: IdeaCountAggregateOutputType | null
+    _avg: IdeaAvgAggregateOutputType | null
+    _sum: IdeaSumAggregateOutputType | null
     _min: IdeaMinAggregateOutputType | null
     _max: IdeaMaxAggregateOutputType | null
   }
@@ -17323,6 +17054,8 @@ export namespace Prisma {
     aiOverallValidation?: boolean
     problemSolved?: boolean
     solutionOffered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     projects?: boolean | Idea$projectsArgs<ExtArgs>
@@ -17342,6 +17075,8 @@ export namespace Prisma {
     aiOverallValidation?: boolean
     problemSolved?: boolean
     solutionOffered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["idea"]>
@@ -17359,6 +17094,8 @@ export namespace Prisma {
     aiOverallValidation?: boolean
     problemSolved?: boolean
     solutionOffered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["idea"]>
@@ -17376,9 +17113,11 @@ export namespace Prisma {
     aiOverallValidation?: boolean
     problemSolved?: boolean
     solutionOffered?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type IdeaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "industry" | "ownerId" | "organizationId" | "internal" | "openSource" | "status" | "aiOverallValidation" | "problemSolved" | "solutionOffered", ExtArgs["result"]["idea"]>
+  export type IdeaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "industry" | "ownerId" | "organizationId" | "internal" | "openSource" | "status" | "aiOverallValidation" | "problemSolved" | "solutionOffered" | "createdAt" | "updatedAt", ExtArgs["result"]["idea"]>
   export type IdeaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -17411,9 +17150,11 @@ export namespace Prisma {
       internal: boolean
       openSource: boolean
       status: $Enums.IdeaStatus
-      aiOverallValidation: Prisma.JsonValue | null
+      aiOverallValidation: number | null
       problemSolved: string | null
       solutionOffered: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["idea"]>
     composites: {}
   }
@@ -17849,9 +17590,11 @@ export namespace Prisma {
     readonly internal: FieldRef<"Idea", 'Boolean'>
     readonly openSource: FieldRef<"Idea", 'Boolean'>
     readonly status: FieldRef<"Idea", 'IdeaStatus'>
-    readonly aiOverallValidation: FieldRef<"Idea", 'Json'>
+    readonly aiOverallValidation: FieldRef<"Idea", 'Float'>
     readonly problemSolved: FieldRef<"Idea", 'String'>
     readonly solutionOffered: FieldRef<"Idea", 'String'>
+    readonly createdAt: FieldRef<"Idea", 'DateTime'>
+    readonly updatedAt: FieldRef<"Idea", 'DateTime'>
   }
     
 
@@ -19836,7 +19579,7 @@ export namespace Prisma {
     mimeType: string | null
     url: string | null
     linkType: $Enums.LinkType | null
-    tags: JsonValue | null
+    tags: string[]
     category: $Enums.AssetCategory | null
     thumbnailUrl: string | null
     isPublic: boolean | null
@@ -20008,7 +19751,7 @@ export namespace Prisma {
       mimeType: string | null
       url: string | null
       linkType: $Enums.LinkType | null
-      tags: Prisma.JsonValue | null
+      tags: string[]
       category: $Enums.AssetCategory | null
       thumbnailUrl: string | null
       isPublic: boolean | null
@@ -20455,7 +20198,7 @@ export namespace Prisma {
     readonly mimeType: FieldRef<"Asset", 'String'>
     readonly url: FieldRef<"Asset", 'String'>
     readonly linkType: FieldRef<"Asset", 'LinkType'>
-    readonly tags: FieldRef<"Asset", 'Json'>
+    readonly tags: FieldRef<"Asset", 'String[]'>
     readonly category: FieldRef<"Asset", 'AssetCategory'>
     readonly thumbnailUrl: FieldRef<"Asset", 'String'>
     readonly isPublic: FieldRef<"Asset", 'Boolean'>
@@ -20939,7 +20682,6 @@ export namespace Prisma {
     name: number
     keyHash: number
     keyPreview: number
-    permissions: number
     createdBy: number
     createdAt: number
     lastUsed: number
@@ -20981,7 +20723,6 @@ export namespace Prisma {
     name?: true
     keyHash?: true
     keyPreview?: true
-    permissions?: true
     createdBy?: true
     createdAt?: true
     lastUsed?: true
@@ -21068,7 +20809,6 @@ export namespace Prisma {
     name: string
     keyHash: string
     keyPreview: string
-    permissions: JsonValue | null
     createdBy: string
     createdAt: Date
     lastUsed: Date | null
@@ -21099,7 +20839,6 @@ export namespace Prisma {
     name?: boolean
     keyHash?: boolean
     keyPreview?: boolean
-    permissions?: boolean
     createdBy?: boolean
     createdAt?: boolean
     lastUsed?: boolean
@@ -21113,7 +20852,6 @@ export namespace Prisma {
     name?: boolean
     keyHash?: boolean
     keyPreview?: boolean
-    permissions?: boolean
     createdBy?: boolean
     createdAt?: boolean
     lastUsed?: boolean
@@ -21127,7 +20865,6 @@ export namespace Prisma {
     name?: boolean
     keyHash?: boolean
     keyPreview?: boolean
-    permissions?: boolean
     createdBy?: boolean
     createdAt?: boolean
     lastUsed?: boolean
@@ -21141,7 +20878,6 @@ export namespace Prisma {
     name?: boolean
     keyHash?: boolean
     keyPreview?: boolean
-    permissions?: boolean
     createdBy?: boolean
     createdAt?: boolean
     lastUsed?: boolean
@@ -21149,7 +20885,7 @@ export namespace Prisma {
     expiresAt?: boolean
   }
 
-  export type ApiKeyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "keyHash" | "keyPreview" | "permissions" | "createdBy" | "createdAt" | "lastUsed" | "isActive" | "expiresAt", ExtArgs["result"]["apiKey"]>
+  export type ApiKeyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "name" | "keyHash" | "keyPreview" | "createdBy" | "createdAt" | "lastUsed" | "isActive" | "expiresAt", ExtArgs["result"]["apiKey"]>
 
   export type $ApiKeyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ApiKey"
@@ -21160,7 +20896,6 @@ export namespace Prisma {
       name: string
       keyHash: string
       keyPreview: string
-      permissions: Prisma.JsonValue | null
       createdBy: string
       createdAt: Date
       lastUsed: Date | null
@@ -21594,7 +21329,6 @@ export namespace Prisma {
     readonly name: FieldRef<"ApiKey", 'String'>
     readonly keyHash: FieldRef<"ApiKey", 'String'>
     readonly keyPreview: FieldRef<"ApiKey", 'String'>
-    readonly permissions: FieldRef<"ApiKey", 'Json'>
     readonly createdBy: FieldRef<"ApiKey", 'String'>
     readonly createdAt: FieldRef<"ApiKey", 'DateTime'>
     readonly lastUsed: FieldRef<"ApiKey", 'DateTime'>
@@ -21967,1670 +21701,441 @@ export namespace Prisma {
 
 
   /**
-   * Model LaunchPlan
+   * Model ActivityFeed
    */
 
-  export type AggregateLaunchPlan = {
-    _count: LaunchPlanCountAggregateOutputType | null
-    _min: LaunchPlanMinAggregateOutputType | null
-    _max: LaunchPlanMaxAggregateOutputType | null
+  export type AggregateActivityFeed = {
+    _count: ActivityFeedCountAggregateOutputType | null
+    _min: ActivityFeedMinAggregateOutputType | null
+    _max: ActivityFeedMaxAggregateOutputType | null
   }
 
-  export type LaunchPlanMinAggregateOutputType = {
+  export type ActivityFeedMinAggregateOutputType = {
     id: string | null
-    projectId: string | null
-    status: $Enums.LaunchPlanStatus | null
-    targetLaunchDate: Date | null
-    actualLaunchDate: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchPlanMaxAggregateOutputType = {
-    id: string | null
-    projectId: string | null
-    status: $Enums.LaunchPlanStatus | null
-    targetLaunchDate: Date | null
-    actualLaunchDate: Date | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchPlanCountAggregateOutputType = {
-    id: number
-    projectId: number
-    status: number
-    targetLaunchDate: number
-    actualLaunchDate: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type LaunchPlanMinAggregateInputType = {
-    id?: true
-    projectId?: true
-    status?: true
-    targetLaunchDate?: true
-    actualLaunchDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchPlanMaxAggregateInputType = {
-    id?: true
-    projectId?: true
-    status?: true
-    targetLaunchDate?: true
-    actualLaunchDate?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchPlanCountAggregateInputType = {
-    id?: true
-    projectId?: true
-    status?: true
-    targetLaunchDate?: true
-    actualLaunchDate?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type LaunchPlanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchPlan to aggregate.
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchPlans to fetch.
-     */
-    orderBy?: LaunchPlanOrderByWithRelationInput | LaunchPlanOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: LaunchPlanWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchPlans from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchPlans.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned LaunchPlans
-    **/
-    _count?: true | LaunchPlanCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: LaunchPlanMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: LaunchPlanMaxAggregateInputType
-  }
-
-  export type GetLaunchPlanAggregateType<T extends LaunchPlanAggregateArgs> = {
-        [P in keyof T & keyof AggregateLaunchPlan]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateLaunchPlan[P]>
-      : GetScalarType<T[P], AggregateLaunchPlan[P]>
-  }
-
-
-
-
-  export type LaunchPlanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchPlanWhereInput
-    orderBy?: LaunchPlanOrderByWithAggregationInput | LaunchPlanOrderByWithAggregationInput[]
-    by: LaunchPlanScalarFieldEnum[] | LaunchPlanScalarFieldEnum
-    having?: LaunchPlanScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: LaunchPlanCountAggregateInputType | true
-    _min?: LaunchPlanMinAggregateInputType
-    _max?: LaunchPlanMaxAggregateInputType
-  }
-
-  export type LaunchPlanGroupByOutputType = {
-    id: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate: Date | null
-    actualLaunchDate: Date | null
-    createdAt: Date
-    updatedAt: Date
-    _count: LaunchPlanCountAggregateOutputType | null
-    _min: LaunchPlanMinAggregateOutputType | null
-    _max: LaunchPlanMaxAggregateOutputType | null
-  }
-
-  type GetLaunchPlanGroupByPayload<T extends LaunchPlanGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<LaunchPlanGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof LaunchPlanGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], LaunchPlanGroupByOutputType[P]>
-            : GetScalarType<T[P], LaunchPlanGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type LaunchPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    projectId?: boolean
-    status?: boolean
-    targetLaunchDate?: boolean
-    actualLaunchDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-    checklistItems?: boolean | LaunchPlan$checklistItemsArgs<ExtArgs>
-    copies?: boolean | LaunchPlan$copiesArgs<ExtArgs>
-    strategies?: boolean | LaunchPlan$strategiesArgs<ExtArgs>
-    _count?: boolean | LaunchPlanCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchPlan"]>
-
-  export type LaunchPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    projectId?: boolean
-    status?: boolean
-    targetLaunchDate?: boolean
-    actualLaunchDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchPlan"]>
-
-  export type LaunchPlanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    projectId?: boolean
-    status?: boolean
-    targetLaunchDate?: boolean
-    actualLaunchDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchPlan"]>
-
-  export type LaunchPlanSelectScalar = {
-    id?: boolean
-    projectId?: boolean
-    status?: boolean
-    targetLaunchDate?: boolean
-    actualLaunchDate?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type LaunchPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "status" | "targetLaunchDate" | "actualLaunchDate" | "createdAt" | "updatedAt", ExtArgs["result"]["launchPlan"]>
-  export type LaunchPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-    checklistItems?: boolean | LaunchPlan$checklistItemsArgs<ExtArgs>
-    copies?: boolean | LaunchPlan$copiesArgs<ExtArgs>
-    strategies?: boolean | LaunchPlan$strategiesArgs<ExtArgs>
-    _count?: boolean | LaunchPlanCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type LaunchPlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-  }
-  export type LaunchPlanIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    project?: boolean | ProjectDefaultArgs<ExtArgs>
-  }
-
-  export type $LaunchPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "LaunchPlan"
-    objects: {
-      project: Prisma.$ProjectPayload<ExtArgs>
-      checklistItems: Prisma.$LaunchChecklistItemPayload<ExtArgs>[]
-      copies: Prisma.$LaunchCopyPayload<ExtArgs>[]
-      strategies: Prisma.$LaunchStrategyPayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      projectId: string
-      status: $Enums.LaunchPlanStatus
-      targetLaunchDate: Date | null
-      actualLaunchDate: Date | null
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["launchPlan"]>
-    composites: {}
-  }
-
-  type LaunchPlanGetPayload<S extends boolean | null | undefined | LaunchPlanDefaultArgs> = $Result.GetResult<Prisma.$LaunchPlanPayload, S>
-
-  type LaunchPlanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<LaunchPlanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: LaunchPlanCountAggregateInputType | true
-    }
-
-  export interface LaunchPlanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LaunchPlan'], meta: { name: 'LaunchPlan' } }
-    /**
-     * Find zero or one LaunchPlan that matches the filter.
-     * @param {LaunchPlanFindUniqueArgs} args - Arguments to find a LaunchPlan
-     * @example
-     * // Get one LaunchPlan
-     * const launchPlan = await prisma.launchPlan.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends LaunchPlanFindUniqueArgs>(args: SelectSubset<T, LaunchPlanFindUniqueArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one LaunchPlan that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {LaunchPlanFindUniqueOrThrowArgs} args - Arguments to find a LaunchPlan
-     * @example
-     * // Get one LaunchPlan
-     * const launchPlan = await prisma.launchPlan.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends LaunchPlanFindUniqueOrThrowArgs>(args: SelectSubset<T, LaunchPlanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchPlan that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanFindFirstArgs} args - Arguments to find a LaunchPlan
-     * @example
-     * // Get one LaunchPlan
-     * const launchPlan = await prisma.launchPlan.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends LaunchPlanFindFirstArgs>(args?: SelectSubset<T, LaunchPlanFindFirstArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchPlan that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanFindFirstOrThrowArgs} args - Arguments to find a LaunchPlan
-     * @example
-     * // Get one LaunchPlan
-     * const launchPlan = await prisma.launchPlan.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends LaunchPlanFindFirstOrThrowArgs>(args?: SelectSubset<T, LaunchPlanFindFirstOrThrowArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more LaunchPlans that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all LaunchPlans
-     * const launchPlans = await prisma.launchPlan.findMany()
-     * 
-     * // Get first 10 LaunchPlans
-     * const launchPlans = await prisma.launchPlan.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const launchPlanWithIdOnly = await prisma.launchPlan.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends LaunchPlanFindManyArgs>(args?: SelectSubset<T, LaunchPlanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a LaunchPlan.
-     * @param {LaunchPlanCreateArgs} args - Arguments to create a LaunchPlan.
-     * @example
-     * // Create one LaunchPlan
-     * const LaunchPlan = await prisma.launchPlan.create({
-     *   data: {
-     *     // ... data to create a LaunchPlan
-     *   }
-     * })
-     * 
-     */
-    create<T extends LaunchPlanCreateArgs>(args: SelectSubset<T, LaunchPlanCreateArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many LaunchPlans.
-     * @param {LaunchPlanCreateManyArgs} args - Arguments to create many LaunchPlans.
-     * @example
-     * // Create many LaunchPlans
-     * const launchPlan = await prisma.launchPlan.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends LaunchPlanCreateManyArgs>(args?: SelectSubset<T, LaunchPlanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many LaunchPlans and returns the data saved in the database.
-     * @param {LaunchPlanCreateManyAndReturnArgs} args - Arguments to create many LaunchPlans.
-     * @example
-     * // Create many LaunchPlans
-     * const launchPlan = await prisma.launchPlan.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many LaunchPlans and only return the `id`
-     * const launchPlanWithIdOnly = await prisma.launchPlan.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LaunchPlanCreateManyAndReturnArgs>(args?: SelectSubset<T, LaunchPlanCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a LaunchPlan.
-     * @param {LaunchPlanDeleteArgs} args - Arguments to delete one LaunchPlan.
-     * @example
-     * // Delete one LaunchPlan
-     * const LaunchPlan = await prisma.launchPlan.delete({
-     *   where: {
-     *     // ... filter to delete one LaunchPlan
-     *   }
-     * })
-     * 
-     */
-    delete<T extends LaunchPlanDeleteArgs>(args: SelectSubset<T, LaunchPlanDeleteArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one LaunchPlan.
-     * @param {LaunchPlanUpdateArgs} args - Arguments to update one LaunchPlan.
-     * @example
-     * // Update one LaunchPlan
-     * const launchPlan = await prisma.launchPlan.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends LaunchPlanUpdateArgs>(args: SelectSubset<T, LaunchPlanUpdateArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more LaunchPlans.
-     * @param {LaunchPlanDeleteManyArgs} args - Arguments to filter LaunchPlans to delete.
-     * @example
-     * // Delete a few LaunchPlans
-     * const { count } = await prisma.launchPlan.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends LaunchPlanDeleteManyArgs>(args?: SelectSubset<T, LaunchPlanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchPlans.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many LaunchPlans
-     * const launchPlan = await prisma.launchPlan.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends LaunchPlanUpdateManyArgs>(args: SelectSubset<T, LaunchPlanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchPlans and returns the data updated in the database.
-     * @param {LaunchPlanUpdateManyAndReturnArgs} args - Arguments to update many LaunchPlans.
-     * @example
-     * // Update many LaunchPlans
-     * const launchPlan = await prisma.launchPlan.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more LaunchPlans and only return the `id`
-     * const launchPlanWithIdOnly = await prisma.launchPlan.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LaunchPlanUpdateManyAndReturnArgs>(args: SelectSubset<T, LaunchPlanUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one LaunchPlan.
-     * @param {LaunchPlanUpsertArgs} args - Arguments to update or create a LaunchPlan.
-     * @example
-     * // Update or create a LaunchPlan
-     * const launchPlan = await prisma.launchPlan.upsert({
-     *   create: {
-     *     // ... data to create a LaunchPlan
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the LaunchPlan we want to update
-     *   }
-     * })
-     */
-    upsert<T extends LaunchPlanUpsertArgs>(args: SelectSubset<T, LaunchPlanUpsertArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of LaunchPlans.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanCountArgs} args - Arguments to filter LaunchPlans to count.
-     * @example
-     * // Count the number of LaunchPlans
-     * const count = await prisma.launchPlan.count({
-     *   where: {
-     *     // ... the filter for the LaunchPlans we want to count
-     *   }
-     * })
-    **/
-    count<T extends LaunchPlanCountArgs>(
-      args?: Subset<T, LaunchPlanCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], LaunchPlanCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a LaunchPlan.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends LaunchPlanAggregateArgs>(args: Subset<T, LaunchPlanAggregateArgs>): Prisma.PrismaPromise<GetLaunchPlanAggregateType<T>>
-
-    /**
-     * Group by LaunchPlan.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchPlanGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends LaunchPlanGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LaunchPlanGroupByArgs['orderBy'] }
-        : { orderBy?: LaunchPlanGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, LaunchPlanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLaunchPlanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the LaunchPlan model
-   */
-  readonly fields: LaunchPlanFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for LaunchPlan.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__LaunchPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    checklistItems<T extends LaunchPlan$checklistItemsArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlan$checklistItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    copies<T extends LaunchPlan$copiesArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlan$copiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    strategies<T extends LaunchPlan$strategiesArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlan$strategiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the LaunchPlan model
-   */
-  interface LaunchPlanFieldRefs {
-    readonly id: FieldRef<"LaunchPlan", 'String'>
-    readonly projectId: FieldRef<"LaunchPlan", 'String'>
-    readonly status: FieldRef<"LaunchPlan", 'LaunchPlanStatus'>
-    readonly targetLaunchDate: FieldRef<"LaunchPlan", 'DateTime'>
-    readonly actualLaunchDate: FieldRef<"LaunchPlan", 'DateTime'>
-    readonly createdAt: FieldRef<"LaunchPlan", 'DateTime'>
-    readonly updatedAt: FieldRef<"LaunchPlan", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * LaunchPlan findUnique
-   */
-  export type LaunchPlanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchPlan to fetch.
-     */
-    where: LaunchPlanWhereUniqueInput
-  }
-
-  /**
-   * LaunchPlan findUniqueOrThrow
-   */
-  export type LaunchPlanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchPlan to fetch.
-     */
-    where: LaunchPlanWhereUniqueInput
-  }
-
-  /**
-   * LaunchPlan findFirst
-   */
-  export type LaunchPlanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchPlan to fetch.
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchPlans to fetch.
-     */
-    orderBy?: LaunchPlanOrderByWithRelationInput | LaunchPlanOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchPlans.
-     */
-    cursor?: LaunchPlanWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchPlans from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchPlans.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchPlans.
-     */
-    distinct?: LaunchPlanScalarFieldEnum | LaunchPlanScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan findFirstOrThrow
-   */
-  export type LaunchPlanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchPlan to fetch.
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchPlans to fetch.
-     */
-    orderBy?: LaunchPlanOrderByWithRelationInput | LaunchPlanOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchPlans.
-     */
-    cursor?: LaunchPlanWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchPlans from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchPlans.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchPlans.
-     */
-    distinct?: LaunchPlanScalarFieldEnum | LaunchPlanScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan findMany
-   */
-  export type LaunchPlanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchPlans to fetch.
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchPlans to fetch.
-     */
-    orderBy?: LaunchPlanOrderByWithRelationInput | LaunchPlanOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing LaunchPlans.
-     */
-    cursor?: LaunchPlanWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchPlans from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchPlans.
-     */
-    skip?: number
-    distinct?: LaunchPlanScalarFieldEnum | LaunchPlanScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan create
-   */
-  export type LaunchPlanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * The data needed to create a LaunchPlan.
-     */
-    data: XOR<LaunchPlanCreateInput, LaunchPlanUncheckedCreateInput>
-  }
-
-  /**
-   * LaunchPlan createMany
-   */
-  export type LaunchPlanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many LaunchPlans.
-     */
-    data: LaunchPlanCreateManyInput | LaunchPlanCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * LaunchPlan createManyAndReturn
-   */
-  export type LaunchPlanCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * The data used to create many LaunchPlans.
-     */
-    data: LaunchPlanCreateManyInput | LaunchPlanCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchPlan update
-   */
-  export type LaunchPlanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * The data needed to update a LaunchPlan.
-     */
-    data: XOR<LaunchPlanUpdateInput, LaunchPlanUncheckedUpdateInput>
-    /**
-     * Choose, which LaunchPlan to update.
-     */
-    where: LaunchPlanWhereUniqueInput
-  }
-
-  /**
-   * LaunchPlan updateMany
-   */
-  export type LaunchPlanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update LaunchPlans.
-     */
-    data: XOR<LaunchPlanUpdateManyMutationInput, LaunchPlanUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchPlans to update
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * Limit how many LaunchPlans to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchPlan updateManyAndReturn
-   */
-  export type LaunchPlanUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * The data used to update LaunchPlans.
-     */
-    data: XOR<LaunchPlanUpdateManyMutationInput, LaunchPlanUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchPlans to update
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * Limit how many LaunchPlans to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchPlan upsert
-   */
-  export type LaunchPlanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * The filter to search for the LaunchPlan to update in case it exists.
-     */
-    where: LaunchPlanWhereUniqueInput
-    /**
-     * In case the LaunchPlan found by the `where` argument doesn't exist, create a new LaunchPlan with this data.
-     */
-    create: XOR<LaunchPlanCreateInput, LaunchPlanUncheckedCreateInput>
-    /**
-     * In case the LaunchPlan was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<LaunchPlanUpdateInput, LaunchPlanUncheckedUpdateInput>
-  }
-
-  /**
-   * LaunchPlan delete
-   */
-  export type LaunchPlanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-    /**
-     * Filter which LaunchPlan to delete.
-     */
-    where: LaunchPlanWhereUniqueInput
-  }
-
-  /**
-   * LaunchPlan deleteMany
-   */
-  export type LaunchPlanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchPlans to delete
-     */
-    where?: LaunchPlanWhereInput
-    /**
-     * Limit how many LaunchPlans to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchPlan.checklistItems
-   */
-  export type LaunchPlan$checklistItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchChecklistItem
-     */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchChecklistItem
-     */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
-    where?: LaunchChecklistItemWhereInput
-    orderBy?: LaunchChecklistItemOrderByWithRelationInput | LaunchChecklistItemOrderByWithRelationInput[]
-    cursor?: LaunchChecklistItemWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LaunchChecklistItemScalarFieldEnum | LaunchChecklistItemScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan.copies
-   */
-  export type LaunchPlan$copiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    where?: LaunchCopyWhereInput
-    orderBy?: LaunchCopyOrderByWithRelationInput | LaunchCopyOrderByWithRelationInput[]
-    cursor?: LaunchCopyWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LaunchCopyScalarFieldEnum | LaunchCopyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan.strategies
-   */
-  export type LaunchPlan$strategiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    where?: LaunchStrategyWhereInput
-    orderBy?: LaunchStrategyOrderByWithRelationInput | LaunchStrategyOrderByWithRelationInput[]
-    cursor?: LaunchStrategyWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LaunchStrategyScalarFieldEnum | LaunchStrategyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchPlan without action
-   */
-  export type LaunchPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchPlan
-     */
-    select?: LaunchPlanSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchPlan
-     */
-    omit?: LaunchPlanOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchPlanInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model LaunchChecklistItem
-   */
-
-  export type AggregateLaunchChecklistItem = {
-    _count: LaunchChecklistItemCountAggregateOutputType | null
-    _avg: LaunchChecklistItemAvgAggregateOutputType | null
-    _sum: LaunchChecklistItemSumAggregateOutputType | null
-    _min: LaunchChecklistItemMinAggregateOutputType | null
-    _max: LaunchChecklistItemMaxAggregateOutputType | null
-  }
-
-  export type LaunchChecklistItemAvgAggregateOutputType = {
-    order: number | null
-  }
-
-  export type LaunchChecklistItemSumAggregateOutputType = {
-    order: number | null
-  }
-
-  export type LaunchChecklistItemMinAggregateOutputType = {
-    id: string | null
-    launchPlanId: string | null
-    category: $Enums.LaunchChecklistCategory | null
+    type: $Enums.ActivityType | null
     title: string | null
     description: string | null
-    priority: $Enums.LaunchChecklistPriority | null
-    status: $Enums.LaunchChecklistStatus | null
-    isRequired: boolean | null
-    assignedTo: string | null
-    dueDate: Date | null
-    notes: string | null
-    order: number | null
+    entityType: $Enums.EntityType | null
+    entityId: string | null
+    organizationId: string | null
+    userId: string | null
+    oldValue: string | null
+    newValue: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type LaunchChecklistItemMaxAggregateOutputType = {
+  export type ActivityFeedMaxAggregateOutputType = {
     id: string | null
-    launchPlanId: string | null
-    category: $Enums.LaunchChecklistCategory | null
+    type: $Enums.ActivityType | null
     title: string | null
     description: string | null
-    priority: $Enums.LaunchChecklistPriority | null
-    status: $Enums.LaunchChecklistStatus | null
-    isRequired: boolean | null
-    assignedTo: string | null
-    dueDate: Date | null
-    notes: string | null
-    order: number | null
+    entityType: $Enums.EntityType | null
+    entityId: string | null
+    organizationId: string | null
+    userId: string | null
+    oldValue: string | null
+    newValue: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
-  export type LaunchChecklistItemCountAggregateOutputType = {
+  export type ActivityFeedCountAggregateOutputType = {
     id: number
-    launchPlanId: number
-    category: number
+    type: number
     title: number
     description: number
-    priority: number
-    status: number
-    isRequired: number
-    dependsOn: number
-    assignedTo: number
-    dueDate: number
-    notes: number
-    order: number
+    entityType: number
+    entityId: number
+    organizationId: number
+    userId: number
+    oldValue: number
+    newValue: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
 
-  export type LaunchChecklistItemAvgAggregateInputType = {
-    order?: true
-  }
-
-  export type LaunchChecklistItemSumAggregateInputType = {
-    order?: true
-  }
-
-  export type LaunchChecklistItemMinAggregateInputType = {
+  export type ActivityFeedMinAggregateInputType = {
     id?: true
-    launchPlanId?: true
-    category?: true
+    type?: true
     title?: true
     description?: true
-    priority?: true
-    status?: true
-    isRequired?: true
-    assignedTo?: true
-    dueDate?: true
-    notes?: true
-    order?: true
+    entityType?: true
+    entityId?: true
+    organizationId?: true
+    userId?: true
+    oldValue?: true
+    newValue?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type LaunchChecklistItemMaxAggregateInputType = {
+  export type ActivityFeedMaxAggregateInputType = {
     id?: true
-    launchPlanId?: true
-    category?: true
+    type?: true
     title?: true
     description?: true
-    priority?: true
-    status?: true
-    isRequired?: true
-    assignedTo?: true
-    dueDate?: true
-    notes?: true
-    order?: true
+    entityType?: true
+    entityId?: true
+    organizationId?: true
+    userId?: true
+    oldValue?: true
+    newValue?: true
     createdAt?: true
     updatedAt?: true
   }
 
-  export type LaunchChecklistItemCountAggregateInputType = {
+  export type ActivityFeedCountAggregateInputType = {
     id?: true
-    launchPlanId?: true
-    category?: true
+    type?: true
     title?: true
     description?: true
-    priority?: true
-    status?: true
-    isRequired?: true
-    dependsOn?: true
-    assignedTo?: true
-    dueDate?: true
-    notes?: true
-    order?: true
+    entityType?: true
+    entityId?: true
+    organizationId?: true
+    userId?: true
+    oldValue?: true
+    newValue?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
   }
 
-  export type LaunchChecklistItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which LaunchChecklistItem to aggregate.
+     * Filter which ActivityFeed to aggregate.
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of LaunchChecklistItems to fetch.
+     * Determine the order of ActivityFeeds to fetch.
      */
-    orderBy?: LaunchChecklistItemOrderByWithRelationInput | LaunchChecklistItemOrderByWithRelationInput[]
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: LaunchChecklistItemWhereUniqueInput
+    cursor?: ActivityFeedWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` LaunchChecklistItems from the position of the cursor.
+     * Take `±n` ActivityFeeds from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` LaunchChecklistItems.
+     * Skip the first `n` ActivityFeeds.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned LaunchChecklistItems
+     * Count returned ActivityFeeds
     **/
-    _count?: true | LaunchChecklistItemCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: LaunchChecklistItemAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LaunchChecklistItemSumAggregateInputType
+    _count?: true | ActivityFeedCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: LaunchChecklistItemMinAggregateInputType
+    _min?: ActivityFeedMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: LaunchChecklistItemMaxAggregateInputType
+    _max?: ActivityFeedMaxAggregateInputType
   }
 
-  export type GetLaunchChecklistItemAggregateType<T extends LaunchChecklistItemAggregateArgs> = {
-        [P in keyof T & keyof AggregateLaunchChecklistItem]: P extends '_count' | 'count'
+  export type GetActivityFeedAggregateType<T extends ActivityFeedAggregateArgs> = {
+        [P in keyof T & keyof AggregateActivityFeed]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateLaunchChecklistItem[P]>
-      : GetScalarType<T[P], AggregateLaunchChecklistItem[P]>
+        : GetScalarType<T[P], AggregateActivityFeed[P]>
+      : GetScalarType<T[P], AggregateActivityFeed[P]>
   }
 
 
 
 
-  export type LaunchChecklistItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchChecklistItemWhereInput
-    orderBy?: LaunchChecklistItemOrderByWithAggregationInput | LaunchChecklistItemOrderByWithAggregationInput[]
-    by: LaunchChecklistItemScalarFieldEnum[] | LaunchChecklistItemScalarFieldEnum
-    having?: LaunchChecklistItemScalarWhereWithAggregatesInput
+  export type ActivityFeedGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ActivityFeedWhereInput
+    orderBy?: ActivityFeedOrderByWithAggregationInput | ActivityFeedOrderByWithAggregationInput[]
+    by: ActivityFeedScalarFieldEnum[] | ActivityFeedScalarFieldEnum
+    having?: ActivityFeedScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: LaunchChecklistItemCountAggregateInputType | true
-    _avg?: LaunchChecklistItemAvgAggregateInputType
-    _sum?: LaunchChecklistItemSumAggregateInputType
-    _min?: LaunchChecklistItemMinAggregateInputType
-    _max?: LaunchChecklistItemMaxAggregateInputType
+    _count?: ActivityFeedCountAggregateInputType | true
+    _min?: ActivityFeedMinAggregateInputType
+    _max?: ActivityFeedMaxAggregateInputType
   }
 
-  export type LaunchChecklistItemGroupByOutputType = {
+  export type ActivityFeedGroupByOutputType = {
     id: string
-    launchPlanId: string
-    category: $Enums.LaunchChecklistCategory
+    type: $Enums.ActivityType
     title: string
     description: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn: JsonValue | null
-    assignedTo: string | null
-    dueDate: Date | null
-    notes: string | null
-    order: number
+    entityType: $Enums.EntityType
+    entityId: string
+    organizationId: string
+    userId: string | null
+    oldValue: string | null
+    newValue: string | null
     createdAt: Date
     updatedAt: Date
-    _count: LaunchChecklistItemCountAggregateOutputType | null
-    _avg: LaunchChecklistItemAvgAggregateOutputType | null
-    _sum: LaunchChecklistItemSumAggregateOutputType | null
-    _min: LaunchChecklistItemMinAggregateOutputType | null
-    _max: LaunchChecklistItemMaxAggregateOutputType | null
+    _count: ActivityFeedCountAggregateOutputType | null
+    _min: ActivityFeedMinAggregateOutputType | null
+    _max: ActivityFeedMaxAggregateOutputType | null
   }
 
-  type GetLaunchChecklistItemGroupByPayload<T extends LaunchChecklistItemGroupByArgs> = Prisma.PrismaPromise<
+  type GetActivityFeedGroupByPayload<T extends ActivityFeedGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<LaunchChecklistItemGroupByOutputType, T['by']> &
+      PickEnumerable<ActivityFeedGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof LaunchChecklistItemGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof ActivityFeedGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], LaunchChecklistItemGroupByOutputType[P]>
-            : GetScalarType<T[P], LaunchChecklistItemGroupByOutputType[P]>
+              : GetScalarType<T[P], ActivityFeedGroupByOutputType[P]>
+            : GetScalarType<T[P], ActivityFeedGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type LaunchChecklistItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ActivityFeedSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    launchPlanId?: boolean
-    category?: boolean
+    type?: boolean
     title?: boolean
     description?: boolean
-    priority?: boolean
-    status?: boolean
-    isRequired?: boolean
-    dependsOn?: boolean
-    assignedTo?: boolean
-    dueDate?: boolean
-    notes?: boolean
-    order?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    organizationId?: boolean
+    userId?: boolean
+    oldValue?: boolean
+    newValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchChecklistItem"]>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
+  }, ExtArgs["result"]["activityFeed"]>
 
-  export type LaunchChecklistItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ActivityFeedSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    launchPlanId?: boolean
-    category?: boolean
+    type?: boolean
     title?: boolean
     description?: boolean
-    priority?: boolean
-    status?: boolean
-    isRequired?: boolean
-    dependsOn?: boolean
-    assignedTo?: boolean
-    dueDate?: boolean
-    notes?: boolean
-    order?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    organizationId?: boolean
+    userId?: boolean
+    oldValue?: boolean
+    newValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchChecklistItem"]>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
+  }, ExtArgs["result"]["activityFeed"]>
 
-  export type LaunchChecklistItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type ActivityFeedSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    launchPlanId?: boolean
-    category?: boolean
+    type?: boolean
     title?: boolean
     description?: boolean
-    priority?: boolean
-    status?: boolean
-    isRequired?: boolean
-    dependsOn?: boolean
-    assignedTo?: boolean
-    dueDate?: boolean
-    notes?: boolean
-    order?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    organizationId?: boolean
+    userId?: boolean
+    oldValue?: boolean
+    newValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchChecklistItem"]>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
+  }, ExtArgs["result"]["activityFeed"]>
 
-  export type LaunchChecklistItemSelectScalar = {
+  export type ActivityFeedSelectScalar = {
     id?: boolean
-    launchPlanId?: boolean
-    category?: boolean
+    type?: boolean
     title?: boolean
     description?: boolean
-    priority?: boolean
-    status?: boolean
-    isRequired?: boolean
-    dependsOn?: boolean
-    assignedTo?: boolean
-    dueDate?: boolean
-    notes?: boolean
-    order?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    organizationId?: boolean
+    userId?: boolean
+    oldValue?: boolean
+    newValue?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LaunchChecklistItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "launchPlanId" | "category" | "title" | "description" | "priority" | "status" | "isRequired" | "dependsOn" | "assignedTo" | "dueDate" | "notes" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["launchChecklistItem"]>
-  export type LaunchChecklistItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
+  export type ActivityFeedOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "title" | "description" | "entityType" | "entityId" | "organizationId" | "userId" | "oldValue" | "newValue" | "createdAt" | "updatedAt", ExtArgs["result"]["activityFeed"]>
+  export type ActivityFeedInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
   }
-  export type LaunchChecklistItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
+  export type ActivityFeedIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
   }
-  export type LaunchChecklistItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
+  export type ActivityFeedIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    user?: boolean | ActivityFeed$userArgs<ExtArgs>
   }
 
-  export type $LaunchChecklistItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "LaunchChecklistItem"
+  export type $ActivityFeedPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ActivityFeed"
     objects: {
-      launchPlan: Prisma.$LaunchPlanPayload<ExtArgs>
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      launchPlanId: string
-      category: $Enums.LaunchChecklistCategory
+      type: $Enums.ActivityType
       title: string
       description: string | null
-      priority: $Enums.LaunchChecklistPriority
-      status: $Enums.LaunchChecklistStatus
-      isRequired: boolean
-      dependsOn: Prisma.JsonValue | null
-      assignedTo: string | null
-      dueDate: Date | null
-      notes: string | null
-      order: number
+      entityType: $Enums.EntityType
+      entityId: string
+      organizationId: string
+      userId: string | null
+      oldValue: string | null
+      newValue: string | null
       createdAt: Date
       updatedAt: Date
-    }, ExtArgs["result"]["launchChecklistItem"]>
+    }, ExtArgs["result"]["activityFeed"]>
     composites: {}
   }
 
-  type LaunchChecklistItemGetPayload<S extends boolean | null | undefined | LaunchChecklistItemDefaultArgs> = $Result.GetResult<Prisma.$LaunchChecklistItemPayload, S>
+  type ActivityFeedGetPayload<S extends boolean | null | undefined | ActivityFeedDefaultArgs> = $Result.GetResult<Prisma.$ActivityFeedPayload, S>
 
-  type LaunchChecklistItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<LaunchChecklistItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: LaunchChecklistItemCountAggregateInputType | true
+  type ActivityFeedCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ActivityFeedFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ActivityFeedCountAggregateInputType | true
     }
 
-  export interface LaunchChecklistItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LaunchChecklistItem'], meta: { name: 'LaunchChecklistItem' } }
+  export interface ActivityFeedDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ActivityFeed'], meta: { name: 'ActivityFeed' } }
     /**
-     * Find zero or one LaunchChecklistItem that matches the filter.
-     * @param {LaunchChecklistItemFindUniqueArgs} args - Arguments to find a LaunchChecklistItem
+     * Find zero or one ActivityFeed that matches the filter.
+     * @param {ActivityFeedFindUniqueArgs} args - Arguments to find a ActivityFeed
      * @example
-     * // Get one LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.findUnique({
+     * // Get one ActivityFeed
+     * const activityFeed = await prisma.activityFeed.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends LaunchChecklistItemFindUniqueArgs>(args: SelectSubset<T, LaunchChecklistItemFindUniqueArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends ActivityFeedFindUniqueArgs>(args: SelectSubset<T, ActivityFeedFindUniqueArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one LaunchChecklistItem that matches the filter or throw an error with `error.code='P2025'`
+     * Find one ActivityFeed that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {LaunchChecklistItemFindUniqueOrThrowArgs} args - Arguments to find a LaunchChecklistItem
+     * @param {ActivityFeedFindUniqueOrThrowArgs} args - Arguments to find a ActivityFeed
      * @example
-     * // Get one LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.findUniqueOrThrow({
+     * // Get one ActivityFeed
+     * const activityFeed = await prisma.activityFeed.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends LaunchChecklistItemFindUniqueOrThrowArgs>(args: SelectSubset<T, LaunchChecklistItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends ActivityFeedFindUniqueOrThrowArgs>(args: SelectSubset<T, ActivityFeedFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first LaunchChecklistItem that matches the filter.
+     * Find the first ActivityFeed that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemFindFirstArgs} args - Arguments to find a LaunchChecklistItem
+     * @param {ActivityFeedFindFirstArgs} args - Arguments to find a ActivityFeed
      * @example
-     * // Get one LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.findFirst({
+     * // Get one ActivityFeed
+     * const activityFeed = await prisma.activityFeed.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends LaunchChecklistItemFindFirstArgs>(args?: SelectSubset<T, LaunchChecklistItemFindFirstArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends ActivityFeedFindFirstArgs>(args?: SelectSubset<T, ActivityFeedFindFirstArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first LaunchChecklistItem that matches the filter or
+     * Find the first ActivityFeed that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemFindFirstOrThrowArgs} args - Arguments to find a LaunchChecklistItem
+     * @param {ActivityFeedFindFirstOrThrowArgs} args - Arguments to find a ActivityFeed
      * @example
-     * // Get one LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.findFirstOrThrow({
+     * // Get one ActivityFeed
+     * const activityFeed = await prisma.activityFeed.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends LaunchChecklistItemFindFirstOrThrowArgs>(args?: SelectSubset<T, LaunchChecklistItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends ActivityFeedFindFirstOrThrowArgs>(args?: SelectSubset<T, ActivityFeedFindFirstOrThrowArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more LaunchChecklistItems that matches the filter.
+     * Find zero or more ActivityFeeds that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {ActivityFeedFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all LaunchChecklistItems
-     * const launchChecklistItems = await prisma.launchChecklistItem.findMany()
+     * // Get all ActivityFeeds
+     * const activityFeeds = await prisma.activityFeed.findMany()
      * 
-     * // Get first 10 LaunchChecklistItems
-     * const launchChecklistItems = await prisma.launchChecklistItem.findMany({ take: 10 })
+     * // Get first 10 ActivityFeeds
+     * const activityFeeds = await prisma.activityFeed.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const launchChecklistItemWithIdOnly = await prisma.launchChecklistItem.findMany({ select: { id: true } })
+     * const activityFeedWithIdOnly = await prisma.activityFeed.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends LaunchChecklistItemFindManyArgs>(args?: SelectSubset<T, LaunchChecklistItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends ActivityFeedFindManyArgs>(args?: SelectSubset<T, ActivityFeedFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a LaunchChecklistItem.
-     * @param {LaunchChecklistItemCreateArgs} args - Arguments to create a LaunchChecklistItem.
+     * Create a ActivityFeed.
+     * @param {ActivityFeedCreateArgs} args - Arguments to create a ActivityFeed.
      * @example
-     * // Create one LaunchChecklistItem
-     * const LaunchChecklistItem = await prisma.launchChecklistItem.create({
+     * // Create one ActivityFeed
+     * const ActivityFeed = await prisma.activityFeed.create({
      *   data: {
-     *     // ... data to create a LaunchChecklistItem
+     *     // ... data to create a ActivityFeed
      *   }
      * })
      * 
      */
-    create<T extends LaunchChecklistItemCreateArgs>(args: SelectSubset<T, LaunchChecklistItemCreateArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends ActivityFeedCreateArgs>(args: SelectSubset<T, ActivityFeedCreateArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many LaunchChecklistItems.
-     * @param {LaunchChecklistItemCreateManyArgs} args - Arguments to create many LaunchChecklistItems.
+     * Create many ActivityFeeds.
+     * @param {ActivityFeedCreateManyArgs} args - Arguments to create many ActivityFeeds.
      * @example
-     * // Create many LaunchChecklistItems
-     * const launchChecklistItem = await prisma.launchChecklistItem.createMany({
+     * // Create many ActivityFeeds
+     * const activityFeed = await prisma.activityFeed.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends LaunchChecklistItemCreateManyArgs>(args?: SelectSubset<T, LaunchChecklistItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends ActivityFeedCreateManyArgs>(args?: SelectSubset<T, ActivityFeedCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many LaunchChecklistItems and returns the data saved in the database.
-     * @param {LaunchChecklistItemCreateManyAndReturnArgs} args - Arguments to create many LaunchChecklistItems.
+     * Create many ActivityFeeds and returns the data saved in the database.
+     * @param {ActivityFeedCreateManyAndReturnArgs} args - Arguments to create many ActivityFeeds.
      * @example
-     * // Create many LaunchChecklistItems
-     * const launchChecklistItem = await prisma.launchChecklistItem.createManyAndReturn({
+     * // Create many ActivityFeeds
+     * const activityFeed = await prisma.activityFeed.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many LaunchChecklistItems and only return the `id`
-     * const launchChecklistItemWithIdOnly = await prisma.launchChecklistItem.createManyAndReturn({
+     * // Create many ActivityFeeds and only return the `id`
+     * const activityFeedWithIdOnly = await prisma.activityFeed.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -23640,28 +22145,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends LaunchChecklistItemCreateManyAndReturnArgs>(args?: SelectSubset<T, LaunchChecklistItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends ActivityFeedCreateManyAndReturnArgs>(args?: SelectSubset<T, ActivityFeedCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a LaunchChecklistItem.
-     * @param {LaunchChecklistItemDeleteArgs} args - Arguments to delete one LaunchChecklistItem.
+     * Delete a ActivityFeed.
+     * @param {ActivityFeedDeleteArgs} args - Arguments to delete one ActivityFeed.
      * @example
-     * // Delete one LaunchChecklistItem
-     * const LaunchChecklistItem = await prisma.launchChecklistItem.delete({
+     * // Delete one ActivityFeed
+     * const ActivityFeed = await prisma.activityFeed.delete({
      *   where: {
-     *     // ... filter to delete one LaunchChecklistItem
+     *     // ... filter to delete one ActivityFeed
      *   }
      * })
      * 
      */
-    delete<T extends LaunchChecklistItemDeleteArgs>(args: SelectSubset<T, LaunchChecklistItemDeleteArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends ActivityFeedDeleteArgs>(args: SelectSubset<T, ActivityFeedDeleteArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one LaunchChecklistItem.
-     * @param {LaunchChecklistItemUpdateArgs} args - Arguments to update one LaunchChecklistItem.
+     * Update one ActivityFeed.
+     * @param {ActivityFeedUpdateArgs} args - Arguments to update one ActivityFeed.
      * @example
-     * // Update one LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.update({
+     * // Update one ActivityFeed
+     * const activityFeed = await prisma.activityFeed.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -23671,30 +22176,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends LaunchChecklistItemUpdateArgs>(args: SelectSubset<T, LaunchChecklistItemUpdateArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends ActivityFeedUpdateArgs>(args: SelectSubset<T, ActivityFeedUpdateArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more LaunchChecklistItems.
-     * @param {LaunchChecklistItemDeleteManyArgs} args - Arguments to filter LaunchChecklistItems to delete.
+     * Delete zero or more ActivityFeeds.
+     * @param {ActivityFeedDeleteManyArgs} args - Arguments to filter ActivityFeeds to delete.
      * @example
-     * // Delete a few LaunchChecklistItems
-     * const { count } = await prisma.launchChecklistItem.deleteMany({
+     * // Delete a few ActivityFeeds
+     * const { count } = await prisma.activityFeed.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends LaunchChecklistItemDeleteManyArgs>(args?: SelectSubset<T, LaunchChecklistItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends ActivityFeedDeleteManyArgs>(args?: SelectSubset<T, ActivityFeedDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more LaunchChecklistItems.
+     * Update zero or more ActivityFeeds.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {ActivityFeedUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many LaunchChecklistItems
-     * const launchChecklistItem = await prisma.launchChecklistItem.updateMany({
+     * // Update many ActivityFeeds
+     * const activityFeed = await prisma.activityFeed.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -23704,14 +22209,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends LaunchChecklistItemUpdateManyArgs>(args: SelectSubset<T, LaunchChecklistItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends ActivityFeedUpdateManyArgs>(args: SelectSubset<T, ActivityFeedUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more LaunchChecklistItems and returns the data updated in the database.
-     * @param {LaunchChecklistItemUpdateManyAndReturnArgs} args - Arguments to update many LaunchChecklistItems.
+     * Update zero or more ActivityFeeds and returns the data updated in the database.
+     * @param {ActivityFeedUpdateManyAndReturnArgs} args - Arguments to update many ActivityFeeds.
      * @example
-     * // Update many LaunchChecklistItems
-     * const launchChecklistItem = await prisma.launchChecklistItem.updateManyAndReturn({
+     * // Update many ActivityFeeds
+     * const activityFeed = await prisma.activityFeed.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -23720,8 +22225,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more LaunchChecklistItems and only return the `id`
-     * const launchChecklistItemWithIdOnly = await prisma.launchChecklistItem.updateManyAndReturn({
+     * // Update zero or more ActivityFeeds and only return the `id`
+     * const activityFeedWithIdOnly = await prisma.activityFeed.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -23734,56 +22239,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends LaunchChecklistItemUpdateManyAndReturnArgs>(args: SelectSubset<T, LaunchChecklistItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends ActivityFeedUpdateManyAndReturnArgs>(args: SelectSubset<T, ActivityFeedUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one LaunchChecklistItem.
-     * @param {LaunchChecklistItemUpsertArgs} args - Arguments to update or create a LaunchChecklistItem.
+     * Create or update one ActivityFeed.
+     * @param {ActivityFeedUpsertArgs} args - Arguments to update or create a ActivityFeed.
      * @example
-     * // Update or create a LaunchChecklistItem
-     * const launchChecklistItem = await prisma.launchChecklistItem.upsert({
+     * // Update or create a ActivityFeed
+     * const activityFeed = await prisma.activityFeed.upsert({
      *   create: {
-     *     // ... data to create a LaunchChecklistItem
+     *     // ... data to create a ActivityFeed
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the LaunchChecklistItem we want to update
+     *     // ... the filter for the ActivityFeed we want to update
      *   }
      * })
      */
-    upsert<T extends LaunchChecklistItemUpsertArgs>(args: SelectSubset<T, LaunchChecklistItemUpsertArgs<ExtArgs>>): Prisma__LaunchChecklistItemClient<$Result.GetResult<Prisma.$LaunchChecklistItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends ActivityFeedUpsertArgs>(args: SelectSubset<T, ActivityFeedUpsertArgs<ExtArgs>>): Prisma__ActivityFeedClient<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of LaunchChecklistItems.
+     * Count the number of ActivityFeeds.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemCountArgs} args - Arguments to filter LaunchChecklistItems to count.
+     * @param {ActivityFeedCountArgs} args - Arguments to filter ActivityFeeds to count.
      * @example
-     * // Count the number of LaunchChecklistItems
-     * const count = await prisma.launchChecklistItem.count({
+     * // Count the number of ActivityFeeds
+     * const count = await prisma.activityFeed.count({
      *   where: {
-     *     // ... the filter for the LaunchChecklistItems we want to count
+     *     // ... the filter for the ActivityFeeds we want to count
      *   }
      * })
     **/
-    count<T extends LaunchChecklistItemCountArgs>(
-      args?: Subset<T, LaunchChecklistItemCountArgs>,
+    count<T extends ActivityFeedCountArgs>(
+      args?: Subset<T, ActivityFeedCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], LaunchChecklistItemCountAggregateOutputType>
+          : GetScalarType<T['select'], ActivityFeedCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a LaunchChecklistItem.
+     * Allows you to perform aggregations operations on a ActivityFeed.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {ActivityFeedAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -23803,13 +22308,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends LaunchChecklistItemAggregateArgs>(args: Subset<T, LaunchChecklistItemAggregateArgs>): Prisma.PrismaPromise<GetLaunchChecklistItemAggregateType<T>>
+    aggregate<T extends ActivityFeedAggregateArgs>(args: Subset<T, ActivityFeedAggregateArgs>): Prisma.PrismaPromise<GetActivityFeedAggregateType<T>>
 
     /**
-     * Group by LaunchChecklistItem.
+     * Group by ActivityFeed.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchChecklistItemGroupByArgs} args - Group by arguments.
+     * @param {ActivityFeedGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -23824,14 +22329,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends LaunchChecklistItemGroupByArgs,
+      T extends ActivityFeedGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LaunchChecklistItemGroupByArgs['orderBy'] }
-        : { orderBy?: LaunchChecklistItemGroupByArgs['orderBy'] },
+        ? { orderBy: ActivityFeedGroupByArgs['orderBy'] }
+        : { orderBy?: ActivityFeedGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -23880,22 +22385,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, LaunchChecklistItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLaunchChecklistItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, ActivityFeedGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetActivityFeedGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the LaunchChecklistItem model
+   * Fields of the ActivityFeed model
    */
-  readonly fields: LaunchChecklistItemFieldRefs;
+  readonly fields: ActivityFeedFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for LaunchChecklistItem.
+   * The delegate class that acts as a "Promise-like" for ActivityFeed.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__LaunchChecklistItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__ActivityFeedClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    launchPlan<T extends LaunchPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlanDefaultArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends ActivityFeed$userArgs<ExtArgs> = {}>(args?: Subset<T, ActivityFeed$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -23922,2825 +22428,451 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the LaunchChecklistItem model
+   * Fields of the ActivityFeed model
    */
-  interface LaunchChecklistItemFieldRefs {
-    readonly id: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly launchPlanId: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly category: FieldRef<"LaunchChecklistItem", 'LaunchChecklistCategory'>
-    readonly title: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly description: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly priority: FieldRef<"LaunchChecklistItem", 'LaunchChecklistPriority'>
-    readonly status: FieldRef<"LaunchChecklistItem", 'LaunchChecklistStatus'>
-    readonly isRequired: FieldRef<"LaunchChecklistItem", 'Boolean'>
-    readonly dependsOn: FieldRef<"LaunchChecklistItem", 'Json'>
-    readonly assignedTo: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly dueDate: FieldRef<"LaunchChecklistItem", 'DateTime'>
-    readonly notes: FieldRef<"LaunchChecklistItem", 'String'>
-    readonly order: FieldRef<"LaunchChecklistItem", 'Int'>
-    readonly createdAt: FieldRef<"LaunchChecklistItem", 'DateTime'>
-    readonly updatedAt: FieldRef<"LaunchChecklistItem", 'DateTime'>
+  interface ActivityFeedFieldRefs {
+    readonly id: FieldRef<"ActivityFeed", 'String'>
+    readonly type: FieldRef<"ActivityFeed", 'ActivityType'>
+    readonly title: FieldRef<"ActivityFeed", 'String'>
+    readonly description: FieldRef<"ActivityFeed", 'String'>
+    readonly entityType: FieldRef<"ActivityFeed", 'EntityType'>
+    readonly entityId: FieldRef<"ActivityFeed", 'String'>
+    readonly organizationId: FieldRef<"ActivityFeed", 'String'>
+    readonly userId: FieldRef<"ActivityFeed", 'String'>
+    readonly oldValue: FieldRef<"ActivityFeed", 'String'>
+    readonly newValue: FieldRef<"ActivityFeed", 'String'>
+    readonly createdAt: FieldRef<"ActivityFeed", 'DateTime'>
+    readonly updatedAt: FieldRef<"ActivityFeed", 'DateTime'>
   }
     
 
   // Custom InputTypes
   /**
-   * LaunchChecklistItem findUnique
+   * ActivityFeed findUnique
    */
-  export type LaunchChecklistItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter, which LaunchChecklistItem to fetch.
+     * Filter, which ActivityFeed to fetch.
      */
-    where: LaunchChecklistItemWhereUniqueInput
+    where: ActivityFeedWhereUniqueInput
   }
 
   /**
-   * LaunchChecklistItem findUniqueOrThrow
+   * ActivityFeed findUniqueOrThrow
    */
-  export type LaunchChecklistItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter, which LaunchChecklistItem to fetch.
+     * Filter, which ActivityFeed to fetch.
      */
-    where: LaunchChecklistItemWhereUniqueInput
+    where: ActivityFeedWhereUniqueInput
   }
 
   /**
-   * LaunchChecklistItem findFirst
+   * ActivityFeed findFirst
    */
-  export type LaunchChecklistItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter, which LaunchChecklistItem to fetch.
+     * Filter, which ActivityFeed to fetch.
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of LaunchChecklistItems to fetch.
+     * Determine the order of ActivityFeeds to fetch.
      */
-    orderBy?: LaunchChecklistItemOrderByWithRelationInput | LaunchChecklistItemOrderByWithRelationInput[]
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for LaunchChecklistItems.
+     * Sets the position for searching for ActivityFeeds.
      */
-    cursor?: LaunchChecklistItemWhereUniqueInput
+    cursor?: ActivityFeedWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` LaunchChecklistItems from the position of the cursor.
+     * Take `±n` ActivityFeeds from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` LaunchChecklistItems.
+     * Skip the first `n` ActivityFeeds.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of LaunchChecklistItems.
+     * Filter by unique combinations of ActivityFeeds.
      */
-    distinct?: LaunchChecklistItemScalarFieldEnum | LaunchChecklistItemScalarFieldEnum[]
+    distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
   }
 
   /**
-   * LaunchChecklistItem findFirstOrThrow
+   * ActivityFeed findFirstOrThrow
    */
-  export type LaunchChecklistItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter, which LaunchChecklistItem to fetch.
+     * Filter, which ActivityFeed to fetch.
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of LaunchChecklistItems to fetch.
+     * Determine the order of ActivityFeeds to fetch.
      */
-    orderBy?: LaunchChecklistItemOrderByWithRelationInput | LaunchChecklistItemOrderByWithRelationInput[]
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for LaunchChecklistItems.
+     * Sets the position for searching for ActivityFeeds.
      */
-    cursor?: LaunchChecklistItemWhereUniqueInput
+    cursor?: ActivityFeedWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` LaunchChecklistItems from the position of the cursor.
+     * Take `±n` ActivityFeeds from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` LaunchChecklistItems.
+     * Skip the first `n` ActivityFeeds.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of LaunchChecklistItems.
+     * Filter by unique combinations of ActivityFeeds.
      */
-    distinct?: LaunchChecklistItemScalarFieldEnum | LaunchChecklistItemScalarFieldEnum[]
+    distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
   }
 
   /**
-   * LaunchChecklistItem findMany
+   * ActivityFeed findMany
    */
-  export type LaunchChecklistItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter, which LaunchChecklistItems to fetch.
+     * Filter, which ActivityFeeds to fetch.
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of LaunchChecklistItems to fetch.
+     * Determine the order of ActivityFeeds to fetch.
      */
-    orderBy?: LaunchChecklistItemOrderByWithRelationInput | LaunchChecklistItemOrderByWithRelationInput[]
+    orderBy?: ActivityFeedOrderByWithRelationInput | ActivityFeedOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing LaunchChecklistItems.
+     * Sets the position for listing ActivityFeeds.
      */
-    cursor?: LaunchChecklistItemWhereUniqueInput
+    cursor?: ActivityFeedWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` LaunchChecklistItems from the position of the cursor.
+     * Take `±n` ActivityFeeds from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` LaunchChecklistItems.
+     * Skip the first `n` ActivityFeeds.
      */
     skip?: number
-    distinct?: LaunchChecklistItemScalarFieldEnum | LaunchChecklistItemScalarFieldEnum[]
+    distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
   }
 
   /**
-   * LaunchChecklistItem create
+   * ActivityFeed create
    */
-  export type LaunchChecklistItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * The data needed to create a LaunchChecklistItem.
+     * The data needed to create a ActivityFeed.
      */
-    data: XOR<LaunchChecklistItemCreateInput, LaunchChecklistItemUncheckedCreateInput>
+    data: XOR<ActivityFeedCreateInput, ActivityFeedUncheckedCreateInput>
   }
 
   /**
-   * LaunchChecklistItem createMany
+   * ActivityFeed createMany
    */
-  export type LaunchChecklistItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many LaunchChecklistItems.
+     * The data used to create many ActivityFeeds.
      */
-    data: LaunchChecklistItemCreateManyInput | LaunchChecklistItemCreateManyInput[]
+    data: ActivityFeedCreateManyInput | ActivityFeedCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * LaunchChecklistItem createManyAndReturn
+   * ActivityFeed createManyAndReturn
    */
-  export type LaunchChecklistItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelectCreateManyAndReturn<ExtArgs> | null
+    select?: ActivityFeedSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
-     * The data used to create many LaunchChecklistItems.
+     * The data used to create many ActivityFeeds.
      */
-    data: LaunchChecklistItemCreateManyInput | LaunchChecklistItemCreateManyInput[]
+    data: ActivityFeedCreateManyInput | ActivityFeedCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: ActivityFeedIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * LaunchChecklistItem update
+   * ActivityFeed update
    */
-  export type LaunchChecklistItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * The data needed to update a LaunchChecklistItem.
+     * The data needed to update a ActivityFeed.
      */
-    data: XOR<LaunchChecklistItemUpdateInput, LaunchChecklistItemUncheckedUpdateInput>
+    data: XOR<ActivityFeedUpdateInput, ActivityFeedUncheckedUpdateInput>
     /**
-     * Choose, which LaunchChecklistItem to update.
+     * Choose, which ActivityFeed to update.
      */
-    where: LaunchChecklistItemWhereUniqueInput
+    where: ActivityFeedWhereUniqueInput
   }
 
   /**
-   * LaunchChecklistItem updateMany
+   * ActivityFeed updateMany
    */
-  export type LaunchChecklistItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update LaunchChecklistItems.
+     * The data used to update ActivityFeeds.
      */
-    data: XOR<LaunchChecklistItemUpdateManyMutationInput, LaunchChecklistItemUncheckedUpdateManyInput>
+    data: XOR<ActivityFeedUpdateManyMutationInput, ActivityFeedUncheckedUpdateManyInput>
     /**
-     * Filter which LaunchChecklistItems to update
+     * Filter which ActivityFeeds to update
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
-     * Limit how many LaunchChecklistItems to update.
+     * Limit how many ActivityFeeds to update.
      */
     limit?: number
   }
 
   /**
-   * LaunchChecklistItem updateManyAndReturn
+   * ActivityFeed updateManyAndReturn
    */
-  export type LaunchChecklistItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: ActivityFeedSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
-     * The data used to update LaunchChecklistItems.
+     * The data used to update ActivityFeeds.
      */
-    data: XOR<LaunchChecklistItemUpdateManyMutationInput, LaunchChecklistItemUncheckedUpdateManyInput>
+    data: XOR<ActivityFeedUpdateManyMutationInput, ActivityFeedUncheckedUpdateManyInput>
     /**
-     * Filter which LaunchChecklistItems to update
+     * Filter which ActivityFeeds to update
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
-     * Limit how many LaunchChecklistItems to update.
+     * Limit how many ActivityFeeds to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: ActivityFeedIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * LaunchChecklistItem upsert
+   * ActivityFeed upsert
    */
-  export type LaunchChecklistItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * The filter to search for the LaunchChecklistItem to update in case it exists.
+     * The filter to search for the ActivityFeed to update in case it exists.
      */
-    where: LaunchChecklistItemWhereUniqueInput
+    where: ActivityFeedWhereUniqueInput
     /**
-     * In case the LaunchChecklistItem found by the `where` argument doesn't exist, create a new LaunchChecklistItem with this data.
+     * In case the ActivityFeed found by the `where` argument doesn't exist, create a new ActivityFeed with this data.
      */
-    create: XOR<LaunchChecklistItemCreateInput, LaunchChecklistItemUncheckedCreateInput>
+    create: XOR<ActivityFeedCreateInput, ActivityFeedUncheckedCreateInput>
     /**
-     * In case the LaunchChecklistItem was found with the provided `where` argument, update it with this data.
+     * In case the ActivityFeed was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<LaunchChecklistItemUpdateInput, LaunchChecklistItemUncheckedUpdateInput>
+    update: XOR<ActivityFeedUpdateInput, ActivityFeedUncheckedUpdateInput>
   }
 
   /**
-   * LaunchChecklistItem delete
+   * ActivityFeed delete
    */
-  export type LaunchChecklistItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the ActivityFeed
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the ActivityFeed
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
     /**
-     * Filter which LaunchChecklistItem to delete.
+     * Filter which ActivityFeed to delete.
      */
-    where: LaunchChecklistItemWhereUniqueInput
+    where: ActivityFeedWhereUniqueInput
   }
 
   /**
-   * LaunchChecklistItem deleteMany
+   * ActivityFeed deleteMany
    */
-  export type LaunchChecklistItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeedDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which LaunchChecklistItems to delete
+     * Filter which ActivityFeeds to delete
      */
-    where?: LaunchChecklistItemWhereInput
+    where?: ActivityFeedWhereInput
     /**
-     * Limit how many LaunchChecklistItems to delete.
+     * Limit how many ActivityFeeds to delete.
      */
     limit?: number
   }
 
   /**
-   * LaunchChecklistItem without action
+   * ActivityFeed.user
    */
-  export type LaunchChecklistItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type ActivityFeed$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the LaunchChecklistItem
+     * Select specific fields to fetch from the User
      */
-    select?: LaunchChecklistItemSelect<ExtArgs> | null
+    select?: UserSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the LaunchChecklistItem
+     * Omit specific fields from the User
      */
-    omit?: LaunchChecklistItemOmit<ExtArgs> | null
+    omit?: UserOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchChecklistItemInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model LaunchCopy
-   */
-
-  export type AggregateLaunchCopy = {
-    _count: LaunchCopyCountAggregateOutputType | null
-    _avg: LaunchCopyAvgAggregateOutputType | null
-    _sum: LaunchCopySumAggregateOutputType | null
-    _min: LaunchCopyMinAggregateOutputType | null
-    _max: LaunchCopyMaxAggregateOutputType | null
-  }
-
-  export type LaunchCopyAvgAggregateOutputType = {
-    version: number | null
-  }
-
-  export type LaunchCopySumAggregateOutputType = {
-    version: number | null
-  }
-
-  export type LaunchCopyMinAggregateOutputType = {
-    id: string | null
-    launchPlanId: string | null
-    platform: $Enums.LaunchCopyPlatform | null
-    title: string | null
-    tagline: string | null
-    description: string | null
-    callToAction: string | null
-    isApproved: boolean | null
-    version: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchCopyMaxAggregateOutputType = {
-    id: string | null
-    launchPlanId: string | null
-    platform: $Enums.LaunchCopyPlatform | null
-    title: string | null
-    tagline: string | null
-    description: string | null
-    callToAction: string | null
-    isApproved: boolean | null
-    version: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchCopyCountAggregateOutputType = {
-    id: number
-    launchPlanId: number
-    platform: number
-    title: number
-    tagline: number
-    description: number
-    callToAction: number
-    hashtags: number
-    mentions: number
-    media: number
-    isApproved: number
-    version: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type LaunchCopyAvgAggregateInputType = {
-    version?: true
-  }
-
-  export type LaunchCopySumAggregateInputType = {
-    version?: true
-  }
-
-  export type LaunchCopyMinAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    platform?: true
-    title?: true
-    tagline?: true
-    description?: true
-    callToAction?: true
-    isApproved?: true
-    version?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchCopyMaxAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    platform?: true
-    title?: true
-    tagline?: true
-    description?: true
-    callToAction?: true
-    isApproved?: true
-    version?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchCopyCountAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    platform?: true
-    title?: true
-    tagline?: true
-    description?: true
-    callToAction?: true
-    hashtags?: true
-    mentions?: true
-    media?: true
-    isApproved?: true
-    version?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type LaunchCopyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchCopy to aggregate.
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchCopies to fetch.
-     */
-    orderBy?: LaunchCopyOrderByWithRelationInput | LaunchCopyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: LaunchCopyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchCopies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchCopies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned LaunchCopies
-    **/
-    _count?: true | LaunchCopyCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: LaunchCopyAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LaunchCopySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: LaunchCopyMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: LaunchCopyMaxAggregateInputType
-  }
-
-  export type GetLaunchCopyAggregateType<T extends LaunchCopyAggregateArgs> = {
-        [P in keyof T & keyof AggregateLaunchCopy]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateLaunchCopy[P]>
-      : GetScalarType<T[P], AggregateLaunchCopy[P]>
-  }
-
-
-
-
-  export type LaunchCopyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchCopyWhereInput
-    orderBy?: LaunchCopyOrderByWithAggregationInput | LaunchCopyOrderByWithAggregationInput[]
-    by: LaunchCopyScalarFieldEnum[] | LaunchCopyScalarFieldEnum
-    having?: LaunchCopyScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: LaunchCopyCountAggregateInputType | true
-    _avg?: LaunchCopyAvgAggregateInputType
-    _sum?: LaunchCopySumAggregateInputType
-    _min?: LaunchCopyMinAggregateInputType
-    _max?: LaunchCopyMaxAggregateInputType
-  }
-
-  export type LaunchCopyGroupByOutputType = {
-    id: string
-    launchPlanId: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline: string | null
-    description: string
-    callToAction: string | null
-    hashtags: JsonValue | null
-    mentions: JsonValue | null
-    media: JsonValue | null
-    isApproved: boolean
-    version: number
-    createdAt: Date
-    updatedAt: Date
-    _count: LaunchCopyCountAggregateOutputType | null
-    _avg: LaunchCopyAvgAggregateOutputType | null
-    _sum: LaunchCopySumAggregateOutputType | null
-    _min: LaunchCopyMinAggregateOutputType | null
-    _max: LaunchCopyMaxAggregateOutputType | null
-  }
-
-  type GetLaunchCopyGroupByPayload<T extends LaunchCopyGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<LaunchCopyGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof LaunchCopyGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], LaunchCopyGroupByOutputType[P]>
-            : GetScalarType<T[P], LaunchCopyGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type LaunchCopySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    platform?: boolean
-    title?: boolean
-    tagline?: boolean
-    description?: boolean
-    callToAction?: boolean
-    hashtags?: boolean
-    mentions?: boolean
-    media?: boolean
-    isApproved?: boolean
-    version?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchCopy"]>
-
-  export type LaunchCopySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    platform?: boolean
-    title?: boolean
-    tagline?: boolean
-    description?: boolean
-    callToAction?: boolean
-    hashtags?: boolean
-    mentions?: boolean
-    media?: boolean
-    isApproved?: boolean
-    version?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchCopy"]>
-
-  export type LaunchCopySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    platform?: boolean
-    title?: boolean
-    tagline?: boolean
-    description?: boolean
-    callToAction?: boolean
-    hashtags?: boolean
-    mentions?: boolean
-    media?: boolean
-    isApproved?: boolean
-    version?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchCopy"]>
-
-  export type LaunchCopySelectScalar = {
-    id?: boolean
-    launchPlanId?: boolean
-    platform?: boolean
-    title?: boolean
-    tagline?: boolean
-    description?: boolean
-    callToAction?: boolean
-    hashtags?: boolean
-    mentions?: boolean
-    media?: boolean
-    isApproved?: boolean
-    version?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type LaunchCopyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "launchPlanId" | "platform" | "title" | "tagline" | "description" | "callToAction" | "hashtags" | "mentions" | "media" | "isApproved" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["launchCopy"]>
-  export type LaunchCopyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-  export type LaunchCopyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-  export type LaunchCopyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-
-  export type $LaunchCopyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "LaunchCopy"
-    objects: {
-      launchPlan: Prisma.$LaunchPlanPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      launchPlanId: string
-      platform: $Enums.LaunchCopyPlatform
-      title: string
-      tagline: string | null
-      description: string
-      callToAction: string | null
-      hashtags: Prisma.JsonValue | null
-      mentions: Prisma.JsonValue | null
-      media: Prisma.JsonValue | null
-      isApproved: boolean
-      version: number
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["launchCopy"]>
-    composites: {}
-  }
-
-  type LaunchCopyGetPayload<S extends boolean | null | undefined | LaunchCopyDefaultArgs> = $Result.GetResult<Prisma.$LaunchCopyPayload, S>
-
-  type LaunchCopyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<LaunchCopyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: LaunchCopyCountAggregateInputType | true
-    }
-
-  export interface LaunchCopyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LaunchCopy'], meta: { name: 'LaunchCopy' } }
-    /**
-     * Find zero or one LaunchCopy that matches the filter.
-     * @param {LaunchCopyFindUniqueArgs} args - Arguments to find a LaunchCopy
-     * @example
-     * // Get one LaunchCopy
-     * const launchCopy = await prisma.launchCopy.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends LaunchCopyFindUniqueArgs>(args: SelectSubset<T, LaunchCopyFindUniqueArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one LaunchCopy that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {LaunchCopyFindUniqueOrThrowArgs} args - Arguments to find a LaunchCopy
-     * @example
-     * // Get one LaunchCopy
-     * const launchCopy = await prisma.launchCopy.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends LaunchCopyFindUniqueOrThrowArgs>(args: SelectSubset<T, LaunchCopyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchCopy that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyFindFirstArgs} args - Arguments to find a LaunchCopy
-     * @example
-     * // Get one LaunchCopy
-     * const launchCopy = await prisma.launchCopy.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends LaunchCopyFindFirstArgs>(args?: SelectSubset<T, LaunchCopyFindFirstArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchCopy that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyFindFirstOrThrowArgs} args - Arguments to find a LaunchCopy
-     * @example
-     * // Get one LaunchCopy
-     * const launchCopy = await prisma.launchCopy.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends LaunchCopyFindFirstOrThrowArgs>(args?: SelectSubset<T, LaunchCopyFindFirstOrThrowArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more LaunchCopies that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all LaunchCopies
-     * const launchCopies = await prisma.launchCopy.findMany()
-     * 
-     * // Get first 10 LaunchCopies
-     * const launchCopies = await prisma.launchCopy.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const launchCopyWithIdOnly = await prisma.launchCopy.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends LaunchCopyFindManyArgs>(args?: SelectSubset<T, LaunchCopyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a LaunchCopy.
-     * @param {LaunchCopyCreateArgs} args - Arguments to create a LaunchCopy.
-     * @example
-     * // Create one LaunchCopy
-     * const LaunchCopy = await prisma.launchCopy.create({
-     *   data: {
-     *     // ... data to create a LaunchCopy
-     *   }
-     * })
-     * 
-     */
-    create<T extends LaunchCopyCreateArgs>(args: SelectSubset<T, LaunchCopyCreateArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many LaunchCopies.
-     * @param {LaunchCopyCreateManyArgs} args - Arguments to create many LaunchCopies.
-     * @example
-     * // Create many LaunchCopies
-     * const launchCopy = await prisma.launchCopy.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends LaunchCopyCreateManyArgs>(args?: SelectSubset<T, LaunchCopyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many LaunchCopies and returns the data saved in the database.
-     * @param {LaunchCopyCreateManyAndReturnArgs} args - Arguments to create many LaunchCopies.
-     * @example
-     * // Create many LaunchCopies
-     * const launchCopy = await prisma.launchCopy.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many LaunchCopies and only return the `id`
-     * const launchCopyWithIdOnly = await prisma.launchCopy.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LaunchCopyCreateManyAndReturnArgs>(args?: SelectSubset<T, LaunchCopyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a LaunchCopy.
-     * @param {LaunchCopyDeleteArgs} args - Arguments to delete one LaunchCopy.
-     * @example
-     * // Delete one LaunchCopy
-     * const LaunchCopy = await prisma.launchCopy.delete({
-     *   where: {
-     *     // ... filter to delete one LaunchCopy
-     *   }
-     * })
-     * 
-     */
-    delete<T extends LaunchCopyDeleteArgs>(args: SelectSubset<T, LaunchCopyDeleteArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one LaunchCopy.
-     * @param {LaunchCopyUpdateArgs} args - Arguments to update one LaunchCopy.
-     * @example
-     * // Update one LaunchCopy
-     * const launchCopy = await prisma.launchCopy.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends LaunchCopyUpdateArgs>(args: SelectSubset<T, LaunchCopyUpdateArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more LaunchCopies.
-     * @param {LaunchCopyDeleteManyArgs} args - Arguments to filter LaunchCopies to delete.
-     * @example
-     * // Delete a few LaunchCopies
-     * const { count } = await prisma.launchCopy.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends LaunchCopyDeleteManyArgs>(args?: SelectSubset<T, LaunchCopyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchCopies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many LaunchCopies
-     * const launchCopy = await prisma.launchCopy.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends LaunchCopyUpdateManyArgs>(args: SelectSubset<T, LaunchCopyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchCopies and returns the data updated in the database.
-     * @param {LaunchCopyUpdateManyAndReturnArgs} args - Arguments to update many LaunchCopies.
-     * @example
-     * // Update many LaunchCopies
-     * const launchCopy = await prisma.launchCopy.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more LaunchCopies and only return the `id`
-     * const launchCopyWithIdOnly = await prisma.launchCopy.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LaunchCopyUpdateManyAndReturnArgs>(args: SelectSubset<T, LaunchCopyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one LaunchCopy.
-     * @param {LaunchCopyUpsertArgs} args - Arguments to update or create a LaunchCopy.
-     * @example
-     * // Update or create a LaunchCopy
-     * const launchCopy = await prisma.launchCopy.upsert({
-     *   create: {
-     *     // ... data to create a LaunchCopy
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the LaunchCopy we want to update
-     *   }
-     * })
-     */
-    upsert<T extends LaunchCopyUpsertArgs>(args: SelectSubset<T, LaunchCopyUpsertArgs<ExtArgs>>): Prisma__LaunchCopyClient<$Result.GetResult<Prisma.$LaunchCopyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of LaunchCopies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyCountArgs} args - Arguments to filter LaunchCopies to count.
-     * @example
-     * // Count the number of LaunchCopies
-     * const count = await prisma.launchCopy.count({
-     *   where: {
-     *     // ... the filter for the LaunchCopies we want to count
-     *   }
-     * })
-    **/
-    count<T extends LaunchCopyCountArgs>(
-      args?: Subset<T, LaunchCopyCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], LaunchCopyCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a LaunchCopy.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends LaunchCopyAggregateArgs>(args: Subset<T, LaunchCopyAggregateArgs>): Prisma.PrismaPromise<GetLaunchCopyAggregateType<T>>
-
-    /**
-     * Group by LaunchCopy.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchCopyGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends LaunchCopyGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LaunchCopyGroupByArgs['orderBy'] }
-        : { orderBy?: LaunchCopyGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, LaunchCopyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLaunchCopyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the LaunchCopy model
-   */
-  readonly fields: LaunchCopyFieldRefs;
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for LaunchCopy.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
+   * ActivityFeed without action
    */
-  export interface Prisma__LaunchCopyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    launchPlan<T extends LaunchPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlanDefaultArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  export type ActivityFeedDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
+     * Select specific fields to fetch from the ActivityFeed
      */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    select?: ActivityFeedSelect<ExtArgs> | null
     /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
+     * Omit specific fields from the ActivityFeed
      */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the LaunchCopy model
-   */
-  interface LaunchCopyFieldRefs {
-    readonly id: FieldRef<"LaunchCopy", 'String'>
-    readonly launchPlanId: FieldRef<"LaunchCopy", 'String'>
-    readonly platform: FieldRef<"LaunchCopy", 'LaunchCopyPlatform'>
-    readonly title: FieldRef<"LaunchCopy", 'String'>
-    readonly tagline: FieldRef<"LaunchCopy", 'String'>
-    readonly description: FieldRef<"LaunchCopy", 'String'>
-    readonly callToAction: FieldRef<"LaunchCopy", 'String'>
-    readonly hashtags: FieldRef<"LaunchCopy", 'Json'>
-    readonly mentions: FieldRef<"LaunchCopy", 'Json'>
-    readonly media: FieldRef<"LaunchCopy", 'Json'>
-    readonly isApproved: FieldRef<"LaunchCopy", 'Boolean'>
-    readonly version: FieldRef<"LaunchCopy", 'Int'>
-    readonly createdAt: FieldRef<"LaunchCopy", 'DateTime'>
-    readonly updatedAt: FieldRef<"LaunchCopy", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * LaunchCopy findUnique
-   */
-  export type LaunchCopyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
+    omit?: ActivityFeedOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchCopy to fetch.
-     */
-    where: LaunchCopyWhereUniqueInput
-  }
-
-  /**
-   * LaunchCopy findUniqueOrThrow
-   */
-  export type LaunchCopyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchCopy to fetch.
-     */
-    where: LaunchCopyWhereUniqueInput
-  }
-
-  /**
-   * LaunchCopy findFirst
-   */
-  export type LaunchCopyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchCopy to fetch.
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchCopies to fetch.
-     */
-    orderBy?: LaunchCopyOrderByWithRelationInput | LaunchCopyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchCopies.
-     */
-    cursor?: LaunchCopyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchCopies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchCopies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchCopies.
-     */
-    distinct?: LaunchCopyScalarFieldEnum | LaunchCopyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchCopy findFirstOrThrow
-   */
-  export type LaunchCopyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchCopy to fetch.
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchCopies to fetch.
-     */
-    orderBy?: LaunchCopyOrderByWithRelationInput | LaunchCopyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchCopies.
-     */
-    cursor?: LaunchCopyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchCopies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchCopies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchCopies.
-     */
-    distinct?: LaunchCopyScalarFieldEnum | LaunchCopyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchCopy findMany
-   */
-  export type LaunchCopyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchCopies to fetch.
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchCopies to fetch.
-     */
-    orderBy?: LaunchCopyOrderByWithRelationInput | LaunchCopyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing LaunchCopies.
-     */
-    cursor?: LaunchCopyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchCopies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchCopies.
-     */
-    skip?: number
-    distinct?: LaunchCopyScalarFieldEnum | LaunchCopyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchCopy create
-   */
-  export type LaunchCopyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * The data needed to create a LaunchCopy.
-     */
-    data: XOR<LaunchCopyCreateInput, LaunchCopyUncheckedCreateInput>
-  }
-
-  /**
-   * LaunchCopy createMany
-   */
-  export type LaunchCopyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many LaunchCopies.
-     */
-    data: LaunchCopyCreateManyInput | LaunchCopyCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * LaunchCopy createManyAndReturn
-   */
-  export type LaunchCopyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * The data used to create many LaunchCopies.
-     */
-    data: LaunchCopyCreateManyInput | LaunchCopyCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchCopy update
-   */
-  export type LaunchCopyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * The data needed to update a LaunchCopy.
-     */
-    data: XOR<LaunchCopyUpdateInput, LaunchCopyUncheckedUpdateInput>
-    /**
-     * Choose, which LaunchCopy to update.
-     */
-    where: LaunchCopyWhereUniqueInput
-  }
-
-  /**
-   * LaunchCopy updateMany
-   */
-  export type LaunchCopyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update LaunchCopies.
-     */
-    data: XOR<LaunchCopyUpdateManyMutationInput, LaunchCopyUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchCopies to update
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * Limit how many LaunchCopies to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchCopy updateManyAndReturn
-   */
-  export type LaunchCopyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * The data used to update LaunchCopies.
-     */
-    data: XOR<LaunchCopyUpdateManyMutationInput, LaunchCopyUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchCopies to update
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * Limit how many LaunchCopies to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchCopy upsert
-   */
-  export type LaunchCopyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * The filter to search for the LaunchCopy to update in case it exists.
-     */
-    where: LaunchCopyWhereUniqueInput
-    /**
-     * In case the LaunchCopy found by the `where` argument doesn't exist, create a new LaunchCopy with this data.
-     */
-    create: XOR<LaunchCopyCreateInput, LaunchCopyUncheckedCreateInput>
-    /**
-     * In case the LaunchCopy was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<LaunchCopyUpdateInput, LaunchCopyUncheckedUpdateInput>
-  }
-
-  /**
-   * LaunchCopy delete
-   */
-  export type LaunchCopyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-    /**
-     * Filter which LaunchCopy to delete.
-     */
-    where: LaunchCopyWhereUniqueInput
-  }
-
-  /**
-   * LaunchCopy deleteMany
-   */
-  export type LaunchCopyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchCopies to delete
-     */
-    where?: LaunchCopyWhereInput
-    /**
-     * Limit how many LaunchCopies to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchCopy without action
-   */
-  export type LaunchCopyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchCopy
-     */
-    select?: LaunchCopySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchCopy
-     */
-    omit?: LaunchCopyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchCopyInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model LaunchStrategy
-   */
-
-  export type AggregateLaunchStrategy = {
-    _count: LaunchStrategyCountAggregateOutputType | null
-    _avg: LaunchStrategyAvgAggregateOutputType | null
-    _sum: LaunchStrategySumAggregateOutputType | null
-    _min: LaunchStrategyMinAggregateOutputType | null
-    _max: LaunchStrategyMaxAggregateOutputType | null
-  }
-
-  export type LaunchStrategyAvgAggregateOutputType = {
-    order: number | null
-  }
-
-  export type LaunchStrategySumAggregateOutputType = {
-    order: number | null
-  }
-
-  export type LaunchStrategyMinAggregateOutputType = {
-    id: string | null
-    launchPlanId: string | null
-    phase: $Enums.LaunchStrategyPhase | null
-    name: string | null
-    description: string | null
-    startDate: Date | null
-    endDate: Date | null
-    order: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchStrategyMaxAggregateOutputType = {
-    id: string | null
-    launchPlanId: string | null
-    phase: $Enums.LaunchStrategyPhase | null
-    name: string | null
-    description: string | null
-    startDate: Date | null
-    endDate: Date | null
-    order: number | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type LaunchStrategyCountAggregateOutputType = {
-    id: number
-    launchPlanId: number
-    phase: number
-    name: number
-    description: number
-    startDate: number
-    endDate: number
-    platforms: number
-    targetAudience: number
-    keyMetrics: number
-    tasks: number
-    order: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type LaunchStrategyAvgAggregateInputType = {
-    order?: true
-  }
-
-  export type LaunchStrategySumAggregateInputType = {
-    order?: true
-  }
-
-  export type LaunchStrategyMinAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    phase?: true
-    name?: true
-    description?: true
-    startDate?: true
-    endDate?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchStrategyMaxAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    phase?: true
-    name?: true
-    description?: true
-    startDate?: true
-    endDate?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type LaunchStrategyCountAggregateInputType = {
-    id?: true
-    launchPlanId?: true
-    phase?: true
-    name?: true
-    description?: true
-    startDate?: true
-    endDate?: true
-    platforms?: true
-    targetAudience?: true
-    keyMetrics?: true
-    tasks?: true
-    order?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type LaunchStrategyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchStrategy to aggregate.
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchStrategies to fetch.
-     */
-    orderBy?: LaunchStrategyOrderByWithRelationInput | LaunchStrategyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: LaunchStrategyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchStrategies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchStrategies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned LaunchStrategies
-    **/
-    _count?: true | LaunchStrategyCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: LaunchStrategyAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: LaunchStrategySumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: LaunchStrategyMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: LaunchStrategyMaxAggregateInputType
-  }
-
-  export type GetLaunchStrategyAggregateType<T extends LaunchStrategyAggregateArgs> = {
-        [P in keyof T & keyof AggregateLaunchStrategy]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateLaunchStrategy[P]>
-      : GetScalarType<T[P], AggregateLaunchStrategy[P]>
-  }
-
-
-
-
-  export type LaunchStrategyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LaunchStrategyWhereInput
-    orderBy?: LaunchStrategyOrderByWithAggregationInput | LaunchStrategyOrderByWithAggregationInput[]
-    by: LaunchStrategyScalarFieldEnum[] | LaunchStrategyScalarFieldEnum
-    having?: LaunchStrategyScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: LaunchStrategyCountAggregateInputType | true
-    _avg?: LaunchStrategyAvgAggregateInputType
-    _sum?: LaunchStrategySumAggregateInputType
-    _min?: LaunchStrategyMinAggregateInputType
-    _max?: LaunchStrategyMaxAggregateInputType
-  }
-
-  export type LaunchStrategyGroupByOutputType = {
-    id: string
-    launchPlanId: string
-    phase: $Enums.LaunchStrategyPhase
-    name: string
-    description: string
-    startDate: Date
-    endDate: Date
-    platforms: JsonValue | null
-    targetAudience: JsonValue | null
-    keyMetrics: JsonValue | null
-    tasks: JsonValue | null
-    order: number
-    createdAt: Date
-    updatedAt: Date
-    _count: LaunchStrategyCountAggregateOutputType | null
-    _avg: LaunchStrategyAvgAggregateOutputType | null
-    _sum: LaunchStrategySumAggregateOutputType | null
-    _min: LaunchStrategyMinAggregateOutputType | null
-    _max: LaunchStrategyMaxAggregateOutputType | null
-  }
-
-  type GetLaunchStrategyGroupByPayload<T extends LaunchStrategyGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<LaunchStrategyGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof LaunchStrategyGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], LaunchStrategyGroupByOutputType[P]>
-            : GetScalarType<T[P], LaunchStrategyGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type LaunchStrategySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    phase?: boolean
-    name?: boolean
-    description?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    platforms?: boolean
-    targetAudience?: boolean
-    keyMetrics?: boolean
-    tasks?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchStrategy"]>
-
-  export type LaunchStrategySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    phase?: boolean
-    name?: boolean
-    description?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    platforms?: boolean
-    targetAudience?: boolean
-    keyMetrics?: boolean
-    tasks?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchStrategy"]>
-
-  export type LaunchStrategySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    launchPlanId?: boolean
-    phase?: boolean
-    name?: boolean
-    description?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    platforms?: boolean
-    targetAudience?: boolean
-    keyMetrics?: boolean
-    tasks?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["launchStrategy"]>
-
-  export type LaunchStrategySelectScalar = {
-    id?: boolean
-    launchPlanId?: boolean
-    phase?: boolean
-    name?: boolean
-    description?: boolean
-    startDate?: boolean
-    endDate?: boolean
-    platforms?: boolean
-    targetAudience?: boolean
-    keyMetrics?: boolean
-    tasks?: boolean
-    order?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-  }
-
-  export type LaunchStrategyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "launchPlanId" | "phase" | "name" | "description" | "startDate" | "endDate" | "platforms" | "targetAudience" | "keyMetrics" | "tasks" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["launchStrategy"]>
-  export type LaunchStrategyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-  export type LaunchStrategyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-  export type LaunchStrategyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    launchPlan?: boolean | LaunchPlanDefaultArgs<ExtArgs>
-  }
-
-  export type $LaunchStrategyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "LaunchStrategy"
-    objects: {
-      launchPlan: Prisma.$LaunchPlanPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      launchPlanId: string
-      phase: $Enums.LaunchStrategyPhase
-      name: string
-      description: string
-      startDate: Date
-      endDate: Date
-      platforms: Prisma.JsonValue | null
-      targetAudience: Prisma.JsonValue | null
-      keyMetrics: Prisma.JsonValue | null
-      tasks: Prisma.JsonValue | null
-      order: number
-      createdAt: Date
-      updatedAt: Date
-    }, ExtArgs["result"]["launchStrategy"]>
-    composites: {}
-  }
-
-  type LaunchStrategyGetPayload<S extends boolean | null | undefined | LaunchStrategyDefaultArgs> = $Result.GetResult<Prisma.$LaunchStrategyPayload, S>
-
-  type LaunchStrategyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<LaunchStrategyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: LaunchStrategyCountAggregateInputType | true
-    }
-
-  export interface LaunchStrategyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LaunchStrategy'], meta: { name: 'LaunchStrategy' } }
-    /**
-     * Find zero or one LaunchStrategy that matches the filter.
-     * @param {LaunchStrategyFindUniqueArgs} args - Arguments to find a LaunchStrategy
-     * @example
-     * // Get one LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends LaunchStrategyFindUniqueArgs>(args: SelectSubset<T, LaunchStrategyFindUniqueArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one LaunchStrategy that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {LaunchStrategyFindUniqueOrThrowArgs} args - Arguments to find a LaunchStrategy
-     * @example
-     * // Get one LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends LaunchStrategyFindUniqueOrThrowArgs>(args: SelectSubset<T, LaunchStrategyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchStrategy that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyFindFirstArgs} args - Arguments to find a LaunchStrategy
-     * @example
-     * // Get one LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends LaunchStrategyFindFirstArgs>(args?: SelectSubset<T, LaunchStrategyFindFirstArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first LaunchStrategy that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyFindFirstOrThrowArgs} args - Arguments to find a LaunchStrategy
-     * @example
-     * // Get one LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends LaunchStrategyFindFirstOrThrowArgs>(args?: SelectSubset<T, LaunchStrategyFindFirstOrThrowArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more LaunchStrategies that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all LaunchStrategies
-     * const launchStrategies = await prisma.launchStrategy.findMany()
-     * 
-     * // Get first 10 LaunchStrategies
-     * const launchStrategies = await prisma.launchStrategy.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const launchStrategyWithIdOnly = await prisma.launchStrategy.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends LaunchStrategyFindManyArgs>(args?: SelectSubset<T, LaunchStrategyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a LaunchStrategy.
-     * @param {LaunchStrategyCreateArgs} args - Arguments to create a LaunchStrategy.
-     * @example
-     * // Create one LaunchStrategy
-     * const LaunchStrategy = await prisma.launchStrategy.create({
-     *   data: {
-     *     // ... data to create a LaunchStrategy
-     *   }
-     * })
-     * 
-     */
-    create<T extends LaunchStrategyCreateArgs>(args: SelectSubset<T, LaunchStrategyCreateArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many LaunchStrategies.
-     * @param {LaunchStrategyCreateManyArgs} args - Arguments to create many LaunchStrategies.
-     * @example
-     * // Create many LaunchStrategies
-     * const launchStrategy = await prisma.launchStrategy.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends LaunchStrategyCreateManyArgs>(args?: SelectSubset<T, LaunchStrategyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many LaunchStrategies and returns the data saved in the database.
-     * @param {LaunchStrategyCreateManyAndReturnArgs} args - Arguments to create many LaunchStrategies.
-     * @example
-     * // Create many LaunchStrategies
-     * const launchStrategy = await prisma.launchStrategy.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many LaunchStrategies and only return the `id`
-     * const launchStrategyWithIdOnly = await prisma.launchStrategy.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends LaunchStrategyCreateManyAndReturnArgs>(args?: SelectSubset<T, LaunchStrategyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a LaunchStrategy.
-     * @param {LaunchStrategyDeleteArgs} args - Arguments to delete one LaunchStrategy.
-     * @example
-     * // Delete one LaunchStrategy
-     * const LaunchStrategy = await prisma.launchStrategy.delete({
-     *   where: {
-     *     // ... filter to delete one LaunchStrategy
-     *   }
-     * })
-     * 
-     */
-    delete<T extends LaunchStrategyDeleteArgs>(args: SelectSubset<T, LaunchStrategyDeleteArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one LaunchStrategy.
-     * @param {LaunchStrategyUpdateArgs} args - Arguments to update one LaunchStrategy.
-     * @example
-     * // Update one LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends LaunchStrategyUpdateArgs>(args: SelectSubset<T, LaunchStrategyUpdateArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more LaunchStrategies.
-     * @param {LaunchStrategyDeleteManyArgs} args - Arguments to filter LaunchStrategies to delete.
-     * @example
-     * // Delete a few LaunchStrategies
-     * const { count } = await prisma.launchStrategy.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends LaunchStrategyDeleteManyArgs>(args?: SelectSubset<T, LaunchStrategyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchStrategies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many LaunchStrategies
-     * const launchStrategy = await prisma.launchStrategy.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends LaunchStrategyUpdateManyArgs>(args: SelectSubset<T, LaunchStrategyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more LaunchStrategies and returns the data updated in the database.
-     * @param {LaunchStrategyUpdateManyAndReturnArgs} args - Arguments to update many LaunchStrategies.
-     * @example
-     * // Update many LaunchStrategies
-     * const launchStrategy = await prisma.launchStrategy.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more LaunchStrategies and only return the `id`
-     * const launchStrategyWithIdOnly = await prisma.launchStrategy.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends LaunchStrategyUpdateManyAndReturnArgs>(args: SelectSubset<T, LaunchStrategyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one LaunchStrategy.
-     * @param {LaunchStrategyUpsertArgs} args - Arguments to update or create a LaunchStrategy.
-     * @example
-     * // Update or create a LaunchStrategy
-     * const launchStrategy = await prisma.launchStrategy.upsert({
-     *   create: {
-     *     // ... data to create a LaunchStrategy
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the LaunchStrategy we want to update
-     *   }
-     * })
-     */
-    upsert<T extends LaunchStrategyUpsertArgs>(args: SelectSubset<T, LaunchStrategyUpsertArgs<ExtArgs>>): Prisma__LaunchStrategyClient<$Result.GetResult<Prisma.$LaunchStrategyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of LaunchStrategies.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyCountArgs} args - Arguments to filter LaunchStrategies to count.
-     * @example
-     * // Count the number of LaunchStrategies
-     * const count = await prisma.launchStrategy.count({
-     *   where: {
-     *     // ... the filter for the LaunchStrategies we want to count
-     *   }
-     * })
-    **/
-    count<T extends LaunchStrategyCountArgs>(
-      args?: Subset<T, LaunchStrategyCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], LaunchStrategyCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a LaunchStrategy.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends LaunchStrategyAggregateArgs>(args: Subset<T, LaunchStrategyAggregateArgs>): Prisma.PrismaPromise<GetLaunchStrategyAggregateType<T>>
-
-    /**
-     * Group by LaunchStrategy.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {LaunchStrategyGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends LaunchStrategyGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LaunchStrategyGroupByArgs['orderBy'] }
-        : { orderBy?: LaunchStrategyGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, LaunchStrategyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLaunchStrategyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the LaunchStrategy model
-   */
-  readonly fields: LaunchStrategyFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for LaunchStrategy.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__LaunchStrategyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    launchPlan<T extends LaunchPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LaunchPlanDefaultArgs<ExtArgs>>): Prisma__LaunchPlanClient<$Result.GetResult<Prisma.$LaunchPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the LaunchStrategy model
-   */
-  interface LaunchStrategyFieldRefs {
-    readonly id: FieldRef<"LaunchStrategy", 'String'>
-    readonly launchPlanId: FieldRef<"LaunchStrategy", 'String'>
-    readonly phase: FieldRef<"LaunchStrategy", 'LaunchStrategyPhase'>
-    readonly name: FieldRef<"LaunchStrategy", 'String'>
-    readonly description: FieldRef<"LaunchStrategy", 'String'>
-    readonly startDate: FieldRef<"LaunchStrategy", 'DateTime'>
-    readonly endDate: FieldRef<"LaunchStrategy", 'DateTime'>
-    readonly platforms: FieldRef<"LaunchStrategy", 'Json'>
-    readonly targetAudience: FieldRef<"LaunchStrategy", 'Json'>
-    readonly keyMetrics: FieldRef<"LaunchStrategy", 'Json'>
-    readonly tasks: FieldRef<"LaunchStrategy", 'Json'>
-    readonly order: FieldRef<"LaunchStrategy", 'Int'>
-    readonly createdAt: FieldRef<"LaunchStrategy", 'DateTime'>
-    readonly updatedAt: FieldRef<"LaunchStrategy", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * LaunchStrategy findUnique
-   */
-  export type LaunchStrategyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchStrategy to fetch.
-     */
-    where: LaunchStrategyWhereUniqueInput
-  }
-
-  /**
-   * LaunchStrategy findUniqueOrThrow
-   */
-  export type LaunchStrategyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchStrategy to fetch.
-     */
-    where: LaunchStrategyWhereUniqueInput
-  }
-
-  /**
-   * LaunchStrategy findFirst
-   */
-  export type LaunchStrategyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchStrategy to fetch.
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchStrategies to fetch.
-     */
-    orderBy?: LaunchStrategyOrderByWithRelationInput | LaunchStrategyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchStrategies.
-     */
-    cursor?: LaunchStrategyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchStrategies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchStrategies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchStrategies.
-     */
-    distinct?: LaunchStrategyScalarFieldEnum | LaunchStrategyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchStrategy findFirstOrThrow
-   */
-  export type LaunchStrategyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchStrategy to fetch.
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchStrategies to fetch.
-     */
-    orderBy?: LaunchStrategyOrderByWithRelationInput | LaunchStrategyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for LaunchStrategies.
-     */
-    cursor?: LaunchStrategyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchStrategies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchStrategies.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of LaunchStrategies.
-     */
-    distinct?: LaunchStrategyScalarFieldEnum | LaunchStrategyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchStrategy findMany
-   */
-  export type LaunchStrategyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter, which LaunchStrategies to fetch.
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of LaunchStrategies to fetch.
-     */
-    orderBy?: LaunchStrategyOrderByWithRelationInput | LaunchStrategyOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing LaunchStrategies.
-     */
-    cursor?: LaunchStrategyWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` LaunchStrategies from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` LaunchStrategies.
-     */
-    skip?: number
-    distinct?: LaunchStrategyScalarFieldEnum | LaunchStrategyScalarFieldEnum[]
-  }
-
-  /**
-   * LaunchStrategy create
-   */
-  export type LaunchStrategyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * The data needed to create a LaunchStrategy.
-     */
-    data: XOR<LaunchStrategyCreateInput, LaunchStrategyUncheckedCreateInput>
-  }
-
-  /**
-   * LaunchStrategy createMany
-   */
-  export type LaunchStrategyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many LaunchStrategies.
-     */
-    data: LaunchStrategyCreateManyInput | LaunchStrategyCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * LaunchStrategy createManyAndReturn
-   */
-  export type LaunchStrategyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * The data used to create many LaunchStrategies.
-     */
-    data: LaunchStrategyCreateManyInput | LaunchStrategyCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchStrategy update
-   */
-  export type LaunchStrategyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * The data needed to update a LaunchStrategy.
-     */
-    data: XOR<LaunchStrategyUpdateInput, LaunchStrategyUncheckedUpdateInput>
-    /**
-     * Choose, which LaunchStrategy to update.
-     */
-    where: LaunchStrategyWhereUniqueInput
-  }
-
-  /**
-   * LaunchStrategy updateMany
-   */
-  export type LaunchStrategyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update LaunchStrategies.
-     */
-    data: XOR<LaunchStrategyUpdateManyMutationInput, LaunchStrategyUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchStrategies to update
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * Limit how many LaunchStrategies to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchStrategy updateManyAndReturn
-   */
-  export type LaunchStrategyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * The data used to update LaunchStrategies.
-     */
-    data: XOR<LaunchStrategyUpdateManyMutationInput, LaunchStrategyUncheckedUpdateManyInput>
-    /**
-     * Filter which LaunchStrategies to update
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * Limit how many LaunchStrategies to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * LaunchStrategy upsert
-   */
-  export type LaunchStrategyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * The filter to search for the LaunchStrategy to update in case it exists.
-     */
-    where: LaunchStrategyWhereUniqueInput
-    /**
-     * In case the LaunchStrategy found by the `where` argument doesn't exist, create a new LaunchStrategy with this data.
-     */
-    create: XOR<LaunchStrategyCreateInput, LaunchStrategyUncheckedCreateInput>
-    /**
-     * In case the LaunchStrategy was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<LaunchStrategyUpdateInput, LaunchStrategyUncheckedUpdateInput>
-  }
-
-  /**
-   * LaunchStrategy delete
-   */
-  export type LaunchStrategyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
-    /**
-     * Filter which LaunchStrategy to delete.
-     */
-    where: LaunchStrategyWhereUniqueInput
-  }
-
-  /**
-   * LaunchStrategy deleteMany
-   */
-  export type LaunchStrategyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which LaunchStrategies to delete
-     */
-    where?: LaunchStrategyWhereInput
-    /**
-     * Limit how many LaunchStrategies to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * LaunchStrategy without action
-   */
-  export type LaunchStrategyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the LaunchStrategy
-     */
-    select?: LaunchStrategySelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the LaunchStrategy
-     */
-    omit?: LaunchStrategyOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LaunchStrategyInclude<ExtArgs> | null
+    include?: ActivityFeedInclude<ExtArgs> | null
   }
 
 
@@ -31576,7 +27708,8 @@ export namespace Prisma {
     roadmapId: number
     title: number
     description: number
-    items: number
+    fixes: number
+    newFeatures: number
     publishDate: number
     isPublished: number
     createdAt: number
@@ -31612,7 +27745,8 @@ export namespace Prisma {
     roadmapId?: true
     title?: true
     description?: true
-    items?: true
+    fixes?: true
+    newFeatures?: true
     publishDate?: true
     isPublished?: true
     createdAt?: true
@@ -31697,7 +27831,8 @@ export namespace Prisma {
     roadmapId: string
     title: string
     description: string
-    items: JsonValue | null
+    fixes: string[]
+    newFeatures: string[]
     publishDate: Date
     isPublished: boolean
     createdAt: Date
@@ -31726,7 +27861,8 @@ export namespace Prisma {
     roadmapId?: boolean
     title?: boolean
     description?: boolean
-    items?: boolean
+    fixes?: boolean
+    newFeatures?: boolean
     publishDate?: boolean
     isPublished?: boolean
     createdAt?: boolean
@@ -31739,7 +27875,8 @@ export namespace Prisma {
     roadmapId?: boolean
     title?: boolean
     description?: boolean
-    items?: boolean
+    fixes?: boolean
+    newFeatures?: boolean
     publishDate?: boolean
     isPublished?: boolean
     createdAt?: boolean
@@ -31752,7 +27889,8 @@ export namespace Prisma {
     roadmapId?: boolean
     title?: boolean
     description?: boolean
-    items?: boolean
+    fixes?: boolean
+    newFeatures?: boolean
     publishDate?: boolean
     isPublished?: boolean
     createdAt?: boolean
@@ -31765,14 +27903,15 @@ export namespace Prisma {
     roadmapId?: boolean
     title?: boolean
     description?: boolean
-    items?: boolean
+    fixes?: boolean
+    newFeatures?: boolean
     publishDate?: boolean
     isPublished?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoadmapChangelogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roadmapId" | "title" | "description" | "items" | "publishDate" | "isPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["roadmapChangelog"]>
+  export type RoadmapChangelogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roadmapId" | "title" | "description" | "fixes" | "newFeatures" | "publishDate" | "isPublished" | "createdAt" | "updatedAt", ExtArgs["result"]["roadmapChangelog"]>
   export type RoadmapChangelogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roadmap?: boolean | PublicRoadmapDefaultArgs<ExtArgs>
   }
@@ -31793,7 +27932,8 @@ export namespace Prisma {
       roadmapId: string
       title: string
       description: string
-      items: Prisma.JsonValue | null
+      fixes: string[]
+      newFeatures: string[]
       publishDate: Date
       isPublished: boolean
       createdAt: Date
@@ -32226,7 +28366,8 @@ export namespace Prisma {
     readonly roadmapId: FieldRef<"RoadmapChangelog", 'String'>
     readonly title: FieldRef<"RoadmapChangelog", 'String'>
     readonly description: FieldRef<"RoadmapChangelog", 'String'>
-    readonly items: FieldRef<"RoadmapChangelog", 'Json'>
+    readonly fixes: FieldRef<"RoadmapChangelog", 'String[]'>
+    readonly newFeatures: FieldRef<"RoadmapChangelog", 'String[]'>
     readonly publishDate: FieldRef<"RoadmapChangelog", 'DateTime'>
     readonly isPublished: FieldRef<"RoadmapChangelog", 'Boolean'>
     readonly createdAt: FieldRef<"RoadmapChangelog", 'DateTime'>
@@ -36556,7 +32697,11 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     platform: 'platform',
-    techStack: 'techStack',
+    ai: 'ai',
+    orm: 'orm',
+    database: 'database',
+    auth: 'auth',
+    framework: 'framework',
     infrastructure: 'infrastructure',
     dueDate: 'dueDate',
     status: 'status',
@@ -36582,7 +32727,9 @@ export namespace Prisma {
     status: 'status',
     aiOverallValidation: 'aiOverallValidation',
     problemSolved: 'problemSolved',
-    solutionOffered: 'solutionOffered'
+    solutionOffered: 'solutionOffered',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type IdeaScalarFieldEnum = (typeof IdeaScalarFieldEnum)[keyof typeof IdeaScalarFieldEnum]
@@ -36644,7 +32791,6 @@ export namespace Prisma {
     name: 'name',
     keyHash: 'keyHash',
     keyPreview: 'keyPreview',
-    permissions: 'permissions',
     createdBy: 'createdBy',
     createdAt: 'createdAt',
     lastUsed: 'lastUsed',
@@ -36655,78 +32801,22 @@ export namespace Prisma {
   export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
 
 
-  export const LaunchPlanScalarFieldEnum: {
+  export const ActivityFeedScalarFieldEnum: {
     id: 'id',
-    projectId: 'projectId',
-    status: 'status',
-    targetLaunchDate: 'targetLaunchDate',
-    actualLaunchDate: 'actualLaunchDate',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type LaunchPlanScalarFieldEnum = (typeof LaunchPlanScalarFieldEnum)[keyof typeof LaunchPlanScalarFieldEnum]
-
-
-  export const LaunchChecklistItemScalarFieldEnum: {
-    id: 'id',
-    launchPlanId: 'launchPlanId',
-    category: 'category',
+    type: 'type',
     title: 'title',
     description: 'description',
-    priority: 'priority',
-    status: 'status',
-    isRequired: 'isRequired',
-    dependsOn: 'dependsOn',
-    assignedTo: 'assignedTo',
-    dueDate: 'dueDate',
-    notes: 'notes',
-    order: 'order',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    organizationId: 'organizationId',
+    userId: 'userId',
+    oldValue: 'oldValue',
+    newValue: 'newValue',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
-  export type LaunchChecklistItemScalarFieldEnum = (typeof LaunchChecklistItemScalarFieldEnum)[keyof typeof LaunchChecklistItemScalarFieldEnum]
-
-
-  export const LaunchCopyScalarFieldEnum: {
-    id: 'id',
-    launchPlanId: 'launchPlanId',
-    platform: 'platform',
-    title: 'title',
-    tagline: 'tagline',
-    description: 'description',
-    callToAction: 'callToAction',
-    hashtags: 'hashtags',
-    mentions: 'mentions',
-    media: 'media',
-    isApproved: 'isApproved',
-    version: 'version',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type LaunchCopyScalarFieldEnum = (typeof LaunchCopyScalarFieldEnum)[keyof typeof LaunchCopyScalarFieldEnum]
-
-
-  export const LaunchStrategyScalarFieldEnum: {
-    id: 'id',
-    launchPlanId: 'launchPlanId',
-    phase: 'phase',
-    name: 'name',
-    description: 'description',
-    startDate: 'startDate',
-    endDate: 'endDate',
-    platforms: 'platforms',
-    targetAudience: 'targetAudience',
-    keyMetrics: 'keyMetrics',
-    tasks: 'tasks',
-    order: 'order',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type LaunchStrategyScalarFieldEnum = (typeof LaunchStrategyScalarFieldEnum)[keyof typeof LaunchStrategyScalarFieldEnum]
+  export type ActivityFeedScalarFieldEnum = (typeof ActivityFeedScalarFieldEnum)[keyof typeof ActivityFeedScalarFieldEnum]
 
 
   export const PublicRoadmapScalarFieldEnum: {
@@ -36807,7 +32897,8 @@ export namespace Prisma {
     roadmapId: 'roadmapId',
     title: 'title',
     description: 'description',
-    items: 'items',
+    fixes: 'fixes',
+    newFeatures: 'newFeatures',
     publishDate: 'publishDate',
     isPublished: 'isPublished',
     createdAt: 'createdAt',
@@ -36892,14 +32983,6 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const NullableJsonNullValueInput: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull
-  };
-
-  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -36914,15 +32997,6 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -36994,20 +33068,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'ProjectStatus'
    */
   export type EnumProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProjectStatus'>
@@ -37032,6 +33092,20 @@ export namespace Prisma {
    * Reference to a field of type 'IdeaStatus[]'
    */
   export type ListEnumIdeaStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IdeaStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -37120,86 +33194,30 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'LaunchPlanStatus'
+   * Reference to a field of type 'ActivityType'
    */
-  export type EnumLaunchPlanStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchPlanStatus'>
+  export type EnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType'>
     
 
 
   /**
-   * Reference to a field of type 'LaunchPlanStatus[]'
+   * Reference to a field of type 'ActivityType[]'
    */
-  export type ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchPlanStatus[]'>
+  export type ListEnumActivityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityType[]'>
     
 
 
   /**
-   * Reference to a field of type 'LaunchChecklistCategory'
+   * Reference to a field of type 'EntityType'
    */
-  export type EnumLaunchChecklistCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistCategory'>
+  export type EnumEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EntityType'>
     
 
 
   /**
-   * Reference to a field of type 'LaunchChecklistCategory[]'
+   * Reference to a field of type 'EntityType[]'
    */
-  export type ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistCategory[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchChecklistPriority'
-   */
-  export type EnumLaunchChecklistPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistPriority'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchChecklistPriority[]'
-   */
-  export type ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistPriority[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchChecklistStatus'
-   */
-  export type EnumLaunchChecklistStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchChecklistStatus[]'
-   */
-  export type ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchChecklistStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchCopyPlatform'
-   */
-  export type EnumLaunchCopyPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchCopyPlatform'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchCopyPlatform[]'
-   */
-  export type ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchCopyPlatform[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchStrategyPhase'
-   */
-  export type EnumLaunchStrategyPhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchStrategyPhase'>
-    
-
-
-  /**
-   * Reference to a field of type 'LaunchStrategyPhase[]'
-   */
-  export type ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LaunchStrategyPhase[]'>
+  export type ListEnumEntityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EntityType[]'>
     
 
 
@@ -37243,20 +33261,6 @@ export namespace Prisma {
    */
   export type ListEnumFeatureRequestPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureRequestPriority[]'>
     
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
   /**
    * Deep Input Types
    */
@@ -37287,6 +33291,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    ActivityFeed?: ActivityFeedListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -37311,6 +33316,7 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
+    ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -37338,6 +33344,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    ActivityFeed?: ActivityFeedListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -37620,6 +33627,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    ActivityFeed?: ActivityFeedListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -37637,6 +33645,7 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
+    ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -37657,6 +33666,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    ActivityFeed?: ActivityFeedListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -38027,7 +34037,11 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     platform?: EnumProjectPlatformFilter<"Project"> | $Enums.ProjectPlatform
-    techStack?: JsonNullableFilter<"Project">
+    ai?: StringNullableFilter<"Project"> | string | null
+    orm?: StringNullableFilter<"Project"> | string | null
+    database?: StringNullableFilter<"Project"> | string | null
+    auth?: StringNullableFilter<"Project"> | string | null
+    framework?: StringNullableFilter<"Project"> | string | null
     infrastructure?: StringNullableFilter<"Project"> | string | null
     dueDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     status?: EnumProjectStatusNullableFilter<"Project"> | $Enums.ProjectStatus | null
@@ -38041,7 +34055,6 @@ export namespace Prisma {
     issues?: IssueListRelationFilter
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     assets?: AssetListRelationFilter
-    launchPlans?: LaunchPlanListRelationFilter
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
   }
@@ -38051,7 +34064,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     platform?: SortOrder
-    techStack?: SortOrderInput | SortOrder
+    ai?: SortOrderInput | SortOrder
+    orm?: SortOrderInput | SortOrder
+    database?: SortOrderInput | SortOrder
+    auth?: SortOrderInput | SortOrder
+    framework?: SortOrderInput | SortOrder
     infrastructure?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
@@ -38065,7 +34082,6 @@ export namespace Prisma {
     issues?: IssueOrderByRelationAggregateInput
     createdBy?: UserOrderByWithRelationInput
     assets?: AssetOrderByRelationAggregateInput
-    launchPlans?: LaunchPlanOrderByRelationAggregateInput
     publicRoadmaps?: PublicRoadmapOrderByRelationAggregateInput
     waitlists?: WaitlistOrderByRelationAggregateInput
   }
@@ -38078,7 +34094,11 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     platform?: EnumProjectPlatformFilter<"Project"> | $Enums.ProjectPlatform
-    techStack?: JsonNullableFilter<"Project">
+    ai?: StringNullableFilter<"Project"> | string | null
+    orm?: StringNullableFilter<"Project"> | string | null
+    database?: StringNullableFilter<"Project"> | string | null
+    auth?: StringNullableFilter<"Project"> | string | null
+    framework?: StringNullableFilter<"Project"> | string | null
     infrastructure?: StringNullableFilter<"Project"> | string | null
     dueDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     status?: EnumProjectStatusNullableFilter<"Project"> | $Enums.ProjectStatus | null
@@ -38092,7 +34112,6 @@ export namespace Prisma {
     issues?: IssueListRelationFilter
     createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     assets?: AssetListRelationFilter
-    launchPlans?: LaunchPlanListRelationFilter
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
   }, "id">
@@ -38102,7 +34121,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     platform?: SortOrder
-    techStack?: SortOrderInput | SortOrder
+    ai?: SortOrderInput | SortOrder
+    orm?: SortOrderInput | SortOrder
+    database?: SortOrderInput | SortOrder
+    auth?: SortOrderInput | SortOrder
+    framework?: SortOrderInput | SortOrder
     infrastructure?: SortOrderInput | SortOrder
     dueDate?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
@@ -38124,7 +34147,11 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Project"> | string
     description?: StringNullableWithAggregatesFilter<"Project"> | string | null
     platform?: EnumProjectPlatformWithAggregatesFilter<"Project"> | $Enums.ProjectPlatform
-    techStack?: JsonNullableWithAggregatesFilter<"Project">
+    ai?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    orm?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    database?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    auth?: StringNullableWithAggregatesFilter<"Project"> | string | null
+    framework?: StringNullableWithAggregatesFilter<"Project"> | string | null
     infrastructure?: StringNullableWithAggregatesFilter<"Project"> | string | null
     dueDate?: DateTimeNullableWithAggregatesFilter<"Project"> | Date | string | null
     status?: EnumProjectStatusNullableWithAggregatesFilter<"Project"> | $Enums.ProjectStatus | null
@@ -38148,9 +34175,11 @@ export namespace Prisma {
     internal?: BoolFilter<"Idea"> | boolean
     openSource?: BoolFilter<"Idea"> | boolean
     status?: EnumIdeaStatusFilter<"Idea"> | $Enums.IdeaStatus
-    aiOverallValidation?: JsonNullableFilter<"Idea">
+    aiOverallValidation?: FloatNullableFilter<"Idea"> | number | null
     problemSolved?: StringNullableFilter<"Idea"> | string | null
     solutionOffered?: StringNullableFilter<"Idea"> | string | null
+    createdAt?: DateTimeFilter<"Idea"> | Date | string
+    updatedAt?: DateTimeFilter<"Idea"> | Date | string
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
@@ -38169,6 +34198,8 @@ export namespace Prisma {
     aiOverallValidation?: SortOrderInput | SortOrder
     problemSolved?: SortOrderInput | SortOrder
     solutionOffered?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     owner?: UserOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
     projects?: ProjectOrderByRelationAggregateInput
@@ -38187,9 +34218,11 @@ export namespace Prisma {
     internal?: BoolFilter<"Idea"> | boolean
     openSource?: BoolFilter<"Idea"> | boolean
     status?: EnumIdeaStatusFilter<"Idea"> | $Enums.IdeaStatus
-    aiOverallValidation?: JsonNullableFilter<"Idea">
+    aiOverallValidation?: FloatNullableFilter<"Idea"> | number | null
     problemSolved?: StringNullableFilter<"Idea"> | string | null
     solutionOffered?: StringNullableFilter<"Idea"> | string | null
+    createdAt?: DateTimeFilter<"Idea"> | Date | string
+    updatedAt?: DateTimeFilter<"Idea"> | Date | string
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
@@ -38208,9 +34241,13 @@ export namespace Prisma {
     aiOverallValidation?: SortOrderInput | SortOrder
     problemSolved?: SortOrderInput | SortOrder
     solutionOffered?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: IdeaCountOrderByAggregateInput
+    _avg?: IdeaAvgOrderByAggregateInput
     _max?: IdeaMaxOrderByAggregateInput
     _min?: IdeaMinOrderByAggregateInput
+    _sum?: IdeaSumOrderByAggregateInput
   }
 
   export type IdeaScalarWhereWithAggregatesInput = {
@@ -38226,9 +34263,11 @@ export namespace Prisma {
     internal?: BoolWithAggregatesFilter<"Idea"> | boolean
     openSource?: BoolWithAggregatesFilter<"Idea"> | boolean
     status?: EnumIdeaStatusWithAggregatesFilter<"Idea"> | $Enums.IdeaStatus
-    aiOverallValidation?: JsonNullableWithAggregatesFilter<"Idea">
+    aiOverallValidation?: FloatNullableWithAggregatesFilter<"Idea"> | number | null
     problemSolved?: StringNullableWithAggregatesFilter<"Idea"> | string | null
     solutionOffered?: StringNullableWithAggregatesFilter<"Idea"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Idea"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Idea"> | Date | string
   }
 
   export type IssueWhereInput = {
@@ -38368,7 +34407,7 @@ export namespace Prisma {
     mimeType?: StringNullableFilter<"Asset"> | string | null
     url?: StringNullableFilter<"Asset"> | string | null
     linkType?: EnumLinkTypeNullableFilter<"Asset"> | $Enums.LinkType | null
-    tags?: JsonNullableFilter<"Asset">
+    tags?: StringNullableListFilter<"Asset">
     category?: EnumAssetCategoryNullableFilter<"Asset"> | $Enums.AssetCategory | null
     thumbnailUrl?: StringNullableFilter<"Asset"> | string | null
     isPublic?: BoolNullableFilter<"Asset"> | boolean | null
@@ -38395,7 +34434,7 @@ export namespace Prisma {
     mimeType?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     linkType?: SortOrderInput | SortOrder
-    tags?: SortOrderInput | SortOrder
+    tags?: SortOrder
     category?: SortOrderInput | SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
     isPublic?: SortOrderInput | SortOrder
@@ -38425,7 +34464,7 @@ export namespace Prisma {
     mimeType?: StringNullableFilter<"Asset"> | string | null
     url?: StringNullableFilter<"Asset"> | string | null
     linkType?: EnumLinkTypeNullableFilter<"Asset"> | $Enums.LinkType | null
-    tags?: JsonNullableFilter<"Asset">
+    tags?: StringNullableListFilter<"Asset">
     category?: EnumAssetCategoryNullableFilter<"Asset"> | $Enums.AssetCategory | null
     thumbnailUrl?: StringNullableFilter<"Asset"> | string | null
     isPublic?: BoolNullableFilter<"Asset"> | boolean | null
@@ -38452,7 +34491,7 @@ export namespace Prisma {
     mimeType?: SortOrderInput | SortOrder
     url?: SortOrderInput | SortOrder
     linkType?: SortOrderInput | SortOrder
-    tags?: SortOrderInput | SortOrder
+    tags?: SortOrder
     category?: SortOrderInput | SortOrder
     thumbnailUrl?: SortOrderInput | SortOrder
     isPublic?: SortOrderInput | SortOrder
@@ -38484,7 +34523,7 @@ export namespace Prisma {
     mimeType?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     url?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     linkType?: EnumLinkTypeNullableWithAggregatesFilter<"Asset"> | $Enums.LinkType | null
-    tags?: JsonNullableWithAggregatesFilter<"Asset">
+    tags?: StringNullableListFilter<"Asset">
     category?: EnumAssetCategoryNullableWithAggregatesFilter<"Asset"> | $Enums.AssetCategory | null
     thumbnailUrl?: StringNullableWithAggregatesFilter<"Asset"> | string | null
     isPublic?: BoolNullableWithAggregatesFilter<"Asset"> | boolean | null
@@ -38504,7 +34543,6 @@ export namespace Prisma {
     name?: StringFilter<"ApiKey"> | string
     keyHash?: StringFilter<"ApiKey"> | string
     keyPreview?: StringFilter<"ApiKey"> | string
-    permissions?: JsonNullableFilter<"ApiKey">
     createdBy?: StringFilter<"ApiKey"> | string
     createdAt?: DateTimeFilter<"ApiKey"> | Date | string
     lastUsed?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
@@ -38518,7 +34556,6 @@ export namespace Prisma {
     name?: SortOrder
     keyHash?: SortOrder
     keyPreview?: SortOrder
-    permissions?: SortOrderInput | SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     lastUsed?: SortOrderInput | SortOrder
@@ -38535,7 +34572,6 @@ export namespace Prisma {
     name?: StringFilter<"ApiKey"> | string
     keyHash?: StringFilter<"ApiKey"> | string
     keyPreview?: StringFilter<"ApiKey"> | string
-    permissions?: JsonNullableFilter<"ApiKey">
     createdBy?: StringFilter<"ApiKey"> | string
     createdAt?: DateTimeFilter<"ApiKey"> | Date | string
     lastUsed?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
@@ -38549,7 +34585,6 @@ export namespace Prisma {
     name?: SortOrder
     keyHash?: SortOrder
     keyPreview?: SortOrder
-    permissions?: SortOrderInput | SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     lastUsed?: SortOrderInput | SortOrder
@@ -38569,7 +34604,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ApiKey"> | string
     keyHash?: StringWithAggregatesFilter<"ApiKey"> | string
     keyPreview?: StringWithAggregatesFilter<"ApiKey"> | string
-    permissions?: JsonNullableWithAggregatesFilter<"ApiKey">
     createdBy?: StringWithAggregatesFilter<"ApiKey"> | string
     createdAt?: DateTimeWithAggregatesFilter<"ApiKey"> | Date | string
     lastUsed?: DateTimeNullableWithAggregatesFilter<"ApiKey"> | Date | string | null
@@ -38577,389 +34611,97 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableWithAggregatesFilter<"ApiKey"> | Date | string | null
   }
 
-  export type LaunchPlanWhereInput = {
-    AND?: LaunchPlanWhereInput | LaunchPlanWhereInput[]
-    OR?: LaunchPlanWhereInput[]
-    NOT?: LaunchPlanWhereInput | LaunchPlanWhereInput[]
-    id?: StringFilter<"LaunchPlan"> | string
-    projectId?: StringFilter<"LaunchPlan"> | string
-    status?: EnumLaunchPlanStatusFilter<"LaunchPlan"> | $Enums.LaunchPlanStatus
-    targetLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    actualLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    createdAt?: DateTimeFilter<"LaunchPlan"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchPlan"> | Date | string
-    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
-    checklistItems?: LaunchChecklistItemListRelationFilter
-    copies?: LaunchCopyListRelationFilter
-    strategies?: LaunchStrategyListRelationFilter
+  export type ActivityFeedWhereInput = {
+    AND?: ActivityFeedWhereInput | ActivityFeedWhereInput[]
+    OR?: ActivityFeedWhereInput[]
+    NOT?: ActivityFeedWhereInput | ActivityFeedWhereInput[]
+    id?: StringFilter<"ActivityFeed"> | string
+    type?: EnumActivityTypeFilter<"ActivityFeed"> | $Enums.ActivityType
+    title?: StringFilter<"ActivityFeed"> | string
+    description?: StringNullableFilter<"ActivityFeed"> | string | null
+    entityType?: EnumEntityTypeFilter<"ActivityFeed"> | $Enums.EntityType
+    entityId?: StringFilter<"ActivityFeed"> | string
+    organizationId?: StringFilter<"ActivityFeed"> | string
+    userId?: StringNullableFilter<"ActivityFeed"> | string | null
+    oldValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    newValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    createdAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+    updatedAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
-  export type LaunchPlanOrderByWithRelationInput = {
+  export type ActivityFeedOrderByWithRelationInput = {
     id?: SortOrder
-    projectId?: SortOrder
-    status?: SortOrder
-    targetLaunchDate?: SortOrderInput | SortOrder
-    actualLaunchDate?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    project?: ProjectOrderByWithRelationInput
-    checklistItems?: LaunchChecklistItemOrderByRelationAggregateInput
-    copies?: LaunchCopyOrderByRelationAggregateInput
-    strategies?: LaunchStrategyOrderByRelationAggregateInput
-  }
-
-  export type LaunchPlanWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: LaunchPlanWhereInput | LaunchPlanWhereInput[]
-    OR?: LaunchPlanWhereInput[]
-    NOT?: LaunchPlanWhereInput | LaunchPlanWhereInput[]
-    projectId?: StringFilter<"LaunchPlan"> | string
-    status?: EnumLaunchPlanStatusFilter<"LaunchPlan"> | $Enums.LaunchPlanStatus
-    targetLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    actualLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    createdAt?: DateTimeFilter<"LaunchPlan"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchPlan"> | Date | string
-    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
-    checklistItems?: LaunchChecklistItemListRelationFilter
-    copies?: LaunchCopyListRelationFilter
-    strategies?: LaunchStrategyListRelationFilter
-  }, "id">
-
-  export type LaunchPlanOrderByWithAggregationInput = {
-    id?: SortOrder
-    projectId?: SortOrder
-    status?: SortOrder
-    targetLaunchDate?: SortOrderInput | SortOrder
-    actualLaunchDate?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: LaunchPlanCountOrderByAggregateInput
-    _max?: LaunchPlanMaxOrderByAggregateInput
-    _min?: LaunchPlanMinOrderByAggregateInput
-  }
-
-  export type LaunchPlanScalarWhereWithAggregatesInput = {
-    AND?: LaunchPlanScalarWhereWithAggregatesInput | LaunchPlanScalarWhereWithAggregatesInput[]
-    OR?: LaunchPlanScalarWhereWithAggregatesInput[]
-    NOT?: LaunchPlanScalarWhereWithAggregatesInput | LaunchPlanScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"LaunchPlan"> | string
-    projectId?: StringWithAggregatesFilter<"LaunchPlan"> | string
-    status?: EnumLaunchPlanStatusWithAggregatesFilter<"LaunchPlan"> | $Enums.LaunchPlanStatus
-    targetLaunchDate?: DateTimeNullableWithAggregatesFilter<"LaunchPlan"> | Date | string | null
-    actualLaunchDate?: DateTimeNullableWithAggregatesFilter<"LaunchPlan"> | Date | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"LaunchPlan"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"LaunchPlan"> | Date | string
-  }
-
-  export type LaunchChecklistItemWhereInput = {
-    AND?: LaunchChecklistItemWhereInput | LaunchChecklistItemWhereInput[]
-    OR?: LaunchChecklistItemWhereInput[]
-    NOT?: LaunchChecklistItemWhereInput | LaunchChecklistItemWhereInput[]
-    id?: StringFilter<"LaunchChecklistItem"> | string
-    launchPlanId?: StringFilter<"LaunchChecklistItem"> | string
-    category?: EnumLaunchChecklistCategoryFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistCategory
-    title?: StringFilter<"LaunchChecklistItem"> | string
-    description?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    priority?: EnumLaunchChecklistPriorityFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFilter<"LaunchChecklistItem"> | boolean
-    dependsOn?: JsonNullableFilter<"LaunchChecklistItem">
-    assignedTo?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    dueDate?: DateTimeNullableFilter<"LaunchChecklistItem"> | Date | string | null
-    notes?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    order?: IntFilter<"LaunchChecklistItem"> | number
-    createdAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
-  }
-
-  export type LaunchChecklistItemOrderByWithRelationInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    category?: SortOrder
+    type?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
-    priority?: SortOrder
-    status?: SortOrder
-    isRequired?: SortOrder
-    dependsOn?: SortOrderInput | SortOrder
-    assignedTo?: SortOrderInput | SortOrder
-    dueDate?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
-    order?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    oldValue?: SortOrderInput | SortOrder
+    newValue?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    launchPlan?: LaunchPlanOrderByWithRelationInput
+    organization?: OrganizationOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
-  export type LaunchChecklistItemWhereUniqueInput = Prisma.AtLeast<{
+  export type ActivityFeedWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: LaunchChecklistItemWhereInput | LaunchChecklistItemWhereInput[]
-    OR?: LaunchChecklistItemWhereInput[]
-    NOT?: LaunchChecklistItemWhereInput | LaunchChecklistItemWhereInput[]
-    launchPlanId?: StringFilter<"LaunchChecklistItem"> | string
-    category?: EnumLaunchChecklistCategoryFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistCategory
-    title?: StringFilter<"LaunchChecklistItem"> | string
-    description?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    priority?: EnumLaunchChecklistPriorityFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFilter<"LaunchChecklistItem"> | boolean
-    dependsOn?: JsonNullableFilter<"LaunchChecklistItem">
-    assignedTo?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    dueDate?: DateTimeNullableFilter<"LaunchChecklistItem"> | Date | string | null
-    notes?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    order?: IntFilter<"LaunchChecklistItem"> | number
-    createdAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
+    AND?: ActivityFeedWhereInput | ActivityFeedWhereInput[]
+    OR?: ActivityFeedWhereInput[]
+    NOT?: ActivityFeedWhereInput | ActivityFeedWhereInput[]
+    type?: EnumActivityTypeFilter<"ActivityFeed"> | $Enums.ActivityType
+    title?: StringFilter<"ActivityFeed"> | string
+    description?: StringNullableFilter<"ActivityFeed"> | string | null
+    entityType?: EnumEntityTypeFilter<"ActivityFeed"> | $Enums.EntityType
+    entityId?: StringFilter<"ActivityFeed"> | string
+    organizationId?: StringFilter<"ActivityFeed"> | string
+    userId?: StringNullableFilter<"ActivityFeed"> | string | null
+    oldValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    newValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    createdAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+    updatedAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
-  export type LaunchChecklistItemOrderByWithAggregationInput = {
+  export type ActivityFeedOrderByWithAggregationInput = {
     id?: SortOrder
-    launchPlanId?: SortOrder
-    category?: SortOrder
+    type?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
-    priority?: SortOrder
-    status?: SortOrder
-    isRequired?: SortOrder
-    dependsOn?: SortOrderInput | SortOrder
-    assignedTo?: SortOrderInput | SortOrder
-    dueDate?: SortOrderInput | SortOrder
-    notes?: SortOrderInput | SortOrder
-    order?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    oldValue?: SortOrderInput | SortOrder
+    newValue?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    _count?: LaunchChecklistItemCountOrderByAggregateInput
-    _avg?: LaunchChecklistItemAvgOrderByAggregateInput
-    _max?: LaunchChecklistItemMaxOrderByAggregateInput
-    _min?: LaunchChecklistItemMinOrderByAggregateInput
-    _sum?: LaunchChecklistItemSumOrderByAggregateInput
+    _count?: ActivityFeedCountOrderByAggregateInput
+    _max?: ActivityFeedMaxOrderByAggregateInput
+    _min?: ActivityFeedMinOrderByAggregateInput
   }
 
-  export type LaunchChecklistItemScalarWhereWithAggregatesInput = {
-    AND?: LaunchChecklistItemScalarWhereWithAggregatesInput | LaunchChecklistItemScalarWhereWithAggregatesInput[]
-    OR?: LaunchChecklistItemScalarWhereWithAggregatesInput[]
-    NOT?: LaunchChecklistItemScalarWhereWithAggregatesInput | LaunchChecklistItemScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"LaunchChecklistItem"> | string
-    launchPlanId?: StringWithAggregatesFilter<"LaunchChecklistItem"> | string
-    category?: EnumLaunchChecklistCategoryWithAggregatesFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistCategory
-    title?: StringWithAggregatesFilter<"LaunchChecklistItem"> | string
-    description?: StringNullableWithAggregatesFilter<"LaunchChecklistItem"> | string | null
-    priority?: EnumLaunchChecklistPriorityWithAggregatesFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusWithAggregatesFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistStatus
-    isRequired?: BoolWithAggregatesFilter<"LaunchChecklistItem"> | boolean
-    dependsOn?: JsonNullableWithAggregatesFilter<"LaunchChecklistItem">
-    assignedTo?: StringNullableWithAggregatesFilter<"LaunchChecklistItem"> | string | null
-    dueDate?: DateTimeNullableWithAggregatesFilter<"LaunchChecklistItem"> | Date | string | null
-    notes?: StringNullableWithAggregatesFilter<"LaunchChecklistItem"> | string | null
-    order?: IntWithAggregatesFilter<"LaunchChecklistItem"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"LaunchChecklistItem"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"LaunchChecklistItem"> | Date | string
-  }
-
-  export type LaunchCopyWhereInput = {
-    AND?: LaunchCopyWhereInput | LaunchCopyWhereInput[]
-    OR?: LaunchCopyWhereInput[]
-    NOT?: LaunchCopyWhereInput | LaunchCopyWhereInput[]
-    id?: StringFilter<"LaunchCopy"> | string
-    launchPlanId?: StringFilter<"LaunchCopy"> | string
-    platform?: EnumLaunchCopyPlatformFilter<"LaunchCopy"> | $Enums.LaunchCopyPlatform
-    title?: StringFilter<"LaunchCopy"> | string
-    tagline?: StringNullableFilter<"LaunchCopy"> | string | null
-    description?: StringFilter<"LaunchCopy"> | string
-    callToAction?: StringNullableFilter<"LaunchCopy"> | string | null
-    hashtags?: JsonNullableFilter<"LaunchCopy">
-    mentions?: JsonNullableFilter<"LaunchCopy">
-    media?: JsonNullableFilter<"LaunchCopy">
-    isApproved?: BoolFilter<"LaunchCopy"> | boolean
-    version?: IntFilter<"LaunchCopy"> | number
-    createdAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
-  }
-
-  export type LaunchCopyOrderByWithRelationInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    platform?: SortOrder
-    title?: SortOrder
-    tagline?: SortOrderInput | SortOrder
-    description?: SortOrder
-    callToAction?: SortOrderInput | SortOrder
-    hashtags?: SortOrderInput | SortOrder
-    mentions?: SortOrderInput | SortOrder
-    media?: SortOrderInput | SortOrder
-    isApproved?: SortOrder
-    version?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    launchPlan?: LaunchPlanOrderByWithRelationInput
-  }
-
-  export type LaunchCopyWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: LaunchCopyWhereInput | LaunchCopyWhereInput[]
-    OR?: LaunchCopyWhereInput[]
-    NOT?: LaunchCopyWhereInput | LaunchCopyWhereInput[]
-    launchPlanId?: StringFilter<"LaunchCopy"> | string
-    platform?: EnumLaunchCopyPlatformFilter<"LaunchCopy"> | $Enums.LaunchCopyPlatform
-    title?: StringFilter<"LaunchCopy"> | string
-    tagline?: StringNullableFilter<"LaunchCopy"> | string | null
-    description?: StringFilter<"LaunchCopy"> | string
-    callToAction?: StringNullableFilter<"LaunchCopy"> | string | null
-    hashtags?: JsonNullableFilter<"LaunchCopy">
-    mentions?: JsonNullableFilter<"LaunchCopy">
-    media?: JsonNullableFilter<"LaunchCopy">
-    isApproved?: BoolFilter<"LaunchCopy"> | boolean
-    version?: IntFilter<"LaunchCopy"> | number
-    createdAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
-  }, "id">
-
-  export type LaunchCopyOrderByWithAggregationInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    platform?: SortOrder
-    title?: SortOrder
-    tagline?: SortOrderInput | SortOrder
-    description?: SortOrder
-    callToAction?: SortOrderInput | SortOrder
-    hashtags?: SortOrderInput | SortOrder
-    mentions?: SortOrderInput | SortOrder
-    media?: SortOrderInput | SortOrder
-    isApproved?: SortOrder
-    version?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: LaunchCopyCountOrderByAggregateInput
-    _avg?: LaunchCopyAvgOrderByAggregateInput
-    _max?: LaunchCopyMaxOrderByAggregateInput
-    _min?: LaunchCopyMinOrderByAggregateInput
-    _sum?: LaunchCopySumOrderByAggregateInput
-  }
-
-  export type LaunchCopyScalarWhereWithAggregatesInput = {
-    AND?: LaunchCopyScalarWhereWithAggregatesInput | LaunchCopyScalarWhereWithAggregatesInput[]
-    OR?: LaunchCopyScalarWhereWithAggregatesInput[]
-    NOT?: LaunchCopyScalarWhereWithAggregatesInput | LaunchCopyScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"LaunchCopy"> | string
-    launchPlanId?: StringWithAggregatesFilter<"LaunchCopy"> | string
-    platform?: EnumLaunchCopyPlatformWithAggregatesFilter<"LaunchCopy"> | $Enums.LaunchCopyPlatform
-    title?: StringWithAggregatesFilter<"LaunchCopy"> | string
-    tagline?: StringNullableWithAggregatesFilter<"LaunchCopy"> | string | null
-    description?: StringWithAggregatesFilter<"LaunchCopy"> | string
-    callToAction?: StringNullableWithAggregatesFilter<"LaunchCopy"> | string | null
-    hashtags?: JsonNullableWithAggregatesFilter<"LaunchCopy">
-    mentions?: JsonNullableWithAggregatesFilter<"LaunchCopy">
-    media?: JsonNullableWithAggregatesFilter<"LaunchCopy">
-    isApproved?: BoolWithAggregatesFilter<"LaunchCopy"> | boolean
-    version?: IntWithAggregatesFilter<"LaunchCopy"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"LaunchCopy"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"LaunchCopy"> | Date | string
-  }
-
-  export type LaunchStrategyWhereInput = {
-    AND?: LaunchStrategyWhereInput | LaunchStrategyWhereInput[]
-    OR?: LaunchStrategyWhereInput[]
-    NOT?: LaunchStrategyWhereInput | LaunchStrategyWhereInput[]
-    id?: StringFilter<"LaunchStrategy"> | string
-    launchPlanId?: StringFilter<"LaunchStrategy"> | string
-    phase?: EnumLaunchStrategyPhaseFilter<"LaunchStrategy"> | $Enums.LaunchStrategyPhase
-    name?: StringFilter<"LaunchStrategy"> | string
-    description?: StringFilter<"LaunchStrategy"> | string
-    startDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    endDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    platforms?: JsonNullableFilter<"LaunchStrategy">
-    targetAudience?: JsonNullableFilter<"LaunchStrategy">
-    keyMetrics?: JsonNullableFilter<"LaunchStrategy">
-    tasks?: JsonNullableFilter<"LaunchStrategy">
-    order?: IntFilter<"LaunchStrategy"> | number
-    createdAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
-  }
-
-  export type LaunchStrategyOrderByWithRelationInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    phase?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    platforms?: SortOrderInput | SortOrder
-    targetAudience?: SortOrderInput | SortOrder
-    keyMetrics?: SortOrderInput | SortOrder
-    tasks?: SortOrderInput | SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    launchPlan?: LaunchPlanOrderByWithRelationInput
-  }
-
-  export type LaunchStrategyWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: LaunchStrategyWhereInput | LaunchStrategyWhereInput[]
-    OR?: LaunchStrategyWhereInput[]
-    NOT?: LaunchStrategyWhereInput | LaunchStrategyWhereInput[]
-    launchPlanId?: StringFilter<"LaunchStrategy"> | string
-    phase?: EnumLaunchStrategyPhaseFilter<"LaunchStrategy"> | $Enums.LaunchStrategyPhase
-    name?: StringFilter<"LaunchStrategy"> | string
-    description?: StringFilter<"LaunchStrategy"> | string
-    startDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    endDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    platforms?: JsonNullableFilter<"LaunchStrategy">
-    targetAudience?: JsonNullableFilter<"LaunchStrategy">
-    keyMetrics?: JsonNullableFilter<"LaunchStrategy">
-    tasks?: JsonNullableFilter<"LaunchStrategy">
-    order?: IntFilter<"LaunchStrategy"> | number
-    createdAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    launchPlan?: XOR<LaunchPlanScalarRelationFilter, LaunchPlanWhereInput>
-  }, "id">
-
-  export type LaunchStrategyOrderByWithAggregationInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    phase?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    platforms?: SortOrderInput | SortOrder
-    targetAudience?: SortOrderInput | SortOrder
-    keyMetrics?: SortOrderInput | SortOrder
-    tasks?: SortOrderInput | SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: LaunchStrategyCountOrderByAggregateInput
-    _avg?: LaunchStrategyAvgOrderByAggregateInput
-    _max?: LaunchStrategyMaxOrderByAggregateInput
-    _min?: LaunchStrategyMinOrderByAggregateInput
-    _sum?: LaunchStrategySumOrderByAggregateInput
-  }
-
-  export type LaunchStrategyScalarWhereWithAggregatesInput = {
-    AND?: LaunchStrategyScalarWhereWithAggregatesInput | LaunchStrategyScalarWhereWithAggregatesInput[]
-    OR?: LaunchStrategyScalarWhereWithAggregatesInput[]
-    NOT?: LaunchStrategyScalarWhereWithAggregatesInput | LaunchStrategyScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"LaunchStrategy"> | string
-    launchPlanId?: StringWithAggregatesFilter<"LaunchStrategy"> | string
-    phase?: EnumLaunchStrategyPhaseWithAggregatesFilter<"LaunchStrategy"> | $Enums.LaunchStrategyPhase
-    name?: StringWithAggregatesFilter<"LaunchStrategy"> | string
-    description?: StringWithAggregatesFilter<"LaunchStrategy"> | string
-    startDate?: DateTimeWithAggregatesFilter<"LaunchStrategy"> | Date | string
-    endDate?: DateTimeWithAggregatesFilter<"LaunchStrategy"> | Date | string
-    platforms?: JsonNullableWithAggregatesFilter<"LaunchStrategy">
-    targetAudience?: JsonNullableWithAggregatesFilter<"LaunchStrategy">
-    keyMetrics?: JsonNullableWithAggregatesFilter<"LaunchStrategy">
-    tasks?: JsonNullableWithAggregatesFilter<"LaunchStrategy">
-    order?: IntWithAggregatesFilter<"LaunchStrategy"> | number
-    createdAt?: DateTimeWithAggregatesFilter<"LaunchStrategy"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"LaunchStrategy"> | Date | string
+  export type ActivityFeedScalarWhereWithAggregatesInput = {
+    AND?: ActivityFeedScalarWhereWithAggregatesInput | ActivityFeedScalarWhereWithAggregatesInput[]
+    OR?: ActivityFeedScalarWhereWithAggregatesInput[]
+    NOT?: ActivityFeedScalarWhereWithAggregatesInput | ActivityFeedScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ActivityFeed"> | string
+    type?: EnumActivityTypeWithAggregatesFilter<"ActivityFeed"> | $Enums.ActivityType
+    title?: StringWithAggregatesFilter<"ActivityFeed"> | string
+    description?: StringNullableWithAggregatesFilter<"ActivityFeed"> | string | null
+    entityType?: EnumEntityTypeWithAggregatesFilter<"ActivityFeed"> | $Enums.EntityType
+    entityId?: StringWithAggregatesFilter<"ActivityFeed"> | string
+    organizationId?: StringWithAggregatesFilter<"ActivityFeed"> | string
+    userId?: StringNullableWithAggregatesFilter<"ActivityFeed"> | string | null
+    oldValue?: StringNullableWithAggregatesFilter<"ActivityFeed"> | string | null
+    newValue?: StringNullableWithAggregatesFilter<"ActivityFeed"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ActivityFeed"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ActivityFeed"> | Date | string
   }
 
   export type PublicRoadmapWhereInput = {
@@ -39352,7 +35094,8 @@ export namespace Prisma {
     roadmapId?: StringFilter<"RoadmapChangelog"> | string
     title?: StringFilter<"RoadmapChangelog"> | string
     description?: StringFilter<"RoadmapChangelog"> | string
-    items?: JsonNullableFilter<"RoadmapChangelog">
+    fixes?: StringNullableListFilter<"RoadmapChangelog">
+    newFeatures?: StringNullableListFilter<"RoadmapChangelog">
     publishDate?: DateTimeFilter<"RoadmapChangelog"> | Date | string
     isPublished?: BoolFilter<"RoadmapChangelog"> | boolean
     createdAt?: DateTimeFilter<"RoadmapChangelog"> | Date | string
@@ -39365,7 +35108,8 @@ export namespace Prisma {
     roadmapId?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    items?: SortOrderInput | SortOrder
+    fixes?: SortOrder
+    newFeatures?: SortOrder
     publishDate?: SortOrder
     isPublished?: SortOrder
     createdAt?: SortOrder
@@ -39381,7 +35125,8 @@ export namespace Prisma {
     roadmapId?: StringFilter<"RoadmapChangelog"> | string
     title?: StringFilter<"RoadmapChangelog"> | string
     description?: StringFilter<"RoadmapChangelog"> | string
-    items?: JsonNullableFilter<"RoadmapChangelog">
+    fixes?: StringNullableListFilter<"RoadmapChangelog">
+    newFeatures?: StringNullableListFilter<"RoadmapChangelog">
     publishDate?: DateTimeFilter<"RoadmapChangelog"> | Date | string
     isPublished?: BoolFilter<"RoadmapChangelog"> | boolean
     createdAt?: DateTimeFilter<"RoadmapChangelog"> | Date | string
@@ -39394,7 +35139,8 @@ export namespace Prisma {
     roadmapId?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    items?: SortOrderInput | SortOrder
+    fixes?: SortOrder
+    newFeatures?: SortOrder
     publishDate?: SortOrder
     isPublished?: SortOrder
     createdAt?: SortOrder
@@ -39412,7 +35158,8 @@ export namespace Prisma {
     roadmapId?: StringWithAggregatesFilter<"RoadmapChangelog"> | string
     title?: StringWithAggregatesFilter<"RoadmapChangelog"> | string
     description?: StringWithAggregatesFilter<"RoadmapChangelog"> | string
-    items?: JsonNullableWithAggregatesFilter<"RoadmapChangelog">
+    fixes?: StringNullableListFilter<"RoadmapChangelog">
+    newFeatures?: StringNullableListFilter<"RoadmapChangelog">
     publishDate?: DateTimeWithAggregatesFilter<"RoadmapChangelog"> | Date | string
     isPublished?: BoolWithAggregatesFilter<"RoadmapChangelog"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"RoadmapChangelog"> | Date | string
@@ -39789,6 +35536,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -39813,6 +35561,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -39837,6 +35586,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -39861,6 +35611,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -40178,6 +35929,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -40195,6 +35947,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -40212,6 +35965,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -40229,6 +35983,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -40605,7 +36360,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -40616,7 +36375,6 @@ export namespace Prisma {
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -40626,7 +36384,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -40637,7 +36399,6 @@ export namespace Prisma {
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -40647,7 +36408,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -40658,7 +36423,6 @@ export namespace Prisma {
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -40668,7 +36432,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -40679,7 +36447,6 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -40689,7 +36456,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -40705,7 +36476,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -40718,7 +36493,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -40737,9 +36516,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
@@ -40755,9 +36536,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -40769,9 +36552,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
@@ -40787,9 +36572,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -40803,9 +36590,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type IdeaUpdateManyMutationInput = {
@@ -40816,9 +36605,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IdeaUncheckedUpdateManyInput = {
@@ -40831,9 +36622,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IssueCreateInput = {
@@ -40984,7 +36777,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -41010,7 +36803,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -41032,7 +36825,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -41058,7 +36851,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -41082,7 +36875,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -41104,7 +36897,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -41127,7 +36920,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -41144,7 +36937,6 @@ export namespace Prisma {
     name: string
     keyHash: string
     keyPreview: string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy: string
     createdAt: Date | string
     lastUsed?: Date | string | null
@@ -41158,7 +36950,6 @@ export namespace Prisma {
     name: string
     keyHash: string
     keyPreview: string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy: string
     createdAt: Date | string
     lastUsed?: Date | string | null
@@ -41172,7 +36963,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     keyHash?: StringFieldUpdateOperationsInput | string
     keyPreview?: StringFieldUpdateOperationsInput | string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastUsed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41186,7 +36976,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     keyHash?: StringFieldUpdateOperationsInput | string
     keyPreview?: StringFieldUpdateOperationsInput | string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastUsed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41200,7 +36989,6 @@ export namespace Prisma {
     name: string
     keyHash: string
     keyPreview: string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy: string
     createdAt: Date | string
     lastUsed?: Date | string | null
@@ -41214,7 +37002,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     keyHash?: StringFieldUpdateOperationsInput | string
     keyPreview?: StringFieldUpdateOperationsInput | string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastUsed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41228,7 +37015,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     keyHash?: StringFieldUpdateOperationsInput | string
     keyPreview?: StringFieldUpdateOperationsInput | string
-    permissions?: NullableJsonNullValueInput | InputJsonValue
     createdBy?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lastUsed?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -41236,444 +37022,105 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type LaunchPlanCreateInput = {
+  export type ActivityFeedCreateInput = {
     id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutLaunchPlansInput
-    checklistItems?: LaunchChecklistItemCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUncheckedCreateInput = {
-    id?: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    checklistItems?: LaunchChecklistItemUncheckedCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyUncheckedCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyUncheckedCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutLaunchPlansNestedInput
-    checklistItems?: LaunchChecklistItemUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    checklistItems?: LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanCreateManyInput = {
-    id?: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchPlanUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchPlanUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchChecklistItemCreateInput = {
-    id?: string
-    category: $Enums.LaunchChecklistCategory
+    type: $Enums.ActivityType
     title: string
     description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
+    entityType: $Enums.EntityType
+    entityId: string
+    oldValue?: string | null
+    newValue?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    launchPlan: LaunchPlanCreateNestedOneWithoutChecklistItemsInput
+    organization: OrganizationCreateNestedOneWithoutActivityFeedInput
+    user?: UserCreateNestedOneWithoutActivityFeedInput
   }
 
-  export type LaunchChecklistItemUncheckedCreateInput = {
+  export type ActivityFeedUncheckedCreateInput = {
     id?: string
-    launchPlanId: string
-    category: $Enums.LaunchChecklistCategory
+    type: $Enums.ActivityType
     title: string
     description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
+    entityType: $Enums.EntityType
+    entityId: string
+    organizationId: string
+    userId?: string | null
+    oldValue?: string | null
+    newValue?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type LaunchChecklistItemUpdateInput = {
+  export type ActivityFeedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    launchPlan?: LaunchPlanUpdateOneRequiredWithoutChecklistItemsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutActivityFeedNestedInput
+    user?: UserUpdateOneWithoutActivityFeedNestedInput
   }
 
-  export type LaunchChecklistItemUncheckedUpdateInput = {
+  export type ActivityFeedUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type LaunchChecklistItemCreateManyInput = {
+  export type ActivityFeedCreateManyInput = {
     id?: string
-    launchPlanId: string
-    category: $Enums.LaunchChecklistCategory
+    type: $Enums.ActivityType
     title: string
     description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
+    entityType: $Enums.EntityType
+    entityId: string
+    organizationId: string
+    userId?: string | null
+    oldValue?: string | null
+    newValue?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
-  export type LaunchChecklistItemUpdateManyMutationInput = {
+  export type ActivityFeedUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type LaunchChecklistItemUncheckedUpdateManyInput = {
+  export type ActivityFeedUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyCreateInput = {
-    id?: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    launchPlan: LaunchPlanCreateNestedOneWithoutCopiesInput
-  }
-
-  export type LaunchCopyUncheckedCreateInput = {
-    id?: string
-    launchPlanId: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchCopyUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    launchPlan?: LaunchPlanUpdateOneRequiredWithoutCopiesNestedInput
-  }
-
-  export type LaunchCopyUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyCreateManyInput = {
-    id?: string
-    launchPlanId: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchCopyUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyCreateInput = {
-    id?: string
-    phase: $Enums.LaunchStrategyPhase
-    name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    launchPlan: LaunchPlanCreateNestedOneWithoutStrategiesInput
-  }
-
-  export type LaunchStrategyUncheckedCreateInput = {
-    id?: string
-    launchPlanId: string
-    phase: $Enums.LaunchStrategyPhase
-    name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchStrategyUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    launchPlan?: LaunchPlanUpdateOneRequiredWithoutStrategiesNestedInput
-  }
-
-  export type LaunchStrategyUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyCreateManyInput = {
-    id?: string
-    launchPlanId: string
-    phase: $Enums.LaunchStrategyPhase
-    name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchStrategyUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    launchPlanId?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42125,7 +37572,8 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -42138,7 +37586,8 @@ export namespace Prisma {
     roadmapId: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -42149,7 +37598,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42162,7 +37612,8 @@ export namespace Prisma {
     roadmapId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42174,7 +37625,8 @@ export namespace Prisma {
     roadmapId: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -42185,7 +37637,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42197,7 +37650,8 @@ export namespace Prisma {
     roadmapId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42731,6 +38185,12 @@ export namespace Prisma {
     none?: WaitlistWhereInput
   }
 
+  export type ActivityFeedListRelationFilter = {
+    every?: ActivityFeedWhereInput
+    some?: ActivityFeedWhereInput
+    none?: ActivityFeedWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -42777,6 +38237,10 @@ export namespace Prisma {
   }
 
   export type WaitlistOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ActivityFeedOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43259,29 +38723,6 @@ export namespace Prisma {
     notIn?: $Enums.ProjectPlatform[] | ListEnumProjectPlatformFieldRefInput<$PrismaModel>
     not?: NestedEnumProjectPlatformFilter<$PrismaModel> | $Enums.ProjectPlatform
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type EnumProjectStatusNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel> | null
@@ -43300,20 +38741,10 @@ export namespace Prisma {
     isNot?: OrganizationWhereInput | null
   }
 
-  export type LaunchPlanListRelationFilter = {
-    every?: LaunchPlanWhereInput
-    some?: LaunchPlanWhereInput
-    none?: LaunchPlanWhereInput
-  }
-
   export type PublicRoadmapListRelationFilter = {
     every?: PublicRoadmapWhereInput
     some?: PublicRoadmapWhereInput
     none?: PublicRoadmapWhereInput
-  }
-
-  export type LaunchPlanOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type PublicRoadmapOrderByRelationAggregateInput = {
@@ -43325,7 +38756,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     platform?: SortOrder
-    techStack?: SortOrder
+    ai?: SortOrder
+    orm?: SortOrder
+    database?: SortOrder
+    auth?: SortOrder
+    framework?: SortOrder
     infrastructure?: SortOrder
     dueDate?: SortOrder
     status?: SortOrder
@@ -43341,6 +38776,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     platform?: SortOrder
+    ai?: SortOrder
+    orm?: SortOrder
+    database?: SortOrder
+    auth?: SortOrder
+    framework?: SortOrder
     infrastructure?: SortOrder
     dueDate?: SortOrder
     status?: SortOrder
@@ -43356,6 +38796,11 @@ export namespace Prisma {
     name?: SortOrder
     description?: SortOrder
     platform?: SortOrder
+    ai?: SortOrder
+    orm?: SortOrder
+    database?: SortOrder
+    auth?: SortOrder
+    framework?: SortOrder
     infrastructure?: SortOrder
     dueDate?: SortOrder
     status?: SortOrder
@@ -43375,32 +38820,6 @@ export namespace Prisma {
     _min?: NestedEnumProjectPlatformFilter<$PrismaModel>
     _max?: NestedEnumProjectPlatformFilter<$PrismaModel>
   }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
 
   export type EnumProjectStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel> | null
@@ -43419,6 +38838,17 @@ export namespace Prisma {
     not?: NestedEnumIdeaStatusFilter<$PrismaModel> | $Enums.IdeaStatus
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type IdeaCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -43432,6 +38862,12 @@ export namespace Prisma {
     aiOverallValidation?: SortOrder
     problemSolved?: SortOrder
     solutionOffered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IdeaAvgOrderByAggregateInput = {
+    aiOverallValidation?: SortOrder
   }
 
   export type IdeaMaxOrderByAggregateInput = {
@@ -43444,8 +38880,11 @@ export namespace Prisma {
     internal?: SortOrder
     openSource?: SortOrder
     status?: SortOrder
+    aiOverallValidation?: SortOrder
     problemSolved?: SortOrder
     solutionOffered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type IdeaMinOrderByAggregateInput = {
@@ -43458,8 +38897,15 @@ export namespace Prisma {
     internal?: SortOrder
     openSource?: SortOrder
     status?: SortOrder
+    aiOverallValidation?: SortOrder
     problemSolved?: SortOrder
     solutionOffered?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IdeaSumOrderByAggregateInput = {
+    aiOverallValidation?: SortOrder
   }
 
   export type EnumIdeaStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -43470,6 +38916,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumIdeaStatusFilter<$PrismaModel>
     _max?: NestedEnumIdeaStatusFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type EnumIssueStatusFilter<$PrismaModel = never> = {
@@ -43613,6 +39075,14 @@ export namespace Prisma {
     not?: NestedEnumLinkTypeNullableFilter<$PrismaModel> | $Enums.LinkType | null
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type EnumAssetCategoryNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.AssetCategory | EnumAssetCategoryFieldRefInput<$PrismaModel> | null
     in?: $Enums.AssetCategory[] | ListEnumAssetCategoryFieldRefInput<$PrismaModel> | null
@@ -43754,7 +39224,6 @@ export namespace Prisma {
     name?: SortOrder
     keyHash?: SortOrder
     keyPreview?: SortOrder
-    permissions?: SortOrder
     createdBy?: SortOrder
     createdAt?: SortOrder
     lastUsed?: SortOrder
@@ -43788,335 +39257,83 @@ export namespace Prisma {
     expiresAt?: SortOrder
   }
 
-  export type EnumLaunchPlanStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchPlanStatus | EnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchPlanStatusFilter<$PrismaModel> | $Enums.LaunchPlanStatus
+  export type EnumActivityTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityType | EnumActivityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTypeFilter<$PrismaModel> | $Enums.ActivityType
   }
 
-  export type LaunchChecklistItemListRelationFilter = {
-    every?: LaunchChecklistItemWhereInput
-    some?: LaunchChecklistItemWhereInput
-    none?: LaunchChecklistItemWhereInput
+  export type EnumEntityTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EntityType | EnumEntityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEntityTypeFilter<$PrismaModel> | $Enums.EntityType
   }
 
-  export type LaunchCopyListRelationFilter = {
-    every?: LaunchCopyWhereInput
-    some?: LaunchCopyWhereInput
-    none?: LaunchCopyWhereInput
-  }
-
-  export type LaunchStrategyListRelationFilter = {
-    every?: LaunchStrategyWhereInput
-    some?: LaunchStrategyWhereInput
-    none?: LaunchStrategyWhereInput
-  }
-
-  export type LaunchChecklistItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LaunchCopyOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LaunchStrategyOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LaunchPlanCountOrderByAggregateInput = {
+  export type ActivityFeedCountOrderByAggregateInput = {
     id?: SortOrder
-    projectId?: SortOrder
-    status?: SortOrder
-    targetLaunchDate?: SortOrder
-    actualLaunchDate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchPlanMaxOrderByAggregateInput = {
-    id?: SortOrder
-    projectId?: SortOrder
-    status?: SortOrder
-    targetLaunchDate?: SortOrder
-    actualLaunchDate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchPlanMinOrderByAggregateInput = {
-    id?: SortOrder
-    projectId?: SortOrder
-    status?: SortOrder
-    targetLaunchDate?: SortOrder
-    actualLaunchDate?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type EnumLaunchPlanStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchPlanStatus | EnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchPlanStatusWithAggregatesFilter<$PrismaModel> | $Enums.LaunchPlanStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchPlanStatusFilter<$PrismaModel>
-    _max?: NestedEnumLaunchPlanStatusFilter<$PrismaModel>
-  }
-
-  export type EnumLaunchChecklistCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistCategory | EnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel> | $Enums.LaunchChecklistCategory
-  }
-
-  export type EnumLaunchChecklistPriorityFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistPriority | EnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel> | $Enums.LaunchChecklistPriority
-  }
-
-  export type EnumLaunchChecklistStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistStatus | EnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel> | $Enums.LaunchChecklistStatus
-  }
-
-  export type LaunchPlanScalarRelationFilter = {
-    is?: LaunchPlanWhereInput
-    isNot?: LaunchPlanWhereInput
-  }
-
-  export type LaunchChecklistItemCountOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    category?: SortOrder
+    type?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    priority?: SortOrder
-    status?: SortOrder
-    isRequired?: SortOrder
-    dependsOn?: SortOrder
-    assignedTo?: SortOrder
-    dueDate?: SortOrder
-    notes?: SortOrder
-    order?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    oldValue?: SortOrder
+    newValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type LaunchChecklistItemAvgOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type LaunchChecklistItemMaxOrderByAggregateInput = {
+  export type ActivityFeedMaxOrderByAggregateInput = {
     id?: SortOrder
-    launchPlanId?: SortOrder
-    category?: SortOrder
+    type?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    priority?: SortOrder
-    status?: SortOrder
-    isRequired?: SortOrder
-    assignedTo?: SortOrder
-    dueDate?: SortOrder
-    notes?: SortOrder
-    order?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    oldValue?: SortOrder
+    newValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type LaunchChecklistItemMinOrderByAggregateInput = {
+  export type ActivityFeedMinOrderByAggregateInput = {
     id?: SortOrder
-    launchPlanId?: SortOrder
-    category?: SortOrder
+    type?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    priority?: SortOrder
-    status?: SortOrder
-    isRequired?: SortOrder
-    assignedTo?: SortOrder
-    dueDate?: SortOrder
-    notes?: SortOrder
-    order?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    oldValue?: SortOrder
+    newValue?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type LaunchChecklistItemSumOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type EnumLaunchChecklistCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistCategory | EnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistCategoryWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistCategory
+  export type EnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityType | EnumActivityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActivityType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel>
+    _min?: NestedEnumActivityTypeFilter<$PrismaModel>
+    _max?: NestedEnumActivityTypeFilter<$PrismaModel>
   }
 
-  export type EnumLaunchChecklistPriorityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistPriority | EnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistPriorityWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistPriority
+  export type EnumEntityTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EntityType | EnumEntityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEntityTypeWithAggregatesFilter<$PrismaModel> | $Enums.EntityType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel>
-  }
-
-  export type EnumLaunchChecklistStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistStatus | EnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistStatusWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel>
-  }
-
-  export type EnumLaunchCopyPlatformFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchCopyPlatform | EnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel> | $Enums.LaunchCopyPlatform
-  }
-
-  export type LaunchCopyCountOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    platform?: SortOrder
-    title?: SortOrder
-    tagline?: SortOrder
-    description?: SortOrder
-    callToAction?: SortOrder
-    hashtags?: SortOrder
-    mentions?: SortOrder
-    media?: SortOrder
-    isApproved?: SortOrder
-    version?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchCopyAvgOrderByAggregateInput = {
-    version?: SortOrder
-  }
-
-  export type LaunchCopyMaxOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    platform?: SortOrder
-    title?: SortOrder
-    tagline?: SortOrder
-    description?: SortOrder
-    callToAction?: SortOrder
-    isApproved?: SortOrder
-    version?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchCopyMinOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    platform?: SortOrder
-    title?: SortOrder
-    tagline?: SortOrder
-    description?: SortOrder
-    callToAction?: SortOrder
-    isApproved?: SortOrder
-    version?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchCopySumOrderByAggregateInput = {
-    version?: SortOrder
-  }
-
-  export type EnumLaunchCopyPlatformWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchCopyPlatform | EnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchCopyPlatformWithAggregatesFilter<$PrismaModel> | $Enums.LaunchCopyPlatform
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel>
-    _max?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel>
-  }
-
-  export type EnumLaunchStrategyPhaseFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchStrategyPhase | EnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel> | $Enums.LaunchStrategyPhase
-  }
-
-  export type LaunchStrategyCountOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    phase?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    platforms?: SortOrder
-    targetAudience?: SortOrder
-    keyMetrics?: SortOrder
-    tasks?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchStrategyAvgOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type LaunchStrategyMaxOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    phase?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchStrategyMinOrderByAggregateInput = {
-    id?: SortOrder
-    launchPlanId?: SortOrder
-    phase?: SortOrder
-    name?: SortOrder
-    description?: SortOrder
-    startDate?: SortOrder
-    endDate?: SortOrder
-    order?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type LaunchStrategySumOrderByAggregateInput = {
-    order?: SortOrder
-  }
-
-  export type EnumLaunchStrategyPhaseWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchStrategyPhase | EnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchStrategyPhaseWithAggregatesFilter<$PrismaModel> | $Enums.LaunchStrategyPhase
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel>
-    _max?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel>
+    _min?: NestedEnumEntityTypeFilter<$PrismaModel>
+    _max?: NestedEnumEntityTypeFilter<$PrismaModel>
   }
 
   export type RoadmapItemListRelationFilter = {
@@ -44396,7 +39613,8 @@ export namespace Prisma {
     roadmapId?: SortOrder
     title?: SortOrder
     description?: SortOrder
-    items?: SortOrder
+    fixes?: SortOrder
+    newFeatures?: SortOrder
     publishDate?: SortOrder
     isPublished?: SortOrder
     createdAt?: SortOrder
@@ -44749,6 +39967,13 @@ export namespace Prisma {
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
   }
 
+  export type ActivityFeedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
+    createMany?: ActivityFeedCreateManyUserInputEnvelope
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -44830,6 +40055,13 @@ export namespace Prisma {
     connectOrCreate?: WaitlistCreateOrConnectWithoutCreatedByInput | WaitlistCreateOrConnectWithoutCreatedByInput[]
     createMany?: WaitlistCreateManyCreatedByInputEnvelope
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
+  }
+
+  export type ActivityFeedUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
+    createMany?: ActivityFeedCreateManyUserInputEnvelope
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -45016,6 +40248,20 @@ export namespace Prisma {
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
   }
 
+  export type ActivityFeedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
+    upsert?: ActivityFeedUpsertWithWhereUniqueWithoutUserInput | ActivityFeedUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ActivityFeedCreateManyUserInputEnvelope
+    set?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    disconnect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    delete?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    update?: ActivityFeedUpdateWithWhereUniqueWithoutUserInput | ActivityFeedUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ActivityFeedUpdateManyWithWhereWithoutUserInput | ActivityFeedUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -45180,6 +40426,20 @@ export namespace Prisma {
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
   }
 
+  export type ActivityFeedUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
+    upsert?: ActivityFeedUpsertWithWhereUniqueWithoutUserInput | ActivityFeedUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ActivityFeedCreateManyUserInputEnvelope
+    set?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    disconnect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    delete?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    update?: ActivityFeedUpdateWithWhereUniqueWithoutUserInput | ActivityFeedUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ActivityFeedUpdateManyWithWhereWithoutUserInput | ActivityFeedUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutSessionsInput = {
     create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
@@ -45272,6 +40532,13 @@ export namespace Prisma {
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
   }
 
+  export type ActivityFeedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput> | ActivityFeedCreateWithoutOrganizationInput[] | ActivityFeedUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ActivityFeedCreateManyOrganizationInputEnvelope
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -45326,6 +40593,13 @@ export namespace Prisma {
     connectOrCreate?: WaitlistCreateOrConnectWithoutOrganizationInput | WaitlistCreateOrConnectWithoutOrganizationInput[]
     createMany?: WaitlistCreateManyOrganizationInputEnvelope
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
+  }
+
+  export type ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput> | ActivityFeedCreateWithoutOrganizationInput[] | ActivityFeedUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ActivityFeedCreateManyOrganizationInputEnvelope
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
   }
 
   export type MemberUpdateManyWithoutOrganizationNestedInput = {
@@ -45440,6 +40714,20 @@ export namespace Prisma {
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
   }
 
+  export type ActivityFeedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput> | ActivityFeedCreateWithoutOrganizationInput[] | ActivityFeedUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput | ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ActivityFeedCreateManyOrganizationInputEnvelope
+    set?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    disconnect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    delete?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    update?: ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput | ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ActivityFeedUpdateManyWithWhereWithoutOrganizationInput | ActivityFeedUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -45550,6 +40838,20 @@ export namespace Prisma {
     update?: WaitlistUpdateWithWhereUniqueWithoutOrganizationInput | WaitlistUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: WaitlistUpdateManyWithWhereWithoutOrganizationInput | WaitlistUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
+  }
+
+  export type ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput> | ActivityFeedCreateWithoutOrganizationInput[] | ActivityFeedUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput | ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ActivityFeedCreateManyOrganizationInputEnvelope
+    set?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    disconnect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    delete?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+    update?: ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput | ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ActivityFeedUpdateManyWithWhereWithoutOrganizationInput | ActivityFeedUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -45714,13 +41016,6 @@ export namespace Prisma {
     connect?: AssetWhereUniqueInput | AssetWhereUniqueInput[]
   }
 
-  export type LaunchPlanCreateNestedManyWithoutProjectInput = {
-    create?: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput> | LaunchPlanCreateWithoutProjectInput[] | LaunchPlanUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutProjectInput | LaunchPlanCreateOrConnectWithoutProjectInput[]
-    createMany?: LaunchPlanCreateManyProjectInputEnvelope
-    connect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-  }
-
   export type PublicRoadmapCreateNestedManyWithoutProjectInput = {
     create?: XOR<PublicRoadmapCreateWithoutProjectInput, PublicRoadmapUncheckedCreateWithoutProjectInput> | PublicRoadmapCreateWithoutProjectInput[] | PublicRoadmapUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: PublicRoadmapCreateOrConnectWithoutProjectInput | PublicRoadmapCreateOrConnectWithoutProjectInput[]
@@ -45747,13 +41042,6 @@ export namespace Prisma {
     connectOrCreate?: AssetCreateOrConnectWithoutProjectInput | AssetCreateOrConnectWithoutProjectInput[]
     createMany?: AssetCreateManyProjectInputEnvelope
     connect?: AssetWhereUniqueInput | AssetWhereUniqueInput[]
-  }
-
-  export type LaunchPlanUncheckedCreateNestedManyWithoutProjectInput = {
-    create?: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput> | LaunchPlanCreateWithoutProjectInput[] | LaunchPlanUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutProjectInput | LaunchPlanCreateOrConnectWithoutProjectInput[]
-    createMany?: LaunchPlanCreateManyProjectInputEnvelope
-    connect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
   }
 
   export type PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput = {
@@ -45836,20 +41124,6 @@ export namespace Prisma {
     deleteMany?: AssetScalarWhereInput | AssetScalarWhereInput[]
   }
 
-  export type LaunchPlanUpdateManyWithoutProjectNestedInput = {
-    create?: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput> | LaunchPlanCreateWithoutProjectInput[] | LaunchPlanUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutProjectInput | LaunchPlanCreateOrConnectWithoutProjectInput[]
-    upsert?: LaunchPlanUpsertWithWhereUniqueWithoutProjectInput | LaunchPlanUpsertWithWhereUniqueWithoutProjectInput[]
-    createMany?: LaunchPlanCreateManyProjectInputEnvelope
-    set?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    disconnect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    delete?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    connect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    update?: LaunchPlanUpdateWithWhereUniqueWithoutProjectInput | LaunchPlanUpdateWithWhereUniqueWithoutProjectInput[]
-    updateMany?: LaunchPlanUpdateManyWithWhereWithoutProjectInput | LaunchPlanUpdateManyWithWhereWithoutProjectInput[]
-    deleteMany?: LaunchPlanScalarWhereInput | LaunchPlanScalarWhereInput[]
-  }
-
   export type PublicRoadmapUpdateManyWithoutProjectNestedInput = {
     create?: XOR<PublicRoadmapCreateWithoutProjectInput, PublicRoadmapUncheckedCreateWithoutProjectInput> | PublicRoadmapCreateWithoutProjectInput[] | PublicRoadmapUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: PublicRoadmapCreateOrConnectWithoutProjectInput | PublicRoadmapCreateOrConnectWithoutProjectInput[]
@@ -45904,20 +41178,6 @@ export namespace Prisma {
     update?: AssetUpdateWithWhereUniqueWithoutProjectInput | AssetUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: AssetUpdateManyWithWhereWithoutProjectInput | AssetUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: AssetScalarWhereInput | AssetScalarWhereInput[]
-  }
-
-  export type LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput = {
-    create?: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput> | LaunchPlanCreateWithoutProjectInput[] | LaunchPlanUncheckedCreateWithoutProjectInput[]
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutProjectInput | LaunchPlanCreateOrConnectWithoutProjectInput[]
-    upsert?: LaunchPlanUpsertWithWhereUniqueWithoutProjectInput | LaunchPlanUpsertWithWhereUniqueWithoutProjectInput[]
-    createMany?: LaunchPlanCreateManyProjectInputEnvelope
-    set?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    disconnect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    delete?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    connect?: LaunchPlanWhereUniqueInput | LaunchPlanWhereUniqueInput[]
-    update?: LaunchPlanUpdateWithWhereUniqueWithoutProjectInput | LaunchPlanUpdateWithWhereUniqueWithoutProjectInput[]
-    updateMany?: LaunchPlanUpdateManyWithWhereWithoutProjectInput | LaunchPlanUpdateManyWithWhereWithoutProjectInput[]
-    deleteMany?: LaunchPlanScalarWhereInput | LaunchPlanScalarWhereInput[]
   }
 
   export type PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput = {
@@ -45976,6 +41236,14 @@ export namespace Prisma {
 
   export type EnumIdeaStatusFieldUpdateOperationsInput = {
     set?: $Enums.IdeaStatus
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type UserUpdateOneWithoutIdeaNestedInput = {
@@ -46080,6 +41348,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIssueInput, UserUpdateWithoutIssueInput>, UserUncheckedUpdateWithoutIssueInput>
   }
 
+  export type AssetCreatetagsInput = {
+    set: string[]
+  }
+
   export type ProjectCreateNestedOneWithoutAssetsInput = {
     create?: XOR<ProjectCreateWithoutAssetsInput, ProjectUncheckedCreateWithoutAssetsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutAssetsInput
@@ -46114,6 +41386,11 @@ export namespace Prisma {
     set?: $Enums.LinkType | null
   }
 
+  export type AssetUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type NullableEnumAssetCategoryFieldUpdateOperationsInput = {
     set?: $Enums.AssetCategory | null
   }
@@ -46144,210 +41421,42 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAssetInput, UserUpdateWithoutAssetInput>, UserUncheckedUpdateWithoutAssetInput>
   }
 
-  export type ProjectCreateNestedOneWithoutLaunchPlansInput = {
-    create?: XOR<ProjectCreateWithoutLaunchPlansInput, ProjectUncheckedCreateWithoutLaunchPlansInput>
-    connectOrCreate?: ProjectCreateOrConnectWithoutLaunchPlansInput
-    connect?: ProjectWhereUniqueInput
+  export type OrganizationCreateNestedOneWithoutActivityFeedInput = {
+    create?: XOR<OrganizationCreateWithoutActivityFeedInput, OrganizationUncheckedCreateWithoutActivityFeedInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutActivityFeedInput
+    connect?: OrganizationWhereUniqueInput
   }
 
-  export type LaunchChecklistItemCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput> | LaunchChecklistItemCreateWithoutLaunchPlanInput[] | LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput | LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchChecklistItemCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutActivityFeedInput = {
+    create?: XOR<UserCreateWithoutActivityFeedInput, UserUncheckedCreateWithoutActivityFeedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityFeedInput
+    connect?: UserWhereUniqueInput
   }
 
-  export type LaunchCopyCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput> | LaunchCopyCreateWithoutLaunchPlanInput[] | LaunchCopyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchCopyCreateOrConnectWithoutLaunchPlanInput | LaunchCopyCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchCopyCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
+  export type EnumActivityTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ActivityType
   }
 
-  export type LaunchStrategyCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput> | LaunchStrategyCreateWithoutLaunchPlanInput[] | LaunchStrategyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchStrategyCreateOrConnectWithoutLaunchPlanInput | LaunchStrategyCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchStrategyCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
+  export type EnumEntityTypeFieldUpdateOperationsInput = {
+    set?: $Enums.EntityType
   }
 
-  export type LaunchChecklistItemUncheckedCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput> | LaunchChecklistItemCreateWithoutLaunchPlanInput[] | LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput | LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchChecklistItemCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
+  export type OrganizationUpdateOneRequiredWithoutActivityFeedNestedInput = {
+    create?: XOR<OrganizationCreateWithoutActivityFeedInput, OrganizationUncheckedCreateWithoutActivityFeedInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutActivityFeedInput
+    upsert?: OrganizationUpsertWithoutActivityFeedInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutActivityFeedInput, OrganizationUpdateWithoutActivityFeedInput>, OrganizationUncheckedUpdateWithoutActivityFeedInput>
   }
 
-  export type LaunchCopyUncheckedCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput> | LaunchCopyCreateWithoutLaunchPlanInput[] | LaunchCopyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchCopyCreateOrConnectWithoutLaunchPlanInput | LaunchCopyCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchCopyCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-  }
-
-  export type LaunchStrategyUncheckedCreateNestedManyWithoutLaunchPlanInput = {
-    create?: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput> | LaunchStrategyCreateWithoutLaunchPlanInput[] | LaunchStrategyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchStrategyCreateOrConnectWithoutLaunchPlanInput | LaunchStrategyCreateOrConnectWithoutLaunchPlanInput[]
-    createMany?: LaunchStrategyCreateManyLaunchPlanInputEnvelope
-    connect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-  }
-
-  export type EnumLaunchPlanStatusFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchPlanStatus
-  }
-
-  export type ProjectUpdateOneRequiredWithoutLaunchPlansNestedInput = {
-    create?: XOR<ProjectCreateWithoutLaunchPlansInput, ProjectUncheckedCreateWithoutLaunchPlansInput>
-    connectOrCreate?: ProjectCreateOrConnectWithoutLaunchPlansInput
-    upsert?: ProjectUpsertWithoutLaunchPlansInput
-    connect?: ProjectWhereUniqueInput
-    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutLaunchPlansInput, ProjectUpdateWithoutLaunchPlansInput>, ProjectUncheckedUpdateWithoutLaunchPlansInput>
-  }
-
-  export type LaunchChecklistItemUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput> | LaunchChecklistItemCreateWithoutLaunchPlanInput[] | LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput | LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchChecklistItemUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchChecklistItemUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchChecklistItemCreateManyLaunchPlanInputEnvelope
-    set?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    disconnect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    delete?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    connect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    update?: LaunchChecklistItemUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchChecklistItemUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchChecklistItemUpdateManyWithWhereWithoutLaunchPlanInput | LaunchChecklistItemUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchChecklistItemScalarWhereInput | LaunchChecklistItemScalarWhereInput[]
-  }
-
-  export type LaunchCopyUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput> | LaunchCopyCreateWithoutLaunchPlanInput[] | LaunchCopyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchCopyCreateOrConnectWithoutLaunchPlanInput | LaunchCopyCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchCopyUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchCopyUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchCopyCreateManyLaunchPlanInputEnvelope
-    set?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    disconnect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    delete?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    connect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    update?: LaunchCopyUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchCopyUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchCopyUpdateManyWithWhereWithoutLaunchPlanInput | LaunchCopyUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchCopyScalarWhereInput | LaunchCopyScalarWhereInput[]
-  }
-
-  export type LaunchStrategyUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput> | LaunchStrategyCreateWithoutLaunchPlanInput[] | LaunchStrategyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchStrategyCreateOrConnectWithoutLaunchPlanInput | LaunchStrategyCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchStrategyUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchStrategyUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchStrategyCreateManyLaunchPlanInputEnvelope
-    set?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    disconnect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    delete?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    connect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    update?: LaunchStrategyUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchStrategyUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchStrategyUpdateManyWithWhereWithoutLaunchPlanInput | LaunchStrategyUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchStrategyScalarWhereInput | LaunchStrategyScalarWhereInput[]
-  }
-
-  export type LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput> | LaunchChecklistItemCreateWithoutLaunchPlanInput[] | LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput | LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchChecklistItemUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchChecklistItemUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchChecklistItemCreateManyLaunchPlanInputEnvelope
-    set?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    disconnect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    delete?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    connect?: LaunchChecklistItemWhereUniqueInput | LaunchChecklistItemWhereUniqueInput[]
-    update?: LaunchChecklistItemUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchChecklistItemUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchChecklistItemUpdateManyWithWhereWithoutLaunchPlanInput | LaunchChecklistItemUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchChecklistItemScalarWhereInput | LaunchChecklistItemScalarWhereInput[]
-  }
-
-  export type LaunchCopyUncheckedUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput> | LaunchCopyCreateWithoutLaunchPlanInput[] | LaunchCopyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchCopyCreateOrConnectWithoutLaunchPlanInput | LaunchCopyCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchCopyUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchCopyUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchCopyCreateManyLaunchPlanInputEnvelope
-    set?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    disconnect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    delete?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    connect?: LaunchCopyWhereUniqueInput | LaunchCopyWhereUniqueInput[]
-    update?: LaunchCopyUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchCopyUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchCopyUpdateManyWithWhereWithoutLaunchPlanInput | LaunchCopyUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchCopyScalarWhereInput | LaunchCopyScalarWhereInput[]
-  }
-
-  export type LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanNestedInput = {
-    create?: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput> | LaunchStrategyCreateWithoutLaunchPlanInput[] | LaunchStrategyUncheckedCreateWithoutLaunchPlanInput[]
-    connectOrCreate?: LaunchStrategyCreateOrConnectWithoutLaunchPlanInput | LaunchStrategyCreateOrConnectWithoutLaunchPlanInput[]
-    upsert?: LaunchStrategyUpsertWithWhereUniqueWithoutLaunchPlanInput | LaunchStrategyUpsertWithWhereUniqueWithoutLaunchPlanInput[]
-    createMany?: LaunchStrategyCreateManyLaunchPlanInputEnvelope
-    set?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    disconnect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    delete?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    connect?: LaunchStrategyWhereUniqueInput | LaunchStrategyWhereUniqueInput[]
-    update?: LaunchStrategyUpdateWithWhereUniqueWithoutLaunchPlanInput | LaunchStrategyUpdateWithWhereUniqueWithoutLaunchPlanInput[]
-    updateMany?: LaunchStrategyUpdateManyWithWhereWithoutLaunchPlanInput | LaunchStrategyUpdateManyWithWhereWithoutLaunchPlanInput[]
-    deleteMany?: LaunchStrategyScalarWhereInput | LaunchStrategyScalarWhereInput[]
-  }
-
-  export type LaunchPlanCreateNestedOneWithoutChecklistItemsInput = {
-    create?: XOR<LaunchPlanCreateWithoutChecklistItemsInput, LaunchPlanUncheckedCreateWithoutChecklistItemsInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutChecklistItemsInput
-    connect?: LaunchPlanWhereUniqueInput
-  }
-
-  export type EnumLaunchChecklistCategoryFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchChecklistCategory
-  }
-
-  export type EnumLaunchChecklistPriorityFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchChecklistPriority
-  }
-
-  export type EnumLaunchChecklistStatusFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchChecklistStatus
-  }
-
-  export type LaunchPlanUpdateOneRequiredWithoutChecklistItemsNestedInput = {
-    create?: XOR<LaunchPlanCreateWithoutChecklistItemsInput, LaunchPlanUncheckedCreateWithoutChecklistItemsInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutChecklistItemsInput
-    upsert?: LaunchPlanUpsertWithoutChecklistItemsInput
-    connect?: LaunchPlanWhereUniqueInput
-    update?: XOR<XOR<LaunchPlanUpdateToOneWithWhereWithoutChecklistItemsInput, LaunchPlanUpdateWithoutChecklistItemsInput>, LaunchPlanUncheckedUpdateWithoutChecklistItemsInput>
-  }
-
-  export type LaunchPlanCreateNestedOneWithoutCopiesInput = {
-    create?: XOR<LaunchPlanCreateWithoutCopiesInput, LaunchPlanUncheckedCreateWithoutCopiesInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutCopiesInput
-    connect?: LaunchPlanWhereUniqueInput
-  }
-
-  export type EnumLaunchCopyPlatformFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchCopyPlatform
-  }
-
-  export type LaunchPlanUpdateOneRequiredWithoutCopiesNestedInput = {
-    create?: XOR<LaunchPlanCreateWithoutCopiesInput, LaunchPlanUncheckedCreateWithoutCopiesInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutCopiesInput
-    upsert?: LaunchPlanUpsertWithoutCopiesInput
-    connect?: LaunchPlanWhereUniqueInput
-    update?: XOR<XOR<LaunchPlanUpdateToOneWithWhereWithoutCopiesInput, LaunchPlanUpdateWithoutCopiesInput>, LaunchPlanUncheckedUpdateWithoutCopiesInput>
-  }
-
-  export type LaunchPlanCreateNestedOneWithoutStrategiesInput = {
-    create?: XOR<LaunchPlanCreateWithoutStrategiesInput, LaunchPlanUncheckedCreateWithoutStrategiesInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutStrategiesInput
-    connect?: LaunchPlanWhereUniqueInput
-  }
-
-  export type EnumLaunchStrategyPhaseFieldUpdateOperationsInput = {
-    set?: $Enums.LaunchStrategyPhase
-  }
-
-  export type LaunchPlanUpdateOneRequiredWithoutStrategiesNestedInput = {
-    create?: XOR<LaunchPlanCreateWithoutStrategiesInput, LaunchPlanUncheckedCreateWithoutStrategiesInput>
-    connectOrCreate?: LaunchPlanCreateOrConnectWithoutStrategiesInput
-    upsert?: LaunchPlanUpsertWithoutStrategiesInput
-    connect?: LaunchPlanWhereUniqueInput
-    update?: XOR<XOR<LaunchPlanUpdateToOneWithWhereWithoutStrategiesInput, LaunchPlanUpdateWithoutStrategiesInput>, LaunchPlanUncheckedUpdateWithoutStrategiesInput>
+  export type UserUpdateOneWithoutActivityFeedNestedInput = {
+    create?: XOR<UserCreateWithoutActivityFeedInput, UserUncheckedCreateWithoutActivityFeedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutActivityFeedInput
+    upsert?: UserUpsertWithoutActivityFeedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutActivityFeedInput, UserUpdateWithoutActivityFeedInput>, UserUncheckedUpdateWithoutActivityFeedInput>
   }
 
   export type ProjectCreateNestedOneWithoutPublicRoadmapsInput = {
@@ -46620,10 +41729,28 @@ export namespace Prisma {
     update?: XOR<XOR<RoadmapItemUpdateToOneWithWhereWithoutFeedbackInput, RoadmapItemUpdateWithoutFeedbackInput>, RoadmapItemUncheckedUpdateWithoutFeedbackInput>
   }
 
+  export type RoadmapChangelogCreatefixesInput = {
+    set: string[]
+  }
+
+  export type RoadmapChangelogCreatenewFeaturesInput = {
+    set: string[]
+  }
+
   export type PublicRoadmapCreateNestedOneWithoutChangelogsInput = {
     create?: XOR<PublicRoadmapCreateWithoutChangelogsInput, PublicRoadmapUncheckedCreateWithoutChangelogsInput>
     connectOrCreate?: PublicRoadmapCreateOrConnectWithoutChangelogsInput
     connect?: PublicRoadmapWhereUniqueInput
+  }
+
+  export type RoadmapChangelogUpdatefixesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type RoadmapChangelogUpdatenewFeaturesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type PublicRoadmapUpdateOneRequiredWithoutChangelogsNestedInput = {
@@ -46966,29 +42093,6 @@ export namespace Prisma {
     _min?: NestedEnumProjectPlatformFilter<$PrismaModel>
     _max?: NestedEnumProjectPlatformFilter<$PrismaModel>
   }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type NestedEnumProjectStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ProjectStatus | EnumProjectStatusFieldRefInput<$PrismaModel> | null
@@ -47007,6 +42111,17 @@ export namespace Prisma {
     not?: NestedEnumIdeaStatusFilter<$PrismaModel> | $Enums.IdeaStatus
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedEnumIdeaStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.IdeaStatus | EnumIdeaStatusFieldRefInput<$PrismaModel>
     in?: $Enums.IdeaStatus[] | ListEnumIdeaStatusFieldRefInput<$PrismaModel>
@@ -47015,6 +42130,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumIdeaStatusFilter<$PrismaModel>
     _max?: NestedEnumIdeaStatusFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumIssueStatusFilter<$PrismaModel = never> = {
@@ -47115,17 +42246,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedEnumLinkTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.LinkType | EnumLinkTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.LinkType[] | ListEnumLinkTypeFieldRefInput<$PrismaModel> | null
@@ -47146,106 +42266,38 @@ export namespace Prisma {
     _max?: NestedEnumAssetCategoryNullableFilter<$PrismaModel>
   }
 
-  export type NestedEnumLaunchPlanStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchPlanStatus | EnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchPlanStatusFilter<$PrismaModel> | $Enums.LaunchPlanStatus
+  export type NestedEnumActivityTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityType | EnumActivityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTypeFilter<$PrismaModel> | $Enums.ActivityType
   }
 
-  export type NestedEnumLaunchPlanStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchPlanStatus | EnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchPlanStatus[] | ListEnumLaunchPlanStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchPlanStatusWithAggregatesFilter<$PrismaModel> | $Enums.LaunchPlanStatus
+  export type NestedEnumEntityTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.EntityType | EnumEntityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEntityTypeFilter<$PrismaModel> | $Enums.EntityType
+  }
+
+  export type NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ActivityType | EnumActivityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ActivityType[] | ListEnumActivityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumActivityTypeWithAggregatesFilter<$PrismaModel> | $Enums.ActivityType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchPlanStatusFilter<$PrismaModel>
-    _max?: NestedEnumLaunchPlanStatusFilter<$PrismaModel>
+    _min?: NestedEnumActivityTypeFilter<$PrismaModel>
+    _max?: NestedEnumActivityTypeFilter<$PrismaModel>
   }
 
-  export type NestedEnumLaunchChecklistCategoryFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistCategory | EnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel> | $Enums.LaunchChecklistCategory
-  }
-
-  export type NestedEnumLaunchChecklistPriorityFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistPriority | EnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel> | $Enums.LaunchChecklistPriority
-  }
-
-  export type NestedEnumLaunchChecklistStatusFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistStatus | EnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel> | $Enums.LaunchChecklistStatus
-  }
-
-  export type NestedEnumLaunchChecklistCategoryWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistCategory | EnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistCategory[] | ListEnumLaunchChecklistCategoryFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistCategoryWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistCategory
+  export type NestedEnumEntityTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.EntityType | EnumEntityTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.EntityType[] | ListEnumEntityTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumEntityTypeWithAggregatesFilter<$PrismaModel> | $Enums.EntityType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistCategoryFilter<$PrismaModel>
-  }
-
-  export type NestedEnumLaunchChecklistPriorityWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistPriority | EnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistPriority[] | ListEnumLaunchChecklistPriorityFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistPriorityWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistPriority
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistPriorityFilter<$PrismaModel>
-  }
-
-  export type NestedEnumLaunchChecklistStatusWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchChecklistStatus | EnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchChecklistStatus[] | ListEnumLaunchChecklistStatusFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchChecklistStatusWithAggregatesFilter<$PrismaModel> | $Enums.LaunchChecklistStatus
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel>
-    _max?: NestedEnumLaunchChecklistStatusFilter<$PrismaModel>
-  }
-
-  export type NestedEnumLaunchCopyPlatformFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchCopyPlatform | EnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel> | $Enums.LaunchCopyPlatform
-  }
-
-  export type NestedEnumLaunchCopyPlatformWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchCopyPlatform | EnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchCopyPlatform[] | ListEnumLaunchCopyPlatformFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchCopyPlatformWithAggregatesFilter<$PrismaModel> | $Enums.LaunchCopyPlatform
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel>
-    _max?: NestedEnumLaunchCopyPlatformFilter<$PrismaModel>
-  }
-
-  export type NestedEnumLaunchStrategyPhaseFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchStrategyPhase | EnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel> | $Enums.LaunchStrategyPhase
-  }
-
-  export type NestedEnumLaunchStrategyPhaseWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.LaunchStrategyPhase | EnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    in?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    notIn?: $Enums.LaunchStrategyPhase[] | ListEnumLaunchStrategyPhaseFieldRefInput<$PrismaModel>
-    not?: NestedEnumLaunchStrategyPhaseWithAggregatesFilter<$PrismaModel> | $Enums.LaunchStrategyPhase
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel>
-    _max?: NestedEnumLaunchStrategyPhaseFilter<$PrismaModel>
+    _min?: NestedEnumEntityTypeFilter<$PrismaModel>
+    _max?: NestedEnumEntityTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumRoadmapFeedbackSentimentFilter<$PrismaModel = never> = {
@@ -47513,7 +42565,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -47523,7 +42579,6 @@ export namespace Prisma {
     organization?: OrganizationCreateNestedOneWithoutProjectInput
     issues?: IssueCreateNestedManyWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -47533,7 +42588,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -47543,7 +42602,6 @@ export namespace Prisma {
     organizationId?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -47566,9 +42624,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
   }
@@ -47582,9 +42642,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -47657,7 +42719,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -47682,7 +42744,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -47743,6 +42805,44 @@ export namespace Prisma {
 
   export type WaitlistCreateManyCreatedByInputEnvelope = {
     data: WaitlistCreateManyCreatedByInput | WaitlistCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ActivityFeedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    oldValue?: string | null
+    newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutActivityFeedInput
+  }
+
+  export type ActivityFeedUncheckedCreateWithoutUserInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    organizationId: string
+    oldValue?: string | null
+    newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ActivityFeedCreateOrConnectWithoutUserInput = {
+    where: ActivityFeedWhereUniqueInput
+    create: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput>
+  }
+
+  export type ActivityFeedCreateManyUserInputEnvelope = {
+    data: ActivityFeedCreateManyUserInput | ActivityFeedCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -47983,7 +43083,11 @@ export namespace Prisma {
     name?: StringFilter<"Project"> | string
     description?: StringNullableFilter<"Project"> | string | null
     platform?: EnumProjectPlatformFilter<"Project"> | $Enums.ProjectPlatform
-    techStack?: JsonNullableFilter<"Project">
+    ai?: StringNullableFilter<"Project"> | string | null
+    orm?: StringNullableFilter<"Project"> | string | null
+    database?: StringNullableFilter<"Project"> | string | null
+    auth?: StringNullableFilter<"Project"> | string | null
+    framework?: StringNullableFilter<"Project"> | string | null
     infrastructure?: StringNullableFilter<"Project"> | string | null
     dueDate?: DateTimeNullableFilter<"Project"> | Date | string | null
     status?: EnumProjectStatusNullableFilter<"Project"> | $Enums.ProjectStatus | null
@@ -48023,9 +43127,11 @@ export namespace Prisma {
     internal?: BoolFilter<"Idea"> | boolean
     openSource?: BoolFilter<"Idea"> | boolean
     status?: EnumIdeaStatusFilter<"Idea"> | $Enums.IdeaStatus
-    aiOverallValidation?: JsonNullableFilter<"Idea">
+    aiOverallValidation?: FloatNullableFilter<"Idea"> | number | null
     problemSolved?: StringNullableFilter<"Idea"> | string | null
     solutionOffered?: StringNullableFilter<"Idea"> | string | null
+    createdAt?: DateTimeFilter<"Idea"> | Date | string
+    updatedAt?: DateTimeFilter<"Idea"> | Date | string
   }
 
   export type IssueUpsertWithWhereUniqueWithoutAssignedToInput = {
@@ -48099,7 +43205,7 @@ export namespace Prisma {
     mimeType?: StringNullableFilter<"Asset"> | string | null
     url?: StringNullableFilter<"Asset"> | string | null
     linkType?: EnumLinkTypeNullableFilter<"Asset"> | $Enums.LinkType | null
-    tags?: JsonNullableFilter<"Asset">
+    tags?: StringNullableListFilter<"Asset">
     category?: EnumAssetCategoryNullableFilter<"Asset"> | $Enums.AssetCategory | null
     thumbnailUrl?: StringNullableFilter<"Asset"> | string | null
     isPublic?: BoolNullableFilter<"Asset"> | boolean | null
@@ -48146,6 +43252,40 @@ export namespace Prisma {
     createdById?: StringNullableFilter<"Waitlist"> | string | null
   }
 
+  export type ActivityFeedUpsertWithWhereUniqueWithoutUserInput = {
+    where: ActivityFeedWhereUniqueInput
+    update: XOR<ActivityFeedUpdateWithoutUserInput, ActivityFeedUncheckedUpdateWithoutUserInput>
+    create: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput>
+  }
+
+  export type ActivityFeedUpdateWithWhereUniqueWithoutUserInput = {
+    where: ActivityFeedWhereUniqueInput
+    data: XOR<ActivityFeedUpdateWithoutUserInput, ActivityFeedUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ActivityFeedUpdateManyWithWhereWithoutUserInput = {
+    where: ActivityFeedScalarWhereInput
+    data: XOR<ActivityFeedUpdateManyMutationInput, ActivityFeedUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ActivityFeedScalarWhereInput = {
+    AND?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+    OR?: ActivityFeedScalarWhereInput[]
+    NOT?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+    id?: StringFilter<"ActivityFeed"> | string
+    type?: EnumActivityTypeFilter<"ActivityFeed"> | $Enums.ActivityType
+    title?: StringFilter<"ActivityFeed"> | string
+    description?: StringNullableFilter<"ActivityFeed"> | string | null
+    entityType?: EnumEntityTypeFilter<"ActivityFeed"> | $Enums.EntityType
+    entityId?: StringFilter<"ActivityFeed"> | string
+    organizationId?: StringFilter<"ActivityFeed"> | string
+    userId?: StringNullableFilter<"ActivityFeed"> | string | null
+    oldValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    newValue?: StringNullableFilter<"ActivityFeed"> | string | null
+    createdAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+    updatedAt?: DateTimeFilter<"ActivityFeed"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -48167,6 +43307,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -48190,6 +43331,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -48229,6 +43371,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -48252,6 +43395,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -48275,6 +43419,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -48298,6 +43443,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -48337,6 +43483,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -48360,6 +43507,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MemberCreateWithoutOrganizationInput = {
@@ -48449,7 +43597,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -48459,7 +43611,6 @@ export namespace Prisma {
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -48469,7 +43620,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -48479,7 +43634,6 @@ export namespace Prisma {
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -48502,9 +43656,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
   }
@@ -48518,9 +43674,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -48593,7 +43751,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -48617,7 +43775,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -48679,6 +43837,44 @@ export namespace Prisma {
 
   export type WaitlistCreateManyOrganizationInputEnvelope = {
     data: WaitlistCreateManyOrganizationInput | WaitlistCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ActivityFeedCreateWithoutOrganizationInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    oldValue?: string | null
+    newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutActivityFeedInput
+  }
+
+  export type ActivityFeedUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    userId?: string | null
+    oldValue?: string | null
+    newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ActivityFeedCreateOrConnectWithoutOrganizationInput = {
+    where: ActivityFeedWhereUniqueInput
+    create: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ActivityFeedCreateManyOrganizationInputEnvelope = {
+    data: ActivityFeedCreateManyOrganizationInput | ActivityFeedCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -48824,6 +44020,22 @@ export namespace Prisma {
     data: XOR<WaitlistUpdateManyMutationInput, WaitlistUncheckedUpdateManyWithoutOrganizationInput>
   }
 
+  export type ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: ActivityFeedWhereUniqueInput
+    update: XOR<ActivityFeedUpdateWithoutOrganizationInput, ActivityFeedUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: ActivityFeedWhereUniqueInput
+    data: XOR<ActivityFeedUpdateWithoutOrganizationInput, ActivityFeedUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ActivityFeedUpdateManyWithWhereWithoutOrganizationInput = {
+    where: ActivityFeedScalarWhereInput
+    data: XOR<ActivityFeedUpdateManyMutationInput, ActivityFeedUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
   export type OrganizationCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -48838,6 +44050,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -48854,6 +44067,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -48882,6 +44096,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMembersInput = {
@@ -48905,6 +44120,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMembersInput = {
@@ -48937,6 +44153,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -48953,6 +44170,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMembersInput = {
@@ -48987,6 +44205,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembersInput = {
@@ -49010,6 +44229,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationCreateWithoutInvitationsInput = {
@@ -49026,6 +44246,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -49042,6 +44263,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -49070,6 +44292,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -49093,6 +44316,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -49125,6 +44349,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -49141,6 +44366,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -49175,6 +44401,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -49198,6 +44425,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPasskeysInput = {
@@ -49221,6 +44449,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPasskeysInput = {
@@ -49244,6 +44473,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPasskeysInput = {
@@ -49283,6 +44513,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasskeysInput = {
@@ -49306,6 +44537,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTwofactorsInput = {
@@ -49329,6 +44561,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTwofactorsInput = {
@@ -49352,6 +44585,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTwofactorsInput = {
@@ -49391,6 +44625,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTwofactorsInput = {
@@ -49414,6 +44649,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationCreateWithoutSubscriptionInput = {
@@ -49430,6 +44666,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -49446,6 +44683,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -49474,6 +44712,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSubscriptionInput = {
@@ -49497,6 +44736,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionInput = {
@@ -49529,6 +44769,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -49545,6 +44786,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSubscriptionInput = {
@@ -49579,6 +44821,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubscriptionInput = {
@@ -49602,6 +44845,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type IdeaCreateWithoutProjectsInput = {
@@ -49612,9 +44856,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
   }
@@ -49629,9 +44875,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type IdeaCreateOrConnectWithoutProjectsInput = {
@@ -49653,6 +44901,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProjectInput = {
@@ -49669,6 +44918,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProjectInput = {
@@ -49745,6 +44995,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProjectInput = {
@@ -49768,6 +45019,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProjectInput = {
@@ -49786,7 +45038,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -49810,7 +45062,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -49828,40 +45080,6 @@ export namespace Prisma {
 
   export type AssetCreateManyProjectInputEnvelope = {
     data: AssetCreateManyProjectInput | AssetCreateManyProjectInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LaunchPlanCreateWithoutProjectInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    checklistItems?: LaunchChecklistItemCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUncheckedCreateWithoutProjectInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    checklistItems?: LaunchChecklistItemUncheckedCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyUncheckedCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyUncheckedCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanCreateOrConnectWithoutProjectInput = {
-    where: LaunchPlanWhereUniqueInput
-    create: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput>
-  }
-
-  export type LaunchPlanCreateManyProjectInputEnvelope = {
-    data: LaunchPlanCreateManyProjectInput | LaunchPlanCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -49978,9 +45196,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
   }
@@ -49995,9 +45215,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrganizationUpsertWithoutProjectInput = {
@@ -50025,6 +45247,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProjectInput = {
@@ -50041,6 +45264,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutProjectInput = {
@@ -50091,6 +45315,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectInput = {
@@ -50114,6 +45339,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AssetUpsertWithWhereUniqueWithoutProjectInput = {
@@ -50130,35 +45356,6 @@ export namespace Prisma {
   export type AssetUpdateManyWithWhereWithoutProjectInput = {
     where: AssetScalarWhereInput
     data: XOR<AssetUpdateManyMutationInput, AssetUncheckedUpdateManyWithoutProjectInput>
-  }
-
-  export type LaunchPlanUpsertWithWhereUniqueWithoutProjectInput = {
-    where: LaunchPlanWhereUniqueInput
-    update: XOR<LaunchPlanUpdateWithoutProjectInput, LaunchPlanUncheckedUpdateWithoutProjectInput>
-    create: XOR<LaunchPlanCreateWithoutProjectInput, LaunchPlanUncheckedCreateWithoutProjectInput>
-  }
-
-  export type LaunchPlanUpdateWithWhereUniqueWithoutProjectInput = {
-    where: LaunchPlanWhereUniqueInput
-    data: XOR<LaunchPlanUpdateWithoutProjectInput, LaunchPlanUncheckedUpdateWithoutProjectInput>
-  }
-
-  export type LaunchPlanUpdateManyWithWhereWithoutProjectInput = {
-    where: LaunchPlanScalarWhereInput
-    data: XOR<LaunchPlanUpdateManyMutationInput, LaunchPlanUncheckedUpdateManyWithoutProjectInput>
-  }
-
-  export type LaunchPlanScalarWhereInput = {
-    AND?: LaunchPlanScalarWhereInput | LaunchPlanScalarWhereInput[]
-    OR?: LaunchPlanScalarWhereInput[]
-    NOT?: LaunchPlanScalarWhereInput | LaunchPlanScalarWhereInput[]
-    id?: StringFilter<"LaunchPlan"> | string
-    projectId?: StringFilter<"LaunchPlan"> | string
-    status?: EnumLaunchPlanStatusFilter<"LaunchPlan"> | $Enums.LaunchPlanStatus
-    targetLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    actualLaunchDate?: DateTimeNullableFilter<"LaunchPlan"> | Date | string | null
-    createdAt?: DateTimeFilter<"LaunchPlan"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchPlan"> | Date | string
   }
 
   export type PublicRoadmapUpsertWithWhereUniqueWithoutProjectInput = {
@@ -50235,6 +45432,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIdeaInput = {
@@ -50258,6 +45456,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIdeaInput = {
@@ -50279,6 +45478,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIdeaInput = {
@@ -50295,6 +45495,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIdeaInput = {
@@ -50307,7 +45508,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50317,7 +45522,6 @@ export namespace Prisma {
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -50327,7 +45531,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50337,7 +45545,6 @@ export namespace Prisma {
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -50384,6 +45591,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIdeaInput = {
@@ -50407,6 +45615,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrganizationUpsertWithoutIdeaInput = {
@@ -50434,6 +45643,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIdeaInput = {
@@ -50450,6 +45660,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -50482,6 +45693,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueInput = {
@@ -50498,6 +45710,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueInput = {
@@ -50510,7 +45723,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50520,7 +45737,6 @@ export namespace Prisma {
     organization?: OrganizationCreateNestedOneWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -50530,7 +45746,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50540,7 +45760,6 @@ export namespace Prisma {
     organizationId?: string | null
     createdById?: string | null
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -50571,6 +45790,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutIssueInput = {
@@ -50594,6 +45814,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutIssueInput = {
@@ -50626,6 +45847,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueInput = {
@@ -50642,6 +45864,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithoutIssuesInput = {
@@ -50660,7 +45883,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -50670,7 +45897,6 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -50680,7 +45906,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -50690,7 +45920,6 @@ export namespace Prisma {
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -50727,6 +45956,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIssueInput = {
@@ -50750,6 +45980,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProjectCreateWithoutAssetsInput = {
@@ -50757,7 +45988,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50767,7 +46002,6 @@ export namespace Prisma {
     organization?: OrganizationCreateNestedOneWithoutProjectInput
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
@@ -50777,7 +46011,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -50787,7 +46025,6 @@ export namespace Prisma {
     organizationId?: string | null
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
@@ -50811,6 +46048,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetInput = {
@@ -50827,6 +46065,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetInput = {
@@ -50855,6 +46094,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAssetInput = {
@@ -50878,6 +46118,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAssetInput = {
@@ -50901,7 +46142,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -50911,7 +46156,6 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneWithoutProjectNestedInput
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -50921,7 +46165,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -50931,7 +46179,6 @@ export namespace Prisma {
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -50961,6 +46208,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetInput = {
@@ -50977,6 +46225,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetInput = {
@@ -51011,6 +46260,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssetInput = {
@@ -51034,531 +46284,203 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type ProjectCreateWithoutLaunchPlansInput = {
+  export type OrganizationCreateWithoutActivityFeedInput = {
     id?: string
     name: string
-    description?: string | null
-    platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
-    infrastructure?: string | null
-    dueDate?: Date | string | null
-    status?: $Enums.ProjectStatus | null
+    slug?: string | null
+    logo?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    idea?: IdeaCreateNestedOneWithoutProjectsInput
-    organization?: OrganizationCreateNestedOneWithoutProjectInput
-    issues?: IssueCreateNestedManyWithoutProjectInput
-    createdBy?: UserCreateNestedOneWithoutProjectInput
-    assets?: AssetCreateNestedManyWithoutProjectInput
-    publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
-    waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
   }
 
-  export type ProjectUncheckedCreateWithoutLaunchPlansInput = {
+  export type OrganizationUncheckedCreateWithoutActivityFeedInput = {
     id?: string
     name: string
-    description?: string | null
-    platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
-    infrastructure?: string | null
-    dueDate?: Date | string | null
-    status?: $Enums.ProjectStatus | null
-    ideaId?: string | null
+    slug?: string | null
+    logo?: string | null
     createdAt?: Date | string
-    updatedAt?: Date | string
-    organizationId?: string | null
-    createdById?: string | null
-    issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
-    assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
-    waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
-  export type ProjectCreateOrConnectWithoutLaunchPlansInput = {
-    where: ProjectWhereUniqueInput
-    create: XOR<ProjectCreateWithoutLaunchPlansInput, ProjectUncheckedCreateWithoutLaunchPlansInput>
+  export type OrganizationCreateOrConnectWithoutActivityFeedInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutActivityFeedInput, OrganizationUncheckedCreateWithoutActivityFeedInput>
   }
 
-  export type LaunchChecklistItemCreateWithoutLaunchPlanInput = {
-    id?: string
-    category: $Enums.LaunchChecklistCategory
-    title: string
-    description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput = {
-    id?: string
-    category: $Enums.LaunchChecklistCategory
-    title: string
-    description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchChecklistItemCreateOrConnectWithoutLaunchPlanInput = {
-    where: LaunchChecklistItemWhereUniqueInput
-    create: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchChecklistItemCreateManyLaunchPlanInputEnvelope = {
-    data: LaunchChecklistItemCreateManyLaunchPlanInput | LaunchChecklistItemCreateManyLaunchPlanInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LaunchCopyCreateWithoutLaunchPlanInput = {
-    id?: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchCopyUncheckedCreateWithoutLaunchPlanInput = {
-    id?: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchCopyCreateOrConnectWithoutLaunchPlanInput = {
-    where: LaunchCopyWhereUniqueInput
-    create: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchCopyCreateManyLaunchPlanInputEnvelope = {
-    data: LaunchCopyCreateManyLaunchPlanInput | LaunchCopyCreateManyLaunchPlanInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type LaunchStrategyCreateWithoutLaunchPlanInput = {
-    id?: string
-    phase: $Enums.LaunchStrategyPhase
+  export type UserCreateWithoutActivityFeedInput = {
+    id: string
     name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionCreateNestedOneWithoutUserInput
+    project?: ProjectCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaCreateNestedManyWithoutOwnerInput
+    issue?: IssueCreateNestedManyWithoutAssignedToInput
+    asset?: AssetCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
   }
 
-  export type LaunchStrategyUncheckedCreateWithoutLaunchPlanInput = {
-    id?: string
-    phase: $Enums.LaunchStrategyPhase
+  export type UserUncheckedCreateWithoutActivityFeedInput = {
+    id: string
     name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorUncheckedCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutUserInput
+    project?: ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
+    issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
+    asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
-  export type LaunchStrategyCreateOrConnectWithoutLaunchPlanInput = {
-    where: LaunchStrategyWhereUniqueInput
-    create: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput>
+  export type UserCreateOrConnectWithoutActivityFeedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActivityFeedInput, UserUncheckedCreateWithoutActivityFeedInput>
   }
 
-  export type LaunchStrategyCreateManyLaunchPlanInputEnvelope = {
-    data: LaunchStrategyCreateManyLaunchPlanInput | LaunchStrategyCreateManyLaunchPlanInput[]
-    skipDuplicates?: boolean
+  export type OrganizationUpsertWithoutActivityFeedInput = {
+    update: XOR<OrganizationUpdateWithoutActivityFeedInput, OrganizationUncheckedUpdateWithoutActivityFeedInput>
+    create: XOR<OrganizationCreateWithoutActivityFeedInput, OrganizationUncheckedCreateWithoutActivityFeedInput>
+    where?: OrganizationWhereInput
   }
 
-  export type ProjectUpsertWithoutLaunchPlansInput = {
-    update: XOR<ProjectUpdateWithoutLaunchPlansInput, ProjectUncheckedUpdateWithoutLaunchPlansInput>
-    create: XOR<ProjectCreateWithoutLaunchPlansInput, ProjectUncheckedCreateWithoutLaunchPlansInput>
-    where?: ProjectWhereInput
+  export type OrganizationUpdateToOneWithWhereWithoutActivityFeedInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutActivityFeedInput, OrganizationUncheckedUpdateWithoutActivityFeedInput>
   }
 
-  export type ProjectUpdateToOneWithWhereWithoutLaunchPlansInput = {
-    where?: ProjectWhereInput
-    data: XOR<ProjectUpdateWithoutLaunchPlansInput, ProjectUncheckedUpdateWithoutLaunchPlansInput>
-  }
-
-  export type ProjectUpdateWithoutLaunchPlansInput = {
+  export type OrganizationUpdateWithoutActivityFeedInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
-    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    idea?: IdeaUpdateOneWithoutProjectsNestedInput
-    organization?: OrganizationUpdateOneWithoutProjectNestedInput
-    issues?: IssueUpdateManyWithoutProjectNestedInput
-    createdBy?: UserUpdateOneWithoutProjectNestedInput
-    assets?: AssetUpdateManyWithoutProjectNestedInput
-    publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
-    waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
   }
 
-  export type ProjectUncheckedUpdateWithoutLaunchPlansInput = {
+  export type OrganizationUncheckedUpdateWithoutActivityFeedInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
-    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
-    ideaId?: NullableStringFieldUpdateOperationsInput | string | null
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
-    createdById?: NullableStringFieldUpdateOperationsInput | string | null
-    issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
-    assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
-    waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
-  export type LaunchChecklistItemUpsertWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchChecklistItemWhereUniqueInput
-    update: XOR<LaunchChecklistItemUpdateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedUpdateWithoutLaunchPlanInput>
-    create: XOR<LaunchChecklistItemCreateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedCreateWithoutLaunchPlanInput>
+  export type UserUpsertWithoutActivityFeedInput = {
+    update: XOR<UserUpdateWithoutActivityFeedInput, UserUncheckedUpdateWithoutActivityFeedInput>
+    create: XOR<UserCreateWithoutActivityFeedInput, UserUncheckedCreateWithoutActivityFeedInput>
+    where?: UserWhereInput
   }
 
-  export type LaunchChecklistItemUpdateWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchChecklistItemWhereUniqueInput
-    data: XOR<LaunchChecklistItemUpdateWithoutLaunchPlanInput, LaunchChecklistItemUncheckedUpdateWithoutLaunchPlanInput>
+  export type UserUpdateToOneWithWhereWithoutActivityFeedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutActivityFeedInput, UserUncheckedUpdateWithoutActivityFeedInput>
   }
 
-  export type LaunchChecklistItemUpdateManyWithWhereWithoutLaunchPlanInput = {
-    where: LaunchChecklistItemScalarWhereInput
-    data: XOR<LaunchChecklistItemUpdateManyMutationInput, LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanInput>
-  }
-
-  export type LaunchChecklistItemScalarWhereInput = {
-    AND?: LaunchChecklistItemScalarWhereInput | LaunchChecklistItemScalarWhereInput[]
-    OR?: LaunchChecklistItemScalarWhereInput[]
-    NOT?: LaunchChecklistItemScalarWhereInput | LaunchChecklistItemScalarWhereInput[]
-    id?: StringFilter<"LaunchChecklistItem"> | string
-    launchPlanId?: StringFilter<"LaunchChecklistItem"> | string
-    category?: EnumLaunchChecklistCategoryFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistCategory
-    title?: StringFilter<"LaunchChecklistItem"> | string
-    description?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    priority?: EnumLaunchChecklistPriorityFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFilter<"LaunchChecklistItem"> | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFilter<"LaunchChecklistItem"> | boolean
-    dependsOn?: JsonNullableFilter<"LaunchChecklistItem">
-    assignedTo?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    dueDate?: DateTimeNullableFilter<"LaunchChecklistItem"> | Date | string | null
-    notes?: StringNullableFilter<"LaunchChecklistItem"> | string | null
-    order?: IntFilter<"LaunchChecklistItem"> | number
-    createdAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchChecklistItem"> | Date | string
-  }
-
-  export type LaunchCopyUpsertWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchCopyWhereUniqueInput
-    update: XOR<LaunchCopyUpdateWithoutLaunchPlanInput, LaunchCopyUncheckedUpdateWithoutLaunchPlanInput>
-    create: XOR<LaunchCopyCreateWithoutLaunchPlanInput, LaunchCopyUncheckedCreateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchCopyUpdateWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchCopyWhereUniqueInput
-    data: XOR<LaunchCopyUpdateWithoutLaunchPlanInput, LaunchCopyUncheckedUpdateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchCopyUpdateManyWithWhereWithoutLaunchPlanInput = {
-    where: LaunchCopyScalarWhereInput
-    data: XOR<LaunchCopyUpdateManyMutationInput, LaunchCopyUncheckedUpdateManyWithoutLaunchPlanInput>
-  }
-
-  export type LaunchCopyScalarWhereInput = {
-    AND?: LaunchCopyScalarWhereInput | LaunchCopyScalarWhereInput[]
-    OR?: LaunchCopyScalarWhereInput[]
-    NOT?: LaunchCopyScalarWhereInput | LaunchCopyScalarWhereInput[]
-    id?: StringFilter<"LaunchCopy"> | string
-    launchPlanId?: StringFilter<"LaunchCopy"> | string
-    platform?: EnumLaunchCopyPlatformFilter<"LaunchCopy"> | $Enums.LaunchCopyPlatform
-    title?: StringFilter<"LaunchCopy"> | string
-    tagline?: StringNullableFilter<"LaunchCopy"> | string | null
-    description?: StringFilter<"LaunchCopy"> | string
-    callToAction?: StringNullableFilter<"LaunchCopy"> | string | null
-    hashtags?: JsonNullableFilter<"LaunchCopy">
-    mentions?: JsonNullableFilter<"LaunchCopy">
-    media?: JsonNullableFilter<"LaunchCopy">
-    isApproved?: BoolFilter<"LaunchCopy"> | boolean
-    version?: IntFilter<"LaunchCopy"> | number
-    createdAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchCopy"> | Date | string
-  }
-
-  export type LaunchStrategyUpsertWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchStrategyWhereUniqueInput
-    update: XOR<LaunchStrategyUpdateWithoutLaunchPlanInput, LaunchStrategyUncheckedUpdateWithoutLaunchPlanInput>
-    create: XOR<LaunchStrategyCreateWithoutLaunchPlanInput, LaunchStrategyUncheckedCreateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchStrategyUpdateWithWhereUniqueWithoutLaunchPlanInput = {
-    where: LaunchStrategyWhereUniqueInput
-    data: XOR<LaunchStrategyUpdateWithoutLaunchPlanInput, LaunchStrategyUncheckedUpdateWithoutLaunchPlanInput>
-  }
-
-  export type LaunchStrategyUpdateManyWithWhereWithoutLaunchPlanInput = {
-    where: LaunchStrategyScalarWhereInput
-    data: XOR<LaunchStrategyUpdateManyMutationInput, LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanInput>
-  }
-
-  export type LaunchStrategyScalarWhereInput = {
-    AND?: LaunchStrategyScalarWhereInput | LaunchStrategyScalarWhereInput[]
-    OR?: LaunchStrategyScalarWhereInput[]
-    NOT?: LaunchStrategyScalarWhereInput | LaunchStrategyScalarWhereInput[]
-    id?: StringFilter<"LaunchStrategy"> | string
-    launchPlanId?: StringFilter<"LaunchStrategy"> | string
-    phase?: EnumLaunchStrategyPhaseFilter<"LaunchStrategy"> | $Enums.LaunchStrategyPhase
-    name?: StringFilter<"LaunchStrategy"> | string
-    description?: StringFilter<"LaunchStrategy"> | string
-    startDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    endDate?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    platforms?: JsonNullableFilter<"LaunchStrategy">
-    targetAudience?: JsonNullableFilter<"LaunchStrategy">
-    keyMetrics?: JsonNullableFilter<"LaunchStrategy">
-    tasks?: JsonNullableFilter<"LaunchStrategy">
-    order?: IntFilter<"LaunchStrategy"> | number
-    createdAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-    updatedAt?: DateTimeFilter<"LaunchStrategy"> | Date | string
-  }
-
-  export type LaunchPlanCreateWithoutChecklistItemsInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutLaunchPlansInput
-    copies?: LaunchCopyCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUncheckedCreateWithoutChecklistItemsInput = {
-    id?: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    copies?: LaunchCopyUncheckedCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyUncheckedCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanCreateOrConnectWithoutChecklistItemsInput = {
-    where: LaunchPlanWhereUniqueInput
-    create: XOR<LaunchPlanCreateWithoutChecklistItemsInput, LaunchPlanUncheckedCreateWithoutChecklistItemsInput>
-  }
-
-  export type LaunchPlanUpsertWithoutChecklistItemsInput = {
-    update: XOR<LaunchPlanUpdateWithoutChecklistItemsInput, LaunchPlanUncheckedUpdateWithoutChecklistItemsInput>
-    create: XOR<LaunchPlanCreateWithoutChecklistItemsInput, LaunchPlanUncheckedCreateWithoutChecklistItemsInput>
-    where?: LaunchPlanWhereInput
-  }
-
-  export type LaunchPlanUpdateToOneWithWhereWithoutChecklistItemsInput = {
-    where?: LaunchPlanWhereInput
-    data: XOR<LaunchPlanUpdateWithoutChecklistItemsInput, LaunchPlanUncheckedUpdateWithoutChecklistItemsInput>
-  }
-
-  export type LaunchPlanUpdateWithoutChecklistItemsInput = {
+  export type UserUpdateWithoutActivityFeedInput = {
     id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutLaunchPlansNestedInput
-    copies?: LaunchCopyUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUpdateManyWithoutLaunchPlanNestedInput
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUpdateOneWithoutUserNestedInput
+    project?: ProjectUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
   }
 
-  export type LaunchPlanUncheckedUpdateWithoutChecklistItemsInput = {
+  export type UserUncheckedUpdateWithoutActivityFeedInput = {
     id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    copies?: LaunchCopyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanCreateWithoutCopiesInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutLaunchPlansInput
-    checklistItems?: LaunchChecklistItemCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUncheckedCreateWithoutCopiesInput = {
-    id?: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    checklistItems?: LaunchChecklistItemUncheckedCreateNestedManyWithoutLaunchPlanInput
-    strategies?: LaunchStrategyUncheckedCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanCreateOrConnectWithoutCopiesInput = {
-    where: LaunchPlanWhereUniqueInput
-    create: XOR<LaunchPlanCreateWithoutCopiesInput, LaunchPlanUncheckedCreateWithoutCopiesInput>
-  }
-
-  export type LaunchPlanUpsertWithoutCopiesInput = {
-    update: XOR<LaunchPlanUpdateWithoutCopiesInput, LaunchPlanUncheckedUpdateWithoutCopiesInput>
-    create: XOR<LaunchPlanCreateWithoutCopiesInput, LaunchPlanUncheckedCreateWithoutCopiesInput>
-    where?: LaunchPlanWhereInput
-  }
-
-  export type LaunchPlanUpdateToOneWithWhereWithoutCopiesInput = {
-    where?: LaunchPlanWhereInput
-    data: XOR<LaunchPlanUpdateWithoutCopiesInput, LaunchPlanUncheckedUpdateWithoutCopiesInput>
-  }
-
-  export type LaunchPlanUpdateWithoutCopiesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutLaunchPlansNestedInput
-    checklistItems?: LaunchChecklistItemUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanUncheckedUpdateWithoutCopiesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    checklistItems?: LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanCreateWithoutStrategiesInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutLaunchPlansInput
-    checklistItems?: LaunchChecklistItemCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanUncheckedCreateWithoutStrategiesInput = {
-    id?: string
-    projectId: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    checklistItems?: LaunchChecklistItemUncheckedCreateNestedManyWithoutLaunchPlanInput
-    copies?: LaunchCopyUncheckedCreateNestedManyWithoutLaunchPlanInput
-  }
-
-  export type LaunchPlanCreateOrConnectWithoutStrategiesInput = {
-    where: LaunchPlanWhereUniqueInput
-    create: XOR<LaunchPlanCreateWithoutStrategiesInput, LaunchPlanUncheckedCreateWithoutStrategiesInput>
-  }
-
-  export type LaunchPlanUpsertWithoutStrategiesInput = {
-    update: XOR<LaunchPlanUpdateWithoutStrategiesInput, LaunchPlanUncheckedUpdateWithoutStrategiesInput>
-    create: XOR<LaunchPlanCreateWithoutStrategiesInput, LaunchPlanUncheckedCreateWithoutStrategiesInput>
-    where?: LaunchPlanWhereInput
-  }
-
-  export type LaunchPlanUpdateToOneWithWhereWithoutStrategiesInput = {
-    where?: LaunchPlanWhereInput
-    data: XOR<LaunchPlanUpdateWithoutStrategiesInput, LaunchPlanUncheckedUpdateWithoutStrategiesInput>
-  }
-
-  export type LaunchPlanUpdateWithoutStrategiesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutLaunchPlansNestedInput
-    checklistItems?: LaunchChecklistItemUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanUncheckedUpdateWithoutStrategiesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    checklistItems?: LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUncheckedUpdateManyWithoutLaunchPlanNestedInput
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUncheckedUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProjectCreateWithoutPublicRoadmapsInput = {
@@ -51566,7 +46488,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -51577,7 +46503,6 @@ export namespace Prisma {
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
   }
 
@@ -51586,7 +46511,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -51597,7 +46526,6 @@ export namespace Prisma {
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
   }
 
@@ -51660,7 +46588,8 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -51671,7 +46600,8 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -51748,7 +46678,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -51759,7 +46693,6 @@ export namespace Prisma {
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
 
@@ -51768,7 +46701,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -51779,7 +46716,6 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
 
@@ -51845,7 +46781,8 @@ export namespace Prisma {
     roadmapId?: StringFilter<"RoadmapChangelog"> | string
     title?: StringFilter<"RoadmapChangelog"> | string
     description?: StringFilter<"RoadmapChangelog"> | string
-    items?: JsonNullableFilter<"RoadmapChangelog">
+    fixes?: StringNullableListFilter<"RoadmapChangelog">
+    newFeatures?: StringNullableListFilter<"RoadmapChangelog">
     publishDate?: DateTimeFilter<"RoadmapChangelog"> | Date | string
     isPublished?: BoolFilter<"RoadmapChangelog"> | boolean
     createdAt?: DateTimeFilter<"RoadmapChangelog"> | Date | string
@@ -52500,7 +47437,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -52511,7 +47452,6 @@ export namespace Prisma {
     issues?: IssueCreateNestedManyWithoutProjectInput
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
   }
 
@@ -52520,7 +47460,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -52531,7 +47475,6 @@ export namespace Prisma {
     createdById?: string | null
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
-    launchPlans?: LaunchPlanUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
   }
 
@@ -52554,6 +47497,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWaitlistInput = {
@@ -52570,6 +47514,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWaitlistInput = {
@@ -52598,6 +47543,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWaitlistInput = {
@@ -52621,6 +47567,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWaitlistInput = {
@@ -52698,7 +47645,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -52709,7 +47660,6 @@ export namespace Prisma {
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
   }
 
@@ -52718,7 +47668,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -52729,7 +47683,6 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
   }
 
@@ -52758,6 +47711,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWaitlistInput = {
@@ -52774,6 +47728,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutWaitlistInput = {
@@ -52808,6 +47763,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWaitlistInput = {
@@ -52831,6 +47787,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WaitlistEntryUpsertWithWhereUniqueWithoutWaitlistInput = {
@@ -53026,7 +47983,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -53045,9 +48006,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type IssueCreateManyAssignedToInput = {
@@ -53082,7 +48045,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -53104,6 +48067,20 @@ export namespace Prisma {
     showSocialProof: boolean
     customMessage?: string | null
     organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ActivityFeedCreateManyUserInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    organizationId: string
+    oldValue?: string | null
+    newValue?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -53299,7 +48276,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53309,7 +48290,6 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneWithoutProjectNestedInput
     issues?: IssueUpdateManyWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -53319,7 +48299,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53329,7 +48313,6 @@ export namespace Prisma {
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -53339,7 +48322,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53357,9 +48344,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
   }
@@ -53373,9 +48362,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -53388,9 +48379,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IssueUpdateWithoutAssignedToInput = {
@@ -53461,7 +48454,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -53486,7 +48479,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -53509,7 +48502,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -53569,6 +48562,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ActivityFeedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutActivityFeedNestedInput
+  }
+
+  export type ActivityFeedUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityFeedUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MemberCreateManyOrganizationInput = {
     id?: string
     userId?: string | null
@@ -53600,7 +48635,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -53619,9 +48658,11 @@ export namespace Prisma {
     internal: boolean
     openSource: boolean
     status: $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: number | null
     problemSolved?: string | null
     solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type IssueCreateManyOrganizationInput = {
@@ -53655,7 +48696,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -53680,6 +48721,20 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     createdById?: string | null
+  }
+
+  export type ActivityFeedCreateManyOrganizationInput = {
+    id?: string
+    type: $Enums.ActivityType
+    title: string
+    description?: string | null
+    entityType: $Enums.EntityType
+    entityId: string
+    userId?: string | null
+    oldValue?: string | null
+    newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type MemberUpdateWithoutOrganizationInput = {
@@ -53765,7 +48820,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53775,7 +48834,6 @@ export namespace Prisma {
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -53785,7 +48843,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53795,7 +48857,6 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -53805,7 +48866,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -53823,9 +48888,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
   }
@@ -53839,9 +48906,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -53854,9 +48923,11 @@ export namespace Prisma {
     internal?: BoolFieldUpdateOperationsInput | boolean
     openSource?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableJsonNullValueInput | InputJsonValue
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
     problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IssueUpdateWithoutOrganizationInput = {
@@ -53927,7 +48998,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -53951,7 +49022,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -53974,7 +49045,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -54035,6 +49106,48 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type ActivityFeedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutActivityFeedNestedInput
+  }
+
+  export type ActivityFeedUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ActivityFeedUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    entityType?: EnumEntityTypeFieldUpdateOperationsInput | $Enums.EntityType
+    entityId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    oldValue?: NullableStringFieldUpdateOperationsInput | string | null
+    newValue?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IssueCreateManyProjectInput = {
     id?: string
     title: string
@@ -54066,7 +49179,7 @@ export namespace Prisma {
     mimeType?: string | null
     url?: string | null
     linkType?: $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetCreatetagsInput | string[]
     category?: $Enums.AssetCategory | null
     thumbnailUrl?: string | null
     isPublic?: boolean | null
@@ -54075,15 +49188,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     viewCount?: number | null
     downloadCount?: number | null
-  }
-
-  export type LaunchPlanCreateManyProjectInput = {
-    id?: string
-    status: $Enums.LaunchPlanStatus
-    targetLaunchDate?: Date | string | null
-    actualLaunchDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type PublicRoadmapCreateManyProjectInput = {
@@ -54187,7 +49291,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -54211,7 +49315,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -54234,7 +49338,7 @@ export namespace Prisma {
     mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     url?: NullableStringFieldUpdateOperationsInput | string | null
     linkType?: NullableEnumLinkTypeFieldUpdateOperationsInput | $Enums.LinkType | null
-    tags?: NullableJsonNullValueInput | InputJsonValue
+    tags?: AssetUpdatetagsInput | string[]
     category?: NullableEnumAssetCategoryFieldUpdateOperationsInput | $Enums.AssetCategory | null
     thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -54243,39 +49347,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     viewCount?: NullableIntFieldUpdateOperationsInput | number | null
     downloadCount?: NullableIntFieldUpdateOperationsInput | number | null
-  }
-
-  export type LaunchPlanUpdateWithoutProjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    checklistItems?: LaunchChecklistItemUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanUncheckedUpdateWithoutProjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    checklistItems?: LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    copies?: LaunchCopyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-    strategies?: LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanNestedInput
-  }
-
-  export type LaunchPlanUncheckedUpdateManyWithoutProjectInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumLaunchPlanStatusFieldUpdateOperationsInput | $Enums.LaunchPlanStatus
-    targetLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    actualLaunchDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PublicRoadmapUpdateWithoutProjectInput = {
@@ -54390,7 +49461,11 @@ export namespace Prisma {
     name: string
     description?: string | null
     platform: $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
     infrastructure?: string | null
     dueDate?: Date | string | null
     status?: $Enums.ProjectStatus | null
@@ -54405,7 +49480,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -54415,7 +49494,6 @@ export namespace Prisma {
     issues?: IssueUpdateManyWithoutProjectNestedInput
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
   }
@@ -54425,7 +49503,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -54435,7 +49517,6 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
-    launchPlans?: LaunchPlanUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
@@ -54445,7 +49526,11 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
-    techStack?: NullableJsonNullValueInput | InputJsonValue
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
     infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
     dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
@@ -54453,202 +49538,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type LaunchChecklistItemCreateManyLaunchPlanInput = {
-    id?: string
-    category: $Enums.LaunchChecklistCategory
-    title: string
-    description?: string | null
-    priority: $Enums.LaunchChecklistPriority
-    status: $Enums.LaunchChecklistStatus
-    isRequired: boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: string | null
-    dueDate?: Date | string | null
-    notes?: string | null
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchCopyCreateManyLaunchPlanInput = {
-    id?: string
-    platform: $Enums.LaunchCopyPlatform
-    title: string
-    tagline?: string | null
-    description: string
-    callToAction?: string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved: boolean
-    version: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchStrategyCreateManyLaunchPlanInput = {
-    id?: string
-    phase: $Enums.LaunchStrategyPhase
-    name: string
-    description: string
-    startDate: Date | string
-    endDate: Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type LaunchChecklistItemUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchChecklistItemUncheckedUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchChecklistItemUncheckedUpdateManyWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    category?: EnumLaunchChecklistCategoryFieldUpdateOperationsInput | $Enums.LaunchChecklistCategory
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    priority?: EnumLaunchChecklistPriorityFieldUpdateOperationsInput | $Enums.LaunchChecklistPriority
-    status?: EnumLaunchChecklistStatusFieldUpdateOperationsInput | $Enums.LaunchChecklistStatus
-    isRequired?: BoolFieldUpdateOperationsInput | boolean
-    dependsOn?: NullableJsonNullValueInput | InputJsonValue
-    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
-    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyUncheckedUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchCopyUncheckedUpdateManyWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    platform?: EnumLaunchCopyPlatformFieldUpdateOperationsInput | $Enums.LaunchCopyPlatform
-    title?: StringFieldUpdateOperationsInput | string
-    tagline?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: StringFieldUpdateOperationsInput | string
-    callToAction?: NullableStringFieldUpdateOperationsInput | string | null
-    hashtags?: NullableJsonNullValueInput | InputJsonValue
-    mentions?: NullableJsonNullValueInput | InputJsonValue
-    media?: NullableJsonNullValueInput | InputJsonValue
-    isApproved?: BoolFieldUpdateOperationsInput | boolean
-    version?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyUncheckedUpdateWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LaunchStrategyUncheckedUpdateManyWithoutLaunchPlanInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    phase?: EnumLaunchStrategyPhaseFieldUpdateOperationsInput | $Enums.LaunchStrategyPhase
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    platforms?: NullableJsonNullValueInput | InputJsonValue
-    targetAudience?: NullableJsonNullValueInput | InputJsonValue
-    keyMetrics?: NullableJsonNullValueInput | InputJsonValue
-    tasks?: NullableJsonNullValueInput | InputJsonValue
-    order?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoadmapItemCreateManyRoadmapInput = {
@@ -54673,7 +49562,8 @@ export namespace Prisma {
     id?: string
     title: string
     description: string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogCreatefixesInput | string[]
+    newFeatures?: RoadmapChangelogCreatenewFeaturesInput | string[]
     publishDate: Date | string
     isPublished: boolean
     createdAt?: Date | string
@@ -54759,7 +49649,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54770,7 +49661,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54781,7 +49673,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
+    fixes?: RoadmapChangelogUpdatefixesInput | string[]
+    newFeatures?: RoadmapChangelogUpdatenewFeaturesInput | string[]
     publishDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isPublished?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

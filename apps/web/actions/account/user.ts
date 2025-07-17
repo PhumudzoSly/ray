@@ -6,11 +6,7 @@ import type { z } from "zod";
 import type { bugReportSchema } from "@/app/report-bugs/_components/bug-report-form";
 import type { supportFormSchema } from "@/app/support/_components/support-form";
 import { auth, polarClient } from "@/lib/auth";
-// import {
-// 	generateApiKey,
-// 	getApiKeyPreview,
-// 	hashApiKey,
-// } from "@/lib/crypto-node";
+
 
 export async function createOrg({ name }: { name: string }) {
 	const headersList = await headers();

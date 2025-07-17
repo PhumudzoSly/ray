@@ -17,9 +17,10 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { status as allStatus } from "@/utils/constants/projects/status";
+import { ProjectStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface StatusSelectorProps {
-  status: string | undefined;
+  status: ProjectStatus | null;
   onChange?: (status: string) => void;
   disabled?: boolean;
   iconOnly?: boolean;
@@ -33,9 +34,9 @@ export function ProjectStatusSelector({
 }: StatusSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string | undefined>(status);
+  const [value, setValue] = useState<ProjectStatus | null>(status);
 
-  const handleStatusChange = (statusId: string) => {
+  const handleStatusChange = (statusId: ProjectStatus) => {
     setValue(statusId);
     setOpen(false);
     onChange?.(statusId);
@@ -88,7 +89,7 @@ export function ProjectStatusSelector({
                   <CommandItem
                     key={item.id}
                     value={item.id}
-                    onSelect={() => handleStatusChange(item.id)}
+                    onSelect={() => handleStatusChange(item.id as ProjectStatus)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">

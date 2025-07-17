@@ -38,7 +38,7 @@ export function NavMenu({ items, title, collapsible = false }: NavMenuProps) {
   return (
     <SidebarGroup
       className={cn(
-        "relative border-b-2",
+        "relative",
         collapsible && "group-data-[collapsible=icon]:hidden"
       )}
     >
@@ -58,7 +58,7 @@ export function NavMenu({ items, title, collapsible = false }: NavMenuProps) {
                   className={cn(
                     "group relative flex w-full items-center gap-3 rounded-4xl transition-colors",
                     isActive &&
-                      "bg-linear-to-r from-transparent to-primary/40 border-r-8 border-r-primary"
+                    "bg-linear-to-r from-transparent to-primary/40 border-r-8 border-r-primary"
                   )}
                 >
                   <item.icon

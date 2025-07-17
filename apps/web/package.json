@@ -20,7 +20,6 @@
 		"@blocknote/mantine": "^0.32.0",
 		"@blocknote/react": "^0.32.0",
 		"@blocknote/shadcn": "^0.32.0",
-		"@daveyplate/better-auth-ui": "^2.0.12",
 		"@emoji-mart/data": "^1.2.1",
 		"@emoji-mart/react": "^1.1.1",
 		"@hcaptcha/react-hcaptcha": "^1.12.0",

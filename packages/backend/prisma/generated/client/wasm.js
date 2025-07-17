@@ -234,7 +234,11 @@ exports.Prisma.ProjectScalarFieldEnum = {
   name: 'name',
   description: 'description',
   platform: 'platform',
-  techStack: 'techStack',
+  ai: 'ai',
+  orm: 'orm',
+  database: 'database',
+  auth: 'auth',
+  framework: 'framework',
   infrastructure: 'infrastructure',
   dueDate: 'dueDate',
   status: 'status',
@@ -257,7 +261,9 @@ exports.Prisma.IdeaScalarFieldEnum = {
   status: 'status',
   aiOverallValidation: 'aiOverallValidation',
   problemSolved: 'problemSolved',
-  solutionOffered: 'solutionOffered'
+  solutionOffered: 'solutionOffered',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.IssueScalarFieldEnum = {
@@ -310,7 +316,6 @@ exports.Prisma.ApiKeyScalarFieldEnum = {
   name: 'name',
   keyHash: 'keyHash',
   keyPreview: 'keyPreview',
-  permissions: 'permissions',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   lastUsed: 'lastUsed',
@@ -318,64 +323,17 @@ exports.Prisma.ApiKeyScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
-exports.Prisma.LaunchPlanScalarFieldEnum = {
+exports.Prisma.ActivityFeedScalarFieldEnum = {
   id: 'id',
-  projectId: 'projectId',
-  status: 'status',
-  targetLaunchDate: 'targetLaunchDate',
-  actualLaunchDate: 'actualLaunchDate',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LaunchChecklistItemScalarFieldEnum = {
-  id: 'id',
-  launchPlanId: 'launchPlanId',
-  category: 'category',
+  type: 'type',
   title: 'title',
   description: 'description',
-  priority: 'priority',
-  status: 'status',
-  isRequired: 'isRequired',
-  dependsOn: 'dependsOn',
-  assignedTo: 'assignedTo',
-  dueDate: 'dueDate',
-  notes: 'notes',
-  order: 'order',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LaunchCopyScalarFieldEnum = {
-  id: 'id',
-  launchPlanId: 'launchPlanId',
-  platform: 'platform',
-  title: 'title',
-  tagline: 'tagline',
-  description: 'description',
-  callToAction: 'callToAction',
-  hashtags: 'hashtags',
-  mentions: 'mentions',
-  media: 'media',
-  isApproved: 'isApproved',
-  version: 'version',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LaunchStrategyScalarFieldEnum = {
-  id: 'id',
-  launchPlanId: 'launchPlanId',
-  phase: 'phase',
-  name: 'name',
-  description: 'description',
-  startDate: 'startDate',
-  endDate: 'endDate',
-  platforms: 'platforms',
-  targetAudience: 'targetAudience',
-  keyMetrics: 'keyMetrics',
-  tasks: 'tasks',
-  order: 'order',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  oldValue: 'oldValue',
+  newValue: 'newValue',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -446,7 +404,8 @@ exports.Prisma.RoadmapChangelogScalarFieldEnum = {
   roadmapId: 'roadmapId',
   title: 'title',
   description: 'description',
-  items: 'items',
+  fixes: 'fixes',
+  newFeatures: 'newFeatures',
   publishDate: 'publishDate',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
@@ -516,11 +475,6 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
-};
-
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -529,12 +483,6 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
-};
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
 };
 exports.ProjectPlatform = exports.$Enums.ProjectPlatform = {
   web: 'web',
@@ -623,52 +571,26 @@ exports.AssetCategory = exports.$Enums.AssetCategory = {
   other: 'other'
 };
 
-exports.LaunchPlanStatus = exports.$Enums.LaunchPlanStatus = {
-  draft: 'draft',
-  in_progress: 'in_progress',
-  ready: 'ready',
-  launched: 'launched'
+exports.ActivityType = exports.$Enums.ActivityType = {
+  CREATED: 'CREATED',
+  UPDATED: 'UPDATED',
+  PHASE_CHANGED: 'PHASE_CHANGED',
+  ASSIGNED: 'ASSIGNED',
+  UNASSIGNED: 'UNASSIGNED',
+  DEPENDENCY_ADDED: 'DEPENDENCY_ADDED',
+  DEPENDENCY_REMOVED: 'DEPENDENCY_REMOVED',
+  LINK_ADDED: 'LINK_ADDED',
+  LINK_REMOVED: 'LINK_REMOVED',
+  PARENT_CHANGED: 'PARENT_CHANGED'
 };
 
-exports.LaunchChecklistCategory = exports.$Enums.LaunchChecklistCategory = {
-  technical: 'technical',
-  content: 'content',
-  legal: 'legal',
-  marketing: 'marketing',
-  analytics: 'analytics',
-  support: 'support'
-};
-
-exports.LaunchChecklistPriority = exports.$Enums.LaunchChecklistPriority = {
-  high: 'high',
-  medium: 'medium',
-  low: 'low'
-};
-
-exports.LaunchChecklistStatus = exports.$Enums.LaunchChecklistStatus = {
-  pending: 'pending',
-  in_progress: 'in_progress',
-  completed: 'completed',
-  skipped: 'skipped'
-};
-
-exports.LaunchCopyPlatform = exports.$Enums.LaunchCopyPlatform = {
-  product_hunt: 'product_hunt',
-  twitter: 'twitter',
-  linkedin: 'linkedin',
-  reddit: 'reddit',
-  hackernews: 'hackernews',
-  readme: 'readme',
-  website: 'website',
-  press_release: 'press_release',
-  email: 'email'
-};
-
-exports.LaunchStrategyPhase = exports.$Enums.LaunchStrategyPhase = {
-  pre_launch: 'pre_launch',
-  soft_launch: 'soft_launch',
-  public_launch: 'public_launch',
-  post_launch: 'post_launch'
+exports.EntityType = exports.$Enums.EntityType = {
+  PROJECT: 'PROJECT',
+  FEATURE: 'FEATURE',
+  ISSUE: 'ISSUE',
+  IDEA: 'IDEA',
+  ROADMAP: 'ROADMAP',
+  MILESTONE: 'MILESTONE'
 };
 
 exports.RoadmapFeedbackSentiment = exports.$Enums.RoadmapFeedbackSentiment = {
@@ -708,10 +630,7 @@ exports.Prisma.ModelName = {
   Issue: 'Issue',
   Asset: 'Asset',
   ApiKey: 'ApiKey',
-  LaunchPlan: 'LaunchPlan',
-  LaunchChecklistItem: 'LaunchChecklistItem',
-  LaunchCopy: 'LaunchCopy',
-  LaunchStrategy: 'LaunchStrategy',
+  ActivityFeed: 'ActivityFeed',
   PublicRoadmap: 'PublicRoadmap',
   RoadmapItem: 'RoadmapItem',
   RoadmapVote: 'RoadmapVote',

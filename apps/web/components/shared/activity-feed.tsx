@@ -2,40 +2,14 @@ import React from "react";
 import { Clock, User, Plus, GitBranch } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Badge } from "@workspace/ui/components/badge";
 import { Separator } from "@workspace/ui/components/separator";
-interface ActivityItem {
-  _id: string;
-  activity: string;
-  title: string;
-  description?: string;
-  user?: {
-    _id: string;
-    _creationTime: number;
-    name: string;
-    email: string;
-    emailVerified: boolean;
-    image?: string;
-    role?: string;
-    updatedAt?: string;
-    twoFactorEnabled?: boolean;
-  } | null;
-  metadata?: {
-    oldValue?: string;
-    newValue?: string;
-  };
-  createdAt: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import { getFeed } from "@/actions/project/activity-feed";
+import { EntityType } from "@workspace/backend/prisma/generated/client/client";
 
-type EntityType =
-  | "project"
-  | "feature"
-  | "issue"
-  | "idea"
-  | "roadmap"
-  | "milestone";
+
 
 interface ActivityFeedProps {
   entityType: EntityType;
@@ -79,12 +53,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 }) => {
   const { token } = useSession();
 
-  const { data: activities, isPending } = api.activities.getActivitiesByEntity({
-    token,
-    entityType,
-    entityId,
-    limit,
-  });
+  const { data: activities, isPending } = useQuery({
+    queryKey: ['activity-feed', entityType, entityId],
+    queryFn: async () => {
+      return await getFeed({
+        entityType, entityId
+      })
+    }
+  })
+
+
 
   if (isPending) {
     return (
@@ -94,7 +72,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
     );
   }
 
-  if (!activities || activities.length === 0) {
+  if (!isPending && activities?.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
         <Clock className="h-4 w-4 mb-1.5 opacity-50" />
@@ -111,19 +89,19 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         <p className="text-sm">Recent Activity</p>
       </div>
       <Separator />
-      {activities.map((activity, index) => (
+      {activities?.map((activity, index) => (
         <div
-          key={activity._id}
+          key={activity.id}
           className="relative flex items-start gap-2.5 py-2 group hover:bg-muted/20 -mx-2 px-2 transition-colors"
         >
           {/* Timeline line */}
-          {index !== activities.length - 1 && (
+          {index !== activities?.length - 1 && (
             <div className="absolute left-[17.7px] top-[30px] w-px h-full bg-border/60" />
           )}
 
           {/* Activity icon */}
           <div className="flex-shrink-0 mt-0.5 flex items-center justify-center w-5 h-5 rounded-full bg-background border border-border/60">
-            {getActivityIcon(activity.activity)}
+            {getActivityIcon(activity.type)}
           </div>
 
           {/* Content */}
@@ -133,7 +111,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm text-foreground line-clamp-1 whitespace-pre-wrap leading-tight">
                     <span className="font-medium">
-                      {activity.user?.name || "Someone"}
+                      {activity?.user?.name || "Someone"}
                     </span>
                   </p>
                   <time className="text-xs text-muted-foreground/70 flex-shrink-0 ml-3">
@@ -146,16 +124,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                   {activity.title}
                 </p>
 
-                {activity.metadata && (
+                {activity.oldValue && activity.newValue && (
                   <div className="mt-2 text-xs">
-                    {activity.metadata.oldValue &&
-                      activity.metadata.newValue && (
+                    {activity?.oldValue as string &&
+                      activity?.newValue as string && (
                         <div className="flex items-center gap-1 text-muted-foreground">
                           <Badge
                             variant="error"
                             className="capitalize bg-muted/60 rounded text-xs"
                           >
-                            {activity.metadata.oldValue.toLocaleLowerCase()}
+                            {JSON.stringify(activity?.oldValue as string)?.toLocaleLowerCase()}
                           </Badge>
                           <span className="text-muted-foreground/40 mb-1">
                             →
@@ -164,20 +142,20 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                             variant="neutral"
                             className="capitalize bg-muted/60 rounded text-xs font-medium"
                           >
-                            {activity.metadata.newValue.toLocaleLowerCase()}
+                            {activity?.newValue.toLocaleLowerCase()}
                           </Badge>
                         </div>
                       )}
-                    {activity.metadata.newValue &&
-                      !activity.metadata.oldValue && (
+                    {activity?.newValue &&
+                      !activity?.oldValue && (
                         <span className="capitalize bg-muted/60 rounded text-xs font-medium">
-                          {activity.metadata.newValue.toLocaleLowerCase()}
+                          {activity?.newValue.toLocaleLowerCase()}
                         </span>
                       )}
-                    {activity.metadata.oldValue &&
-                      !activity.metadata.newValue && (
+                    {activity?.oldValue &&
+                      !activity?.newValue && (
                         <span className="capitalize bg-muted/60 rounded text-xs line-through text-muted-foreground">
-                          {activity.metadata.oldValue.toLocaleLowerCase()}
+                          {activity?.oldValue.toLocaleLowerCase()}
                         </span>
                       )}
                   </div>

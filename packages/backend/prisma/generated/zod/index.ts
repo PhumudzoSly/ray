@@ -1,53 +1,9 @@
 import { z } from 'zod';
-import { Prisma } from '../client';
+import type { Prisma } from '../client';
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////////////////////
-
-// JSON
-//------------------------------------------------------
-
-export type NullableJsonInput = Prisma.JsonValue | null | 'JsonNull' | 'DbNull' | Prisma.NullTypes.DbNull | Prisma.NullTypes.JsonNull;
-
-export const transformJsonNull = (v?: NullableJsonInput) => {
-  if (!v || v === 'DbNull') return Prisma.DbNull;
-  if (v === 'JsonNull') return Prisma.JsonNull;
-  return v;
-};
-
-export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
-  z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.literal(null),
-    z.record(z.lazy(() => JsonValueSchema.optional())),
-    z.array(z.lazy(() => JsonValueSchema)),
-  ])
-);
-
-export type JsonValueType = z.infer<typeof JsonValueSchema>;
-
-export const NullableJsonValue = z
-  .union([JsonValueSchema, z.literal('DbNull'), z.literal('JsonNull')])
-  .nullable()
-  .transform((v) => transformJsonNull(v));
-
-export type NullableJsonValueType = z.infer<typeof NullableJsonValue>;
-
-export const InputJsonValueSchema: z.ZodType<Prisma.InputJsonValue> = z.lazy(() =>
-  z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.object({ toJSON: z.function(z.tuple([]), z.any()) }),
-    z.record(z.lazy(() => z.union([InputJsonValueSchema, z.literal(null)]))),
-    z.array(z.lazy(() => z.union([InputJsonValueSchema, z.literal(null)]))),
-  ])
-);
-
-export type InputJsonValueType = z.infer<typeof InputJsonValueSchema>;
 
 
 /////////////////////////////////////////
@@ -76,23 +32,17 @@ export const TwoFactorScalarFieldEnumSchema = z.enum(['id','secret','backupCodes
 
 export const SubscriptionScalarFieldEnumSchema = z.enum(['id','status','organisation_id','subscription_id','product_id','userId','createdAt','updatedAt']);
 
-export const ProjectScalarFieldEnumSchema = z.enum(['id','name','description','platform','techStack','infrastructure','dueDate','status','ideaId','createdAt','updatedAt','organizationId','createdById']);
+export const ProjectScalarFieldEnumSchema = z.enum(['id','name','description','platform','ai','orm','database','auth','framework','infrastructure','dueDate','status','ideaId','createdAt','updatedAt','organizationId','createdById']);
 
-export const IdeaScalarFieldEnumSchema = z.enum(['id','name','description','industry','ownerId','organizationId','internal','openSource','status','aiOverallValidation','problemSolved','solutionOffered']);
+export const IdeaScalarFieldEnumSchema = z.enum(['id','name','description','industry','ownerId','organizationId','internal','openSource','status','aiOverallValidation','problemSolved','solutionOffered','createdAt','updatedAt']);
 
 export const IssueScalarFieldEnumSchema = z.enum(['id','title','description','organizationId','projectId','milestoneId','featureId','parentIssueId','status','priority','label','dueDate','assignedToId','achieved','isPublic','sourceType','sourceFeedbackId']);
 
 export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','type','projectId','organizationId','storageId','fileName','fileSize','mimeType','url','linkType','tags','category','thumbnailUrl','isPublic','uploadedById','createdAt','updatedAt','viewCount','downloadCount']);
 
-export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','permissions','createdBy','createdAt','lastUsed','isActive','expiresAt']);
+export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','createdBy','createdAt','lastUsed','isActive','expiresAt']);
 
-export const LaunchPlanScalarFieldEnumSchema = z.enum(['id','projectId','status','targetLaunchDate','actualLaunchDate','createdAt','updatedAt']);
-
-export const LaunchChecklistItemScalarFieldEnumSchema = z.enum(['id','launchPlanId','category','title','description','priority','status','isRequired','dependsOn','assignedTo','dueDate','notes','order','createdAt','updatedAt']);
-
-export const LaunchCopyScalarFieldEnumSchema = z.enum(['id','launchPlanId','platform','title','tagline','description','callToAction','hashtags','mentions','media','isApproved','version','createdAt','updatedAt']);
-
-export const LaunchStrategyScalarFieldEnumSchema = z.enum(['id','launchPlanId','phase','name','description','startDate','endDate','platforms','targetAudience','keyMetrics','tasks','order','createdAt','updatedAt']);
+export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','description','entityType','entityId','organizationId','userId','oldValue','newValue','createdAt','updatedAt']);
 
 export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','customDomain','theme','logoUrl','accentColor','allowVoting','allowFeedback','showChangelog','createdAt','updatedAt']);
 
@@ -102,7 +52,7 @@ export const RoadmapVoteScalarFieldEnumSchema = z.enum(['id','roadmapItemId','us
 
 export const RoadmapFeedbackScalarFieldEnumSchema = z.enum(['id','roadmapItemId','userId','ipAddress','content','sentiment','isApproved','convertedToFeatureId','convertedToIssueId','convertedAt','convertedBy','conversionNotes','createdAt']);
 
-export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','items','publishDate','isPublished','createdAt','updatedAt']);
+export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','fixes','newFeatures','publishDate','isPublished','createdAt','updatedAt']);
 
 export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','upvotes','isPublic','adminNotes','createdAt','updatedAt']);
 
@@ -112,13 +62,17 @@ export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','ema
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
-export const NullableJsonNullValueInputSchema = z.enum(['DbNull','JsonNull',]).transform((value) => value === 'JsonNull' ? Prisma.JsonNull : value === 'DbNull' ? Prisma.DbNull : value);
-
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
 
-export const JsonNullValueFilterSchema = z.enum(['DbNull','JsonNull','AnyNull',]).transform((value) => value === 'JsonNull' ? Prisma.JsonNull : value === 'DbNull' ? Prisma.JsonNull : value === 'AnyNull' ? Prisma.AnyNull : value);
+export const ActivityTypeSchema = z.enum(['CREATED','UPDATED','PHASE_CHANGED','ASSIGNED','UNASSIGNED','DEPENDENCY_ADDED','DEPENDENCY_REMOVED','LINK_ADDED','LINK_REMOVED','PARENT_CHANGED']);
+
+export type ActivityTypeType = `${z.infer<typeof ActivityTypeSchema>}`
+
+export const EntityTypeSchema = z.enum(['PROJECT','FEATURE','ISSUE','IDEA','ROADMAP','MILESTONE']);
+
+export type EntityTypeType = `${z.infer<typeof EntityTypeSchema>}`
 
 export const IdeaStatusSchema = z.enum(['INVALIDATED','VALIDATED','FAILED','IN_PROGRESS','LAUNCHED']);
 
@@ -152,10 +106,6 @@ export const IssueLabelSchema = z.enum(['UI','BUG','FEATURE','DOCUMENTATION','RE
 
 export type IssueLabelType = `${z.infer<typeof IssueLabelSchema>}`
 
-export const AgentMessageRoleSchema = z.enum(['user','assistant','system']);
-
-export type AgentMessageRoleType = `${z.infer<typeof AgentMessageRoleSchema>}`
-
 export const AssetTypeSchema = z.enum(['image','document','video','link','code','design','other']);
 
 export type AssetTypeType = `${z.infer<typeof AssetTypeSchema>}`
@@ -168,14 +118,6 @@ export const AssetCategorySchema = z.enum(['branding','ui_design','mockups','doc
 
 export type AssetCategoryType = `${z.infer<typeof AssetCategorySchema>}`
 
-export const ChatTypeSchema = z.enum(['general','flow_analysis','recommendations']);
-
-export type ChatTypeType = `${z.infer<typeof ChatTypeSchema>}`
-
-export const MessageRoleSchema = z.enum(['user','assistant']);
-
-export type MessageRoleType = `${z.infer<typeof MessageRoleSchema>}`
-
 export const PrdStatusSchema = z.enum(['draft','approved','archived']);
 
 export type PrdStatusType = `${z.infer<typeof PrdStatusSchema>}`
@@ -187,30 +129,6 @@ export type ImplementationPromptCategoryType = `${z.infer<typeof ImplementationP
 export const AnalysisReportTypeSchema = z.enum(['flow_analysis','missing_flows','recommendations']);
 
 export type AnalysisReportTypeType = `${z.infer<typeof AnalysisReportTypeSchema>}`
-
-export const LaunchPlanStatusSchema = z.enum(['draft','in_progress','ready','launched']);
-
-export type LaunchPlanStatusType = `${z.infer<typeof LaunchPlanStatusSchema>}`
-
-export const LaunchChecklistCategorySchema = z.enum(['technical','content','legal','marketing','analytics','support']);
-
-export type LaunchChecklistCategoryType = `${z.infer<typeof LaunchChecklistCategorySchema>}`
-
-export const LaunchChecklistPrioritySchema = z.enum(['high','medium','low']);
-
-export type LaunchChecklistPriorityType = `${z.infer<typeof LaunchChecklistPrioritySchema>}`
-
-export const LaunchChecklistStatusSchema = z.enum(['pending','in_progress','completed','skipped']);
-
-export type LaunchChecklistStatusType = `${z.infer<typeof LaunchChecklistStatusSchema>}`
-
-export const LaunchCopyPlatformSchema = z.enum(['product_hunt','twitter','linkedin','reddit','hackernews','readme','website','press_release','email']);
-
-export type LaunchCopyPlatformType = `${z.infer<typeof LaunchCopyPlatformSchema>}`
-
-export const LaunchStrategyPhaseSchema = z.enum(['pre_launch','soft_launch','public_launch','post_launch']);
-
-export type LaunchStrategyPhaseType = `${z.infer<typeof LaunchStrategyPhaseSchema>}`
 
 export const NotificationDigestFrequencySchema = z.enum(['IMMEDIATE','HOURLY','DAILY','WEEKLY','NEVER']);
 
@@ -505,7 +423,11 @@ export const ProjectSchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
   description: z.string().nullish(),
-  techStack: JsonValueSchema.nullable(),
+  ai: z.string().nullish(),
+  orm: z.string().nullish(),
+  database: z.string().nullish(),
+  auth: z.string().nullish(),
+  framework: z.string().nullish(),
   infrastructure: z.string().nullish(),
   dueDate: z.coerce.date().nullish(),
   ideaId: z.string().nullish(),
@@ -542,9 +464,11 @@ export const IdeaSchema = z.object({
   organizationId: z.string(),
   internal: z.boolean(),
   openSource: z.boolean(),
-  aiOverallValidation: JsonValueSchema.nullable(),
+  aiOverallValidation: z.number().nullish(),
   problemSolved: z.string().nullish(),
   solutionOffered: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
 export type Idea = z.infer<typeof IdeaSchema>
@@ -554,6 +478,8 @@ export type Idea = z.infer<typeof IdeaSchema>
 
 export const IdeaOptionalDefaultsSchema = IdeaSchema.merge(z.object({
   id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 }))
 
 export type IdeaOptionalDefaults = z.infer<typeof IdeaOptionalDefaultsSchema>
@@ -611,7 +537,7 @@ export const AssetSchema = z.object({
   fileSize: z.number().int().nullish(),
   mimeType: z.string().nullish(),
   url: z.string().nullish(),
-  tags: JsonValueSchema.nullable(),
+  tags: z.string().array(),
   thumbnailUrl: z.string().nullish(),
   isPublic: z.boolean().nullish(),
   uploadedById: z.string().nullish(),
@@ -644,7 +570,6 @@ export const ApiKeySchema = z.object({
   name: z.string(),
   keyHash: z.string(),
   keyPreview: z.string(),
-  permissions: JsonValueSchema.nullable(),
   createdBy: z.string(),
   createdAt: z.coerce.date(),
   lastUsed: z.coerce.date().nullish(),
@@ -664,134 +589,36 @@ export const ApiKeyOptionalDefaultsSchema = ApiKeySchema.merge(z.object({
 export type ApiKeyOptionalDefaults = z.infer<typeof ApiKeyOptionalDefaultsSchema>
 
 /////////////////////////////////////////
-// LAUNCH PLAN SCHEMA
+// ACTIVITY FEED SCHEMA
 /////////////////////////////////////////
 
-export const LaunchPlanSchema = z.object({
-  status: LaunchPlanStatusSchema,
+export const ActivityFeedSchema = z.object({
+  type: ActivityTypeSchema,
+  entityType: EntityTypeSchema,
   id: z.string().uuid(),
-  projectId: z.string(),
-  targetLaunchDate: z.coerce.date().nullish(),
-  actualLaunchDate: z.coerce.date().nullish(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type LaunchPlan = z.infer<typeof LaunchPlanSchema>
-
-// LAUNCH PLAN OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const LaunchPlanOptionalDefaultsSchema = LaunchPlanSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type LaunchPlanOptionalDefaults = z.infer<typeof LaunchPlanOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// LAUNCH CHECKLIST ITEM SCHEMA
-/////////////////////////////////////////
-
-export const LaunchChecklistItemSchema = z.object({
-  category: LaunchChecklistCategorySchema,
-  priority: LaunchChecklistPrioritySchema,
-  status: LaunchChecklistStatusSchema,
-  id: z.string().uuid(),
-  launchPlanId: z.string(),
   title: z.string(),
   description: z.string().nullish(),
-  isRequired: z.boolean(),
-  dependsOn: JsonValueSchema.nullable(),
-  assignedTo: z.string().nullish(),
-  dueDate: z.coerce.date().nullish(),
-  notes: z.string().nullish(),
-  order: z.number().int(),
+  entityId: z.string(),
+  organizationId: z.string(),
+  userId: z.string().nullish(),
+  oldValue: z.string().nullish(),
+  newValue: z.string().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
 
-export type LaunchChecklistItem = z.infer<typeof LaunchChecklistItemSchema>
+export type ActivityFeed = z.infer<typeof ActivityFeedSchema>
 
-// LAUNCH CHECKLIST ITEM OPTIONAL DEFAULTS SCHEMA
+// ACTIVITY FEED OPTIONAL DEFAULTS SCHEMA
 //------------------------------------------------------
 
-export const LaunchChecklistItemOptionalDefaultsSchema = LaunchChecklistItemSchema.merge(z.object({
+export const ActivityFeedOptionalDefaultsSchema = ActivityFeedSchema.merge(z.object({
   id: z.string().uuid().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 }))
 
-export type LaunchChecklistItemOptionalDefaults = z.infer<typeof LaunchChecklistItemOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// LAUNCH COPY SCHEMA
-/////////////////////////////////////////
-
-export const LaunchCopySchema = z.object({
-  platform: LaunchCopyPlatformSchema,
-  id: z.string().uuid(),
-  launchPlanId: z.string(),
-  title: z.string(),
-  tagline: z.string().nullish(),
-  description: z.string(),
-  callToAction: z.string().nullish(),
-  hashtags: JsonValueSchema.nullable(),
-  mentions: JsonValueSchema.nullable(),
-  media: JsonValueSchema.nullable(),
-  isApproved: z.boolean(),
-  version: z.number().int(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type LaunchCopy = z.infer<typeof LaunchCopySchema>
-
-// LAUNCH COPY OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const LaunchCopyOptionalDefaultsSchema = LaunchCopySchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type LaunchCopyOptionalDefaults = z.infer<typeof LaunchCopyOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// LAUNCH STRATEGY SCHEMA
-/////////////////////////////////////////
-
-export const LaunchStrategySchema = z.object({
-  phase: LaunchStrategyPhaseSchema,
-  id: z.string().uuid(),
-  launchPlanId: z.string(),
-  name: z.string(),
-  description: z.string(),
-  startDate: z.coerce.date(),
-  endDate: z.coerce.date(),
-  platforms: JsonValueSchema.nullable(),
-  targetAudience: JsonValueSchema.nullable(),
-  keyMetrics: JsonValueSchema.nullable(),
-  tasks: JsonValueSchema.nullable(),
-  order: z.number().int(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type LaunchStrategy = z.infer<typeof LaunchStrategySchema>
-
-// LAUNCH STRATEGY OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const LaunchStrategyOptionalDefaultsSchema = LaunchStrategySchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type LaunchStrategyOptionalDefaults = z.infer<typeof LaunchStrategyOptionalDefaultsSchema>
+export type ActivityFeedOptionalDefaults = z.infer<typeof ActivityFeedOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // PUBLIC ROADMAP SCHEMA
@@ -927,7 +754,8 @@ export const RoadmapChangelogSchema = z.object({
   roadmapId: z.string(),
   title: z.string(),
   description: z.string(),
-  items: JsonValueSchema.nullable(),
+  fixes: z.string().array(),
+  newFeatures: z.string().array(),
   publishDate: z.coerce.date(),
   isPublished: z.boolean(),
   createdAt: z.coerce.date(),

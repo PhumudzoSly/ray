@@ -39,21 +39,21 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <AuthProvider>
-          <ReactQueryProvider>
-            <HydrationBoundary state={dehydrate(client)}>
-              <ThemeProvider
-                storageKey="rayai-theme"
-                attribute="class"
-                nonce="b1282rp=1ed2h3od12ndu2boqjdh1ibuo2i3hn"
-                defaultTheme="dark"
-              >
-                <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-                <Toaster />
-              </ThemeProvider>
-            </HydrationBoundary>
-          </ReactQueryProvider>
-        </AuthProvider>
+        {/* <AuthProvider> */}
+        <ReactQueryProvider>
+          <HydrationBoundary state={dehydrate(client)}>
+            <ThemeProvider
+              storageKey="rayai-theme"
+              attribute="class"
+              nonce="b1282rp=1ed2h3od12ndu2boqjdh1ibuo2i3hn"
+              defaultTheme="dark"
+            >
+              <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+              <Toaster />
+            </ThemeProvider>
+          </HydrationBoundary>
+        </ReactQueryProvider>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );

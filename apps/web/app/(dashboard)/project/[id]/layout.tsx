@@ -8,7 +8,6 @@ import { Database, Lock, Trash, Bot, Server } from "lucide-react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { techStackOptions } from "@/lib/types";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
@@ -27,6 +26,8 @@ import { DateSelector } from "@/components/ui/selectors";
 import { INFRASTRUCTURE_PROVIDERS } from "@/utils/constants/sources/infrastructure";
 import { ProjectStatusSelector } from "@/components/ui/selectors/project-status-selector";
 import { ActivityFeed } from "@/components/shared";
+import { ORM_PLATFORMS } from "@/utils/constants/sources/orms";
+import { AI_PLATFORMS } from "@/utils/constants/sources/ai";
 
 export default function ProjectPage({ children }: { children: ReactNode }) {
   //
@@ -89,8 +90,8 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
     },
   });
 
-  if (pathname === `/project/${project?._id}/flow`) return children;
-  if (pathname === `/project/${project?._id}/board`) return children;
+  if (pathname === `/project/${project?.id}/flow`) return children;
+  if (pathname === `/project/${project?.id}/board`) return children;
 
   const handleDeleteProject = async () => {
     try {
@@ -98,8 +99,8 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
         description: "Are you sure you want to delete this project?",
         title: "Delete Project",
       });
-      if (isConfirmed && project?._id) {
-        await deleteProjectMutation.mutateAsync(project._id);
+      if (isConfirmed && project?.id) {
+        await deleteProjectMutation.mutateAsync(project.id);
         router.push("/project");
       }
     } catch (error) {
@@ -117,7 +118,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
           },
           {
             title: project?.name || "",
-            url: `/project/${project?._id}`,
+            url: `/project/${project?.id}`,
           },
         ]}
       >
@@ -161,7 +162,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                     Status
                   </h3>
                   <ProjectStatusSelector
-                    onChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { status: value } })}
+                    onChange={async (value) => updateProjectMutation.mutate({ id: project.id, updates: { status: value } })}
                     status={project.status}
                   />
 
@@ -170,7 +171,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   </h3>
                   <ProjectTypeSelector
                     selectedType={project.platform}
-                    onChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { platform: value } })}
+                    onChange={async (value) => updateProjectMutation.mutate({ id: project.id, updates: { platform: value } })}
                   />
 
                   <h3 className="text-xs font-medium text-muted-foreground">
@@ -178,7 +179,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   </h3>
                   <DateSelector
                     value={project?.dueDate ? new Date(project?.dueDate) : null}
-                    onChange={async (e) => updateProjectMutation.mutate({ id: project._id, updates: { dueDate: e?.toDateString() } })}
+                    onChange={async (e) => updateProjectMutation.mutate({ id: project.id, updates: { dueDate: e?.toDateString() } })}
                   />
 
                   <h3 className="text-xs font-medium text-muted-foreground">
@@ -209,13 +210,18 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                     ORM
                   </h3>
                   <CommandSelect
-                    options={techStackOptions.orm.map((option) => ({
-                      value: option,
-                      label: option,
+                    options={ORM_PLATFORMS.map((option) => ({
+                      value: option.name,
+                      label: option.name,
                       icon: <ImConnection />,
                     }))}
-                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, orm: value } } })}
-                    value={project.techStack.orm}
+                    onValueChange={async (value) => updateProjectMutation.mutate({
+                      id: project.id, updates: {
+                        ...project,
+                        orm: value
+                      }
+                    })}
+                    value={project?.orm || ""}
                     placeholder="Select ORM"
                   />
 
@@ -228,8 +234,13 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Database />,
                     }))}
-                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, database: value } } })}
-                    value={project.techStack.database}
+                    onValueChange={async (value) => updateProjectMutation.mutate({
+                      id: project.id, updates: {
+                        ...project,
+                        database: value
+                      }
+                    })}
+                    value={project?.database || ""}
                     placeholder="Select Database"
                   />
 
@@ -242,21 +253,31 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Lock />,
                     }))}
-                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, auth: value } } })}
-                    value={project.techStack.auth}
+                    onValueChange={async (value) => updateProjectMutation.mutate({
+                      id: project.id, updates: {
+                        ...project,
+                        auth: value
+                      }
+                    })}
+                    value={project.auth || ""}
                     placeholder="Select Auth provider"
                   />
                   <h3 className="text-xs font-medium text-muted-foreground">
                     AI
                   </h3>
                   <CommandSelect
-                    options={techStackOptions.ai.map((option) => ({
-                      value: option,
-                      label: option,
+                    options={AI_PLATFORMS.map((option) => ({
+                      value: option.name,
+                      label: option.name,
                       icon: <Bot />,
                     }))}
-                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, ai: value } } })}
-                    value={project.techStack.ai}
+                    onValueChange={async (value) => updateProjectMutation.mutate({
+                      id: project.id, updates: {
+                        ...project,
+                        ai: value
+                      }
+                    })}
+                    value={project?.ai || ''}
                     placeholder="Select AI provider"
                   />
 
@@ -269,15 +290,20 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Server />,
                     }))}
-                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { infrastructure: value } })}
-                    value={project?.infrastructure}
+                    onValueChange={async (value) => updateProjectMutation.mutate({
+                      id: project.id, updates: {
+                        ...project,
+                        infrastructure: value
+                      }
+                    })}
+                    value={project?.infrastructure as string}
                     placeholder="Select infrastructure"
                   />
                 </div>
               </div>
               <ActivityFeed
-                entityId={project?._id}
-                entityType="project"
+                entityId={project?.id}
+                entityType="PROJECT"
                 emptyMessage="No activity yet"
                 limit={20}
               />
@@ -289,11 +315,11 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
               title={project.name}
               description={project?.description || ""}
               platform={project?.platform || ""}
-              id={project._id}
+              id={project.id}
               token={token}
             />
           </div>
-          <ProjectTabs projectId={project._id} />
+          <ProjectTabs projectId={project.id} />
 
           <div className="p-4">{children}</div>
         </ExpandedLayoutContainer>

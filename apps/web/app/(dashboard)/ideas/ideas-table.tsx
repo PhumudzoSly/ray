@@ -36,11 +36,12 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { formatDistanceToNow, format } from "date-fns";
 import { TbProgress } from "react-icons/tb";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import NoData from "@/components/shared/no-data";
-import { Doc } from "@workspace/backend";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getAllIdeas } from "@/actions/idea";
+import { Idea } from "@workspace/backend";
 
 export function IdeasTable() {
   const router = useRouter();
@@ -48,19 +49,18 @@ export function IdeasTable() {
 
   const page = Number(searchParams.get("page") || "1");
   const perPage = Number(searchParams.get("per_page") || "10");
-  const sort = searchParams.get("sort") || "._creationTime";
+  const sort = searchParams.get("sort") || ".createdAt";
   const order = (searchParams.get("order") as "asc" | "desc") || "desc";
   const status = searchParams.get("status") || "";
   const industry = searchParams.get("industry") || "";
   const search = searchParams.get("search") || "";
 
-  const {
-    data: allIdeas,
-    isPending,
-    isError,
-  } = api.idea.getIdeas({
-    token: useSession().token,
-  });
+  const { data: allIdeas, isPending, isError } = useQuery({
+    queryKey: ["ideas"],
+    queryFn: async () => {
+      return await getAllIdeas()
+    },
+  })
 
   // Filter ideas based on search params
   const filteredIdeas =
@@ -98,12 +98,9 @@ export function IdeasTable() {
       case "status":
         comparison = (a.status || "").localeCompare(b.status || "");
         break;
-      case "._creationTime":
-        comparison = (a._creationTime || 0) - (b._creationTime || 0);
-        break;
+
       default:
-        // Default sorting by creation time
-        comparison = (a._creationTime || 0) - (b._creationTime || 0);
+        comparison = a.name.localeCompare(b.name);
     }
 
     return order === "asc" ? comparison : -comparison;
@@ -137,9 +134,9 @@ export function IdeasTable() {
   };
 
   const getStatusInfo = (
-    idea: Doc<"idea">
+    idea: Idea
   ): { icon: JSX.Element; badge: JSX.Element; progress: number } => {
-    const progress = idea.aiOverallValidation?.overallRating || 0;
+    const progress = 0
 
     switch (idea.status) {
       case "VALIDATED":
@@ -188,7 +185,7 @@ export function IdeasTable() {
 
   if (filteredIdeas?.length === 0) {
     return (
-      <div className="rounded-md border p-8">
+      <div className="rounded-md  p-8">
         <div className="flex flex-col items-center justify-center space-y-4 text-center">
           <NoData />
         </div>
@@ -274,9 +271,9 @@ export function IdeasTable() {
               const statusInfo = getStatusInfo(idea);
               return (
                 <TableRow
-                  key={idea._id}
+                  key={idea.id}
                   className="group cursor-pointer hover:bg-muted/50"
-                  onClick={() => router.push(`/ideas/${idea._id}`)}
+                  onClick={() => router.push(`/ideas/${idea.id}`)}
                 >
                   <TableCell className="[&:has([role=checkbox])]:pl-3">
                     <Badge>{index + 1}</Badge>
@@ -312,12 +309,12 @@ export function IdeasTable() {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger className="text-xs">
-                          {formatDistanceToNow(new Date(idea._creationTime), {
+                          {formatDistanceToNow(new Date(idea.createdAt), {
                             addSuffix: true,
                           })}
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>{format(new Date(idea._creationTime), "PPP")}</p>
+                          <p>{format(new Date(idea.createdAt), "PPP")}</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -328,7 +325,7 @@ export function IdeasTable() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Link
-                        href={`/ideas/${idea._id}`}
+                        href={`/ideas/${idea.id}`}
                         className={buttonVariants({
                           size: "icon",
                           variant: "outline",
