@@ -119,7 +119,7 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
             assignee={feature.assignedToId || null}
             onChange={async (assignee) => {
               await handleUpdate({
-                assignedTo: assignee === "unassigned" ? null : assignee,
+                assignedToId: assignee === "unassigned" ? null : assignee,
               });
             }}
           />

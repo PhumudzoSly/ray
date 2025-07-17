@@ -329,10 +329,10 @@ export const FeatureDependencyManager: React.FC<
                         phase: feature.phase,
                         priority: feature.priority,
                         assignedTo: feature.assignedTo,
-                        user: feature.user
+                        user: feature.assignedTo
                           ? {
-                            name: feature.user.name,
-                            image: feature.user.image,
+                            name: feature.assignedTo.name,
+                            image: feature.assignedTo.image,
                           }
                           : undefined,
                       }))

@@ -27,26 +27,45 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as featureActions from "@/actions/project/features";
 import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
+import { Feature, FeaturePhaseType, ImportanceType, FeatureOptionalDefaults } from "@workspace/backend";
 
 interface FeatureCardProps {
-  feature: any;
+  feature: Feature & {
+    assignedTo?: {
+      id: string;
+      name: string;
+      email: string;
+      image?: string;
+    } | null;
+    parentFeature?: {
+      id: string;
+      name: string;
+    } | null;
+    subFeatures?: Feature[];
+    dependencies?: Array<{
+      dependency: Feature;
+    }>;
+    dependentOn?: Array<{
+      feature: Feature;
+    }>;
+    isSubFeature?: boolean;
+  };
   index: number;
-  showProject?: boolean;
   onClick?: () => void;
 }
 
-export function FeatureCard({ feature, showProject }: FeatureCardProps) {
+export function FeatureCard({ feature, }: FeatureCardProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature
   const updateFeatureMutation = useMutation({
-    mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
-      return await featureActions.updateFeature(featureId, updates);
+    mutationFn: async ({ featureId, updates }: { featureId: string; updates: Partial<FeatureOptionalDefaults> }) => {
+      return await featureActions.updateFeature(featureId, updates as any);
     },
     onMutate: async ({ featureId, updates }) => {
       await queryClient.cancelQueries();
-      const previousFeatures = queryClient.getQueryData<any[]>(["features", feature.projectId]);
-      queryClient.setQueryData<any[]>(["features", feature.projectId], (old) => {
+      const previousFeatures = queryClient.getQueryData<Feature[]>(["features", feature.projectId]);
+      queryClient.setQueryData<Feature[]>(["features", feature.projectId], (old) => {
         if (!old) return old;
         return old.map((f) =>
           f.id === featureId ? { ...f, ...updates } : f
@@ -80,7 +99,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
     e.stopPropagation();
   };
 
-  const handleUpdate = async (updates: any) => {
+  const handleUpdate = async (updates: Partial<FeatureOptionalDefaults>) => {
     updateFeatureMutation.mutate({
       featureId: feature.id,
       updates,
@@ -91,8 +110,8 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-shadow"
-      onClick={handleClick}
+      className="hover:shadow-md transition-shadow"
+    // onClick={handleClick}
     >
       <CardHeader>
         <div className="flex justify-between items-center gap-2">
@@ -135,8 +154,8 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
         <div className="flex gap-2 flex-wrap" onClick={handleInteractiveClick}>
           <PhaseSelector
             phase={feature.phase}
-            onChange={async (phase) => {
-              await handleUpdate({ phase });
+            onChange={async (phase: string) => {
+              await handleUpdate({ phase: phase as FeaturePhaseType });
             }}
             blockedPhases={
               validationResult && validationResult.success && !validationResult?.data?.canComplete ? ["LIVE"] : []
@@ -149,15 +168,15 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
           />
           <PrioritySelector
             priority={feature.priority}
-            onChange={async (priority) => {
-              await handleUpdate({ priority });
+            onChange={async (priority: string) => {
+              await handleUpdate({ priority: priority as ImportanceType });
             }}
           />
           <AssigneeSelector
-            assignee={feature.assignedTo || null}
+            assignee={feature.assignedToId || null}
             onChange={async (assignee) => {
               await handleUpdate({
-                assignedTo: assignee === "unassigned" ? null : assignee,
+                assignedToId: assignee === "unassigned" ? null : assignee,
               });
             }}
           />
@@ -176,7 +195,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
               }
               onChange={async (date) => {
                 await handleUpdate({
-                  startDate: date ? date.toISOString().split("T")[0] : null,
+                  startDate: date ? new Date(date) : null,
                 });
               }}
               placeholder="Set start"
@@ -189,7 +208,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
               value={feature.endDate ? new Date(feature.endDate) : undefined}
               onChange={async (date) => {
                 await handleUpdate({
-                  endDate: date ? date.toISOString().split("T")[0] : null,
+                  endDate: date ? new Date(date) : null,
                 });
               }}
               placeholder="Set end"

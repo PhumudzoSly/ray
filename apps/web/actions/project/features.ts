@@ -231,7 +231,7 @@ export const updateFeature = async (featureId: string, updates: FeatureOptionalD
             return { success: false, error: "Feature not found" };
         }
 
-        const updatedFeature = await prisma.feature.update({
+                const updatedFeature = await prisma.feature.update({
             where: { id: featureId, organizationId: org },
             data: {
                 ...updates,

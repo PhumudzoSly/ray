@@ -99,10 +99,10 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     if (!features) return [];
     const uniqueAssignees = new Map();
     features.forEach((feature: any) => {
-      if (feature.user && !uniqueAssignees.has(feature.user.id)) {
-        uniqueAssignees.set(feature.user.id, {
-          id: feature.user.id,
-          name: feature.user.name,
+      if (feature.assignedTo && !uniqueAssignees.has(feature.assignedTo.id)) {
+        uniqueAssignees.set(feature.assignedTo.id, {
+          id: feature.assignedTo.id,
+          name: feature.assignedTo.name,
         });
       }
     });
@@ -134,12 +134,12 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
 
       // Assignee filter
       if (filters.assignee !== "all") {
-        if (filters.assignee === "unassigned" && feature.user) {
+        if (filters.assignee === "unassigned" && feature.assignedTo) {
           return false;
         }
         if (
           filters.assignee !== "unassigned" &&
-          feature.user?.id !== filters.assignee
+          feature.assignedTo?.id !== filters.assignee
         ) {
           return false;
         }
@@ -176,10 +176,10 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
           id: feature.id,
           title: feature.name,
           subtitle: feature.description || undefined,
-          avatar: feature.user ? (
+          avatar: feature.assignedTo ? (
             <Avatar>
               <AvatarFallback>
-                {feature.user.name?.charAt(0) || "?"}
+                {feature.assignedTo.name?.charAt(0) || "?"}
               </AvatarFallback>
             </Avatar>
           ) : undefined,
@@ -311,7 +311,6 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
               index={index + 1}
               key={feature.id}
               feature={feature}
-              showProject={false}
             />
           ))}
         </div>

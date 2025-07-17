@@ -64,7 +64,7 @@ export function AssigneeSelector({
       if (!token) return [];
       const raw = await getOrgMembers();
       return (raw ?? []).map((m) => ({
-        id: m.id,
+        id: m.userId,
         name: m.user.name,
         email: m.user.email,
         image: m.user.image,
@@ -72,6 +72,7 @@ export function AssigneeSelector({
     },
     enabled: !!token,
   });
+
 
   // Fix for TS: always use typed orgMembers
   const orgMembers: OrgMember[] = members ?? [];
@@ -173,6 +174,19 @@ export function AssigneeSelector({
           <CommandList>
             <CommandEmpty>No users found.</CommandEmpty>
             <CommandGroup>
+              <CommandItem
+                value="unassigned"
+                onSelect={() => handleAssigneeChange("unassigned")}
+                className="flex items-center justify-between"
+              >
+                <div className="flex items-center gap-2">
+                  <UserCircle className="size-5" />
+                  Unassigned
+                </div>
+                {!value && (
+                  <CheckIcon size={16} className="ml-auto" />
+                )}
+              </CommandItem>
               {orgMembers.map((user) => {
                 return (
                   <CommandItem
