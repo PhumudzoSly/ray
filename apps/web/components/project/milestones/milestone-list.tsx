@@ -28,7 +28,7 @@ import { formatDate } from "@/lib/format";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getProjectMilestones, updateMilestone } from "@/actions/project/milestone";
+import { getProjectMilestones, updateMilestone, CreateMilestoneData } from "@/actions/project/milestone";
 
 interface MilestoneListProps {
   projectId: string;
@@ -93,7 +93,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => updateMilestone(data.milestoneId, { status: data.status }),
+    mutationFn: async (data: { milestoneId: string; status: string }) => updateMilestone(data.milestoneId, { status: data.status as any }),
     onSuccess: (_data, variables) => {
       toast.success(`Milestone status changed to ${getStatusText(variables.status)}.`);
     },

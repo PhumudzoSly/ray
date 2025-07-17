@@ -116,7 +116,7 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
             Assignee
           </h3>
           <AssigneeSelector
-            assignee={feature.assignedTo || null}
+            assignee={feature.assignedToId || null}
             onChange={async (assignee) => {
               await handleUpdate({
                 assignedTo: assignee === "unassigned" ? null : assignee,

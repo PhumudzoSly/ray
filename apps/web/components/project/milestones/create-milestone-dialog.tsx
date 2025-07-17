@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createMilestone } from "@/actions/project/milestone";
+import { createMilestone, CreateMilestoneData } from "@/actions/project/milestone";
 import { getOrgMembers } from "@/actions/account/user";
 
 interface CreateMilestoneDialogProps {
@@ -86,7 +86,7 @@ export function CreateMilestoneDialog({
   };
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => createMilestone(data),
+    mutationFn: async (data: CreateMilestoneData) => createMilestone(data),
     onSuccess: () => {
       toast.success("Milestone created successfully");
       close();

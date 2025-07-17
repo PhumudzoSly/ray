@@ -56,32 +56,12 @@ import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { MilestoneStatusSelector } from "@/components/ui/selectors/milestone-status-selector";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getMilestone, updateMilestone, deleteMilestone } from "@/actions/project/milestone";
+import { getMilestone, updateMilestone, deleteMilestone, MilestoneWithProgress } from "@/actions/project/milestone";
 
 interface MilestoneDetailsSheetProps {
   milestoneId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}
-
-interface Milestone {
-  id: string;
-  name: string;
-  description?: string;
-  status: string;
-  startDate?: string | number;
-  endDate?: string | number;
-  owner?: { id: string; name: string } | null;
-  progress: number;
-  completedIssueCount: number;
-  issueCount: number;
-  completedFeatureCount: number;
-  featureCount: number;
-  overdueItems: number;
-  dependsOn: { id: string; name: string }[];
-  blocking: { id: string; name: string }[];
-  issues: any[];
-  features: any[];
 }
 
 export function MilestoneDetailsSheet({
@@ -94,32 +74,11 @@ export function MilestoneDetailsSheet({
   const { token } = useSession();
   const queryClient = useQueryClient();
 
-  const { data: milestone, isLoading } = useQuery<Milestone | null>({
+  const { data: milestone, isLoading } = useQuery<MilestoneWithProgress | null>({
     queryKey: ["milestone", milestoneId, token],
     queryFn: async () => {
       if (!token || !milestoneId) return null;
-      const raw = await getMilestone(milestoneId);
-      if (!raw) return null;
-      // Map to local type if needed
-      return {
-        id: raw.id,
-        name: raw.name,
-        description: raw.description,
-        status: raw.status,
-        startDate: raw.startDate,
-        endDate: raw.endDate,
-        owner: raw.owner ? { id: raw.owner.id, name: raw.owner.name } : null,
-        progress: raw.progress,
-        completedIssueCount: raw.completedIssueCount,
-        issueCount: raw.issueCount,
-        completedFeatureCount: raw.completedFeatureCount,
-        featureCount: raw.featureCount,
-        overdueItems: raw.overdueItems,
-        dependsOn: (raw.dependsOn ?? []).map((d: any) => ({ id: d.id, name: d.name })),
-        blocking: (raw.blocking ?? []).map((b: any) => ({ id: b.id, name: b.name })),
-        issues: raw.issues ?? [],
-        features: raw.features ?? [],
-      };
+      return await getMilestone(milestoneId);
     },
     enabled: !!token && !!milestoneId,
   });
