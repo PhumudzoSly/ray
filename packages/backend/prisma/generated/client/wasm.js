@@ -485,7 +485,8 @@ exports.Prisma.FeatureScalarFieldEnum = {
   parentFeatureId: 'parentFeatureId',
   organizationId: 'organizationId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  milestoneId: 'milestoneId'
 };
 
 exports.Prisma.FeatureDependencyScalarFieldEnum = {
@@ -501,6 +502,28 @@ exports.Prisma.FeatureLinkScalarFieldEnum = {
   organizationId: 'organizationId',
   featureId: 'featureId',
   url: 'url',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MilestoneScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  projectId: 'projectId',
+  organizationId: 'organizationId',
+  ownerId: 'ownerId'
+};
+
+exports.Prisma.MilestoneDependencyScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  milestoneId: 'milestoneId',
+  dependencyId: 'dependencyId',
   createdAt: 'createdAt'
 };
 
@@ -658,6 +681,14 @@ exports.FeaturePhase = exports.$Enums.FeaturePhase = {
   DEPRECATED: 'DEPRECATED'
 };
 
+exports.MilestoneStatus = exports.$Enums.MilestoneStatus = {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  AT_RISK: 'AT_RISK',
+  COMPLETED: 'COMPLETED',
+  DELAYED: 'DELAYED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -685,7 +716,9 @@ exports.Prisma.ModelName = {
   WaitlistEntry: 'WaitlistEntry',
   Feature: 'Feature',
   FeatureDependency: 'FeatureDependency',
-  FeatureLink: 'FeatureLink'
+  FeatureLink: 'FeatureLink',
+  Milestone: 'Milestone',
+  MilestoneDependency: 'MilestoneDependency'
 };
 
 /**

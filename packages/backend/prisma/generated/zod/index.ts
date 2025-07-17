@@ -60,11 +60,15 @@ export const WaitlistScalarFieldEnumSchema = z.enum(['id','projectId','name','sl
 
 export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','referralCount','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
 
-export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','parentFeatureId','organizationId','createdAt','updatedAt']);
+export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','parentFeatureId','organizationId','createdAt','updatedAt','milestoneId']);
 
 export const FeatureDependencyScalarFieldEnumSchema = z.enum(['id','organizationId','featureId','dependencyId','createdAt']);
 
 export const FeatureLinkScalarFieldEnumSchema = z.enum(['id','organizationId','featureId','url','createdAt']);
+
+export const MilestoneScalarFieldEnumSchema = z.enum(['id','name','description','status','startDate','endDate','createdAt','updatedAt','projectId','organizationId','ownerId']);
+
+export const MilestoneDependencyScalarFieldEnumSchema = z.enum(['id','organizationId','milestoneId','dependencyId','createdAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -155,6 +159,10 @@ export type FeatureRequestPriorityType = `${z.infer<typeof FeatureRequestPriorit
 export const FeaturePhaseSchema = z.enum(['DISCOVERY','PLANNING','DEVELOPMENT','TESTING','RELEASE','LIVE','DEPRECATED']);
 
 export type FeaturePhaseType = `${z.infer<typeof FeaturePhaseSchema>}`
+
+export const MilestoneStatusSchema = z.enum(['NOT_STARTED','IN_PROGRESS','AT_RISK','COMPLETED','DELAYED']);
+
+export type MilestoneStatusType = `${z.infer<typeof MilestoneStatusSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -914,6 +922,7 @@ export const FeatureSchema = z.object({
   organizationId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  milestoneId: z.string().nullish(),
 })
 
 export type Feature = z.infer<typeof FeatureSchema>
@@ -976,3 +985,59 @@ export const FeatureLinkOptionalDefaultsSchema = FeatureLinkSchema.merge(z.objec
 }))
 
 export type FeatureLinkOptionalDefaults = z.infer<typeof FeatureLinkOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MILESTONE SCHEMA
+/////////////////////////////////////////
+
+export const MilestoneSchema = z.object({
+  status: MilestoneStatusSchema,
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string().nullish(),
+  startDate: z.coerce.date().nullish(),
+  endDate: z.coerce.date().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  projectId: z.string(),
+  organizationId: z.string(),
+  ownerId: z.string().nullish(),
+})
+
+export type Milestone = z.infer<typeof MilestoneSchema>
+
+// MILESTONE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MilestoneOptionalDefaultsSchema = MilestoneSchema.merge(z.object({
+  status: MilestoneStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type MilestoneOptionalDefaults = z.infer<typeof MilestoneOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MILESTONE DEPENDENCY SCHEMA
+/////////////////////////////////////////
+
+export const MilestoneDependencySchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  milestoneId: z.string(),
+  dependencyId: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type MilestoneDependency = z.infer<typeof MilestoneDependencySchema>
+
+// MILESTONE DEPENDENCY OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MilestoneDependencyOptionalDefaultsSchema = MilestoneDependencySchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type MilestoneDependencyOptionalDefaults = z.infer<typeof MilestoneDependencyOptionalDefaultsSchema>

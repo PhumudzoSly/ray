@@ -148,6 +148,16 @@ export type FeatureDependency = $Result.DefaultSelection<Prisma.$FeatureDependen
  * 
  */
 export type FeatureLink = $Result.DefaultSelection<Prisma.$FeatureLinkPayload>
+/**
+ * Model Milestone
+ * 
+ */
+export type Milestone = $Result.DefaultSelection<Prisma.$MilestonePayload>
+/**
+ * Model MilestoneDependency
+ * 
+ */
+export type MilestoneDependency = $Result.DefaultSelection<Prisma.$MilestoneDependencyPayload>
 
 /**
  * Enums
@@ -398,6 +408,17 @@ export const FeaturePhase: {
 
 export type FeaturePhase = (typeof FeaturePhase)[keyof typeof FeaturePhase]
 
+
+export const MilestoneStatus: {
+  NOT_STARTED: 'NOT_STARTED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  AT_RISK: 'AT_RISK',
+  COMPLETED: 'COMPLETED',
+  DELAYED: 'DELAYED'
+};
+
+export type MilestoneStatus = (typeof MilestoneStatus)[keyof typeof MilestoneStatus]
+
 }
 
 export type ActivityType = $Enums.ActivityType
@@ -483,6 +504,10 @@ export const FeatureRequestPriority: typeof $Enums.FeatureRequestPriority
 export type FeaturePhase = $Enums.FeaturePhase
 
 export const FeaturePhase: typeof $Enums.FeaturePhase
+
+export type MilestoneStatus = $Enums.MilestoneStatus
+
+export const MilestoneStatus: typeof $Enums.MilestoneStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -878,6 +903,26 @@ export class PrismaClient<
     * ```
     */
   get featureLink(): Prisma.FeatureLinkDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.milestone`: Exposes CRUD operations for the **Milestone** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Milestones
+    * const milestones = await prisma.milestone.findMany()
+    * ```
+    */
+  get milestone(): Prisma.MilestoneDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.milestoneDependency`: Exposes CRUD operations for the **MilestoneDependency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MilestoneDependencies
+    * const milestoneDependencies = await prisma.milestoneDependency.findMany()
+    * ```
+    */
+  get milestoneDependency(): Prisma.MilestoneDependencyDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1344,7 +1389,9 @@ export namespace Prisma {
     WaitlistEntry: 'WaitlistEntry',
     Feature: 'Feature',
     FeatureDependency: 'FeatureDependency',
-    FeatureLink: 'FeatureLink'
+    FeatureLink: 'FeatureLink',
+    Milestone: 'Milestone',
+    MilestoneDependency: 'MilestoneDependency'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1363,7 +1410,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3365,6 +3412,154 @@ export namespace Prisma {
           }
         }
       }
+      Milestone: {
+        payload: Prisma.$MilestonePayload<ExtArgs>
+        fields: Prisma.MilestoneFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MilestoneFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MilestoneFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          findFirst: {
+            args: Prisma.MilestoneFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MilestoneFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          findMany: {
+            args: Prisma.MilestoneFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+          }
+          create: {
+            args: Prisma.MilestoneCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          createMany: {
+            args: Prisma.MilestoneCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MilestoneCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+          }
+          delete: {
+            args: Prisma.MilestoneDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          update: {
+            args: Prisma.MilestoneUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          deleteMany: {
+            args: Prisma.MilestoneDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MilestoneUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MilestoneUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>[]
+          }
+          upsert: {
+            args: Prisma.MilestoneUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestonePayload>
+          }
+          aggregate: {
+            args: Prisma.MilestoneAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMilestone>
+          }
+          groupBy: {
+            args: Prisma.MilestoneGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MilestoneGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MilestoneCountArgs<ExtArgs>
+            result: $Utils.Optional<MilestoneCountAggregateOutputType> | number
+          }
+        }
+      }
+      MilestoneDependency: {
+        payload: Prisma.$MilestoneDependencyPayload<ExtArgs>
+        fields: Prisma.MilestoneDependencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MilestoneDependencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MilestoneDependencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          findFirst: {
+            args: Prisma.MilestoneDependencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MilestoneDependencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          findMany: {
+            args: Prisma.MilestoneDependencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>[]
+          }
+          create: {
+            args: Prisma.MilestoneDependencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          createMany: {
+            args: Prisma.MilestoneDependencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MilestoneDependencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>[]
+          }
+          delete: {
+            args: Prisma.MilestoneDependencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          update: {
+            args: Prisma.MilestoneDependencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.MilestoneDependencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MilestoneDependencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MilestoneDependencyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>[]
+          }
+          upsert: {
+            args: Prisma.MilestoneDependencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MilestoneDependencyPayload>
+          }
+          aggregate: {
+            args: Prisma.MilestoneDependencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMilestoneDependency>
+          }
+          groupBy: {
+            args: Prisma.MilestoneDependencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MilestoneDependencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MilestoneDependencyCountArgs<ExtArgs>
+            result: $Utils.Optional<MilestoneDependencyCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3476,6 +3671,8 @@ export namespace Prisma {
     feature?: FeatureOmit
     featureDependency?: FeatureDependencyOmit
     featureLink?: FeatureLinkOmit
+    milestone?: MilestoneOmit
+    milestoneDependency?: MilestoneDependencyOmit
   }
 
   /* Types for Logging */
@@ -3581,8 +3778,9 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
-    ActivityFeed: number
-    Feature: number
+    activityFeed: number
+    feature: number
+    milestone: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3597,8 +3795,9 @@ export namespace Prisma {
     issue?: boolean | UserCountOutputTypeCountIssueArgs
     asset?: boolean | UserCountOutputTypeCountAssetArgs
     waitlist?: boolean | UserCountOutputTypeCountWaitlistArgs
-    ActivityFeed?: boolean | UserCountOutputTypeCountActivityFeedArgs
-    Feature?: boolean | UserCountOutputTypeCountFeatureArgs
+    activityFeed?: boolean | UserCountOutputTypeCountActivityFeedArgs
+    feature?: boolean | UserCountOutputTypeCountFeatureArgs
+    milestone?: boolean | UserCountOutputTypeCountMilestoneArgs
   }
 
   // Custom InputTypes
@@ -3703,6 +3902,13 @@ export namespace Prisma {
     where?: FeatureWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMilestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneWhereInput
+  }
+
 
   /**
    * Count Type OrganizationCountOutputType
@@ -3717,10 +3923,12 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
-    ActivityFeed: number
-    Feature: number
-    FeatureDependency: number
-    FeatureLink: number
+    activityFeed: number
+    feature: number
+    featureDependency: number
+    featureLink: number
+    milestone: number
+    milestoneDependency: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3732,10 +3940,12 @@ export namespace Prisma {
     issue?: boolean | OrganizationCountOutputTypeCountIssueArgs
     asset?: boolean | OrganizationCountOutputTypeCountAssetArgs
     waitlist?: boolean | OrganizationCountOutputTypeCountWaitlistArgs
-    ActivityFeed?: boolean | OrganizationCountOutputTypeCountActivityFeedArgs
-    Feature?: boolean | OrganizationCountOutputTypeCountFeatureArgs
-    FeatureDependency?: boolean | OrganizationCountOutputTypeCountFeatureDependencyArgs
-    FeatureLink?: boolean | OrganizationCountOutputTypeCountFeatureLinkArgs
+    activityFeed?: boolean | OrganizationCountOutputTypeCountActivityFeedArgs
+    feature?: boolean | OrganizationCountOutputTypeCountFeatureArgs
+    featureDependency?: boolean | OrganizationCountOutputTypeCountFeatureDependencyArgs
+    featureLink?: boolean | OrganizationCountOutputTypeCountFeatureLinkArgs
+    milestone?: boolean | OrganizationCountOutputTypeCountMilestoneArgs
+    milestoneDependency?: boolean | OrganizationCountOutputTypeCountMilestoneDependencyArgs
   }
 
   // Custom InputTypes
@@ -3833,6 +4043,20 @@ export namespace Prisma {
     where?: FeatureLinkWhereInput
   }
 
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountMilestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountMilestoneDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneDependencyWhereInput
+  }
+
 
   /**
    * Count Type ProjectCountOutputType
@@ -3844,6 +4068,7 @@ export namespace Prisma {
     publicRoadmaps: number
     waitlists: number
     features: number
+    milestones: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3852,6 +4077,7 @@ export namespace Prisma {
     publicRoadmaps?: boolean | ProjectCountOutputTypeCountPublicRoadmapsArgs
     waitlists?: boolean | ProjectCountOutputTypeCountWaitlistsArgs
     features?: boolean | ProjectCountOutputTypeCountFeaturesArgs
+    milestones?: boolean | ProjectCountOutputTypeCountMilestonesArgs
   }
 
   // Custom InputTypes
@@ -3898,6 +4124,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountFeaturesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeatureWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountMilestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneWhereInput
   }
 
 
@@ -4107,6 +4340,64 @@ export namespace Prisma {
    */
   export type FeatureCountOutputTypeCountFeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeatureLinkWhereInput
+  }
+
+
+  /**
+   * Count Type MilestoneCountOutputType
+   */
+
+  export type MilestoneCountOutputType = {
+    issues: number
+    features: number
+    dependsOn: number
+    blocking: number
+  }
+
+  export type MilestoneCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    issues?: boolean | MilestoneCountOutputTypeCountIssuesArgs
+    features?: boolean | MilestoneCountOutputTypeCountFeaturesArgs
+    dependsOn?: boolean | MilestoneCountOutputTypeCountDependsOnArgs
+    blocking?: boolean | MilestoneCountOutputTypeCountBlockingArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MilestoneCountOutputType without action
+   */
+  export type MilestoneCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneCountOutputType
+     */
+    select?: MilestoneCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MilestoneCountOutputType without action
+   */
+  export type MilestoneCountOutputTypeCountIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueWhereInput
+  }
+
+  /**
+   * MilestoneCountOutputType without action
+   */
+  export type MilestoneCountOutputTypeCountFeaturesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
+  }
+
+  /**
+   * MilestoneCountOutputType without action
+   */
+  export type MilestoneCountOutputTypeCountDependsOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneDependencyWhereInput
+  }
+
+  /**
+   * MilestoneCountOutputType without action
+   */
+  export type MilestoneCountOutputTypeCountBlockingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneDependencyWhereInput
   }
 
 
@@ -4322,8 +4613,9 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
-    ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
-    Feature?: boolean | User$FeatureArgs<ExtArgs>
+    activityFeed?: boolean | User$activityFeedArgs<ExtArgs>
+    feature?: boolean | User$featureArgs<ExtArgs>
+    milestone?: boolean | User$milestoneArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4377,8 +4669,9 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
-    ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
-    Feature?: boolean | User$FeatureArgs<ExtArgs>
+    activityFeed?: boolean | User$activityFeedArgs<ExtArgs>
+    feature?: boolean | User$featureArgs<ExtArgs>
+    milestone?: boolean | User$milestoneArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4399,8 +4692,9 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
-      ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
-      Feature: Prisma.$FeaturePayload<ExtArgs>[]
+      activityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
+      feature: Prisma.$FeaturePayload<ExtArgs>[]
+      milestone: Prisma.$MilestonePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4818,8 +5112,9 @@ export namespace Prisma {
     issue<T extends User$issueArgs<ExtArgs> = {}>(args?: Subset<T, User$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends User$assetArgs<ExtArgs> = {}>(args?: Subset<T, User$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends User$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, User$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ActivityFeed<T extends User$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, User$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Feature<T extends User$FeatureArgs<ExtArgs> = {}>(args?: Subset<T, User$FeatureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activityFeed<T extends User$activityFeedArgs<ExtArgs> = {}>(args?: Subset<T, User$activityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feature<T extends User$featureArgs<ExtArgs> = {}>(args?: Subset<T, User$featureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    milestone<T extends User$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, User$milestoneArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5529,9 +5824,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.ActivityFeed
+   * User.activityFeed
    */
-  export type User$ActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$activityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ActivityFeed
      */
@@ -5553,9 +5848,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.Feature
+   * User.feature
    */
-  export type User$FeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$featureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Feature
      */
@@ -5574,6 +5869,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * User.milestone
+   */
+  export type User$milestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    where?: MilestoneWhereInput
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    cursor?: MilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
   }
 
   /**
@@ -9106,10 +9425,12 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
-    ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
-    Feature?: boolean | Organization$FeatureArgs<ExtArgs>
-    FeatureDependency?: boolean | Organization$FeatureDependencyArgs<ExtArgs>
-    FeatureLink?: boolean | Organization$FeatureLinkArgs<ExtArgs>
+    activityFeed?: boolean | Organization$activityFeedArgs<ExtArgs>
+    feature?: boolean | Organization$featureArgs<ExtArgs>
+    featureDependency?: boolean | Organization$featureDependencyArgs<ExtArgs>
+    featureLink?: boolean | Organization$featureLinkArgs<ExtArgs>
+    milestone?: boolean | Organization$milestoneArgs<ExtArgs>
+    milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -9150,10 +9471,12 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
-    ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
-    Feature?: boolean | Organization$FeatureArgs<ExtArgs>
-    FeatureDependency?: boolean | Organization$FeatureDependencyArgs<ExtArgs>
-    FeatureLink?: boolean | Organization$FeatureLinkArgs<ExtArgs>
+    activityFeed?: boolean | Organization$activityFeedArgs<ExtArgs>
+    feature?: boolean | Organization$featureArgs<ExtArgs>
+    featureDependency?: boolean | Organization$featureDependencyArgs<ExtArgs>
+    featureLink?: boolean | Organization$featureLinkArgs<ExtArgs>
+    milestone?: boolean | Organization$milestoneArgs<ExtArgs>
+    milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9170,10 +9493,12 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
-      ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
-      Feature: Prisma.$FeaturePayload<ExtArgs>[]
-      FeatureDependency: Prisma.$FeatureDependencyPayload<ExtArgs>[]
-      FeatureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
+      activityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
+      feature: Prisma.$FeaturePayload<ExtArgs>[]
+      featureDependency: Prisma.$FeatureDependencyPayload<ExtArgs>[]
+      featureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
+      milestone: Prisma.$MilestonePayload<ExtArgs>[]
+      milestoneDependency: Prisma.$MilestoneDependencyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9584,10 +9909,12 @@ export namespace Prisma {
     issue<T extends Organization$issueArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends Organization$assetArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends Organization$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, Organization$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ActivityFeed<T extends Organization$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    Feature<T extends Organization$FeatureArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    FeatureDependency<T extends Organization$FeatureDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    FeatureLink<T extends Organization$FeatureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activityFeed<T extends Organization$activityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Organization$activityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feature<T extends Organization$featureArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    featureDependency<T extends Organization$featureDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    featureLink<T extends Organization$featureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    milestone<T extends Organization$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, Organization$milestoneArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    milestoneDependency<T extends Organization$milestoneDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$milestoneDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10203,9 +10530,9 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.ActivityFeed
+   * Organization.activityFeed
    */
-  export type Organization$ActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Organization$activityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the ActivityFeed
      */
@@ -10227,9 +10554,9 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.Feature
+   * Organization.feature
    */
-  export type Organization$FeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Organization$featureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Feature
      */
@@ -10251,9 +10578,9 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.FeatureDependency
+   * Organization.featureDependency
    */
-  export type Organization$FeatureDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Organization$featureDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the FeatureDependency
      */
@@ -10275,9 +10602,9 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.FeatureLink
+   * Organization.featureLink
    */
-  export type Organization$FeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Organization$featureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the FeatureLink
      */
@@ -10296,6 +10623,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.milestone
+   */
+  export type Organization$milestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    where?: MilestoneWhereInput
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    cursor?: MilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.milestoneDependency
+   */
+  export type Organization$milestoneDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    where?: MilestoneDependencyWhereInput
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    cursor?: MilestoneDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
   }
 
   /**
@@ -16158,6 +16533,7 @@ export namespace Prisma {
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
     features?: boolean | Project$featuresArgs<ExtArgs>
+    milestones?: boolean | Project$milestonesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -16237,6 +16613,7 @@ export namespace Prisma {
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
     features?: boolean | Project$featuresArgs<ExtArgs>
+    milestones?: boolean | Project$milestonesArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16261,6 +16638,7 @@ export namespace Prisma {
       publicRoadmaps: Prisma.$PublicRoadmapPayload<ExtArgs>[]
       waitlists: Prisma.$WaitlistPayload<ExtArgs>[]
       features: Prisma.$FeaturePayload<ExtArgs>[]
+      milestones: Prisma.$MilestonePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16682,6 +17060,7 @@ export namespace Prisma {
     publicRoadmaps<T extends Project$publicRoadmapsArgs<ExtArgs> = {}>(args?: Subset<T, Project$publicRoadmapsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublicRoadmapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlists<T extends Project$waitlistsArgs<ExtArgs> = {}>(args?: Subset<T, Project$waitlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     features<T extends Project$featuresArgs<ExtArgs> = {}>(args?: Subset<T, Project$featuresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    milestones<T extends Project$milestonesArgs<ExtArgs> = {}>(args?: Subset<T, Project$milestonesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17298,6 +17677,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Project.milestones
+   */
+  export type Project$milestonesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    where?: MilestoneWhereInput
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    cursor?: MilestoneWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
   }
 
   /**
@@ -18847,6 +19250,7 @@ export namespace Prisma {
     sourceFeedbackId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
@@ -18870,6 +19274,7 @@ export namespace Prisma {
     sourceFeedbackId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
@@ -18893,6 +19298,7 @@ export namespace Prisma {
     sourceFeedbackId?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
@@ -18920,16 +19326,19 @@ export namespace Prisma {
   export type IssueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }
   export type IssueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }
   export type IssueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
   }
 
@@ -18938,6 +19347,7 @@ export namespace Prisma {
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       project: Prisma.$ProjectPayload<ExtArgs>
+      milestone: Prisma.$MilestonePayload<ExtArgs> | null
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -19354,6 +19764,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    milestone<T extends Issue$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, Issue$milestoneArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignedTo<T extends Issue$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Issue$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -19794,6 +20205,25 @@ export namespace Prisma {
      * Limit how many Issues to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Issue.milestone
+   */
+  export type Issue$milestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    where?: MilestoneWhereInput
   }
 
   /**
@@ -33110,6 +33540,7 @@ export namespace Prisma {
     organizationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    milestoneId: string | null
   }
 
   export type FeatureMaxAggregateOutputType = {
@@ -33128,6 +33559,7 @@ export namespace Prisma {
     organizationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    milestoneId: string | null
   }
 
   export type FeatureCountAggregateOutputType = {
@@ -33146,6 +33578,7 @@ export namespace Prisma {
     organizationId: number
     createdAt: number
     updatedAt: number
+    milestoneId: number
     _all: number
   }
 
@@ -33176,6 +33609,7 @@ export namespace Prisma {
     organizationId?: true
     createdAt?: true
     updatedAt?: true
+    milestoneId?: true
   }
 
   export type FeatureMaxAggregateInputType = {
@@ -33194,6 +33628,7 @@ export namespace Prisma {
     organizationId?: true
     createdAt?: true
     updatedAt?: true
+    milestoneId?: true
   }
 
   export type FeatureCountAggregateInputType = {
@@ -33212,6 +33647,7 @@ export namespace Prisma {
     organizationId?: true
     createdAt?: true
     updatedAt?: true
+    milestoneId?: true
     _all?: true
   }
 
@@ -33317,6 +33753,7 @@ export namespace Prisma {
     organizationId: string
     createdAt: Date
     updatedAt: Date
+    milestoneId: string | null
     _count: FeatureCountAggregateOutputType | null
     _avg: FeatureAvgAggregateOutputType | null
     _sum: FeatureSumAggregateOutputType | null
@@ -33354,11 +33791,13 @@ export namespace Prisma {
     organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    milestoneId?: boolean
     parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
     subFeatures?: boolean | Feature$subFeaturesArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
     dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
     FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
@@ -33381,10 +33820,12 @@ export namespace Prisma {
     organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    milestoneId?: boolean
     parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
 
   export type FeatureSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33403,10 +33844,12 @@ export namespace Prisma {
     organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    milestoneId?: boolean
     parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
 
   export type FeatureSelectScalar = {
@@ -33425,15 +33868,17 @@ export namespace Prisma {
     organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    milestoneId?: boolean
   }
 
-  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "projectId" | "phase" | "businessValue" | "estimatedEffort" | "startDate" | "endDate" | "priority" | "assignedToId" | "parentFeatureId" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["feature"]>
+  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "projectId" | "phase" | "businessValue" | "estimatedEffort" | "startDate" | "endDate" | "priority" | "assignedToId" | "parentFeatureId" | "organizationId" | "createdAt" | "updatedAt" | "milestoneId", ExtArgs["result"]["feature"]>
   export type FeatureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
     subFeatures?: boolean | Feature$subFeaturesArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
     dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
     FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
@@ -33444,12 +33889,14 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
   }
   export type FeatureIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    milestone?: boolean | Feature$milestoneArgs<ExtArgs>
   }
 
   export type $FeaturePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -33460,6 +33907,7 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
       project: Prisma.$ProjectPayload<ExtArgs>
+      milestone: Prisma.$MilestonePayload<ExtArgs> | null
       dependencies: Prisma.$FeatureDependencyPayload<ExtArgs>[]
       dependentOn: Prisma.$FeatureDependencyPayload<ExtArgs>[]
       FeatureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
@@ -33480,6 +33928,7 @@ export namespace Prisma {
       organizationId: string
       createdAt: Date
       updatedAt: Date
+      milestoneId: string | null
     }, ExtArgs["result"]["feature"]>
     composites: {}
   }
@@ -33879,6 +34328,7 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignedTo<T extends Feature$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Feature$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    milestone<T extends Feature$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, Feature$milestoneArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     dependencies<T extends Feature$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dependentOn<T extends Feature$dependentOnArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependentOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     FeatureLink<T extends Feature$FeatureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Feature$FeatureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -33926,6 +34376,7 @@ export namespace Prisma {
     readonly organizationId: FieldRef<"Feature", 'String'>
     readonly createdAt: FieldRef<"Feature", 'DateTime'>
     readonly updatedAt: FieldRef<"Feature", 'DateTime'>
+    readonly milestoneId: FieldRef<"Feature", 'String'>
   }
     
 
@@ -34381,6 +34832,25 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Feature.milestone
+   */
+  export type Feature$milestoneArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    where?: MilestoneWhereInput
   }
 
   /**
@@ -36615,6 +37085,2365 @@ export namespace Prisma {
 
 
   /**
+   * Model Milestone
+   */
+
+  export type AggregateMilestone = {
+    _count: MilestoneCountAggregateOutputType | null
+    _min: MilestoneMinAggregateOutputType | null
+    _max: MilestoneMaxAggregateOutputType | null
+  }
+
+  export type MilestoneMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.MilestoneStatus | null
+    startDate: Date | null
+    endDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    projectId: string | null
+    organizationId: string | null
+    ownerId: string | null
+  }
+
+  export type MilestoneMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.MilestoneStatus | null
+    startDate: Date | null
+    endDate: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    projectId: string | null
+    organizationId: string | null
+    ownerId: string | null
+  }
+
+  export type MilestoneCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    status: number
+    startDate: number
+    endDate: number
+    createdAt: number
+    updatedAt: number
+    projectId: number
+    organizationId: number
+    ownerId: number
+    _all: number
+  }
+
+
+  export type MilestoneMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    startDate?: true
+    endDate?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+    organizationId?: true
+    ownerId?: true
+  }
+
+  export type MilestoneMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    startDate?: true
+    endDate?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+    organizationId?: true
+    ownerId?: true
+  }
+
+  export type MilestoneCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    status?: true
+    startDate?: true
+    endDate?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+    organizationId?: true
+    ownerId?: true
+    _all?: true
+  }
+
+  export type MilestoneAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Milestone to aggregate.
+     */
+    where?: MilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Milestones to fetch.
+     */
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Milestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Milestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Milestones
+    **/
+    _count?: true | MilestoneCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MilestoneMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MilestoneMaxAggregateInputType
+  }
+
+  export type GetMilestoneAggregateType<T extends MilestoneAggregateArgs> = {
+        [P in keyof T & keyof AggregateMilestone]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMilestone[P]>
+      : GetScalarType<T[P], AggregateMilestone[P]>
+  }
+
+
+
+
+  export type MilestoneGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneWhereInput
+    orderBy?: MilestoneOrderByWithAggregationInput | MilestoneOrderByWithAggregationInput[]
+    by: MilestoneScalarFieldEnum[] | MilestoneScalarFieldEnum
+    having?: MilestoneScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MilestoneCountAggregateInputType | true
+    _min?: MilestoneMinAggregateInputType
+    _max?: MilestoneMaxAggregateInputType
+  }
+
+  export type MilestoneGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    status: $Enums.MilestoneStatus
+    startDate: Date | null
+    endDate: Date | null
+    createdAt: Date
+    updatedAt: Date
+    projectId: string
+    organizationId: string
+    ownerId: string | null
+    _count: MilestoneCountAggregateOutputType | null
+    _min: MilestoneMinAggregateOutputType | null
+    _max: MilestoneMaxAggregateOutputType | null
+  }
+
+  type GetMilestoneGroupByPayload<T extends MilestoneGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MilestoneGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MilestoneGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MilestoneGroupByOutputType[P]>
+            : GetScalarType<T[P], MilestoneGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MilestoneSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    organizationId?: boolean
+    ownerId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+    issues?: boolean | Milestone$issuesArgs<ExtArgs>
+    features?: boolean | Milestone$featuresArgs<ExtArgs>
+    dependsOn?: boolean | Milestone$dependsOnArgs<ExtArgs>
+    blocking?: boolean | Milestone$blockingArgs<ExtArgs>
+    _count?: boolean | MilestoneCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["milestone"]>
+
+  export type MilestoneSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    organizationId?: boolean
+    ownerId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+  }, ExtArgs["result"]["milestone"]>
+
+  export type MilestoneSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    organizationId?: boolean
+    ownerId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+  }, ExtArgs["result"]["milestone"]>
+
+  export type MilestoneSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    organizationId?: boolean
+    ownerId?: boolean
+  }
+
+  export type MilestoneOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "status" | "startDate" | "endDate" | "createdAt" | "updatedAt" | "projectId" | "organizationId" | "ownerId", ExtArgs["result"]["milestone"]>
+  export type MilestoneInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+    issues?: boolean | Milestone$issuesArgs<ExtArgs>
+    features?: boolean | Milestone$featuresArgs<ExtArgs>
+    dependsOn?: boolean | Milestone$dependsOnArgs<ExtArgs>
+    blocking?: boolean | Milestone$blockingArgs<ExtArgs>
+    _count?: boolean | MilestoneCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type MilestoneIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+  }
+  export type MilestoneIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    owner?: boolean | Milestone$ownerArgs<ExtArgs>
+  }
+
+  export type $MilestonePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Milestone"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      owner: Prisma.$UserPayload<ExtArgs> | null
+      issues: Prisma.$IssuePayload<ExtArgs>[]
+      features: Prisma.$FeaturePayload<ExtArgs>[]
+      dependsOn: Prisma.$MilestoneDependencyPayload<ExtArgs>[]
+      blocking: Prisma.$MilestoneDependencyPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      status: $Enums.MilestoneStatus
+      startDate: Date | null
+      endDate: Date | null
+      createdAt: Date
+      updatedAt: Date
+      projectId: string
+      organizationId: string
+      ownerId: string | null
+    }, ExtArgs["result"]["milestone"]>
+    composites: {}
+  }
+
+  type MilestoneGetPayload<S extends boolean | null | undefined | MilestoneDefaultArgs> = $Result.GetResult<Prisma.$MilestonePayload, S>
+
+  type MilestoneCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MilestoneFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MilestoneCountAggregateInputType | true
+    }
+
+  export interface MilestoneDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Milestone'], meta: { name: 'Milestone' } }
+    /**
+     * Find zero or one Milestone that matches the filter.
+     * @param {MilestoneFindUniqueArgs} args - Arguments to find a Milestone
+     * @example
+     * // Get one Milestone
+     * const milestone = await prisma.milestone.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MilestoneFindUniqueArgs>(args: SelectSubset<T, MilestoneFindUniqueArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Milestone that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MilestoneFindUniqueOrThrowArgs} args - Arguments to find a Milestone
+     * @example
+     * // Get one Milestone
+     * const milestone = await prisma.milestone.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MilestoneFindUniqueOrThrowArgs>(args: SelectSubset<T, MilestoneFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Milestone that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneFindFirstArgs} args - Arguments to find a Milestone
+     * @example
+     * // Get one Milestone
+     * const milestone = await prisma.milestone.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MilestoneFindFirstArgs>(args?: SelectSubset<T, MilestoneFindFirstArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Milestone that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneFindFirstOrThrowArgs} args - Arguments to find a Milestone
+     * @example
+     * // Get one Milestone
+     * const milestone = await prisma.milestone.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MilestoneFindFirstOrThrowArgs>(args?: SelectSubset<T, MilestoneFindFirstOrThrowArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Milestones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Milestones
+     * const milestones = await prisma.milestone.findMany()
+     * 
+     * // Get first 10 Milestones
+     * const milestones = await prisma.milestone.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const milestoneWithIdOnly = await prisma.milestone.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MilestoneFindManyArgs>(args?: SelectSubset<T, MilestoneFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Milestone.
+     * @param {MilestoneCreateArgs} args - Arguments to create a Milestone.
+     * @example
+     * // Create one Milestone
+     * const Milestone = await prisma.milestone.create({
+     *   data: {
+     *     // ... data to create a Milestone
+     *   }
+     * })
+     * 
+     */
+    create<T extends MilestoneCreateArgs>(args: SelectSubset<T, MilestoneCreateArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Milestones.
+     * @param {MilestoneCreateManyArgs} args - Arguments to create many Milestones.
+     * @example
+     * // Create many Milestones
+     * const milestone = await prisma.milestone.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MilestoneCreateManyArgs>(args?: SelectSubset<T, MilestoneCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Milestones and returns the data saved in the database.
+     * @param {MilestoneCreateManyAndReturnArgs} args - Arguments to create many Milestones.
+     * @example
+     * // Create many Milestones
+     * const milestone = await prisma.milestone.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Milestones and only return the `id`
+     * const milestoneWithIdOnly = await prisma.milestone.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MilestoneCreateManyAndReturnArgs>(args?: SelectSubset<T, MilestoneCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Milestone.
+     * @param {MilestoneDeleteArgs} args - Arguments to delete one Milestone.
+     * @example
+     * // Delete one Milestone
+     * const Milestone = await prisma.milestone.delete({
+     *   where: {
+     *     // ... filter to delete one Milestone
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MilestoneDeleteArgs>(args: SelectSubset<T, MilestoneDeleteArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Milestone.
+     * @param {MilestoneUpdateArgs} args - Arguments to update one Milestone.
+     * @example
+     * // Update one Milestone
+     * const milestone = await prisma.milestone.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MilestoneUpdateArgs>(args: SelectSubset<T, MilestoneUpdateArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Milestones.
+     * @param {MilestoneDeleteManyArgs} args - Arguments to filter Milestones to delete.
+     * @example
+     * // Delete a few Milestones
+     * const { count } = await prisma.milestone.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MilestoneDeleteManyArgs>(args?: SelectSubset<T, MilestoneDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Milestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Milestones
+     * const milestone = await prisma.milestone.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MilestoneUpdateManyArgs>(args: SelectSubset<T, MilestoneUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Milestones and returns the data updated in the database.
+     * @param {MilestoneUpdateManyAndReturnArgs} args - Arguments to update many Milestones.
+     * @example
+     * // Update many Milestones
+     * const milestone = await prisma.milestone.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Milestones and only return the `id`
+     * const milestoneWithIdOnly = await prisma.milestone.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MilestoneUpdateManyAndReturnArgs>(args: SelectSubset<T, MilestoneUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Milestone.
+     * @param {MilestoneUpsertArgs} args - Arguments to update or create a Milestone.
+     * @example
+     * // Update or create a Milestone
+     * const milestone = await prisma.milestone.upsert({
+     *   create: {
+     *     // ... data to create a Milestone
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Milestone we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MilestoneUpsertArgs>(args: SelectSubset<T, MilestoneUpsertArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Milestones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneCountArgs} args - Arguments to filter Milestones to count.
+     * @example
+     * // Count the number of Milestones
+     * const count = await prisma.milestone.count({
+     *   where: {
+     *     // ... the filter for the Milestones we want to count
+     *   }
+     * })
+    **/
+    count<T extends MilestoneCountArgs>(
+      args?: Subset<T, MilestoneCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MilestoneCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Milestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MilestoneAggregateArgs>(args: Subset<T, MilestoneAggregateArgs>): Prisma.PrismaPromise<GetMilestoneAggregateType<T>>
+
+    /**
+     * Group by Milestone.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MilestoneGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MilestoneGroupByArgs['orderBy'] }
+        : { orderBy?: MilestoneGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MilestoneGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMilestoneGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Milestone model
+   */
+  readonly fields: MilestoneFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Milestone.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MilestoneClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    owner<T extends Milestone$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Milestone$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    issues<T extends Milestone$issuesArgs<ExtArgs> = {}>(args?: Subset<T, Milestone$issuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    features<T extends Milestone$featuresArgs<ExtArgs> = {}>(args?: Subset<T, Milestone$featuresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dependsOn<T extends Milestone$dependsOnArgs<ExtArgs> = {}>(args?: Subset<T, Milestone$dependsOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    blocking<T extends Milestone$blockingArgs<ExtArgs> = {}>(args?: Subset<T, Milestone$blockingArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Milestone model
+   */
+  interface MilestoneFieldRefs {
+    readonly id: FieldRef<"Milestone", 'String'>
+    readonly name: FieldRef<"Milestone", 'String'>
+    readonly description: FieldRef<"Milestone", 'String'>
+    readonly status: FieldRef<"Milestone", 'MilestoneStatus'>
+    readonly startDate: FieldRef<"Milestone", 'DateTime'>
+    readonly endDate: FieldRef<"Milestone", 'DateTime'>
+    readonly createdAt: FieldRef<"Milestone", 'DateTime'>
+    readonly updatedAt: FieldRef<"Milestone", 'DateTime'>
+    readonly projectId: FieldRef<"Milestone", 'String'>
+    readonly organizationId: FieldRef<"Milestone", 'String'>
+    readonly ownerId: FieldRef<"Milestone", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Milestone findUnique
+   */
+  export type MilestoneFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which Milestone to fetch.
+     */
+    where: MilestoneWhereUniqueInput
+  }
+
+  /**
+   * Milestone findUniqueOrThrow
+   */
+  export type MilestoneFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which Milestone to fetch.
+     */
+    where: MilestoneWhereUniqueInput
+  }
+
+  /**
+   * Milestone findFirst
+   */
+  export type MilestoneFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which Milestone to fetch.
+     */
+    where?: MilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Milestones to fetch.
+     */
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Milestones.
+     */
+    cursor?: MilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Milestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Milestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Milestones.
+     */
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone findFirstOrThrow
+   */
+  export type MilestoneFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which Milestone to fetch.
+     */
+    where?: MilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Milestones to fetch.
+     */
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Milestones.
+     */
+    cursor?: MilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Milestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Milestones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Milestones.
+     */
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone findMany
+   */
+  export type MilestoneFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter, which Milestones to fetch.
+     */
+    where?: MilestoneWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Milestones to fetch.
+     */
+    orderBy?: MilestoneOrderByWithRelationInput | MilestoneOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Milestones.
+     */
+    cursor?: MilestoneWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Milestones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Milestones.
+     */
+    skip?: number
+    distinct?: MilestoneScalarFieldEnum | MilestoneScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone create
+   */
+  export type MilestoneCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Milestone.
+     */
+    data: XOR<MilestoneCreateInput, MilestoneUncheckedCreateInput>
+  }
+
+  /**
+   * Milestone createMany
+   */
+  export type MilestoneCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Milestones.
+     */
+    data: MilestoneCreateManyInput | MilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Milestone createManyAndReturn
+   */
+  export type MilestoneCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * The data used to create many Milestones.
+     */
+    data: MilestoneCreateManyInput | MilestoneCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Milestone update
+   */
+  export type MilestoneUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Milestone.
+     */
+    data: XOR<MilestoneUpdateInput, MilestoneUncheckedUpdateInput>
+    /**
+     * Choose, which Milestone to update.
+     */
+    where: MilestoneWhereUniqueInput
+  }
+
+  /**
+   * Milestone updateMany
+   */
+  export type MilestoneUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Milestones.
+     */
+    data: XOR<MilestoneUpdateManyMutationInput, MilestoneUncheckedUpdateManyInput>
+    /**
+     * Filter which Milestones to update
+     */
+    where?: MilestoneWhereInput
+    /**
+     * Limit how many Milestones to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Milestone updateManyAndReturn
+   */
+  export type MilestoneUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * The data used to update Milestones.
+     */
+    data: XOR<MilestoneUpdateManyMutationInput, MilestoneUncheckedUpdateManyInput>
+    /**
+     * Filter which Milestones to update
+     */
+    where?: MilestoneWhereInput
+    /**
+     * Limit how many Milestones to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Milestone upsert
+   */
+  export type MilestoneUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Milestone to update in case it exists.
+     */
+    where: MilestoneWhereUniqueInput
+    /**
+     * In case the Milestone found by the `where` argument doesn't exist, create a new Milestone with this data.
+     */
+    create: XOR<MilestoneCreateInput, MilestoneUncheckedCreateInput>
+    /**
+     * In case the Milestone was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MilestoneUpdateInput, MilestoneUncheckedUpdateInput>
+  }
+
+  /**
+   * Milestone delete
+   */
+  export type MilestoneDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+    /**
+     * Filter which Milestone to delete.
+     */
+    where: MilestoneWhereUniqueInput
+  }
+
+  /**
+   * Milestone deleteMany
+   */
+  export type MilestoneDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Milestones to delete
+     */
+    where?: MilestoneWhereInput
+    /**
+     * Limit how many Milestones to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Milestone.owner
+   */
+  export type Milestone$ownerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Milestone.issues
+   */
+  export type Milestone$issuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Issue
+     */
+    select?: IssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Issue
+     */
+    omit?: IssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueInclude<ExtArgs> | null
+    where?: IssueWhereInput
+    orderBy?: IssueOrderByWithRelationInput | IssueOrderByWithRelationInput[]
+    cursor?: IssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueScalarFieldEnum | IssueScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone.features
+   */
+  export type Milestone$featuresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    cursor?: FeatureWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone.dependsOn
+   */
+  export type Milestone$dependsOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    where?: MilestoneDependencyWhereInput
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    cursor?: MilestoneDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone.blocking
+   */
+  export type Milestone$blockingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    where?: MilestoneDependencyWhereInput
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    cursor?: MilestoneDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Milestone without action
+   */
+  export type MilestoneDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Milestone
+     */
+    select?: MilestoneSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Milestone
+     */
+    omit?: MilestoneOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MilestoneDependency
+   */
+
+  export type AggregateMilestoneDependency = {
+    _count: MilestoneDependencyCountAggregateOutputType | null
+    _min: MilestoneDependencyMinAggregateOutputType | null
+    _max: MilestoneDependencyMaxAggregateOutputType | null
+  }
+
+  export type MilestoneDependencyMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    milestoneId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type MilestoneDependencyMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    milestoneId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type MilestoneDependencyCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    milestoneId: number
+    dependencyId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MilestoneDependencyMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    milestoneId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type MilestoneDependencyMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    milestoneId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type MilestoneDependencyCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    milestoneId?: true
+    dependencyId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MilestoneDependencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MilestoneDependency to aggregate.
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MilestoneDependencies to fetch.
+     */
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MilestoneDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MilestoneDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MilestoneDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MilestoneDependencies
+    **/
+    _count?: true | MilestoneDependencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MilestoneDependencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MilestoneDependencyMaxAggregateInputType
+  }
+
+  export type GetMilestoneDependencyAggregateType<T extends MilestoneDependencyAggregateArgs> = {
+        [P in keyof T & keyof AggregateMilestoneDependency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMilestoneDependency[P]>
+      : GetScalarType<T[P], AggregateMilestoneDependency[P]>
+  }
+
+
+
+
+  export type MilestoneDependencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MilestoneDependencyWhereInput
+    orderBy?: MilestoneDependencyOrderByWithAggregationInput | MilestoneDependencyOrderByWithAggregationInput[]
+    by: MilestoneDependencyScalarFieldEnum[] | MilestoneDependencyScalarFieldEnum
+    having?: MilestoneDependencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MilestoneDependencyCountAggregateInputType | true
+    _min?: MilestoneDependencyMinAggregateInputType
+    _max?: MilestoneDependencyMaxAggregateInputType
+  }
+
+  export type MilestoneDependencyGroupByOutputType = {
+    id: string
+    organizationId: string
+    milestoneId: string
+    dependencyId: string
+    createdAt: Date
+    _count: MilestoneDependencyCountAggregateOutputType | null
+    _min: MilestoneDependencyMinAggregateOutputType | null
+    _max: MilestoneDependencyMaxAggregateOutputType | null
+  }
+
+  type GetMilestoneDependencyGroupByPayload<T extends MilestoneDependencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MilestoneDependencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MilestoneDependencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MilestoneDependencyGroupByOutputType[P]>
+            : GetScalarType<T[P], MilestoneDependencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MilestoneDependencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    milestoneId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["milestoneDependency"]>
+
+  export type MilestoneDependencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    milestoneId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["milestoneDependency"]>
+
+  export type MilestoneDependencySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    milestoneId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["milestoneDependency"]>
+
+  export type MilestoneDependencySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    milestoneId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+  }
+
+  export type MilestoneDependencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "milestoneId" | "dependencyId" | "createdAt", ExtArgs["result"]["milestoneDependency"]>
+  export type MilestoneDependencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }
+  export type MilestoneDependencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }
+  export type MilestoneDependencyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    milestone?: boolean | MilestoneDefaultArgs<ExtArgs>
+    dependency?: boolean | MilestoneDefaultArgs<ExtArgs>
+  }
+
+  export type $MilestoneDependencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MilestoneDependency"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      milestone: Prisma.$MilestonePayload<ExtArgs>
+      dependency: Prisma.$MilestonePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      milestoneId: string
+      dependencyId: string
+      createdAt: Date
+    }, ExtArgs["result"]["milestoneDependency"]>
+    composites: {}
+  }
+
+  type MilestoneDependencyGetPayload<S extends boolean | null | undefined | MilestoneDependencyDefaultArgs> = $Result.GetResult<Prisma.$MilestoneDependencyPayload, S>
+
+  type MilestoneDependencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MilestoneDependencyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MilestoneDependencyCountAggregateInputType | true
+    }
+
+  export interface MilestoneDependencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MilestoneDependency'], meta: { name: 'MilestoneDependency' } }
+    /**
+     * Find zero or one MilestoneDependency that matches the filter.
+     * @param {MilestoneDependencyFindUniqueArgs} args - Arguments to find a MilestoneDependency
+     * @example
+     * // Get one MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MilestoneDependencyFindUniqueArgs>(args: SelectSubset<T, MilestoneDependencyFindUniqueArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MilestoneDependency that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MilestoneDependencyFindUniqueOrThrowArgs} args - Arguments to find a MilestoneDependency
+     * @example
+     * // Get one MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MilestoneDependencyFindUniqueOrThrowArgs>(args: SelectSubset<T, MilestoneDependencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MilestoneDependency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyFindFirstArgs} args - Arguments to find a MilestoneDependency
+     * @example
+     * // Get one MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MilestoneDependencyFindFirstArgs>(args?: SelectSubset<T, MilestoneDependencyFindFirstArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MilestoneDependency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyFindFirstOrThrowArgs} args - Arguments to find a MilestoneDependency
+     * @example
+     * // Get one MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MilestoneDependencyFindFirstOrThrowArgs>(args?: SelectSubset<T, MilestoneDependencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MilestoneDependencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MilestoneDependencies
+     * const milestoneDependencies = await prisma.milestoneDependency.findMany()
+     * 
+     * // Get first 10 MilestoneDependencies
+     * const milestoneDependencies = await prisma.milestoneDependency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const milestoneDependencyWithIdOnly = await prisma.milestoneDependency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MilestoneDependencyFindManyArgs>(args?: SelectSubset<T, MilestoneDependencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MilestoneDependency.
+     * @param {MilestoneDependencyCreateArgs} args - Arguments to create a MilestoneDependency.
+     * @example
+     * // Create one MilestoneDependency
+     * const MilestoneDependency = await prisma.milestoneDependency.create({
+     *   data: {
+     *     // ... data to create a MilestoneDependency
+     *   }
+     * })
+     * 
+     */
+    create<T extends MilestoneDependencyCreateArgs>(args: SelectSubset<T, MilestoneDependencyCreateArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MilestoneDependencies.
+     * @param {MilestoneDependencyCreateManyArgs} args - Arguments to create many MilestoneDependencies.
+     * @example
+     * // Create many MilestoneDependencies
+     * const milestoneDependency = await prisma.milestoneDependency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MilestoneDependencyCreateManyArgs>(args?: SelectSubset<T, MilestoneDependencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MilestoneDependencies and returns the data saved in the database.
+     * @param {MilestoneDependencyCreateManyAndReturnArgs} args - Arguments to create many MilestoneDependencies.
+     * @example
+     * // Create many MilestoneDependencies
+     * const milestoneDependency = await prisma.milestoneDependency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MilestoneDependencies and only return the `id`
+     * const milestoneDependencyWithIdOnly = await prisma.milestoneDependency.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MilestoneDependencyCreateManyAndReturnArgs>(args?: SelectSubset<T, MilestoneDependencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MilestoneDependency.
+     * @param {MilestoneDependencyDeleteArgs} args - Arguments to delete one MilestoneDependency.
+     * @example
+     * // Delete one MilestoneDependency
+     * const MilestoneDependency = await prisma.milestoneDependency.delete({
+     *   where: {
+     *     // ... filter to delete one MilestoneDependency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MilestoneDependencyDeleteArgs>(args: SelectSubset<T, MilestoneDependencyDeleteArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MilestoneDependency.
+     * @param {MilestoneDependencyUpdateArgs} args - Arguments to update one MilestoneDependency.
+     * @example
+     * // Update one MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MilestoneDependencyUpdateArgs>(args: SelectSubset<T, MilestoneDependencyUpdateArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MilestoneDependencies.
+     * @param {MilestoneDependencyDeleteManyArgs} args - Arguments to filter MilestoneDependencies to delete.
+     * @example
+     * // Delete a few MilestoneDependencies
+     * const { count } = await prisma.milestoneDependency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MilestoneDependencyDeleteManyArgs>(args?: SelectSubset<T, MilestoneDependencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MilestoneDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MilestoneDependencies
+     * const milestoneDependency = await prisma.milestoneDependency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MilestoneDependencyUpdateManyArgs>(args: SelectSubset<T, MilestoneDependencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MilestoneDependencies and returns the data updated in the database.
+     * @param {MilestoneDependencyUpdateManyAndReturnArgs} args - Arguments to update many MilestoneDependencies.
+     * @example
+     * // Update many MilestoneDependencies
+     * const milestoneDependency = await prisma.milestoneDependency.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MilestoneDependencies and only return the `id`
+     * const milestoneDependencyWithIdOnly = await prisma.milestoneDependency.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MilestoneDependencyUpdateManyAndReturnArgs>(args: SelectSubset<T, MilestoneDependencyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MilestoneDependency.
+     * @param {MilestoneDependencyUpsertArgs} args - Arguments to update or create a MilestoneDependency.
+     * @example
+     * // Update or create a MilestoneDependency
+     * const milestoneDependency = await prisma.milestoneDependency.upsert({
+     *   create: {
+     *     // ... data to create a MilestoneDependency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MilestoneDependency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MilestoneDependencyUpsertArgs>(args: SelectSubset<T, MilestoneDependencyUpsertArgs<ExtArgs>>): Prisma__MilestoneDependencyClient<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MilestoneDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyCountArgs} args - Arguments to filter MilestoneDependencies to count.
+     * @example
+     * // Count the number of MilestoneDependencies
+     * const count = await prisma.milestoneDependency.count({
+     *   where: {
+     *     // ... the filter for the MilestoneDependencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends MilestoneDependencyCountArgs>(
+      args?: Subset<T, MilestoneDependencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MilestoneDependencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MilestoneDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MilestoneDependencyAggregateArgs>(args: Subset<T, MilestoneDependencyAggregateArgs>): Prisma.PrismaPromise<GetMilestoneDependencyAggregateType<T>>
+
+    /**
+     * Group by MilestoneDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MilestoneDependencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MilestoneDependencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MilestoneDependencyGroupByArgs['orderBy'] }
+        : { orderBy?: MilestoneDependencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MilestoneDependencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMilestoneDependencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MilestoneDependency model
+   */
+  readonly fields: MilestoneDependencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MilestoneDependency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MilestoneDependencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    milestone<T extends MilestoneDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MilestoneDefaultArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    dependency<T extends MilestoneDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MilestoneDefaultArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MilestoneDependency model
+   */
+  interface MilestoneDependencyFieldRefs {
+    readonly id: FieldRef<"MilestoneDependency", 'String'>
+    readonly organizationId: FieldRef<"MilestoneDependency", 'String'>
+    readonly milestoneId: FieldRef<"MilestoneDependency", 'String'>
+    readonly dependencyId: FieldRef<"MilestoneDependency", 'String'>
+    readonly createdAt: FieldRef<"MilestoneDependency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MilestoneDependency findUnique
+   */
+  export type MilestoneDependencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which MilestoneDependency to fetch.
+     */
+    where: MilestoneDependencyWhereUniqueInput
+  }
+
+  /**
+   * MilestoneDependency findUniqueOrThrow
+   */
+  export type MilestoneDependencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which MilestoneDependency to fetch.
+     */
+    where: MilestoneDependencyWhereUniqueInput
+  }
+
+  /**
+   * MilestoneDependency findFirst
+   */
+  export type MilestoneDependencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which MilestoneDependency to fetch.
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MilestoneDependencies to fetch.
+     */
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MilestoneDependencies.
+     */
+    cursor?: MilestoneDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MilestoneDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MilestoneDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MilestoneDependencies.
+     */
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * MilestoneDependency findFirstOrThrow
+   */
+  export type MilestoneDependencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which MilestoneDependency to fetch.
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MilestoneDependencies to fetch.
+     */
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MilestoneDependencies.
+     */
+    cursor?: MilestoneDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MilestoneDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MilestoneDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MilestoneDependencies.
+     */
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * MilestoneDependency findMany
+   */
+  export type MilestoneDependencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which MilestoneDependencies to fetch.
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MilestoneDependencies to fetch.
+     */
+    orderBy?: MilestoneDependencyOrderByWithRelationInput | MilestoneDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MilestoneDependencies.
+     */
+    cursor?: MilestoneDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MilestoneDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MilestoneDependencies.
+     */
+    skip?: number
+    distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * MilestoneDependency create
+   */
+  export type MilestoneDependencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MilestoneDependency.
+     */
+    data: XOR<MilestoneDependencyCreateInput, MilestoneDependencyUncheckedCreateInput>
+  }
+
+  /**
+   * MilestoneDependency createMany
+   */
+  export type MilestoneDependencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MilestoneDependencies.
+     */
+    data: MilestoneDependencyCreateManyInput | MilestoneDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MilestoneDependency createManyAndReturn
+   */
+  export type MilestoneDependencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to create many MilestoneDependencies.
+     */
+    data: MilestoneDependencyCreateManyInput | MilestoneDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MilestoneDependency update
+   */
+  export type MilestoneDependencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MilestoneDependency.
+     */
+    data: XOR<MilestoneDependencyUpdateInput, MilestoneDependencyUncheckedUpdateInput>
+    /**
+     * Choose, which MilestoneDependency to update.
+     */
+    where: MilestoneDependencyWhereUniqueInput
+  }
+
+  /**
+   * MilestoneDependency updateMany
+   */
+  export type MilestoneDependencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MilestoneDependencies.
+     */
+    data: XOR<MilestoneDependencyUpdateManyMutationInput, MilestoneDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which MilestoneDependencies to update
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * Limit how many MilestoneDependencies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MilestoneDependency updateManyAndReturn
+   */
+  export type MilestoneDependencyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to update MilestoneDependencies.
+     */
+    data: XOR<MilestoneDependencyUpdateManyMutationInput, MilestoneDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which MilestoneDependencies to update
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * Limit how many MilestoneDependencies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MilestoneDependency upsert
+   */
+  export type MilestoneDependencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MilestoneDependency to update in case it exists.
+     */
+    where: MilestoneDependencyWhereUniqueInput
+    /**
+     * In case the MilestoneDependency found by the `where` argument doesn't exist, create a new MilestoneDependency with this data.
+     */
+    create: XOR<MilestoneDependencyCreateInput, MilestoneDependencyUncheckedCreateInput>
+    /**
+     * In case the MilestoneDependency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MilestoneDependencyUpdateInput, MilestoneDependencyUncheckedUpdateInput>
+  }
+
+  /**
+   * MilestoneDependency delete
+   */
+  export type MilestoneDependencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+    /**
+     * Filter which MilestoneDependency to delete.
+     */
+    where: MilestoneDependencyWhereUniqueInput
+  }
+
+  /**
+   * MilestoneDependency deleteMany
+   */
+  export type MilestoneDependencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MilestoneDependencies to delete
+     */
+    where?: MilestoneDependencyWhereInput
+    /**
+     * Limit how many MilestoneDependencies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MilestoneDependency without action
+   */
+  export type MilestoneDependencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MilestoneDependency
+     */
+    select?: MilestoneDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MilestoneDependency
+     */
+    omit?: MilestoneDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MilestoneDependencyInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -37065,7 +39894,8 @@ export namespace Prisma {
     parentFeatureId: 'parentFeatureId',
     organizationId: 'organizationId',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    milestoneId: 'milestoneId'
   };
 
   export type FeatureScalarFieldEnum = (typeof FeatureScalarFieldEnum)[keyof typeof FeatureScalarFieldEnum]
@@ -37091,6 +39921,34 @@ export namespace Prisma {
   };
 
   export type FeatureLinkScalarFieldEnum = (typeof FeatureLinkScalarFieldEnum)[keyof typeof FeatureLinkScalarFieldEnum]
+
+
+  export const MilestoneScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    status: 'status',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    projectId: 'projectId',
+    organizationId: 'organizationId',
+    ownerId: 'ownerId'
+  };
+
+  export type MilestoneScalarFieldEnum = (typeof MilestoneScalarFieldEnum)[keyof typeof MilestoneScalarFieldEnum]
+
+
+  export const MilestoneDependencyScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    milestoneId: 'milestoneId',
+    dependencyId: 'dependencyId',
+    createdAt: 'createdAt'
+  };
+
+  export type MilestoneDependencyScalarFieldEnum = (typeof MilestoneDependencyScalarFieldEnum)[keyof typeof MilestoneDependencyScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -37393,6 +40251,20 @@ export namespace Prisma {
    */
   export type ListEnumFeaturePhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeaturePhase[]'>
     
+
+
+  /**
+   * Reference to a field of type 'MilestoneStatus'
+   */
+  export type EnumMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MilestoneStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'MilestoneStatus[]'
+   */
+  export type ListEnumMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MilestoneStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -37423,8 +40295,9 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
-    ActivityFeed?: ActivityFeedListRelationFilter
-    Feature?: FeatureListRelationFilter
+    activityFeed?: ActivityFeedListRelationFilter
+    feature?: FeatureListRelationFilter
+    milestone?: MilestoneListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -37449,8 +40322,9 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
-    ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
-    Feature?: FeatureOrderByRelationAggregateInput
+    activityFeed?: ActivityFeedOrderByRelationAggregateInput
+    feature?: FeatureOrderByRelationAggregateInput
+    milestone?: MilestoneOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -37478,8 +40352,9 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
-    ActivityFeed?: ActivityFeedListRelationFilter
-    Feature?: FeatureListRelationFilter
+    activityFeed?: ActivityFeedListRelationFilter
+    feature?: FeatureListRelationFilter
+    milestone?: MilestoneListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -37762,10 +40637,12 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
-    ActivityFeed?: ActivityFeedListRelationFilter
-    Feature?: FeatureListRelationFilter
-    FeatureDependency?: FeatureDependencyListRelationFilter
-    FeatureLink?: FeatureLinkListRelationFilter
+    activityFeed?: ActivityFeedListRelationFilter
+    feature?: FeatureListRelationFilter
+    featureDependency?: FeatureDependencyListRelationFilter
+    featureLink?: FeatureLinkListRelationFilter
+    milestone?: MilestoneListRelationFilter
+    milestoneDependency?: MilestoneDependencyListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -37783,10 +40660,12 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
-    ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
-    Feature?: FeatureOrderByRelationAggregateInput
-    FeatureDependency?: FeatureDependencyOrderByRelationAggregateInput
-    FeatureLink?: FeatureLinkOrderByRelationAggregateInput
+    activityFeed?: ActivityFeedOrderByRelationAggregateInput
+    feature?: FeatureOrderByRelationAggregateInput
+    featureDependency?: FeatureDependencyOrderByRelationAggregateInput
+    featureLink?: FeatureLinkOrderByRelationAggregateInput
+    milestone?: MilestoneOrderByRelationAggregateInput
+    milestoneDependency?: MilestoneDependencyOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -37807,10 +40686,12 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
-    ActivityFeed?: ActivityFeedListRelationFilter
-    Feature?: FeatureListRelationFilter
-    FeatureDependency?: FeatureDependencyListRelationFilter
-    FeatureLink?: FeatureLinkListRelationFilter
+    activityFeed?: ActivityFeedListRelationFilter
+    feature?: FeatureListRelationFilter
+    featureDependency?: FeatureDependencyListRelationFilter
+    featureLink?: FeatureLinkListRelationFilter
+    milestone?: MilestoneListRelationFilter
+    milestoneDependency?: MilestoneDependencyListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -38202,6 +41083,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
     features?: FeatureListRelationFilter
+    milestones?: MilestoneListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -38230,6 +41112,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapOrderByRelationAggregateInput
     waitlists?: WaitlistOrderByRelationAggregateInput
     features?: FeatureOrderByRelationAggregateInput
+    milestones?: MilestoneOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -38261,6 +41144,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
     features?: FeatureListRelationFilter
+    milestones?: MilestoneListRelationFilter
   }, "id">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -38440,6 +41324,7 @@ export namespace Prisma {
     sourceFeedbackId?: StringNullableFilter<"Issue"> | string | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
@@ -38463,6 +41348,7 @@ export namespace Prisma {
     sourceFeedbackId?: SortOrderInput | SortOrder
     organization?: OrganizationOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    milestone?: MilestoneOrderByWithRelationInput
     assignedTo?: UserOrderByWithRelationInput
   }
 
@@ -38489,6 +41375,7 @@ export namespace Prisma {
     sourceFeedbackId?: StringNullableFilter<"Issue"> | string | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
@@ -39680,11 +42567,13 @@ export namespace Prisma {
     organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    milestoneId?: StringNullableFilter<"Feature"> | string | null
     parentFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
     subFeatures?: FeatureListRelationFilter
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     dependencies?: FeatureDependencyListRelationFilter
     dependentOn?: FeatureDependencyListRelationFilter
     FeatureLink?: FeatureLinkListRelationFilter
@@ -39706,11 +42595,13 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    milestoneId?: SortOrderInput | SortOrder
     parentFeature?: FeatureOrderByWithRelationInput
     subFeatures?: FeatureOrderByRelationAggregateInput
     organization?: OrganizationOrderByWithRelationInput
     assignedTo?: UserOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    milestone?: MilestoneOrderByWithRelationInput
     dependencies?: FeatureDependencyOrderByRelationAggregateInput
     dependentOn?: FeatureDependencyOrderByRelationAggregateInput
     FeatureLink?: FeatureLinkOrderByRelationAggregateInput
@@ -39735,11 +42626,13 @@ export namespace Prisma {
     organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    milestoneId?: StringNullableFilter<"Feature"> | string | null
     parentFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
     subFeatures?: FeatureListRelationFilter
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     dependencies?: FeatureDependencyListRelationFilter
     dependentOn?: FeatureDependencyListRelationFilter
     FeatureLink?: FeatureLinkListRelationFilter
@@ -39761,6 +42654,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    milestoneId?: SortOrderInput | SortOrder
     _count?: FeatureCountOrderByAggregateInput
     _avg?: FeatureAvgOrderByAggregateInput
     _max?: FeatureMaxOrderByAggregateInput
@@ -39787,6 +42681,7 @@ export namespace Prisma {
     organizationId?: StringWithAggregatesFilter<"Feature"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+    milestoneId?: StringNullableWithAggregatesFilter<"Feature"> | string | null
   }
 
   export type FeatureDependencyWhereInput = {
@@ -39908,6 +42803,170 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"FeatureLink"> | Date | string
   }
 
+  export type MilestoneWhereInput = {
+    AND?: MilestoneWhereInput | MilestoneWhereInput[]
+    OR?: MilestoneWhereInput[]
+    NOT?: MilestoneWhereInput | MilestoneWhereInput[]
+    id?: StringFilter<"Milestone"> | string
+    name?: StringFilter<"Milestone"> | string
+    description?: StringNullableFilter<"Milestone"> | string | null
+    status?: EnumMilestoneStatusFilter<"Milestone"> | $Enums.MilestoneStatus
+    startDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    createdAt?: DateTimeFilter<"Milestone"> | Date | string
+    updatedAt?: DateTimeFilter<"Milestone"> | Date | string
+    projectId?: StringFilter<"Milestone"> | string
+    organizationId?: StringFilter<"Milestone"> | string
+    ownerId?: StringNullableFilter<"Milestone"> | string | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    issues?: IssueListRelationFilter
+    features?: FeatureListRelationFilter
+    dependsOn?: MilestoneDependencyListRelationFilter
+    blocking?: MilestoneDependencyListRelationFilter
+  }
+
+  export type MilestoneOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    organizationId?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    project?: ProjectOrderByWithRelationInput
+    organization?: OrganizationOrderByWithRelationInput
+    owner?: UserOrderByWithRelationInput
+    issues?: IssueOrderByRelationAggregateInput
+    features?: FeatureOrderByRelationAggregateInput
+    dependsOn?: MilestoneDependencyOrderByRelationAggregateInput
+    blocking?: MilestoneDependencyOrderByRelationAggregateInput
+  }
+
+  export type MilestoneWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MilestoneWhereInput | MilestoneWhereInput[]
+    OR?: MilestoneWhereInput[]
+    NOT?: MilestoneWhereInput | MilestoneWhereInput[]
+    name?: StringFilter<"Milestone"> | string
+    description?: StringNullableFilter<"Milestone"> | string | null
+    status?: EnumMilestoneStatusFilter<"Milestone"> | $Enums.MilestoneStatus
+    startDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    createdAt?: DateTimeFilter<"Milestone"> | Date | string
+    updatedAt?: DateTimeFilter<"Milestone"> | Date | string
+    projectId?: StringFilter<"Milestone"> | string
+    organizationId?: StringFilter<"Milestone"> | string
+    ownerId?: StringNullableFilter<"Milestone"> | string | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    issues?: IssueListRelationFilter
+    features?: FeatureListRelationFilter
+    dependsOn?: MilestoneDependencyListRelationFilter
+    blocking?: MilestoneDependencyListRelationFilter
+  }, "id">
+
+  export type MilestoneOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    organizationId?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    _count?: MilestoneCountOrderByAggregateInput
+    _max?: MilestoneMaxOrderByAggregateInput
+    _min?: MilestoneMinOrderByAggregateInput
+  }
+
+  export type MilestoneScalarWhereWithAggregatesInput = {
+    AND?: MilestoneScalarWhereWithAggregatesInput | MilestoneScalarWhereWithAggregatesInput[]
+    OR?: MilestoneScalarWhereWithAggregatesInput[]
+    NOT?: MilestoneScalarWhereWithAggregatesInput | MilestoneScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Milestone"> | string
+    name?: StringWithAggregatesFilter<"Milestone"> | string
+    description?: StringNullableWithAggregatesFilter<"Milestone"> | string | null
+    status?: EnumMilestoneStatusWithAggregatesFilter<"Milestone"> | $Enums.MilestoneStatus
+    startDate?: DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
+    endDate?: DateTimeNullableWithAggregatesFilter<"Milestone"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Milestone"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Milestone"> | Date | string
+    projectId?: StringWithAggregatesFilter<"Milestone"> | string
+    organizationId?: StringWithAggregatesFilter<"Milestone"> | string
+    ownerId?: StringNullableWithAggregatesFilter<"Milestone"> | string | null
+  }
+
+  export type MilestoneDependencyWhereInput = {
+    AND?: MilestoneDependencyWhereInput | MilestoneDependencyWhereInput[]
+    OR?: MilestoneDependencyWhereInput[]
+    NOT?: MilestoneDependencyWhereInput | MilestoneDependencyWhereInput[]
+    id?: StringFilter<"MilestoneDependency"> | string
+    organizationId?: StringFilter<"MilestoneDependency"> | string
+    milestoneId?: StringFilter<"MilestoneDependency"> | string
+    dependencyId?: StringFilter<"MilestoneDependency"> | string
+    createdAt?: DateTimeFilter<"MilestoneDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    milestone?: XOR<MilestoneScalarRelationFilter, MilestoneWhereInput>
+    dependency?: XOR<MilestoneScalarRelationFilter, MilestoneWhereInput>
+  }
+
+  export type MilestoneDependencyOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    milestoneId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    milestone?: MilestoneOrderByWithRelationInput
+    dependency?: MilestoneOrderByWithRelationInput
+  }
+
+  export type MilestoneDependencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MilestoneDependencyWhereInput | MilestoneDependencyWhereInput[]
+    OR?: MilestoneDependencyWhereInput[]
+    NOT?: MilestoneDependencyWhereInput | MilestoneDependencyWhereInput[]
+    organizationId?: StringFilter<"MilestoneDependency"> | string
+    milestoneId?: StringFilter<"MilestoneDependency"> | string
+    dependencyId?: StringFilter<"MilestoneDependency"> | string
+    createdAt?: DateTimeFilter<"MilestoneDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    milestone?: XOR<MilestoneScalarRelationFilter, MilestoneWhereInput>
+    dependency?: XOR<MilestoneScalarRelationFilter, MilestoneWhereInput>
+  }, "id">
+
+  export type MilestoneDependencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    milestoneId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    _count?: MilestoneDependencyCountOrderByAggregateInput
+    _max?: MilestoneDependencyMaxOrderByAggregateInput
+    _min?: MilestoneDependencyMinOrderByAggregateInput
+  }
+
+  export type MilestoneDependencyScalarWhereWithAggregatesInput = {
+    AND?: MilestoneDependencyScalarWhereWithAggregatesInput | MilestoneDependencyScalarWhereWithAggregatesInput[]
+    OR?: MilestoneDependencyScalarWhereWithAggregatesInput[]
+    NOT?: MilestoneDependencyScalarWhereWithAggregatesInput | MilestoneDependencyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"MilestoneDependency"> | string
+    organizationId?: StringWithAggregatesFilter<"MilestoneDependency"> | string
+    milestoneId?: StringWithAggregatesFilter<"MilestoneDependency"> | string
+    dependencyId?: StringWithAggregatesFilter<"MilestoneDependency"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"MilestoneDependency"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -39930,8 +42989,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -39956,8 +43016,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -39982,8 +43043,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -40008,8 +43070,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -40327,10 +43390,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -40348,10 +43413,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -40369,10 +43436,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -40390,10 +43459,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -40788,6 +43859,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -40813,6 +43885,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -40838,6 +43911,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -40863,6 +43937,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -41047,7 +44122,6 @@ export namespace Prisma {
     id?: string
     title: string
     description?: string | null
-    milestoneId?: string | null
     featureId?: string | null
     parentIssueId?: string | null
     status: $Enums.IssueStatus
@@ -41060,6 +44134,7 @@ export namespace Prisma {
     sourceFeedbackId?: string | null
     organization: OrganizationCreateNestedOneWithoutIssueInput
     project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
   }
 
@@ -41087,7 +44162,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
     parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
@@ -41100,6 +44174,7 @@ export namespace Prisma {
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
   }
 
@@ -41147,7 +44222,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
     parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
@@ -42494,6 +45568,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -42515,6 +45590,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -42538,6 +45614,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -42559,6 +45636,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
@@ -42581,6 +45659,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
   }
 
   export type FeatureUpdateManyMutationInput = {
@@ -42613,6 +45692,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FeatureDependencyCreateInput = {
@@ -42719,6 +45799,170 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     featureId?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+  }
+
+  export type MilestoneUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MilestoneDependencyCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutMilestoneDependencyInput
+    milestone: MilestoneCreateNestedOneWithoutDependsOnInput
+    dependency: MilestoneCreateNestedOneWithoutBlockingInput
+  }
+
+  export type MilestoneDependencyUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    milestoneId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneDependencyNestedInput
+    milestone?: MilestoneUpdateOneRequiredWithoutDependsOnNestedInput
+    dependency?: MilestoneUpdateOneRequiredWithoutBlockingNestedInput
+  }
+
+  export type MilestoneDependencyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyCreateManyInput = {
+    id?: string
+    organizationId: string
+    milestoneId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -42856,6 +46100,12 @@ export namespace Prisma {
     none?: FeatureWhereInput
   }
 
+  export type MilestoneListRelationFilter = {
+    every?: MilestoneWhereInput
+    some?: MilestoneWhereInput
+    none?: MilestoneWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -42910,6 +46160,10 @@ export namespace Prisma {
   }
 
   export type FeatureOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MilestoneOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43177,6 +46431,12 @@ export namespace Prisma {
     none?: FeatureLinkWhereInput
   }
 
+  export type MilestoneDependencyListRelationFilter = {
+    every?: MilestoneDependencyWhereInput
+    some?: MilestoneDependencyWhereInput
+    none?: MilestoneDependencyWhereInput
+  }
+
   export type SubscriptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -43186,6 +46446,10 @@ export namespace Prisma {
   }
 
   export type FeatureLinkOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MilestoneDependencyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43647,6 +46911,11 @@ export namespace Prisma {
   export type ProjectScalarRelationFilter = {
     is?: ProjectWhereInput
     isNot?: ProjectWhereInput
+  }
+
+  export type MilestoneNullableScalarRelationFilter = {
+    is?: MilestoneWhereInput | null
+    isNot?: MilestoneWhereInput | null
   }
 
   export type IssueCountOrderByAggregateInput = {
@@ -44601,6 +47870,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    milestoneId?: SortOrder
   }
 
   export type FeatureAvgOrderByAggregateInput = {
@@ -44624,6 +47894,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    milestoneId?: SortOrder
   }
 
   export type FeatureMinOrderByAggregateInput = {
@@ -44642,6 +47913,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    milestoneId?: SortOrder
   }
 
   export type FeatureSumOrderByAggregateInput = {
@@ -44709,6 +47981,94 @@ export namespace Prisma {
     organizationId?: SortOrder
     featureId?: SortOrder
     url?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumMilestoneStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MilestoneStatus | EnumMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMilestoneStatusFilter<$PrismaModel> | $Enums.MilestoneStatus
+  }
+
+  export type MilestoneCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    organizationId?: SortOrder
+    ownerId?: SortOrder
+  }
+
+  export type MilestoneMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    organizationId?: SortOrder
+    ownerId?: SortOrder
+  }
+
+  export type MilestoneMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    organizationId?: SortOrder
+    ownerId?: SortOrder
+  }
+
+  export type EnumMilestoneStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MilestoneStatus | EnumMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMilestoneStatusWithAggregatesFilter<$PrismaModel> | $Enums.MilestoneStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMilestoneStatusFilter<$PrismaModel>
+    _max?: NestedEnumMilestoneStatusFilter<$PrismaModel>
+  }
+
+  export type MilestoneScalarRelationFilter = {
+    is?: MilestoneWhereInput
+    isNot?: MilestoneWhereInput
+  }
+
+  export type MilestoneDependencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    milestoneId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MilestoneDependencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    milestoneId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MilestoneDependencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    milestoneId?: SortOrder
+    dependencyId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -44809,6 +48169,13 @@ export namespace Prisma {
     connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
   }
 
+  export type MilestoneCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput> | MilestoneCreateWithoutOwnerInput[] | MilestoneUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOwnerInput | MilestoneCreateOrConnectWithoutOwnerInput[]
+    createMany?: MilestoneCreateManyOwnerInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -44904,6 +48271,13 @@ export namespace Prisma {
     connectOrCreate?: FeatureCreateOrConnectWithoutAssignedToInput | FeatureCreateOrConnectWithoutAssignedToInput[]
     createMany?: FeatureCreateManyAssignedToInputEnvelope
     connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type MilestoneUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput> | MilestoneCreateWithoutOwnerInput[] | MilestoneUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOwnerInput | MilestoneCreateOrConnectWithoutOwnerInput[]
+    createMany?: MilestoneCreateManyOwnerInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -45118,6 +48492,20 @@ export namespace Prisma {
     deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
   }
 
+  export type MilestoneUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput> | MilestoneCreateWithoutOwnerInput[] | MilestoneUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOwnerInput | MilestoneCreateOrConnectWithoutOwnerInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutOwnerInput | MilestoneUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: MilestoneCreateManyOwnerInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutOwnerInput | MilestoneUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutOwnerInput | MilestoneUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -45310,6 +48698,20 @@ export namespace Prisma {
     deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
   }
 
+  export type MilestoneUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput> | MilestoneCreateWithoutOwnerInput[] | MilestoneUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOwnerInput | MilestoneCreateOrConnectWithoutOwnerInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutOwnerInput | MilestoneUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: MilestoneCreateManyOwnerInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutOwnerInput | MilestoneUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutOwnerInput | MilestoneUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutSessionsInput = {
     create?: XOR<UserCreateWithoutSessionsInput, UserUncheckedCreateWithoutSessionsInput>
     connectOrCreate?: UserCreateOrConnectWithoutSessionsInput
@@ -45430,6 +48832,20 @@ export namespace Prisma {
     connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
   }
 
+  export type MilestoneCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput> | MilestoneCreateWithoutOrganizationInput[] | MilestoneUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOrganizationInput | MilestoneCreateOrConnectWithoutOrganizationInput[]
+    createMany?: MilestoneCreateManyOrganizationInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput> | MilestoneDependencyCreateWithoutOrganizationInput[] | MilestoneDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutOrganizationInput | MilestoneDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: MilestoneDependencyCreateManyOrganizationInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -45512,6 +48928,20 @@ export namespace Prisma {
     connectOrCreate?: FeatureLinkCreateOrConnectWithoutOrganizationInput | FeatureLinkCreateOrConnectWithoutOrganizationInput[]
     createMany?: FeatureLinkCreateManyOrganizationInputEnvelope
     connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+  }
+
+  export type MilestoneUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput> | MilestoneCreateWithoutOrganizationInput[] | MilestoneUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOrganizationInput | MilestoneCreateOrConnectWithoutOrganizationInput[]
+    createMany?: MilestoneCreateManyOrganizationInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput> | MilestoneDependencyCreateWithoutOrganizationInput[] | MilestoneDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutOrganizationInput | MilestoneDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: MilestoneDependencyCreateManyOrganizationInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
   }
 
   export type MemberUpdateManyWithoutOrganizationNestedInput = {
@@ -45682,6 +49112,34 @@ export namespace Prisma {
     deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
   }
 
+  export type MilestoneUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput> | MilestoneCreateWithoutOrganizationInput[] | MilestoneUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOrganizationInput | MilestoneCreateOrConnectWithoutOrganizationInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutOrganizationInput | MilestoneUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: MilestoneCreateManyOrganizationInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutOrganizationInput | MilestoneUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutOrganizationInput | MilestoneUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput> | MilestoneDependencyCreateWithoutOrganizationInput[] | MilestoneDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutOrganizationInput | MilestoneDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutOrganizationInput | MilestoneDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: MilestoneDependencyCreateManyOrganizationInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput | MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput | MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -45848,6 +49306,34 @@ export namespace Prisma {
     update?: FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput | FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: FeatureLinkUpdateManyWithWhereWithoutOrganizationInput | FeatureLinkUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+  }
+
+  export type MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput> | MilestoneCreateWithoutOrganizationInput[] | MilestoneUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutOrganizationInput | MilestoneCreateOrConnectWithoutOrganizationInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutOrganizationInput | MilestoneUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: MilestoneCreateManyOrganizationInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutOrganizationInput | MilestoneUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutOrganizationInput | MilestoneUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput> | MilestoneDependencyCreateWithoutOrganizationInput[] | MilestoneDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutOrganizationInput | MilestoneDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutOrganizationInput | MilestoneDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: MilestoneDependencyCreateManyOrganizationInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput | MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput | MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -46033,6 +49519,13 @@ export namespace Prisma {
     connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
   }
 
+  export type MilestoneCreateNestedManyWithoutProjectInput = {
+    create?: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput> | MilestoneCreateWithoutProjectInput[] | MilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutProjectInput | MilestoneCreateOrConnectWithoutProjectInput[]
+    createMany?: MilestoneCreateManyProjectInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+  }
+
   export type IssueUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<IssueCreateWithoutProjectInput, IssueUncheckedCreateWithoutProjectInput> | IssueCreateWithoutProjectInput[] | IssueUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutProjectInput | IssueCreateOrConnectWithoutProjectInput[]
@@ -46066,6 +49559,13 @@ export namespace Prisma {
     connectOrCreate?: FeatureCreateOrConnectWithoutProjectInput | FeatureCreateOrConnectWithoutProjectInput[]
     createMany?: FeatureCreateManyProjectInputEnvelope
     connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type MilestoneUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput> | MilestoneCreateWithoutProjectInput[] | MilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutProjectInput | MilestoneCreateOrConnectWithoutProjectInput[]
+    createMany?: MilestoneCreateManyProjectInputEnvelope
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
   }
 
   export type EnumProjectPlatformFieldUpdateOperationsInput = {
@@ -46176,6 +49676,20 @@ export namespace Prisma {
     deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
   }
 
+  export type MilestoneUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput> | MilestoneCreateWithoutProjectInput[] | MilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutProjectInput | MilestoneCreateOrConnectWithoutProjectInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutProjectInput | MilestoneUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: MilestoneCreateManyProjectInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutProjectInput | MilestoneUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutProjectInput | MilestoneUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+  }
+
   export type IssueUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<IssueCreateWithoutProjectInput, IssueUncheckedCreateWithoutProjectInput> | IssueCreateWithoutProjectInput[] | IssueUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutProjectInput | IssueCreateOrConnectWithoutProjectInput[]
@@ -46244,6 +49758,20 @@ export namespace Prisma {
     update?: FeatureUpdateWithWhereUniqueWithoutProjectInput | FeatureUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: FeatureUpdateManyWithWhereWithoutProjectInput | FeatureUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type MilestoneUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput> | MilestoneCreateWithoutProjectInput[] | MilestoneUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: MilestoneCreateOrConnectWithoutProjectInput | MilestoneCreateOrConnectWithoutProjectInput[]
+    upsert?: MilestoneUpsertWithWhereUniqueWithoutProjectInput | MilestoneUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: MilestoneCreateManyProjectInputEnvelope
+    set?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    disconnect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    delete?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    connect?: MilestoneWhereUniqueInput | MilestoneWhereUniqueInput[]
+    update?: MilestoneUpdateWithWhereUniqueWithoutProjectInput | MilestoneUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: MilestoneUpdateManyWithWhereWithoutProjectInput | MilestoneUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutIdeaInput = {
@@ -46342,6 +49870,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type MilestoneCreateNestedOneWithoutIssuesInput = {
+    create?: XOR<MilestoneCreateWithoutIssuesInput, MilestoneUncheckedCreateWithoutIssuesInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutIssuesInput
+    connect?: MilestoneWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutIssueInput = {
     create?: XOR<UserCreateWithoutIssueInput, UserUncheckedCreateWithoutIssueInput>
     connectOrCreate?: UserCreateOrConnectWithoutIssueInput
@@ -46374,6 +49908,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutIssuesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutIssuesInput, ProjectUpdateWithoutIssuesInput>, ProjectUncheckedUpdateWithoutIssuesInput>
+  }
+
+  export type MilestoneUpdateOneWithoutIssuesNestedInput = {
+    create?: XOR<MilestoneCreateWithoutIssuesInput, MilestoneUncheckedCreateWithoutIssuesInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutIssuesInput
+    upsert?: MilestoneUpsertWithoutIssuesInput
+    disconnect?: MilestoneWhereInput | boolean
+    delete?: MilestoneWhereInput | boolean
+    connect?: MilestoneWhereUniqueInput
+    update?: XOR<XOR<MilestoneUpdateToOneWithWhereWithoutIssuesInput, MilestoneUpdateWithoutIssuesInput>, MilestoneUncheckedUpdateWithoutIssuesInput>
   }
 
   export type UserUpdateOneWithoutIssueNestedInput = {
@@ -46952,6 +50496,12 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type MilestoneCreateNestedOneWithoutFeaturesInput = {
+    create?: XOR<MilestoneCreateWithoutFeaturesInput, MilestoneUncheckedCreateWithoutFeaturesInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutFeaturesInput
+    connect?: MilestoneWhereUniqueInput
+  }
+
   export type FeatureDependencyCreateNestedManyWithoutFeatureInput = {
     create?: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput> | FeatureDependencyCreateWithoutFeatureInput[] | FeatureDependencyUncheckedCreateWithoutFeatureInput[]
     connectOrCreate?: FeatureDependencyCreateOrConnectWithoutFeatureInput | FeatureDependencyCreateOrConnectWithoutFeatureInput[]
@@ -47053,6 +50603,16 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutFeaturesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutFeaturesInput, ProjectUpdateWithoutFeaturesInput>, ProjectUncheckedUpdateWithoutFeaturesInput>
+  }
+
+  export type MilestoneUpdateOneWithoutFeaturesNestedInput = {
+    create?: XOR<MilestoneCreateWithoutFeaturesInput, MilestoneUncheckedCreateWithoutFeaturesInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutFeaturesInput
+    upsert?: MilestoneUpsertWithoutFeaturesInput
+    disconnect?: MilestoneWhereInput | boolean
+    delete?: MilestoneWhereInput | boolean
+    connect?: MilestoneWhereUniqueInput
+    update?: XOR<XOR<MilestoneUpdateToOneWithWhereWithoutFeaturesInput, MilestoneUpdateWithoutFeaturesInput>, MilestoneUncheckedUpdateWithoutFeaturesInput>
   }
 
   export type FeatureDependencyUpdateManyWithoutFeatureNestedInput = {
@@ -47221,6 +50781,264 @@ export namespace Prisma {
     upsert?: FeatureUpsertWithoutFeatureLinkInput
     connect?: FeatureWhereUniqueInput
     update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutFeatureLinkInput, FeatureUpdateWithoutFeatureLinkInput>, FeatureUncheckedUpdateWithoutFeatureLinkInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutMilestonesInput = {
+    create?: XOR<ProjectCreateWithoutMilestonesInput, ProjectUncheckedCreateWithoutMilestonesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutMilestonesInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type OrganizationCreateNestedOneWithoutMilestoneInput = {
+    create?: XOR<OrganizationCreateWithoutMilestoneInput, OrganizationUncheckedCreateWithoutMilestoneInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutMilestoneInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutMilestoneInput = {
+    create?: XOR<UserCreateWithoutMilestoneInput, UserUncheckedCreateWithoutMilestoneInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMilestoneInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IssueCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput> | IssueCreateWithoutMilestoneInput[] | IssueUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutMilestoneInput | IssueCreateOrConnectWithoutMilestoneInput[]
+    createMany?: IssueCreateManyMilestoneInputEnvelope
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+  }
+
+  export type FeatureCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput> | FeatureCreateWithoutMilestoneInput[] | FeatureUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutMilestoneInput | FeatureCreateOrConnectWithoutMilestoneInput[]
+    createMany?: FeatureCreateManyMilestoneInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput> | MilestoneDependencyCreateWithoutMilestoneInput[] | MilestoneDependencyUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutMilestoneInput | MilestoneDependencyCreateOrConnectWithoutMilestoneInput[]
+    createMany?: MilestoneDependencyCreateManyMilestoneInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput> | MilestoneDependencyCreateWithoutDependencyInput[] | MilestoneDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutDependencyInput | MilestoneDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: MilestoneDependencyCreateManyDependencyInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
+  export type IssueUncheckedCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput> | IssueCreateWithoutMilestoneInput[] | IssueUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutMilestoneInput | IssueCreateOrConnectWithoutMilestoneInput[]
+    createMany?: IssueCreateManyMilestoneInputEnvelope
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+  }
+
+  export type FeatureUncheckedCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput> | FeatureCreateWithoutMilestoneInput[] | FeatureUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutMilestoneInput | FeatureCreateOrConnectWithoutMilestoneInput[]
+    createMany?: FeatureCreateManyMilestoneInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput> | MilestoneDependencyCreateWithoutMilestoneInput[] | MilestoneDependencyUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutMilestoneInput | MilestoneDependencyCreateOrConnectWithoutMilestoneInput[]
+    createMany?: MilestoneDependencyCreateManyMilestoneInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
+  export type MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput> | MilestoneDependencyCreateWithoutDependencyInput[] | MilestoneDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutDependencyInput | MilestoneDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: MilestoneDependencyCreateManyDependencyInputEnvelope
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
+  export type EnumMilestoneStatusFieldUpdateOperationsInput = {
+    set?: $Enums.MilestoneStatus
+  }
+
+  export type ProjectUpdateOneRequiredWithoutMilestonesNestedInput = {
+    create?: XOR<ProjectCreateWithoutMilestonesInput, ProjectUncheckedCreateWithoutMilestonesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutMilestonesInput
+    upsert?: ProjectUpsertWithoutMilestonesInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutMilestonesInput, ProjectUpdateWithoutMilestonesInput>, ProjectUncheckedUpdateWithoutMilestonesInput>
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutMilestoneNestedInput = {
+    create?: XOR<OrganizationCreateWithoutMilestoneInput, OrganizationUncheckedCreateWithoutMilestoneInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutMilestoneInput
+    upsert?: OrganizationUpsertWithoutMilestoneInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutMilestoneInput, OrganizationUpdateWithoutMilestoneInput>, OrganizationUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type UserUpdateOneWithoutMilestoneNestedInput = {
+    create?: XOR<UserCreateWithoutMilestoneInput, UserUncheckedCreateWithoutMilestoneInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMilestoneInput
+    upsert?: UserUpsertWithoutMilestoneInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMilestoneInput, UserUpdateWithoutMilestoneInput>, UserUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type IssueUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput> | IssueCreateWithoutMilestoneInput[] | IssueUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutMilestoneInput | IssueCreateOrConnectWithoutMilestoneInput[]
+    upsert?: IssueUpsertWithWhereUniqueWithoutMilestoneInput | IssueUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: IssueCreateManyMilestoneInputEnvelope
+    set?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    disconnect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    delete?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    update?: IssueUpdateWithWhereUniqueWithoutMilestoneInput | IssueUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: IssueUpdateManyWithWhereWithoutMilestoneInput | IssueUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: IssueScalarWhereInput | IssueScalarWhereInput[]
+  }
+
+  export type FeatureUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput> | FeatureCreateWithoutMilestoneInput[] | FeatureUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutMilestoneInput | FeatureCreateOrConnectWithoutMilestoneInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutMilestoneInput | FeatureUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: FeatureCreateManyMilestoneInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutMilestoneInput | FeatureUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutMilestoneInput | FeatureUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput> | MilestoneDependencyCreateWithoutMilestoneInput[] | MilestoneDependencyUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutMilestoneInput | MilestoneDependencyCreateOrConnectWithoutMilestoneInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutMilestoneInput | MilestoneDependencyUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: MilestoneDependencyCreateManyMilestoneInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutMilestoneInput | MilestoneDependencyUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutMilestoneInput | MilestoneDependencyUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput> | MilestoneDependencyCreateWithoutDependencyInput[] | MilestoneDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutDependencyInput | MilestoneDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutDependencyInput | MilestoneDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: MilestoneDependencyCreateManyDependencyInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutDependencyInput | MilestoneDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutDependencyInput | MilestoneDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
+  export type IssueUncheckedUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput> | IssueCreateWithoutMilestoneInput[] | IssueUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutMilestoneInput | IssueCreateOrConnectWithoutMilestoneInput[]
+    upsert?: IssueUpsertWithWhereUniqueWithoutMilestoneInput | IssueUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: IssueCreateManyMilestoneInputEnvelope
+    set?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    disconnect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    delete?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    update?: IssueUpdateWithWhereUniqueWithoutMilestoneInput | IssueUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: IssueUpdateManyWithWhereWithoutMilestoneInput | IssueUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: IssueScalarWhereInput | IssueScalarWhereInput[]
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput> | FeatureCreateWithoutMilestoneInput[] | FeatureUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutMilestoneInput | FeatureCreateOrConnectWithoutMilestoneInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutMilestoneInput | FeatureUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: FeatureCreateManyMilestoneInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutMilestoneInput | FeatureUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutMilestoneInput | FeatureUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput> | MilestoneDependencyCreateWithoutMilestoneInput[] | MilestoneDependencyUncheckedCreateWithoutMilestoneInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutMilestoneInput | MilestoneDependencyCreateOrConnectWithoutMilestoneInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutMilestoneInput | MilestoneDependencyUpsertWithWhereUniqueWithoutMilestoneInput[]
+    createMany?: MilestoneDependencyCreateManyMilestoneInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutMilestoneInput | MilestoneDependencyUpdateWithWhereUniqueWithoutMilestoneInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutMilestoneInput | MilestoneDependencyUpdateManyWithWhereWithoutMilestoneInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput> | MilestoneDependencyCreateWithoutDependencyInput[] | MilestoneDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutDependencyInput | MilestoneDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: MilestoneDependencyUpsertWithWhereUniqueWithoutDependencyInput | MilestoneDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: MilestoneDependencyCreateManyDependencyInputEnvelope
+    set?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    disconnect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    delete?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+    update?: MilestoneDependencyUpdateWithWhereUniqueWithoutDependencyInput | MilestoneDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutDependencyInput | MilestoneDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutMilestoneDependencyInput = {
+    create?: XOR<OrganizationCreateWithoutMilestoneDependencyInput, OrganizationUncheckedCreateWithoutMilestoneDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutMilestoneDependencyInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type MilestoneCreateNestedOneWithoutDependsOnInput = {
+    create?: XOR<MilestoneCreateWithoutDependsOnInput, MilestoneUncheckedCreateWithoutDependsOnInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutDependsOnInput
+    connect?: MilestoneWhereUniqueInput
+  }
+
+  export type MilestoneCreateNestedOneWithoutBlockingInput = {
+    create?: XOR<MilestoneCreateWithoutBlockingInput, MilestoneUncheckedCreateWithoutBlockingInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutBlockingInput
+    connect?: MilestoneWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutMilestoneDependencyNestedInput = {
+    create?: XOR<OrganizationCreateWithoutMilestoneDependencyInput, OrganizationUncheckedCreateWithoutMilestoneDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutMilestoneDependencyInput
+    upsert?: OrganizationUpsertWithoutMilestoneDependencyInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutMilestoneDependencyInput, OrganizationUpdateWithoutMilestoneDependencyInput>, OrganizationUncheckedUpdateWithoutMilestoneDependencyInput>
+  }
+
+  export type MilestoneUpdateOneRequiredWithoutDependsOnNestedInput = {
+    create?: XOR<MilestoneCreateWithoutDependsOnInput, MilestoneUncheckedCreateWithoutDependsOnInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutDependsOnInput
+    upsert?: MilestoneUpsertWithoutDependsOnInput
+    connect?: MilestoneWhereUniqueInput
+    update?: XOR<XOR<MilestoneUpdateToOneWithWhereWithoutDependsOnInput, MilestoneUpdateWithoutDependsOnInput>, MilestoneUncheckedUpdateWithoutDependsOnInput>
+  }
+
+  export type MilestoneUpdateOneRequiredWithoutBlockingNestedInput = {
+    create?: XOR<MilestoneCreateWithoutBlockingInput, MilestoneUncheckedCreateWithoutBlockingInput>
+    connectOrCreate?: MilestoneCreateOrConnectWithoutBlockingInput
+    upsert?: MilestoneUpsertWithoutBlockingInput
+    connect?: MilestoneWhereUniqueInput
+    update?: XOR<XOR<MilestoneUpdateToOneWithWhereWithoutBlockingInput, MilestoneUpdateWithoutBlockingInput>, MilestoneUncheckedUpdateWithoutBlockingInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -47708,6 +51526,23 @@ export namespace Prisma {
     _max?: NestedEnumFeaturePhaseFilter<$PrismaModel>
   }
 
+  export type NestedEnumMilestoneStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.MilestoneStatus | EnumMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMilestoneStatusFilter<$PrismaModel> | $Enums.MilestoneStatus
+  }
+
+  export type NestedEnumMilestoneStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MilestoneStatus | EnumMilestoneStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MilestoneStatus[] | ListEnumMilestoneStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumMilestoneStatusWithAggregatesFilter<$PrismaModel> | $Enums.MilestoneStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMilestoneStatusFilter<$PrismaModel>
+    _max?: NestedEnumMilestoneStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -47939,6 +51774,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCreatedByInput = {
@@ -47963,6 +51799,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCreatedByInput = {
@@ -48023,7 +51860,6 @@ export namespace Prisma {
     id?: string
     title: string
     description?: string | null
-    milestoneId?: string | null
     featureId?: string | null
     parentIssueId?: string | null
     status: $Enums.IssueStatus
@@ -48036,6 +51872,7 @@ export namespace Prisma {
     sourceFeedbackId?: string | null
     organization: OrganizationCreateNestedOneWithoutIssueInput
     project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
   }
 
   export type IssueUncheckedCreateWithoutAssignedToInput = {
@@ -48221,6 +52058,7 @@ export namespace Prisma {
     subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -48241,6 +52079,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -48254,6 +52093,50 @@ export namespace Prisma {
 
   export type FeatureCreateManyAssignedToInputEnvelope = {
     data: FeatureCreateManyAssignedToInput | FeatureCreateManyAssignedToInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutOwnerInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type MilestoneCreateManyOwnerInputEnvelope = {
+    data: MilestoneCreateManyOwnerInput | MilestoneCreateManyOwnerInput[]
     skipDuplicates?: boolean
   }
 
@@ -48732,6 +52615,40 @@ export namespace Prisma {
     organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    milestoneId?: StringNullableFilter<"Feature"> | string | null
+  }
+
+  export type MilestoneUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: MilestoneWhereUniqueInput
+    update: XOR<MilestoneUpdateWithoutOwnerInput, MilestoneUncheckedUpdateWithoutOwnerInput>
+    create: XOR<MilestoneCreateWithoutOwnerInput, MilestoneUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type MilestoneUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: MilestoneWhereUniqueInput
+    data: XOR<MilestoneUpdateWithoutOwnerInput, MilestoneUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type MilestoneUpdateManyWithWhereWithoutOwnerInput = {
+    where: MilestoneScalarWhereInput
+    data: XOR<MilestoneUpdateManyMutationInput, MilestoneUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type MilestoneScalarWhereInput = {
+    AND?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+    OR?: MilestoneScalarWhereInput[]
+    NOT?: MilestoneScalarWhereInput | MilestoneScalarWhereInput[]
+    id?: StringFilter<"Milestone"> | string
+    name?: StringFilter<"Milestone"> | string
+    description?: StringNullableFilter<"Milestone"> | string | null
+    status?: EnumMilestoneStatusFilter<"Milestone"> | $Enums.MilestoneStatus
+    startDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Milestone"> | Date | string | null
+    createdAt?: DateTimeFilter<"Milestone"> | Date | string
+    updatedAt?: DateTimeFilter<"Milestone"> | Date | string
+    projectId?: StringFilter<"Milestone"> | string
+    organizationId?: StringFilter<"Milestone"> | string
+    ownerId?: StringNullableFilter<"Milestone"> | string | null
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -48755,8 +52672,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -48780,8 +52698,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -48821,8 +52740,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -48846,8 +52766,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -48871,8 +52792,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -48896,8 +52818,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -48937,8 +52860,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -48962,8 +52886,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type MemberCreateWithoutOrganizationInput = {
@@ -49070,6 +52995,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutOrganizationInput = {
@@ -49094,6 +53020,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutOrganizationInput = {
@@ -49154,7 +53081,6 @@ export namespace Prisma {
     id?: string
     title: string
     description?: string | null
-    milestoneId?: string | null
     featureId?: string | null
     parentIssueId?: string | null
     status: $Enums.IssueStatus
@@ -49166,6 +53092,7 @@ export namespace Prisma {
     sourceType?: string | null
     sourceFeedbackId?: string | null
     project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
   }
 
@@ -49352,6 +53279,7 @@ export namespace Prisma {
     subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -49372,6 +53300,7 @@ export namespace Prisma {
     parentFeatureId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -49433,6 +53362,74 @@ export namespace Prisma {
 
   export type FeatureLinkCreateManyOrganizationInputEnvelope = {
     data: FeatureLinkCreateManyOrganizationInput | FeatureLinkCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutOrganizationInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type MilestoneCreateManyOrganizationInputEnvelope = {
+    data: MilestoneCreateManyOrganizationInput | MilestoneCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneDependencyCreateWithoutOrganizationInput = {
+    id?: string
+    createdAt?: Date | string
+    milestone: MilestoneCreateNestedOneWithoutDependsOnInput
+    dependency: MilestoneCreateNestedOneWithoutBlockingInput
+  }
+
+  export type MilestoneDependencyUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    milestoneId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyCreateOrConnectWithoutOrganizationInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    create: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type MilestoneDependencyCreateManyOrganizationInputEnvelope = {
+    data: MilestoneDependencyCreateManyOrganizationInput | MilestoneDependencyCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -49664,6 +53661,49 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeatureLink"> | Date | string
   }
 
+  export type MilestoneUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: MilestoneWhereUniqueInput
+    update: XOR<MilestoneUpdateWithoutOrganizationInput, MilestoneUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<MilestoneCreateWithoutOrganizationInput, MilestoneUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type MilestoneUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: MilestoneWhereUniqueInput
+    data: XOR<MilestoneUpdateWithoutOrganizationInput, MilestoneUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type MilestoneUpdateManyWithWhereWithoutOrganizationInput = {
+    where: MilestoneScalarWhereInput
+    data: XOR<MilestoneUpdateManyMutationInput, MilestoneUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type MilestoneDependencyUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    update: XOR<MilestoneDependencyUpdateWithoutOrganizationInput, MilestoneDependencyUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<MilestoneDependencyCreateWithoutOrganizationInput, MilestoneDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    data: XOR<MilestoneDependencyUpdateWithoutOrganizationInput, MilestoneDependencyUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput = {
+    where: MilestoneDependencyScalarWhereInput
+    data: XOR<MilestoneDependencyUpdateManyMutationInput, MilestoneDependencyUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type MilestoneDependencyScalarWhereInput = {
+    AND?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+    OR?: MilestoneDependencyScalarWhereInput[]
+    NOT?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+    id?: StringFilter<"MilestoneDependency"> | string
+    organizationId?: StringFilter<"MilestoneDependency"> | string
+    milestoneId?: StringFilter<"MilestoneDependency"> | string
+    dependencyId?: StringFilter<"MilestoneDependency"> | string
+    createdAt?: DateTimeFilter<"MilestoneDependency"> | Date | string
+  }
+
   export type OrganizationCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -49678,10 +53718,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -49698,10 +53740,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -49730,8 +53774,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutMembersInput = {
@@ -49755,8 +53800,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutMembersInput = {
@@ -49789,10 +53835,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -49809,10 +53857,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMembersInput = {
@@ -49847,8 +53897,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembersInput = {
@@ -49872,8 +53923,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type OrganizationCreateWithoutInvitationsInput = {
@@ -49890,10 +53942,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -49910,10 +53964,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -49942,8 +53998,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -49967,8 +54024,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -50001,10 +54059,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -50021,10 +54081,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -50059,8 +54121,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -50084,8 +54147,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutPasskeysInput = {
@@ -50109,8 +54173,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutPasskeysInput = {
@@ -50134,8 +54199,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutPasskeysInput = {
@@ -50175,8 +54241,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasskeysInput = {
@@ -50200,8 +54267,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutTwofactorsInput = {
@@ -50225,8 +54293,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutTwofactorsInput = {
@@ -50250,8 +54319,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutTwofactorsInput = {
@@ -50291,8 +54361,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTwofactorsInput = {
@@ -50316,8 +54387,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type OrganizationCreateWithoutSubscriptionInput = {
@@ -50334,10 +54406,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -50354,10 +54428,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -50386,8 +54462,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutSubscriptionInput = {
@@ -50411,8 +54488,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionInput = {
@@ -50445,10 +54523,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -50465,10 +54545,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSubscriptionInput = {
@@ -50503,8 +54585,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubscriptionInput = {
@@ -50528,8 +54611,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type IdeaCreateWithoutProjectsInput = {
@@ -50585,10 +54669,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProjectInput = {
@@ -50605,10 +54691,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProjectInput = {
@@ -50620,7 +54708,6 @@ export namespace Prisma {
     id?: string
     title: string
     description?: string | null
-    milestoneId?: string | null
     featureId?: string | null
     parentIssueId?: string | null
     status: $Enums.IssueStatus
@@ -50632,6 +54719,7 @@ export namespace Prisma {
     sourceType?: string | null
     sourceFeedbackId?: string | null
     organization: OrganizationCreateNestedOneWithoutIssueInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
   }
 
@@ -50685,8 +54773,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProjectInput = {
@@ -50710,8 +54799,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProjectInput = {
@@ -50885,6 +54975,7 @@ export namespace Prisma {
     subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -50905,6 +54996,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -50918,6 +55010,50 @@ export namespace Prisma {
 
   export type FeatureCreateManyProjectInputEnvelope = {
     data: FeatureCreateManyProjectInput | FeatureCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizationId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutProjectInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput>
+  }
+
+  export type MilestoneCreateManyProjectInputEnvelope = {
+    data: MilestoneCreateManyProjectInput | MilestoneCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -50991,10 +55127,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProjectInput = {
@@ -51011,10 +55149,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutProjectInput = {
@@ -51065,8 +55205,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectInput = {
@@ -51090,8 +55231,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type AssetUpsertWithWhereUniqueWithoutProjectInput = {
@@ -51179,6 +55321,22 @@ export namespace Prisma {
     data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type MilestoneUpsertWithWhereUniqueWithoutProjectInput = {
+    where: MilestoneWhereUniqueInput
+    update: XOR<MilestoneUpdateWithoutProjectInput, MilestoneUncheckedUpdateWithoutProjectInput>
+    create: XOR<MilestoneCreateWithoutProjectInput, MilestoneUncheckedCreateWithoutProjectInput>
+  }
+
+  export type MilestoneUpdateWithWhereUniqueWithoutProjectInput = {
+    where: MilestoneWhereUniqueInput
+    data: XOR<MilestoneUpdateWithoutProjectInput, MilestoneUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type MilestoneUpdateManyWithWhereWithoutProjectInput = {
+    where: MilestoneScalarWhereInput
+    data: XOR<MilestoneUpdateManyMutationInput, MilestoneUncheckedUpdateManyWithoutProjectInput>
+  }
+
   export type UserCreateWithoutIdeaInput = {
     id: string
     name: string
@@ -51200,8 +55358,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutIdeaInput = {
@@ -51225,8 +55384,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutIdeaInput = {
@@ -51248,10 +55408,12 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIdeaInput = {
@@ -51268,10 +55430,12 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIdeaInput = {
@@ -51301,6 +55465,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutIdeaInput = {
@@ -51325,6 +55490,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutIdeaInput = {
@@ -51369,8 +55535,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIdeaInput = {
@@ -51394,8 +55561,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type OrganizationUpsertWithoutIdeaInput = {
@@ -51423,10 +55591,12 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIdeaInput = {
@@ -51443,10 +55613,12 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -51479,10 +55651,12 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueInput = {
@@ -51499,10 +55673,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueInput = {
@@ -51532,6 +55708,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutIssuesInput = {
@@ -51556,11 +55733,51 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutIssuesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutIssuesInput, ProjectUncheckedCreateWithoutIssuesInput>
+  }
+
+  export type MilestoneCreateWithoutIssuesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutIssuesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutIssuesInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutIssuesInput, MilestoneUncheckedCreateWithoutIssuesInput>
   }
 
   export type UserCreateWithoutIssueInput = {
@@ -51584,8 +55801,9 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutIssueInput = {
@@ -51609,8 +55827,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutIssueInput = {
@@ -51643,10 +55862,12 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueInput = {
@@ -51663,10 +55884,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithoutIssuesInput = {
@@ -51702,6 +55925,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutIssuesInput = {
@@ -51726,6 +55950,52 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type MilestoneUpsertWithoutIssuesInput = {
+    update: XOR<MilestoneUpdateWithoutIssuesInput, MilestoneUncheckedUpdateWithoutIssuesInput>
+    create: XOR<MilestoneCreateWithoutIssuesInput, MilestoneUncheckedCreateWithoutIssuesInput>
+    where?: MilestoneWhereInput
+  }
+
+  export type MilestoneUpdateToOneWithWhereWithoutIssuesInput = {
+    where?: MilestoneWhereInput
+    data: XOR<MilestoneUpdateWithoutIssuesInput, MilestoneUncheckedUpdateWithoutIssuesInput>
+  }
+
+  export type MilestoneUpdateWithoutIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
   }
 
   export type UserUpsertWithoutIssueInput = {
@@ -51760,8 +56030,9 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIssueInput = {
@@ -51785,8 +56056,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutAssetsInput = {
@@ -51811,6 +56083,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAssetsInput = {
@@ -51835,6 +56108,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAssetsInput = {
@@ -51856,10 +56130,12 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetInput = {
@@ -51876,10 +56152,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetInput = {
@@ -51908,8 +56186,9 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutAssetInput = {
@@ -51933,8 +56212,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutAssetInput = {
@@ -51975,6 +56255,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAssetsInput = {
@@ -51999,6 +56280,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type OrganizationUpsertWithoutAssetInput = {
@@ -52026,10 +56308,12 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetInput = {
@@ -52046,10 +56330,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetInput = {
@@ -52084,8 +56370,9 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssetInput = {
@@ -52109,8 +56396,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type OrganizationCreateWithoutActivityFeedInput = {
@@ -52128,9 +56416,11 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutActivityFeedInput = {
@@ -52148,9 +56438,11 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutActivityFeedInput = {
@@ -52180,7 +56472,8 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutActivityFeedInput = {
@@ -52205,7 +56498,8 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutActivityFeedInput = {
@@ -52239,9 +56533,11 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutActivityFeedInput = {
@@ -52259,9 +56555,11 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutActivityFeedInput = {
@@ -52297,7 +56595,8 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityFeedInput = {
@@ -52322,7 +56621,8 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectCreateWithoutPublicRoadmapsInput = {
@@ -52347,6 +56647,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPublicRoadmapsInput = {
@@ -52371,6 +56672,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPublicRoadmapsInput = {
@@ -52539,6 +56841,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPublicRoadmapsInput = {
@@ -52563,6 +56866,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type RoadmapItemUpsertWithWhereUniqueWithoutRoadmapInput = {
@@ -53300,6 +57604,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     features?: FeatureCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWaitlistsInput = {
@@ -53324,6 +57629,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWaitlistsInput = {
@@ -53345,10 +57651,12 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWaitlistInput = {
@@ -53365,10 +57673,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWaitlistInput = {
@@ -53397,8 +57707,9 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
-    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutWaitlistInput = {
@@ -53422,8 +57733,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutWaitlistInput = {
@@ -53518,6 +57830,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWaitlistsInput = {
@@ -53542,6 +57855,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type OrganizationUpsertWithoutWaitlistInput = {
@@ -53569,10 +57883,12 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWaitlistInput = {
@@ -53589,10 +57905,12 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutWaitlistInput = {
@@ -53627,8 +57945,9 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWaitlistInput = {
@@ -53652,8 +57971,9 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type WaitlistEntryUpsertWithWhereUniqueWithoutWaitlistInput = {
@@ -53798,6 +58118,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -53819,6 +58140,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
@@ -53845,6 +58167,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
@@ -53865,6 +58188,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -53896,9 +58220,11 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureInput = {
@@ -53916,9 +58242,11 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureInput = {
@@ -53948,7 +58276,8 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutFeatureInput = {
@@ -53973,7 +58302,8 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutFeatureInput = {
@@ -54003,6 +58333,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutFeaturesInput = {
@@ -54027,11 +58358,51 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutFeaturesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+  }
+
+  export type MilestoneCreateWithoutFeaturesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutFeaturesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutFeaturesInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutFeaturesInput, MilestoneUncheckedCreateWithoutFeaturesInput>
   }
 
   export type FeatureDependencyCreateWithoutFeatureInput = {
@@ -54133,6 +58504,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -54154,6 +58526,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
@@ -54201,9 +58574,11 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureInput = {
@@ -54221,9 +58596,11 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutFeatureInput = {
@@ -54259,7 +58636,8 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeatureInput = {
@@ -54284,7 +58662,8 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProjectUpsertWithoutFeaturesInput = {
@@ -54320,6 +58699,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutFeaturesInput = {
@@ -54344,6 +58724,52 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type MilestoneUpsertWithoutFeaturesInput = {
+    update: XOR<MilestoneUpdateWithoutFeaturesInput, MilestoneUncheckedUpdateWithoutFeaturesInput>
+    create: XOR<MilestoneCreateWithoutFeaturesInput, MilestoneUncheckedCreateWithoutFeaturesInput>
+    where?: MilestoneWhereInput
+  }
+
+  export type MilestoneUpdateToOneWithWhereWithoutFeaturesInput = {
+    where?: MilestoneWhereInput
+    data: XOR<MilestoneUpdateWithoutFeaturesInput, MilestoneUncheckedUpdateWithoutFeaturesInput>
+  }
+
+  export type MilestoneUpdateWithoutFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
   }
 
   export type FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput = {
@@ -54409,9 +58835,11 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureDependencyInput = {
@@ -54429,9 +58857,11 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureDependencyInput = {
@@ -54456,6 +58886,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
   }
@@ -54476,6 +58907,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
@@ -54503,6 +58935,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
   }
@@ -54523,6 +58956,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
@@ -54559,9 +58993,11 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureDependencyInput = {
@@ -54579,9 +59015,11 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutDependenciesInput = {
@@ -54612,6 +59050,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
   }
@@ -54632,6 +59071,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
@@ -54665,6 +59105,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
   }
@@ -54685,6 +59126,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
@@ -54705,9 +59147,11 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureLinkInput = {
@@ -54725,9 +59169,11 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureLinkInput = {
@@ -54752,6 +59198,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
   }
@@ -54772,6 +59219,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
@@ -54808,9 +59256,11 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureLinkInput = {
@@ -54828,9 +59278,11 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutFeatureLinkInput = {
@@ -54861,6 +59313,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
   }
@@ -54881,9 +59334,836 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type ProjectCreateWithoutMilestonesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    platform: $Enums.ProjectPlatform
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
+    infrastructure?: string | null
+    dueDate?: Date | string | null
+    status?: $Enums.ProjectStatus | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea?: IdeaCreateNestedOneWithoutProjectsInput
+    organization?: OrganizationCreateNestedOneWithoutProjectInput
+    issues?: IssueCreateNestedManyWithoutProjectInput
+    createdBy?: UserCreateNestedOneWithoutProjectInput
+    assets?: AssetCreateNestedManyWithoutProjectInput
+    publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
+    waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutMilestonesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    platform: $Enums.ProjectPlatform
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
+    infrastructure?: string | null
+    dueDate?: Date | string | null
+    status?: $Enums.ProjectStatus | null
+    ideaId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizationId?: string | null
+    createdById?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
+    assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
+    publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
+    waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutMilestonesInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutMilestonesInput, ProjectUncheckedCreateWithoutMilestonesInput>
+  }
+
+  export type OrganizationCreateWithoutMilestoneInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutMilestoneInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutMilestoneInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutMilestoneInput, OrganizationUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type UserCreateWithoutMilestoneInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionCreateNestedOneWithoutUserInput
+    project?: ProjectCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaCreateNestedManyWithoutOwnerInput
+    issue?: IssueCreateNestedManyWithoutAssignedToInput
+    asset?: AssetCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+  }
+
+  export type UserUncheckedCreateWithoutMilestoneInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorUncheckedCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutUserInput
+    project?: ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
+    issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
+    asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+  }
+
+  export type UserCreateOrConnectWithoutMilestoneInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMilestoneInput, UserUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type IssueCreateWithoutMilestoneInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutMilestoneInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+  }
+
+  export type IssueCreateOrConnectWithoutMilestoneInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type IssueCreateManyMilestoneInputEnvelope = {
+    data: IssueCreateManyMilestoneInput | IssueCreateManyMilestoneInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureCreateWithoutMilestoneInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutMilestoneInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutMilestoneInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type FeatureCreateManyMilestoneInputEnvelope = {
+    data: FeatureCreateManyMilestoneInput | FeatureCreateManyMilestoneInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneDependencyCreateWithoutMilestoneInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutMilestoneDependencyInput
+    dependency: MilestoneCreateNestedOneWithoutBlockingInput
+  }
+
+  export type MilestoneDependencyUncheckedCreateWithoutMilestoneInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyCreateOrConnectWithoutMilestoneInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    create: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type MilestoneDependencyCreateManyMilestoneInputEnvelope = {
+    data: MilestoneDependencyCreateManyMilestoneInput | MilestoneDependencyCreateManyMilestoneInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MilestoneDependencyCreateWithoutDependencyInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutMilestoneDependencyInput
+    milestone: MilestoneCreateNestedOneWithoutDependsOnInput
+  }
+
+  export type MilestoneDependencyUncheckedCreateWithoutDependencyInput = {
+    id?: string
+    organizationId: string
+    milestoneId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyCreateOrConnectWithoutDependencyInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    create: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type MilestoneDependencyCreateManyDependencyInputEnvelope = {
+    data: MilestoneDependencyCreateManyDependencyInput | MilestoneDependencyCreateManyDependencyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectUpsertWithoutMilestonesInput = {
+    update: XOR<ProjectUpdateWithoutMilestonesInput, ProjectUncheckedUpdateWithoutMilestonesInput>
+    create: XOR<ProjectCreateWithoutMilestonesInput, ProjectUncheckedCreateWithoutMilestonesInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutMilestonesInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutMilestonesInput, ProjectUncheckedUpdateWithoutMilestonesInput>
+  }
+
+  export type ProjectUpdateWithoutMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
+    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneWithoutProjectsNestedInput
+    organization?: OrganizationUpdateOneWithoutProjectNestedInput
+    issues?: IssueUpdateManyWithoutProjectNestedInput
+    createdBy?: UserUpdateOneWithoutProjectNestedInput
+    assets?: AssetUpdateManyWithoutProjectNestedInput
+    publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
+    waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutMilestonesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
+    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+    ideaId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
+    assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
+    publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
+    waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type OrganizationUpsertWithoutMilestoneInput = {
+    update: XOR<OrganizationUpdateWithoutMilestoneInput, OrganizationUncheckedUpdateWithoutMilestoneInput>
+    create: XOR<OrganizationCreateWithoutMilestoneInput, OrganizationUncheckedCreateWithoutMilestoneInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutMilestoneInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutMilestoneInput, OrganizationUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type OrganizationUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutMilestoneInput = {
+    update: XOR<UserUpdateWithoutMilestoneInput, UserUncheckedUpdateWithoutMilestoneInput>
+    create: XOR<UserCreateWithoutMilestoneInput, UserUncheckedCreateWithoutMilestoneInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMilestoneInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMilestoneInput, UserUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type UserUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUpdateOneWithoutUserNestedInput
+    project?: ProjectUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUncheckedUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+  }
+
+  export type IssueUpsertWithWhereUniqueWithoutMilestoneInput = {
+    where: IssueWhereUniqueInput
+    update: XOR<IssueUpdateWithoutMilestoneInput, IssueUncheckedUpdateWithoutMilestoneInput>
+    create: XOR<IssueCreateWithoutMilestoneInput, IssueUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type IssueUpdateWithWhereUniqueWithoutMilestoneInput = {
+    where: IssueWhereUniqueInput
+    data: XOR<IssueUpdateWithoutMilestoneInput, IssueUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type IssueUpdateManyWithWhereWithoutMilestoneInput = {
+    where: IssueScalarWhereInput
+    data: XOR<IssueUpdateManyMutationInput, IssueUncheckedUpdateManyWithoutMilestoneInput>
+  }
+
+  export type FeatureUpsertWithWhereUniqueWithoutMilestoneInput = {
+    where: FeatureWhereUniqueInput
+    update: XOR<FeatureUpdateWithoutMilestoneInput, FeatureUncheckedUpdateWithoutMilestoneInput>
+    create: XOR<FeatureCreateWithoutMilestoneInput, FeatureUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type FeatureUpdateWithWhereUniqueWithoutMilestoneInput = {
+    where: FeatureWhereUniqueInput
+    data: XOR<FeatureUpdateWithoutMilestoneInput, FeatureUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type FeatureUpdateManyWithWhereWithoutMilestoneInput = {
+    where: FeatureScalarWhereInput
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutMilestoneInput>
+  }
+
+  export type MilestoneDependencyUpsertWithWhereUniqueWithoutMilestoneInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    update: XOR<MilestoneDependencyUpdateWithoutMilestoneInput, MilestoneDependencyUncheckedUpdateWithoutMilestoneInput>
+    create: XOR<MilestoneDependencyCreateWithoutMilestoneInput, MilestoneDependencyUncheckedCreateWithoutMilestoneInput>
+  }
+
+  export type MilestoneDependencyUpdateWithWhereUniqueWithoutMilestoneInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    data: XOR<MilestoneDependencyUpdateWithoutMilestoneInput, MilestoneDependencyUncheckedUpdateWithoutMilestoneInput>
+  }
+
+  export type MilestoneDependencyUpdateManyWithWhereWithoutMilestoneInput = {
+    where: MilestoneDependencyScalarWhereInput
+    data: XOR<MilestoneDependencyUpdateManyMutationInput, MilestoneDependencyUncheckedUpdateManyWithoutMilestoneInput>
+  }
+
+  export type MilestoneDependencyUpsertWithWhereUniqueWithoutDependencyInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    update: XOR<MilestoneDependencyUpdateWithoutDependencyInput, MilestoneDependencyUncheckedUpdateWithoutDependencyInput>
+    create: XOR<MilestoneDependencyCreateWithoutDependencyInput, MilestoneDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type MilestoneDependencyUpdateWithWhereUniqueWithoutDependencyInput = {
+    where: MilestoneDependencyWhereUniqueInput
+    data: XOR<MilestoneDependencyUpdateWithoutDependencyInput, MilestoneDependencyUncheckedUpdateWithoutDependencyInput>
+  }
+
+  export type MilestoneDependencyUpdateManyWithWhereWithoutDependencyInput = {
+    where: MilestoneDependencyScalarWhereInput
+    data: XOR<MilestoneDependencyUpdateManyMutationInput, MilestoneDependencyUncheckedUpdateManyWithoutDependencyInput>
+  }
+
+  export type OrganizationCreateWithoutMilestoneDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutMilestoneDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutMilestoneDependencyInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutMilestoneDependencyInput, OrganizationUncheckedCreateWithoutMilestoneDependencyInput>
+  }
+
+  export type MilestoneCreateWithoutDependsOnInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutDependsOnInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    blocking?: MilestoneDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutDependsOnInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutDependsOnInput, MilestoneUncheckedCreateWithoutDependsOnInput>
+  }
+
+  export type MilestoneCreateWithoutBlockingInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutMilestonesInput
+    organization: OrganizationCreateNestedOneWithoutMilestoneInput
+    owner?: UserCreateNestedOneWithoutMilestoneInput
+    issues?: IssueCreateNestedManyWithoutMilestoneInput
+    features?: FeatureCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyCreateNestedManyWithoutMilestoneInput
+  }
+
+  export type MilestoneUncheckedCreateWithoutBlockingInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
+    ownerId?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutMilestoneInput
+    features?: FeatureUncheckedCreateNestedManyWithoutMilestoneInput
+    dependsOn?: MilestoneDependencyUncheckedCreateNestedManyWithoutMilestoneInput
+  }
+
+  export type MilestoneCreateOrConnectWithoutBlockingInput = {
+    where: MilestoneWhereUniqueInput
+    create: XOR<MilestoneCreateWithoutBlockingInput, MilestoneUncheckedCreateWithoutBlockingInput>
+  }
+
+  export type OrganizationUpsertWithoutMilestoneDependencyInput = {
+    update: XOR<OrganizationUpdateWithoutMilestoneDependencyInput, OrganizationUncheckedUpdateWithoutMilestoneDependencyInput>
+    create: XOR<OrganizationCreateWithoutMilestoneDependencyInput, OrganizationUncheckedCreateWithoutMilestoneDependencyInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutMilestoneDependencyInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutMilestoneDependencyInput, OrganizationUncheckedUpdateWithoutMilestoneDependencyInput>
+  }
+
+  export type OrganizationUpdateWithoutMilestoneDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutMilestoneDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type MilestoneUpsertWithoutDependsOnInput = {
+    update: XOR<MilestoneUpdateWithoutDependsOnInput, MilestoneUncheckedUpdateWithoutDependsOnInput>
+    create: XOR<MilestoneCreateWithoutDependsOnInput, MilestoneUncheckedCreateWithoutDependsOnInput>
+    where?: MilestoneWhereInput
+  }
+
+  export type MilestoneUpdateToOneWithWhereWithoutDependsOnInput = {
+    where?: MilestoneWhereInput
+    data: XOR<MilestoneUpdateWithoutDependsOnInput, MilestoneUncheckedUpdateWithoutDependsOnInput>
+  }
+
+  export type MilestoneUpdateWithoutDependsOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutDependsOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUpsertWithoutBlockingInput = {
+    update: XOR<MilestoneUpdateWithoutBlockingInput, MilestoneUncheckedUpdateWithoutBlockingInput>
+    create: XOR<MilestoneCreateWithoutBlockingInput, MilestoneUncheckedCreateWithoutBlockingInput>
+    where?: MilestoneWhereInput
+  }
+
+  export type MilestoneUpdateToOneWithWhereWithoutBlockingInput = {
+    where?: MilestoneWhereInput
+    data: XOR<MilestoneUpdateWithoutBlockingInput, MilestoneUncheckedUpdateWithoutBlockingInput>
+  }
+
+  export type MilestoneUpdateWithoutBlockingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutBlockingInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -55070,6 +60350,20 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
+  }
+
+  export type MilestoneCreateManyOwnerInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    organizationId: string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -55280,6 +60574,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCreatedByInput = {
@@ -55304,6 +60599,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutCreatedByInput = {
@@ -55379,7 +60675,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
     parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
@@ -55392,6 +60687,7 @@ export namespace Prisma {
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutAssignedToInput = {
@@ -55609,6 +60905,7 @@ export namespace Prisma {
     subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -55629,6 +60926,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
@@ -55650,6 +60948,54 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MilestoneUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MemberCreateManyOrganizationInput = {
@@ -55800,6 +61146,7 @@ export namespace Prisma {
     parentFeatureId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
   }
 
   export type FeatureDependencyCreateManyOrganizationInput = {
@@ -55813,6 +61160,26 @@ export namespace Prisma {
     id?: string
     featureId: string
     url: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneCreateManyOrganizationInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    ownerId?: string | null
+  }
+
+  export type MilestoneDependencyCreateManyOrganizationInput = {
+    id?: string
+    milestoneId: string
+    dependencyId: string
     createdAt?: Date | string
   }
 
@@ -55916,6 +61283,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutOrganizationInput = {
@@ -55940,6 +61308,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutOrganizationInput = {
@@ -56015,7 +61384,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
     parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
@@ -56027,6 +61395,7 @@ export namespace Prisma {
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
   }
 
@@ -56245,6 +61614,7 @@ export namespace Prisma {
     subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -56265,6 +61635,7 @@ export namespace Prisma {
     parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
@@ -56286,6 +61657,7 @@ export namespace Prisma {
     parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FeatureDependencyUpdateWithoutOrganizationInput = {
@@ -56327,6 +61699,74 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     featureId?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutMilestonesNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MilestoneDependencyUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestone?: MilestoneUpdateOneRequiredWithoutDependsOnNestedInput
+    dependency?: MilestoneUpdateOneRequiredWithoutBlockingNestedInput
+  }
+
+  export type MilestoneDependencyUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -56420,13 +61860,26 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
+  }
+
+  export type MilestoneCreateManyProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    status?: $Enums.MilestoneStatus
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizationId: string
+    ownerId?: string | null
   }
 
   export type IssueUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
-    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
     parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
@@ -56438,6 +61891,7 @@ export namespace Prisma {
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
   }
 
@@ -56671,6 +62125,7 @@ export namespace Prisma {
     subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -56691,6 +62146,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
@@ -56712,6 +62168,54 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MilestoneUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneNestedInput
+    owner?: UserUpdateOneWithoutMilestoneNestedInput
+    issues?: IssueUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutMilestoneNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutMilestoneNestedInput
+    dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
+    blocking?: MilestoneDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type MilestoneUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumMilestoneStatusFieldUpdateOperationsInput | $Enums.MilestoneStatus
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProjectCreateManyIdeaInput = {
@@ -56755,6 +62259,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
     features?: FeatureUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutIdeaInput = {
@@ -56779,6 +62284,7 @@ export namespace Prisma {
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
     features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutIdeaInput = {
@@ -57183,6 +62689,7 @@ export namespace Prisma {
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    milestoneId?: string | null
   }
 
   export type FeatureDependencyCreateManyFeatureInput = {
@@ -57222,6 +62729,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
@@ -57242,6 +62750,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
@@ -57263,6 +62772,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FeatureDependencyUpdateWithoutFeatureInput = {
@@ -57325,6 +62835,218 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueCreateManyMilestoneInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+  }
+
+  export type FeatureCreateManyMilestoneInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MilestoneDependencyCreateManyMilestoneInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type MilestoneDependencyCreateManyDependencyInput = {
+    id?: string
+    organizationId: string
+    milestoneId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IssueUncheckedUpdateManyWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeatureUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneDependencyNestedInput
+    dependency?: MilestoneUpdateOneRequiredWithoutBlockingNestedInput
+  }
+
+  export type MilestoneDependencyUncheckedUpdateWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutMilestoneInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutMilestoneDependencyNestedInput
+    milestone?: MilestoneUpdateOneRequiredWithoutDependsOnNestedInput
+  }
+
+  export type MilestoneDependencyUncheckedUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MilestoneDependencyUncheckedUpdateManyWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

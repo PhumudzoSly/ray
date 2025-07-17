@@ -12,8 +12,8 @@ export function LiveBlockProvider({ children }: { children: ReactNode }) {
 
   return (
     <LiveblocksProvider
-      // publicApiKey={env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!}
-      authEndpoint="/api/liveblocks-auth"
+      publicApiKey={process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!}
+      // authEndpoint="/api/liveblocks-auth"
 
       resolveUsers={async ({ userIds }) => {
         const users = await Promise.all(

@@ -40,8 +40,9 @@ model User {
   issue        Issue[]        @relation("AssignedIssues")
   asset        Asset[]        @relation("UploadedAssets")
   waitlist     Waitlist[]     @relation("CreatedWaitlists")
-  ActivityFeed ActivityFeed[]
-  Feature      Feature[]
+  activityFeed ActivityFeed[]
+  feature      Feature[]
+  milestone    Milestone[]    @relation("MilestoneOwner")
 
   @@unique([email])
   @@map("user")
@@ -100,24 +101,26 @@ model Verification {
 }
 
 model Organization {
-  id                String              @id @default(uuid())
-  name              String
-  slug              String?
-  logo              String?
-  createdAt         DateTime            @default(now())
-  metadata          String?
-  members           Member[]
-  invitations       Invitation[]
-  subscription      Subscription[]
-  project           Project[]
-  idea              Idea[]
-  issue             Issue[]
-  asset             Asset[]
-  waitlist          Waitlist[]
-  ActivityFeed      ActivityFeed[]
-  Feature           Feature[]
-  FeatureDependency FeatureDependency[]
-  FeatureLink       FeatureLink[]
+  id                  String                @id @default(uuid())
+  name                String
+  slug                String?
+  logo                String?
+  createdAt           DateTime              @default(now())
+  metadata            String?
+  members             Member[]
+  invitations         Invitation[]
+  subscription        Subscription[]
+  project             Project[]
+  idea                Idea[]
+  issue               Issue[]
+  asset               Asset[]
+  waitlist            Waitlist[]
+  activityFeed        ActivityFeed[]
+  feature             Feature[]
+  featureDependency   FeatureDependency[]
+  featureLink         FeatureLink[]
+  milestone           Milestone[]
+  milestoneDependency MilestoneDependency[]
 
   @@unique([slug])
   @@map("organization")
@@ -225,6 +228,7 @@ model Project {
   publicRoadmaps PublicRoadmap[]
   waitlists      Waitlist[]
   features       Feature[]
+  milestones     Milestone[]
 
   @@index([ideaId])
   @@index([organizationId])
@@ -261,6 +265,7 @@ model Issue {
   organizationId   String
   project          Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId        String
+  milestone        Milestone?   @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
   milestoneId      String?
   featureId        String?
   parentIssueId    String?
@@ -570,6 +575,8 @@ model Feature {
   organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   assignedTo    User?        @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
   project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone     Milestone?   @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  milestoneId   String?
 
   // Feature dependencies
   dependencies FeatureDependency[] @relation("Dependants")
@@ -577,6 +584,7 @@ model Feature {
   FeatureLink  FeatureLink[]
 
   @@index([projectId])
+  @@index([milestoneId])
   @@map("feature")
 }
 
@@ -613,6 +621,58 @@ model FeatureLink {
   @@index([featureId])
   @@index([organizationId, featureId])
   @@map("featureLink")
+}
+
+model Milestone {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+  status      MilestoneStatus @default(NOT_STARTED)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  // Relations
+  project        Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId      String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  owner          User?        @relation("MilestoneOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId        String?
+
+  // Related items
+  issues   Issue[]
+  features Feature[]
+
+  // Dependencies
+  dependsOn MilestoneDependency[] @relation("Dependants")
+  blocking  MilestoneDependency[] @relation("Dependencies")
+
+  @@index([projectId])
+  @@index([organizationId])
+  @@index([ownerId])
+  @@map("milestone")
+}
+
+model MilestoneDependency {
+  id             String   @id @default(uuid())
+  organizationId String
+  milestoneId    String
+  dependencyId   String
+  createdAt      DateTime @default(now())
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  milestone    Milestone    @relation("Dependants", fields: [milestoneId], references: [id], onDelete: Cascade)
+  dependency   Milestone    @relation("Dependencies", fields: [dependencyId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([milestoneId])
+  @@index([dependencyId])
+  @@index([organizationId, milestoneId])
+  @@index([organizationId, dependencyId])
+  @@map("milestoneDependency")
 }
 
 enum ActivityType {
@@ -796,4 +856,12 @@ enum FeaturePhase {
   RELEASE
   LIVE
   DEPRECATED
+}
+
+enum MilestoneStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  AT_RISK
+  COMPLETED
+  DELAYED
 }

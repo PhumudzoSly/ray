@@ -39,31 +39,48 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
   const [selectedFeatureId, setSelectedFeatureId] =
     useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
 
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature (phase change)
   const updateFeatureMutation = useMutation({
     mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
-      return await featureActions.updateFeatureById(featureId, updates);
+      const result = await featureActions.updateFeature(featureId, updates);
+      if (!result.success) {
+        throw new Error(result.error as string || "Failed to update feature");
+      }
+      return result;
     },
     onMutate: async ({ featureId, updates }) => {
+      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["features", projectId] });
+
+      // Snapshot the previous value
       const previousFeatures = queryClient.getQueryData<any[]>(["features", projectId]);
+
+      // Optimistically update to the new value
       queryClient.setQueryData<any[]>(["features", projectId], (old) => {
         if (!old) return old;
         return old.map((f) =>
           f.id === featureId ? { ...f, ...updates } : f
         );
       });
+
+      // Return a context object with the snapshotted value
       return { previousFeatures };
     },
     onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousFeatures) {
         queryClient.setQueryData(["features", projectId], context.previousFeatures);
       }
-      toast.error("Failed to move feature");
+      toast.error(err.message || "Failed to move feature");
+    },
+    onSuccess: (data, variables) => {
+      toast.success("Feature updated successfully");
     },
     onSettled: () => {
+      // Always refetch after error or success to ensure data consistency
       queryClient.invalidateQueries({ queryKey: ["features", projectId] });
     },
   });
@@ -71,7 +88,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
   const { data: features, isPending } = useQuery({
     queryKey: ["features", projectId],
     queryFn: async () => {
-      const res = await featureActions.getFeaturesByProjectId(projectId);
+      const res = await featureActions.getFeaturesByProject(projectId);
       if (res.success) return res.data;
       throw new Error("Failed to fetch features");
     },
@@ -205,6 +222,12 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     toGroupId: string,
     newIndex: number
   ) => {
+    // Don't update if moving to the same phase
+    if (fromGroupId === toGroupId) return;
+
+    // Don't allow multiple moves at once
+    if (updateFeatureMutation.isPending) return;
+
     updateFeatureMutation.mutate({
       featureId: itemId,
       updates: { phase: toGroupId },

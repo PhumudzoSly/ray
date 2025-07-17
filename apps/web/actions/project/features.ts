@@ -994,6 +994,65 @@ export const searchFeatures = async (projectId: string, searchTerm: string) => {
 };
 
 /**
+ * Get feature dependency graph for a project
+ */
+export const getFeatureDependencyGraph = async (projectId: string) => {
+    const { org } = await getSession();
+    try {
+        const features = await prisma.feature.findMany({
+            where: {
+                projectId,
+                organizationId: org,
+            },
+            include: {
+                assignedTo: true,
+                dependencies: {
+                    include: {
+                        dependency: true,
+                    },
+                },
+                dependentOn: {
+                    include: {
+                        feature: true,
+                    },
+                },
+            },
+        });
+
+        // Extract dependencies
+        const dependencies: { parentId: string; dependentFeatureId: string }[] = [];
+        features.forEach((feature) => {
+            feature.dependencies.forEach((dep) => {
+                dependencies.push({
+                    parentId: dep.dependency.id,
+                    dependentFeatureId: feature.id,
+                });
+            });
+        });
+
+        return {
+            success: true,
+            data: {
+                features: features.map((feature) => ({
+                    id: feature.id,
+                    name: feature.name,
+                    phase: feature.phase,
+                    priority: feature.priority,
+                    assignedTo: feature.assignedTo?.id,
+                    user: feature.assignedTo ? {
+                        name: feature.assignedTo.name,
+                        image: feature.assignedTo.image,
+                    } : undefined,
+                })),
+                dependencies,
+            },
+        };
+    } catch (error) {
+        return { success: false, error };
+    }
+};
+
+/**
  * Get feature activity feed
  */
 export const getFeatureActivity = async (featureId: string, limit = 50) => {

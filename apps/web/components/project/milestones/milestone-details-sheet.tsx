@@ -583,7 +583,7 @@ export function MilestoneDetailsSheet({
               <h3 className="text-sm font-medium text-foreground">Activity</h3>
             </div>
             <ActivityFeed
-              entityType="milestone"
+              entityType="MILESTONE"
               entityId={milestoneId}
               emptyMessage="No activity yet"
               limit={10}

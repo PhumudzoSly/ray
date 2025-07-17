@@ -10,15 +10,15 @@ import ReactQueryProvider from "@/lib/query/provider";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query/getQueryClient";
 
-// const fontSans = Geist({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-// });
+const fontSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
-// const fontMono = Geist_Mono({
-//   subsets: ["latin"],
-//   variable: "--font-mono",
-// });
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: "Ray AI - Build SaaS that users want and love.",
@@ -36,9 +36,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-      // className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        {/* <AuthProvider> */}
         <ReactQueryProvider>
           <HydrationBoundary state={dehydrate(client)}>
             <ThemeProvider
@@ -52,7 +51,6 @@ export default function RootLayout({
             </ThemeProvider>
           </HydrationBoundary>
         </ReactQueryProvider>
-        {/* </AuthProvider> */}
       </body>
     </html>
   );

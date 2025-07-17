@@ -10,7 +10,7 @@ import { Separator } from "@workspace/ui/components/separator";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import FeatureLinks from "./feature-links";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, updateFeatureById, validateFeatureCompletion } from "@/actions/project/features";
+import { getFeatureById, updateFeature, validateFeatureCompletion } from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 
@@ -33,16 +33,46 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
   });
 
   // Mutation for updating feature
-  const { mutateAsync: updateFeature } = useMutation({
+  const { mutateAsync: updateFeatureMutation } = useMutation({
     mutationFn: async (updates: any) => {
-      return await updateFeatureById(featureId, updates);
+      return await updateFeature(featureId, updates);
+    },
+    onMutate: async (updates) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["feature", featureId] });
+
+      // Snapshot the previous value
+      const previousFeature = queryClient.getQueryData(["feature", featureId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["feature", featureId], (old: any) => {
+        if (!old?.success) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            ...updates,
+          },
+        };
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousFeature };
+    },
+    onError: (err, updates, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousFeature) {
+        queryClient.setQueryData(["feature", featureId], context.previousFeature);
+      }
+      toast.error("Failed to update feature");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
       toast.success("Feature updated");
     },
-    onError: () => {
-      toast.error("Failed to update feature");
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
     },
   });
 
@@ -50,7 +80,7 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
 
   const handleUpdate = async (updates: any) => {
     if (!featureId) return;
-    await updateFeature(updates);
+    await updateFeatureMutation(updates);
   };
 
   return (
@@ -74,11 +104,11 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
               await handleUpdate({ phase });
             }}
             blockedPhases={
-              validationResult && !validationResult.canComplete ? ["LIVE"] : []
+              validationResult && !validationResult.data?.canComplete ? ["LIVE"] : []
             }
             onBlockedPhaseAttempt={() => {
               toast.error(
-                `Cannot move to LIVE phase - this feature has ${validationResult?.blockers.length} incomplete dependencies`
+                `Cannot move to LIVE phase - this feature has ${validationResult?.data?.blockers.length} incomplete dependencies`
               );
             }}
           />

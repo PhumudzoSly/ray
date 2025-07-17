@@ -5,7 +5,7 @@ import { ProjectCard } from "./project-card";
 
 const PROJECT_STATUSES = [
   { id: "planning", label: "Planning", color: "bg-blue-500" },
-  { id: "in-progress", label: "In Progress", color: "bg-yellow-500" },
+  { id: "in_progress", label: "In Progress", color: "bg-yellow-500" },
   { id: "review", label: "Review", color: "bg-purple-500" },
   { id: "completed", label: "Completed", color: "bg-green-500" },
 ];

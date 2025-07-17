@@ -20,7 +20,7 @@ import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { Comments } from "@/components/liveblocks/comments";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, getFeatureHierarchy, updateFeatureById } from "@/actions/project/features";
+import { getFeatureById, getFeatureHierarchy, updateFeature } from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 
@@ -45,22 +45,52 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
   const featureHierarchy = hierarchyResult?.success ? hierarchyResult.data : null;
 
   // Mutation for updating feature
-  const { mutateAsync: updateFeature, isPending: isUpdating } = useMutation({
+  const { mutateAsync: updateFeatureMutation, isPending: isUpdating } = useMutation({
     mutationFn: async (updates: any) => {
-      return await updateFeatureById(id, updates);
+      return await updateFeature(id, updates);
+    },
+    onMutate: async (updates) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["feature", id] });
+
+      // Snapshot the previous value
+      const previousFeature = queryClient.getQueryData(["feature", id]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["feature", id], (old: any) => {
+        if (!old?.success) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            ...updates,
+          },
+        };
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousFeature };
+    },
+    onError: (err, updates, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousFeature) {
+        queryClient.setQueryData(["feature", id], context.previousFeature);
+      }
+      toast.error("Failed to update feature");
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["feature", id] });
       toast.success("Feature updated");
     },
-    onError: () => {
-      toast.error("Failed to update feature");
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({ queryKey: ["feature", id] });
     },
   });
 
   const handleUpdate = async (updates: any) => {
     if (!id) return;
-    await updateFeature(updates);
+    await updateFeatureMutation(updates);
   };
 
   if (isFeaturePending || feature === undefined)
@@ -282,7 +312,7 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
       {view === "activity" ? (
         <div className="py-6">
           <ActivityFeed
-            entityType="feature"
+            entityType="FEATURE"
             entityId={id}
             emptyMessage="No feature activity yet"
           />

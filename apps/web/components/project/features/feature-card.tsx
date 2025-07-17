@@ -26,6 +26,7 @@ import { DateInput } from "@workspace/ui/components/date-input";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as featureActions from "@/actions/project/features";
 import { toast } from "sonner";
+import { Button } from "@workspace/ui/components/button";
 
 interface FeatureCardProps {
   feature: any;
@@ -40,12 +41,12 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
   // TanStack mutation for updating a feature
   const updateFeatureMutation = useMutation({
     mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
-      return await featureActions.updateFeatureById(featureId, updates);
+      return await featureActions.updateFeature(featureId, updates);
     },
     onMutate: async ({ featureId, updates }) => {
       await queryClient.cancelQueries();
-      const previousFeatures = queryClient.getQueryData<any[]>(["features"]);
-      queryClient.setQueryData<any[]>(["features"], (old) => {
+      const previousFeatures = queryClient.getQueryData<any[]>(["features", feature.projectId]);
+      queryClient.setQueryData<any[]>(["features", feature.projectId], (old) => {
         if (!old) return old;
         return old.map((f) =>
           f.id === featureId ? { ...f, ...updates } : f
@@ -55,12 +56,12 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
     },
     onError: (err, variables, context) => {
       if (context?.previousFeatures) {
-        queryClient.setQueryData(["features"], context.previousFeatures);
+        queryClient.setQueryData(["features", feature.projectId], context.previousFeatures);
       }
       toast.error("Failed to update feature");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["features"] });
+      queryClient.invalidateQueries({ queryKey: ["features", feature.projectId] });
     },
   });
 
@@ -86,18 +87,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
     });
   };
 
-  const getPhaseColor = (phase: string) => {
-    const colors: Record<string, string> = {
-      DISCOVERY: "bg-secondary text-secondary-foreground",
-      PLANNING: "bg-secondary text-secondary-foreground",
-      DEVELOPMENT: "bg-secondary text-secondary-foreground",
-      TESTING: "bg-secondary text-secondary-foreground",
-      RELEASE: "bg-secondary text-secondary-foreground",
-      LIVE: "bg-secondary text-secondary-foreground",
-      DEPRECATED: "bg-muted text-muted-foreground",
-    };
-    return colors[phase] || "bg-secondary text-secondary-foreground";
-  };
+
 
   return (
     <Card
@@ -149,11 +139,11 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
               await handleUpdate({ phase });
             }}
             blockedPhases={
-              validationResult && !validationResult.canComplete ? ["LIVE"] : []
+              validationResult && validationResult.success && !validationResult?.data?.canComplete ? ["LIVE"] : []
             }
             onBlockedPhaseAttempt={() => {
               toast.error(
-                `Cannot move to LIVE phase - this feature has ${validationResult?.blockers.length} incomplete dependencies`
+                `Cannot move to LIVE phase - this feature has ${validationResult && validationResult.success ? validationResult?.data?.blockers?.length : 0} incomplete dependencies`
               );
             }}
           />

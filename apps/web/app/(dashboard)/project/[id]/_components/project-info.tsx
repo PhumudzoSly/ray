@@ -7,6 +7,8 @@ import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { ProjectTypeSelector } from "@/components/ui/selectors/project-type-selector";
 import { ProjectPlatform } from "@workspace/backend/prisma/generated/client/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProject } from "@/actions/project/index";
 
 export const ProjectInfo = ({
   title,
@@ -21,6 +23,29 @@ export const ProjectInfo = ({
   platform: ProjectPlatform;
   token: string;
 }) => {
+
+  const queryClient = useQueryClient();
+  // Optimistic update mutation for project
+  const updateProjectMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+      return await updateProject(id, updates);
+    },
+    onMutate: async ({ id, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["project", id] });
+      const previousProject = queryClient.getQueryData(["project", id]);
+      queryClient.setQueryData(["project", id], (old: any) => ({ ...old, ...updates }));
+      return { previousProject };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousProject) {
+        queryClient.setQueryData(["project", id], context.previousProject);
+      }
+      toast.error("Failed to update project");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+    },
+  });
 
   return (
     <div>
@@ -40,13 +65,7 @@ export const ProjectInfo = ({
               value={title}
               onSave={async (value) => {
                 try {
-                  // Removed: await updateProject({
-                  // Removed:   project: {
-                  // Removed:     projectId: id as Id<"projects">,
-                  // Removed:     name: value,
-                  // Removed:   },
-                  // Removed:   token,
-                  // Removed: });
+                  updateProjectMutation.mutate({ id, updates: { name: value } });
                 } catch (error) {
                   toast.error("Failed to update project");
                 }
@@ -68,13 +87,7 @@ export const ProjectInfo = ({
         value={description}
         onSave={async (value) => {
           try {
-            // Removed: await updateProject({
-            // Removed:   project: {
-            // Removed:     projectId: id as Id<"projects">,
-            // Removed:     description: value,
-            // Removed:   },
-            // Removed:   token,
-            // Removed: });
+            updateProjectMutation.mutate({ id, updates: { description: value } });
           } catch (error) {
             toast.error("Failed to update project");
           }

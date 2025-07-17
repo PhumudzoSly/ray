@@ -41,7 +41,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   // Fetch project data using TanStack Query and server action
-  const { data: project, isLoading } = useQuery({
+  const { data: project, } = useQuery({
     queryKey: ["project", id],
     queryFn: () => projectActions.getProject(id),
   });
@@ -179,7 +179,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   </h3>
                   <DateSelector
                     value={project?.dueDate ? new Date(project?.dueDate) : null}
-                    onChange={async (e) => updateProjectMutation.mutate({ id: project.id, updates: { dueDate: e?.toDateString() } })}
+                    onChange={async (e) => updateProjectMutation.mutate({ id: project.id, updates: { dueDate: e } })}
                   />
 
                   <h3 className="text-xs font-medium text-muted-foreground">

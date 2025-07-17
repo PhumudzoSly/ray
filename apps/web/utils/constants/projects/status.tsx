@@ -233,7 +233,7 @@ export const status: Status[] = [
     icon: TechnicalReviewIcon,
   },
   {
-    id: "in-progress",
+    id: "in_progress",
     name: "In Progress",
     color: "#facc15",
     colorClass: "text-yellow-400",

@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import * as featureActions from "@/actions/feature";
-import * as issueActions from "@/actions/issue";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import * as featureActions from "@/actions/project/features";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 import { Badge } from "@workspace/ui/components/badge";
@@ -13,7 +12,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/components/avatar";
-import { Separator } from "@workspace/ui/components/separator";
 import {
   Tooltip,
   TooltipContent,
@@ -21,12 +19,10 @@ import {
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
 import {
-  Plus,
   X,
   ArrowRight,
   ArrowLeft,
   AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
 import {
   Dialog,
@@ -34,7 +30,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
   DialogDescription,
 } from "@workspace/ui/components/dialog";
 import { Alert, AlertDescription } from "@workspace/ui/components/alert";
@@ -103,62 +98,145 @@ export const FeatureDependencyManager: React.FC<
 
   const addDependencyMutation = useMutation({
     mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
-      featureActions.addFeatureDependency({ parentId, dependentFeatureId, token }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] }),
+      featureActions.addFeatureDependency({ parentId, dependentFeatureId }),
+    onMutate: async ({ parentId, dependentFeatureId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["featureDependencies", featureId] });
+
+      // Snapshot the previous value
+      const previousDependencies = queryClient.getQueryData(["featureDependencies", featureId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["featureDependencies", featureId], (old: any) => {
+        if (!old?.success) return old;
+
+        const newDependency = {
+          id: `temp-${Date.now()}`,
+          dependency: {
+            id: parentId,
+            name: "Loading...",
+            description: "",
+            phase: "PLANNING",
+            priority: "MEDIUM",
+            assignedTo: null,
+          },
+        };
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            dependencies: [...old.data.dependencies, newDependency],
+          },
+        };
+      });
+
+      return { previousDependencies };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousDependencies) {
+        queryClient.setQueryData(["featureDependencies", featureId], context.previousDependencies);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] });
+    },
   });
+
   const removeDependencyMutation = useMutation({
     mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
-      featureActions.removeFeatureDependency({ parentId, dependentFeatureId, token }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] }),
+      featureActions.removeFeatureDependency({ parentId, dependentFeatureId }),
+    onMutate: async ({ parentId, dependentFeatureId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["featureDependencies", featureId] });
+
+      // Snapshot the previous value
+      const previousDependencies = queryClient.getQueryData(["featureDependencies", featureId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["featureDependencies", featureId], (old: any) => {
+        if (!old?.success) return old;
+
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            dependencies: old.data.dependencies.filter((dep: any) => dep.dependency.id !== parentId),
+          },
+        };
+      });
+
+      return { previousDependencies };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousDependencies) {
+        queryClient.setQueryData(["featureDependencies", featureId], context.previousDependencies);
+      }
+    },
+    onSettled: () => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] });
+    },
   });
 
   const { data: dependencies } = useQuery({
     queryKey: ["featureDependencies", featureId],
-    queryFn: () => featureActions.getFeatureDependencies({ token, featureId }),
+    queryFn: () => featureActions.getFeatureDependencies(featureId),
   });
 
   const { data: validationResult } = useQuery({
     queryKey: ["featureValidation", featureId],
-    queryFn: () => featureActions.validateFeatureCompletion({ token, featureId }),
+    queryFn: () => featureActions.validateFeatureCompletion(featureId),
   });
 
   const { data: dependencyGraph } = useQuery({
     queryKey: ["featureDependencyGraph", projectId],
-    queryFn: () => featureActions.getFeatureDependencyGraph({ token, projectId }),
+    queryFn: () => featureActions.getFeatureDependencyGraph(projectId!),
     enabled: !!projectId,
   });
 
   // Combine dependencies and dependents into a single list
   const combinedDependencies = useMemo(() => {
-    if (!dependencies) return [];
+    if (!dependencies?.success || !dependencies.data) return [];
 
     const combined: CombinedDependency[] = [];
 
     // Add dependencies (features this feature depends on)
-    dependencies.dependencies.forEach((dep) => {
-      if (dep.id) {
+    dependencies.data.dependencies.forEach((dep: any) => {
+      if (dep.dependency?.id) {
         combined.push({
-          id: dep.id,
-          name: dep.name as any,
-          description: dep.description,
-          phase: dep.phase,
-          priority: dep.priority,
-          user: dep.user as any,
+          id: dep.dependency.id,
+          name: dep.dependency.name,
+          description: dep.dependency.description,
+          phase: dep.dependency.phase,
+          priority: dep.dependency.priority,
+          user: dep.dependency.assignedTo ? {
+            name: dep.dependency.assignedTo.name,
+            image: dep.dependency.assignedTo.image,
+            email: dep.dependency.assignedTo.email,
+          } : undefined,
           type: "dependency",
         });
       }
     });
 
     // Add dependents (features that depend on this feature)
-    dependencies.dependents.forEach((dep) => {
-      if (dep.id) {
+    dependencies.data.dependents.forEach((dep: any) => {
+      if (dep.feature?.id) {
         combined.push({
-          id: dep.id,
-          name: dep.name as any,
-          description: dep.description,
-          phase: dep.phase,
-          priority: dep.priority,
-          user: dep.user as any,
+          id: dep.feature.id,
+          name: dep.feature.name,
+          description: dep.feature.description,
+          phase: dep.feature.phase,
+          priority: dep.feature.priority,
+          user: dep.feature.assignedTo ? {
+            name: dep.feature.assignedTo.name,
+            image: dep.feature.assignedTo.image,
+            email: dep.feature.assignedTo.email,
+          } : undefined,
           type: "dependent",
         });
       }
@@ -181,6 +259,7 @@ export const FeatureDependencyManager: React.FC<
       toast.error("Failed to add dependency");
     }
   };
+
   const handleRemoveDependency = async (parentId: string) => {
     try {
       await removeDependencyMutation.mutateAsync({
@@ -193,7 +272,7 @@ export const FeatureDependencyManager: React.FC<
     }
   };
 
-  if (!dependencies) {
+  if (!dependencies?.success) {
     return (
       <div className="flex items-center justify-center py-8">
         <LoadingSpinner />
@@ -204,11 +283,11 @@ export const FeatureDependencyManager: React.FC<
   return (
     <div className="space-y-6">
       {/* Status Alert */}
-      {validationResult && !validationResult.canComplete && (
+      {validationResult?.success && validationResult.data && !validationResult.data.canComplete && (
         <Alert variant={"destructive"}>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Blocked by {validationResult.blockers.length} incomplete
+            Blocked by {validationResult.data.blockers.length} incomplete
             dependencies
           </AlertDescription>
         </Alert>
@@ -243,21 +322,27 @@ export const FeatureDependencyManager: React.FC<
               <div className="flex-1 min-h-0 min-w-0 overflow-auto bg-background">
                 <DependencyGraphVisualization
                   features={
-                    dependencyGraph?.features.map((feature) => ({
-                      id: feature.id,
-                      name: feature.name,
-                      phase: feature.phase,
-                      priority: feature.priority,
-                      assignedTo: feature.assignedTo,
-                      user: feature.user
-                        ? {
-                          name: feature.user.name,
-                          image: feature.user.image,
-                        }
-                        : undefined,
-                    })) || []
+                    dependencyGraph?.success && dependencyGraph.data
+                      ? dependencyGraph.data.features.map((feature: any) => ({
+                        id: feature.id,
+                        name: feature.name,
+                        phase: feature.phase,
+                        priority: feature.priority,
+                        assignedTo: feature.assignedTo,
+                        user: feature.user
+                          ? {
+                            name: feature.user.name,
+                            image: feature.user.image,
+                          }
+                          : undefined,
+                      }))
+                      : []
                   }
-                  dependencies={dependencyGraph?.dependencies || []}
+                  dependencies={
+                    dependencyGraph?.success && dependencyGraph.data
+                      ? dependencyGraph.data.dependencies
+                      : []
+                  }
                   currentFeatureId={featureId}
                 />
               </div>
@@ -317,6 +402,7 @@ export const FeatureDependencyManager: React.FC<
                     variant="ghost"
                     onClick={() => handleRemoveDependency(item.id)}
                     className="h-6 w-6 p-0"
+                    disabled={removeDependencyMutation.isPending}
                   >
                     <X className="h-3 w-3" />
                   </Button>
