@@ -335,7 +335,7 @@ export default function WaitlistManagePage() {
                     checked={selectedEntries.length === filteredEntries.length}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        setSelectedEntries(filteredEntries.map((e) => e._id));
+                        setSelectedEntries(filteredEntries.map((e) => e.id));
                       } else {
                         setSelectedEntries([]);
                       }
@@ -353,16 +353,16 @@ export default function WaitlistManagePage() {
             </TableHeader>
             <TableBody>
               {filteredEntries.map((entry) => (
-                <TableRow key={entry._id}>
+                <TableRow key={entry.id}>
                   <TableCell>
                     <Checkbox
-                      checked={selectedEntries.includes(entry._id)}
+                      checked={selectedEntries.includes(entry.id)}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          setSelectedEntries([...selectedEntries, entry._id]);
+                          setSelectedEntries([...selectedEntries, entry.id]);
                         } else {
                           setSelectedEntries(
-                            selectedEntries.filter((id) => id !== entry._id)
+                            selectedEntries.filter((id) => id !== entry.id)
                           );
                         }
                       }}
@@ -396,7 +396,7 @@ export default function WaitlistManagePage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           onClick={() =>
-                            handleStatusChange(entry._id, "invited")
+                            handleStatusChange(entry.id, "invited")
                           }
                           disabled={entry.status === "invited"}
                         >
@@ -405,7 +405,7 @@ export default function WaitlistManagePage() {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
-                            handleStatusChange(entry._id, "joined")
+                            handleStatusChange(entry.id, "joined")
                           }
                           disabled={entry.status === "joined"}
                         >
@@ -413,7 +413,7 @@ export default function WaitlistManagePage() {
                           Mark as Joined
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => handleDeleteEntry(entry._id)}
+                          onClick={() => handleDeleteEntry(entry.id)}
                           className="text-red-600"
                         >
                           <Trash2 className="w-4 h-4 mr-2" />

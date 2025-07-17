@@ -109,7 +109,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
         try {
           await assetActions.incrementViewCount({
             token: token,
-            assetId: asset._id,
+            assetId: asset.id,
           });
         } catch (error) {
           console.error("Failed to increment view count:", error);
@@ -125,7 +125,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
     try {
       const downloadUrl = await assetActions.getAssetDownloadUrl({
         token: token,
-        assetId: asset._id,
+        assetId: asset.id,
       });
 
       if (downloadUrl) {
@@ -173,7 +173,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
 
         return (
           <div
-            key={asset._id}
+            key={asset.id}
             className="flex items-center gap-4 p-4 bg-card border rounded-lg hover:shadow-sm transition-shadow group"
           >
             {/* Icon */}
@@ -236,12 +236,12 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
                           Download
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={() => onUpdate?.(asset._id)}>
+                      <DropdownMenuItem onClick={() => onUpdate?.(asset.id)}>
                         <Edit className="w-4 h-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => onDelete(asset._id)}
+                        onClick={() => onDelete(asset.id)}
                         className="text-destructive"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />

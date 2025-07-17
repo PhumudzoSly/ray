@@ -33,7 +33,7 @@ export function IssuePriorityField({
       queryClient.setQueryData<any[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) =>
-          i._id === issueId ? { ...i, priority } : i
+          i.id === issueId ? { ...i, priority } : i
         );
       });
       return { previousIssues };

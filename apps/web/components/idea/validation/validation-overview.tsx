@@ -33,7 +33,7 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
   const { token } = useSession();
   const [isValidating, setIsValidating] = useState(false);
   const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ token, ideaId: idea._id }),
+    mutationFn: async () => ideaActions.triggerValidation({ token, ideaId: idea.id }),
     onSuccess: () => {
       toast.success("Validation completed successfully!");
       window.location.reload();

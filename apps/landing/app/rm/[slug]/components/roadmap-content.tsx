@@ -34,7 +34,7 @@ import { RoadmapKanbanView } from "./roadmap-kanban-view";
 import { FeatureRequestDialog } from "./feature-request-dialog";
 
 interface RoadmapItem {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   status: string;
@@ -52,7 +52,7 @@ interface ChangelogItem {
 }
 
 interface Changelog {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   publishDate: number;
@@ -217,8 +217,8 @@ export function RoadmapContent({
                 </h3>
                 <p className="text-muted-foreground">
                   {searchQuery ||
-                  filterCategory !== "all" ||
-                  filterStatus !== "all"
+                    filterCategory !== "all" ||
+                    filterStatus !== "all"
                     ? "No items match your current filters"
                     : "Check back soon for upcoming features"}
                 </p>
@@ -226,7 +226,7 @@ export function RoadmapContent({
             ) : (
               upcomingItems.map((item) => (
                 <Card
-                  key={item._id}
+                  key={item.id}
                   className="group overflow-hidden border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card to-card/50 backdrop-blur-sm"
                 >
                   <CardContent className="p-6">
@@ -286,7 +286,7 @@ export function RoadmapContent({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleVote(item._id)}
+                          onClick={() => handleVote(item.id)}
                           className="flex items-center gap-2 w-full"
                         >
                           <ThumbsUp className="w-4 h-4" />
@@ -295,7 +295,7 @@ export function RoadmapContent({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setSelectedItemId(item._id)}
+                          onClick={() => setSelectedItemId(item.id)}
                           className="flex items-center gap-2 w-full"
                         >
                           <MessageSquare className="w-4 h-4" />
@@ -305,7 +305,7 @@ export function RoadmapContent({
                     </div>
 
                     {/* Feedback form */}
-                    {selectedItemId === item._id && (
+                    {selectedItemId === item.id && (
                       <div className="mt-6 pt-6 border-t">
                         <h4 className="font-medium mb-2">Add your feedback</h4>
                         <Textarea
@@ -393,7 +393,7 @@ export function RoadmapContent({
             ) : (
               changelogs.map((changelog) => (
                 <Card
-                  key={changelog._id}
+                  key={changelog.id}
                   className="overflow-hidden border-border/50 hover:shadow-md transition-all"
                 >
                   <CardHeader>

@@ -48,7 +48,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
       queryClient.setQueryData<any[]>(["features"], (old) => {
         if (!old) return old;
         return old.map((f) =>
-          f._id === featureId ? { ...f, ...updates } : f
+          f.id === featureId ? { ...f, ...updates } : f
         );
       });
       return { previousFeatures };
@@ -66,12 +66,12 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
 
   // Add dependency validation
   const { data: validationResult } = useQuery({
-    queryKey: ["validateFeatureCompletion", feature._id],
-    queryFn: () => featureActions.validateFeatureCompletion(feature._id),
+    queryKey: ["validateFeatureCompletion", feature.id],
+    queryFn: () => featureActions.validateFeatureCompletion(feature.id),
   });
 
   const handleClick = () => {
-    router.push(`/features/${feature._id}`);
+    router.push(`/features/${feature.id}`);
   };
 
   const handleInteractiveClick = (e: React.MouseEvent) => {
@@ -81,7 +81,7 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
 
   const handleUpdate = async (updates: any) => {
     updateFeatureMutation.mutate({
-      featureId: feature._id,
+      featureId: feature.id,
       updates,
     });
   };

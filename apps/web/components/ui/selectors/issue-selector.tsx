@@ -34,7 +34,7 @@ interface IssueSelectorProps {
 }
 
 interface Issue {
-  _id: string;
+  id: string;
   title: string;
 }
 
@@ -68,10 +68,10 @@ export function IssueSelector({
       if (!token) return [];
       if (projectId) {
         const raw = await getIssuesByProject(projectId as string);
-        return (raw ?? []).map((i: any) => ({ _id: i.id, title: i.title }));
+        return (raw ?? []).map((i: any) => ({ id: i.id, title: i.title }));
       } else {
         const raw = await listAllIssues();
-        return (raw ?? []).map((i: any) => ({ _id: i.id, title: i.title }));
+        return (raw ?? []).map((i: any) => ({ id: i.id, title: i.title }));
       }
     },
     enabled: !!token,
@@ -83,9 +83,9 @@ export function IssueSelector({
     : excludeIssueId
       ? [excludeIssueId]
       : [];
-  const filteredIssues = (issues ?? []).filter((issue: Issue) => !excludedIds.includes(issue._id));
+  const filteredIssues = (issues ?? []).filter((issue: Issue) => !excludedIds.includes(issue.id));
 
-  const selectedIssue = filteredIssues.find((issue: Issue) => issue._id === selectedValue);
+  const selectedIssue = filteredIssues.find((issue: Issue) => issue.id === selectedValue);
 
   return (
     <div className="*:not-first:mt-2">
@@ -153,9 +153,9 @@ export function IssueSelector({
                   );
                   return (
                     <CommandItem
-                      key={issue._id}
-                      value={issue._id}
-                      onSelect={() => handleIssueChange(issue._id)}
+                      key={issue.id}
+                      value={issue.id}
+                      onSelect={() => handleIssueChange(issue.id)}
                       className="flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export function IssueSelector({
                         )}
                         <span>{issue.title}</span>
                       </div>
-                      {selectedValue === issue._id && (
+                      {selectedValue === issue.id && (
                         <CheckIcon size={16} className="ml-auto" />
                       )}
                     </CommandItem>

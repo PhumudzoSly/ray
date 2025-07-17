@@ -521,7 +521,6 @@ export function IssuesFilters() {
                 setSelectedCategory(null);
               }}
             />
-            {/* TODO: Add organization members list here when available */}
           </FilterGroup>
         );
     }
@@ -686,8 +685,8 @@ export function IssuesFilters() {
                       placeholder={
                         selectedCategory
                           ? `Search ${filterCategories
-                              .find((c) => c.id === selectedCategory)
-                              ?.name.toLowerCase()}...`
+                            .find((c) => c.id === selectedCategory)
+                            ?.name.toLowerCase()}...`
                           : "Search all filters..."
                       }
                       className="h-11"

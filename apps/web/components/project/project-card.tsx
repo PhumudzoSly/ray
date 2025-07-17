@@ -62,7 +62,7 @@ export function ProjectCard({
       queryClient.setQueryData<any[]>(["projects"], (old) => {
         if (!old) return old;
         return old.map((p) =>
-          p._id === projectId ? { ...p, ...updates } : p
+          p.id === projectId ? { ...p, ...updates } : p
         );
       });
       return { previousProjects };
@@ -92,7 +92,7 @@ export function ProjectCard({
                   selectedType={project.platform}
                   onChange={async (value) => {
                     updateProjectMutation.mutate({
-                      projectId: project._id,
+                      projectId: project.id,
                       updates: { platform: value },
                     });
                   }}
@@ -149,13 +149,13 @@ export function ProjectCard({
           {/* Tech Stack */}
           <div className="flex flex-wrap gap-1">
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {project?.auth.split(" ")[0]}
+              {project?.auth}
             </Badge>
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
               {project?.orm}
             </Badge>
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {project?.database.split(" ")[0]}
+              {project?.database}
             </Badge>
           </div>
 
@@ -168,7 +168,7 @@ export function ProjectCard({
               })}
             </div>
             <Button size="sm" variant="outline" asChild>
-              <Link href={`/project/${project._id}`}>Open</Link>
+              <Link href={`/project/${project.id}`}>Open</Link>
             </Button>
           </div>
         </div>

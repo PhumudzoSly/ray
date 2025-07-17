@@ -28,7 +28,7 @@ interface FeatureLinksProps {
 }
 
 interface FeatureLink {
-  _id: string;
+  id: string;
   url: string;
   metadata?: {
     title?: string;
@@ -179,8 +179,8 @@ export default function FeatureLinks({ featureId }: FeatureLinksProps) {
           <div className="space-y-2">
             {links.map((link: FeatureLink) => (
               <LinkPreview
-                key={link._id}
-                id={link._id}
+                key={link.id}
+                id={link.id}
                 url={link.url}
                 title={link.metadata?.title || new URL(link.url).hostname}
                 description={link.metadata?.description}

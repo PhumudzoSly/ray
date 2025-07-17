@@ -4,7 +4,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Calendar, Target, Users, BarChart3 } from "lucide-react";
 
 interface StrategyPhase {
-  _id: string;
+  id: string;
   name: string;
   description: string;
   phase: string;
@@ -45,7 +45,7 @@ export function LaunchStrategy({ strategyPhases }: LaunchStrategyProps) {
   return (
     <div className="space-y-6">
       {strategyPhases.map((phase, index) => (
-        <div key={phase._id} className="relative">
+        <div key={phase.id} className="relative">
           {/* Timeline connector */}
           {index < strategyPhases.length - 1 && (
             <div className="absolute left-6 top-16 w-0.5 h-12 bg-border" />

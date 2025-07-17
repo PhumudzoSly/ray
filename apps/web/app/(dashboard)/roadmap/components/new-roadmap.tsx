@@ -238,7 +238,7 @@ const RoadmapForm = ({
         }
       } else {
         await updateRoadmapMutation.mutateAsync({
-          id: roadmap._id,
+          id: roadmap.id,
           name: formData.name,
           slug: formData.slug,
           description: formData.description,
@@ -361,10 +361,10 @@ const RoadmapForm = ({
                     }
                     placeholder="my-project-roadmap"
                     className={`pr-10 ${slugStatus.available === false
-                        ? "border-destructive focus-visible:ring-destructive"
-                        : slugStatus.available === true
-                          ? "border-green-500 focus-visible:ring-green-500"
-                          : ""
+                      ? "border-destructive focus-visible:ring-destructive"
+                      : slugStatus.available === true
+                        ? "border-green-500 focus-visible:ring-green-500"
+                        : ""
                       }`}
                   />
                   {formData.slug && (
@@ -384,10 +384,10 @@ const RoadmapForm = ({
                 <div className="space-y-2">
                   <p
                     className={`text-sm ${slugStatus.available === true
-                        ? "text-green-600"
-                        : slugStatus.available === false
-                          ? "text-destructive"
-                          : "text-muted-foreground"
+                      ? "text-green-600"
+                      : slugStatus.available === false
+                        ? "text-destructive"
+                        : "text-muted-foreground"
                       }`}
                   >
                     {slugStatus.message}

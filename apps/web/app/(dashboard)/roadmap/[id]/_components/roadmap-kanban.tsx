@@ -97,7 +97,7 @@ export function RoadmapKanban({
 
   // Filter out optimistically deleted items
   const filteredItems =
-    displayItems?.filter((item) => !optimisticDeletes.has(item._id)) || [];
+    displayItems?.filter((item) => !optimisticDeletes.has(item.id)) || [];
 
   // Group items by status
   const itemsByStatus = ROADMAP_STATUSES.reduce(
@@ -130,7 +130,7 @@ export function RoadmapKanban({
     // Optimistic update
     const currentItems = optimisticItems.length > 0 ? optimisticItems : items;
     const updatedItems = currentItems.map((item) =>
-      item._id === draggableId
+      item.id === draggableId
         ? { ...item, status: destination.droppableId }
         : item
     );
@@ -157,7 +157,7 @@ export function RoadmapKanban({
     // Optimistic update
     const currentItems = optimisticItems.length > 0 ? optimisticItems : items;
     const updatedItems = currentItems.map((item) =>
-      item._id === itemId ? { ...item, isPublic: !isPublic } : item
+      item.id === itemId ? { ...item, isPublic: !isPublic } : item
     );
     setOptimisticItems(updatedItems);
 
@@ -223,7 +223,7 @@ export function RoadmapKanban({
     return (
       <div
         className="p-3 rounded-lg bg-card border shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => handleItemClick(item._id)}
+        onClick={() => handleItemClick(item.id)}
       >
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex gap-2 items-center">
@@ -269,7 +269,7 @@ export function RoadmapKanban({
               className="h-6 w-6 p-0"
               onClick={(e) => {
                 e.stopPropagation();
-                handleToggleVisibility(item._id, item.isPublic);
+                handleToggleVisibility(item.id, item.isPublic);
               }}
             >
               {item.isPublic ? (
@@ -298,7 +298,7 @@ export function RoadmapKanban({
                   className="text-destructive"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDeleteItem(item._id);
+                    handleDeleteItem(item.id);
                   }}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
@@ -330,12 +330,12 @@ export function RoadmapKanban({
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`min-h-[60vh] p-2 rounded-lg border-2 border-dashed transition-colors ${snapshot.isDraggingOver
-                ? "border-primary bg-primary/5"
-                : "border-muted bg-muted/20"
+              ? "border-primary bg-primary/5"
+              : "border-muted bg-muted/20"
               }`}
           >
             {items.map((item, index) => (
-              <Draggable key={item._id} draggableId={item._id} index={index}>
+              <Draggable key={item.id} draggableId={item.id} index={index}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}

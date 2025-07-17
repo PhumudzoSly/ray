@@ -68,7 +68,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       const currentIssues =
         optimisticIssues.length > 0 ? optimisticIssues : issues;
       const updatedIssues = currentIssues.map((issue) =>
-        issue._id === draggableId
+        issue.id === draggableId
           ? { ...issue, status: destinationStatus }
           : issue
       );
@@ -125,7 +125,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
             )}
           >
             {issues.map((issue, index) => (
-              <Draggable key={issue._id} draggableId={issue._id} index={index}>
+              <Draggable key={issue.id} draggableId={issue.id} index={index}>
                 {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}

@@ -105,11 +105,11 @@ export function TableView({
             const launchReadinessScore = metrics.launchReadinessScore || 0;
 
             return (
-              <TableRow key={project._id} className="hover:bg-muted/50">
+              <TableRow key={project.id} className="hover:bg-muted/50">
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <Link
-                      href={`/project/${project._id}`}
+                      href={`/project/${project.id}`}
                       className="font-medium hover:text-primary transition-colors"
                     >
                       {project.name}
@@ -139,7 +139,7 @@ export function TableView({
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
                     >
-                      {project?.auth.split(" ")[0]}
+                      {project?.auth}
                     </Badge>
                     <Badge
                       variant="secondary"
@@ -151,7 +151,7 @@ export function TableView({
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
                     >
-                      {project?.database.split(" ")[0]}
+                      {project?.database}
                     </Badge>
                   </div>
                 </TableCell>
@@ -226,7 +226,7 @@ export function TableView({
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <Link
-                          href={`/project/${project._id}`}
+                          href={`/project/${project.id}`}
                           className="flex items-center"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />

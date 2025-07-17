@@ -17,7 +17,7 @@ import {
 import { format, formatDistanceToNow } from "date-fns";
 
 interface RoadmapItem {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   status: string;
@@ -120,7 +120,7 @@ export function RoadmapKanbanView({
           </div>
         ) : (
           items.map((item) => (
-            <Card key={item._id} className="overflow-hidden">
+            <Card key={item.id} className="overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex items-start gap-2 mb-2">
                   <Badge
@@ -174,7 +174,7 @@ export function RoadmapKanbanView({
                         size="sm"
                         variant="outline"
                         className="h-7 px-3 text-xs"
-                        onClick={() => handleVote(item._id)}
+                        onClick={() => handleVote(item.id)}
                       >
                         <ThumbsUp className="h-3 w-3 mr-1" />
                         Vote
@@ -183,7 +183,7 @@ export function RoadmapKanbanView({
                         size="sm"
                         variant="outline"
                         className="h-7 px-3 text-xs"
-                        onClick={() => setSelectedItemId(item._id)}
+                        onClick={() => setSelectedItemId(item.id)}
                       >
                         <MessageSquare className="h-3 w-3 mr-1" />
                         Comment
@@ -193,7 +193,7 @@ export function RoadmapKanbanView({
                 </div>
 
                 {/* Feedback form */}
-                {selectedItemId === item._id && (
+                {selectedItemId === item.id && (
                   <div className="mt-3 pt-3 border-t">
                     <h4 className="text-sm font-medium mb-2">
                       Add your feedback

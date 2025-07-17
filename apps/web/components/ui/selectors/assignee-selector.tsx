@@ -40,7 +40,7 @@ interface AssigneeSelectorProps {
 }
 
 interface OrgMember {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   image?: string;
@@ -64,7 +64,7 @@ export function AssigneeSelector({
       if (!token) return [];
       const raw = await getOrgMembers();
       return (raw ?? []).map((m) => ({
-        _id: m.id,
+        id: m.id,
         name: m.user.name,
         email: m.user.email,
         image: m.user.image,
@@ -86,9 +86,9 @@ export function AssigneeSelector({
       onChange?.(userId);
     } else {
       setValue(userId);
-      const newAssignee = orgMembers.find((u) => u._id === userId);
+      const newAssignee = orgMembers.find((u) => u.id === userId);
       if (newAssignee) {
-        onChange?.(newAssignee._id);
+        onChange?.(newAssignee.id);
       }
     }
     setOpen(false);
@@ -108,7 +108,7 @@ export function AssigneeSelector({
         >
           {value ? (
             (() => {
-              const selectedUser = orgMembers.find((user) => user._id === value);
+              const selectedUser = orgMembers.find((user) => user.id === value);
               if (selectedUser) {
                 return (
                   <TooltipProvider>
@@ -158,7 +158,7 @@ export function AssigneeSelector({
           {iconOnly ? null : (
             <div>
               {value
-                ? orgMembers.find((user) => user._id === value)?.name
+                ? orgMembers.find((user) => user.id === value)?.name
                 : "No lead assigned"}
             </div>
           )}
@@ -176,9 +176,9 @@ export function AssigneeSelector({
               {orgMembers.map((user) => {
                 return (
                   <CommandItem
-                    key={user._id}
-                    value={user._id}
-                    onSelect={() => handleAssigneeChange(user._id)}
+                    key={user.id}
+                    value={user.id}
+                    onSelect={() => handleAssigneeChange(user.id)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export function AssigneeSelector({
                       </Avatar>
                       {user.name}
                     </div>
-                    {value === user._id && (
+                    {value === user.id && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}
                   </CommandItem>

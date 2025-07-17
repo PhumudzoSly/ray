@@ -21,7 +21,7 @@ import { useSession } from "@/context/session-context";
 import { getFeaturesByProject } from "@/actions/issue";
 
 interface Feature {
-  _id: string;
+  id: string;
   name: string;
 }
 
@@ -56,7 +56,7 @@ export function FeatureSelector({
       const raw = await getFeaturesByProject(projectId);
       // If the server action returns a wrapped object, adjust accordingly
       return (raw ?? []).map((f: any) => ({
-        _id: f._id ?? f.id ?? f._id,
+        id: f.id ?? f.id ?? f.id,
         name: f.name,
       }));
     },
@@ -64,9 +64,9 @@ export function FeatureSelector({
   });
 
   const currentValue = value || selectedFeatureId;
-  const filteredFeatures = (features ?? []).filter((f: Feature) => !excludeFeatureIds.includes(f._id));
+  const filteredFeatures = (features ?? []).filter((f: Feature) => !excludeFeatureIds.includes(f.id));
 
-  const selectedFeature = filteredFeatures.find((feature: Feature) => feature._id === currentValue);
+  const selectedFeature = filteredFeatures.find((feature: Feature) => feature.id === currentValue);
 
   const handleFeatureChange = (featureId: string) => {
     onChange(featureId === "" ? null : featureId);
@@ -133,16 +133,16 @@ export function FeatureSelector({
                 </CommandItem>
                 {filteredFeatures.map((feature: Feature) => (
                   <CommandItem
-                    key={feature._id}
-                    value={feature._id}
-                    onSelect={() => handleFeatureChange(feature._id)}
+                    key={feature.id}
+                    value={feature.id}
+                    onSelect={() => handleFeatureChange(feature.id)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
                       <Layers className="text-muted-foreground size-4" />
                       <span>{feature.name}</span>
                     </div>
-                    {currentValue === feature._id && (
+                    {currentValue === feature.id && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}
                   </CommandItem>

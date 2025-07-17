@@ -60,7 +60,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 
 interface ApiKey {
-  _id: Id<"apiKeys">;
+  id: Id<"apiKeys">;
   name: string;
   keyPreview: string;
   permissions: string[];
@@ -373,7 +373,7 @@ export default function ApiKeysPage() {
               </TableHeader>
               <TableBody>
                 {apiKeys.map((key) => (
-                  <TableRow key={key._id}>
+                  <TableRow key={key.id}>
                     <TableCell className="font-medium">{key.name}</TableCell>
                     <TableCell>
                       <code className="text-sm bg-muted px-2 py-1 rounded">
@@ -431,13 +431,13 @@ export default function ApiKeysPage() {
                         <DropdownMenuContent align="end">
                           {key.isActive && (
                             <DropdownMenuItem
-                              onClick={() => handleDeactivateKey(key._id)}
+                              onClick={() => handleDeactivateKey(key.id)}
                             >
                               Deactivate
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
-                            onClick={() => handleDeleteKey(key._id)}
+                            onClick={() => handleDeleteKey(key.id)}
                             className="text-destructive"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />

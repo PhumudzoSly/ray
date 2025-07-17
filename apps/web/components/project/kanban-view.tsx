@@ -62,7 +62,7 @@ export function KanbanView({
     const currentProjects =
       optimisticProjects.length > 0 ? optimisticProjects : projects;
     const updatedProjects = currentProjects.map((project) =>
-      project._id === draggableId
+      project.id === draggableId
         ? { ...project, status: destination.droppableId }
         : project
     );
@@ -102,6 +102,7 @@ export function KanbanView({
       <Droppable droppableId={status.id}>
         {(provided, snapshot) => (
           <div
+            key={status.id}
             ref={provided.innerRef}
             {...provided.droppableProps}
             className={`min-h-[200px] p-2 rounded-lg border-2 border-dashed transition-colors ${snapshot.isDraggingOver
@@ -111,12 +112,13 @@ export function KanbanView({
           >
             {projects.map((project, index) => (
               <Draggable
-                key={project._id}
-                draggableId={project._id}
+                key={project.id}
+                draggableId={project.id}
                 index={index}
               >
                 {(provided, snapshot) => (
                   <div
+                    key={project.id}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}

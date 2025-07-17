@@ -35,7 +35,7 @@ export function IssueCard({
   // Optimistic update mutation for assignee
   const updateAssigneeMutation = useMutation({
     mutationFn: async ({ issueId, assignedTo }: { issueId: string; assignedTo: string }) => {
-      return await issueActions.updateIssue(issueId, { assignedTo });
+      return await issueActions.updateIssue(issueId, { assignedToId: assignedTo });
     },
     onMutate: async ({ issueId, assignedTo }) => {
       await queryClient.cancelQueries({ queryKey: ["issues"] });
@@ -43,7 +43,7 @@ export function IssueCard({
       queryClient.setQueryData<CustomIssue[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) =>
-          i._id === issueId ? { ...i, assignedTo } : i
+          i.id === issueId ? { ...i, assignedTo } : i
         );
       });
       return { previousIssues };
@@ -63,7 +63,7 @@ export function IssueCard({
     <>
       <TableRow
         className="w-full hover:bg-muted/50 transition-colors cursor-pointer"
-        onClick={() => router.push(`/issues/${issue._id}`)}
+        onClick={() => router.push(`/issues/${issue.id}`)}
       >
         <TableCell>
           <div className="flex items-start gap-3">
@@ -76,7 +76,7 @@ export function IssueCard({
               {showProject && issue.project && (
                 <div onClick={handleInteractiveClick}>
                   <Link
-                    href={`/project/${issue.project._id}`}
+                    href={`/project/${issue.project.id}`}
                     className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                   >
                     <FolderIcon className="h-3 w-3" />
@@ -91,21 +91,21 @@ export function IssueCard({
           <IssueStatusField
             value={issue.status}
             align="end"
-            issueId={issue._id}
+            issueId={issue.id}
           />
         </TableCell>
         <TableCell onClick={handleInteractiveClick}>
           <IssuePriorityField
             value={issue.priority}
             align="end"
-            issueId={issue._id}
+            issueId={issue.id}
           />
         </TableCell>
         <TableCell onClick={handleInteractiveClick}>
           <IssueLabelField
             value={issue.label}
             align="end"
-            issueId={issue._id}
+            issueId={issue.id}
           />
         </TableCell>
         <TableCell onClick={handleInteractiveClick}>
@@ -113,7 +113,7 @@ export function IssueCard({
             assignee={(issue.assignedTo as string) || ""}
             onChange={async (e) => {
               updateAssigneeMutation.mutate({
-                issueId: issue._id,
+                issueId: issue.id,
                 assignedTo: e as string,
               });
             }}
@@ -123,8 +123,8 @@ export function IssueCard({
           <IssueDueDateField
             value={issue.dueDate ? new Date(issue.dueDate) : null}
             align="end"
-            issueId={issue._id}
-            disabled={!issue._id}
+            issueId={issue.id}
+            disabled={!issue.id}
           />
         </TableCell>
       </TableRow>

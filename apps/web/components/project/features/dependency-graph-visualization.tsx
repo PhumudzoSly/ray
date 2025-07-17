@@ -41,7 +41,7 @@ import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 
 interface Feature {
-  _id: string;
+  id: string;
   name: string;
   phase: string;
   priority: string;
@@ -100,7 +100,7 @@ const DependencyEdge: React.FC<EdgeProps<DependencyEdgeData>> = ({
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (data?.onRemove) {
-      data.onRemove(data.parentFeature._id, data.dependentFeature._id);
+      data.onRemove(data.parentFeature.id, data.dependentFeature.id);
     }
   };
 
@@ -158,7 +158,7 @@ const FeatureNode: React.FC<NodeProps<FeatureNodeData>> = ({
   data,
   selected,
 }) => {
-  const isCurrentFeature = data._id === data.currentFeatureId;
+  const isCurrentFeature = data.id === data.currentFeatureId;
 
   return (
     <div
@@ -265,12 +265,12 @@ const getLayoutedElements = (
     return level;
   };
 
-  features.forEach((feature) => calculateLevel(feature._id));
+  features.forEach((feature) => calculateLevel(feature.id));
 
   // Group features by level
   const levelGroups = new Map<number, Feature[]>();
   features.forEach((feature) => {
-    const level = levels.get(feature._id) || 0;
+    const level = levels.get(feature.id) || 0;
     if (!levelGroups.has(level)) {
       levelGroups.set(level, []);
     }
@@ -288,7 +288,7 @@ const getLayoutedElements = (
 
     featuresInLevel.forEach((feature, index) => {
       nodes.push({
-        id: feature._id,
+        id: feature.id,
         type: "feature",
         position: {
           x: level * levelWidth,
@@ -301,9 +301,9 @@ const getLayoutedElements = (
 
   // Create edges with labels and remove functionality
   dependencies.forEach((dep) => {
-    const parentFeature = features.find((f) => f._id === dep.parentId);
+    const parentFeature = features.find((f) => f.id === dep.parentId);
     const dependentFeature = features.find(
-      (f) => f._id === dep.dependentFeatureId
+      (f) => f.id === dep.dependentFeatureId
     );
 
     if (parentFeature && dependentFeature) {
@@ -454,8 +454,8 @@ const DependencyGraphVisualization: React.FC<
         });
 
         // Find feature names for better feedback
-        const sourceFeature = features.find((f) => f._id === connection.source);
-        const targetFeature = features.find((f) => f._id === connection.target);
+        const sourceFeature = features.find((f) => f.id === connection.source);
+        const targetFeature = features.find((f) => f.id === connection.target);
 
         toast.success(
           `Added dependency: "${targetFeature?.name}" now depends on "${sourceFeature?.name}"`
@@ -476,8 +476,8 @@ const DependencyGraphVisualization: React.FC<
       if (!token) return;
 
       for (const edge of edgesToDelete) {
-        const parentFeature = features.find((f) => f._id === edge.source);
-        const dependentFeature = features.find((f) => f._id === edge.target);
+        const parentFeature = features.find((f) => f.id === edge.source);
+        const dependentFeature = features.find((f) => f.id === edge.target);
 
         if (parentFeature && dependentFeature) {
           handleRemoveDependency(edge.source, edge.target);

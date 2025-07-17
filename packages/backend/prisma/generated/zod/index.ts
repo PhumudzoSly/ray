@@ -60,6 +60,8 @@ export const WaitlistScalarFieldEnumSchema = z.enum(['id','projectId','name','sl
 
 export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','referralCount','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
 
+export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','createdAt','updatedAt']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
@@ -145,6 +147,10 @@ export type FeatureRequestStatusType = `${z.infer<typeof FeatureRequestStatusSch
 export const FeatureRequestPrioritySchema = z.enum(['low','medium','high','urgent']);
 
 export type FeatureRequestPriorityType = `${z.infer<typeof FeatureRequestPrioritySchema>}`
+
+export const FeaturePhaseSchema = z.enum(['DISCOVERY','PLANNING','DEVELOPMENT','TESTING','RELEASE','LIVE','DEPRECATED']);
+
+export type FeaturePhaseType = `${z.infer<typeof FeaturePhaseSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -883,3 +889,36 @@ export const WaitlistEntryOptionalDefaultsSchema = WaitlistEntrySchema.merge(z.o
 }))
 
 export type WaitlistEntryOptionalDefaults = z.infer<typeof WaitlistEntryOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// FEATURE SCHEMA
+/////////////////////////////////////////
+
+export const FeatureSchema = z.object({
+  phase: FeaturePhaseSchema,
+  priority: ImportanceSchema,
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  projectId: z.string(),
+  businessValue: z.number().nullish(),
+  estimatedEffort: z.number().nullish(),
+  startDate: z.coerce.date().nullish(),
+  endDate: z.coerce.date().nullish(),
+  assignedToId: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Feature = z.infer<typeof FeatureSchema>
+
+// FEATURE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const FeatureOptionalDefaultsSchema = FeatureSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type FeatureOptionalDefaults = z.infer<typeof FeatureOptionalDefaultsSchema>

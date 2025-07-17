@@ -28,7 +28,7 @@ interface MilestoneEvent {
   title: string;
   date: Date;
   milestone: {
-    _id: string;
+    id: string;
     name: string;
     status: string;
     progress?: number;
@@ -51,7 +51,7 @@ export function MilestoneTimeline({
       if (!token || !projectId) return [];
       const raw = await getProjectMilestones(projectId);
       return (raw ?? []).map((m: any) => ({
-        _id: m.id,
+        id: m.id,
         name: m.name,
         status: m.status,
         progress: m.progress,
@@ -96,11 +96,11 @@ export function MilestoneTimeline({
   const milestoneEvents: MilestoneEvent[] = milestones
     .filter((milestone: any) => milestone.endDate)
     .map((milestone: any) => ({
-      id: milestone._id,
+      id: milestone.id,
       title: milestone.name,
       date: new Date(milestone.endDate!),
       milestone: {
-        _id: milestone._id,
+        id: milestone.id,
         name: milestone.name,
         status: milestone.status,
         progress: milestone.progress || 0,
@@ -168,7 +168,7 @@ export function MilestoneTimeline({
         <HoverCardContent className="w-80">
           <div
             className="space-y-3 cursor-pointer hover:bg-muted/50  rounded-md transition-colors"
-            onClick={() => handleMilestoneClick(milestone._id)}
+            onClick={() => handleMilestoneClick(milestone.id)}
           >
             <div className="space-y-1">
               <h4 className="text-sm font-semibold">{milestone.name}</h4>
@@ -208,7 +208,7 @@ export function MilestoneTimeline({
   };
 
   const handleEventClick = (event: MilestoneEvent) => {
-    setSelectedMilestoneId(event.milestone._id);
+    setSelectedMilestoneId(event.milestone.id);
     setIsDetailsSheetOpen(true);
   };
 

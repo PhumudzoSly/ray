@@ -48,7 +48,7 @@ interface FeatureDependencyManagerProps {
 }
 
 interface CombinedDependency {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
   phase?: string;
@@ -136,9 +136,9 @@ export const FeatureDependencyManager: React.FC<
 
     // Add dependencies (features this feature depends on)
     dependencies.dependencies.forEach((dep) => {
-      if (dep._id) {
+      if (dep.id) {
         combined.push({
-          _id: dep._id,
+          id: dep.id,
           name: dep.name as any,
           description: dep.description,
           phase: dep.phase,
@@ -151,9 +151,9 @@ export const FeatureDependencyManager: React.FC<
 
     // Add dependents (features that depend on this feature)
     dependencies.dependents.forEach((dep) => {
-      if (dep._id) {
+      if (dep.id) {
         combined.push({
-          _id: dep._id,
+          id: dep.id,
           name: dep.name as any,
           description: dep.description,
           phase: dep.phase,
@@ -244,7 +244,7 @@ export const FeatureDependencyManager: React.FC<
                 <DependencyGraphVisualization
                   features={
                     dependencyGraph?.features.map((feature) => ({
-                      _id: feature._id,
+                      id: feature.id,
                       name: feature.name,
                       phase: feature.phase,
                       priority: feature.priority,
@@ -275,7 +275,7 @@ export const FeatureDependencyManager: React.FC<
         <div className="space-y-px divide-y">
           {combinedDependencies.map((item) => (
             <div
-              key={`${item.type}-${item._id}`}
+              key={`${item.type}-${item.id}`}
               className="group flex items-center justify-between py-2 px-3 -mx-3 hover:bg-muted/50"
             >
               <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -315,7 +315,7 @@ export const FeatureDependencyManager: React.FC<
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => handleRemoveDependency(item._id)}
+                    onClick={() => handleRemoveDependency(item.id)}
                     className="h-6 w-6 p-0"
                   >
                     <X className="h-3 w-3" />

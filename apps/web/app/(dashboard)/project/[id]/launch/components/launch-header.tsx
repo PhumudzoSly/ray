@@ -7,7 +7,7 @@ import Link from "next/link";
 
 interface LaunchHeaderProps {
   project: {
-    _id: string;
+    id: string;
     name: string;
     platform: string;
   };

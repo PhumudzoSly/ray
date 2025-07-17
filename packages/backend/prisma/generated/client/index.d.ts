@@ -133,6 +133,11 @@ export type Waitlist = $Result.DefaultSelection<Prisma.$WaitlistPayload>
  * 
  */
 export type WaitlistEntry = $Result.DefaultSelection<Prisma.$WaitlistEntryPayload>
+/**
+ * Model Feature
+ * 
+ */
+export type Feature = $Result.DefaultSelection<Prisma.$FeaturePayload>
 
 /**
  * Enums
@@ -370,6 +375,19 @@ export const FeatureRequestPriority: {
 
 export type FeatureRequestPriority = (typeof FeatureRequestPriority)[keyof typeof FeatureRequestPriority]
 
+
+export const FeaturePhase: {
+  DISCOVERY: 'DISCOVERY',
+  PLANNING: 'PLANNING',
+  DEVELOPMENT: 'DEVELOPMENT',
+  TESTING: 'TESTING',
+  RELEASE: 'RELEASE',
+  LIVE: 'LIVE',
+  DEPRECATED: 'DEPRECATED'
+};
+
+export type FeaturePhase = (typeof FeaturePhase)[keyof typeof FeaturePhase]
+
 }
 
 export type ActivityType = $Enums.ActivityType
@@ -451,6 +469,10 @@ export const FeatureRequestStatus: typeof $Enums.FeatureRequestStatus
 export type FeatureRequestPriority = $Enums.FeatureRequestPriority
 
 export const FeatureRequestPriority: typeof $Enums.FeatureRequestPriority
+
+export type FeaturePhase = $Enums.FeaturePhase
+
+export const FeaturePhase: typeof $Enums.FeaturePhase
 
 /**
  * ##  Prisma Client ʲˢ
@@ -816,6 +838,16 @@ export class PrismaClient<
     * ```
     */
   get waitlistEntry(): Prisma.WaitlistEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.feature`: Exposes CRUD operations for the **Feature** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Features
+    * const features = await prisma.feature.findMany()
+    * ```
+    */
+  get feature(): Prisma.FeatureDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1279,7 +1311,8 @@ export namespace Prisma {
     RoadmapChangelog: 'RoadmapChangelog',
     FeatureRequest: 'FeatureRequest',
     Waitlist: 'Waitlist',
-    WaitlistEntry: 'WaitlistEntry'
+    WaitlistEntry: 'WaitlistEntry',
+    Feature: 'Feature'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1298,7 +1331,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3078,6 +3111,80 @@ export namespace Prisma {
           }
         }
       }
+      Feature: {
+        payload: Prisma.$FeaturePayload<ExtArgs>
+        fields: Prisma.FeatureFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeatureFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeatureFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          findFirst: {
+            args: Prisma.FeatureFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeatureFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          findMany: {
+            args: Prisma.FeatureFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>[]
+          }
+          create: {
+            args: Prisma.FeatureCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          createMany: {
+            args: Prisma.FeatureCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeatureCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>[]
+          }
+          delete: {
+            args: Prisma.FeatureDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          update: {
+            args: Prisma.FeatureUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          deleteMany: {
+            args: Prisma.FeatureDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeatureUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeatureUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>[]
+          }
+          upsert: {
+            args: Prisma.FeatureUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeaturePayload>
+          }
+          aggregate: {
+            args: Prisma.FeatureAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeature>
+          }
+          groupBy: {
+            args: Prisma.FeatureGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeatureGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeatureCountArgs<ExtArgs>
+            result: $Utils.Optional<FeatureCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3186,6 +3293,7 @@ export namespace Prisma {
     featureRequest?: FeatureRequestOmit
     waitlist?: WaitlistOmit
     waitlistEntry?: WaitlistEntryOmit
+    feature?: FeatureOmit
   }
 
   /* Types for Logging */
@@ -3292,6 +3400,7 @@ export namespace Prisma {
     asset: number
     waitlist: number
     ActivityFeed: number
+    Feature: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3307,6 +3416,7 @@ export namespace Prisma {
     asset?: boolean | UserCountOutputTypeCountAssetArgs
     waitlist?: boolean | UserCountOutputTypeCountWaitlistArgs
     ActivityFeed?: boolean | UserCountOutputTypeCountActivityFeedArgs
+    Feature?: boolean | UserCountOutputTypeCountFeatureArgs
   }
 
   // Custom InputTypes
@@ -3402,6 +3512,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ActivityFeedWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
   }
 
 
@@ -3517,6 +3634,7 @@ export namespace Prisma {
     assets: number
     publicRoadmaps: number
     waitlists: number
+    features: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3524,6 +3642,7 @@ export namespace Prisma {
     assets?: boolean | ProjectCountOutputTypeCountAssetsArgs
     publicRoadmaps?: boolean | ProjectCountOutputTypeCountPublicRoadmapsArgs
     waitlists?: boolean | ProjectCountOutputTypeCountWaitlistsArgs
+    features?: boolean | ProjectCountOutputTypeCountFeaturesArgs
   }
 
   // Custom InputTypes
@@ -3563,6 +3682,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountWaitlistsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WaitlistWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountFeaturesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
   }
 
 
@@ -3930,6 +4056,7 @@ export namespace Prisma {
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
     ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
+    Feature?: boolean | User$FeatureArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3984,6 +4111,7 @@ export namespace Prisma {
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
     ActivityFeed?: boolean | User$ActivityFeedArgs<ExtArgs>
+    Feature?: boolean | User$FeatureArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4005,6 +4133,7 @@ export namespace Prisma {
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
       ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
+      Feature: Prisma.$FeaturePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4423,6 +4552,7 @@ export namespace Prisma {
     asset<T extends User$assetArgs<ExtArgs> = {}>(args?: Subset<T, User$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends User$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, User$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ActivityFeed<T extends User$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, User$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Feature<T extends User$FeatureArgs<ExtArgs> = {}>(args?: Subset<T, User$FeatureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5153,6 +5283,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
+  }
+
+  /**
+   * User.Feature
+   */
+  export type User$FeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    cursor?: FeatureWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
   }
 
   /**
@@ -15652,6 +15806,7 @@ export namespace Prisma {
     assets?: boolean | Project$assetsArgs<ExtArgs>
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
+    features?: boolean | Project$featuresArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -15730,6 +15885,7 @@ export namespace Prisma {
     assets?: boolean | Project$assetsArgs<ExtArgs>
     publicRoadmaps?: boolean | Project$publicRoadmapsArgs<ExtArgs>
     waitlists?: boolean | Project$waitlistsArgs<ExtArgs>
+    features?: boolean | Project$featuresArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15753,6 +15909,7 @@ export namespace Prisma {
       assets: Prisma.$AssetPayload<ExtArgs>[]
       publicRoadmaps: Prisma.$PublicRoadmapPayload<ExtArgs>[]
       waitlists: Prisma.$WaitlistPayload<ExtArgs>[]
+      features: Prisma.$FeaturePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16173,6 +16330,7 @@ export namespace Prisma {
     assets<T extends Project$assetsArgs<ExtArgs> = {}>(args?: Subset<T, Project$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     publicRoadmaps<T extends Project$publicRoadmapsArgs<ExtArgs> = {}>(args?: Subset<T, Project$publicRoadmapsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PublicRoadmapPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlists<T extends Project$waitlistsArgs<ExtArgs> = {}>(args?: Subset<T, Project$waitlistsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    features<T extends Project$featuresArgs<ExtArgs> = {}>(args?: Subset<T, Project$featuresArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16765,6 +16923,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaitlistScalarFieldEnum | WaitlistScalarFieldEnum[]
+  }
+
+  /**
+   * Project.features
+   */
+  export type Project$featuresArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    cursor?: FeatureWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
   }
 
   /**
@@ -32540,6 +32722,1233 @@ export namespace Prisma {
 
 
   /**
+   * Model Feature
+   */
+
+  export type AggregateFeature = {
+    _count: FeatureCountAggregateOutputType | null
+    _avg: FeatureAvgAggregateOutputType | null
+    _sum: FeatureSumAggregateOutputType | null
+    _min: FeatureMinAggregateOutputType | null
+    _max: FeatureMaxAggregateOutputType | null
+  }
+
+  export type FeatureAvgAggregateOutputType = {
+    businessValue: number | null
+    estimatedEffort: number | null
+  }
+
+  export type FeatureSumAggregateOutputType = {
+    businessValue: number | null
+    estimatedEffort: number | null
+  }
+
+  export type FeatureMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    projectId: string | null
+    phase: $Enums.FeaturePhase | null
+    businessValue: number | null
+    estimatedEffort: number | null
+    startDate: Date | null
+    endDate: Date | null
+    priority: $Enums.Importance | null
+    assignedToId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeatureMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    projectId: string | null
+    phase: $Enums.FeaturePhase | null
+    businessValue: number | null
+    estimatedEffort: number | null
+    startDate: Date | null
+    endDate: Date | null
+    priority: $Enums.Importance | null
+    assignedToId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FeatureCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    projectId: number
+    phase: number
+    businessValue: number
+    estimatedEffort: number
+    startDate: number
+    endDate: number
+    priority: number
+    assignedToId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FeatureAvgAggregateInputType = {
+    businessValue?: true
+    estimatedEffort?: true
+  }
+
+  export type FeatureSumAggregateInputType = {
+    businessValue?: true
+    estimatedEffort?: true
+  }
+
+  export type FeatureMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    projectId?: true
+    phase?: true
+    businessValue?: true
+    estimatedEffort?: true
+    startDate?: true
+    endDate?: true
+    priority?: true
+    assignedToId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeatureMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    projectId?: true
+    phase?: true
+    businessValue?: true
+    estimatedEffort?: true
+    startDate?: true
+    endDate?: true
+    priority?: true
+    assignedToId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FeatureCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    projectId?: true
+    phase?: true
+    businessValue?: true
+    estimatedEffort?: true
+    startDate?: true
+    endDate?: true
+    priority?: true
+    assignedToId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FeatureAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Feature to aggregate.
+     */
+    where?: FeatureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Features to fetch.
+     */
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeatureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Features from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Features.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Features
+    **/
+    _count?: true | FeatureCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FeatureAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FeatureSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeatureMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeatureMaxAggregateInputType
+  }
+
+  export type GetFeatureAggregateType<T extends FeatureAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeature]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeature[P]>
+      : GetScalarType<T[P], AggregateFeature[P]>
+  }
+
+
+
+
+  export type FeatureGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithAggregationInput | FeatureOrderByWithAggregationInput[]
+    by: FeatureScalarFieldEnum[] | FeatureScalarFieldEnum
+    having?: FeatureScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeatureCountAggregateInputType | true
+    _avg?: FeatureAvgAggregateInputType
+    _sum?: FeatureSumAggregateInputType
+    _min?: FeatureMinAggregateInputType
+    _max?: FeatureMaxAggregateInputType
+  }
+
+  export type FeatureGroupByOutputType = {
+    id: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue: number | null
+    estimatedEffort: number | null
+    startDate: Date | null
+    endDate: Date | null
+    priority: $Enums.Importance
+    assignedToId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: FeatureCountAggregateOutputType | null
+    _avg: FeatureAvgAggregateOutputType | null
+    _sum: FeatureSumAggregateOutputType | null
+    _min: FeatureMinAggregateOutputType | null
+    _max: FeatureMaxAggregateOutputType | null
+  }
+
+  type GetFeatureGroupByPayload<T extends FeatureGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeatureGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeatureGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeatureGroupByOutputType[P]>
+            : GetScalarType<T[P], FeatureGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeatureSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    projectId?: boolean
+    phase?: boolean
+    businessValue?: boolean
+    estimatedEffort?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    priority?: boolean
+    assignedToId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feature"]>
+
+  export type FeatureSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    projectId?: boolean
+    phase?: boolean
+    businessValue?: boolean
+    estimatedEffort?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    priority?: boolean
+    assignedToId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feature"]>
+
+  export type FeatureSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    projectId?: boolean
+    phase?: boolean
+    businessValue?: boolean
+    estimatedEffort?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    priority?: boolean
+    assignedToId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["feature"]>
+
+  export type FeatureSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    projectId?: boolean
+    phase?: boolean
+    businessValue?: boolean
+    estimatedEffort?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    priority?: boolean
+    assignedToId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "projectId" | "phase" | "businessValue" | "estimatedEffort" | "startDate" | "endDate" | "priority" | "assignedToId" | "createdAt" | "updatedAt", ExtArgs["result"]["feature"]>
+  export type FeatureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type FeatureIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type FeatureIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $FeaturePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Feature"
+    objects: {
+      assignedTo: Prisma.$UserPayload<ExtArgs> | null
+      project: Prisma.$ProjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string
+      projectId: string
+      phase: $Enums.FeaturePhase
+      businessValue: number | null
+      estimatedEffort: number | null
+      startDate: Date | null
+      endDate: Date | null
+      priority: $Enums.Importance
+      assignedToId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["feature"]>
+    composites: {}
+  }
+
+  type FeatureGetPayload<S extends boolean | null | undefined | FeatureDefaultArgs> = $Result.GetResult<Prisma.$FeaturePayload, S>
+
+  type FeatureCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeatureFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeatureCountAggregateInputType | true
+    }
+
+  export interface FeatureDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Feature'], meta: { name: 'Feature' } }
+    /**
+     * Find zero or one Feature that matches the filter.
+     * @param {FeatureFindUniqueArgs} args - Arguments to find a Feature
+     * @example
+     * // Get one Feature
+     * const feature = await prisma.feature.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeatureFindUniqueArgs>(args: SelectSubset<T, FeatureFindUniqueArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Feature that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeatureFindUniqueOrThrowArgs} args - Arguments to find a Feature
+     * @example
+     * // Get one Feature
+     * const feature = await prisma.feature.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeatureFindUniqueOrThrowArgs>(args: SelectSubset<T, FeatureFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Feature that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureFindFirstArgs} args - Arguments to find a Feature
+     * @example
+     * // Get one Feature
+     * const feature = await prisma.feature.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeatureFindFirstArgs>(args?: SelectSubset<T, FeatureFindFirstArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Feature that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureFindFirstOrThrowArgs} args - Arguments to find a Feature
+     * @example
+     * // Get one Feature
+     * const feature = await prisma.feature.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeatureFindFirstOrThrowArgs>(args?: SelectSubset<T, FeatureFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Features that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Features
+     * const features = await prisma.feature.findMany()
+     * 
+     * // Get first 10 Features
+     * const features = await prisma.feature.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const featureWithIdOnly = await prisma.feature.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeatureFindManyArgs>(args?: SelectSubset<T, FeatureFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Feature.
+     * @param {FeatureCreateArgs} args - Arguments to create a Feature.
+     * @example
+     * // Create one Feature
+     * const Feature = await prisma.feature.create({
+     *   data: {
+     *     // ... data to create a Feature
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeatureCreateArgs>(args: SelectSubset<T, FeatureCreateArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Features.
+     * @param {FeatureCreateManyArgs} args - Arguments to create many Features.
+     * @example
+     * // Create many Features
+     * const feature = await prisma.feature.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeatureCreateManyArgs>(args?: SelectSubset<T, FeatureCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Features and returns the data saved in the database.
+     * @param {FeatureCreateManyAndReturnArgs} args - Arguments to create many Features.
+     * @example
+     * // Create many Features
+     * const feature = await prisma.feature.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Features and only return the `id`
+     * const featureWithIdOnly = await prisma.feature.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeatureCreateManyAndReturnArgs>(args?: SelectSubset<T, FeatureCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Feature.
+     * @param {FeatureDeleteArgs} args - Arguments to delete one Feature.
+     * @example
+     * // Delete one Feature
+     * const Feature = await prisma.feature.delete({
+     *   where: {
+     *     // ... filter to delete one Feature
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeatureDeleteArgs>(args: SelectSubset<T, FeatureDeleteArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Feature.
+     * @param {FeatureUpdateArgs} args - Arguments to update one Feature.
+     * @example
+     * // Update one Feature
+     * const feature = await prisma.feature.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeatureUpdateArgs>(args: SelectSubset<T, FeatureUpdateArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Features.
+     * @param {FeatureDeleteManyArgs} args - Arguments to filter Features to delete.
+     * @example
+     * // Delete a few Features
+     * const { count } = await prisma.feature.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeatureDeleteManyArgs>(args?: SelectSubset<T, FeatureDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Features.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Features
+     * const feature = await prisma.feature.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeatureUpdateManyArgs>(args: SelectSubset<T, FeatureUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Features and returns the data updated in the database.
+     * @param {FeatureUpdateManyAndReturnArgs} args - Arguments to update many Features.
+     * @example
+     * // Update many Features
+     * const feature = await prisma.feature.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Features and only return the `id`
+     * const featureWithIdOnly = await prisma.feature.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeatureUpdateManyAndReturnArgs>(args: SelectSubset<T, FeatureUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Feature.
+     * @param {FeatureUpsertArgs} args - Arguments to update or create a Feature.
+     * @example
+     * // Update or create a Feature
+     * const feature = await prisma.feature.upsert({
+     *   create: {
+     *     // ... data to create a Feature
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Feature we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeatureUpsertArgs>(args: SelectSubset<T, FeatureUpsertArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Features.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureCountArgs} args - Arguments to filter Features to count.
+     * @example
+     * // Count the number of Features
+     * const count = await prisma.feature.count({
+     *   where: {
+     *     // ... the filter for the Features we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeatureCountArgs>(
+      args?: Subset<T, FeatureCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeatureCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Feature.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeatureAggregateArgs>(args: Subset<T, FeatureAggregateArgs>): Prisma.PrismaPromise<GetFeatureAggregateType<T>>
+
+    /**
+     * Group by Feature.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeatureGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeatureGroupByArgs['orderBy'] }
+        : { orderBy?: FeatureGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeatureGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeatureGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Feature model
+   */
+  readonly fields: FeatureFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Feature.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeatureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    assignedTo<T extends Feature$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Feature$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Feature model
+   */
+  interface FeatureFieldRefs {
+    readonly id: FieldRef<"Feature", 'String'>
+    readonly name: FieldRef<"Feature", 'String'>
+    readonly description: FieldRef<"Feature", 'String'>
+    readonly projectId: FieldRef<"Feature", 'String'>
+    readonly phase: FieldRef<"Feature", 'FeaturePhase'>
+    readonly businessValue: FieldRef<"Feature", 'Float'>
+    readonly estimatedEffort: FieldRef<"Feature", 'Float'>
+    readonly startDate: FieldRef<"Feature", 'DateTime'>
+    readonly endDate: FieldRef<"Feature", 'DateTime'>
+    readonly priority: FieldRef<"Feature", 'Importance'>
+    readonly assignedToId: FieldRef<"Feature", 'String'>
+    readonly createdAt: FieldRef<"Feature", 'DateTime'>
+    readonly updatedAt: FieldRef<"Feature", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Feature findUnique
+   */
+  export type FeatureFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter, which Feature to fetch.
+     */
+    where: FeatureWhereUniqueInput
+  }
+
+  /**
+   * Feature findUniqueOrThrow
+   */
+  export type FeatureFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter, which Feature to fetch.
+     */
+    where: FeatureWhereUniqueInput
+  }
+
+  /**
+   * Feature findFirst
+   */
+  export type FeatureFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter, which Feature to fetch.
+     */
+    where?: FeatureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Features to fetch.
+     */
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Features.
+     */
+    cursor?: FeatureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Features from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Features.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Features.
+     */
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Feature findFirstOrThrow
+   */
+  export type FeatureFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter, which Feature to fetch.
+     */
+    where?: FeatureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Features to fetch.
+     */
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Features.
+     */
+    cursor?: FeatureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Features from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Features.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Features.
+     */
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Feature findMany
+   */
+  export type FeatureFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter, which Features to fetch.
+     */
+    where?: FeatureWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Features to fetch.
+     */
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Features.
+     */
+    cursor?: FeatureWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Features from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Features.
+     */
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Feature create
+   */
+  export type FeatureCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Feature.
+     */
+    data: XOR<FeatureCreateInput, FeatureUncheckedCreateInput>
+  }
+
+  /**
+   * Feature createMany
+   */
+  export type FeatureCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Features.
+     */
+    data: FeatureCreateManyInput | FeatureCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Feature createManyAndReturn
+   */
+  export type FeatureCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * The data used to create many Features.
+     */
+    data: FeatureCreateManyInput | FeatureCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Feature update
+   */
+  export type FeatureUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Feature.
+     */
+    data: XOR<FeatureUpdateInput, FeatureUncheckedUpdateInput>
+    /**
+     * Choose, which Feature to update.
+     */
+    where: FeatureWhereUniqueInput
+  }
+
+  /**
+   * Feature updateMany
+   */
+  export type FeatureUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Features.
+     */
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyInput>
+    /**
+     * Filter which Features to update
+     */
+    where?: FeatureWhereInput
+    /**
+     * Limit how many Features to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Feature updateManyAndReturn
+   */
+  export type FeatureUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * The data used to update Features.
+     */
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyInput>
+    /**
+     * Filter which Features to update
+     */
+    where?: FeatureWhereInput
+    /**
+     * Limit how many Features to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Feature upsert
+   */
+  export type FeatureUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Feature to update in case it exists.
+     */
+    where: FeatureWhereUniqueInput
+    /**
+     * In case the Feature found by the `where` argument doesn't exist, create a new Feature with this data.
+     */
+    create: XOR<FeatureCreateInput, FeatureUncheckedCreateInput>
+    /**
+     * In case the Feature was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeatureUpdateInput, FeatureUncheckedUpdateInput>
+  }
+
+  /**
+   * Feature delete
+   */
+  export type FeatureDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    /**
+     * Filter which Feature to delete.
+     */
+    where: FeatureWhereUniqueInput
+  }
+
+  /**
+   * Feature deleteMany
+   */
+  export type FeatureDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Features to delete
+     */
+    where?: FeatureWhereInput
+    /**
+     * Limit how many Features to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Feature.assignedTo
+   */
+  export type Feature$assignedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Feature without action
+   */
+  export type FeatureDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -32975,6 +34384,25 @@ export namespace Prisma {
   export type WaitlistEntryScalarFieldEnum = (typeof WaitlistEntryScalarFieldEnum)[keyof typeof WaitlistEntryScalarFieldEnum]
 
 
+  export const FeatureScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    projectId: 'projectId',
+    phase: 'phase',
+    businessValue: 'businessValue',
+    estimatedEffort: 'estimatedEffort',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    priority: 'priority',
+    assignedToId: 'assignedToId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FeatureScalarFieldEnum = (typeof FeatureScalarFieldEnum)[keyof typeof FeatureScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -33261,6 +34689,20 @@ export namespace Prisma {
    */
   export type ListEnumFeatureRequestPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureRequestPriority[]'>
     
+
+
+  /**
+   * Reference to a field of type 'FeaturePhase'
+   */
+  export type EnumFeaturePhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeaturePhase'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeaturePhase[]'
+   */
+  export type ListEnumFeaturePhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeaturePhase[]'>
+    
   /**
    * Deep Input Types
    */
@@ -33292,6 +34734,7 @@ export namespace Prisma {
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
     ActivityFeed?: ActivityFeedListRelationFilter
+    Feature?: FeatureListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -33317,6 +34760,7 @@ export namespace Prisma {
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
     ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
+    Feature?: FeatureOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -33345,6 +34789,7 @@ export namespace Prisma {
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
     ActivityFeed?: ActivityFeedListRelationFilter
+    Feature?: FeatureListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -34057,6 +35502,7 @@ export namespace Prisma {
     assets?: AssetListRelationFilter
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
+    features?: FeatureListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
@@ -34084,6 +35530,7 @@ export namespace Prisma {
     assets?: AssetOrderByRelationAggregateInput
     publicRoadmaps?: PublicRoadmapOrderByRelationAggregateInput
     waitlists?: WaitlistOrderByRelationAggregateInput
+    features?: FeatureOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -34114,6 +35561,7 @@ export namespace Prisma {
     assets?: AssetListRelationFilter
     publicRoadmaps?: PublicRoadmapListRelationFilter
     waitlists?: WaitlistListRelationFilter
+    features?: FeatureListRelationFilter
   }, "id">
 
   export type ProjectOrderByWithAggregationInput = {
@@ -35514,6 +36962,106 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"WaitlistEntry"> | Date | string
   }
 
+  export type FeatureWhereInput = {
+    AND?: FeatureWhereInput | FeatureWhereInput[]
+    OR?: FeatureWhereInput[]
+    NOT?: FeatureWhereInput | FeatureWhereInput[]
+    id?: StringFilter<"Feature"> | string
+    name?: StringFilter<"Feature"> | string
+    description?: StringFilter<"Feature"> | string
+    projectId?: StringFilter<"Feature"> | string
+    phase?: EnumFeaturePhaseFilter<"Feature"> | $Enums.FeaturePhase
+    businessValue?: FloatNullableFilter<"Feature"> | number | null
+    estimatedEffort?: FloatNullableFilter<"Feature"> | number | null
+    startDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
+    assignedToId?: StringNullableFilter<"Feature"> | string | null
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+  }
+
+  export type FeatureOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    projectId?: SortOrder
+    phase?: SortOrder
+    businessValue?: SortOrderInput | SortOrder
+    estimatedEffort?: SortOrderInput | SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    assignedToId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    assignedTo?: UserOrderByWithRelationInput
+    project?: ProjectOrderByWithRelationInput
+  }
+
+  export type FeatureWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeatureWhereInput | FeatureWhereInput[]
+    OR?: FeatureWhereInput[]
+    NOT?: FeatureWhereInput | FeatureWhereInput[]
+    name?: StringFilter<"Feature"> | string
+    description?: StringFilter<"Feature"> | string
+    projectId?: StringFilter<"Feature"> | string
+    phase?: EnumFeaturePhaseFilter<"Feature"> | $Enums.FeaturePhase
+    businessValue?: FloatNullableFilter<"Feature"> | number | null
+    estimatedEffort?: FloatNullableFilter<"Feature"> | number | null
+    startDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
+    assignedToId?: StringNullableFilter<"Feature"> | string | null
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+  }, "id">
+
+  export type FeatureOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    projectId?: SortOrder
+    phase?: SortOrder
+    businessValue?: SortOrderInput | SortOrder
+    estimatedEffort?: SortOrderInput | SortOrder
+    startDate?: SortOrderInput | SortOrder
+    endDate?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    assignedToId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FeatureCountOrderByAggregateInput
+    _avg?: FeatureAvgOrderByAggregateInput
+    _max?: FeatureMaxOrderByAggregateInput
+    _min?: FeatureMinOrderByAggregateInput
+    _sum?: FeatureSumOrderByAggregateInput
+  }
+
+  export type FeatureScalarWhereWithAggregatesInput = {
+    AND?: FeatureScalarWhereWithAggregatesInput | FeatureScalarWhereWithAggregatesInput[]
+    OR?: FeatureScalarWhereWithAggregatesInput[]
+    NOT?: FeatureScalarWhereWithAggregatesInput | FeatureScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Feature"> | string
+    name?: StringWithAggregatesFilter<"Feature"> | string
+    description?: StringWithAggregatesFilter<"Feature"> | string
+    projectId?: StringWithAggregatesFilter<"Feature"> | string
+    phase?: EnumFeaturePhaseWithAggregatesFilter<"Feature"> | $Enums.FeaturePhase
+    businessValue?: FloatNullableWithAggregatesFilter<"Feature"> | number | null
+    estimatedEffort?: FloatNullableWithAggregatesFilter<"Feature"> | number | null
+    startDate?: DateTimeNullableWithAggregatesFilter<"Feature"> | Date | string | null
+    endDate?: DateTimeNullableWithAggregatesFilter<"Feature"> | Date | string | null
+    priority?: EnumImportanceWithAggregatesFilter<"Feature"> | $Enums.Importance
+    assignedToId?: StringNullableWithAggregatesFilter<"Feature"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -35537,6 +37085,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -35562,6 +37111,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUpdateInput = {
@@ -35587,6 +37137,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -35612,6 +37163,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -36377,6 +37929,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
@@ -36401,6 +37954,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
@@ -36425,6 +37979,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
@@ -36449,6 +38004,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
@@ -38063,6 +39619,116 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeatureCreateInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+  }
+
+  export type FeatureUncheckedCreateInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+  }
+
+  export type FeatureUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureCreateManyInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -38191,6 +39857,12 @@ export namespace Prisma {
     none?: ActivityFeedWhereInput
   }
 
+  export type FeatureListRelationFilter = {
+    every?: FeatureWhereInput
+    some?: FeatureWhereInput
+    none?: FeatureWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -38241,6 +39913,10 @@ export namespace Prisma {
   }
 
   export type ActivityFeedOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeatureOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -39884,6 +41560,81 @@ export namespace Prisma {
     referralCount?: SortOrder
   }
 
+  export type EnumFeaturePhaseFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeaturePhase | EnumFeaturePhaseFieldRefInput<$PrismaModel>
+    in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeaturePhaseFilter<$PrismaModel> | $Enums.FeaturePhase
+  }
+
+  export type FeatureCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    projectId?: SortOrder
+    phase?: SortOrder
+    businessValue?: SortOrder
+    estimatedEffort?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    priority?: SortOrder
+    assignedToId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeatureAvgOrderByAggregateInput = {
+    businessValue?: SortOrder
+    estimatedEffort?: SortOrder
+  }
+
+  export type FeatureMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    projectId?: SortOrder
+    phase?: SortOrder
+    businessValue?: SortOrder
+    estimatedEffort?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    priority?: SortOrder
+    assignedToId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeatureMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    projectId?: SortOrder
+    phase?: SortOrder
+    businessValue?: SortOrder
+    estimatedEffort?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    priority?: SortOrder
+    assignedToId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FeatureSumOrderByAggregateInput = {
+    businessValue?: SortOrder
+    estimatedEffort?: SortOrder
+  }
+
+  export type EnumFeaturePhaseWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeaturePhase | EnumFeaturePhaseFieldRefInput<$PrismaModel>
+    in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeaturePhaseWithAggregatesFilter<$PrismaModel> | $Enums.FeaturePhase
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeaturePhaseFilter<$PrismaModel>
+    _max?: NestedEnumFeaturePhaseFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -39974,6 +41725,13 @@ export namespace Prisma {
     connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
   }
 
+  export type FeatureCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput> | FeatureCreateWithoutAssignedToInput[] | FeatureUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutAssignedToInput | FeatureCreateOrConnectWithoutAssignedToInput[]
+    createMany?: FeatureCreateManyAssignedToInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
   export type SessionUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -40062,6 +41820,13 @@ export namespace Prisma {
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
     createMany?: ActivityFeedCreateManyUserInputEnvelope
     connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+  }
+
+  export type FeatureUncheckedCreateNestedManyWithoutAssignedToInput = {
+    create?: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput> | FeatureCreateWithoutAssignedToInput[] | FeatureUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutAssignedToInput | FeatureCreateOrConnectWithoutAssignedToInput[]
+    createMany?: FeatureCreateManyAssignedToInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -40262,6 +42027,20 @@ export namespace Prisma {
     deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
   }
 
+  export type FeatureUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput> | FeatureCreateWithoutAssignedToInput[] | FeatureUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutAssignedToInput | FeatureCreateOrConnectWithoutAssignedToInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutAssignedToInput | FeatureUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: FeatureCreateManyAssignedToInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutAssignedToInput | FeatureUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutAssignedToInput | FeatureUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
   export type SessionUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -40438,6 +42217,20 @@ export namespace Prisma {
     update?: ActivityFeedUpdateWithWhereUniqueWithoutUserInput | ActivityFeedUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ActivityFeedUpdateManyWithWhereWithoutUserInput | ActivityFeedUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutAssignedToNestedInput = {
+    create?: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput> | FeatureCreateWithoutAssignedToInput[] | FeatureUncheckedCreateWithoutAssignedToInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutAssignedToInput | FeatureCreateOrConnectWithoutAssignedToInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutAssignedToInput | FeatureUpsertWithWhereUniqueWithoutAssignedToInput[]
+    createMany?: FeatureCreateManyAssignedToInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutAssignedToInput | FeatureUpdateWithWhereUniqueWithoutAssignedToInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutAssignedToInput | FeatureUpdateManyWithWhereWithoutAssignedToInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -41030,6 +42823,13 @@ export namespace Prisma {
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
   }
 
+  export type FeatureCreateNestedManyWithoutProjectInput = {
+    create?: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput> | FeatureCreateWithoutProjectInput[] | FeatureUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutProjectInput | FeatureCreateOrConnectWithoutProjectInput[]
+    createMany?: FeatureCreateManyProjectInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
   export type IssueUncheckedCreateNestedManyWithoutProjectInput = {
     create?: XOR<IssueCreateWithoutProjectInput, IssueUncheckedCreateWithoutProjectInput> | IssueCreateWithoutProjectInput[] | IssueUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutProjectInput | IssueCreateOrConnectWithoutProjectInput[]
@@ -41056,6 +42856,13 @@ export namespace Prisma {
     connectOrCreate?: WaitlistCreateOrConnectWithoutProjectInput | WaitlistCreateOrConnectWithoutProjectInput[]
     createMany?: WaitlistCreateManyProjectInputEnvelope
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
+  }
+
+  export type FeatureUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput> | FeatureCreateWithoutProjectInput[] | FeatureUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutProjectInput | FeatureCreateOrConnectWithoutProjectInput[]
+    createMany?: FeatureCreateManyProjectInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
   }
 
   export type EnumProjectPlatformFieldUpdateOperationsInput = {
@@ -41152,6 +42959,20 @@ export namespace Prisma {
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
   }
 
+  export type FeatureUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput> | FeatureCreateWithoutProjectInput[] | FeatureUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutProjectInput | FeatureCreateOrConnectWithoutProjectInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutProjectInput | FeatureUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: FeatureCreateManyProjectInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutProjectInput | FeatureUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutProjectInput | FeatureUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
   export type IssueUncheckedUpdateManyWithoutProjectNestedInput = {
     create?: XOR<IssueCreateWithoutProjectInput, IssueUncheckedCreateWithoutProjectInput> | IssueCreateWithoutProjectInput[] | IssueUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutProjectInput | IssueCreateOrConnectWithoutProjectInput[]
@@ -41206,6 +43027,20 @@ export namespace Prisma {
     update?: WaitlistUpdateWithWhereUniqueWithoutProjectInput | WaitlistUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: WaitlistUpdateManyWithWhereWithoutProjectInput | WaitlistUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput> | FeatureCreateWithoutProjectInput[] | FeatureUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutProjectInput | FeatureCreateOrConnectWithoutProjectInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutProjectInput | FeatureUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: FeatureCreateManyProjectInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutProjectInput | FeatureUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutProjectInput | FeatureUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutIdeaInput = {
@@ -41883,6 +43718,40 @@ export namespace Prisma {
     update?: XOR<XOR<WaitlistUpdateToOneWithWhereWithoutEntriesInput, WaitlistUpdateWithoutEntriesInput>, WaitlistUncheckedUpdateWithoutEntriesInput>
   }
 
+  export type UserCreateNestedOneWithoutFeatureInput = {
+    create?: XOR<UserCreateWithoutFeatureInput, UserUncheckedCreateWithoutFeatureInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeatureInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProjectCreateNestedOneWithoutFeaturesInput = {
+    create?: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutFeaturesInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type EnumFeaturePhaseFieldUpdateOperationsInput = {
+    set?: $Enums.FeaturePhase
+  }
+
+  export type UserUpdateOneWithoutFeatureNestedInput = {
+    create?: XOR<UserCreateWithoutFeatureInput, UserUncheckedCreateWithoutFeatureInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeatureInput
+    upsert?: UserUpsertWithoutFeatureInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeatureInput, UserUpdateWithoutFeatureInput>, UserUncheckedUpdateWithoutFeatureInput>
+  }
+
+  export type ProjectUpdateOneRequiredWithoutFeaturesNestedInput = {
+    create?: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutFeaturesInput
+    upsert?: ProjectUpsertWithoutFeaturesInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutFeaturesInput, ProjectUpdateWithoutFeaturesInput>, ProjectUncheckedUpdateWithoutFeaturesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -42351,6 +44220,23 @@ export namespace Prisma {
     _max?: NestedEnumFeatureRequestPriorityFilter<$PrismaModel>
   }
 
+  export type NestedEnumFeaturePhaseFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeaturePhase | EnumFeaturePhaseFieldRefInput<$PrismaModel>
+    in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeaturePhaseFilter<$PrismaModel> | $Enums.FeaturePhase
+  }
+
+  export type NestedEnumFeaturePhaseWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeaturePhase | EnumFeaturePhaseFieldRefInput<$PrismaModel>
+    in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
+    not?: NestedEnumFeaturePhaseWithAggregatesFilter<$PrismaModel> | $Enums.FeaturePhase
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeaturePhaseFilter<$PrismaModel>
+    _max?: NestedEnumFeaturePhaseFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -42581,6 +44467,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutCreatedByInput = {
@@ -42604,6 +44491,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutCreatedByInput = {
@@ -42843,6 +44731,46 @@ export namespace Prisma {
 
   export type ActivityFeedCreateManyUserInputEnvelope = {
     data: ActivityFeedCreateManyUserInput | ActivityFeedCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureCreateWithoutAssignedToInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+  }
+
+  export type FeatureUncheckedCreateWithoutAssignedToInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureCreateOrConnectWithoutAssignedToInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type FeatureCreateManyAssignedToInputEnvelope = {
+    data: FeatureCreateManyAssignedToInput | FeatureCreateManyAssignedToInput[]
     skipDuplicates?: boolean
   }
 
@@ -43286,6 +45214,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ActivityFeed"> | Date | string
   }
 
+  export type FeatureUpsertWithWhereUniqueWithoutAssignedToInput = {
+    where: FeatureWhereUniqueInput
+    update: XOR<FeatureUpdateWithoutAssignedToInput, FeatureUncheckedUpdateWithoutAssignedToInput>
+    create: XOR<FeatureCreateWithoutAssignedToInput, FeatureUncheckedCreateWithoutAssignedToInput>
+  }
+
+  export type FeatureUpdateWithWhereUniqueWithoutAssignedToInput = {
+    where: FeatureWhereUniqueInput
+    data: XOR<FeatureUpdateWithoutAssignedToInput, FeatureUncheckedUpdateWithoutAssignedToInput>
+  }
+
+  export type FeatureUpdateManyWithWhereWithoutAssignedToInput = {
+    where: FeatureScalarWhereInput
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutAssignedToInput>
+  }
+
+  export type FeatureScalarWhereInput = {
+    AND?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+    OR?: FeatureScalarWhereInput[]
+    NOT?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+    id?: StringFilter<"Feature"> | string
+    name?: StringFilter<"Feature"> | string
+    description?: StringFilter<"Feature"> | string
+    projectId?: StringFilter<"Feature"> | string
+    phase?: EnumFeaturePhaseFilter<"Feature"> | $Enums.FeaturePhase
+    businessValue?: FloatNullableFilter<"Feature"> | number | null
+    estimatedEffort?: FloatNullableFilter<"Feature"> | number | null
+    startDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
+    priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
+    assignedToId?: StringNullableFilter<"Feature"> | string | null
+    createdAt?: DateTimeFilter<"Feature"> | Date | string
+    updatedAt?: DateTimeFilter<"Feature"> | Date | string
+  }
+
   export type UserCreateWithoutSessionsInput = {
     id: string
     name: string
@@ -43308,6 +45271,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -43332,6 +45296,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -43372,6 +45337,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -43396,6 +45362,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserCreateWithoutAccountsInput = {
@@ -43420,6 +45387,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -43444,6 +45412,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -43484,6 +45453,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -43508,6 +45478,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type MemberCreateWithoutOrganizationInput = {
@@ -43613,6 +45584,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutOrganizationInput = {
@@ -43636,6 +45608,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutOrganizationInput = {
@@ -44097,6 +46070,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutMembersInput = {
@@ -44121,6 +46095,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutMembersInput = {
@@ -44206,6 +46181,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMembersInput = {
@@ -44230,6 +46206,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type OrganizationCreateWithoutInvitationsInput = {
@@ -44293,6 +46270,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutInvitationsInput = {
@@ -44317,6 +46295,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutInvitationsInput = {
@@ -44402,6 +46381,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutInvitationsInput = {
@@ -44426,6 +46406,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserCreateWithoutPasskeysInput = {
@@ -44450,6 +46431,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutPasskeysInput = {
@@ -44474,6 +46456,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutPasskeysInput = {
@@ -44514,6 +46497,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasskeysInput = {
@@ -44538,6 +46522,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserCreateWithoutTwofactorsInput = {
@@ -44562,6 +46547,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutTwofactorsInput = {
@@ -44586,6 +46572,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutTwofactorsInput = {
@@ -44626,6 +46613,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTwofactorsInput = {
@@ -44650,6 +46638,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type OrganizationCreateWithoutSubscriptionInput = {
@@ -44713,6 +46702,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutSubscriptionInput = {
@@ -44737,6 +46727,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionInput = {
@@ -44822,6 +46813,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSubscriptionInput = {
@@ -44846,6 +46838,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type IdeaCreateWithoutProjectsInput = {
@@ -44996,6 +46989,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutProjectInput = {
@@ -45020,6 +47014,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutProjectInput = {
@@ -45177,6 +47172,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeatureCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureCreateOrConnectWithoutProjectInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput>
+  }
+
+  export type FeatureCreateManyProjectInputEnvelope = {
+    data: FeatureCreateManyProjectInput | FeatureCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type IdeaUpsertWithoutProjectsInput = {
     update: XOR<IdeaUpdateWithoutProjectsInput, IdeaUncheckedUpdateWithoutProjectsInput>
     create: XOR<IdeaCreateWithoutProjectsInput, IdeaUncheckedCreateWithoutProjectsInput>
@@ -45316,6 +47351,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProjectInput = {
@@ -45340,6 +47376,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type AssetUpsertWithWhereUniqueWithoutProjectInput = {
@@ -45411,6 +47448,22 @@ export namespace Prisma {
     data: XOR<WaitlistUpdateManyMutationInput, WaitlistUncheckedUpdateManyWithoutProjectInput>
   }
 
+  export type FeatureUpsertWithWhereUniqueWithoutProjectInput = {
+    where: FeatureWhereUniqueInput
+    update: XOR<FeatureUpdateWithoutProjectInput, FeatureUncheckedUpdateWithoutProjectInput>
+    create: XOR<FeatureCreateWithoutProjectInput, FeatureUncheckedCreateWithoutProjectInput>
+  }
+
+  export type FeatureUpdateWithWhereUniqueWithoutProjectInput = {
+    where: FeatureWhereUniqueInput
+    data: XOR<FeatureUpdateWithoutProjectInput, FeatureUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type FeatureUpdateManyWithWhereWithoutProjectInput = {
+    where: FeatureScalarWhereInput
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutProjectInput>
+  }
+
   export type UserCreateWithoutIdeaInput = {
     id: string
     name: string
@@ -45433,6 +47486,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutIdeaInput = {
@@ -45457,6 +47511,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutIdeaInput = {
@@ -45524,6 +47579,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutIdeaInput = {
@@ -45547,6 +47603,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutIdeaInput = {
@@ -45592,6 +47649,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIdeaInput = {
@@ -45616,6 +47674,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type OrganizationUpsertWithoutIdeaInput = {
@@ -45739,6 +47798,7 @@ export namespace Prisma {
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutIssuesInput = {
@@ -45762,6 +47822,7 @@ export namespace Prisma {
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutIssuesInput = {
@@ -45791,6 +47852,7 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutIssueInput = {
@@ -45815,6 +47877,7 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutIssueInput = {
@@ -45899,6 +47962,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutIssuesInput = {
@@ -45922,6 +47986,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type UserUpsertWithoutIssueInput = {
@@ -45957,6 +48022,7 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIssueInput = {
@@ -45981,6 +48047,7 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type ProjectCreateWithoutAssetsInput = {
@@ -46004,6 +48071,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutAssetsInput = {
@@ -46027,6 +48095,7 @@ export namespace Prisma {
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutAssetsInput = {
@@ -46095,6 +48164,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutAssetInput = {
@@ -46119,6 +48189,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutAssetInput = {
@@ -46158,6 +48229,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutAssetsInput = {
@@ -46181,6 +48253,7 @@ export namespace Prisma {
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type OrganizationUpsertWithoutAssetInput = {
@@ -46261,6 +48334,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAssetInput = {
@@ -46285,6 +48359,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type OrganizationCreateWithoutActivityFeedInput = {
@@ -46348,6 +48423,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutActivityFeedInput = {
@@ -46372,6 +48448,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutActivityFeedInput = {
@@ -46457,6 +48534,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActivityFeedInput = {
@@ -46481,6 +48559,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type ProjectCreateWithoutPublicRoadmapsInput = {
@@ -46504,6 +48583,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutPublicRoadmapsInput = {
@@ -46527,6 +48607,7 @@ export namespace Prisma {
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutPublicRoadmapsInput = {
@@ -46694,6 +48775,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutPublicRoadmapsInput = {
@@ -46717,6 +48799,7 @@ export namespace Prisma {
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type RoadmapItemUpsertWithWhereUniqueWithoutRoadmapInput = {
@@ -47453,6 +49536,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutProjectInput
     assets?: AssetCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
+    features?: FeatureCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWaitlistsInput = {
@@ -47476,6 +49560,7 @@ export namespace Prisma {
     issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
     assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
     publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
+    features?: FeatureUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWaitlistsInput = {
@@ -47544,6 +49629,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    Feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserUncheckedCreateWithoutWaitlistInput = {
@@ -47568,6 +49654,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
 
   export type UserCreateOrConnectWithoutWaitlistInput = {
@@ -47661,6 +49748,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutProjectNestedInput
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWaitlistsInput = {
@@ -47684,6 +49772,7 @@ export namespace Prisma {
     issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type OrganizationUpsertWithoutWaitlistInput = {
@@ -47764,6 +49853,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWaitlistInput = {
@@ -47788,6 +49878,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
 
   export type WaitlistEntryUpsertWithWhereUniqueWithoutWaitlistInput = {
@@ -47914,6 +50005,234 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type UserCreateWithoutFeatureInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionCreateNestedOneWithoutUserInput
+    project?: ProjectCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaCreateNestedManyWithoutOwnerInput
+    issue?: IssueCreateNestedManyWithoutAssignedToInput
+    asset?: AssetCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFeatureInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorUncheckedCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutUserInput
+    project?: ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
+    issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
+    asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFeatureInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeatureInput, UserUncheckedCreateWithoutFeatureInput>
+  }
+
+  export type ProjectCreateWithoutFeaturesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    platform: $Enums.ProjectPlatform
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
+    infrastructure?: string | null
+    dueDate?: Date | string | null
+    status?: $Enums.ProjectStatus | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea?: IdeaCreateNestedOneWithoutProjectsInput
+    organization?: OrganizationCreateNestedOneWithoutProjectInput
+    issues?: IssueCreateNestedManyWithoutProjectInput
+    createdBy?: UserCreateNestedOneWithoutProjectInput
+    assets?: AssetCreateNestedManyWithoutProjectInput
+    publicRoadmaps?: PublicRoadmapCreateNestedManyWithoutProjectInput
+    waitlists?: WaitlistCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectUncheckedCreateWithoutFeaturesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    platform: $Enums.ProjectPlatform
+    ai?: string | null
+    orm?: string | null
+    database?: string | null
+    auth?: string | null
+    framework?: string | null
+    infrastructure?: string | null
+    dueDate?: Date | string | null
+    status?: $Enums.ProjectStatus | null
+    ideaId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organizationId?: string | null
+    createdById?: string | null
+    issues?: IssueUncheckedCreateNestedManyWithoutProjectInput
+    assets?: AssetUncheckedCreateNestedManyWithoutProjectInput
+    publicRoadmaps?: PublicRoadmapUncheckedCreateNestedManyWithoutProjectInput
+    waitlists?: WaitlistUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type ProjectCreateOrConnectWithoutFeaturesInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+  }
+
+  export type UserUpsertWithoutFeatureInput = {
+    update: XOR<UserUpdateWithoutFeatureInput, UserUncheckedUpdateWithoutFeatureInput>
+    create: XOR<UserCreateWithoutFeatureInput, UserUncheckedCreateWithoutFeatureInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeatureInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeatureInput, UserUncheckedUpdateWithoutFeatureInput>
+  }
+
+  export type UserUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUpdateOneWithoutUserNestedInput
+    project?: ProjectUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUncheckedUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProjectUpsertWithoutFeaturesInput = {
+    update: XOR<ProjectUpdateWithoutFeaturesInput, ProjectUncheckedUpdateWithoutFeaturesInput>
+    create: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutFeaturesInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutFeaturesInput, ProjectUncheckedUpdateWithoutFeaturesInput>
+  }
+
+  export type ProjectUpdateWithoutFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
+    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneWithoutProjectsNestedInput
+    organization?: OrganizationUpdateOneWithoutProjectNestedInput
+    issues?: IssueUpdateManyWithoutProjectNestedInput
+    createdBy?: UserUpdateOneWithoutProjectNestedInput
+    assets?: AssetUpdateManyWithoutProjectNestedInput
+    publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
+    waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    platform?: EnumProjectPlatformFieldUpdateOperationsInput | $Enums.ProjectPlatform
+    ai?: NullableStringFieldUpdateOperationsInput | string | null
+    orm?: NullableStringFieldUpdateOperationsInput | string | null
+    database?: NullableStringFieldUpdateOperationsInput | string | null
+    auth?: NullableStringFieldUpdateOperationsInput | string | null
+    framework?: NullableStringFieldUpdateOperationsInput | string | null
+    infrastructure?: NullableStringFieldUpdateOperationsInput | string | null
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus | null
+    ideaId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organizationId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    issues?: IssueUncheckedUpdateManyWithoutProjectNestedInput
+    assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
+    publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
+    waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -48081,6 +50400,21 @@ export namespace Prisma {
     organizationId: string
     oldValue?: string | null
     newValue?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureCreateManyAssignedToInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -48292,6 +50626,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutCreatedByInput = {
@@ -48315,6 +50650,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutCreatedByInput = {
@@ -48604,6 +50940,51 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeatureUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutAssignedToInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MemberCreateManyOrganizationInput = {
     id?: string
     userId?: string | null
@@ -48836,6 +51217,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutOrganizationInput = {
@@ -48859,6 +51241,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutOrganizationInput = {
@@ -49223,6 +51606,21 @@ export namespace Prisma {
     createdById?: string | null
   }
 
+  export type FeatureCreateManyProjectInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type IssueUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -49456,6 +51854,51 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type FeatureUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProjectCreateManyIdeaInput = {
     id?: string
     name: string
@@ -49496,6 +51939,7 @@ export namespace Prisma {
     assets?: AssetUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUpdateManyWithoutProjectNestedInput
+    features?: FeatureUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutIdeaInput = {
@@ -49519,6 +51963,7 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+    features?: FeatureUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutIdeaInput = {

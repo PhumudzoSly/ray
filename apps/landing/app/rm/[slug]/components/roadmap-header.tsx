@@ -4,7 +4,7 @@ import { FeatureRequestDialog } from "./feature-request-dialog";
 
 interface RoadmapHeaderProps {
   roadmap: {
-    _id: string;
+    id: string;
     name: string;
     description: string;
     logoUrl?: string;
@@ -43,7 +43,7 @@ export function RoadmapHeader({ roadmap, categories }: RoadmapHeaderProps) {
               <span className="hidden sm:inline">Stats</span>
             </Button>
             <FeatureRequestDialog
-              roadmapId={roadmap._id}
+              roadmapId={roadmap.id}
               categories={categories}
               roadmapName={roadmap.name}
               trigger={

@@ -16,7 +16,7 @@ import { FeatureCard } from "@/components/project/features/feature-card";
 type ViewMode = "list" | "kanban";
 
 interface Feature {
-  _id: string;
+  id: string;
   name: string;
   description?: string;
   status: string;
@@ -114,7 +114,7 @@ const AllFeatures = ({ features }: { features: Feature[] }) => {
                 {features.map((feature, index) => (
                   <FeatureCard
                     index={index + 1}
-                    key={feature?._id}
+                    key={feature?.id}
                     feature={feature}
                     showProject={true}
                   />

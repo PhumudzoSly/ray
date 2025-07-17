@@ -74,7 +74,7 @@ export function RoadmapChangelogs({
           <NoData title="No Changelogs" />
         ) : (
           changelogs.map((changelog) => (
-            <Card key={changelog._id}>
+            <Card key={changelog.id}>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>

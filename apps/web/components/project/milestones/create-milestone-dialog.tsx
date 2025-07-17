@@ -55,7 +55,7 @@ export function CreateMilestoneDialog({
       if (!token) return [];
       const raw = await getOrgMembers();
       return (raw ?? []).map((m: any) => ({
-        _id: m.id,
+        id: m.id,
         name: m.user.name,
         email: m.user.email,
         image: m.user.image,

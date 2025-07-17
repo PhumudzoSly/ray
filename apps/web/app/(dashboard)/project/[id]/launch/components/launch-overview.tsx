@@ -5,7 +5,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { CheckSquare, Target, Clock, MessageSquare } from "lucide-react";
 
 interface ChecklistItem {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   priority: "high" | "medium" | "low";

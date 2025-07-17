@@ -77,7 +77,7 @@ export function AssetEditDialog({
       const previousAssets = queryClient.getQueryData(["assets"]);
       queryClient.setQueryData(["assets"], (old: any) => {
         if (!old) return old;
-        return old.map((a: any) => a._id === updates.assetId ? { ...a, ...updates } : a);
+        return old.map((a: any) => a.id === updates.assetId ? { ...a, ...updates } : a);
       });
       return { previousAssets };
     },
@@ -109,7 +109,7 @@ export function AssetEditDialog({
     try {
       await updateAssetMutation.mutateAsync({
         token: token,
-        assetId: asset._id,
+        assetId: asset.id,
         name: assetName.trim(),
         description: assetDescription.trim() || undefined,
         category: assetCategory || undefined,

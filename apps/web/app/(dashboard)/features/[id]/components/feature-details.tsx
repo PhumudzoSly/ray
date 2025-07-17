@@ -185,7 +185,7 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
                 Parent Feature
               </h3>
               <Link
-                href={`/features/${featureHierarchy.parentFeature._id}`}
+                href={`/features/${featureHierarchy.parentFeature.id}`}
                 className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -219,7 +219,7 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
               <div className="mt-6">
                 <NewFeature
                   projectId={feature.projectId}
-                  parentFeatureId={feature._id}
+                  parentFeatureId={feature.id}
                 />
               </div>
             )}
@@ -235,14 +235,14 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
                   </h3>
                   <NewFeature
                     projectId={feature.projectId}
-                    parentFeatureId={feature._id}
+                    parentFeatureId={feature.id}
                   />
                 </div>
                 <div className="space-y-2">
                   {featureHierarchy.subFeatures.map((subFeature: any) => (
                     <Link
-                      key={subFeature._id}
-                      href={`/features/${subFeature._id}`}
+                      key={subFeature.id}
+                      href={`/features/${subFeature.id}`}
                       className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

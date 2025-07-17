@@ -204,7 +204,7 @@ export interface FeatureFilters {
 interface FeatureFiltersProps {
   filters: FeatureFilters;
   onFiltersChange: (filters: FeatureFilters) => void;
-  assignees?: Array<{ _id: string; name: string }>;
+  assignees?: Array<{ id: string; name: string }>;
 }
 
 export function FeatureFilters({
@@ -363,12 +363,12 @@ export function FeatureFilters({
             />
             {assignees.map((assignee) => (
               <FilterCommandItem
-                key={assignee._id}
+                key={assignee.id}
                 icon={User}
                 name={assignee.name}
-                isSelected={filters.assignee === assignee._id}
+                isSelected={filters.assignee === assignee.id}
                 onSelect={() => {
-                  handleFilterChange("assignee", assignee._id);
+                  handleFilterChange("assignee", assignee.id);
                   setSelectedCategory(null);
                 }}
               />
@@ -407,8 +407,8 @@ export function FeatureFilters({
       const assigneeName =
         filters.assignee === "unassigned"
           ? "Unassigned"
-          : assignees.find((a) => a._id === filters.assignee)?.name ||
-            filters.assignee;
+          : assignees.find((a) => a.id === filters.assignee)?.name ||
+          filters.assignee;
       activeFilters.push({
         name: "Assigned To",
         value: assigneeName,
@@ -522,8 +522,8 @@ export function FeatureFilters({
                       placeholder={
                         selectedCategory
                           ? `Search ${filterCategories
-                              .find((c) => c.id === selectedCategory)
-                              ?.name.toLowerCase()}...`
+                            .find((c) => c.id === selectedCategory)
+                            ?.name.toLowerCase()}...`
                           : "Search all filters..."
                       }
                       className="h-11"

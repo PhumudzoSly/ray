@@ -122,7 +122,7 @@ export function AssetCard({
         try {
           await assetActions.incrementViewCount({
             token: token,
-            assetId: asset._id,
+            assetId: asset.id,
           });
         } catch (error) {
           console.error("Failed to increment view count:", error);
@@ -138,7 +138,7 @@ export function AssetCard({
     try {
       const downloadUrl = await assetActions.getAssetDownloadUrl({
         token: token,
-        assetId: asset._id,
+        assetId: asset.id,
       });
 
       if (downloadUrl) {
@@ -163,12 +163,12 @@ export function AssetCard({
   };
 
   const handleDelete = () => {
-    onDelete(asset._id);
+    onDelete(asset.id);
   };
 
   const handleUpdate = () => {
     if (onUpdate) {
-      onUpdate(asset._id);
+      onUpdate(asset.id);
     }
   };
 

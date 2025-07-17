@@ -41,6 +41,7 @@ model User {
   asset        Asset[]        @relation("UploadedAssets")
   waitlist     Waitlist[]     @relation("CreatedWaitlists")
   ActivityFeed ActivityFeed[]
+  Feature      Feature[]
 
   @@unique([email])
   @@map("user")
@@ -220,6 +221,7 @@ model Project {
   assets         Asset[]
   publicRoadmaps PublicRoadmap[]
   waitlists      Waitlist[]
+  features       Feature[]
 
   @@index([ideaId])
   @@index([organizationId])
@@ -542,6 +544,27 @@ model WaitlistEntry {
   @@index([verificationToken])
 }
 
+model Feature {
+  id              String       @id @default(uuid())
+  name            String
+  description     String
+  projectId       String
+  phase           FeaturePhase
+  businessValue   Float?
+  estimatedEffort Float?
+  startDate       DateTime?
+  endDate         DateTime?
+  priority        Importance
+  assignedTo      User?        @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  assignedToId    String?
+  project         Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([projectId])
+  @@map("feature")
+}
+
 enum ActivityType {
   CREATED
   UPDATED
@@ -713,4 +736,14 @@ enum FeatureRequestPriority {
   medium
   high
   urgent
+}
+
+enum FeaturePhase {
+  DISCOVERY
+  PLANNING
+  DEVELOPMENT
+  TESTING
+  RELEASE
+  LIVE
+  DEPRECATED
 }

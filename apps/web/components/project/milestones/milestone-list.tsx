@@ -81,7 +81,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
       if (!token || !projectId) return [];
       const raw = await getProjectMilestones(projectId);
       return (raw ?? []).map((m: any) => ({
-        _id: m.id,
+        id: m.id,
         name: m.name,
         status: m.status,
         owner: m.owner ? { name: m.owner.name, image: m.owner.image } : null,
@@ -183,7 +183,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     const group = groupedMilestones.find((g) => g.id === milestone.status);
     if (group) {
       const milestoneItem: GroupedListItem = {
-        id: milestone._id,
+        id: milestone.id,
         title: milestone.name,
         subtitle: milestone.endDate
           ? formatDate(new Date(milestone.endDate))

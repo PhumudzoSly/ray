@@ -25,7 +25,7 @@ import {
 
 interface MilestoneBarProps {
   milestone: {
-    _id: string;
+    id: string;
     name: string;
     description?: string;
     startDate?: number;
@@ -33,12 +33,12 @@ interface MilestoneBarProps {
     status: "not-started" | "in-progress" | "at-risk" | "completed" | "delayed";
     progress?: number;
     owner?: {
-      _id: string;
+      id: string;
       name: string;
       image?: string;
     };
     project?: {
-      _id: string;
+      id: string;
       name: string;
     };
     issueCount?: number;

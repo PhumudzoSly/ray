@@ -33,23 +33,14 @@ type CreateProjectDialogProps = {
 
 
 export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
-  const { token, org } = useSession();
   const router = useRouter();
   const createProjectMutation = useMutation(
     {
       mutationFn: createProject,
-      onSuccess: () => {
-        toast.success("Project created successfully!");
-        //  router.push(`/project/${projectId}`);
-      },
-      onError: () => {
-        toast.error("Failed to create project. Please try again.");
-      }
     }
   );
   const [open, setOpen] = useState(false);
 
-  // Fetch idea details if ideaId is provided
 
   const [form, setForm] = useState<ProjectOptionalDefaults>({
     name: "",

@@ -3,33 +3,15 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as featureActions from "@/actions/features";
-import { useSession } from "@/context/session-context";
-import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { LayoutGrid, List, Clock, Target, User, GitBranch } from "lucide-react";
+import { LayoutGrid, List, Clock, Target, GitBranch } from "lucide-react";
 import { FeatureCard } from "./feature-card";
 import {
   FeatureFilters,
   type FeatureFilters as FeatureFiltersType,
 } from "./feature-filters";
 import { NewFeature } from "./new-feature";
-import { useQuery } from "@tanstack/react-query";
-import * as featureActions from "@/actions/features";
-import { useSession } from "@/context/session-context";
-import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
-import { Skeleton } from "@workspace/ui/components/skeleton";
-import { Badge } from "@workspace/ui/components/badge";
-import { Button } from "@workspace/ui/components/button";
-import { LayoutGrid, List, Clock, Target, User, GitBranch } from "lucide-react";
-import { FeatureCard } from "./feature-card";
-import {
-  FeatureFilters,
-  type FeatureFilters as FeatureFiltersType,
-} from "./feature-filters";
-import { NewFeature } from "./new-feature";
-import { useData } from "@/hooks/use-data";
 import NoData from "@/components/shared/no-data";
 import {
   GroupedList,
@@ -46,7 +28,6 @@ interface FeatureTableProps {
 }
 
 export function FeatureTable({ projectId }: FeatureTableProps) {
-  const { token } = useSession();
   const router = useRouter();
   const [filters, setFilters] = useState<FeatureFiltersType>({
     search: "",
@@ -71,7 +52,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
       queryClient.setQueryData<any[]>(["features", projectId], (old) => {
         if (!old) return old;
         return old.map((f) =>
-          f._id === featureId ? { ...f, ...updates } : f
+          f.id === featureId ? { ...f, ...updates } : f
         );
       });
       return { previousFeatures };
@@ -90,7 +71,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
   const { data: features, isPending } = useQuery({
     queryKey: ["features", projectId],
     queryFn: async () => {
-      const res = await featureActions.getFeaturesByProject(projectId);
+      const res = await featureActions.getFeaturesByProjectId(projectId);
       if (res.success) return res.data;
       throw new Error("Failed to fetch features");
     },
@@ -101,9 +82,9 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     if (!features) return [];
     const uniqueAssignees = new Map();
     features.forEach((feature: any) => {
-      if (feature.user && !uniqueAssignees.has(feature.user._id)) {
-        uniqueAssignees.set(feature.user._id, {
-          _id: feature.user._id,
+      if (feature.user && !uniqueAssignees.has(feature.user.id)) {
+        uniqueAssignees.set(feature.user.id, {
+          id: feature.user.id,
           name: feature.user.name,
         });
       }
@@ -141,7 +122,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
         }
         if (
           filters.assignee !== "unassigned" &&
-          feature.user?._id !== filters.assignee
+          feature.user?.id !== filters.assignee
         ) {
           return false;
         }
@@ -175,7 +156,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
 
       const items: GroupedListItem[] = phaseFeatures.map((feature: any) => {
         return {
-          id: feature._id,
+          id: feature.id,
           title: feature.name,
           subtitle: feature.description || undefined,
           avatar: feature.user ? (
@@ -305,7 +286,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
           {filteredFeatures.map((feature: any, index: number) => (
             <FeatureCard
               index={index + 1}
-              key={feature._id}
+              key={feature.id}
               feature={feature}
               showProject={false}
             />

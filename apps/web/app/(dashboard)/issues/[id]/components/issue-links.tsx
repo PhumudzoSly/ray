@@ -28,7 +28,7 @@ interface IssueLinksProps {
 }
 
 interface IssueLink {
-  _id: string;
+  id: string;
   url: string;
   metadata?: {
     title?: string;
@@ -179,8 +179,8 @@ export default function IssueLinks({ issueId }: IssueLinksProps) {
           <div className="space-y-2">
             {links.map((link: IssueLink) => (
               <LinkPreview
-                key={link._id}
-                id={link._id}
+                key={link.id}
+                id={link.id}
                 url={link.url}
                 title={link.metadata?.title || new URL(link.url).hostname}
                 description={link.metadata?.description}

@@ -5,7 +5,7 @@ import { Checkbox } from "@workspace/ui/components/checkbox";
 import { CheckCircle, Clock, Calendar } from "lucide-react";
 
 interface ChecklistItem {
-  _id: string;
+  id: string;
   title: string;
   description: string;
   priority: "high" | "medium" | "low";
@@ -115,18 +115,17 @@ export function LaunchChecklist({
                 .sort((a, b) => a.order - b.order)
                 .map((item) => (
                   <div
-                    key={item._id}
-                    className={`group relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200 bg-card border border-border hover:border-border/80 hover:shadow-sm hover:bg-accent/50 cursor-pointer select-none ${
-                      item.status === "completed" ? "opacity-60" : ""
-                    }`}
-                    onClick={() => handleToggle(item._id, item.status)}
+                    key={item.id}
+                    className={`group relative flex items-center gap-3 p-3 rounded-lg transition-all duration-200 bg-card border border-border hover:border-border/80 hover:shadow-sm hover:bg-accent/50 cursor-pointer select-none ${item.status === "completed" ? "opacity-60" : ""
+                      }`}
+                    onClick={() => handleToggle(item.id, item.status)}
                   >
                     {/* Checkbox and Status Icons */}
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <Checkbox
                         checked={item.status === "completed"}
                         onCheckedChange={() =>
-                          handleToggle(item._id, item.status)
+                          handleToggle(item.id, item.status)
                         }
                         className="h-4 w-4"
                       />
@@ -164,13 +163,12 @@ export function LaunchChecklist({
                           <div
                             className="bg-primary h-1 rounded-full transition-all duration-300"
                             style={{
-                              width: `${
-                                item.status === "completed"
+                              width: `${item.status === "completed"
                                   ? 100
                                   : item.status === "in-progress"
                                     ? 50
                                     : 0
-                              }%`,
+                                }%`,
                             }}
                           />
                         </div>

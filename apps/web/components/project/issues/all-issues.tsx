@@ -94,7 +94,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
         filtered = filtered.filter((issue) => !issue.user);
       } else {
         filtered = filtered.filter(
-          (issue) => issue.user?._id === assigneeFilter
+          (issue) => issue.user?.id === assigneeFilter
         );
       }
     }
@@ -171,7 +171,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
       const statusIssues = issuesByStatus[status] || [];
       if (statusIssues.length > 0) {
         const items: IssueItem[] = statusIssues.map((issue: any) => ({
-          _id: issue._id,
+          id: issue.id,
           title: issue.title,
           description: issue.description,
           status: issue.status,
@@ -196,7 +196,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
   }, [filteredIssues]);
 
   const handleIssueClick = (item: IssueItem) => {
-    router.push(`/issues/${item._id}`);
+    router.push(`/issues/${item.id}`);
   };
 
   // Show filtered results message if filters are applied

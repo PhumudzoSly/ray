@@ -32,7 +32,7 @@ interface MilestoneSelectorProps {
 }
 
 interface Milestone {
-  _id: string;
+  id: string;
   name: string;
   status: string;
   progress: number;
@@ -54,7 +54,7 @@ export function MilestoneSelector({
       if (!token || !projectId) return [];
       const raw = await getProjectMilestones(projectId);
       return (raw ?? []).map((m: any) => ({
-        _id: m.id,
+        id: m.id,
         name: m.name,
         status: m.status,
         progress: m.progress,
@@ -63,7 +63,7 @@ export function MilestoneSelector({
     enabled: !!token && !!projectId,
   });
 
-  const selectedMilestone = (milestones ?? []).find((milestone: Milestone) => milestone._id === value);
+  const selectedMilestone = (milestones ?? []).find((milestone: Milestone) => milestone.id === value);
 
   return (
     <div className={className}>
@@ -100,17 +100,17 @@ export function MilestoneSelector({
             <CommandGroup>
               {(milestones ?? []).map((milestone: Milestone) => (
                 <CommandItem
-                  key={milestone._id}
+                  key={milestone.id}
                   value={milestone.name}
                   onSelect={() => {
-                    onValueChange(milestone._id);
+                    onValueChange(milestone.id);
                     setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === milestone._id ? "opacity-100" : "opacity-0"
+                      value === milestone.id ? "opacity-100" : "opacity-0"
                     )}
                   />
                   <div className="flex flex-col w-full">

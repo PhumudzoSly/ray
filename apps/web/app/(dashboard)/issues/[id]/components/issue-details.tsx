@@ -201,7 +201,7 @@ const IssueDetails = ({ id }: { id: string }) => {
                 Parent Issue
               </h3>
               <Link
-                href={`/issues/${issueHierarchy.parentIssue._id}`}
+                href={`/issues/${issueHierarchy.parentIssue.id}`}
                 className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
               >
                 <div className="flex items-center justify-between">
@@ -249,8 +249,8 @@ const IssueDetails = ({ id }: { id: string }) => {
               <div className="space-y-2">
                 {issueHierarchy.subIssues.map((subIssue) => (
                   <Link
-                    key={subIssue._id}
-                    href={`/issues/${subIssue._id}`}
+                    key={subIssue.id}
+                    href={`/issues/${subIssue.id}`}
                     className="block p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

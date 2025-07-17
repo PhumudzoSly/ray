@@ -32,7 +32,7 @@ export function IssueLabelField({
       queryClient.setQueryData<any[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) =>
-          i._id === issueId ? { ...i, label } : i
+          i.id === issueId ? { ...i, label } : i
         );
       });
       return { previousIssues };

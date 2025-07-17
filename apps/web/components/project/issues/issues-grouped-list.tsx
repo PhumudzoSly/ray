@@ -22,7 +22,7 @@ import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 
 interface IssueItem {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
   status: string;
@@ -31,7 +31,7 @@ interface IssueItem {
   dueDate?: string;
   assignedTo?: any;
   project?: {
-    _id: string;
+    id: string;
     name: string;
   };
 }
@@ -114,7 +114,7 @@ function IssueItemComponent({
       queryClient.setQueryData<IssueItem[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) =>
-          i._id === issueId ? { ...i, ...updates } : i
+          i.id === issueId ? { ...i, ...updates } : i
         );
       });
       return { previousIssues };
@@ -148,7 +148,7 @@ function IssueItemComponent({
           <PrioritySelector
             onChange={async (e) => {
               updateIssueMutation.mutate({
-                issueId: item._id,
+                issueId: item.id,
                 updates: {
                   priority: e as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
                 },
@@ -161,13 +161,13 @@ function IssueItemComponent({
 
         {/* Issue ID */}
         <div className="hidden md:block text-sm text-muted-foreground font-medium min-w-[80px]">
-          {item._id.slice(-6).toUpperCase()}
+          {item.id.slice(-6).toUpperCase()}
         </div>
         <div onClick={handleInteractiveClick}>
           <StatusSelector
             onChange={async (e) => {
               updateIssueMutation.mutate({
-                issueId: item._id,
+                issueId: item.id,
                 updates: {
                   status: e as
                     | "BACKLOG"
@@ -192,11 +192,11 @@ function IssueItemComponent({
 
       <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
         <Badge variant="neutral">{item.project?.name}</Badge>
-        <IssueLabelField issueId={item._id} value={item?.label} />
+        <IssueLabelField issueId={item.id} value={item?.label} />
         <AssigneeSelector
           onChange={async (e) => {
             updateIssueMutation.mutate({
-              issueId: item._id,
+              issueId: item.id,
               updates: {
                 assignedTo: e as any,
               },
@@ -255,7 +255,7 @@ function IssueGroupComponent({
         <div className="space-y-0 min-w-max">
           {group.items.map((item) => (
             <IssueItemComponent
-              key={item._id}
+              key={item.id}
               item={item}
               onItemClick={onItemClick}
             />

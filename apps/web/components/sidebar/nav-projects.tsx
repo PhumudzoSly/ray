@@ -90,7 +90,7 @@ export function NavProjects() {
           {projects?.map((project, index) => {
             return (
               <Collapsible
-                key={project._id}
+                key={project.id}
                 asChild
                 defaultOpen={index === 0}
                 className="group/collapsible"
@@ -115,7 +115,7 @@ export function NavProjects() {
                     <SidebarMenuSub className="dark:text-muted-foreground text-sm text-muted-foreground">
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}`}>
+                          <Link href={`/project/${project.id}`}>
                             <CircleCheck size={12} className="text-green-500" />
                             <span>Overview</span>
                           </Link>
@@ -123,7 +123,7 @@ export function NavProjects() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/features`}>
+                          <Link href={`/project/${project.id}/features`}>
                             <GitBranch size={12} className="text-blue-500" />
                             <span>Features</span>
                           </Link>
@@ -131,7 +131,7 @@ export function NavProjects() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/assets`}>
+                          <Link href={`/project/${project.id}/assets`}>
                             <FolderArchive
                               size={12}
                               className="text-yellow-500"
@@ -142,7 +142,7 @@ export function NavProjects() {
                       </SidebarMenuSubItem>
                       <SidebarMenuSubItem>
                         <SidebarMenuSubButton asChild>
-                          <Link href={`/project/${project._id}/milestones`}>
+                          <Link href={`/project/${project.id}/milestones`}>
                             <LoaderPinwheel
                               size={12}
                               className="text-gray-500"

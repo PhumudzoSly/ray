@@ -39,7 +39,7 @@ export function IssueKanbanCard({
 
   const handleCardClick = () => {
     if (!isDragging) {
-      router.push(`/issues/${issue._id}`);
+      router.push(`/issues/${issue.id}`);
     }
   };
 
@@ -60,7 +60,7 @@ export function IssueKanbanCard({
         {showProject && issue.project && (
           <div onClick={handleInteractiveClick} className="inline-block">
             <Link
-              href={`/project/${issue.project._id}`}
+              href={`/project/${issue.project.id}`}
               className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               <FolderIcon className="h-3 w-3 flex-shrink-0" />
@@ -81,7 +81,7 @@ export function IssueKanbanCard({
           onChange={async (userId) => {
             try {
               await changeLeaderMutation.mutateAsync({
-                issueId: issue._id,
+                issueId: issue.id,
                 userId: userId as any,
                 token,
               });
@@ -90,11 +90,11 @@ export function IssueKanbanCard({
             }
           }}
         />
-        <IssueLabelField issueId={issue._id} value={issue.label} align="end" />
+        <IssueLabelField issueId={issue.id} value={issue.label} align="end" />
 
         <IssueDueDateField
           value={issue.dueDate ? new Date(issue.dueDate) : null}
-          issueId={issue._id}
+          issueId={issue.id}
           align="end"
         />
       </div>

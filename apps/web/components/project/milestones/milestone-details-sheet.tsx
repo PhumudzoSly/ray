@@ -71,15 +71,15 @@ interface Milestone {
   status: string;
   startDate?: string | number;
   endDate?: string | number;
-  owner?: { _id: string; name: string } | null;
+  owner?: { id: string; name: string } | null;
   progress: number;
   completedIssueCount: number;
   issueCount: number;
   completedFeatureCount: number;
   featureCount: number;
   overdueItems: number;
-  dependsOn: { _id: string; name: string }[];
-  blocking: { _id: string; name: string }[];
+  dependsOn: { id: string; name: string }[];
+  blocking: { id: string; name: string }[];
   issues: any[];
   features: any[];
 }
@@ -108,15 +108,15 @@ export function MilestoneDetailsSheet({
         status: raw.status,
         startDate: raw.startDate,
         endDate: raw.endDate,
-        owner: raw.owner ? { _id: raw.owner.id, name: raw.owner.name } : null,
+        owner: raw.owner ? { id: raw.owner.id, name: raw.owner.name } : null,
         progress: raw.progress,
         completedIssueCount: raw.completedIssueCount,
         issueCount: raw.issueCount,
         completedFeatureCount: raw.completedFeatureCount,
         featureCount: raw.featureCount,
         overdueItems: raw.overdueItems,
-        dependsOn: (raw.dependsOn ?? []).map((d: any) => ({ _id: d.id, name: d.name })),
-        blocking: (raw.blocking ?? []).map((b: any) => ({ _id: b.id, name: b.name })),
+        dependsOn: (raw.dependsOn ?? []).map((d: any) => ({ id: d.id, name: d.name })),
+        blocking: (raw.blocking ?? []).map((b: any) => ({ id: b.id, name: b.name })),
         issues: raw.issues ?? [],
         features: raw.features ?? [],
       };
@@ -314,7 +314,7 @@ export function MilestoneDetailsSheet({
               <div className="flex items-center justify-between py-2">
                 <span className="text-sm text-muted-foreground">Owner</span>
                 <AssigneeSelector
-                  assignee={milestone.owner?._id || null}
+                  assignee={milestone.owner?.id || null}
                   onChange={async (assignee) => {
                     await handleUpdate({
                       ownerId: assignee === "unassigned" ? undefined : assignee,
@@ -415,9 +415,9 @@ export function MilestoneDetailsSheet({
                         {milestone.dependsOn.length > 1 ? "s" : ""}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {milestone.dependsOn.filter(Boolean).map((dep: { _id: string; name: string }) => (
+                        {milestone.dependsOn.filter(Boolean).map((dep: { id: string; name: string }) => (
                           <Badge
-                            key={dep?._id}
+                            key={dep?.id}
                             variant="outline"
                             className="text-xs font-normal"
                           >
@@ -434,9 +434,9 @@ export function MilestoneDetailsSheet({
                         {milestone.blocking.length > 1 ? "s" : ""}
                       </p>
                       <div className="flex flex-wrap gap-1.5">
-                        {milestone.blocking.filter(Boolean).map((blocked: { _id: string; name: string }) => (
+                        {milestone.blocking.filter(Boolean).map((blocked: { id: string; name: string }) => (
                           <Badge
-                            key={blocked?._id}
+                            key={blocked?.id}
                             variant="outline"
                             className="text-xs font-normal"
                           >
@@ -471,7 +471,7 @@ export function MilestoneDetailsSheet({
                     <div className="space-y-1">
                       {milestone.issues.map((issue: any) => (
                         <div
-                          key={issue._id}
+                          key={issue.id}
                           className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
                         >
                           <div className="flex-shrink-0">
@@ -524,7 +524,7 @@ export function MilestoneDetailsSheet({
                     <div className="space-y-1">
                       {milestone.features.map((feature: any) => (
                         <div
-                          key={feature._id}
+                          key={feature.id}
                           className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
                         >
                           <div className="flex-shrink-0">

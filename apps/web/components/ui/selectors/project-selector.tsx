@@ -28,7 +28,7 @@ interface ProjectSelectorProps {
 }
 
 interface Project {
-  _id: string;
+  id: string;
   name: string;
   platform?: string;
 }
@@ -53,7 +53,7 @@ export function ProjectSelector({
       if (!token) return [];
       const raw = await getProjects();
       return (raw ?? []).map((p: any) => ({
-        _id: p.id,
+        id: p.id,
         name: p.name,
         platform: p.platform,
       }));
@@ -61,7 +61,7 @@ export function ProjectSelector({
     enabled: !!token,
   });
 
-  const selectedProject = (projects ?? []).find((project: Project) => project._id === currentProject);
+  const selectedProject = (projects ?? []).find((project: Project) => project.id === currentProject);
 
   // Find the project type configuration for the selected project
   const selectedProjectType = selectedProject
@@ -126,9 +126,9 @@ export function ProjectSelector({
                   );
                   return (
                     <CommandItem
-                      key={project._id}
-                      value={project._id}
-                      onSelect={() => handleProjectChange(project._id)}
+                      key={project.id}
+                      value={project.id}
+                      onSelect={() => handleProjectChange(project.id)}
                       className="flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export function ProjectSelector({
                         )}
                         <span>{project.name}</span>
                       </div>
-                      {currentProject === project._id && (
+                      {currentProject === project.id && (
                         <CheckIcon size={16} className="ml-auto" />
                       )}
                     </CommandItem>

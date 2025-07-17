@@ -42,7 +42,7 @@ export function IssueDueDateField({
       queryClient.setQueryData<any[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) =>
-          i._id === issueId ? { ...i, dueDate } : i
+          i.id === issueId ? { ...i, dueDate } : i
         );
       });
       return { previousIssues };

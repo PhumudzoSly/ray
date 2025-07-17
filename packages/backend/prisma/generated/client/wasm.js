@@ -470,6 +470,22 @@ exports.Prisma.WaitlistEntryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FeatureScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  projectId: 'projectId',
+  phase: 'phase',
+  businessValue: 'businessValue',
+  estimatedEffort: 'estimatedEffort',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  priority: 'priority',
+  assignedToId: 'assignedToId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -614,6 +630,16 @@ exports.FeatureRequestPriority = exports.$Enums.FeatureRequestPriority = {
   urgent: 'urgent'
 };
 
+exports.FeaturePhase = exports.$Enums.FeaturePhase = {
+  DISCOVERY: 'DISCOVERY',
+  PLANNING: 'PLANNING',
+  DEVELOPMENT: 'DEVELOPMENT',
+  TESTING: 'TESTING',
+  RELEASE: 'RELEASE',
+  LIVE: 'LIVE',
+  DEPRECATED: 'DEPRECATED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -638,7 +664,8 @@ exports.Prisma.ModelName = {
   RoadmapChangelog: 'RoadmapChangelog',
   FeatureRequest: 'FeatureRequest',
   Waitlist: 'Waitlist',
-  WaitlistEntry: 'WaitlistEntry'
+  WaitlistEntry: 'WaitlistEntry',
+  Feature: 'Feature'
 };
 
 /**

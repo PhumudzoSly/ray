@@ -49,7 +49,7 @@ import { useSession } from "@/context/session-context";
 import { Id } from "@workspace/backend";
 
 interface FeedbackItem {
-  _id: Id<"roadmapFeedback">;
+  id: Id<"roadmapFeedback">;
   content: string;
   sentiment: "positive" | "neutral" | "negative";
   isApproved: boolean;
@@ -60,16 +60,16 @@ interface FeedbackItem {
   convertedBy?: any;
   conversionNotes?: string;
   roadmapItem?: {
-    _id: Id<"roadmapItems">;
+    id: Id<"roadmapItems">;
     title: string;
     category: string;
   };
   convertedFeature?: {
-    _id: Id<"feature">;
+    id: Id<"feature">;
     name: string;
   };
   convertedIssue?: {
-    _id: Id<"issues">;
+    id: Id<"issues">;
     title: string;
   };
 }
@@ -169,7 +169,7 @@ export function RoadmapFeedback({
 
         // Removed: await convertToFeature({
         // Removed:   token,
-        // Removed:   feedbackId: selectedFeedback._id,
+        // Removed:   feedbackId: selectedFeedback.id,
         // Removed:   featureName: featureForm.name,
         // Removed:   featureDescription:
         // Removed:     featureForm.description || selectedFeedback.content,
@@ -187,7 +187,7 @@ export function RoadmapFeedback({
 
         // Removed: await convertToIssue({
         // Removed:   token,
-        // Removed:   feedbackId: selectedFeedback._id,
+        // Removed:   feedbackId: selectedFeedback.id,
         // Removed:   issueTitle: issueForm.title,
         // Removed:   issueDescription: issueForm.description || selectedFeedback.content,
         // Removed:   priority: issueForm.priority,
@@ -326,7 +326,7 @@ export function RoadmapFeedback({
           <TabsContent value="pending" className="space-y-4 mt-6">
             {unconvertedFeedback.map((item) => (
               <Card
-                key={item._id}
+                key={item.id}
                 className={`border-l-4 ${getSentimentColor(item.sentiment)}`}
               >
                 <CardHeader className="pb-3">
@@ -351,14 +351,14 @@ export function RoadmapFeedback({
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleApprove(item._id, true)}
+                            onClick={() => handleApprove(item.id, true)}
                           >
                             <CheckCircle className="w-4 h-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleApprove(item._id, false)}
+                            onClick={() => handleApprove(item.id, false)}
                           >
                             <AlertCircle className="w-4 h-4" />
                           </Button>
@@ -398,7 +398,7 @@ export function RoadmapFeedback({
           <TabsContent value="converted" className="space-y-4 mt-6">
             {convertedFeedback.map((item) => (
               <Card
-                key={item._id}
+                key={item.id}
                 className={`border-l-4 ${getSentimentColor(item.sentiment)} opacity-75`}
               >
                 <CardHeader className="pb-3">
@@ -461,7 +461,7 @@ export function RoadmapFeedback({
           <TabsContent value="all" className="space-y-4 mt-6">
             {feedback.map((item) => (
               <Card
-                key={item._id}
+                key={item.id}
                 className={`border-l-4 ${getSentimentColor(item.sentiment)} ${item.convertedToFeatureId || item.convertedToIssueId ? "opacity-75" : ""}`}
               >
                 <CardHeader className="pb-3">
@@ -496,14 +496,14 @@ export function RoadmapFeedback({
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleApprove(item._id, true)}
+                                  onClick={() => handleApprove(item.id, true)}
                                 >
                                   <CheckCircle className="w-4 h-4" />
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleApprove(item._id, false)}
+                                  onClick={() => handleApprove(item.id, false)}
                                 >
                                   <AlertCircle className="w-4 h-4" />
                                 </Button>

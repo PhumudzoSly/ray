@@ -177,98 +177,98 @@ export const createFeature = async (data: {
 
 // Add a dependency between two features
 export const addFeatureDependency = async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) => {
-  const { org } = await getSession();
-  if (parentId === dependentFeatureId) throw new Error("Cannot add self as dependency");
-  await prisma.feature.update({
-    where: { id: dependentFeatureId, organizationId: org },
-    data: {
-      dependencies: {
-        connect: { id: parentId },
-      },
-    },
-  });
-  return { success: true };
+    const { org } = await getSession();
+    if (parentId === dependentFeatureId) throw new Error("Cannot add self as dependency");
+    await prisma.feature.update({
+        where: { id: dependentFeatureId, organizationId: org },
+        data: {
+            dependencies: {
+                connect: { id: parentId },
+            },
+        },
+    });
+    return { success: true };
 };
 
 // Remove a dependency between two features
 export const removeFeatureDependency = async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) => {
-  const { org } = await getSession();
-  await prisma.feature.update({
-    where: { id: dependentFeatureId, organizationId: org },
-    data: {
-      dependencies: {
-        disconnect: { id: parentId },
-      },
-    },
-  });
-  return { success: true };
+    const { org } = await getSession();
+    await prisma.feature.update({
+        where: { id: dependentFeatureId, organizationId: org },
+        data: {
+            dependencies: {
+                disconnect: { id: parentId },
+            },
+        },
+    });
+    return { success: true };
 };
 
 // Get dependencies and dependents for a feature
 export const getFeatureDependencies = async ({ featureId }: { featureId: string }) => {
-  const { org } = await getSession();
-  // Features that this feature depends on (parent features)
-  const dependencies = await prisma.feature.findMany({
-    where: {
-      dependents: {
-        some: {
-          id: featureId,
-          organizationId: org,
+    const { org } = await getSession();
+    // Features that this feature depends on (parent features)
+    const dependencies = await prisma.feature.findMany({
+        where: {
+            dependents: {
+                some: {
+                    id: featureId,
+                    organizationId: org,
+                },
+            },
+            organizationId: org,
         },
-      },
-      organizationId: org,
-    },
-  });
-  // Features that depend on this feature (child features)
-  const dependents = await prisma.feature.findMany({
-    where: {
-      dependencies: {
-        some: {
-          id: featureId,
-          organizationId: org,
+    });
+    // Features that depend on this feature (child features)
+    const dependents = await prisma.feature.findMany({
+        where: {
+            dependencies: {
+                some: {
+                    id: featureId,
+                    organizationId: org,
+                },
+            },
+            organizationId: org,
         },
-      },
-      organizationId: org,
-    },
-  });
-  return { dependencies, dependents };
+    });
+    return { dependencies, dependents };
 };
 
 /**
  * Get project-level feature dependency statistics (scoped to org)
  */
 export const getProjectDependencyStats = async (projectId: string) => {
-  const { org } = await getSession();
-  // Get all features in the project
-  const features = await prisma.feature.findMany({
-    where: { projectId, organizationId: org },
-    include: { dependencies: true, dependents: true },
-  });
-  const totalFeatures = features.length;
-  let totalDependencies = 0;
-  let blockedFeatures = 0;
-  let completableFeatures = 0;
-  let featuresWithDependencies = 0;
-  let featuresBeingDependedOn = 0;
+    const { org } = await getSession();
+    // Get all features in the project
+    const features = await prisma.feature.findMany({
+        where: { projectId, organizationId: org },
+        include: { dependencies: true, dependents: true },
+    });
+    const totalFeatures = features.length;
+    let totalDependencies = 0;
+    let blockedFeatures = 0;
+    let completableFeatures = 0;
+    let featuresWithDependencies = 0;
+    let featuresBeingDependedOn = 0;
 
-  for (const feature of features) {
-    const deps = feature.dependencies || [];
-    const dependents = feature.dependents || [];
-    totalDependencies += deps.length;
-    if (deps.length > 0) featuresWithDependencies++;
-    if (dependents.length > 0) featuresBeingDependedOn++;
-    // Blocked if any dependency is not LIVE
-    const isBlocked = deps.some((dep: any) => dep.phase !== "LIVE");
-    if (isBlocked) blockedFeatures++;
-    else completableFeatures++;
-  }
+    for (const feature of features) {
+        const deps = feature.dependencies || [];
+        const dependents = feature.dependents || [];
+        totalDependencies += deps.length;
+        if (deps.length > 0) featuresWithDependencies++;
+        if (dependents.length > 0) featuresBeingDependedOn++;
+        // Blocked if any dependency is not LIVE
+        const isBlocked = deps.some((dep: any) => dep.phase !== "LIVE");
+        if (isBlocked) blockedFeatures++;
+        else completableFeatures++;
+    }
 
-  return {
-    totalFeatures,
-    totalDependencies,
-    blockedFeatures,
-    completableFeatures,
-    featuresWithDependencies,
-    featuresBeingDependedOn,
-  };
+    return {
+        totalFeatures,
+        totalDependencies,
+        blockedFeatures,
+        completableFeatures,
+        featuresWithDependencies,
+        featuresBeingDependedOn,
+    };
 }; 
