@@ -38,7 +38,6 @@ import { formatDistanceToNow, format } from "date-fns";
 import { TbProgress } from "react-icons/tb";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
-import { useData } from "@/hooks/use-data";
 import NoData from "@/components/shared/no-data";
 import { Doc } from "@workspace/backend";
 import Link from "next/link";
@@ -59,7 +58,7 @@ export function IdeasTable() {
     data: allIdeas,
     isPending,
     isError,
-  } = useData(api.idea.getIdeas, {
+  } = api.idea.getIdeas({
     token: useSession().token,
   });
 

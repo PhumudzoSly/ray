@@ -27,9 +27,8 @@ import {
 import { Card } from "@workspace/ui/components/card";
 import { TooltipProvider } from "@workspace/ui/components/tooltip";
 import { cn } from "@/lib/utils";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as ideaActions from "@/actions/idea";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 
@@ -100,7 +99,13 @@ const IdeaStatus = ({
   const config = statusConfig[status];
   const initConfig = statusConfig[status];
 
-  const changeStatus = useMutation(api.idea.changeStatus);
+  const queryClient = useQueryClient();
+  const changeStatusMutation = useMutation({
+    mutationFn: async (data: { id: string; status: string }) => ideaActions.changeStatus(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(); // Optionally, scope to idea queries
+    },
+  });
 
   async function handleSubmit() {
     if (currentStatus === status) {
@@ -111,9 +116,8 @@ const IdeaStatus = ({
     setIsSubmitting(true);
     try {
       await toast.promise(
-        changeStatus({
-          id: id as Id<"idea">,
-          token,
+        changeStatusMutation.mutateAsync({
+          id,
           status: currentStatus,
         }),
         {
@@ -123,7 +127,6 @@ const IdeaStatus = ({
         }
       );
       setIsOpen(false);
-
       await refetch();
     } catch (error) {
       console.error("Error updating status:", error);

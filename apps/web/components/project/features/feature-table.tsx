@@ -1,9 +1,22 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
+import { useSession } from "@/context/session-context";
+import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
+import { Skeleton } from "@workspace/ui/components/skeleton";
+import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
+import { LayoutGrid, List, Clock, Target, User, GitBranch } from "lucide-react";
+import { FeatureCard } from "./feature-card";
+import {
+  FeatureFilters,
+  type FeatureFilters as FeatureFiltersType,
+} from "./feature-filters";
+import { NewFeature } from "./new-feature";
+import { useQuery } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
 import { useSession } from "@/context/session-context";
 import { ScrollArea, ScrollBar } from "@workspace/ui/components/scroll-area";
 import { Skeleton } from "@workspace/ui/components/skeleton";
@@ -24,13 +37,12 @@ import {
   GroupedListGroup,
 } from "@workspace/ui/components/grouped-list";
 import { phases } from "@/utils/constants/features/phases";
-import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { useRouter } from "next/navigation";
 
 interface FeatureTableProps {
-  projectId: Id<"projects">;
+  projectId: string;
 }
 
 export function FeatureTable({ projectId }: FeatureTableProps) {
@@ -44,15 +56,45 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
   });
   const [viewMode, setViewMode] = useState<"grid" | "grouped">("grouped");
   const [selectedFeatureId, setSelectedFeatureId] =
-    useState<Id<"feature"> | null>(null);
+    useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const updateFeature = useMutation(api.issue.feature.updateFeature);
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating a feature (phase change)
+  const updateFeatureMutation = useMutation({
+    mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
+      return await featureActions.updateFeatureById(featureId, updates);
+    },
+    onMutate: async ({ featureId, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["features", projectId] });
+      const previousFeatures = queryClient.getQueryData<any[]>(["features", projectId]);
+      queryClient.setQueryData<any[]>(["features", projectId], (old) => {
+        if (!old) return old;
+        return old.map((f) =>
+          f._id === featureId ? { ...f, ...updates } : f
+        );
+      });
+      return { previousFeatures };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousFeatures) {
+        queryClient.setQueryData(["features", projectId], context.previousFeatures);
+      }
+      toast.error("Failed to move feature");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["features", projectId] });
+    },
+  });
 
-  const { data: features, isPending } = useData(
-    api.issue.feature.getFeaturesByProject,
-    { projectId, token }
-  );
+  const { data: features, isPending } = useQuery({
+    queryKey: ["features", projectId],
+    queryFn: async () => {
+      const res = await featureActions.getFeaturesByProject(projectId);
+      if (res.success) return res.data;
+      throw new Error("Failed to fetch features");
+    },
+  });
 
   // Get unique assignees for filter dropdown
   const assignees = useMemo(() => {
@@ -182,17 +224,10 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     toGroupId: string,
     newIndex: number
   ) => {
-    try {
-      await updateFeature({
-        token,
-        featureId: itemId as Id<"feature">,
-        updates: { phase: toGroupId as any },
-      });
-      toast.success("Feature moved successfully");
-    } catch (error) {
-      console.error("Error moving feature:", error);
-      toast.error("Failed to move feature");
-    }
+    updateFeatureMutation.mutate({
+      featureId: itemId,
+      updates: { phase: toGroupId },
+    });
   };
 
   if (isPending) {

@@ -8,8 +8,8 @@ import { IssueKanbanCard } from "./issue-kanbab-card";
 import { status as issueStatuses } from "@/utils/constants/issues/status";
 import { toast } from "sonner";
 import { CustomIssue } from "@/types/project";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
@@ -22,7 +22,11 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
   // Local state for optimistic updates
   const [optimisticIssues, setOptimisticIssues] = useState<CustomIssue[]>([]);
   const { token } = useSession();
-  const updateStatus = useMutation(api.issue.quickAction.changeIssueStatus);
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ issueId, status, token }: any) => issueActions.updateIssue(issueId, { status, token }),
+    onSuccess: () => setOptimisticIssues([]),
+    onError: () => setOptimisticIssues([]),
+  });
 
   // Use optimistic issues if available, otherwise use props
   const displayIssues = optimisticIssues.length > 0 ? optimisticIssues : issues;
@@ -71,16 +75,13 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       setOptimisticIssues(updatedIssues);
 
       try {
-        await updateStatus({
+        await updateStatusMutation.mutateAsync({
           issueId: draggableId,
           status: destinationStatus,
           token: token,
         });
-        // Clear optimistic state on success
-        setOptimisticIssues([]);
       } catch (error: any) {
         console.error("Failed to update issue status:", error);
-        // Revert optimistic update on error
         setOptimisticIssues([]);
         if (error.message?.includes("Cannot mark issue as DONE")) {
           toast.error(error.message);

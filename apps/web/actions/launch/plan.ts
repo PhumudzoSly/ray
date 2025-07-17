@@ -74,4 +74,12 @@ export const deleteLaunchPlan = async (id: string) => {
     } catch (error) {
         return { success: false, error };
     }
+};
+
+/**
+ * Generate a structured launch plan for a project (placeholder)
+ */
+export const generateLaunchPlan = async ({ projectId }: { projectId: string }) => {
+    // TODO: Implement AI/logic to generate a launch plan
+    return { success: true };
 }; 

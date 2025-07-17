@@ -19,12 +19,18 @@ import {
 import { projectTypes } from "@/utils/constants/projects/projectTypes";
 import { TbListDetails } from "react-icons/tb";
 import { useSession } from "@/context/session-context";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getProjects } from "@/actions/project";
 
 interface ProjectSelectorProps {
   currentProject?: string | null;
   onChange: (project: string | null) => void;
+}
+
+interface Project {
+  _id: string;
+  name: string;
+  platform?: string;
 }
 
 export function ProjectSelector({
@@ -41,13 +47,21 @@ export function ProjectSelector({
     setOpen(false);
   };
 
-  const { data: projects, isPending } = useData(api.projects.list, {
-    token,
+  const { data: projects, isPending } = useQuery<Project[]>({
+    queryKey: ["projects", token],
+    queryFn: async () => {
+      if (!token) return [];
+      const raw = await getProjects();
+      return (raw ?? []).map((p: any) => ({
+        _id: p.id,
+        name: p.name,
+        platform: p.platform,
+      }));
+    },
+    enabled: !!token,
   });
 
-  const selectedProject = projects?.find(
-    (project) => project._id === currentProject
-  );
+  const selectedProject = (projects ?? []).find((project: Project) => project._id === currentProject);
 
   // Find the project type configuration for the selected project
   const selectedProjectType = selectedProject
@@ -106,7 +120,7 @@ export function ProjectSelector({
                 )}
               </CommandEmpty>
               <CommandGroup>
-                {projects?.map((project) => {
+                {(projects ?? []).map((project: Project) => {
                   const projectType = projectTypes.find(
                     (type) => type.id === project.platform
                   );

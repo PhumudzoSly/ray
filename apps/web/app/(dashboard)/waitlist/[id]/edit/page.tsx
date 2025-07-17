@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
@@ -13,8 +13,8 @@ import { useSession } from "@/context/session-context";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import { Badge } from "@workspace/ui/components/badge";
 import { Copy, Key, Loader2 } from "lucide-react";
-import { Id } from "@workspace/backend";
 import Header from "@/components/shared/header";
+import * as waitlistActions from "@/actions/waitlist";
 
 type FormState = {
   name: string;
@@ -29,15 +29,23 @@ type FormState = {
 export default function EditWaitlistPage() {
   const router = useRouter();
   const params = useParams();
-  const waitlistId = params.id as Id<"waitlists">;
+  const waitlistId = params.id as string;
   const { token } = useSession();
 
-  const updateWaitlist = useMutation(api.waitlists.updateWaitlist);
+  // Mutations
+  const updateWaitlistMutation = useMutation({
+    mutationFn: async (data: any) => waitlistActions.updateWaitlist(waitlistId, data),
+    onSuccess: () => router.push(`/waitlist/${waitlistId}`),
+  });
 
   // Fetch waitlist data
-  const waitlist = useQuery(api.waitlists.getWaitlistById, {
-    waitlistId,
-    token,
+  const { data: waitlist } = useQuery({
+    queryKey: ["waitlist", waitlistId],
+    queryFn: async () => {
+      const res = await waitlistActions.getWaitlist(waitlistId);
+      return res.success ? res.data : null;
+    },
+    enabled: !!waitlistId,
   });
 
   const [form, setForm] = useState<FormState>({
@@ -82,17 +90,12 @@ export default function EditWaitlistPage() {
     if (!validateForm(form)) {
       return;
     }
-
     try {
-      await updateWaitlist({
-        waitlistId,
+      await updateWaitlistMutation.mutateAsync({
         ...form,
         customMessage: form.customMessage || undefined,
-        token,
       });
-
       toast.success("Waitlist updated successfully!");
-      router.push(`/waitlist/${waitlistId}`);
     } catch (error) {
       console.error("Error updating waitlist:", error);
       toast.error(

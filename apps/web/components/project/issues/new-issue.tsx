@@ -21,8 +21,8 @@ import { LabelSelector } from "@/components/ui/selectors/label-selector";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { labels } from "@/utils/constants/issues/labels";
 import { useSession } from "@/context/session-context";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 type NewIssueProps = {
   projectId?: string;
@@ -50,7 +50,9 @@ export function NewIssue({
   defaultStatus,
 }: NewIssueProps) {
   const { token, org } = useSession();
-  const createIssue = useMutation(api.issue.index.addIssue);
+  const createIssueMutation = useMutation({
+    mutationFn: async (data: any) => issueActions.createIssue(data),
+  });
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -90,18 +92,15 @@ export function NewIssue({
     setOpen(false);
 
     try {
-      await createIssue({
-        issue: {
-          label: form.label,
-          organizationId: org as any,
-          priority: form.priority,
-          projectId: form.projectId as any,
-          status: form.status,
-          title: form.title,
-          description: form.description,
-          parentIssueId: parentIssueId as any,
-        },
-        token,
+      await createIssueMutation.mutateAsync({
+        title: form.title,
+        description: form.description,
+        status: form.status,
+        priority: form.priority,
+        label: form.label,
+        projectId: form.projectId,
+        parentIssueId,
+        organizationId: org,
       });
 
       toast.success(

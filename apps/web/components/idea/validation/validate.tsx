@@ -35,7 +35,6 @@ import { cn } from "@/lib/utils";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
-import { useData } from "@/hooks/use-data";
 import { useSession } from "@/context/session-context";
 import { ValidationPanel } from "@/components/ideas/validation/validation-panel";
 
@@ -43,7 +42,7 @@ const Validate = ({ id }: { id: string }) => {
   //
 
   const { token } = useSession();
-  const { data: idea, isPending } = useData(api.idea.getSingleIdea, {
+  const { data: idea, isPending } = api.idea.getSingleIdea({
     id: id as Id<"idea">,
     token,
   });

@@ -77,4 +77,6 @@ export const deleteRoadmapChangelog = async (id: string) => {
     } catch (error) {
         return { success: false, error };
     }
-}; 
+};
+
+export { getAllRoadmapChangelogs }; 

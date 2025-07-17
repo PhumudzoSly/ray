@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as assetActions from "@/actions/project/assets";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Card, CardContent } from "@workspace/ui/components/card";
@@ -85,8 +86,8 @@ export function AssetCard({
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Mutations
-  const getDownloadUrl = useMutation(api.assets.getAssetDownloadUrl);
-  const incrementViewCount = useMutation(api.assets.incrementViewCount);
+  // Replace with TanStack Query and server actions as needed
+  // ... implement download URL and increment view count using assetActions ...
 
   const TypeIcon =
     ASSET_TYPE_ICONS[asset.type as keyof typeof ASSET_TYPE_ICONS] || File;
@@ -112,14 +113,14 @@ export function AssetCard({
     } else {
       // For file assets, open in a new tab using the storage URL
       if (asset.storageId) {
-        const fileUrl = `https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${asset.storageId}`;
+        const fileUrl = `/api/storage/${asset.storageId}`;
         window.open(fileUrl, "_blank");
       }
 
       // Increment view count
       if (token) {
         try {
-          await incrementViewCount({
+          await assetActions.incrementViewCount({
             token: token,
             assetId: asset._id,
           });
@@ -135,7 +136,7 @@ export function AssetCard({
 
     setIsDownloading(true);
     try {
-      const downloadUrl = await getDownloadUrl({
+      const downloadUrl = await assetActions.getAssetDownloadUrl({
         token: token,
         assetId: asset._id,
       });
@@ -173,10 +174,12 @@ export function AssetCard({
 
   const renderPreview = () => {
     if (asset.type === "image" && asset.storageId) {
+      // Use asset.fileUrl or getAssetDownloadUrl for image src
+      let imageUrl = `/api/storage/${asset.storageId}`;
       return (
         <div className="aspect-video bg-muted rounded-lg overflow-hidden">
           <img
-            src={`https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${asset.storageId}`}
+            src={imageUrl}
             alt={asset.name}
             className="w-full h-full object-cover"
           />

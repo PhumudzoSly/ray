@@ -3,7 +3,6 @@ import { Providers } from "@/components/providers";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/main/navbar";
 import Footer from "@/components/main/footer";
-import { ConvexClientProvider } from "@/components/convex-provider";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -25,7 +24,6 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <ConvexClientProvider>
           <Providers>
             <Navbar />
             {children}
@@ -82,7 +80,6 @@ export default function RootLayout({
               ]}
             />
           </Providers>
-        </ConvexClientProvider>
       </body>
     </html>
   );

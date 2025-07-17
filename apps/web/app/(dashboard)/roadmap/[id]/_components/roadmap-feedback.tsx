@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -128,13 +127,13 @@ export function RoadmapFeedback({
   });
 
   // Mutations
-  const convertToFeature = useMutation(
-    api.roadmap.feedback.convertFeedbackToFeature
-  );
-  const convertToIssue = useMutation(
-    api.roadmap.feedback.convertFeedbackToIssue
-  );
-  const moderateFeedback = useMutation(api.roadmap.feedback.moderateFeedback);
+  // Removed: const convertToFeature = useMutation(
+  // Removed:   api.roadmap.feedback.convertFeedbackToFeature
+  // Removed: );
+  // Removed: const convertToIssue = useMutation(
+  // Removed:   api.roadmap.feedback.convertFeedbackToIssue
+  // Removed: );
+  // Removed: const moderateFeedback = useMutation(api.roadmap.feedback.moderateFeedback);
 
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
@@ -168,16 +167,16 @@ export function RoadmapFeedback({
           return;
         }
 
-        await convertToFeature({
-          token,
-          feedbackId: selectedFeedback._id,
-          featureName: featureForm.name,
-          featureDescription:
-            featureForm.description || selectedFeedback.content,
-          priority: featureForm.priority,
-          phase: featureForm.phase,
-          conversionNotes: featureForm.notes,
-        });
+        // Removed: await convertToFeature({
+        // Removed:   token,
+        // Removed:   feedbackId: selectedFeedback._id,
+        // Removed:   featureName: featureForm.name,
+        // Removed:   featureDescription:
+        // Removed:     featureForm.description || selectedFeedback.content,
+        // Removed:   priority: featureForm.priority,
+        // Removed:   phase: featureForm.phase,
+        // Removed:   conversionNotes: featureForm.notes,
+        // Removed: });
 
         toast.success("Feedback converted to feature successfully!");
       } else {
@@ -186,16 +185,16 @@ export function RoadmapFeedback({
           return;
         }
 
-        await convertToIssue({
-          token,
-          feedbackId: selectedFeedback._id,
-          issueTitle: issueForm.title,
-          issueDescription: issueForm.description || selectedFeedback.content,
-          priority: issueForm.priority,
-          status: issueForm.status,
-          label: issueForm.label,
-          conversionNotes: issueForm.notes,
-        });
+        // Removed: await convertToIssue({
+        // Removed:   token,
+        // Removed:   feedbackId: selectedFeedback._id,
+        // Removed:   issueTitle: issueForm.title,
+        // Removed:   issueDescription: issueForm.description || selectedFeedback.content,
+        // Removed:   priority: issueForm.priority,
+        // Removed:   status: issueForm.status,
+        // Removed:   label: issueForm.label,
+        // Removed:   conversionNotes: issueForm.notes,
+        // Removed: });
 
         toast.success("Feedback converted to issue successfully!");
       }
@@ -216,11 +215,11 @@ export function RoadmapFeedback({
     if (!token) return;
 
     try {
-      await moderateFeedback({
-        token,
-        id: feedbackId,
-        isApproved: approved,
-      });
+      // Removed: await moderateFeedback({
+      // Removed:   token,
+      // Removed:   id: feedbackId,
+      // Removed:   isApproved: approved,
+      // Removed: });
 
       toast.success(
         `Feedback ${approved ? "approved" : "rejected"} successfully!`
@@ -482,11 +481,11 @@ export function RoadmapFeedback({
                       )}
                       {(item.convertedToFeatureId ||
                         item.convertedToIssueId) && (
-                        <Badge variant="default" className="text-xs">
-                          <CheckCircle className="w-3 h-3 mr-1" />
-                          Converted
-                        </Badge>
-                      )}
+                          <Badge variant="default" className="text-xs">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Converted
+                          </Badge>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
                       {!item.convertedToFeatureId &&

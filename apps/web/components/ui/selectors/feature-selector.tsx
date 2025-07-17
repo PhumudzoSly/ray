@@ -16,10 +16,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
+import { getFeaturesByProject } from "@/actions/issue";
+
+interface Feature {
+  _id: string;
+  name: string;
+}
 
 interface FeatureSelectorProps {
   projectId?: string;
@@ -42,27 +46,27 @@ export function FeatureSelector({
   const [open, setOpen] = useState<boolean>(false);
   const { token } = useSession();
 
-  const { data: projectFeatures, isPending: projectPending } = useData(
-    api.issue.feature.getFeaturesByProject,
-    projectId
-      ? {
-          token,
-          projectId: projectId as Id<"projects">,
-        }
-      : "skip"
-  );
-
-  const features = projectFeatures;
-
-  const isPending = projectPending;
+  const {
+    data: features,
+    isPending,
+  } = useQuery<Feature[]>({
+    queryKey: ["features", projectId, token],
+    queryFn: async () => {
+      if (!token || !projectId) return [];
+      const raw = await getFeaturesByProject(projectId);
+      // If the server action returns a wrapped object, adjust accordingly
+      return (raw ?? []).map((f: any) => ({
+        _id: f._id ?? f.id ?? f._id,
+        name: f.name,
+      }));
+    },
+    enabled: !!token && !!projectId,
+  });
 
   const currentValue = value || selectedFeatureId;
-  const filteredFeatures =
-    features?.filter((f) => !excludeFeatureIds.includes(f._id)) || [];
+  const filteredFeatures = (features ?? []).filter((f: Feature) => !excludeFeatureIds.includes(f._id));
 
-  const selectedFeature = filteredFeatures.find(
-    (feature) => feature._id === currentValue
-  );
+  const selectedFeature = filteredFeatures.find((feature: Feature) => feature._id === currentValue);
 
   const handleFeatureChange = (featureId: string) => {
     onChange(featureId === "" ? null : featureId);
@@ -127,7 +131,7 @@ export function FeatureSelector({
                   </div>
                   {!currentValue && <CheckIcon size={16} className="ml-auto" />}
                 </CommandItem>
-                {filteredFeatures.map((feature) => (
+                {filteredFeatures.map((feature: Feature) => (
                   <CommandItem
                     key={feature._id}
                     value={feature._id}

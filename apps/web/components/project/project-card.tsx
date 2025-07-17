@@ -23,8 +23,8 @@ import {
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { ProjectTypeSelector } from "../ui/selectors/project-type-selector";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as projectActions from "@/actions/project";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 
@@ -59,14 +59,38 @@ export function ProjectCard({
     return "text-red-600";
   };
 
-  const { token } = useSession();
-  const updateProject = useMutation(api.projects.update);
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating a project
+  const updateProjectMutation = useMutation({
+    mutationFn: async ({ projectId, updates }: { projectId: string; updates: any }) => {
+      return await projectActions.updateProject(projectId, updates);
+    },
+    onMutate: async ({ projectId, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["projects"] });
+      const previousProjects = queryClient.getQueryData<any[]>(["projects"]);
+      queryClient.setQueryData<any[]>(["projects"], (old) => {
+        if (!old) return old;
+        return old.map((p) =>
+          p._id === projectId ? { ...p, ...updates } : p
+        );
+      });
+      return { previousProjects };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousProjects) {
+        queryClient.setQueryData(["projects"], context.previousProjects);
+      }
+      toast.error("Failed to update project");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+  });
 
   return (
     <Card
-      className={`hover:shadow-md transition-all duration-200 ${
-        isDragging ? "shadow-xl border-primary" : ""
-      } ${variant === "table" ? "mb-2" : ""}`}
+      className={`hover:shadow-md transition-all duration-200 ${isDragging ? "shadow-xl border-primary" : ""
+        } ${variant === "table" ? "mb-2" : ""}`}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
@@ -76,17 +100,10 @@ export function ProjectCard({
                 <ProjectTypeSelector
                   selectedType={project.platform}
                   onChange={async (value) => {
-                    try {
-                      await updateProject({
-                        project: {
-                          projectId: project._id,
-                          platform: value as any,
-                        },
-                        token,
-                      });
-                    } catch (error) {
-                      toast.error("Failed to update project");
-                    }
+                    updateProjectMutation.mutate({
+                      projectId: project._id,
+                      updates: { platform: value },
+                    });
                   }}
                   iconOnly
                 />{" "}

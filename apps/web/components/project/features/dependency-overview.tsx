@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
 import { useSession } from "@/context/session-context";
 import { Id } from "@workspace/backend";
 import {
@@ -33,10 +33,10 @@ const DependencyOverview: React.FC<DependencyOverviewProps> = ({
 }) => {
   const { token } = useSession();
 
-  const { data: stats, isPending } = useData(
-    api.issue.feature.getProjectDependencyStats,
-    { token, projectId }
-  );
+  const { data: stats, isPending } = useQuery({
+    queryKey: ["projectDependencyStats", projectId],
+    queryFn: () => featureActions.getProjectDependencyStats(projectId),
+  });
 
   if (isPending) {
     return (
@@ -106,13 +106,12 @@ const DependencyOverview: React.FC<DependencyOverviewProps> = ({
     <div className="space-y-6">
       {/* Health Status Alert */}
       <Alert
-        className={`border-l-4 ${
-          healthStatus === "healthy"
+        className={`border-l-4 ${healthStatus === "healthy"
             ? "border-l-green-500"
             : healthStatus === "warning"
               ? "border-l-yellow-500"
               : "border-l-red-500"
-        }`}
+          }`}
       >
         <div className="flex items-center gap-2">
           {getHealthIcon()}

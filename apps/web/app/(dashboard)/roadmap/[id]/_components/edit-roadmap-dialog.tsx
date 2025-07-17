@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -63,7 +62,7 @@ export function EditRoadmapDialog({
     showChangelog: true,
   });
 
-  const updateRoadmap = useMutation(api.roadmap.updateRoadmap);
+  // Removed: const updateRoadmap = useMutation(api.roadmap.updateRoadmap);
 
   // Initialize form data when roadmap is loaded
   useEffect(() => {
@@ -89,19 +88,19 @@ export function EditRoadmapDialog({
     }
 
     try {
-      await updateRoadmap({
-        id: roadmapId,
-        name: formData.name,
-        slug: formData.slug,
-        description: formData.description,
-        isPublic: formData.isPublic,
-        customDomain: formData.customDomain || undefined,
-        theme: formData.theme,
-        allowVoting: formData.allowVoting,
-        allowFeedback: formData.allowFeedback,
-        showChangelog: formData.showChangelog,
-        token,
-      });
+      // Removed: await updateRoadmap({
+      // Removed:   id: roadmapId,
+      // Removed:   name: formData.name,
+      // Removed:   slug: formData.slug,
+      // Removed:   description: formData.description,
+      // Removed:   isPublic: formData.isPublic,
+      // Removed:   customDomain: formData.customDomain || undefined,
+      // Removed:   theme: formData.theme,
+      // Removed:   allowVoting: formData.allowVoting,
+      // Removed:   allowFeedback: formData.allowFeedback,
+      // Removed:   showChangelog: formData.showChangelog,
+      // Removed:   token,
+      // Removed: });
 
       toast.success("Roadmap updated successfully!");
       onClose();

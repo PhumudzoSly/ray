@@ -23,11 +23,10 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { Button } from "@workspace/ui/components/button";
 import { GitBranch, X, ArrowRight, Trash2, AlertTriangle } from "lucide-react";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -325,7 +324,7 @@ const getLayoutedElements = (
         data: {
           parentFeature,
           dependentFeature,
-          onRemove: onRemoveDependency || (() => {}),
+          onRemove: onRemoveDependency || (() => { }),
         },
       });
     }
@@ -345,38 +344,29 @@ const DependencyGraphVisualization: React.FC<
     dependentName: string;
   } | null>(null);
 
-  const addDependency = useMutation(api.issue.feature.addFeatureDependency);
-  const removeDependency = useMutation(
-    api.issue.feature.removeFeatureDependency
-  );
+  const queryClient = useQueryClient();
+  const removeDependencyMutation = useMutation({
+    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
+      featureActions.removeFeatureDependency({ parentId, dependentFeatureId }),
+    onSuccess: () => queryClient.invalidateQueries(),
+  });
 
   // Handle dependency removal with confirmation
-  const handleRemoveDependency = useCallback(
-    (parentId: string, dependentId: string) => {
-      const parentFeature = features.find((f) => f._id === parentId);
-      const dependentFeature = features.find((f) => f._id === dependentId);
-
-      if (parentFeature && dependentFeature) {
-        setPendingRemoval({
-          parentId,
-          dependentId,
-          parentName: parentFeature.name,
-          dependentName: dependentFeature.name,
-        });
-      }
-    },
-    [features]
-  );
+  const handleRemoveDependency = (parentId: string, dependentId: string) => {
+    removeDependencyMutation.mutate({
+      parentId,
+      dependentFeatureId: dependentId,
+    });
+  };
 
   // Confirm dependency removal
   const confirmRemoveDependency = useCallback(async () => {
     if (!pendingRemoval || !token) return;
 
     try {
-      await removeDependency({
-        token,
-        parentId: pendingRemoval.parentId as Id<"feature">,
-        dependentFeatureId: pendingRemoval.dependentId as Id<"feature">,
+      await removeDependencyMutation.mutateAsync({
+        parentId: pendingRemoval.parentId,
+        dependentFeatureId: pendingRemoval.dependentId,
       });
 
       toast.success(
@@ -388,7 +378,7 @@ const DependencyGraphVisualization: React.FC<
     } finally {
       setPendingRemoval(null);
     }
-  }, [pendingRemoval, removeDependency, token]);
+  }, [pendingRemoval, removeDependencyMutation, token]);
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     return getLayoutedElements(
@@ -457,10 +447,10 @@ const DependencyGraphVisualization: React.FC<
 
       try {
         // Add the dependency
-        await addDependency({
+        await featureActions.addFeatureDependency({
           token,
-          parentId: connection.source as Id<"feature">,
-          dependentFeatureId: connection.target as Id<"feature">,
+          parentId: connection.source as string,
+          dependentFeatureId: connection.target as string,
         });
 
         // Find feature names for better feedback
@@ -477,7 +467,7 @@ const DependencyGraphVisualization: React.FC<
         );
       }
     },
-    [addDependency, dependencies, features, token]
+    [dependencies, features, token]
   );
 
   // Handle edge deletion (removing dependencies) - kept for keyboard shortcuts

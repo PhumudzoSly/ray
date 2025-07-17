@@ -98,21 +98,6 @@ export const DATABASE_PROVIDERS: DatabaseProvider[] = [
     deployment: ["cloud"],
   },
   {
-    name: "Convex",
-    description: "Backend-as-a-Service with real-time database",
-    databases: ["Convex Database (Document-based with relations)"],
-    link: "https://convex.dev/",
-    features: [
-      "Real-time updates",
-      "TypeScript support",
-      "ACID transactions",
-      "Built-in auth",
-      "Serverless functions",
-    ],
-    pricing: "freemium",
-    deployment: ["cloud"],
-  },
-  {
     name: "MongoDB",
     description: "Leading NoSQL document database platform",
     databases: [

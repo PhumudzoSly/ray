@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -19,9 +16,12 @@ import {
 import { toast } from "sonner";
 import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createMilestone } from "@/actions/project/milestone";
+import { getOrgMembers } from "@/actions/account/user";
 
 interface CreateMilestoneDialogProps {
-  projectId: Id<"projects">;
+  projectId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
@@ -31,7 +31,7 @@ type FormState = {
   description: string;
   startDate: Date | undefined;
   endDate: Date | undefined;
-  ownerId: Id<"user"> | undefined;
+  ownerId: string | undefined;
 };
 
 export function CreateMilestoneDialog({
@@ -40,15 +40,28 @@ export function CreateMilestoneDialog({
   onOpenChange,
 }: CreateMilestoneDialogProps) {
   const { token } = useSession();
-  const createMilestone = useMutation(api.milestones.createMilestone);
-  const organizationMembers = useQuery(api.user.orgMembers, { token });
-
   const [form, setForm] = useState<FormState>({
     name: "",
     description: "",
     startDate: new Date(),
     endDate: undefined,
     ownerId: undefined,
+  });
+
+  // Fetch org members for assignee selector
+  const { data: organizationMembers } = useQuery({
+    queryKey: ["orgMembers", token],
+    queryFn: async () => {
+      if (!token) return [];
+      const raw = await getOrgMembers();
+      return (raw ?? []).map((m: any) => ({
+        _id: m.id,
+        name: m.user.name,
+        email: m.user.email,
+        image: m.user.image,
+      }));
+    },
+    enabled: !!token,
   });
 
   // Utility function to validate form fields
@@ -72,34 +85,29 @@ export function CreateMilestoneDialog({
     });
   };
 
+  const mutation = useMutation({
+    mutationFn: async (data: any) => createMilestone(data),
+    onSuccess: () => {
+      toast.success("Milestone created successfully");
+      close();
+    },
+    onError: () => {
+      toast.error("Failed to create milestone");
+    },
+  });
+
   async function handleSubmit() {
     if (!validateForm(form)) {
       return;
     }
-
-    try {
-      await toast.promise(
-        createMilestone({
-          name: form.name.trim(),
-          description: form.description.trim() || undefined,
-          projectId,
-          startDate: form.startDate?.getTime(),
-          endDate: form.endDate?.getTime(),
-          ownerId: form.ownerId,
-          token,
-        }),
-        {
-          loading: "Creating milestone...",
-          error: "Failed to create milestone",
-          success: "Milestone created successfully",
-        }
-      );
-
-      close();
-    } catch (error) {
-      console.error("Error creating milestone:", error);
-      toast.error("Failed to create milestone");
-    }
+    mutation.mutate({
+      name: form.name.trim(),
+      description: form.description.trim() || undefined,
+      projectId,
+      startDate: form.startDate?.getTime(),
+      endDate: form.endDate?.getTime(),
+      ownerId: form.ownerId,
+    });
   }
 
   return (
@@ -143,9 +151,9 @@ export function CreateMilestoneDialog({
 
           <div className="flex items-center gap-4">
             <AssigneeSelector
-              assignee={form.ownerId as Id<"user">}
+              assignee={form.ownerId ?? null}
               onChange={(value) =>
-                setForm({ ...form, ownerId: value as Id<"user"> })
+                setForm({ ...form, ownerId: value })
               }
             />
             <DateRangeSelector
@@ -168,8 +176,8 @@ export function CreateMilestoneDialog({
           >
             Cancel
           </Button>
-          <Button className="mb-2" onClick={handleSubmit}>
-            Create Milestone
+          <Button className="mb-2" onClick={handleSubmit} disabled={mutation.status === "pending"}>
+            {mutation.status === "pending" ? "Creating..." : "Create Milestone"}
           </Button>
         </DialogFooter>
       </DialogContent>

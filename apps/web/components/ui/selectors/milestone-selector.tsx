@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -22,13 +20,22 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Check, ChevronsUpDown, Diamond, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MilestoneStatusBadge } from "@/components/project/milestones/milestone-status-badge";
+import { getProjectMilestones } from "@/actions/project/milestone";
+import { MilestoneStatus } from "@/utils/constants/milestones/status";
 
 interface MilestoneSelectorProps {
-  projectId: Id<"projects">;
-  value?: Id<"milestones">;
-  onValueChange: (value: Id<"milestones"> | undefined) => void;
+  projectId: string;
+  value?: string;
+  onValueChange: (value: string | undefined) => void;
   placeholder?: string;
   className?: string;
+}
+
+interface Milestone {
+  _id: string;
+  name: string;
+  status: string;
+  progress: number;
 }
 
 export function MilestoneSelector({
@@ -41,14 +48,22 @@ export function MilestoneSelector({
   const [open, setOpen] = useState(false);
   const { token } = useSession();
 
-  const milestones = useQuery(api.milestones.getProjectMilestones, {
-    projectId,
-    token,
+  const { data: milestones } = useQuery<Milestone[]>({
+    queryKey: ["milestones", projectId, token],
+    queryFn: async () => {
+      if (!token || !projectId) return [];
+      const raw = await getProjectMilestones(projectId);
+      return (raw ?? []).map((m: any) => ({
+        _id: m.id,
+        name: m.name,
+        status: m.status,
+        progress: m.progress,
+      }));
+    },
+    enabled: !!token && !!projectId,
   });
 
-  const selectedMilestone = milestones?.find(
-    (milestone) => milestone._id === value
-  );
+  const selectedMilestone = (milestones ?? []).find((milestone: Milestone) => milestone._id === value);
 
   return (
     <div className={className}>
@@ -68,7 +83,7 @@ export function MilestoneSelector({
                     {selectedMilestone.name}
                   </span>
                 </div>
-                <MilestoneStatusBadge status={selectedMilestone.status} />
+                <MilestoneStatusBadge status={selectedMilestone.status as MilestoneStatus} />
               </>
             ) : (
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -83,7 +98,7 @@ export function MilestoneSelector({
             <CommandInput placeholder="Search milestones..." />
             <CommandEmpty>No milestones found.</CommandEmpty>
             <CommandGroup>
-              {milestones?.map((milestone) => (
+              {(milestones ?? []).map((milestone: Milestone) => (
                 <CommandItem
                   key={milestone._id}
                   value={milestone.name}
@@ -104,7 +119,7 @@ export function MilestoneSelector({
                       <span className="truncate">{milestone.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MilestoneStatusBadge status={milestone.status} />
+                      <MilestoneStatusBadge status={milestone.status as MilestoneStatus} />
                       {milestone.progress > 0 && (
                         <Badge variant="outline" className="text-xs">
                           {milestone.progress}%

@@ -3,11 +3,10 @@
 import React from "react";
 import { toast } from "sonner";
 import { IssueDueDateField as BaseDueDateField } from "./issue-due-date-field";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
-import { api } from "@workspace/backend";
 
 interface IssueDueDateFieldProps {
   issueId: string;
@@ -16,18 +15,18 @@ interface IssueDueDateFieldProps {
 
 export function IssueDueDateField({ issueId, value }: IssueDueDateFieldProps) {
   const { token } = useSession();
-  const changeIssueDueDate = useMutation(
-    api.issue.quickAction.changeIssueDueDate
-  );
+  const changeIssueDueDateMutation = useMutation({
+    mutationFn: async ({ issueId, dueDate }: { issueId: string; dueDate: string }) =>
+      issueActions.changeIssueDueDate({ issueId, dueDate, token }),
+  });
 
   const dateValue = value ? new Date(value) : null;
 
   const handleSave = async (newDate: Date | null): Promise<void> => {
     toast.promise(
-      changeIssueDueDate({
+      changeIssueDueDateMutation.mutateAsync({
+        issueId,
         dueDate: newDate ? newDate.toISOString() : "",
-        issueId: issueId as Id<"issues">,
-        token,
       }),
       {
         success: "Due date changed",

@@ -4,7 +4,6 @@ import "@liveblocks/react-ui/styles/dark/attributes.css";
 import type { Metadata } from "next";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@/context/theme-provider";
-import { ConvexClientProvider } from "@/context/convex-provider";
 import { AuthProvider } from "@/context/auth-provider";
 import { ConfirmDialogProvider } from "@workspace/ui/components/confirm-dialog";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -49,10 +48,8 @@ export default function RootLayout({
                 nonce="b1282rp=1ed2h3od12ndu2boqjdh1ibuo2i3hn"
                 defaultTheme="dark"
               >
-                <ConvexClientProvider>
-                  <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-                  <Toaster />
-                </ConvexClientProvider>
+                <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
+                <Toaster />
               </ThemeProvider>
             </HydrationBoundary>
           </ReactQueryProvider>

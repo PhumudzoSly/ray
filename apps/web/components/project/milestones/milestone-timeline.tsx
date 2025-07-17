@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
@@ -18,9 +15,11 @@ import {
 } from "@workspace/ui/components/hover-card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getProjectMilestones, updateMilestone } from "@/actions/project/milestone";
 
 interface MilestoneTimelineProps {
-  projectId: Id<"projects">;
+  projectId: string;
   className?: string;
 }
 
@@ -29,7 +28,7 @@ interface MilestoneEvent {
   title: string;
   date: Date;
   milestone: {
-    _id: Id<"milestones">;
+    _id: string;
     name: string;
     status: string;
     progress?: number;
@@ -42,16 +41,36 @@ export function MilestoneTimeline({
   className,
 }: MilestoneTimelineProps) {
   const [selectedMilestoneId, setSelectedMilestoneId] =
-    useState<Id<"milestones"> | null>(null);
+    useState<string | null>(null);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
 
   const { token } = useSession();
-  const milestones = useQuery(api.milestones.getProjectMilestones, {
-    projectId,
-    token,
+  const { data: milestones } = useQuery({
+    queryKey: ["milestones", projectId, token],
+    queryFn: async () => {
+      if (!token || !projectId) return [];
+      const raw = await getProjectMilestones(projectId);
+      return (raw ?? []).map((m: any) => ({
+        _id: m.id,
+        name: m.name,
+        status: m.status,
+        progress: m.progress,
+        description: m.description,
+        endDate: m.endDate,
+      }));
+    },
+    enabled: !!token && !!projectId,
   });
 
-  const updateMilestone = useMutation(api.milestones.updateMilestone);
+  const mutation = useMutation({
+    mutationFn: async (data: any) => updateMilestone(data.milestoneId, { endDate: data.endDate }),
+    onSuccess: () => {
+      toast.success("End date has been updated successfully.");
+    },
+    onError: () => {
+      toast.error("Failed to update milestone end date. Please try again.");
+    },
+  });
 
   if (!milestones || milestones.length === 0) {
     return (
@@ -75,8 +94,8 @@ export function MilestoneTimeline({
 
   // Convert milestones to calendar events
   const milestoneEvents: MilestoneEvent[] = milestones
-    .filter((milestone) => milestone.endDate)
-    .map((milestone) => ({
+    .filter((milestone: any) => milestone.endDate)
+    .map((milestone: any) => ({
       id: milestone._id,
       title: milestone.name,
       date: new Date(milestone.endDate!),
@@ -105,18 +124,7 @@ export function MilestoneTimeline({
   };
 
   const handleEventDrop = async (eventId: string, newDate: Date) => {
-    try {
-      await updateMilestone({
-        milestoneId: eventId as Id<"milestones">,
-        endDate: newDate.getTime(),
-        token,
-      });
-
-      toast.success("End date has been updated successfully.");
-    } catch (error) {
-      console.error("Failed to update milestone:", error);
-      toast.error("Failed to update milestone end date. Please try again.");
-    }
+    mutation.mutate({ milestoneId: eventId, endDate: newDate.getTime() });
   };
 
   const renderMilestoneEvent = (
@@ -204,7 +212,7 @@ export function MilestoneTimeline({
     setIsDetailsSheetOpen(true);
   };
 
-  const handleMilestoneClick = (milestoneId: Id<"milestones">) => {
+  const handleMilestoneClick = (milestoneId: string) => {
     setSelectedMilestoneId(milestoneId);
     setIsDetailsSheetOpen(true);
   };

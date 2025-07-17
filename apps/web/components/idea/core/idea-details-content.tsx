@@ -14,12 +14,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { useData } from "@/hooks/use-data";
 import { useSession } from "@/context/session-context";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { ValidationOverview } from "@/components/idea/validation/validation-overview";
+import { useQuery } from "@tanstack/react-query";
 
 interface IdeaDetailsContentProps {
   ideaId: string;
@@ -31,21 +31,15 @@ export const IdeaDetailsContent: React.FC<IdeaDetailsContentProps> = ({
   const { token } = useSession();
   const [activeTab, setActiveTab] = useState("overview");
 
-  const { data: idea, isPending: ideaPending } = useData(
-    api.idea.getSingleIdea,
-    {
-      id: ideaId as Id<"idea">,
-      token,
-    }
-  );
+  const { data: idea, isPending: ideaPending } = useQuery({
+    queryKey: ["idea", ideaId],
+    queryFn: () => api.idea.getSingleIdea({ id: ideaId as Id<"idea">, token }),
+  });
 
-  const { data: validationDetails, isPending: validationPending } = useData(
-    api.idea.getValidationDetails,
-    {
-      token,
-      ideaId: ideaId as Id<"idea">,
-    }
-  );
+  const { data: validationDetails, isPending: validationPending } = useQuery({
+    queryKey: ["validationDetails", ideaId],
+    queryFn: () => api.idea.getValidationDetails({ token, ideaId: ideaId as Id<"idea"> }),
+  });
 
   if (ideaPending || validationPending) {
     return (

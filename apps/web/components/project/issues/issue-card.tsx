@@ -10,9 +10,8 @@ import { TableCell, TableRow } from "@workspace/ui/components/table";
 import { useRouter } from "next/navigation";
 import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import { toast } from "sonner";
 
 export function IssueCard({
@@ -32,8 +31,33 @@ export function IssueCard({
     e.stopPropagation();
   };
 
-  const { token } = useSession();
-  const changeLeader = useMutation(api.issue.quickAction.changeIssueAssignedTo);
+  const queryClient = useQueryClient();
+  // Optimistic update mutation for assignee
+  const updateAssigneeMutation = useMutation({
+    mutationFn: async ({ issueId, assignedTo }: { issueId: string; assignedTo: string }) => {
+      return await issueActions.updateIssue(issueId, { assignedTo });
+    },
+    onMutate: async ({ issueId, assignedTo }) => {
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      const previousIssues = queryClient.getQueryData<CustomIssue[]>(["issues"]);
+      queryClient.setQueryData<CustomIssue[]>(["issues"], (old) => {
+        if (!old) return old;
+        return old.map((i) =>
+          i._id === issueId ? { ...i, assignedTo } : i
+        );
+      });
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+      toast.error("Failed to change issue leader");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+  });
 
   return (
     <>
@@ -88,15 +112,10 @@ export function IssueCard({
           <AssigneeSelector
             assignee={(issue.assignedTo as string) || ""}
             onChange={async (e) => {
-              try {
-                await changeLeader({
-                  issueId: issue._id,
-                  token,
-                  userId: e as any,
-                });
-              } catch (error) {
-                toast.error("Failed to change issue leader");
-              }
+              updateAssigneeMutation.mutate({
+                issueId: issue._id,
+                assignedTo: e as string,
+              });
             }}
           />
         </TableCell>

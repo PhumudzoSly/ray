@@ -15,7 +15,6 @@ import {
   Archive,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useData } from "@/hooks/use-data";
 import { useSession } from "@/context/session-context";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
@@ -38,7 +37,7 @@ export const IdeaDetailsHeader: React.FC<IdeaDetailsHeaderProps> = ({
   const router = useRouter();
   const { token } = useSession();
 
-  const { data: idea, isPending } = useData(api.idea.getSingleIdea, {
+  const { data: idea, isPending } = api.idea.getSingleIdea({
     id: ideaId as Id<"idea">,
     token,
   });

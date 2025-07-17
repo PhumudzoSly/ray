@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useCallback } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as fileActions from "@/actions/files";
+import * as assetActions from "@/actions/project/assets";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -37,6 +38,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { UploadDropzone } from "@/lib/uploadthing";
 
 interface AssetUploadDialogProps {
   projectId: string;
@@ -128,9 +130,19 @@ export function AssetUploadDialog({
   }, [open]);
 
   // Mutations
-  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-  const saveFile = useMutation(api.files.saveFile);
-  const createFileAsset = useMutation(api.assets.createFileAsset);
+  const queryClient = useQueryClient();
+  const generateUploadUrlMutation = useMutation({
+    mutationFn: async (args) => fileActions.generateUploadUrl(args),
+  });
+  const saveFileMutation = useMutation({
+    mutationFn: async (args) => fileActions.saveFile(args),
+  });
+  const createFileAssetMutation = useMutation({
+    mutationFn: async (args) => assetActions.createFileAsset(args),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assets"] });
+    },
+  });
 
   const getFileType = (file: File): string => {
     // First try MIME type detection
@@ -282,58 +294,28 @@ export function AssetUploadDialog({
     setAssetTags(assetTags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile || !token) return;
-
-    setIsUploading(true);
+  // Remove old upload logic and use UploadThing
+  const handleUploadComplete = async (files: any[]) => {
+    if (!files || files.length === 0) return;
+    const file = files[0];
     try {
-      // Generate upload URL
-      const uploadUrl = await generateUploadUrl({ token });
-
-      // Upload file
-      const uploadResult = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": selectedFile.type },
-        body: selectedFile,
-      });
-
-      if (!uploadResult.ok) {
-        throw new Error("Failed to upload file");
-      }
-
-      const { storageId } = await uploadResult.json();
-
-      // Save file metadata
-      const fileData = await saveFile({
-        token,
-        storageId,
-        name: selectedFile.name,
-        size: selectedFile.size,
-        type: selectedFile.type,
-      });
-
-      // Create asset record
-      await createFileAsset({
-        token,
-        projectId: projectId as any,
-        name: assetName || selectedFile.name,
+      await createFileAssetMutation.mutateAsync({
+        projectId,
+        name: assetName || file.name,
         description: assetDescription,
-        storageId,
-        fileName: selectedFile.name,
-        fileSize: selectedFile.size,
-        mimeType: selectedFile.type,
+        url: file.url, // UploadThing file URL
+        fileName: file.name,
+        fileSize: file.size,
+        mimeType: file.type,
         type: assetType as any,
         category: assetCategory || "other",
         tags: assetTags.length > 0 ? assetTags : undefined,
       });
-
       toast.success("Asset uploaded successfully");
       onClose();
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Failed to upload asset");
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -354,64 +336,11 @@ export function AssetUploadDialog({
           {/* File Upload Area */}
           <div className="space-y-4">
             <Label>File</Label>
-            <div
-              className={cn(
-                "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
-                dragActive
-                  ? "border-primary bg-primary/5"
-                  : "border-muted-foreground/25",
-                selectedFile
-                  ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                  : ""
-              )}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              {selectedFile ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-center">
-                    <CheckCircle className="w-12 h-12 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">{selectedFile.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSelectedFile(null)}
-                  >
-                    <X className="w-4 h-4 mr-2" />
-                    Remove File
-                  </Button>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <Upload className="mx-auto w-12 h-12 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">Drop your file here</p>
-                    <p className="text-sm text-muted-foreground">
-                      or click to browse
-                    </p>
-                  </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <label>
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={handleFileInput}
-                        accept={Object.values(ALLOWED_TYPES).flat().join(",")}
-                      />
-                      Choose File
-                    </label>
-                  </Button>
-                </div>
-              )}
-            </div>
+            <UploadDropzone
+              endpoint="fileUpload"
+              onClientUploadComplete={handleUploadComplete}
+              onUploadError={(error) => toast.error(error.message)}
+            />
           </div>
 
           {/* Asset Metadata */}

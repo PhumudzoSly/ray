@@ -1,8 +1,8 @@
 "use client";
 
+"use client";
+
 import { useState, useEffect } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
 import { useParams, useSearchParams } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -32,6 +32,8 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { getWaitlistBySlug } from "actions/waitlist";
+import { Waitlist } from "@workspace/backend/prisma/generated/client";
 
 const joinWaitlistSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -46,13 +48,26 @@ export default function PublicWaitlistPage() {
   const slug = params.slug as string;
   const referralCode = searchParams.get("ref");
 
+  const [waitlist, setWaitlist] = useState<Waitlist | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
   const [userReferralCode, setUserReferralCode] = useState<string>("");
   const [position, setPosition] = useState<number>(0);
 
-  // Fetch waitlist data
-  const waitlist = useQuery(api.waitlists.getWaitlistBySlug, { slug });
+  useEffect(() => {
+    const fetchWaitlist = async () => {
+      setIsLoading(true);
+      const { success, data } = await getWaitlistBySlug(slug);
+      if (success) {
+        setWaitlist(data);
+      } else {
+        toast.error("Waitlist not found or is not public");
+      }
+      setIsLoading(false);
+    };
+    fetchWaitlist();
+  }, [slug]);
 
   const form = useForm<JoinWaitlistForm>({
     resolver: zodResolver(joinWaitlistSchema),
@@ -79,7 +94,7 @@ export default function PublicWaitlistPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          waitlistId: waitlist._id,
+          waitlistId: waitlist.id,
           email: data.email,
           name: data.name,
           referredBy: referralCode,
@@ -115,10 +130,14 @@ export default function PublicWaitlistPage() {
 
     switch (platform) {
       case "twitter":
-        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          text
+        )}&url=${encodeURIComponent(shareUrl)}`;
         break;
       case "linkedin":
-        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          shareUrl
+        )}`;
         break;
       case "whatsapp":
         url = `https://wa.me/?text=${encodeURIComponent(`${text} ${shareUrl}`)}`;
@@ -135,10 +154,18 @@ export default function PublicWaitlistPage() {
     toast.success("Link copied to clipboard!");
   };
 
-  if (!waitlist) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!waitlist) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p>Waitlist not found.</p>
       </div>
     );
   }

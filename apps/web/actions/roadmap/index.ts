@@ -74,4 +74,24 @@ export const deletePublicRoadmap = async (id: string) => {
   } catch (error) {
     return { success: false, error };
   }
-}; 
+};
+
+/**
+ * Get a public roadmap by slug (public, no org restriction)
+ */
+export const getRoadmapBySlug = async (slug: string) => {
+  try {
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { slug },
+      include: { project: true },
+    });
+    return { success: true, data: roadmap };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
+export * from "./items";
+export * from "./changelogs";
+export * from "./votes";
+export * from "./feedback"; 

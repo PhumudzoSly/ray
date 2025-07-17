@@ -177,13 +177,6 @@ export const LIBRARY_RECOMMENDATIONS: Record<
       configRequired: true,
     },
     {
-      name: "convex",
-      installCommand: "npm install convex",
-      description: "The backend application platform with everything you need",
-      documentationUrl: "https://convex.dev",
-      configRequired: true,
-    },
-    {
       name: "supabase",
       installCommand: "npm install @supabase/supabase-js",
       description:

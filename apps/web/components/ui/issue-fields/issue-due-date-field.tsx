@@ -11,11 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
-import { useMutation } from "convex/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
-import { api } from "@workspace/backend";
 
 interface IssueDueDateFieldProps {
   value: Date | null;
@@ -30,10 +30,35 @@ export function IssueDueDateField({
   align = "start",
   issueId,
 }: IssueDueDateFieldProps) {
-  const { token } = useSession();
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating due date
+  const updateDueDateMutation = useMutation({
+    mutationFn: async ({ issueId, dueDate }: { issueId: string; dueDate: string | null }) => {
+      return await issueActions.updateIssue(issueId, { dueDate });
+    },
+    onMutate: async ({ issueId, dueDate }) => {
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      const previousIssues = queryClient.getQueryData<any[]>(["issues"]);
+      queryClient.setQueryData<any[]>(["issues"], (old) => {
+        if (!old) return old;
+        return old.map((i) =>
+          i._id === issueId ? { ...i, dueDate } : i
+        );
+      });
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+      toast.error("Failed to change due date");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+  });
   const [open, setOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const changeDueDate = useMutation(api.issue.quickAction.changeIssueDueDate);
 
   const handleSelect = React.useCallback(
     async (date: Date | undefined) => {
@@ -50,19 +75,20 @@ export function IssueDueDateField({
       setIsLoading(true);
       setOpen(false);
 
-      try {
-        await changeDueDate({
-          dueDate: newValue?.toISOString() || "",
-          issueId: issueId as any,
-          token,
-        });
-        toast.success("Due date updated");
-      } catch (error) {
-        toast.error("Failed to change due date");
-        setOpen(true);
-      } finally {
-        setIsLoading(false);
-      }
+      updateDueDateMutation.mutate({
+        issueId,
+        dueDate: newValue ? newValue.toISOString() : null,
+      }, {
+        onSuccess: () => {
+          toast.success("Due date updated");
+        },
+        onError: () => {
+          setOpen(true);
+        },
+        onSettled: () => {
+          setIsLoading(false);
+        },
+      });
     },
     [value]
   );

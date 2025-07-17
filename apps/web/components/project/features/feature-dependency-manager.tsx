@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import * as featureActions from "@/actions/feature";
+import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
-import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -44,12 +43,12 @@ import DependencyGraphVisualization from "./dependency-graph-visualization";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 
 interface FeatureDependencyManagerProps {
-  featureId: Id<"feature">;
-  projectId?: Id<"projects">;
+  featureId: string;
+  projectId?: string;
 }
 
 interface CombinedDependency {
-  _id: Id<"feature">;
+  _id: string;
   name: string;
   description?: string;
   phase?: string;
@@ -100,26 +99,34 @@ export const FeatureDependencyManager: React.FC<
   const [isAddingDependency, setIsAddingDependency] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
   const [showGraphDialog, setShowGraphDialog] = useState(false);
+  const queryClient = useQueryClient();
 
-  const addDependency = useMutation(api.issue.feature.addFeatureDependency);
-  const removeDependency = useMutation(
-    api.issue.feature.removeFeatureDependency
-  );
+  const addDependencyMutation = useMutation({
+    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
+      featureActions.addFeatureDependency({ parentId, dependentFeatureId, token }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] }),
+  });
+  const removeDependencyMutation = useMutation({
+    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
+      featureActions.removeFeatureDependency({ parentId, dependentFeatureId, token }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] }),
+  });
 
-  const { data: dependencies } = useData(
-    api.issue.feature.getFeatureDependencies,
-    { token, featureId }
-  );
+  const { data: dependencies } = useQuery({
+    queryKey: ["featureDependencies", featureId],
+    queryFn: () => featureActions.getFeatureDependencies({ token, featureId }),
+  });
 
-  const { data: validationResult } = useData(
-    api.issue.feature.validateFeatureCompletion,
-    { token, featureId }
-  );
+  const { data: validationResult } = useQuery({
+    queryKey: ["featureValidation", featureId],
+    queryFn: () => featureActions.validateFeatureCompletion({ token, featureId }),
+  });
 
-  const dependencyGraph = useQuery(
-    api.issue.feature.getFeatureDependencyGraph,
-    { token, projectId }
-  );
+  const { data: dependencyGraph } = useQuery({
+    queryKey: ["featureDependencyGraph", projectId],
+    queryFn: () => featureActions.getFeatureDependencyGraph({ token, projectId }),
+    enabled: !!projectId,
+  });
 
   // Combine dependencies and dependents into a single list
   const combinedDependencies = useMemo(() => {
@@ -162,14 +169,11 @@ export const FeatureDependencyManager: React.FC<
 
   const handleAddDependency = async () => {
     if (!selectedFeature) return;
-
     try {
-      await addDependency({
-        token,
-        parentId: selectedFeature as Id<"feature">,
+      await addDependencyMutation.mutateAsync({
+        parentId: selectedFeature,
         dependentFeatureId: featureId,
       });
-
       toast.success("Dependency added");
       setSelectedFeature(null);
       setIsAddingDependency(false);
@@ -177,11 +181,9 @@ export const FeatureDependencyManager: React.FC<
       toast.error("Failed to add dependency");
     }
   };
-
-  const handleRemoveDependency = async (parentId: Id<"feature">) => {
+  const handleRemoveDependency = async (parentId: string) => {
     try {
-      await removeDependency({
-        token,
+      await removeDependencyMutation.mutateAsync({
         parentId,
         dependentFeatureId: featureId,
       });
@@ -249,9 +251,9 @@ export const FeatureDependencyManager: React.FC<
                       assignedTo: feature.assignedTo,
                       user: feature.user
                         ? {
-                            name: feature.user.name,
-                            image: feature.user.image,
-                          }
+                          name: feature.user.name,
+                          image: feature.user.image,
+                        }
                         : undefined,
                     })) || []
                   }

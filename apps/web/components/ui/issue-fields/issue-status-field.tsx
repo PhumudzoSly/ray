@@ -3,11 +3,8 @@
 import { IssueFieldBase } from "./issue-field-base";
 import { status } from "@/utils/constants/issues/status";
 import { IssueStatusBadge } from "@/components/project/issues/issue-badge";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
-import { useData } from "@/hooks/use-data";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 interface IssueStatusFieldProps {
   issueId: string;
@@ -23,16 +20,41 @@ export function IssueStatusField({
   disabled,
   align,
 }: IssueStatusFieldProps) {
-  const { token } = useSession();
-  const changeIssueStatus = useMutation(
-    api.issue.quickAction.changeIssueStatus
-  );
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating status
+  const updateStatusMutation = useMutation({
+    mutationFn: async ({ issueId, status }: { issueId: string; status: string }) => {
+      return await issueActions.updateIssue(issueId, { status });
+    },
+    onMutate: async ({ issueId, status }) => {
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      const previousIssues = queryClient.getQueryData<any[]>(["issues"]);
+      queryClient.setQueryData<any[]>(["issues"], (old) => {
+        if (!old) return old;
+        return old.map((i) =>
+          i._id === issueId ? { ...i, status } : i
+        );
+      });
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+  });
 
   // Fetch dependency validation to check if issue can be marked as DONE
-  const { data: validationResult } = useData(
-    api.issue.dependency.validateIssueCompletion,
-    { token, issueId: issueId as Id<"issues"> }
-  );
+  const { data: validationResult } = useQuery({
+    queryKey: ["issue-completion-validation", issueId],
+    queryFn: async () => {
+      const response = await issueActions.validateIssueCompletion(issueId);
+      return response;
+    },
+  });
 
   // Filter out "DONE" option when issue is blocked by dependencies
   const isBlockedByDependencies =
@@ -46,10 +68,9 @@ export function IssueStatusField({
       value={value}
       onSave={async (newValue: string) => {
         try {
-          await changeIssueStatus({
-            issueId: issueId as Id<"issues">,
-            token,
-            status: newValue as any,
+          await updateStatusMutation.mutateAsync({
+            issueId,
+            status: newValue,
           });
         } catch (error: any) {
           if (error.message?.includes("Cannot mark issue as DONE")) {

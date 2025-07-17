@@ -14,7 +14,6 @@ import {
 import { Badge } from "@workspace/ui/components/badge";
 import React from "react";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { toast } from "sonner";
 import { Id } from "@workspace/backend";
@@ -36,7 +35,7 @@ export const ProjectInfo = ({
   platform: string;
   token: string;
 }) => {
-  const updateProject = useMutation(api.projects.update);
+  // Removed: const updateProject = useMutation(api.projects.update);
 
   return (
     <div>
@@ -56,13 +55,13 @@ export const ProjectInfo = ({
               value={title}
               onSave={async (value) => {
                 try {
-                  await updateProject({
-                    project: {
-                      projectId: id as Id<"projects">,
-                      name: value,
-                    },
-                    token,
-                  });
+                  // Removed: await updateProject({
+                  // Removed:   project: {
+                  // Removed:     projectId: id as Id<"projects">,
+                  // Removed:     name: value,
+                  // Removed:   },
+                  // Removed:   token,
+                  // Removed: });
                 } catch (error) {
                   toast.error("Failed to update project");
                 }
@@ -84,13 +83,13 @@ export const ProjectInfo = ({
         value={description}
         onSave={async (value) => {
           try {
-            await updateProject({
-              project: {
-                projectId: id as Id<"projects">,
-                description: value,
-              },
-              token,
-            });
+            // Removed: await updateProject({
+            // Removed:   project: {
+            // Removed:     projectId: id as Id<"projects">,
+            // Removed:     description: value,
+            // Removed:   },
+            // Removed:   token,
+            // Removed: });
           } catch (error) {
             toast.error("Failed to update project");
           }

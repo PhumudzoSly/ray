@@ -1,11 +1,9 @@
 "use client";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
-import { useQuery } from "convex/react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
-import { Id } from "@workspace/backend";
-import { useData } from "@/hooks/use-data";
+import { getAllRoadmapChangelogs } from "@/actions/roadmap/changelogs";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { ChangelogDialog } from "./_components/changelog-dialog";
 import { RoadmapChangelogs } from "./_components/roadmap-changelogs";
@@ -16,12 +14,11 @@ const ChangelogsPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Fetch changelogs
-  const { data: changelogs, isPending } = useData(
-    api.roadmap.changelog.getChangelogs,
-    {
-      roadmapId: id as Id<"publicRoadmaps">,
-    }
-  );
+  const { data: changelogs = [], isLoading } = useQuery({
+    queryKey: ["roadmapChangelogs", id],
+    queryFn: () => getAllRoadmapChangelogs(id as string),
+    select: (res) => res?.success ? res.data : [],
+  });
 
   const handleCreateChangelog = () => {
     setIsDialogOpen(true);
@@ -31,19 +28,19 @@ const ChangelogsPage = () => {
     setIsDialogOpen(false);
   };
 
-  if (isPending) return <LoadingSpinner />;
+  if (isLoading) return <LoadingSpinner />;
 
   return (
     <div>
       <RoadmapChangelogs
-        changelogs={changelogs || []}
+        changelogs={changelogs}
         onCreateChangelog={handleCreateChangelog}
       />
 
       <ChangelogDialog
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
-        roadmapId={id as Id<"publicRoadmaps">}
+        roadmapId={id as string}
         token={token}
       />
     </div>

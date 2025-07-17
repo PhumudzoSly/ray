@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as waitlistActions from "@/actions/waitlist";
+import * as waitlistEntryActions from "@/actions/waitlist/entries";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -39,8 +41,6 @@ import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
 import PageHeader from "@/components/shared/page-header";
-import { useData } from "@/hooks/use-data";
-import { Id } from "@workspace/backend";
 import { format } from "date-fns";
 import Link from "next/link";
 import Header from "@/components/shared/header";
@@ -51,34 +51,57 @@ export default function WaitlistManagePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const queryClient = useQueryClient();
 
-  const updateEntryStatus = useMutation(api.waitlists.updateEntryStatus);
-  const deleteWaitlistEntry = useMutation(api.waitlists.deleteWaitlistEntry);
+  // Mutations
+  const updateEntryStatusMutation = useMutation({
+    mutationFn: async ({ entryId, status }: { entryId: string; status: string }) =>
+      waitlistEntryActions.updateWaitlistEntry(entryId, { status }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["waitlistEntries", id] }),
+  });
+  const deleteWaitlistEntryMutation = useMutation({
+    mutationFn: async ({ entryId }: { entryId: string }) =>
+      waitlistEntryActions.deleteWaitlistEntry(entryId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["waitlistEntries", id] }),
+  });
 
   // Fetch waitlist data
-  const { data: waitlist } = useData(api.waitlists.getWaitlistById, {
-    waitlistId: id as Id<"waitlists">,
-    token,
+  const { data: waitlistResult } = useQuery({
+    queryKey: ["waitlist", id],
+    queryFn: async () => {
+      const res = await waitlistActions.getWaitlist(id);
+      return res.success ? res.data : null;
+    },
+    enabled: !!id,
   });
+  const waitlist = waitlistResult;
 
   // Fetch waitlist entries
-  const { data: entriesData } = useData(api.waitlists.getWaitlistEntries, {
-    waitlistId: id as Id<"waitlists">,
-    status: statusFilter === "all" ? undefined : statusFilter,
-    token,
+  const { data: entriesResult } = useQuery({
+    queryKey: ["waitlistEntries", id, statusFilter],
+    queryFn: async () => {
+      const res = await waitlistEntryActions.getAllWaitlistEntries(id);
+      return res.success ? res.data : [];
+    },
+    enabled: !!id,
   });
+  const entries = entriesResult || [];
 
   // Fetch analytics
-  const { data: analytics } = useData(api.waitlists.getWaitlistAnalytics, {
-    waitlistId: id as Id<"waitlists">,
-    token,
+  const { data: analyticsResult } = useQuery({
+    queryKey: ["waitlistAnalytics", id],
+    queryFn: async () => {
+      const res = await waitlistActions.getWaitlistAnalytics(id);
+      return res.success ? res.data : null;
+    },
+    enabled: !!id,
   });
+  const analytics = analyticsResult;
 
   if (!waitlist) {
     return <div>Loading...</div>;
   }
 
-  const entries = entriesData?.entries || [];
   const filteredEntries = entries.filter(
     (entry) =>
       entry.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,11 +110,7 @@ export default function WaitlistManagePage() {
 
   const handleStatusChange = async (entryId: string, newStatus: string) => {
     try {
-      await updateEntryStatus({
-        entryId: entryId as Id<"waitlistEntries">,
-        status: newStatus,
-        token,
-      });
+      await updateEntryStatusMutation.mutateAsync({ entryId, status: newStatus });
       toast.success("Status updated successfully");
     } catch (error) {
       toast.error("Failed to update status");
@@ -100,10 +119,7 @@ export default function WaitlistManagePage() {
 
   const handleDeleteEntry = async (entryId: string) => {
     try {
-      await deleteWaitlistEntry({
-        entryId: entryId as Id<"waitlistEntries">,
-        token,
-      });
+      await deleteWaitlistEntryMutation.mutateAsync({ entryId });
       toast.success("Entry deleted successfully");
     } catch (error) {
       toast.error("Failed to delete entry");
@@ -114,11 +130,7 @@ export default function WaitlistManagePage() {
     try {
       await Promise.all(
         selectedEntries.map((entryId) =>
-          updateEntryStatus({
-            entryId: entryId as Id<"waitlistEntries">,
-            status: "invited",
-            token,
-          })
+          updateEntryStatusMutation.mutateAsync({ entryId, status: "invited" })
         )
       );
       toast.success(`Invited ${selectedEntries.length} users`);

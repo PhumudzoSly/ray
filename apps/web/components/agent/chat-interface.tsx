@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useQuery, useMutation, useAction } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as agentActions from "@/actions/agent";
 import { ChatMessage } from "./chat-message";
 import { ChatInput } from "./chat-input";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
@@ -12,8 +11,8 @@ import { useSession } from "@/context/session-context";
 import { cn } from "@/lib/utils";
 
 interface ChatInterfaceProps {
-  conversationId: Id<"agentConversations"> | null;
-  onConversationCreated?: (conversationId: Id<"agentConversations">) => void;
+  conversationId: string | null;
+  onConversationCreated?: (conversationId: string) => void;
 }
 
 export function ChatInterface({
@@ -23,21 +22,36 @@ export function ChatInterface({
   const session = useSession();
   const [isGenerating, setIsGenerating] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   // Queries
-  const messages = useQuery(
-    api.agent.getMessages,
-    conversationId ? { conversationId } : "skip"
-  );
+  const { data: messages, isLoading: isMessagesLoading } = useQuery({
+    queryKey: ["agentMessages", conversationId],
+    queryFn: async () => {
+      if (!conversationId) return [];
+      return await agentActions.getMessages(conversationId);
+    },
+    enabled: !!conversationId,
+  });
 
-  const conversation = useQuery(
-    api.agent.getConversation,
-    conversationId ? { conversationId } : "skip"
-  );
+  const { data: conversation } = useQuery({
+    queryKey: ["agentConversation", conversationId],
+    queryFn: async () => {
+      if (!conversationId) return null;
+      return await agentActions.getConversation(conversationId);
+    },
+    enabled: !!conversationId,
+  });
 
   // Mutations
-  const createConversation = useMutation(api.agent.createConversation);
-  const generateResponse = useAction(api.agent.generateResponse);
+  const createConversationMutation = useMutation({
+    mutationFn: async (data: any) => agentActions.createConversation(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["agentConversations", session?.userId] }),
+  });
+  const generateResponseMutation = useMutation({
+    mutationFn: async (data: any) => agentActions.generateResponse(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["agentMessages", data.conversationId] }),
+  });
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -46,32 +60,27 @@ export function ChatInterface({
 
   const handleSendMessage = async (message: string) => {
     if (!session?.org) return;
-
     try {
       setIsGenerating(true);
-
       let currentConversationId = conversationId;
-
       // Create conversation if it doesn't exist
       if (!currentConversationId) {
-        const title =
-          message.length > 50 ? message.substring(0, 50) + "..." : message;
-        currentConversationId = await createConversation({
+        const title = message.length > 50 ? message.substring(0, 50) + "..." : message;
+        const conversation = await createConversationMutation.mutateAsync({
           title,
           userId: session.userId,
-          organizationId: session.org as Id<"organization">,
+          organizationId: session.org,
           model: "gemini-2.0-flash",
         });
-
+        currentConversationId = conversation.id || conversation;
         onConversationCreated?.(currentConversationId);
       }
-
       // Generate AI response
-      await generateResponse({
+      await generateResponseMutation.mutateAsync({
         conversationId: currentConversationId,
         userMessage: message,
         userId: session.userId,
-        organizationId: session.org as Id<"organization">,
+        organizationId: session.org,
       });
     } catch (error) {
       console.error("Error sending message:", error);

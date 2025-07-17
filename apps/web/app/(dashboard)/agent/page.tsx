@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as agentActions from "@/actions/agent";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import { ConversationSidebar } from "@/components/agent/conversation-sidebar";
 import { ChatInterface } from "@/components/agent/chat-interface";
@@ -13,46 +12,55 @@ import Header from "@/components/shared/header";
 export default function AgentPage() {
   const session = useSession();
   const [activeConversationId, setActiveConversationId] =
-    useState<Id<"agentConversations"> | null>(null);
+    useState<string | null>(null);
+  const queryClient = useQueryClient();
 
-  // Queries
-  const conversations = useQuery(
-    api.agent.getConversations,
-    session ? { userId: session.userId } : "skip"
-  );
+  // Fetch conversations
+  const { data: conversations, isLoading } = useQuery({
+    queryKey: ["agentConversations", session?.userId],
+    queryFn: async () => {
+      if (!session) return [];
+      return await agentActions.getConversations({ userId: session.userId });
+    },
+    enabled: !!session,
+  });
 
   // Mutations
-  const createConversation = useMutation(api.agent.createConversation);
-  const deleteConversation = useMutation(api.agent.deleteConversation);
-  const updateConversationTitle = useMutation(
-    api.agent.updateConversationTitle
-  );
+  const createConversationMutation = useMutation({
+    mutationFn: async (data: any) => agentActions.createConversation(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["agentConversations", session?.userId] }),
+  });
+  const deleteConversationMutation = useMutation({
+    mutationFn: async (data: any) => agentActions.deleteConversation(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["agentConversations", session?.userId] }),
+  });
+  const updateConversationTitleMutation = useMutation({
+    mutationFn: async (data: any) => agentActions.updateConversationTitle(data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["agentConversations", session?.userId] }),
+  });
 
   const handleCreateConversation = async () => {
     if (!session?.org) return;
-
     try {
-      const conversationId = await createConversation({
+      const conversation = await createConversationMutation.mutateAsync({
         title: "New Conversation",
         userId: session.userId,
-        organizationId: session.org as Id<"organization">,
+        organizationId: session.org,
         model: "gemini-2.0-flash",
       });
-      setActiveConversationId(conversationId);
+      setActiveConversationId(conversation.id || conversation);
     } catch (error) {
       console.error("Error creating conversation:", error);
     }
   };
 
   const handleSelectConversation = (conversationId: string) => {
-    setActiveConversationId(conversationId as Id<"agentConversations">);
+    setActiveConversationId(conversationId);
   };
 
   const handleDeleteConversation = async (conversationId: string) => {
     try {
-      await deleteConversation({
-        conversationId: conversationId as Id<"agentConversations">,
-      });
+      await deleteConversationMutation.mutateAsync({ conversationId });
       if (activeConversationId === conversationId) {
         setActiveConversationId(null);
       }
@@ -63,18 +71,13 @@ export default function AgentPage() {
 
   const handleUpdateTitle = async (conversationId: string, title: string) => {
     try {
-      await updateConversationTitle({
-        conversationId: conversationId as Id<"agentConversations">,
-        title,
-      });
+      await updateConversationTitleMutation.mutateAsync({ conversationId, title });
     } catch (error) {
       console.error("Error updating conversation title:", error);
     }
   };
 
-  const handleConversationCreated = (
-    conversationId: Id<"agentConversations">
-  ) => {
+  const handleConversationCreated = (conversationId: string) => {
     setActiveConversationId(conversationId);
   };
 
@@ -98,7 +101,7 @@ export default function AgentPage() {
       onCreateConversation={handleCreateConversation}
       onDeleteConversation={handleDeleteConversation}
       onUpdateTitle={handleUpdateTitle}
-      isLoading={!conversations}
+      isLoading={isLoading}
     />
   );
 

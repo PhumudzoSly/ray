@@ -1,7 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import * as assetActions from "@/actions/project/assets";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
@@ -75,21 +76,22 @@ const AssetsPage = () => {
   const [selectedAsset, setSelectedAsset] = useState<any>(null);
 
   // Queries
-  const assets = useQuery(
-    api.assets.getProjectAssets,
-    token
-      ? {
-          token,
-          projectId: projectId as any,
-          type: selectedType !== "all" ? (selectedType as any) : undefined,
-          category:
-            selectedCategory !== "all" ? (selectedCategory as any) : undefined,
-        }
-      : "skip"
-  );
+  const { data: assets = [] } = useQuery({
+    queryKey: ["projectAssets", projectId, selectedType, selectedCategory],
+    queryFn: async () => {
+      return await assetActions.getProjectAssets({
+        projectId,
+        type: selectedType !== "all" ? selectedType : undefined,
+        category: selectedCategory !== "all" ? selectedCategory : undefined,
+      });
+    },
+    enabled: !!projectId,
+  });
 
   // Mutations
-  const deleteAssetMutation = useMutation(api.assets.deleteAsset);
+  const deleteAssetMutation = useMutation({
+    mutationFn: async ({ assetId }: { assetId: string }) => assetActions.deleteAsset({ assetId }),
+  });
 
   // Filter assets based on search query
   const filteredAssets =
@@ -97,19 +99,14 @@ const AssetsPage = () => {
       (asset) =>
         asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         asset.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        asset.tags?.some((tag) =>
+        asset.tags?.some((tag: string) =>
           tag.toLowerCase().includes(searchQuery.toLowerCase())
         )
     ) || [];
 
   const handleDelete = async (assetId: string) => {
-    if (!token) return;
-
     try {
-      await deleteAssetMutation({
-        token,
-        assetId: assetId as any,
-      });
+      await deleteAssetMutation.mutateAsync({ assetId });
       toast.success("Asset deleted successfully");
     } catch (error) {
       console.error("Failed to delete asset:", error);
@@ -118,7 +115,7 @@ const AssetsPage = () => {
   };
 
   const handleUpdate = (assetId: string) => {
-    const asset = assets?.find((a) => a._id === assetId);
+    const asset = assets?.find((a: any) => a.id === assetId);
     if (asset) {
       setSelectedAsset(asset);
       setIsEditDialogOpen(true);
@@ -259,8 +256,8 @@ const AssetsPage = () => {
                 <h3 className="text-lg font-medium">No assets found</h3>
                 <p className="text-muted-foreground">
                   {searchQuery ||
-                  selectedType !== "all" ||
-                  selectedCategory !== "all"
+                    selectedType !== "all" ||
+                    selectedCategory !== "all"
                     ? "Try adjusting your filters or search terms"
                     : "Get started by uploading your first asset"}
                 </p>

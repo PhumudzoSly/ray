@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as featureRequestActions from "@/actions/roadmap/feature-requests";
 import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -35,7 +35,6 @@ import {
   MessageSquare,
   Tag,
 } from "lucide-react";
-import { Id } from "@workspace/backend";
 
 interface FeatureRequestDialogProps {
   roadmapId: string;
@@ -59,9 +58,11 @@ export function FeatureRequestDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [userIp, setUserIp] = useState("");
 
-  const submitFeatureRequest = useMutation(
-    api.roadmap.featureRequests.submitFeatureRequest
-  );
+  const submitFeatureRequestMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await featureRequestActions.createFeatureRequest(data);
+    },
+  });
 
   // Get user IP address
   const getUserIp = async () => {
@@ -93,12 +94,15 @@ export function FeatureRequestDialog({
     try {
       const ip = await getUserIp();
 
-      await submitFeatureRequest({
-        roadmapId: roadmapId as Id<"publicRoadmaps">,
+      await submitFeatureRequestMutation.mutateAsync({
+        roadmapId,
         title: title.trim(),
         description: description.trim(),
         category,
-        email: email.trim(),
+        status: "PENDING",
+        priority: "MEDIUM",
+        isPublic: true,
+        upvotes: 0,
         name: name.trim() || undefined,
         ipAddress: ip,
       });

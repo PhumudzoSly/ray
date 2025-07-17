@@ -1,32 +1,43 @@
 import { useSession } from "@/context/session-context";
-import { useMutation, useQuery } from "convex/react";
-import { api, Id } from "@workspace/backend";
+import { QueryClient, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getFeatureLinks, addFeatureLink, deleteFeatureLink } from "@/actions/features";
 
 export function useFeatureLinks(featureId: string) {
   const session = useSession();
-  const links = useQuery(api.issue.feature.getLinks, {
-    token: session?.token || "",
-    featureId: featureId as Id<"feature">,
+  const queryClient = useQueryClient();
+
+  // Fetch links
+  const { data: linksResult, isPending } = useQuery({
+    queryKey: ["featureLinks", featureId],
+    queryFn: () => getFeatureLinks(featureId),
+    enabled: !!featureId,
+  });
+  const links = linksResult?.success ? linksResult.data : [];
+
+  // Mutation for creating a link
+  const { mutateAsync: createLinkMutation, isPending: isCreating } = useMutation({
+    mutationFn: async ({ url, featureId }: { url: string; featureId: string }) => {
+      return await addFeatureLink({ featureId, url });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["featureLinks", featureId] });
+    },
   });
 
-  const createMutation = useMutation(api.issue.feature.addLink);
-  const deleteMutation = useMutation(api.issue.feature.deleteLink);
+  // Mutation for deleting a link
+  const { mutateAsync: deleteLinkMutation, isPending: isDeleting } = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      return await deleteFeatureLink(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["featureLinks", featureId] });
+    },
+  });
 
-  const createLink = async ({
-    url,
-    featureId,
-  }: {
-    url: string;
-    featureId: string;
-  }) => {
+  const createLink = async ({ url, featureId }: { url: string; featureId: string }) => {
     if (!session?.token) return;
-
     try {
-      const result = await createMutation({
-        token: session.token,
-        featureId: featureId as Id<"feature">,
-        link: { url },
-      });
+      const result = await createLinkMutation({ url, featureId });
       return { success: true, data: result };
     } catch (error) {
       console.error("Error creating link:", error);
@@ -34,20 +45,10 @@ export function useFeatureLinks(featureId: string) {
     }
   };
 
-  const deleteLink = async ({
-    id,
-    featureId,
-  }: {
-    id: string;
-    featureId: string;
-  }) => {
+  const deleteLinkFn = async ({ id }: { id: string }) => {
     if (!session?.token) return;
-
     try {
-      await deleteMutation({
-        token: session.token,
-        linkId: id as Id<"featureLink">,
-      });
+      await deleteLinkMutation({ id });
       return { success: true };
     } catch (error) {
       console.error("Error deleting link:", error);
@@ -57,10 +58,10 @@ export function useFeatureLinks(featureId: string) {
 
   return {
     links: links || [],
-    isLoading: links === undefined,
+    isLoading: isPending,
     createLink,
-    isCreating: false,
-    deleteLink,
-    isDeleting: false,
+    isCreating,
+    deleteLink: deleteLinkFn,
+    isDeleting,
   };
 }

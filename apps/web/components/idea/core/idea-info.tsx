@@ -15,7 +15,6 @@ import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { Button } from "@workspace/ui/components/button";
 import IdeaEditModal from "./idea-edit-modal";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
@@ -26,7 +25,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
   //
 
   const { token } = useSession();
-  const { data: idea, isPending } = useData(api.idea.getSingleIdea, {
+  const { data: idea, isPending } = api.idea.getSingleIdea({
     id: id as Id<"idea">,
     token,
   });
@@ -71,7 +70,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
           </div>
           <div className="flex items-center gap-2">
             {idea?.status && (
-              <IdeaStatus refetch={() => {}} id={id} status={idea.status} />
+              <IdeaStatus refetch={() => { }} id={id} status={idea.status} />
             )}
             <div className="flex items-center gap-4">
               <Button
@@ -129,7 +128,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
           idea={idea}
           isOpen={editModalOpen}
           onOpenChange={setEditModalOpen}
-          onSuccess={() => {}}
+          onSuccess={() => { }}
         />
       )}
     </div>

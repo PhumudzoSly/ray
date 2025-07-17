@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as assetActions from "@/actions/project/assets";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -69,7 +69,28 @@ export function AssetEditDialog({
   }, [open, asset]);
 
   // Mutations
-  const updateAsset = useMutation(api.assets.updateAsset);
+  const queryClient = useQueryClient();
+  const updateAssetMutation = useMutation({
+    mutationFn: async (updates) => assetActions.updateAsset(updates),
+    onMutate: async (updates) => {
+      await queryClient.cancelQueries({ queryKey: ["assets"] });
+      const previousAssets = queryClient.getQueryData(["assets"]);
+      queryClient.setQueryData(["assets"], (old: any) => {
+        if (!old) return old;
+        return old.map((a: any) => a._id === updates.assetId ? { ...a, ...updates } : a);
+      });
+      return { previousAssets };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousAssets) {
+        queryClient.setQueryData(["assets"], context.previousAssets);
+      }
+      toast.error("Failed to update asset");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["assets"] });
+    },
+  });
 
   const addTag = () => {
     if (tagInput.trim() && !assetTags.includes(tagInput.trim())) {
@@ -84,10 +105,9 @@ export function AssetEditDialog({
 
   const handleUpdate = async () => {
     if (!assetName.trim() || !token) return;
-
     setIsUpdating(true);
     try {
-      await updateAsset({
+      await updateAssetMutation.mutateAsync({
         token: token,
         assetId: asset._id,
         name: assetName.trim(),
@@ -95,7 +115,6 @@ export function AssetEditDialog({
         category: assetCategory || undefined,
         tags: assetTags.length > 0 ? assetTags : undefined,
       });
-
       toast.success("Asset updated successfully");
       onClose();
     } catch (error) {

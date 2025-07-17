@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as assetActions from "@/actions/project/assets";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Badge } from "@workspace/ui/components/badge";
@@ -78,8 +79,8 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Mutations
-  const getDownloadUrl = useMutation(api.assets.getAssetDownloadUrl);
-  const incrementViewCount = useMutation(api.assets.incrementViewCount);
+  // Replace with TanStack Query and server actions as needed
+  // ... implement download URL and increment view count using assetActions ...
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 B";
@@ -99,14 +100,14 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
     } else {
       // For file assets, open in a new tab using the storage URL
       if (asset.storageId) {
-        const fileUrl = `https://${process.env.NEXT_PUBLIC_CONVEX_URL?.replace("https://", "")}/api/storage/${asset.storageId}`;
+        const fileUrl = `/api/storage/${asset.storageId}`;
         window.open(fileUrl, "_blank");
       }
 
       // Increment view count
       if (token) {
         try {
-          await incrementViewCount({
+          await assetActions.incrementViewCount({
             token: token,
             assetId: asset._id,
           });
@@ -122,7 +123,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
 
     setIsDownloading(true);
     try {
-      const downloadUrl = await getDownloadUrl({
+      const downloadUrl = await assetActions.getAssetDownloadUrl({
         token: token,
         assetId: asset._id,
       });

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as projectActions from "@/actions/project";
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { EnhancedProjectFilters } from "@/components/project/enhanced-project-filters";
 import { KanbanView } from "@/components/project/kanban-view";
@@ -24,10 +24,40 @@ export default function ProjectsPage() {
   const [filterAi, setFilterAi] = useState("");
   const [view, setView] = useState<"kanban" | "table">("kanban");
 
-  const { token } = useSession();
-
-  const projects = useQuery(api.projects.list, { token });
-  const updateProjectStatus = useMutation(api.projects.updateStatus);
+  const queryClient = useQueryClient();
+  // Fetch projects
+  const { data: projects, isLoading } = useQuery({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      return await projectActions.getProjects();
+    },
+  });
+  // Optimistic update for project status
+  const updateProjectStatusMutation = useMutation({
+    mutationFn: async ({ projectId, status }: { projectId: string; status: string }) => {
+      return await projectActions.updateProject(projectId, { status });
+    },
+    onMutate: async ({ projectId, status }) => {
+      await queryClient.cancelQueries({ queryKey: ["projects"] });
+      const previousProjects = queryClient.getQueryData<any[]>(["projects"]);
+      queryClient.setQueryData<any[]>(["projects"], (old) => {
+        if (!old) return old;
+        return old.map((p) =>
+          p.id === projectId ? { ...p, status } : p
+        );
+      });
+      return { previousProjects };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousProjects) {
+        queryClient.setQueryData(["projects"], context.previousProjects);
+      }
+      toast.error("Failed to update project status");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    },
+  });
 
   // Get unique tech stack options for filters
   const availableOptions = {
@@ -105,17 +135,10 @@ export default function ProjectsPage() {
     const projectId = draggableId;
     const newStatus = destination.droppableId;
 
-    try {
-      await updateProjectStatus({
-        projectId,
-        status: newStatus,
-        token,
-      });
-      toast.success("Project status updated");
-    } catch (error) {
-      console.error("Failed to update project status:", error);
-      toast.error("Failed to update project status");
-    }
+    updateProjectStatusMutation.mutate({
+      projectId,
+      status: newStatus,
+    });
   };
 
   const handleEditProject = (project: any) => {
@@ -166,9 +189,9 @@ export default function ProjectsPage() {
       </div>
       <div className="flex-1 overflow-hidden bg-background">
         <div className="flex-1 overflow-hidden">
-          {projects === undefined ? (
+          {isLoading ? (
             <ProjectsLoading view={view} />
-          ) : projects.length === 0 ? (
+          ) : !projects || projects.length === 0 ? (
             <NoData title="No projects found" />
           ) : view === "kanban" ? (
             <KanbanView

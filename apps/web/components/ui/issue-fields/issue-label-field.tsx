@@ -3,10 +3,8 @@
 import { IssueFieldBase } from "./issue-field-base";
 import { labels } from "@/utils/constants/issues/labels";
 import { IssueLabelBadge } from "@/components/project/issues/issue-badge";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 interface IssueLabelFieldProps {
   issueId: string;
@@ -22,17 +20,40 @@ export function IssueLabelField({
   disabled,
   align,
 }: IssueLabelFieldProps) {
-  const { token } = useSession();
-  const changeIssueLabel = useMutation(api.issue.quickAction.changeIssueLabel);
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating label
+  const updateLabelMutation = useMutation({
+    mutationFn: async ({ issueId, label }: { issueId: string; label: string }) => {
+      return await issueActions.updateIssue(issueId, { label });
+    },
+    onMutate: async ({ issueId, label }) => {
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      const previousIssues = queryClient.getQueryData<any[]>(["issues"]);
+      queryClient.setQueryData<any[]>(["issues"], (old) => {
+        if (!old) return old;
+        return old.map((i) =>
+          i._id === issueId ? { ...i, label } : i
+        );
+      });
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+  });
 
   return (
     <IssueFieldBase
       value={value}
       onSave={async (newValue: string) => {
-        await changeIssueLabel({
-          issueId: issueId as Id<"issues">,
-          token,
-          label: newValue as any,
+        await updateLabelMutation.mutateAsync({
+          issueId,
+          label: newValue,
         });
       }}
       options={labels.map((l) => ({

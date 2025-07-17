@@ -1,6 +1,6 @@
 "use client";
-import { api } from "@workspace/backend";
-import { useQuery } from "convex/react";
+import { useQuery } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import AllIssues from "@/components/project/issues/all-issues";
 import { IssuesSkeleton } from "@/components/project/issues/issue-skeleton";
 import { NewIssue } from "@/components/project/issues/new-issue";
@@ -10,8 +10,10 @@ import { useSession } from "@/context/session-context";
 const IssuesPage = () => {
 	const { token } = useSession();
 
-	const issues = useQuery(api.issue.index.getIssues, {
-		token,
+	const { data: issues, isLoading } = useQuery({
+		queryKey: ["issues"],
+		queryFn: () => issueActions.getAllIssues(),
+		select: (res) => res?.success ? res.data : [],
 	});
 
 	return (
@@ -19,7 +21,7 @@ const IssuesPage = () => {
 			<Header crumb={[{ title: "Issues", url: "/issues" }]}>
 				<NewIssue />
 			</Header>
-			{issues === undefined ? (
+			{isLoading ? (
 				<IssuesSkeleton />
 			) : (
 				<>

@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useAction } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getProject } from "@/actions/project";
+import { getLaunchPlan, generateLaunchPlan } from "@/actions/launch/plan";
+import { updateLaunchChecklistItem } from "@/actions/launch/checklist-items";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
-import { Id } from "@workspace/backend";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
@@ -21,105 +22,70 @@ import { LaunchCopy } from "./components/launch-copy";
 import { LaunchStrategy } from "./components/launch-strategy";
 import { Separator } from "@workspace/ui/components/separator";
 
-// Type definitions for launch plan data
-interface ChecklistItem {
-  _id: string;
-  title: string;
-  description: string;
-  priority: "high" | "medium" | "low";
-  status: "pending" | "in-progress" | "completed" | "skipped";
-  isRequired: boolean;
-  category: string;
-  order: number;
-  dueDate?: string;
-}
-
-interface CopyItem {
-  platform: string;
-  title: string;
-  tagline?: string;
-  description: string;
-  hashtags?: string[];
-  isApproved: boolean;
-  version: number;
-}
-
-interface StrategyPhase {
-  _id: string;
-  name: string;
-  description: string;
-  phase: string;
-  startDate: string;
-  endDate: string;
-  platforms: string[];
-  targetAudience: string[];
-  keyMetrics?: Array<{
-    name: string;
-    target: string;
-  }>;
-}
-
-interface LaunchPlan {
-  status: string;
-  checklistItems?: ChecklistItem[];
-  copyItems?: CopyItem[];
-  strategyPhases?: StrategyPhase[];
-}
-
 export default function ProjectLaunchPage() {
   const params = useParams();
-  const id = params.id as Id<"projects">;
+  const id = params.id as string;
   const [activeTab, setActiveTab] = useState("overview");
   const [isGenerating, setIsGenerating] = useState(false);
   const { token } = useSession();
 
   // Fetch project data
-  const project = useQuery(api.projects.get, { id, token });
+  const { data: project, isLoading: isProjectLoading } = useQuery({
+    queryKey: ["project", id],
+    queryFn: () => getProject(id),
+    enabled: !!id,
+  });
 
   // Fetch launch plan data
-  const launchPlan = useQuery(api.launch.index.getByProject, {
-    projectId: id,
-    token,
-  }) as LaunchPlan | undefined;
+  const { data: launchPlan, isLoading: isLaunchPlanLoading, refetch: refetchLaunchPlan } = useQuery({
+    queryKey: ["launchPlan", id],
+    queryFn: () => getLaunchPlan(id),
+    enabled: !!id,
+    select: (res) => res?.success ? res.data : undefined,
+  });
 
   // Generate structured launch plan
-  const generateLaunchPlan = useAction(api.launch.generator.generate);
+  const generateLaunchPlanMutation = useMutation({
+    mutationFn: async () => {
+      return await generateLaunchPlan({ projectId: id });
+    },
+    onSuccess: () => {
+      toast.success("Structured launch plan generated successfully!");
+      refetchLaunchPlan();
+    },
+    onError: () => {
+      toast.error("Failed to generate launch plan");
+    },
+    onSettled: () => {
+      setIsGenerating(false);
+    },
+  });
 
   // Update checklist item status
-  const updateChecklistStatus = useMutation(api.launch.checklist.updateStatus);
+  const updateChecklistStatusMutation = useMutation({
+    mutationFn: async ({ itemId, status }: { itemId: string; status: string }) => {
+      return await updateLaunchChecklistItem(itemId, { status });
+    },
+    onSuccess: () => {
+      toast.success("Checklist item updated!");
+      refetchLaunchPlan();
+    },
+    onError: () => {
+      toast.error("Failed to update checklist item");
+    },
+  });
 
   const handleGenerateLaunchPlan = async () => {
     if (!project) return;
-
     setIsGenerating(true);
-    try {
-      await generateLaunchPlan({
-        projectId: id,
-        token,
-      });
-      toast.success("Structured launch plan generated successfully!");
-    } catch (error) {
-      toast.error("Failed to generate launch plan");
-      console.error(error);
-    } finally {
-      setIsGenerating(false);
-    }
+    generateLaunchPlanMutation.mutate();
   };
 
   const handleChecklistToggle = async (itemId: string, status: string) => {
-    try {
-      await updateChecklistStatus({
-        token,
-        itemId: itemId as Id<"launchChecklistItems">,
-        status: status as any,
-      });
-      toast.success("Checklist item updated!");
-    } catch (error) {
-      toast.error("Failed to update checklist item");
-    }
+    updateChecklistStatusMutation.mutate({ itemId, status });
   };
 
-  if (!project) {
+  if (isProjectLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -137,7 +103,11 @@ export default function ProjectLaunchPage() {
       />
       <Separator className="my-4" />
       <div className="flex-1 overflow-y-auto">
-        {!launchPlan ? (
+        {isLaunchPlanLoading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : !launchPlan ? (
           <LaunchEmptyState
             isGenerating={isGenerating}
             onGenerate={handleGenerateLaunchPlan}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
@@ -15,6 +15,7 @@ import { ExpandedLayoutContainer } from "@/components/expanded-layout-container"
 import { Badge } from "@workspace/ui/components/badge";
 import { Code, Copy, ExternalLink, Key, Settings, Users } from "lucide-react";
 import Header from "@/components/shared/header";
+import * as waitlistActions from "@/actions/waitlist";
 
 type FormState = {
   name: string;
@@ -31,7 +32,15 @@ type FormState = {
 export default function NewWaitlistPage() {
   const router = useRouter();
   const { token } = useSession();
-  const createWaitlist = useMutation(api.waitlists.createWaitlist);
+  const createWaitlistMutation = useMutation({
+    mutationFn: async (data: any) => waitlistActions.createWaitlist(data),
+    onSuccess: (result) => {
+      if (result && result.success && result.data && result.data.id) {
+        toast.success("Waitlist created successfully!");
+        router.push(`/waitlist/${result.data.id}`);
+      }
+    },
+  });
 
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -88,17 +97,12 @@ export default function NewWaitlistPage() {
     if (!validateForm(form)) {
       return;
     }
-
     try {
-      const waitlistId = await createWaitlist({
+      await createWaitlistMutation.mutateAsync({
         ...form,
         projectId: form.projectId as any,
         customMessage: form.customMessage || undefined,
-        token,
       });
-
-      toast.success("Waitlist created successfully!");
-      router.push(`/waitlist/${waitlistId}`);
     } catch (error) {
       console.error("Error creating waitlist:", error);
       toast.error(

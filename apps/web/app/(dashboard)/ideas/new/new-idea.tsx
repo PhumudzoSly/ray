@@ -51,9 +51,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Checkbox } from "@workspace/ui/components/checkbox";
-import { Doc } from "@workspace/backend";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as ideaActions from "@/actions/idea";
 import { useSession } from "@/context/session-context";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -114,11 +113,15 @@ export const INDUSTRIES = [
 
 const NewIdeaForm = () => {
   const router = useRouter();
-  const createIdea = useMutation(api.idea.addIdea);
+  const createIdeaMutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await ideaActions.createIdea(data);
+    },
+  });
   const [loading, setLoading] = useState(false);
   const { userId, org, token } = useSession();
 
-  const form = useForm<Doc<"idea">>({
+  const form = useForm<any>({
     defaultValues: {
       ownerId: userId,
       organizationId: org,
@@ -128,14 +131,14 @@ const NewIdeaForm = () => {
     },
   });
 
-  const onSubmit = async (values: Doc<"idea">) => {
+  const onSubmit = async (values: any) => {
     try {
       setLoading(true);
-      const ideaId = await createIdea({
-        idea: { ...values, status: "INVALIDATED" },
-        token,
+      const idea = await createIdeaMutation.mutateAsync({
+        ...values,
+        status: "INVALIDATED",
       });
-      router.push(`/ideas/${ideaId}`);
+      router.push(`/ideas/${idea.id}`);
     } catch (error) {
       toast.error("Failed to create idea");
     } finally {

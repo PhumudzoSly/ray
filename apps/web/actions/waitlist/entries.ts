@@ -77,4 +77,25 @@ export const deleteWaitlistEntry = async (id: string) => {
   } catch (error) {
     return { success: false, error };
   }
+};
+
+/**
+ * Verify a waitlist entry by verification token
+ */
+export const verifyWaitlistEmail = async (verificationToken: string) => {
+  const { org } = await getSession();
+  try {
+    const entry = await prisma.waitlistEntry.findFirst({
+      where: { verificationToken, waitlist: { organizationId: org } },
+    });
+    if (!entry) return { success: false, error: 'Invalid or expired verification token' };
+    if (entry.verifiedAt) return { success: false, error: 'Email already verified' };
+    const updated = await prisma.waitlistEntry.update({
+      where: { id: entry.id },
+      data: { verifiedAt: new Date() },
+    });
+    return { success: true, data: updated };
+  } catch (error) {
+    return { success: false, error };
+  }
 }; 

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as roadmapItemActions from "@/actions/roadmap/items";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -66,7 +67,9 @@ export function AddItemDialog({
     nodeId: "",
   });
 
-  const createRoadmapItem = useMutation(api.roadmap.items.createRoadmapItem);
+  const createRoadmapItemMutation = useMutation({
+    mutationFn: async (data: any) => roadmapItemActions.createRoadmapItem(data),
+  });
 
   const resetForm = () => {
     setFormData({
@@ -93,7 +96,7 @@ export function AddItemDialog({
         ? new Date(formData.targetDate).getTime()
         : undefined;
 
-      await createRoadmapItem({
+      await createRoadmapItemMutation.mutateAsync({
         roadmapId,
         issueId: formData.issueId ? (formData.issueId as any) : undefined,
         nodeId: formData.nodeId || undefined,

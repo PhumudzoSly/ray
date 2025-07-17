@@ -4,12 +4,10 @@ import { InlineEditField } from "@workspace/ui/components/inline-field";
 import Link from "next/link";
 import { Badge } from "@workspace/ui/components/badge";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { Id } from "@workspace/backend";
-import { useMutation } from "convex/react";
+import { toast } from "sonner";
 import { GitBranch, Clock, Inbox, Plug } from "lucide-react";
 import { NewIssue } from "@/components/project/issues/new-issue";
 import { ActivityFeed, BlockEditor, NoData } from "@/components/shared";
@@ -27,21 +25,65 @@ const IssueDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<"details" | "relationship" | "activity">(
     "details"
   );
-  const { token } = useSession();
-
-  const updateTitle = useMutation(api.issue.quickAction.changeIssueTitle);
-  const updateDescription = useMutation(
-    api.issue.quickAction.changeIssueDescription
-  );
-  const { data: issue, isPending } = useData(api.issue.index.getIssueById, {
-    token,
-    id: id as Id<"issues">,
+  const queryClient = useQueryClient();
+  // Fetch issue details
+  const { data: issue, isLoading: isPending } = useQuery({
+    queryKey: ["issue", id],
+    queryFn: async () => {
+      const { success, data } = await issueActions.getIssue(id);
+      if (!success) throw new Error("Failed to fetch issue");
+      return data;
+    },
   });
-
-  const { data: issueHierarchy } = useData(
-    api.issue.dependency.getIssueHierarchy,
-    { token, issueId: id as Id<"issues"> }
-  );
+  // Fetch issue hierarchy
+  const { data: issueHierarchy } = useQuery({
+    queryKey: ["issueHierarchy", id],
+    queryFn: async () => {
+      return await issueActions.getIssueHierarchy(id);
+    },
+  });
+  // Optimistic update for title
+  const updateTitleMutation = useMutation({
+    mutationFn: async ({ issueId, title }: { issueId: string; title: string }) => {
+      return await issueActions.updateIssue(issueId, { title });
+    },
+    onMutate: async ({ issueId, title }) => {
+      await queryClient.cancelQueries({ queryKey: ["issue", id] });
+      const previousIssue = queryClient.getQueryData(["issue", id]);
+      queryClient.setQueryData(["issue", id], (old: any) => ({ ...old, title }));
+      return { previousIssue };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssue) {
+        queryClient.setQueryData(["issue", id], context.previousIssue);
+      }
+      toast.error("Failed to update title");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issue", id] });
+    },
+  });
+  // Optimistic update for description
+  const updateDescriptionMutation = useMutation({
+    mutationFn: async ({ issueId, description }: { issueId: string; description: string }) => {
+      return await issueActions.updateIssue(issueId, { description });
+    },
+    onMutate: async ({ issueId, description }) => {
+      await queryClient.cancelQueries({ queryKey: ["issue", id] });
+      const previousIssue = queryClient.getQueryData(["issue", id]);
+      queryClient.setQueryData(["issue", id], (old: any) => ({ ...old, description }));
+      return { previousIssue };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssue) {
+        queryClient.setQueryData(["issue", id], context.previousIssue);
+      }
+      toast.error("Failed to update description");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issue", id] });
+    },
+  });
 
   if (isPending || issue === undefined)
     return (
@@ -69,11 +111,7 @@ const IssueDetails = ({ id }: { id: string }) => {
         <InlineEditField
           value={issue.title}
           onSave={async (value) => {
-            await updateTitle({
-              token,
-              issueId: id as Id<"issues">,
-              title: value,
-            });
+            await updateTitleMutation.mutateAsync({ issueId: id, title: value });
           }}
           displayValue={
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
@@ -88,11 +126,7 @@ const IssueDetails = ({ id }: { id: string }) => {
         <InlineEditTextArea
           value={issue.description || ""}
           onSave={async (value) => {
-            await updateDescription({
-              token,
-              issueId: id as Id<"issues">,
-              description: value,
-            });
+            await updateDescriptionMutation.mutateAsync({ issueId: id, description: value });
           }}
           placeholder="No description provided."
         />
@@ -250,14 +284,14 @@ const IssueDetails = ({ id }: { id: string }) => {
           {/* Add Sub-Issue Button for issues without sub-issues */}
           {(!issueHierarchy?.subIssues ||
             issueHierarchy.subIssues.length === 0) && (
-            <div className="mt-6">
-              <NewIssue
-                projectId={issue.projectId}
-                parentIssueId={id}
-                variant="sub-issue"
-              />
-            </div>
-          )}
+              <div className="mt-6">
+                <NewIssue
+                  projectId={issue.projectId}
+                  parentIssueId={id}
+                  variant="sub-issue"
+                />
+              </div>
+            )}
         </div>
       ) : null}
 

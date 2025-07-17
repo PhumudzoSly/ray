@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -41,7 +40,7 @@ export function ChangelogDialog({
     isPublished: false,
   });
 
-  const createChangelog = useMutation(api.roadmap.changelog.createChangelog);
+  const createChangelog = api.roadmap.changelog.createChangelog;
 
   const resetForm = () => {
     setFormData({

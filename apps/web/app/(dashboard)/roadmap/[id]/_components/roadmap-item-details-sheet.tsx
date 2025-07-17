@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import * as roadmapItemActions from "@/actions/roadmap/items";
+import * as roadmapFeedbackActions from "@/actions/roadmap/feedback";
+import * as roadmapVoteActions from "@/actions/roadmap/votes";
 import { useSession } from "@/context/session-context";
 import {
   Sheet,
@@ -44,7 +45,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
-import { useData } from "@/hooks/use-data";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 const ROADMAP_STATUSES = [
@@ -75,7 +75,7 @@ const SENTIMENT_OPTIONS = [
 interface RoadmapItemDetailsSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  itemId: Id<"roadmapItems"> | null;
+  itemId: string | null;
 }
 
 export function RoadmapItemDetailsSheet({
@@ -91,21 +91,26 @@ export function RoadmapItemDetailsSheet({
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   // Fetch roadmap item details
-  const { data: item, isPending: isLoadingItem } = useData(
-    api.roadmap.items.getRoadmapItem,
-    itemId ? { id: itemId, token } : "skip"
-  );
+  const { data: item, isLoading: isLoadingItem } = useQuery({
+    queryKey: ["roadmapItem", itemId],
+    queryFn: () => itemId ? roadmapItemActions.getRoadmapItem(itemId).then(res => res.data) : null,
+    enabled: !!itemId,
+  });
 
   // Fetch feedback for the item
-  const { data: feedback, isPending: isLoadingFeedback } = useData(
-    api.roadmap.feedback.getFeedback,
-    itemId ? { itemId, onlyApproved: true } : "skip"
-  );
+  const { data: feedback, isLoading: isLoadingFeedback } = useQuery({
+    queryKey: ["roadmapFeedback", itemId],
+    queryFn: () => itemId ? roadmapFeedbackActions.getAllRoadmapFeedback(itemId).then(res => res.data) : [],
+    enabled: !!itemId,
+  });
 
   // Mutations
-  const addFeedback = useMutation(api.roadmap.feedback.addFeedback);
-  const voteForItem = useMutation(api.roadmap.items.voteForItem);
-  const removeVote = useMutation(api.roadmap.items.removeVote);
+  const addFeedbackMutation = useMutation({
+    mutationFn: async (data: any) => roadmapFeedbackActions.createRoadmapFeedback(data),
+  });
+  const voteForItemMutation = useMutation({
+    mutationFn: async (data: any) => roadmapVoteActions.createRoadmapVote(data),
+  });
 
   if (!itemId) return null;
 
@@ -114,14 +119,14 @@ export function RoadmapItemDetailsSheet({
       toast.error("Please enter your feedback");
       return;
     }
-
     setIsSubmittingFeedback(true);
     try {
-      await addFeedback({
-        itemId,
+      await addFeedbackMutation.mutateAsync({
+        roadmapItemId: itemId,
         content: feedbackContent,
         sentiment: feedbackSentiment,
-        ipAddress: "127.0.0.1", // In a real app, you'd get this from the server
+        ipAddress: "127.0.0.1",
+        isApproved: true,
       });
       toast.success("Feedback submitted successfully!");
       setFeedbackContent("");
@@ -135,9 +140,9 @@ export function RoadmapItemDetailsSheet({
 
   const handleVote = async () => {
     try {
-      await voteForItem({
-        itemId,
-        ipAddress: "127.0.0.1", // In a real app, you'd get this from the server
+      await voteForItemMutation.mutateAsync({
+        roadmapItemId: itemId,
+        ipAddress: "127.0.0.1",
       });
       toast.success("Vote added!");
     } catch (error) {

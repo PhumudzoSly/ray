@@ -23,13 +23,9 @@ import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { DateInput } from "@workspace/ui/components/date-input";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
-import { Button } from "@workspace/ui/components/button";
-import { useData } from "@/hooks/use-data";
 
 interface FeatureCardProps {
   feature: any;
@@ -40,14 +36,39 @@ interface FeatureCardProps {
 
 export function FeatureCard({ feature, showProject }: FeatureCardProps) {
   const router = useRouter();
-  const { token } = useSession();
-  const updateFeature = useMutation(api.issue.feature.updateFeature);
+  const queryClient = useQueryClient();
+  // TanStack mutation for updating a feature
+  const updateFeatureMutation = useMutation({
+    mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
+      return await featureActions.updateFeatureById(featureId, updates);
+    },
+    onMutate: async ({ featureId, updates }) => {
+      await queryClient.cancelQueries();
+      const previousFeatures = queryClient.getQueryData<any[]>(["features"]);
+      queryClient.setQueryData<any[]>(["features"], (old) => {
+        if (!old) return old;
+        return old.map((f) =>
+          f._id === featureId ? { ...f, ...updates } : f
+        );
+      });
+      return { previousFeatures };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousFeatures) {
+        queryClient.setQueryData(["features"], context.previousFeatures);
+      }
+      toast.error("Failed to update feature");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+    },
+  });
 
   // Add dependency validation
-  const { data: validationResult } = useData(
-    api.issue.feature.validateFeatureCompletion,
-    { token, featureId: feature._id }
-  );
+  const { data: validationResult } = useQuery({
+    queryKey: ["validateFeatureCompletion", feature._id],
+    queryFn: () => featureActions.validateFeatureCompletion(feature._id),
+  });
 
   const handleClick = () => {
     router.push(`/features/${feature._id}`);
@@ -59,16 +80,10 @@ export function FeatureCard({ feature, showProject }: FeatureCardProps) {
   };
 
   const handleUpdate = async (updates: any) => {
-    try {
-      await updateFeature({
-        token,
-        featureId: feature._id as Id<"feature">,
-        updates,
-      });
-    } catch (error) {
-      console.error("Error updating feature:", error);
-      toast.error("Failed to update feature");
-    }
+    updateFeatureMutation.mutate({
+      featureId: feature._id,
+      updates,
+    });
   };
 
   const getPhaseColor = (phase: string) => {

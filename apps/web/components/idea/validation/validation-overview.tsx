@@ -16,10 +16,9 @@ import {
   DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAction } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as ideaActions from "@/actions/idea";
 import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
 import { toast } from "sonner";
 
 interface ValidationOverviewProps {
@@ -33,7 +32,17 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 }) => {
   const { token } = useSession();
   const [isValidating, setIsValidating] = useState(false);
-  const triggerValidation = useAction(api.idea.triggerValidation);
+  const triggerValidationMutation = useMutation({
+    mutationFn: async () => ideaActions.triggerValidation({ token, ideaId: idea._id }),
+    onSuccess: () => {
+      toast.success("Validation completed successfully!");
+      window.location.reload();
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to validate idea");
+    },
+    onSettled: () => setIsValidating(false),
+  });
 
   const validationScore =
     validationDetails?.validation?.overallScore ||
@@ -66,29 +75,8 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 
   const handleValidate = async () => {
     if (!idea) return;
-
     setIsValidating(true);
-
-    try {
-      const result = await triggerValidation({
-        token,
-        ideaId: idea._id as Id<"idea">,
-      });
-
-      if (result && result.success) {
-        toast.success("Validation completed successfully!");
-        window.location.reload();
-      } else {
-        throw new Error("Validation failed");
-      }
-    } catch (error) {
-      console.error("Error validating idea:", error);
-      toast.error(
-        error instanceof Error ? error.message : "Failed to validate idea"
-      );
-    } finally {
-      setIsValidating(false);
-    }
+    triggerValidationMutation.mutate();
   };
 
   // Validation metrics

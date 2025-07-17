@@ -3,9 +3,7 @@ import { ExpandedLayoutContainer } from "@/components/expanded-layout-container"
 import FeatureSidebar from "./components/feature-sidebar";
 import FeatureDetails from "./components/feature-details";
 import { redirect } from "next/navigation";
-import { preloadQuery } from "convex/nextjs";
-import { Id } from "@workspace/backend";
-import { api } from "@workspace/backend";
+import { getFeatureById } from "@/actions/features";
 import Header from "@/components/shared/header";
 import { NewFeature } from "@/components/project/features/new-feature";
 
@@ -17,10 +15,9 @@ const SingleFeaturePage = async ({
   const { id } = await params;
   const { token } = await getSession();
 
-  const feature = preloadQuery(api.issue.feature.getFeatureById, {
-    token,
-    id: id as Id<"feature">,
-  });
+  // Fetch feature using server action
+  const featureResult = await getFeatureById(id);
+  const feature = featureResult.success ? featureResult.data : null;
 
   if (!feature) {
     return redirect("/dashboard");
@@ -37,7 +34,7 @@ const SingleFeaturePage = async ({
         {null}
       </Header>
       <ExpandedLayoutContainer
-        sidebar={<FeatureSidebar featureId={id as Id<"feature">} />}
+        sidebar={<FeatureSidebar featureId={id} />}
       >
         <div className="py-4 px-6">
           <FeatureDetails id={id} />

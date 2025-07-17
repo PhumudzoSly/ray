@@ -21,10 +21,9 @@ import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { FeatureSelector } from "@/components/ui/selectors/feature-selector";
 import { useSession } from "@/context/session-context";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import * as featureActions from "@/actions/features";
 import { DateInput } from "@workspace/ui/components/date-input";
-import { useData } from "@/hooks/use-data";
 
 type NewFeatureProps = {
   projectId?: string;
@@ -46,10 +45,10 @@ type FormState = {
 
 type DateValidationError = {
   type:
-    | "end_before_start"
-    | "start_in_past"
-    | "end_in_past"
-    | "duration_too_long";
+  | "end_before_start"
+  | "start_in_past"
+  | "end_in_past"
+  | "duration_too_long";
   message: string;
 };
 
@@ -58,17 +57,27 @@ export function NewFeature({
   parentFeatureId: initialParentFeatureId,
 }: NewFeatureProps) {
   const { token, org } = useSession();
-  const createFeature = useMutation(api.issue.feature.addFeature);
+  const queryClient = useQueryClient();
+  // TanStack mutation for creating a feature
+  const createFeatureMutation = useMutation({
+    mutationFn: async (featureData: any) => {
+      return await featureActions.createFeature(featureData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+    },
+    onError: () => {
+      toast.error("Failed to create feature");
+    },
+  });
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const { data: currentFeature, isPending: loadingFeature } = useData(
-    api.issue.feature.getFeatureById,
-    {
-      id: initialParentFeatureId as any,
-      token,
-    }
-  );
+  const { data: currentFeature, isLoading: loadingFeature } = useQuery({
+    queryKey: ["feature", initialParentFeatureId],
+    queryFn: () => initialParentFeatureId ? featureActions.getFeatureById(initialParentFeatureId) : null,
+    enabled: !!initialParentFeatureId,
+  });
 
   const [form, setForm] = useState<FormState>({
     name: "",
@@ -240,21 +249,17 @@ export function NewFeature({
     setOpen(false);
 
     try {
-      await createFeature({
-        feature: {
-          name: form.name,
-          description: form.description || undefined,
-          organizationId: org as any,
-          priority: form.priority,
-          projectId: form.projectId as any,
-          parentFeatureId: (form.parentFeatureId as any) || undefined,
-          phase: form.phase,
-          startDate: form.startDate?.toISOString() || undefined,
-          endDate: form.endDate?.toISOString() || undefined,
-          estimatedEffort: form.estimatedEffort || undefined,
-          businessValue: form.businessValue || undefined,
-        },
-        token,
+      await createFeatureMutation.mutateAsync({
+        name: form.name,
+        description: form.description || undefined,
+        priority: form.priority,
+        projectId: form.projectId,
+        parentFeatureId: form.parentFeatureId || undefined,
+        phase: form.phase,
+        startDate: form.startDate?.toISOString() || undefined,
+        endDate: form.endDate?.toISOString() || undefined,
+        estimatedEffort: form.estimatedEffort || undefined,
+        businessValue: form.businessValue || undefined,
       });
 
       toast.success("Feature created successfully");
@@ -402,7 +407,7 @@ export function NewFeature({
             <Alert
               variant={
                 dateValidation.type === "end_before_start" ||
-                dateValidation.type === "end_in_past"
+                  dateValidation.type === "end_in_past"
                   ? "destructive"
                   : "default"
               }

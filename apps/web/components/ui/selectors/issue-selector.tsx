@@ -19,19 +19,23 @@ import {
 import { projectTypes } from "@/utils/constants/projects/projectTypes";
 import { TbListDetails } from "react-icons/tb";
 import { useSession } from "@/context/session-context";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getIssuesByProject, listAllIssues } from "@/actions/issue";
 
 interface IssueSelectorProps {
-  projectId?: Id<"projects">;
+  projectId?: string;
   value: string;
   onValueChange: (value: string) => void;
-  excludeIssueId?: Id<"issues"> | Id<"issues">[];
+  excludeIssueId?: string | string[];
   placeholder?: string;
   // Legacy props for backward compatibility
   currentIssue?: string | null;
   onChange?: (issue: string | null) => void;
+}
+
+interface Issue {
+  _id: string;
+  title: string;
 }
 
 export function IssueSelector({
@@ -58,12 +62,20 @@ export function IssueSelector({
     setOpen(false);
   };
 
-  const { data: issues, isPending } = useData(
-    projectId
-      ? api.issue.index.getIssuesByProject
-      : api.issue.quickAction.listAll,
-    projectId ? { token, projectId } : { token }
-  );
+  const { data: issues, isPending } = useQuery<Issue[]>({
+    queryKey: ["issues", projectId, token],
+    queryFn: async () => {
+      if (!token) return [];
+      if (projectId) {
+        const raw = await getIssuesByProject(projectId as string);
+        return (raw ?? []).map((i: any) => ({ _id: i.id, title: i.title }));
+      } else {
+        const raw = await listAllIssues();
+        return (raw ?? []).map((i: any) => ({ _id: i.id, title: i.title }));
+      }
+    },
+    enabled: !!token,
+  });
 
   // Filter out excluded issues - support both single ID and array of IDs
   const excludedIds = Array.isArray(excludeIssueId)
@@ -71,12 +83,9 @@ export function IssueSelector({
     : excludeIssueId
       ? [excludeIssueId]
       : [];
-  const filteredIssues =
-    issues?.filter((issue) => !excludedIds.includes(issue._id)) || [];
+  const filteredIssues = (issues ?? []).filter((issue: Issue) => !excludedIds.includes(issue._id));
 
-  const selectedIssue = filteredIssues.find(
-    (issue) => issue._id === selectedValue
-  );
+  const selectedIssue = filteredIssues.find((issue: Issue) => issue._id === selectedValue);
 
   return (
     <div className="*:not-first:mt-2">
@@ -138,7 +147,7 @@ export function IssueSelector({
                     <CheckIcon size={16} className="ml-auto" />
                   )}
                 </CommandItem>
-                {filteredIssues.map((issue) => {
+                {filteredIssues.map((issue: Issue) => {
                   const issueType = projectTypes.find(
                     (type) => type.id === issue.title
                   );

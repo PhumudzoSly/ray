@@ -1,33 +1,43 @@
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
+import { QueryClient, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getLinks, addLink, deleteLink } from "@/actions/issue";
 
 export function useIssueLinks(issueId: string) {
   const session = useSession();
-  const links = useQuery(api.issue.index.getLinks, {
-    token: session?.token || "",
-    issueId: issueId as Id<"issues">,
+  const queryClient = useQueryClient();
+
+  // Fetch links
+  const { data: linksResult, isPending } = useQuery({
+    queryKey: ["issueLinks", issueId],
+    queryFn: () => getLinks(issueId),
+    enabled: !!issueId,
+  });
+  const links = linksResult?.success ? linksResult.data : [];
+
+  // Mutation for creating a link
+  const { mutateAsync: createLinkMutation, isPending: isCreating } = useMutation({
+    mutationFn: async ({ url, issueId }: { url: string; issueId: string }) => {
+      return await addLink({ issueId, url });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["issueLinks", issueId] });
+    },
   });
 
-  const createMutation = useMutation(api.issue.index.addLink);
-  const deleteMutation = useMutation(api.issue.index.deleteLink);
+  // Mutation for deleting a link
+  const { mutateAsync: deleteLinkMutation, isPending: isDeleting } = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      return await deleteLink(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["issueLinks", issueId] });
+    },
+  });
 
-  const createLink = async ({
-    url,
-    issueId,
-  }: {
-    url: string;
-    issueId: string;
-  }) => {
+  const createLink = async ({ url, issueId }: { url: string; issueId: string }) => {
     if (!session?.token) return;
-
     try {
-      const result = await createMutation({
-        token: session.token,
-        issueId: issueId as Id<"issues">,
-        link: { url },
-      });
+      const result = await createLinkMutation({ url, issueId });
       return { success: true, data: result };
     } catch (error) {
       console.error("Error creating link:", error);
@@ -35,20 +45,10 @@ export function useIssueLinks(issueId: string) {
     }
   };
 
-  const deleteLink = async ({
-    id,
-    issueId,
-  }: {
-    id: string;
-    issueId: string;
-  }) => {
+  const deleteLinkFn = async ({ id }: { id: string }) => {
     if (!session?.token) return;
-
     try {
-      await deleteMutation({
-        token: session.token,
-        linkId: id as Id<"issueLink">,
-      });
+      await deleteLinkMutation({ id });
       return { success: true };
     } catch (error) {
       console.error("Error deleting link:", error);
@@ -58,10 +58,10 @@ export function useIssueLinks(issueId: string) {
 
   return {
     links: links || [],
-    isLoading: links === undefined,
+    isLoading: isPending,
     createLink,
-    isCreating: false,
-    deleteLink,
-    isDeleting: false,
+    isCreating,
+    deleteLink: deleteLinkFn,
+    isDeleting,
   };
 }

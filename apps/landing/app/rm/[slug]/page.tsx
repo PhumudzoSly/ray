@@ -1,18 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as roadmapActions from "@/actions/roadmap";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { RoadmapHeader } from "./components/roadmap-header";
 import { RoadmapFilters } from "./components/roadmap-filters";
 import { RoadmapContent } from "./components/roadmap-content";
-import { Id } from "@/convex/_generated/dataModel";
+// Removed: import { Id } from "@/convex/_generated/dataModel";
 
 export default function PublicRoadmapPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,32 +27,46 @@ export default function PublicRoadmapPage() {
   const [userIp, setUserIp] = useState<string>("");
 
   // Fetch roadmap data
-  const roadmap = useQuery(api.roadmap.getRoadmapBySlug, { slug });
-
-  // Fetch roadmap items based on active tab
-  const allItems = useQuery(
-    api.roadmap.items.getPublicRoadmapItems,
-    roadmap
-      ? {
-          roadmapId: roadmap._id,
-        }
-      : "skip"
-  );
-
+  const { data: roadmap } = useQuery({
+    queryKey: ["roadmap", slug],
+    queryFn: async () => {
+      const res = await roadmapActions.getRoadmapBySlug?.(slug);
+      return res?.success ? res.data : null;
+    },
+  });
+  // Fetch roadmap items
+  const { data: allItems = [] } = useQuery({
+    queryKey: ["publicRoadmapItems", roadmap?.id],
+    queryFn: async () => {
+      if (!roadmap?.id) return [];
+      const res = await roadmapActions.getAllRoadmapItems?.(roadmap.id);
+      return res?.success ? res.data : [];
+    },
+    enabled: !!roadmap?.id,
+  });
   // Fetch changelogs
-  const changelogs = useQuery(
-    api.roadmap.changelog.getChangelogs,
-    roadmap
-      ? {
-          roadmapId: roadmap._id,
-          onlyPublished: true,
-        }
-      : "skip"
-  );
-
+  const { data: changelogs = [] } = useQuery({
+    queryKey: ["changelogs", roadmap?.id],
+    queryFn: async () => {
+      if (!roadmap?.id) return [];
+      const res = await roadmapActions.getAllRoadmapChangelogs?.(roadmap.id);
+      return res?.success ? res.data : [];
+    },
+    enabled: !!roadmap?.id,
+  });
   // Mutations
-  const voteForItem = useMutation(api.roadmap.items.voteForItem);
-  const addFeedback = useMutation(api.roadmap.feedback.addFeedback);
+  const voteForItemMutation = useMutation({
+    mutationFn: async ({ itemId, ipAddress }: { itemId: string; ipAddress: string }) => {
+      return await roadmapActions.createRoadmapVote?.({ roadmapItemId: itemId, ipAddress });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["publicRoadmapItems", roadmap?.id] }),
+  });
+  const addFeedbackMutation = useMutation({
+    mutationFn: async ({ itemId, ipAddress, content, sentiment }: { itemId: string; ipAddress: string; content: string; sentiment: string }) => {
+      return await roadmapActions.createRoadmapFeedback?.({ roadmapItemId: itemId, ipAddress, content, sentiment, isApproved: false });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["publicRoadmapItems", roadmap?.id] }),
+  });
 
   // Get user IP address for voting
   useEffect(() => {
@@ -119,10 +134,7 @@ export default function PublicRoadmapPage() {
     }
 
     try {
-      await voteForItem({
-        itemId: itemId as Id<"roadmapItems">,
-        ipAddress: userIp,
-      });
+      await voteForItemMutation.mutate({ itemId, ipAddress: userIp });
       toast.success("Vote recorded!");
     } catch (error) {
       toast.error("You have already voted for this item");
@@ -137,8 +149,8 @@ export default function PublicRoadmapPage() {
     }
 
     try {
-      await addFeedback({
-        itemId: selectedItemId as Id<"roadmapItems">,
+      await addFeedbackMutation.mutate({
+        itemId: selectedItemId,
         ipAddress: userIp,
         content: feedbackContent,
         sentiment: feedbackSentiment,
@@ -187,7 +199,7 @@ export default function PublicRoadmapPage() {
           filterCategory={filterCategory}
           filterStatus={filterStatus}
           roadmapName={roadmap.name}
-          roadmapId={roadmap._id}
+          roadmapId={roadmap.id}
           categories={categories}
         />
       </div>

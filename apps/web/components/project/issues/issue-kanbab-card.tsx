@@ -9,8 +9,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useMutation } from "convex/react";
-import { api } from "@workspace/backend";
+import { useMutation } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 
@@ -27,7 +27,9 @@ export function IssueKanbanCard({
 }: IssueKanbanCardProps) {
   const router = useRouter();
   const { token } = useSession();
-  const changeLeader = useMutation(api.issue.quickAction.changeIssueAssignedTo);
+  const changeLeaderMutation = useMutation({
+    mutationFn: async ({ issueId, userId, token }: any) => issueActions.updateIssue(issueId, { assignedToId: userId, token }),
+  });
 
   // Handler for interactive element clicks
   const handleInteractiveClick = (e: React.MouseEvent) => {
@@ -78,10 +80,10 @@ export function IssueKanbanCard({
           iconOnly
           onChange={async (userId) => {
             try {
-              await changeLeader({
+              await changeLeaderMutation.mutateAsync({
                 issueId: issue._id,
-                token,
                 userId: userId as any,
+                token,
               });
             } catch (error) {
               toast.error("Failed to change issue assignee");

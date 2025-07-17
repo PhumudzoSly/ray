@@ -1,9 +1,8 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getProject } from "@/actions/project";
 import { FlowEditor } from "@/components/flow/flow-editor";
-import { Id } from "@workspace/backend";
 import { useParams } from "next/navigation";
 import { useSession } from "@/context/session-context";
 import { ReactFlowProvider } from "reactflow";
@@ -14,16 +13,17 @@ export default function ProjectFlowPage() {
   const params = useParams();
   const id = params.id as string;
   const { token } = useSession();
-  const project = useQuery(api.projects.get, {
-    id: id as Id<"projects">,
-    token,
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["project", id],
+    queryFn: () => getProject(id),
+    enabled: !!id,
   });
 
-  if (project === undefined) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 
-  if (project === null) {
+  if (!project) {
     return (
       <NoData
         title="Project not found"

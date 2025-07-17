@@ -33,6 +33,16 @@ export const getAllIdeas = async () => {
 	return ideas
 }
 
+/**
+ * Get a single idea by ID (scoped to org)
+ */
+export const getSingleIdea = async (id: string) => {
+	const { org } = await getSession();
+	const idea = await prisma.idea.findFirst({
+		where: { id, organizationId: org },
+	});
+	return idea;
+};
 
 export const updateIdea = async (data: IdeaOptionalDefaults) => {
 	await getSession();
@@ -149,5 +159,44 @@ export const updateSolutionOffered = async ({ id, solutionOffered }: { id: strin
 			solutionOffered,
 		},
 	});
+};
+
+export const changeStatus = async ({ id, status }: { id: string; status: string }) => {
+	await getSession();
+	return prisma.idea.update({
+		where: { id },
+		data: { status },
+	});
+};
+
+// Trigger AI validation for an idea (stub)
+export const triggerValidation = async ({ ideaId }: { ideaId: string }) => {
+	// TODO: Implement AI validation logic
+	// For now, return a stub result
+	return {
+		success: true,
+		results: {
+			overallScore: 80,
+			recommendation: "Strong validation (stub)",
+			// Add more fields as needed
+		},
+	};
+};
+
+// Get detailed validation results for an idea
+export const getValidationDetails = async ({ ideaId }: { ideaId: string }) => {
+	// Fetch the idea and related validation fields
+	const idea = await prisma.idea.findUnique({
+		where: { id: ideaId },
+		include: {
+			aiOverallValidation: true,
+			// Add more relations as needed
+		},
+	});
+	// Return a shape similar to what the component expects
+	return {
+		validation: idea?.aiOverallValidation || null,
+		// Add more fields as needed
+	};
 };
 

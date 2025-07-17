@@ -2,7 +2,6 @@ import React from "react";
 import { Clock, User, Plus, GitBranch } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { useData } from "@/hooks/use-data";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Badge } from "@workspace/ui/components/badge";
@@ -80,15 +79,12 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 }) => {
   const { token } = useSession();
 
-  const { data: activities, isPending } = useData(
-    api.activities.getActivitiesByEntity,
-    {
-      token,
-      entityType,
-      entityId,
-      limit,
-    }
-  );
+  const { data: activities, isPending } = api.activities.getActivitiesByEntity({
+    token,
+    entityType,
+    entityId,
+    limit,
+  });
 
   if (isPending) {
     return (

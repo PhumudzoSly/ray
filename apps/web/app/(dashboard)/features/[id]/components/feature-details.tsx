@@ -4,13 +4,9 @@ import { InlineEditField } from "@workspace/ui/components/inline-field";
 import Link from "next/link";
 import { Badge } from "@workspace/ui/components/badge";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import NoData from "@/components/shared/no-data";
-import { Id } from "@workspace/backend";
-import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { GitBranch, Clock, Plug, Inbox, File } from "lucide-react";
 import { NewFeature } from "@/components/project/features/new-feature";
@@ -23,47 +19,51 @@ import { cn } from "@/lib/utils";
 import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { Comments } from "@/components/liveblocks/comments";
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getFeatureById, getFeatureHierarchy, updateFeatureById } from "@/actions/features";
 
-const FeatureDetails = ({ id }: { id: string }) => {
+const queryClient = new QueryClient();
+
+const FeatureDetailsInner = ({ id }: { id: string }) => {
   const { token } = useSession();
+  const [view, setView] = useState<"details" | "dependencies" | "prd" | "activity">("prd");
+  const queryClient = useQueryClient();
 
-  const [view, setView] = useState<
-    "details" | "dependencies" | "prd" | "activity"
-  >("prd");
+  // Fetch feature details
+  const { data: featureResult, isPending: isFeaturePending } = useQuery({
+    queryKey: ["feature", id],
+    queryFn: () => getFeatureById(id),
+  });
+  const feature = featureResult?.success ? featureResult.data : null;
 
-  const updateFeature = useMutation(api.issue.feature.updateFeature);
+  // Fetch feature hierarchy
+  const { data: hierarchyResult } = useQuery({
+    queryKey: ["featureHierarchy", id],
+    queryFn: () => getFeatureHierarchy(id),
+    enabled: !!feature,
+  });
+  const featureHierarchy = hierarchyResult?.success ? hierarchyResult.data : null;
+
+  // Mutation for updating feature
+  const { mutateAsync: updateFeature, isPending: isUpdating } = useMutation({
+    mutationFn: async (updates: any) => {
+      return await updateFeatureById(id, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature", id] });
+      toast.success("Feature updated");
+    },
+    onError: () => {
+      toast.error("Failed to update feature");
+    },
+  });
 
   const handleUpdate = async (updates: any) => {
     if (!id) return;
-
-    try {
-      await updateFeature({
-        token,
-        featureId: id as any,
-        updates,
-      });
-    } catch (error) {
-      console.error("Error updating feature:", error);
-      toast.error("Failed to update feature");
-    }
+    await updateFeature(updates);
   };
-  const { data: feature, isPending } = useData(
-    api.issue.feature.getFeatureById,
-    {
-      token,
-      id: id as Id<"feature">,
-    }
-  );
 
-  const { data: featureHierarchy } = useData(
-    api.issue.feature.getFeatureHierarchy,
-    {
-      token,
-      featureId: id as Id<"feature">,
-    }
-  );
-
-  if (isPending || feature === undefined)
+  if (isFeaturePending || feature === undefined)
     return (
       <div className="flex items-center justify-center p-20">
         <LoadingSpinner />
@@ -216,13 +216,13 @@ const FeatureDetails = ({ id }: { id: string }) => {
 
           {(!featureHierarchy?.subFeatures ||
             featureHierarchy.subFeatures.length === 0) && (
-            <div className="mt-6">
-              <NewFeature
-                projectId={feature.projectId}
-                parentFeatureId={feature._id}
-              />
-            </div>
-          )}
+              <div className="mt-6">
+                <NewFeature
+                  projectId={feature.projectId}
+                  parentFeatureId={feature._id}
+                />
+              </div>
+            )}
 
           {/* Sub-Features Section */}
           {featureHierarchy?.subFeatures &&
@@ -273,7 +273,7 @@ const FeatureDetails = ({ id }: { id: string }) => {
       {view === "dependencies" ? (
         <div className="py-6">
           <FeatureDependencyManager
-            featureId={id as Id<"feature">}
+            featureId={id as string}
             projectId={feature.projectId}
           />
         </div>
@@ -291,5 +291,11 @@ const FeatureDetails = ({ id }: { id: string }) => {
     </div>
   );
 };
+
+const FeatureDetails = (props: { id: string }) => (
+  <QueryClientProvider client={queryClient}>
+    <FeatureDetailsInner {...props} />
+  </QueryClientProvider>
+);
 
 export default FeatureDetails;

@@ -1,8 +1,6 @@
 import React, { ReactNode } from "react";
 import { Separator } from "@workspace/ui/components/separator";
-import { preloadQuery } from "convex/nextjs";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { getSingleIdea } from "@/actions/idea";
 import { getSession } from "@/actions/account/user";
 import NoData from "@/components/shared/no-data";
 import IdeaInfo from "@/components/idea/core/idea-info";
@@ -48,10 +46,7 @@ const IdeaLayout = async ({
     },
   ];
 
-  const idea = await preloadQuery(api.idea.getSingleIdea, {
-    token,
-    id: id as Id<"idea">,
-  });
+  const idea = await getSingleIdea(id);
 
   if (!idea) {
     return <NoData />;

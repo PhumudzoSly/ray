@@ -1,11 +1,10 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as projectActions from "@/actions/project";
 import { Button } from "@workspace/ui/components/button";
 import { Separator } from "@workspace/ui/components/separator";
 import { Database, Lock, Trash, Bot, Server } from "lucide-react";
-import { Id } from "@workspace/backend";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -38,14 +37,57 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
   const id = params.id as string;
   const { token } = useSession();
   const confirm = useConfirm();
+  const queryClient = useQueryClient();
 
-  const project = useQuery(api.projects.get, {
-    id: id as Id<"projects">,
-    token,
+  // Fetch project data using TanStack Query and server action
+  const { data: project, isLoading } = useQuery({
+    queryKey: ["project", id],
+    queryFn: () => projectActions.getProject(id),
   });
 
-  const updateProject = useMutation(api.projects.update);
-  const deleteProject = useMutation(api.projects.deleteProject);
+  // Optimistic update mutation for project
+  const updateProjectMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+      return await projectActions.updateProject(id, updates);
+    },
+    onMutate: async ({ id, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["project", id] });
+      const previousProject = queryClient.getQueryData(["project", id]);
+      queryClient.setQueryData(["project", id], (old: any) => ({ ...old, ...updates }));
+      return { previousProject };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousProject) {
+        queryClient.setQueryData(["project", id], context.previousProject);
+      }
+      toast.error("Failed to update project");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+    },
+  });
+
+  // Optimistic delete mutation for project
+  const deleteProjectMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await projectActions.deleteProject(id);
+    },
+    onMutate: async (id: string) => {
+      await queryClient.cancelQueries({ queryKey: ["project", id] });
+      const previousProject = queryClient.getQueryData(["project", id]);
+      queryClient.setQueryData(["project", id], null);
+      return { previousProject };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousProject) {
+        queryClient.setQueryData(["project", id], context.previousProject);
+      }
+      toast.error("Failed to delete project");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["project", id] });
+    },
+  });
 
   if (pathname === `/project/${project?._id}/flow`) return children;
   if (pathname === `/project/${project?._id}/board`) return children;
@@ -56,9 +98,8 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
         description: "Are you sure you want to delete this project?",
         title: "Delete Project",
       });
-
       if (isConfirmed && project?._id) {
-        await deleteProject({ id: project?._id, token });
+        await deleteProjectMutation.mutateAsync(project._id);
         router.push("/project");
       }
     } catch (error) {
@@ -120,19 +161,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                     Status
                   </h3>
                   <ProjectStatusSelector
-                    onChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            status: value as any,
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { status: value } })}
                     status={project.status}
                   />
 
@@ -141,19 +170,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   </h3>
                   <ProjectTypeSelector
                     selectedType={project.platform}
-                    onChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            platform: value as any,
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { platform: value } })}
                   />
 
                   <h3 className="text-xs font-medium text-muted-foreground">
@@ -161,19 +178,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                   </h3>
                   <DateSelector
                     value={project?.dueDate ? new Date(project?.dueDate) : null}
-                    onChange={async (e) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            dueDate: e?.toDateString(),
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update due date");
-                      }
-                    }}
+                    onChange={async (e) => updateProjectMutation.mutate({ id: project._id, updates: { dueDate: e?.toDateString() } })}
                   />
 
                   <h3 className="text-xs font-medium text-muted-foreground">
@@ -209,19 +214,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option,
                       icon: <ImConnection />,
                     }))}
-                    onValueChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            techStack: { ...project.techStack, orm: value },
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, orm: value } } })}
                     value={project.techStack.orm}
                     placeholder="Select ORM"
                   />
@@ -235,22 +228,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Database />,
                     }))}
-                    onValueChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            techStack: {
-                              ...project.techStack,
-                              database: value,
-                            },
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, database: value } } })}
                     value={project.techStack.database}
                     placeholder="Select Database"
                   />
@@ -264,19 +242,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Lock />,
                     }))}
-                    onValueChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            techStack: { ...project.techStack, auth: value },
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, auth: value } } })}
                     value={project.techStack.auth}
                     placeholder="Select Auth provider"
                   />
@@ -289,19 +255,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option,
                       icon: <Bot />,
                     }))}
-                    onValueChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            techStack: { ...project.techStack, ai: value },
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { techStack: { ...project.techStack, ai: value } } })}
                     value={project.techStack.ai}
                     placeholder="Select AI provider"
                   />
@@ -315,19 +269,7 @@ export default function ProjectPage({ children }: { children: ReactNode }) {
                       label: option.name,
                       icon: <Server />,
                     }))}
-                    onValueChange={async (value) => {
-                      try {
-                        await updateProject({
-                          project: {
-                            projectId: project._id,
-                            infrastructure: value,
-                          },
-                          token,
-                        });
-                      } catch (error) {
-                        toast.error("Failed to update project");
-                      }
-                    }}
+                    onValueChange={async (value) => updateProjectMutation.mutate({ id: project._id, updates: { infrastructure: value } })}
                     value={project?.infrastructure}
                     placeholder="Select infrastructure"
                   />

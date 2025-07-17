@@ -11,20 +11,18 @@ import {
 } from "lucide-react";
 import { ArrowLeft } from "lucide-react";
 import { Badge } from "@workspace/ui/components/badge";
-import { preloadQuery } from "convex/nextjs";
 import Link from "next/link";
 import React from "react";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { redirect, useRouter } from "next/navigation";
 import { Id } from "@workspace/backend";
-import { useData } from "@/hooks/use-data";
 import { useParams } from "next/navigation";
 import { useSession } from "@/context/session-context";
 import { Separator } from "@workspace/ui/components/separator";
 import { RoadmapTabs } from "./_components/tabs";
 import { RoadmapForm } from "../components/new-roadmap";
-import { useQuery } from "convex/react";
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { useQuery } from "@tanstack/react-query";
 
 function RoadmapHeaderSkeleton() {
   return (
@@ -60,9 +58,9 @@ export default function RoadmapLayout({
   const roadmapId = params.id as Id<"publicRoadmaps">;
   const { token } = useSession();
 
-  const { data: roadmap, isPending } = useData(api.roadmap.getRoadmap, {
-    id: roadmapId,
-    token,
+  const { data: roadmap, isPending } = useQuery({
+    queryKey: ["roadmap", roadmapId],
+    queryFn: () => api.roadmap.getRoadmap({ id: roadmapId }),
   });
 
   if (isPending || roadmap === undefined) return <RoadmapHeaderSkeleton />;

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as roadmapItemActions from "@/actions/roadmap/items";
 import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -74,8 +75,12 @@ export function RoadmapKanban({
   setSearchQuery,
 }: RoadmapKanbanProps) {
   const { token } = useSession();
-  const updateRoadmapItem = useMutation(api.roadmap.items.updateRoadmapItem);
-  const deleteRoadmapItem = useMutation(api.roadmap.items.deleteRoadmapItem);
+  const updateRoadmapItemMutation = useMutation({
+    mutationFn: async ({ id, ...data }: any) => roadmapItemActions.updateRoadmapItem(id, data),
+  });
+  const deleteRoadmapItemMutation = useMutation({
+    mutationFn: async ({ id }: any) => roadmapItemActions.deleteRoadmapItem(id),
+  });
 
   // Local state for optimistic updates
   const [optimisticItems, setOptimisticItems] = useState<any[]>([]);
@@ -132,7 +137,7 @@ export function RoadmapKanban({
     setOptimisticItems(updatedItems);
 
     try {
-      await updateRoadmapItem({
+      await updateRoadmapItemMutation.mutateAsync({
         id: draggableId as any,
         status: destination.droppableId,
         token: token,
@@ -157,7 +162,7 @@ export function RoadmapKanban({
     setOptimisticItems(updatedItems);
 
     try {
-      await updateRoadmapItem({
+      await updateRoadmapItemMutation.mutateAsync({
         id: itemId as any,
         isPublic: !isPublic,
         token: token,
@@ -180,7 +185,7 @@ export function RoadmapKanban({
     setOptimisticDeletes((prev) => new Set([...prev, itemId]));
 
     try {
-      await deleteRoadmapItem({
+      await deleteRoadmapItemMutation.mutateAsync({
         id: itemId as any,
         token: token,
       });
@@ -324,11 +329,10 @@ export function RoadmapKanban({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-[60vh] p-2 rounded-lg border-2 border-dashed transition-colors ${
-              snapshot.isDraggingOver
+            className={`min-h-[60vh] p-2 rounded-lg border-2 border-dashed transition-colors ${snapshot.isDraggingOver
                 ? "border-primary bg-primary/5"
                 : "border-muted bg-muted/20"
-            }`}
+              }`}
           >
             {items.map((item, index) => (
               <Draggable key={item._id} draggableId={item._id} index={index}>

@@ -1,11 +1,7 @@
 "use client";
-import { Id } from "@workspace/backend";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
-import { useMutation } from "convex/react";
 import { toast } from "sonner";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
@@ -13,36 +9,48 @@ import { DateInput } from "@workspace/ui/components/date-input";
 import { Separator } from "@workspace/ui/components/separator";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import FeatureLinks from "./feature-links";
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getFeatureById, updateFeatureById, validateFeatureCompletion } from "@/actions/features";
 
-const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
+const queryClient = new QueryClient();
+
+const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
   const { token } = useSession();
-  const updateFeature = useMutation(api.issue.feature.updateFeature);
+  const queryClient = useQueryClient();
 
-  const { data: feature } = useData(api.issue.feature.getFeatureById, {
-    token,
-    id: featureId,
+  // Fetch feature details
+  const { data: featureResult } = useQuery({
+    queryKey: ["feature", featureId],
+    queryFn: () => getFeatureById(featureId),
+  });
+  const feature = featureResult?.success ? featureResult.data : null;
+
+  // Fetch validation result
+  const { data: validationResult } = useQuery({
+    queryKey: ["featureValidation", featureId],
+    queryFn: () => validateFeatureCompletion(featureId),
+    enabled: !!feature,
   });
 
-  const { data: validationResult } = useData(
-    api.issue.feature.validateFeatureCompletion,
-    { token, featureId }
-  );
+  // Mutation for updating feature
+  const { mutateAsync: updateFeature } = useMutation({
+    mutationFn: async (updates: any) => {
+      return await updateFeatureById(featureId, updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+      toast.success("Feature updated");
+    },
+    onError: () => {
+      toast.error("Failed to update feature");
+    },
+  });
 
   if (!feature) return null;
 
   const handleUpdate = async (updates: any) => {
     if (!featureId) return;
-
-    try {
-      await updateFeature({
-        token,
-        featureId: featureId as any,
-        updates,
-      });
-    } catch (error) {
-      console.error("Error updating feature:", error);
-      toast.error("Failed to update feature");
-    }
+    await updateFeature(updates);
   };
 
   return (
@@ -174,5 +182,11 @@ const FeatureSidebar = ({ featureId }: { featureId: Id<"feature"> }) => {
     </div>
   );
 };
+
+const FeatureSidebar = (props: { featureId: string }) => (
+  <QueryClientProvider client={queryClient}>
+    <FeatureSidebarInner {...props} />
+  </QueryClientProvider>
+);
 
 export default FeatureSidebar;

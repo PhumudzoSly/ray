@@ -77,4 +77,6 @@ export const deleteRoadmapItem = async (id: string) => {
     } catch (error) {
         return { success: false, error };
     }
-}; 
+};
+
+export { getAllRoadmapItems }; 

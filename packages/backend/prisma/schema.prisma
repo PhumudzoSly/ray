@@ -28,18 +28,19 @@ model User {
 
   twoFactorEnabled Boolean?
 
-  sessions     Session[]
-  accounts     Account[]
-  members      Member[]
-  invitations  Invitation[]
-  passkeys     Passkey[]
-  twofactors   TwoFactor[]
-  subscription Subscription?
-  project      Project[]     @relation("CreatedProjects")
-  idea         Idea[]        @relation("IdeaOwner")
-  issue        Issue[]       @relation("AssignedIssues")
-  asset        Asset[]       @relation("UploadedAssets")
-  waitlist     Waitlist[]    @relation("CreatedWaitlists")
+  sessions       Session[]
+  accounts       Account[]
+  members        Member[]
+  invitations    Invitation[]
+  passkeys       Passkey[]
+  twofactors     TwoFactor[]
+  subscription   Subscription?
+  project        Project[]       @relation("CreatedProjects")
+  idea           Idea[]          @relation("IdeaOwner")
+  issue          Issue[]         @relation("AssignedIssues")
+  asset          Asset[]         @relation("UploadedAssets")
+  waitlist       Waitlist[]      @relation("CreatedWaitlists")
+  blockDocuments BlockDocument[]
 
   @@unique([email])
   @@map("user")
@@ -591,6 +592,15 @@ model WaitlistEntry {
   @@index([waitlistId, status])
   @@index([waitlistId, position])
   @@index([verificationToken])
+}
+
+model BlockDocument {
+  id        String   @id @default(uuid())
+  title     String?
+  content   Json
+  ownerId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Enums

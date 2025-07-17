@@ -3,10 +3,7 @@
 import React from "react";
 import { FinancialAnalysis } from "@/components/idea/validation/financial-analysis";
 import { FeasibilityAnalysis } from "@/components/idea/validation/feasibility-analysis";
-import { useData } from "@/hooks/use-data";
-import { useSession } from "@/context/session-context";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { getSingleIdea, getValidationDetails } from "@/actions/idea";
 import {
   Card,
   CardContent,
@@ -16,26 +13,20 @@ import {
 } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { DollarSign, CheckCircle2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const FinancePage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  const { token } = useSession();
 
-  const { data: idea, isPending: ideaPending } = useData(
-    api.idea.getSingleIdea,
-    {
-      id: id as Id<"idea">,
-      token,
-    }
-  );
+  const { data: idea, isPending: ideaPending } = useQuery({
+    queryKey: ["idea", id],
+    queryFn: () => getSingleIdea(id),
+  });
 
-  const { data: validationDetails, isPending: validationPending } = useData(
-    api.idea.getValidationDetails,
-    {
-      token,
-      ideaId: id as Id<"idea">,
-    }
-  );
+  const { data: validationDetails, isPending: validationPending } = useQuery({
+    queryKey: ["validationDetails", id],
+    queryFn: () => getValidationDetails({ ideaId: id }),
+  });
 
   if (ideaPending || validationPending) {
     return (

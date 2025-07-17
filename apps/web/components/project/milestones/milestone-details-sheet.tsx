@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -58,11 +55,33 @@ import { DateInput } from "@workspace/ui/components/date-input";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { MilestoneStatusSelector } from "@/components/ui/selectors/milestone-status-selector";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getMilestone, updateMilestone, deleteMilestone } from "@/actions/project/milestone";
 
 interface MilestoneDetailsSheetProps {
-  milestoneId: Id<"milestones">;
+  milestoneId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface Milestone {
+  id: string;
+  name: string;
+  description?: string;
+  status: string;
+  startDate?: string | number;
+  endDate?: string | number;
+  owner?: { _id: string; name: string } | null;
+  progress: number;
+  completedIssueCount: number;
+  issueCount: number;
+  completedFeatureCount: number;
+  featureCount: number;
+  overdueItems: number;
+  dependsOn: { _id: string; name: string }[];
+  blocking: { _id: string; name: string }[];
+  issues: any[];
+  features: any[];
 }
 
 export function MilestoneDetailsSheet({
@@ -73,53 +92,93 @@ export function MilestoneDetailsSheet({
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { token } = useSession();
+  const queryClient = useQueryClient();
 
-  const milestone = useQuery(api.milestones.getMilestone, {
-    milestoneId,
-    token,
+  const { data: milestone, isLoading } = useQuery<Milestone | null>({
+    queryKey: ["milestone", milestoneId, token],
+    queryFn: async () => {
+      if (!token || !milestoneId) return null;
+      const raw = await getMilestone(milestoneId);
+      if (!raw) return null;
+      // Map to local type if needed
+      return {
+        id: raw.id,
+        name: raw.name,
+        description: raw.description,
+        status: raw.status,
+        startDate: raw.startDate,
+        endDate: raw.endDate,
+        owner: raw.owner ? { _id: raw.owner.id, name: raw.owner.name } : null,
+        progress: raw.progress,
+        completedIssueCount: raw.completedIssueCount,
+        issueCount: raw.issueCount,
+        completedFeatureCount: raw.completedFeatureCount,
+        featureCount: raw.featureCount,
+        overdueItems: raw.overdueItems,
+        dependsOn: (raw.dependsOn ?? []).map((d: any) => ({ _id: d.id, name: d.name })),
+        blocking: (raw.blocking ?? []).map((b: any) => ({ _id: b.id, name: b.name })),
+        issues: raw.issues ?? [],
+        features: raw.features ?? [],
+      };
+    },
+    enabled: !!token && !!milestoneId,
   });
-  const updateMilestone = useMutation(api.milestones.updateMilestone);
-  const deleteMilestone = useMutation(api.milestones.deleteMilestone);
+
+  // Optimistic update for milestone
+  const updateMutation = useMutation({
+    mutationFn: async (updates: any) => updateMilestone(milestoneId, updates),
+    onMutate: async (updates) => {
+      await queryClient.cancelQueries({ queryKey: ["milestone", milestoneId, token] });
+      const previous = queryClient.getQueryData(["milestone", milestoneId, token]);
+      queryClient.setQueryData(["milestone", milestoneId, token], (old: any) => ({ ...old, ...updates }));
+      return { previous };
+    },
+    onError: (err, updates, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["milestone", milestoneId, token], context.previous);
+      }
+      toast.error("Failed to update milestone");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId, token] });
+    },
+    onSuccess: () => {
+      toast.success("Milestone updated");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => deleteMilestone(milestoneId),
+    onSuccess: () => {
+      toast.success("Milestone deleted");
+      onOpenChange(false);
+    },
+    onError: () => {
+      toast.error("Failed to delete milestone");
+    },
+  });
 
   const handleUpdate = async (updates: any) => {
     if (!milestone) return;
-
     setIsUpdating(true);
-    try {
-      await updateMilestone({
-        milestoneId,
-        ...updates,
-        token,
-      });
-      toast.success("Milestone updated");
-    } catch (error) {
-      console.error("Error updating milestone:", error);
-      toast.error("Failed to update milestone");
-    } finally {
-      setIsUpdating(false);
-    }
+    updateMutation.mutate(updates, {
+      onSettled: () => setIsUpdating(false),
+    });
   };
 
   const handleStatusChange = async (status: string) => {
-    await handleUpdate({ status: status as any });
+    await handleUpdate({ status });
   };
 
   const handleDelete = async () => {
     if (!milestone) return;
-
     setIsDeleting(true);
-    try {
-      await deleteMilestone({ milestoneId, token });
-      toast.success("Milestone deleted");
-      onOpenChange(false);
-    } catch (error) {
-      toast.error("Failed to delete milestone");
-    } finally {
-      setIsDeleting(false);
-    }
+    deleteMutation.mutate(undefined, {
+      onSettled: () => setIsDeleting(false),
+    });
   };
 
-  if (!milestone) {
+  if (isLoading || !milestone) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-full sm:max-w-[640px] p-0">
@@ -344,52 +403,52 @@ export function MilestoneDetailsSheet({
           {/* Dependencies */}
           {(milestone.dependsOn.length > 0 ||
             milestone.blocking.length > 0) && (
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium text-foreground">
-                Dependencies
-              </h3>
-              <div className="space-y-3">
-                {milestone.dependsOn.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      Depends on {milestone.dependsOn.length} milestone
-                      {milestone.dependsOn.length > 1 ? "s" : ""}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {milestone.dependsOn.filter(Boolean).map((dep) => (
-                        <Badge
-                          key={dep?._id}
-                          variant="outline"
-                          className="text-xs font-normal"
-                        >
-                          {dep?.name}
-                        </Badge>
-                      ))}
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium text-foreground">
+                  Dependencies
+                </h3>
+                <div className="space-y-3">
+                  {milestone.dependsOn.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Depends on {milestone.dependsOn.length} milestone
+                        {milestone.dependsOn.length > 1 ? "s" : ""}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {milestone.dependsOn.filter(Boolean).map((dep: { _id: string; name: string }) => (
+                          <Badge
+                            key={dep?._id}
+                            variant="outline"
+                            className="text-xs font-normal"
+                          >
+                            {dep?.name}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-                {milestone.blocking.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      Blocking {milestone.blocking.length} milestone
-                      {milestone.blocking.length > 1 ? "s" : ""}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {milestone.blocking.filter(Boolean).map((blocked) => (
-                        <Badge
-                          key={blocked?._id}
-                          variant="outline"
-                          className="text-xs font-normal"
-                        >
-                          {blocked?.name}
-                        </Badge>
-                      ))}
+                  )}
+                  {milestone.blocking.length > 0 && (
+                    <div className="space-y-2">
+                      <p className="text-xs text-muted-foreground">
+                        Blocking {milestone.blocking.length} milestone
+                        {milestone.blocking.length > 1 ? "s" : ""}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {milestone.blocking.filter(Boolean).map((blocked: { _id: string; name: string }) => (
+                          <Badge
+                            key={blocked?._id}
+                            variant="outline"
+                            className="text-xs font-normal"
+                          >
+                            {blocked?.name}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Assigned Items */}
           {(milestone.issues.length > 0 || milestone.features.length > 0) && (
@@ -410,7 +469,7 @@ export function MilestoneDetailsSheet({
                 <TabsContent value="issues" className="mt-3 space-y-1">
                   {milestone.issues.length > 0 ? (
                     <div className="space-y-1">
-                      {milestone.issues.map((issue) => (
+                      {milestone.issues.map((issue: any) => (
                         <div
                           key={issue._id}
                           className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
@@ -463,7 +522,7 @@ export function MilestoneDetailsSheet({
                 <TabsContent value="features" className="mt-3 space-y-1">
                   {milestone.features.length > 0 ? (
                     <div className="space-y-1">
-                      {milestone.features.map((feature) => (
+                      {milestone.features.map((feature: any) => (
                         <div
                           key={feature._id}
                           className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
@@ -473,7 +532,7 @@ export function MilestoneDetailsSheet({
                               <CheckCircle2 className="h-4 w-4 text-green-600" />
                             ) : feature.endDate &&
                               new Date(feature.endDate).getTime() <
-                                Date.now() ? (
+                              Date.now() ? (
                               <AlertTriangle className="h-4 w-4 text-amber-600" />
                             ) : (
                               <Circle className="h-4 w-4 text-muted-foreground" />

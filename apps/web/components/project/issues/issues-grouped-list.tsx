@@ -16,8 +16,8 @@ import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field"
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { NewIssue } from "./new-issue";
-import { useMutation } from "convex/react";
-import { api, Id } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 
@@ -99,14 +99,41 @@ function IssueItemComponent({
   className?: string;
 }) {
   //
+  const queryClient = useQueryClient();
 
-  const { token } = useSession();
+  // Optimistic update mutation for issue
+  const updateIssueMutation = useMutation({
+    mutationFn: async ({ issueId, updates }: { issueId: string; updates: any }) => {
+      // Call the server action
+      return await issueActions.updateIssue(issueId, updates);
+    },
+    // Optimistic update
+    onMutate: async ({ issueId, updates }) => {
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      const previousIssues = queryClient.getQueryData<IssueItem[]>(["issues"]);
+      queryClient.setQueryData<IssueItem[]>(["issues"], (old) => {
+        if (!old) return old;
+        return old.map((i) =>
+          i._id === issueId ? { ...i, ...updates } : i
+        );
+      });
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+      toast.error("Failed to update issue");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+  });
+
   const handleInteractiveClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
-
-  const updateIssue = useMutation(api.issue.index.updateIssue);
 
   return (
     <div
@@ -120,17 +147,12 @@ function IssueItemComponent({
         <div onClick={handleInteractiveClick}>
           <PrioritySelector
             onChange={async (e) => {
-              try {
-                await updateIssue({
-                  issueId: item._id as Id<"issues">,
-                  updates: {
-                    priority: e as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
-                  },
-                  token,
-                });
-              } catch (error) {
-                toast.error("Failed to update issue priority");
-              }
+              updateIssueMutation.mutate({
+                issueId: item._id,
+                updates: {
+                  priority: e as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
+                },
+              });
             }}
             iconOnly={true}
             priority={item.priority}
@@ -144,27 +166,18 @@ function IssueItemComponent({
         <div onClick={handleInteractiveClick}>
           <StatusSelector
             onChange={async (e) => {
-              try {
-                await updateIssue({
-                  issueId: item._id as Id<"issues">,
-                  updates: {
-                    status: e as
-                      | "BACKLOG"
-                      | "IN_PROGRESS"
-                      | "REVIEW"
-                      | "DONE"
-                      | "BLOCKED"
-                      | "CANCELLED",
-                  },
-                  token,
-                });
-              } catch (error: any) {
-                if (error.message?.includes("Cannot mark issue as DONE")) {
-                  toast.error(error.message);
-                } else {
-                  toast.error("Failed to update issue status");
-                }
-              }
+              updateIssueMutation.mutate({
+                issueId: item._id,
+                updates: {
+                  status: e as
+                    | "BACKLOG"
+                    | "IN_PROGRESS"
+                    | "REVIEW"
+                    | "DONE"
+                    | "BLOCKED"
+                    | "CANCELLED",
+                },
+              });
             }}
             iconOnly
             status={item.status}
@@ -182,17 +195,12 @@ function IssueItemComponent({
         <IssueLabelField issueId={item._id} value={item?.label} />
         <AssigneeSelector
           onChange={async (e) => {
-            try {
-              await updateIssue({
-                issueId: item._id as Id<"issues">,
-                updates: {
-                  assignedTo: e as any,
-                },
-                token,
-              });
-            } catch (error) {
-              toast.error("Failed to update issue assignee");
-            }
+            updateIssueMutation.mutate({
+              issueId: item._id,
+              updates: {
+                assignedTo: e as any,
+              },
+            });
           }}
           assignee={item.assignedTo}
           iconOnly

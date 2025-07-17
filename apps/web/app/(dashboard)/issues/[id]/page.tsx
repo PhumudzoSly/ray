@@ -4,9 +4,7 @@ import React from "react";
 import IssueSidebar from "./components/issue-sidebar";
 import { redirect } from "next/navigation";
 import IssueDetails from "./components/issue-details";
-import { preloadQuery } from "convex/nextjs";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { getIssue } from "@/actions/issue";
 import Header from "@/components/shared/header";
 
 const SingleIssuePage = async ({
@@ -18,12 +16,9 @@ const SingleIssuePage = async ({
   const { id } = await params;
   const { token } = await getSession();
 
-  const issue = preloadQuery(api.issue.index.getIssueById, {
-    token,
-    id: id as Id<"issues">,
-  });
+  const { success, data: issue } = await getIssue(id);
 
-  if (!issue) {
+  if (!success || !issue) {
     return redirect("/issues");
   }
 
@@ -35,7 +30,7 @@ const SingleIssuePage = async ({
         {null}
       </Header>
       <ExpandedLayoutContainer
-        sidebar={<IssueSidebar issueId={id as Id<"issues">} />}
+        sidebar={<IssueSidebar issueId={id} />}
       >
         <div className="p-4">
           <IssueDetails id={id} />

@@ -28,8 +28,8 @@ import {
   AvatarImage,
 } from "@workspace/ui/components/avatar";
 import { useSession } from "@/context/session-context";
-import { useData } from "@/hooks/use-data";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getOrgMembers } from "@/actions/account/user";
 import { getInitials } from "@/utils/helpers";
 
 interface AssigneeSelectorProps {
@@ -37,6 +37,13 @@ interface AssigneeSelectorProps {
   onChange?: (assignee: string) => void;
   disabled?: boolean;
   iconOnly?: boolean;
+}
+
+interface OrgMember {
+  _id: string;
+  name: string;
+  email: string;
+  image?: string;
 }
 
 export function AssigneeSelector({
@@ -50,9 +57,24 @@ export function AssigneeSelector({
   const [value, setValue] = useState<string | null>(assignee || null);
 
   const { token } = useSession();
-  const { data: members } = useData(api.user.orgMembers, {
-    token,
+
+  const { data: members } = useQuery<OrgMember[]>({
+    queryKey: ["orgMembers", token],
+    queryFn: async () => {
+      if (!token) return [];
+      const raw = await getOrgMembers();
+      return (raw ?? []).map((m) => ({
+        _id: m.id,
+        name: m.user.name,
+        email: m.user.email,
+        image: m.user.image,
+      }));
+    },
+    enabled: !!token,
   });
+
+  // Fix for TS: always use typed orgMembers
+  const orgMembers: OrgMember[] = members ?? [];
 
   useEffect(() => {
     setValue(assignee || null);
@@ -64,7 +86,7 @@ export function AssigneeSelector({
       onChange?.(userId);
     } else {
       setValue(userId);
-      const newAssignee = members?.find((u) => u?._id === userId);
+      const newAssignee = orgMembers.find((u) => u._id === userId);
       if (newAssignee) {
         onChange?.(newAssignee._id);
       }
@@ -86,7 +108,7 @@ export function AssigneeSelector({
         >
           {value ? (
             (() => {
-              const selectedUser = members?.find((user) => user?._id === value);
+              const selectedUser = orgMembers.find((user) => user._id === value);
               if (selectedUser) {
                 return (
                   <TooltipProvider>
@@ -136,7 +158,7 @@ export function AssigneeSelector({
           {iconOnly ? null : (
             <div>
               {value
-                ? members?.find((user) => user?._id === value)?.name
+                ? orgMembers.find((user) => user._id === value)?.name
                 : "No lead assigned"}
             </div>
           )}
@@ -151,22 +173,22 @@ export function AssigneeSelector({
           <CommandList>
             <CommandEmpty>No users found.</CommandEmpty>
             <CommandGroup>
-              {members?.map((user) => {
+              {orgMembers.map((user) => {
                 return (
                   <CommandItem
-                    key={user?._id}
-                    value={user?._id}
-                    onSelect={() => handleAssigneeChange(user?._id as any)}
+                    key={user._id}
+                    value={user._id}
+                    onSelect={() => handleAssigneeChange(user._id)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
                       <Avatar className="size-5">
-                        <AvatarImage src={user?.image || ""} alt={user?.name} />
-                        <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={user.image || ""} alt={user.name} />
+                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      {user?.name}
+                      {user.name}
                     </div>
-                    {value === user?._id && (
+                    {value === user._id && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}
                   </CommandItem>

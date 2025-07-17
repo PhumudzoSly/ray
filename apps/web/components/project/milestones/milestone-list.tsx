@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
@@ -16,14 +13,8 @@ import {
   Plus,
   Calendar,
   Diamond,
-  RefreshCw,
-  Target,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  Circle,
-  List,
-  CalendarDays,
+  RefreshCw, List,
+  CalendarDays
 } from "lucide-react";
 import { CreateMilestoneDialog } from "./create-milestone-dialog";
 import { MilestoneDetailsSheet } from "./milestone-details-sheet";
@@ -36,9 +27,11 @@ import {
 import { formatDate } from "@/lib/format";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { getProjectMilestones, updateMilestone } from "@/actions/project/milestone";
 
 interface MilestoneListProps {
-  projectId: Id<"projects">;
+  projectId: string;
 }
 
 type ViewMode = "list" | "timeline";
@@ -78,31 +71,36 @@ const getStatusText = (status: string) => {
 export function MilestoneList({ projectId }: MilestoneListProps) {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedMilestone, setSelectedMilestone] =
-    useState<Id<"milestones"> | null>(null);
+    useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const { token } = useSession();
 
-  const milestones = useQuery(api.milestones.getProjectMilestones, {
-    projectId,
-    token,
+  const { data: milestones } = useQuery({
+    queryKey: ["milestones", projectId, token],
+    queryFn: async () => {
+      if (!token || !projectId) return [];
+      const raw = await getProjectMilestones(projectId);
+      return (raw ?? []).map((m: any) => ({
+        _id: m.id,
+        name: m.name,
+        status: m.status,
+        owner: m.owner ? { name: m.owner.name, image: m.owner.image } : null,
+        endDate: m.endDate,
+        description: m.description,
+      }));
+    },
+    enabled: !!token && !!projectId,
   });
 
-  const triggerAnalysis = useMutation(
-    api.milestoneAnalytics.triggerMilestoneAnalysis
-  );
-
-  const updateMilestone = useMutation(api.milestones.updateMilestone);
-
-  const handleTriggerAnalysis = async () => {
-    try {
-      await triggerAnalysis({ token });
-      toast.success(
-        "Milestone statuses have been updated based on current progress."
-      );
-    } catch (error) {
-      toast.error("Failed to analyze milestone health. Please try again.");
-    }
-  };
+  const mutation = useMutation({
+    mutationFn: async (data: any) => updateMilestone(data.milestoneId, { status: data.status }),
+    onSuccess: (_data, variables) => {
+      toast.success(`Milestone status changed to ${getStatusText(variables.status)}.`);
+    },
+    onError: () => {
+      toast.error("Failed to update milestone status. Please try again.");
+    },
+  });
 
   const handleItemMove = async (
     itemId: string,
@@ -110,21 +108,11 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     toGroupId: string,
     newIndex: number
   ) => {
-    try {
-      await updateMilestone({
-        milestoneId: itemId as Id<"milestones">,
-        status: toGroupId as any,
-        token,
-      });
-
-      toast.success(`Milestone status changed to ${getStatusText(toGroupId)}.`);
-    } catch (error) {
-      toast.error("Failed to update milestone status. Please try again.");
-    }
+    mutation.mutate({ milestoneId: itemId, status: toGroupId });
   };
 
   const handleItemClick = (item: GroupedListItem) => {
-    setSelectedMilestone(item.id as Id<"milestones">);
+    setSelectedMilestone(item.id);
   };
 
   if (milestones === undefined) {
@@ -191,7 +179,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   ];
 
   // Populate groups with milestones
-  milestones.forEach((milestone) => {
+  milestones.forEach((milestone: any) => {
     const group = groupedMilestones.find((g) => g.id === milestone.status);
     if (group) {
       const milestoneItem: GroupedListItem = {
@@ -239,7 +227,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
         </div>
         <div className="flex gap-2">
           <Button
-            onClick={handleTriggerAnalysis}
+            onClick={() => toast.info('Milestone analysis is not implemented in this version.')}
             size="sm"
             variant="outline"
             title="Analyze milestone health and update statuses"

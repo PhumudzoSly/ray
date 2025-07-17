@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useMutation } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import * as assetActions from "@/actions/project/assets";
 import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
@@ -113,7 +114,8 @@ export function AssetLinkDialog({
   }, [open]);
 
   // Mutations
-  const createLinkAsset = useMutation(api.assets.createLinkAsset);
+  // Replace with TanStack Query and server actions as needed
+  // ... implement link asset creation using assetActions ...
 
   const detectLinkType = (url: string): string => {
     const linkType = LINK_TYPES.find((type) => type.pattern.test(url));
@@ -171,7 +173,7 @@ export function AssetLinkDialog({
 
     setIsCreating(true);
     try {
-      await createLinkAsset({
+      await assetActions.createLinkAsset({
         token: token,
         projectId: projectId as any,
         name: assetName,

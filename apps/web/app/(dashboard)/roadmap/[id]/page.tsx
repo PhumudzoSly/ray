@@ -1,23 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getPublicRoadmap } from "@/actions/roadmap";
+import { getAllRoadmapItems } from "@/actions/roadmap/items";
+// Placeholder for getRoadmapStats, to be implemented
+const getRoadmapStats = async (roadmapId: string) => { return {}; };
 import { Badge } from "@workspace/ui/components/badge";
-import { useParams, useRouter } from "next/navigation";
-import { Id } from "@workspace/backend";
+import { useParams } from "next/navigation";
 import { useSession } from "@/context/session-context";
 import { RoadmapKanban } from "./_components/roadmap-kanban";
 import { AddItemDialog } from "./_components/add-item-dialog";
 import { EditRoadmapDialog } from "./_components/edit-roadmap-dialog";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { useData } from "@/hooks/use-data";
 
 export default function RoadmapDetailPage() {
-  //
-
   const params = useParams();
-  const roadmapId = params.id as Id<"publicRoadmaps">;
+  const roadmapId = params.id as string;
   const { token } = useSession();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,19 +27,22 @@ export default function RoadmapDetailPage() {
   const [addItemInitialStatus, setAddItemInitialStatus] = useState("REVIEW");
 
   // Fetch roadmap data
-  const roadmap = useQuery(api.roadmap.getRoadmap, { id: roadmapId, token });
-
+  const { data: roadmap } = useQuery({
+    queryKey: ["roadmap", roadmapId],
+    queryFn: () => getPublicRoadmap(roadmapId),
+    select: (res) => res?.success ? res.data : undefined,
+  });
   // Fetch roadmap items
-  const { data: items, isPending } = useData(
-    api.roadmap.items.getRoadmapItems,
-    {
-      roadmapId,
-      token,
-    }
-  );
-
-  // Fetch roadmap stats
-  const stats = useQuery(api.roadmap.getRoadmapStats, { roadmapId });
+  const { data: items = [], isLoading: isPending } = useQuery({
+    queryKey: ["roadmapItems", roadmapId],
+    queryFn: () => getAllRoadmapItems(roadmapId),
+    select: (res) => res?.success ? res.data : [],
+  });
+  // Fetch roadmap stats (placeholder)
+  const { data: stats } = useQuery({
+    queryKey: ["roadmapStats", roadmapId],
+    queryFn: () => getRoadmapStats(roadmapId),
+  });
 
   // Handle add item with status
   const handleAddItemWithStatus = (status: string) => {
