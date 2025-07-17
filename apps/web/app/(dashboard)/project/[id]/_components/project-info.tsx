@@ -49,7 +49,7 @@ export const ProjectInfo = ({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
         <div className="flex items-center gap-3">
           <ProjectTypeSelector
             iconOnly

@@ -9,10 +9,8 @@ import { KanbanView } from "@/components/project/kanban-view";
 import { TableView } from "@/components/project/table-view";
 import { ProjectsLoading } from "@/components/project/projects-loading";
 import { toast } from "sonner";
-import { useSession } from "@/context/session-context";
 import NoData from "@/components/shared/no-data";
 import Header from "@/components/shared/header";
-import { ProjectStatus } from "@workspace/backend/prisma/generated/client/client";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,8 +33,8 @@ export default function ProjectsPage() {
   });
   // Optimistic update for project status
   const updateProjectStatusMutation = useMutation({
-    mutationFn: async ({ projectId, status }: { projectId: string; status: "planning" | "in_progress" | "review" | "completed" | null | undefined }) => {
-      return await projectActions.updateProject(projectId, { status: status as any });
+    mutationFn: async ({ projectId, status }: { projectId: string; status: any }) => {
+      return await projectActions.updateProject(projectId, { status } as any);
     },
     onMutate: async ({ projectId, status }) => {
       await queryClient.cancelQueries({ queryKey: ["projects"] });
@@ -203,7 +201,6 @@ export default function ProjectsPage() {
             />
           ) : (
             <TableView
-              projects={sortedProjects}
               onEditProject={handleEditProject}
               onDeleteProject={handleDeleteProject}
             />

@@ -11,6 +11,8 @@ import {
   Rocket,
   CheckCircle,
   Star,
+  TrendingUp,
+  AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -34,20 +36,43 @@ export function ProjectCard({
   onEdit,
   onDelete,
 }: ProjectCardProps) {
-  // Enhanced metrics from database
-  const metrics = project.metrics || {};
-  const totalIssues = metrics.totalIssues || 0;
-  const openIssues = metrics.openIssues || 0;
-  const totalFeatures = metrics.totalFeatures || 0;
-  const completedFeatures = metrics.completedFeatures || 0;
-  const hasLaunchPlan = metrics.hasLaunchPlan || false;
-  const launchReadinessScore = metrics.launchReadinessScore || 0;
+  // Use health metrics from the new system
+  const healthMetrics = project.healthMetrics;
+  const totalIssues = healthMetrics?.totalIssues || 0;
+  const completedIssues = healthMetrics?.completedIssues || 0;
+  const blockedIssues = healthMetrics?.blockedIssues || 0;
+  const totalFeatures = healthMetrics?.totalFeatures || 0;
+  const completedFeatures = healthMetrics?.completedFeatures || 0;
+  const inProgressFeatures = healthMetrics?.inProgressFeatures || 0;
+  const healthScore = healthMetrics?.overallHealthScore || 0;
+  const healthStatus = healthMetrics?.healthStatus || 'fair';
 
-  const getReadinessColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    if (score >= 40) return "text-orange-600";
-    return "text-red-600";
+  const getHealthStatusColor = (status: string) => {
+    switch (status) {
+      case "excellent":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "good":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "fair":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "poor":
+        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "critical":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getHealthIcon = (status: string) => {
+    switch (status) {
+      case "excellent":
+        return <TrendingUp className="w-3 h-3 text-green-600" />;
+      case "critical":
+        return <AlertTriangle className="w-3 h-3 text-red-600" />;
+      default:
+        return null;
+    }
   };
 
   const queryClient = useQueryClient();
@@ -102,13 +127,23 @@ export function ProjectCard({
                   {project.name}
                 </p>
               </div>
+              {/* Health indicator */}
+              <div className="flex items-center gap-1">
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${getHealthStatusColor(healthStatus)}`}
+                >
+                  {healthScore}%
+                </Badge>
+                {getHealthIcon(healthStatus)}
+              </div>
             </div>
           </div>
         </div>
       </CardHeader>
       <CardContent className="pt-0">
         <div className="space-y-3">
-          {/* Project Stats - Enhanced */}
+          {/* Project Stats - Enhanced with health metrics */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <div className="flex items-center gap-1">
               <Star className="w-3 h-3 text-muted-foreground" />
@@ -122,29 +157,29 @@ export function ProjectCard({
             <div className="flex items-center gap-1">
               <Bug className="w-3 h-3 text-muted-foreground" />
               <span>{totalIssues} issues</span>
-              {openIssues > 0 && (
-                <span className="text-orange-600">({openIssues} open)</span>
+              {completedIssues > 0 && (
+                <span className="text-green-600">({completedIssues} done)</span>
               )}
             </div>
           </div>
 
-          {/* Launch Readiness */}
-          <div className="flex items-center justify-between p-2 bg-muted dark:bg-muted/30 rounded-md">
-            <div className="flex items-center gap-2">
-              <Rocket className="w-3 h-3 text-muted-foreground" />
-              <span className="text-xs font-medium">Launch Readiness</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className={`text-xs font-bold ${getReadinessColor(launchReadinessScore)}`}
-              >
-                {launchReadinessScore}%
-              </span>
-              {hasLaunchPlan && (
-                <CheckCircle className="w-3 h-3 text-green-600" />
+          {/* Progress indicators */}
+          {(inProgressFeatures > 0 || blockedIssues > 0) && (
+            <div className="space-y-1">
+              {inProgressFeatures > 0 && (
+                <div className="flex items-center gap-1 text-xs text-blue-600">
+                  <Star className="w-3 h-3" />
+                  <span>{inProgressFeatures} features in development</span>
+                </div>
+              )}
+              {blockedIssues > 0 && (
+                <div className="flex items-center gap-1 text-xs text-red-600">
+                  <AlertTriangle className="w-3 h-3" />
+                  <span>{blockedIssues} issues blocked</span>
+                </div>
               )}
             </div>
-          </div>
+          )}
 
           {/* Tech Stack */}
           <div className="flex flex-wrap gap-1">

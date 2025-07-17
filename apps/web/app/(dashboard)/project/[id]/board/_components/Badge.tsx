@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import * as projectActions from "@/actions/project";
 import { useSession } from "@/context/session-context";
-import { ProjectStatusSelector } from "@/components/ui/selectors/project-status-selector";
 
 export function Badge({ id }: { id: string }) {
-  const { token } = useSession();
   const { data: project } = useQuery({
     queryKey: ["simpleProject", id],
     queryFn: () => projectActions.getSimpleProject(id),

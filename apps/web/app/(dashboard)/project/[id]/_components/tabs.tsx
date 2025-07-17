@@ -23,6 +23,10 @@ export function ProjectTabs({ projectId }: ProjectTabsProps) {
       href: `/project/${projectId}`,
     },
     {
+      title: "PRD & Implementation",
+      href: `/project/${projectId}/doc`,
+    },
+    {
       title: "Features",
       href: `/project/${projectId}/features`,
     },
