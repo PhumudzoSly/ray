@@ -24,7 +24,7 @@ import "reactflow/dist/style.css";
 import { Button } from "@workspace/ui/components/button";
 import { GitBranch, X, ArrowRight, Trash2, AlertTriangle } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as featureActions from "@/actions/features";
+import * as featureActions from "@/actions/project/features";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 import {

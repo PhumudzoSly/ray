@@ -3,7 +3,7 @@ import { ExpandedLayoutContainer } from "@/components/expanded-layout-container"
 import FeatureSidebar from "./components/feature-sidebar";
 import FeatureDetails from "./components/feature-details";
 import { redirect } from "next/navigation";
-import { getFeatureById } from "@/actions/features";
+import { getFeatureById } from "@/actions/project/features";
 import Header from "@/components/shared/header";
 import { NewFeature } from "@/components/project/features/new-feature";
 

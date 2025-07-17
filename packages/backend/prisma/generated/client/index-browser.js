@@ -482,8 +482,26 @@ exports.Prisma.FeatureScalarFieldEnum = {
   endDate: 'endDate',
   priority: 'priority',
   assignedToId: 'assignedToId',
+  parentFeatureId: 'parentFeatureId',
+  organizationId: 'organizationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FeatureDependencyScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  featureId: 'featureId',
+  dependencyId: 'dependencyId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FeatureLinkScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  featureId: 'featureId',
+  url: 'url',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -665,7 +683,9 @@ exports.Prisma.ModelName = {
   FeatureRequest: 'FeatureRequest',
   Waitlist: 'Waitlist',
   WaitlistEntry: 'WaitlistEntry',
-  Feature: 'Feature'
+  Feature: 'Feature',
+  FeatureDependency: 'FeatureDependency',
+  FeatureLink: 'FeatureLink'
 };
 
 /**

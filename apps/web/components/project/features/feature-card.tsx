@@ -24,7 +24,7 @@ import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { DateInput } from "@workspace/ui/components/date-input";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import * as featureActions from "@/actions/features";
+import * as featureActions from "@/actions/project/features";
 import { toast } from "sonner";
 
 interface FeatureCardProps {

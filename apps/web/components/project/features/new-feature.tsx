@@ -22,7 +22,7 @@ import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { FeatureSelector } from "@/components/ui/selectors/feature-selector";
 import { useSession } from "@/context/session-context";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import * as featureActions from "@/actions/features";
+import * as featureActions from "@/actions/project/features";
 import { DateInput } from "@workspace/ui/components/date-input";
 
 type NewFeatureProps = {

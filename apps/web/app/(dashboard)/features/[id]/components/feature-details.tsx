@@ -20,7 +20,7 @@ import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { Comments } from "@/components/liveblocks/comments";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, getFeatureHierarchy, updateFeatureById } from "@/actions/features";
+import { getFeatureById, getFeatureHierarchy, updateFeatureById } from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 

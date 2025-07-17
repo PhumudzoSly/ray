@@ -1,6 +1,6 @@
 import { useSession } from "@/context/session-context";
 import { QueryClient, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureLinks, addFeatureLink, deleteFeatureLink } from "@/actions/features";
+import { getFeatureLinks, addFeatureLink, deleteFeatureLink } from "@/actions/project/features";
 
 export function useFeatureLinks(featureId: string) {
   const session = useSession();

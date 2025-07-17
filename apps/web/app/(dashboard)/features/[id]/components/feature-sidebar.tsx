@@ -10,7 +10,7 @@ import { Separator } from "@workspace/ui/components/separator";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import FeatureLinks from "./feature-links";
 import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, updateFeatureById, validateFeatureCompletion } from "@/actions/features";
+import { getFeatureById, updateFeatureById, validateFeatureCompletion } from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 

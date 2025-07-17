@@ -100,21 +100,24 @@ model Verification {
 }
 
 model Organization {
-  id           String         @id @default(uuid())
-  name         String
-  slug         String?
-  logo         String?
-  createdAt    DateTime       @default(now())
-  metadata     String?
-  members      Member[]
-  invitations  Invitation[]
-  subscription Subscription[]
-  project      Project[]
-  idea         Idea[]
-  issue        Issue[]
-  asset        Asset[]
-  waitlist     Waitlist[]
-  ActivityFeed ActivityFeed[]
+  id                String              @id @default(uuid())
+  name              String
+  slug              String?
+  logo              String?
+  createdAt         DateTime            @default(now())
+  metadata          String?
+  members           Member[]
+  invitations       Invitation[]
+  subscription      Subscription[]
+  project           Project[]
+  idea              Idea[]
+  issue             Issue[]
+  asset             Asset[]
+  waitlist          Waitlist[]
+  ActivityFeed      ActivityFeed[]
+  Feature           Feature[]
+  FeatureDependency FeatureDependency[]
+  FeatureLink       FeatureLink[]
 
   @@unique([slug])
   @@map("organization")
@@ -555,14 +558,61 @@ model Feature {
   startDate       DateTime?
   endDate         DateTime?
   priority        Importance
-  assignedTo      User?        @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
   assignedToId    String?
-  project         Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parentFeatureId String?
+  organizationId  String
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
+  // Relations
+  parentFeature Feature?     @relation("FeatureHierarchy", fields: [parentFeatureId], references: [id], onDelete: SetNull)
+  subFeatures   Feature[]    @relation("FeatureHierarchy")
+  organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  assignedTo    User?        @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Feature dependencies
+  dependencies FeatureDependency[] @relation("Dependants")
+  dependentOn  FeatureDependency[] @relation("Dependencies")
+  FeatureLink  FeatureLink[]
+
   @@index([projectId])
   @@map("feature")
+}
+
+model FeatureDependency {
+  id             String   @id @default(uuid())
+  organizationId String
+  featureId      String
+  dependencyId   String
+  createdAt      DateTime @default(now())
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  feature      Feature      @relation("Dependants", fields: [featureId], references: [id], onDelete: Cascade)
+  dependency   Feature      @relation("Dependencies", fields: [dependencyId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([featureId])
+  @@index([dependencyId])
+  @@index([organizationId, featureId])
+  @@index([organizationId, dependencyId])
+  @@map("featureDependency")
+}
+
+model FeatureLink {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  featureId      String
+  feature        Feature      @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  url            String
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([featureId])
+  @@index([organizationId, featureId])
+  @@map("featureLink")
 }
 
 enum ActivityType {

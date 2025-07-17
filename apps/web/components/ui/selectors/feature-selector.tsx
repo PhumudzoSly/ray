@@ -18,7 +18,7 @@ import {
 } from "@workspace/ui/components/popover";
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "@/context/session-context";
-import { getFeaturesByProject } from "@/actions/issue";
+import { getSimpleFeatureByProject } from "@/actions/project/features";
 
 interface Feature {
   id: string;
@@ -53,12 +53,9 @@ export function FeatureSelector({
     queryKey: ["features", projectId, token],
     queryFn: async () => {
       if (!token || !projectId) return [];
-      const raw = await getFeaturesByProject(projectId);
+      const features = await getSimpleFeatureByProject(projectId);
       // If the server action returns a wrapped object, adjust accordingly
-      return (raw ?? []).map((f: any) => ({
-        id: f.id ?? f.id ?? f.id,
-        name: f.name,
-      }));
+      return features
     },
     enabled: !!token && !!projectId,
   });

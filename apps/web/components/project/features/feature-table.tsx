@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import * as featureActions from "@/actions/features";
+import * as featureActions from "@/actions/project/features";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Button } from "@workspace/ui/components/button";
 import { LayoutGrid, List, Clock, Target, GitBranch } from "lucide-react";

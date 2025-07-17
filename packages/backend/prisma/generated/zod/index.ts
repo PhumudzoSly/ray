@@ -60,7 +60,11 @@ export const WaitlistScalarFieldEnumSchema = z.enum(['id','projectId','name','sl
 
 export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','referralCount','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
 
-export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','createdAt','updatedAt']);
+export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','parentFeatureId','organizationId','createdAt','updatedAt']);
+
+export const FeatureDependencyScalarFieldEnumSchema = z.enum(['id','organizationId','featureId','dependencyId','createdAt']);
+
+export const FeatureLinkScalarFieldEnumSchema = z.enum(['id','organizationId','featureId','url','createdAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -906,6 +910,8 @@ export const FeatureSchema = z.object({
   startDate: z.coerce.date().nullish(),
   endDate: z.coerce.date().nullish(),
   assignedToId: z.string().nullish(),
+  parentFeatureId: z.string().nullish(),
+  organizationId: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -922,3 +928,51 @@ export const FeatureOptionalDefaultsSchema = FeatureSchema.merge(z.object({
 }))
 
 export type FeatureOptionalDefaults = z.infer<typeof FeatureOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// FEATURE DEPENDENCY SCHEMA
+/////////////////////////////////////////
+
+export const FeatureDependencySchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  featureId: z.string(),
+  dependencyId: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type FeatureDependency = z.infer<typeof FeatureDependencySchema>
+
+// FEATURE DEPENDENCY OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const FeatureDependencyOptionalDefaultsSchema = FeatureDependencySchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type FeatureDependencyOptionalDefaults = z.infer<typeof FeatureDependencyOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// FEATURE LINK SCHEMA
+/////////////////////////////////////////
+
+export const FeatureLinkSchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  featureId: z.string(),
+  url: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type FeatureLink = z.infer<typeof FeatureLinkSchema>
+
+// FEATURE LINK OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const FeatureLinkOptionalDefaultsSchema = FeatureLinkSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type FeatureLinkOptionalDefaults = z.infer<typeof FeatureLinkOptionalDefaultsSchema>

@@ -138,6 +138,16 @@ export type WaitlistEntry = $Result.DefaultSelection<Prisma.$WaitlistEntryPayloa
  * 
  */
 export type Feature = $Result.DefaultSelection<Prisma.$FeaturePayload>
+/**
+ * Model FeatureDependency
+ * 
+ */
+export type FeatureDependency = $Result.DefaultSelection<Prisma.$FeatureDependencyPayload>
+/**
+ * Model FeatureLink
+ * 
+ */
+export type FeatureLink = $Result.DefaultSelection<Prisma.$FeatureLinkPayload>
 
 /**
  * Enums
@@ -848,6 +858,26 @@ export class PrismaClient<
     * ```
     */
   get feature(): Prisma.FeatureDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.featureDependency`: Exposes CRUD operations for the **FeatureDependency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeatureDependencies
+    * const featureDependencies = await prisma.featureDependency.findMany()
+    * ```
+    */
+  get featureDependency(): Prisma.FeatureDependencyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.featureLink`: Exposes CRUD operations for the **FeatureLink** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeatureLinks
+    * const featureLinks = await prisma.featureLink.findMany()
+    * ```
+    */
+  get featureLink(): Prisma.FeatureLinkDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1312,7 +1342,9 @@ export namespace Prisma {
     FeatureRequest: 'FeatureRequest',
     Waitlist: 'Waitlist',
     WaitlistEntry: 'WaitlistEntry',
-    Feature: 'Feature'
+    Feature: 'Feature',
+    FeatureDependency: 'FeatureDependency',
+    FeatureLink: 'FeatureLink'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1331,7 +1363,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3185,6 +3217,154 @@ export namespace Prisma {
           }
         }
       }
+      FeatureDependency: {
+        payload: Prisma.$FeatureDependencyPayload<ExtArgs>
+        fields: Prisma.FeatureDependencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeatureDependencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeatureDependencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          findFirst: {
+            args: Prisma.FeatureDependencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeatureDependencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          findMany: {
+            args: Prisma.FeatureDependencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>[]
+          }
+          create: {
+            args: Prisma.FeatureDependencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          createMany: {
+            args: Prisma.FeatureDependencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeatureDependencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>[]
+          }
+          delete: {
+            args: Prisma.FeatureDependencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          update: {
+            args: Prisma.FeatureDependencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeatureDependencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeatureDependencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeatureDependencyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeatureDependencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureDependencyPayload>
+          }
+          aggregate: {
+            args: Prisma.FeatureDependencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeatureDependency>
+          }
+          groupBy: {
+            args: Prisma.FeatureDependencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeatureDependencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeatureDependencyCountArgs<ExtArgs>
+            result: $Utils.Optional<FeatureDependencyCountAggregateOutputType> | number
+          }
+        }
+      }
+      FeatureLink: {
+        payload: Prisma.$FeatureLinkPayload<ExtArgs>
+        fields: Prisma.FeatureLinkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeatureLinkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeatureLinkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          findFirst: {
+            args: Prisma.FeatureLinkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeatureLinkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          findMany: {
+            args: Prisma.FeatureLinkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>[]
+          }
+          create: {
+            args: Prisma.FeatureLinkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          createMany: {
+            args: Prisma.FeatureLinkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FeatureLinkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>[]
+          }
+          delete: {
+            args: Prisma.FeatureLinkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          update: {
+            args: Prisma.FeatureLinkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeatureLinkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeatureLinkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.FeatureLinkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>[]
+          }
+          upsert: {
+            args: Prisma.FeatureLinkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeatureLinkPayload>
+          }
+          aggregate: {
+            args: Prisma.FeatureLinkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeatureLink>
+          }
+          groupBy: {
+            args: Prisma.FeatureLinkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeatureLinkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeatureLinkCountArgs<ExtArgs>
+            result: $Utils.Optional<FeatureLinkCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3294,6 +3474,8 @@ export namespace Prisma {
     waitlist?: WaitlistOmit
     waitlistEntry?: WaitlistEntryOmit
     feature?: FeatureOmit
+    featureDependency?: FeatureDependencyOmit
+    featureLink?: FeatureLinkOmit
   }
 
   /* Types for Logging */
@@ -3536,6 +3718,9 @@ export namespace Prisma {
     asset: number
     waitlist: number
     ActivityFeed: number
+    Feature: number
+    FeatureDependency: number
+    FeatureLink: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3548,6 +3733,9 @@ export namespace Prisma {
     asset?: boolean | OrganizationCountOutputTypeCountAssetArgs
     waitlist?: boolean | OrganizationCountOutputTypeCountWaitlistArgs
     ActivityFeed?: boolean | OrganizationCountOutputTypeCountActivityFeedArgs
+    Feature?: boolean | OrganizationCountOutputTypeCountFeatureArgs
+    FeatureDependency?: boolean | OrganizationCountOutputTypeCountFeatureDependencyArgs
+    FeatureLink?: boolean | OrganizationCountOutputTypeCountFeatureLinkArgs
   }
 
   // Custom InputTypes
@@ -3622,6 +3810,27 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ActivityFeedWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountFeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountFeatureDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureDependencyWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountFeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureLinkWhereInput
   }
 
 
@@ -3840,6 +4049,64 @@ export namespace Prisma {
    */
   export type WaitlistCountOutputTypeCountEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WaitlistEntryWhereInput
+  }
+
+
+  /**
+   * Count Type FeatureCountOutputType
+   */
+
+  export type FeatureCountOutputType = {
+    subFeatures: number
+    dependencies: number
+    dependentOn: number
+    FeatureLink: number
+  }
+
+  export type FeatureCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subFeatures?: boolean | FeatureCountOutputTypeCountSubFeaturesArgs
+    dependencies?: boolean | FeatureCountOutputTypeCountDependenciesArgs
+    dependentOn?: boolean | FeatureCountOutputTypeCountDependentOnArgs
+    FeatureLink?: boolean | FeatureCountOutputTypeCountFeatureLinkArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureCountOutputType
+     */
+    select?: FeatureCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeCountSubFeaturesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureWhereInput
+  }
+
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeCountDependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureDependencyWhereInput
+  }
+
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeCountDependentOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureDependencyWhereInput
+  }
+
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeCountFeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureLinkWhereInput
   }
 
 
@@ -8840,6 +9107,9 @@ export namespace Prisma {
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
     ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
+    Feature?: boolean | Organization$FeatureArgs<ExtArgs>
+    FeatureDependency?: boolean | Organization$FeatureDependencyArgs<ExtArgs>
+    FeatureLink?: boolean | Organization$FeatureLinkArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -8881,6 +9151,9 @@ export namespace Prisma {
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
     ActivityFeed?: boolean | Organization$ActivityFeedArgs<ExtArgs>
+    Feature?: boolean | Organization$FeatureArgs<ExtArgs>
+    FeatureDependency?: boolean | Organization$FeatureDependencyArgs<ExtArgs>
+    FeatureLink?: boolean | Organization$FeatureLinkArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -8898,6 +9171,9 @@ export namespace Prisma {
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
       ActivityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
+      Feature: Prisma.$FeaturePayload<ExtArgs>[]
+      FeatureDependency: Prisma.$FeatureDependencyPayload<ExtArgs>[]
+      FeatureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9309,6 +9585,9 @@ export namespace Prisma {
     asset<T extends Organization$assetArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends Organization$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, Organization$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ActivityFeed<T extends Organization$ActivityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ActivityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    Feature<T extends Organization$FeatureArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeatureDependency<T extends Organization$FeatureDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeatureLink<T extends Organization$FeatureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$FeatureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9945,6 +10224,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ActivityFeedScalarFieldEnum | ActivityFeedScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.Feature
+   */
+  export type Organization$FeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    cursor?: FeatureWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.FeatureDependency
+   */
+  export type Organization$FeatureDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    where?: FeatureDependencyWhereInput
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    cursor?: FeatureDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.FeatureLink
+   */
+  export type Organization$FeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    where?: FeatureLinkWhereInput
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    cursor?: FeatureLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
   }
 
   /**
@@ -32755,6 +33106,8 @@ export namespace Prisma {
     endDate: Date | null
     priority: $Enums.Importance | null
     assignedToId: string | null
+    parentFeatureId: string | null
+    organizationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32771,6 +33124,8 @@ export namespace Prisma {
     endDate: Date | null
     priority: $Enums.Importance | null
     assignedToId: string | null
+    parentFeatureId: string | null
+    organizationId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -32787,6 +33142,8 @@ export namespace Prisma {
     endDate: number
     priority: number
     assignedToId: number
+    parentFeatureId: number
+    organizationId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -32815,6 +33172,8 @@ export namespace Prisma {
     endDate?: true
     priority?: true
     assignedToId?: true
+    parentFeatureId?: true
+    organizationId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32831,6 +33190,8 @@ export namespace Prisma {
     endDate?: true
     priority?: true
     assignedToId?: true
+    parentFeatureId?: true
+    organizationId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -32847,6 +33208,8 @@ export namespace Prisma {
     endDate?: true
     priority?: true
     assignedToId?: true
+    parentFeatureId?: true
+    organizationId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -32950,6 +33313,8 @@ export namespace Prisma {
     endDate: Date | null
     priority: $Enums.Importance
     assignedToId: string | null
+    parentFeatureId: string | null
+    organizationId: string
     createdAt: Date
     updatedAt: Date
     _count: FeatureCountAggregateOutputType | null
@@ -32985,10 +33350,19 @@ export namespace Prisma {
     endDate?: boolean
     priority?: boolean
     assignedToId?: boolean
+    parentFeatureId?: boolean
+    organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    subFeatures?: boolean | Feature$subFeaturesArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
+    dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
+    FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
+    _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
 
   export type FeatureSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -33003,8 +33377,12 @@ export namespace Prisma {
     endDate?: boolean
     priority?: boolean
     assignedToId?: boolean
+    parentFeatureId?: boolean
+    organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
@@ -33021,8 +33399,12 @@ export namespace Prisma {
     endDate?: boolean
     priority?: boolean
     assignedToId?: boolean
+    parentFeatureId?: boolean
+    organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
@@ -33039,20 +33421,33 @@ export namespace Prisma {
     endDate?: boolean
     priority?: boolean
     assignedToId?: boolean
+    parentFeatureId?: boolean
+    organizationId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "projectId" | "phase" | "businessValue" | "estimatedEffort" | "startDate" | "endDate" | "priority" | "assignedToId" | "createdAt" | "updatedAt", ExtArgs["result"]["feature"]>
+  export type FeatureOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "projectId" | "phase" | "businessValue" | "estimatedEffort" | "startDate" | "endDate" | "priority" | "assignedToId" | "parentFeatureId" | "organizationId" | "createdAt" | "updatedAt", ExtArgs["result"]["feature"]>
   export type FeatureInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    subFeatures?: boolean | Feature$subFeaturesArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
+    dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
+    dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
+    FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
+    _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeatureIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }
   export type FeatureIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parentFeature?: boolean | Feature$parentFeatureArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     assignedTo?: boolean | Feature$assignedToArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
   }
@@ -33060,8 +33455,14 @@ export namespace Prisma {
   export type $FeaturePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Feature"
     objects: {
+      parentFeature: Prisma.$FeaturePayload<ExtArgs> | null
+      subFeatures: Prisma.$FeaturePayload<ExtArgs>[]
+      organization: Prisma.$OrganizationPayload<ExtArgs>
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
       project: Prisma.$ProjectPayload<ExtArgs>
+      dependencies: Prisma.$FeatureDependencyPayload<ExtArgs>[]
+      dependentOn: Prisma.$FeatureDependencyPayload<ExtArgs>[]
+      FeatureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -33075,6 +33476,8 @@ export namespace Prisma {
       endDate: Date | null
       priority: $Enums.Importance
       assignedToId: string | null
+      parentFeatureId: string | null
+      organizationId: string
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["feature"]>
@@ -33471,8 +33874,14 @@ export namespace Prisma {
    */
   export interface Prisma__FeatureClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    parentFeature<T extends Feature$parentFeatureArgs<ExtArgs> = {}>(args?: Subset<T, Feature$parentFeatureArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    subFeatures<T extends Feature$subFeaturesArgs<ExtArgs> = {}>(args?: Subset<T, Feature$subFeaturesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     assignedTo<T extends Feature$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Feature$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    dependencies<T extends Feature$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dependentOn<T extends Feature$dependentOnArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependentOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    FeatureLink<T extends Feature$FeatureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Feature$FeatureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -33513,6 +33922,8 @@ export namespace Prisma {
     readonly endDate: FieldRef<"Feature", 'DateTime'>
     readonly priority: FieldRef<"Feature", 'Importance'>
     readonly assignedToId: FieldRef<"Feature", 'String'>
+    readonly parentFeatureId: FieldRef<"Feature", 'String'>
+    readonly organizationId: FieldRef<"Feature", 'String'>
     readonly createdAt: FieldRef<"Feature", 'DateTime'>
     readonly updatedAt: FieldRef<"Feature", 'DateTime'>
   }
@@ -33911,6 +34322,49 @@ export namespace Prisma {
   }
 
   /**
+   * Feature.parentFeature
+   */
+  export type Feature$parentFeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+  }
+
+  /**
+   * Feature.subFeatures
+   */
+  export type Feature$subFeaturesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+    orderBy?: FeatureOrderByWithRelationInput | FeatureOrderByWithRelationInput[]
+    cursor?: FeatureWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureScalarFieldEnum | FeatureScalarFieldEnum[]
+  }
+
+  /**
    * Feature.assignedTo
    */
   export type Feature$assignedToArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -33930,6 +34384,78 @@ export namespace Prisma {
   }
 
   /**
+   * Feature.dependencies
+   */
+  export type Feature$dependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    where?: FeatureDependencyWhereInput
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    cursor?: FeatureDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Feature.dependentOn
+   */
+  export type Feature$dependentOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    where?: FeatureDependencyWhereInput
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    cursor?: FeatureDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Feature.FeatureLink
+   */
+  export type Feature$FeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    where?: FeatureLinkWhereInput
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    cursor?: FeatureLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
    * Feature without action
    */
   export type FeatureDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -33945,6 +34471,2146 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FeatureInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FeatureDependency
+   */
+
+  export type AggregateFeatureDependency = {
+    _count: FeatureDependencyCountAggregateOutputType | null
+    _min: FeatureDependencyMinAggregateOutputType | null
+    _max: FeatureDependencyMaxAggregateOutputType | null
+  }
+
+  export type FeatureDependencyMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    featureId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type FeatureDependencyMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    featureId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type FeatureDependencyCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    featureId: number
+    dependencyId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FeatureDependencyMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type FeatureDependencyMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type FeatureDependencyCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    dependencyId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FeatureDependencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeatureDependency to aggregate.
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureDependencies to fetch.
+     */
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeatureDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeatureDependencies
+    **/
+    _count?: true | FeatureDependencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeatureDependencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeatureDependencyMaxAggregateInputType
+  }
+
+  export type GetFeatureDependencyAggregateType<T extends FeatureDependencyAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeatureDependency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeatureDependency[P]>
+      : GetScalarType<T[P], AggregateFeatureDependency[P]>
+  }
+
+
+
+
+  export type FeatureDependencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureDependencyWhereInput
+    orderBy?: FeatureDependencyOrderByWithAggregationInput | FeatureDependencyOrderByWithAggregationInput[]
+    by: FeatureDependencyScalarFieldEnum[] | FeatureDependencyScalarFieldEnum
+    having?: FeatureDependencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeatureDependencyCountAggregateInputType | true
+    _min?: FeatureDependencyMinAggregateInputType
+    _max?: FeatureDependencyMaxAggregateInputType
+  }
+
+  export type FeatureDependencyGroupByOutputType = {
+    id: string
+    organizationId: string
+    featureId: string
+    dependencyId: string
+    createdAt: Date
+    _count: FeatureDependencyCountAggregateOutputType | null
+    _min: FeatureDependencyMinAggregateOutputType | null
+    _max: FeatureDependencyMaxAggregateOutputType | null
+  }
+
+  type GetFeatureDependencyGroupByPayload<T extends FeatureDependencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeatureDependencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeatureDependencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeatureDependencyGroupByOutputType[P]>
+            : GetScalarType<T[P], FeatureDependencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeatureDependencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureDependency"]>
+
+  export type FeatureDependencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureDependency"]>
+
+  export type FeatureDependencySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureDependency"]>
+
+  export type FeatureDependencySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+  }
+
+  export type FeatureDependencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "featureId" | "dependencyId" | "createdAt", ExtArgs["result"]["featureDependency"]>
+  export type FeatureDependencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+  export type FeatureDependencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+  export type FeatureDependencyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+    dependency?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+
+  export type $FeatureDependencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeatureDependency"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      feature: Prisma.$FeaturePayload<ExtArgs>
+      dependency: Prisma.$FeaturePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      featureId: string
+      dependencyId: string
+      createdAt: Date
+    }, ExtArgs["result"]["featureDependency"]>
+    composites: {}
+  }
+
+  type FeatureDependencyGetPayload<S extends boolean | null | undefined | FeatureDependencyDefaultArgs> = $Result.GetResult<Prisma.$FeatureDependencyPayload, S>
+
+  type FeatureDependencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeatureDependencyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeatureDependencyCountAggregateInputType | true
+    }
+
+  export interface FeatureDependencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeatureDependency'], meta: { name: 'FeatureDependency' } }
+    /**
+     * Find zero or one FeatureDependency that matches the filter.
+     * @param {FeatureDependencyFindUniqueArgs} args - Arguments to find a FeatureDependency
+     * @example
+     * // Get one FeatureDependency
+     * const featureDependency = await prisma.featureDependency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeatureDependencyFindUniqueArgs>(args: SelectSubset<T, FeatureDependencyFindUniqueArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeatureDependency that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeatureDependencyFindUniqueOrThrowArgs} args - Arguments to find a FeatureDependency
+     * @example
+     * // Get one FeatureDependency
+     * const featureDependency = await prisma.featureDependency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeatureDependencyFindUniqueOrThrowArgs>(args: SelectSubset<T, FeatureDependencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeatureDependency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyFindFirstArgs} args - Arguments to find a FeatureDependency
+     * @example
+     * // Get one FeatureDependency
+     * const featureDependency = await prisma.featureDependency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeatureDependencyFindFirstArgs>(args?: SelectSubset<T, FeatureDependencyFindFirstArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeatureDependency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyFindFirstOrThrowArgs} args - Arguments to find a FeatureDependency
+     * @example
+     * // Get one FeatureDependency
+     * const featureDependency = await prisma.featureDependency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeatureDependencyFindFirstOrThrowArgs>(args?: SelectSubset<T, FeatureDependencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeatureDependencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeatureDependencies
+     * const featureDependencies = await prisma.featureDependency.findMany()
+     * 
+     * // Get first 10 FeatureDependencies
+     * const featureDependencies = await prisma.featureDependency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const featureDependencyWithIdOnly = await prisma.featureDependency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeatureDependencyFindManyArgs>(args?: SelectSubset<T, FeatureDependencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeatureDependency.
+     * @param {FeatureDependencyCreateArgs} args - Arguments to create a FeatureDependency.
+     * @example
+     * // Create one FeatureDependency
+     * const FeatureDependency = await prisma.featureDependency.create({
+     *   data: {
+     *     // ... data to create a FeatureDependency
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeatureDependencyCreateArgs>(args: SelectSubset<T, FeatureDependencyCreateArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeatureDependencies.
+     * @param {FeatureDependencyCreateManyArgs} args - Arguments to create many FeatureDependencies.
+     * @example
+     * // Create many FeatureDependencies
+     * const featureDependency = await prisma.featureDependency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeatureDependencyCreateManyArgs>(args?: SelectSubset<T, FeatureDependencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeatureDependencies and returns the data saved in the database.
+     * @param {FeatureDependencyCreateManyAndReturnArgs} args - Arguments to create many FeatureDependencies.
+     * @example
+     * // Create many FeatureDependencies
+     * const featureDependency = await prisma.featureDependency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeatureDependencies and only return the `id`
+     * const featureDependencyWithIdOnly = await prisma.featureDependency.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeatureDependencyCreateManyAndReturnArgs>(args?: SelectSubset<T, FeatureDependencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeatureDependency.
+     * @param {FeatureDependencyDeleteArgs} args - Arguments to delete one FeatureDependency.
+     * @example
+     * // Delete one FeatureDependency
+     * const FeatureDependency = await prisma.featureDependency.delete({
+     *   where: {
+     *     // ... filter to delete one FeatureDependency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeatureDependencyDeleteArgs>(args: SelectSubset<T, FeatureDependencyDeleteArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeatureDependency.
+     * @param {FeatureDependencyUpdateArgs} args - Arguments to update one FeatureDependency.
+     * @example
+     * // Update one FeatureDependency
+     * const featureDependency = await prisma.featureDependency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeatureDependencyUpdateArgs>(args: SelectSubset<T, FeatureDependencyUpdateArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeatureDependencies.
+     * @param {FeatureDependencyDeleteManyArgs} args - Arguments to filter FeatureDependencies to delete.
+     * @example
+     * // Delete a few FeatureDependencies
+     * const { count } = await prisma.featureDependency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeatureDependencyDeleteManyArgs>(args?: SelectSubset<T, FeatureDependencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeatureDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeatureDependencies
+     * const featureDependency = await prisma.featureDependency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeatureDependencyUpdateManyArgs>(args: SelectSubset<T, FeatureDependencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeatureDependencies and returns the data updated in the database.
+     * @param {FeatureDependencyUpdateManyAndReturnArgs} args - Arguments to update many FeatureDependencies.
+     * @example
+     * // Update many FeatureDependencies
+     * const featureDependency = await prisma.featureDependency.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeatureDependencies and only return the `id`
+     * const featureDependencyWithIdOnly = await prisma.featureDependency.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeatureDependencyUpdateManyAndReturnArgs>(args: SelectSubset<T, FeatureDependencyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeatureDependency.
+     * @param {FeatureDependencyUpsertArgs} args - Arguments to update or create a FeatureDependency.
+     * @example
+     * // Update or create a FeatureDependency
+     * const featureDependency = await prisma.featureDependency.upsert({
+     *   create: {
+     *     // ... data to create a FeatureDependency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeatureDependency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeatureDependencyUpsertArgs>(args: SelectSubset<T, FeatureDependencyUpsertArgs<ExtArgs>>): Prisma__FeatureDependencyClient<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeatureDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyCountArgs} args - Arguments to filter FeatureDependencies to count.
+     * @example
+     * // Count the number of FeatureDependencies
+     * const count = await prisma.featureDependency.count({
+     *   where: {
+     *     // ... the filter for the FeatureDependencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeatureDependencyCountArgs>(
+      args?: Subset<T, FeatureDependencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeatureDependencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeatureDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeatureDependencyAggregateArgs>(args: Subset<T, FeatureDependencyAggregateArgs>): Prisma.PrismaPromise<GetFeatureDependencyAggregateType<T>>
+
+    /**
+     * Group by FeatureDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureDependencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeatureDependencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeatureDependencyGroupByArgs['orderBy'] }
+        : { orderBy?: FeatureDependencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeatureDependencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeatureDependencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeatureDependency model
+   */
+  readonly fields: FeatureDependencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeatureDependency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeatureDependencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    feature<T extends FeatureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeatureDefaultArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    dependency<T extends FeatureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeatureDefaultArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeatureDependency model
+   */
+  interface FeatureDependencyFieldRefs {
+    readonly id: FieldRef<"FeatureDependency", 'String'>
+    readonly organizationId: FieldRef<"FeatureDependency", 'String'>
+    readonly featureId: FieldRef<"FeatureDependency", 'String'>
+    readonly dependencyId: FieldRef<"FeatureDependency", 'String'>
+    readonly createdAt: FieldRef<"FeatureDependency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeatureDependency findUnique
+   */
+  export type FeatureDependencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureDependency to fetch.
+     */
+    where: FeatureDependencyWhereUniqueInput
+  }
+
+  /**
+   * FeatureDependency findUniqueOrThrow
+   */
+  export type FeatureDependencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureDependency to fetch.
+     */
+    where: FeatureDependencyWhereUniqueInput
+  }
+
+  /**
+   * FeatureDependency findFirst
+   */
+  export type FeatureDependencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureDependency to fetch.
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureDependencies to fetch.
+     */
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeatureDependencies.
+     */
+    cursor?: FeatureDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeatureDependencies.
+     */
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureDependency findFirstOrThrow
+   */
+  export type FeatureDependencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureDependency to fetch.
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureDependencies to fetch.
+     */
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeatureDependencies.
+     */
+    cursor?: FeatureDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeatureDependencies.
+     */
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureDependency findMany
+   */
+  export type FeatureDependencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureDependencies to fetch.
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureDependencies to fetch.
+     */
+    orderBy?: FeatureDependencyOrderByWithRelationInput | FeatureDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeatureDependencies.
+     */
+    cursor?: FeatureDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureDependencies.
+     */
+    skip?: number
+    distinct?: FeatureDependencyScalarFieldEnum | FeatureDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureDependency create
+   */
+  export type FeatureDependencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeatureDependency.
+     */
+    data: XOR<FeatureDependencyCreateInput, FeatureDependencyUncheckedCreateInput>
+  }
+
+  /**
+   * FeatureDependency createMany
+   */
+  export type FeatureDependencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeatureDependencies.
+     */
+    data: FeatureDependencyCreateManyInput | FeatureDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeatureDependency createManyAndReturn
+   */
+  export type FeatureDependencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeatureDependencies.
+     */
+    data: FeatureDependencyCreateManyInput | FeatureDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeatureDependency update
+   */
+  export type FeatureDependencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeatureDependency.
+     */
+    data: XOR<FeatureDependencyUpdateInput, FeatureDependencyUncheckedUpdateInput>
+    /**
+     * Choose, which FeatureDependency to update.
+     */
+    where: FeatureDependencyWhereUniqueInput
+  }
+
+  /**
+   * FeatureDependency updateMany
+   */
+  export type FeatureDependencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeatureDependencies.
+     */
+    data: XOR<FeatureDependencyUpdateManyMutationInput, FeatureDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which FeatureDependencies to update
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * Limit how many FeatureDependencies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeatureDependency updateManyAndReturn
+   */
+  export type FeatureDependencyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to update FeatureDependencies.
+     */
+    data: XOR<FeatureDependencyUpdateManyMutationInput, FeatureDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which FeatureDependencies to update
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * Limit how many FeatureDependencies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeatureDependency upsert
+   */
+  export type FeatureDependencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeatureDependency to update in case it exists.
+     */
+    where: FeatureDependencyWhereUniqueInput
+    /**
+     * In case the FeatureDependency found by the `where` argument doesn't exist, create a new FeatureDependency with this data.
+     */
+    create: XOR<FeatureDependencyCreateInput, FeatureDependencyUncheckedCreateInput>
+    /**
+     * In case the FeatureDependency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeatureDependencyUpdateInput, FeatureDependencyUncheckedUpdateInput>
+  }
+
+  /**
+   * FeatureDependency delete
+   */
+  export type FeatureDependencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+    /**
+     * Filter which FeatureDependency to delete.
+     */
+    where: FeatureDependencyWhereUniqueInput
+  }
+
+  /**
+   * FeatureDependency deleteMany
+   */
+  export type FeatureDependencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeatureDependencies to delete
+     */
+    where?: FeatureDependencyWhereInput
+    /**
+     * Limit how many FeatureDependencies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeatureDependency without action
+   */
+  export type FeatureDependencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureDependency
+     */
+    select?: FeatureDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureDependency
+     */
+    omit?: FeatureDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureDependencyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FeatureLink
+   */
+
+  export type AggregateFeatureLink = {
+    _count: FeatureLinkCountAggregateOutputType | null
+    _min: FeatureLinkMinAggregateOutputType | null
+    _max: FeatureLinkMaxAggregateOutputType | null
+  }
+
+  export type FeatureLinkMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    featureId: string | null
+    url: string | null
+    createdAt: Date | null
+  }
+
+  export type FeatureLinkMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    featureId: string | null
+    url: string | null
+    createdAt: Date | null
+  }
+
+  export type FeatureLinkCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    featureId: number
+    url: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FeatureLinkMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    url?: true
+    createdAt?: true
+  }
+
+  export type FeatureLinkMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    url?: true
+    createdAt?: true
+  }
+
+  export type FeatureLinkCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    featureId?: true
+    url?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FeatureLinkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeatureLink to aggregate.
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureLinks to fetch.
+     */
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeatureLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeatureLinks
+    **/
+    _count?: true | FeatureLinkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeatureLinkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeatureLinkMaxAggregateInputType
+  }
+
+  export type GetFeatureLinkAggregateType<T extends FeatureLinkAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeatureLink]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeatureLink[P]>
+      : GetScalarType<T[P], AggregateFeatureLink[P]>
+  }
+
+
+
+
+  export type FeatureLinkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeatureLinkWhereInput
+    orderBy?: FeatureLinkOrderByWithAggregationInput | FeatureLinkOrderByWithAggregationInput[]
+    by: FeatureLinkScalarFieldEnum[] | FeatureLinkScalarFieldEnum
+    having?: FeatureLinkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeatureLinkCountAggregateInputType | true
+    _min?: FeatureLinkMinAggregateInputType
+    _max?: FeatureLinkMaxAggregateInputType
+  }
+
+  export type FeatureLinkGroupByOutputType = {
+    id: string
+    organizationId: string
+    featureId: string
+    url: string
+    createdAt: Date
+    _count: FeatureLinkCountAggregateOutputType | null
+    _min: FeatureLinkMinAggregateOutputType | null
+    _max: FeatureLinkMaxAggregateOutputType | null
+  }
+
+  type GetFeatureLinkGroupByPayload<T extends FeatureLinkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeatureLinkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeatureLinkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeatureLinkGroupByOutputType[P]>
+            : GetScalarType<T[P], FeatureLinkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeatureLinkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureLink"]>
+
+  export type FeatureLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureLink"]>
+
+  export type FeatureLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["featureLink"]>
+
+  export type FeatureLinkSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    featureId?: boolean
+    url?: boolean
+    createdAt?: boolean
+  }
+
+  export type FeatureLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "featureId" | "url" | "createdAt", ExtArgs["result"]["featureLink"]>
+  export type FeatureLinkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+  export type FeatureLinkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+  export type FeatureLinkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    feature?: boolean | FeatureDefaultArgs<ExtArgs>
+  }
+
+  export type $FeatureLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeatureLink"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      feature: Prisma.$FeaturePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      featureId: string
+      url: string
+      createdAt: Date
+    }, ExtArgs["result"]["featureLink"]>
+    composites: {}
+  }
+
+  type FeatureLinkGetPayload<S extends boolean | null | undefined | FeatureLinkDefaultArgs> = $Result.GetResult<Prisma.$FeatureLinkPayload, S>
+
+  type FeatureLinkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeatureLinkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeatureLinkCountAggregateInputType | true
+    }
+
+  export interface FeatureLinkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeatureLink'], meta: { name: 'FeatureLink' } }
+    /**
+     * Find zero or one FeatureLink that matches the filter.
+     * @param {FeatureLinkFindUniqueArgs} args - Arguments to find a FeatureLink
+     * @example
+     * // Get one FeatureLink
+     * const featureLink = await prisma.featureLink.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeatureLinkFindUniqueArgs>(args: SelectSubset<T, FeatureLinkFindUniqueArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeatureLink that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeatureLinkFindUniqueOrThrowArgs} args - Arguments to find a FeatureLink
+     * @example
+     * // Get one FeatureLink
+     * const featureLink = await prisma.featureLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeatureLinkFindUniqueOrThrowArgs>(args: SelectSubset<T, FeatureLinkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeatureLink that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkFindFirstArgs} args - Arguments to find a FeatureLink
+     * @example
+     * // Get one FeatureLink
+     * const featureLink = await prisma.featureLink.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeatureLinkFindFirstArgs>(args?: SelectSubset<T, FeatureLinkFindFirstArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeatureLink that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkFindFirstOrThrowArgs} args - Arguments to find a FeatureLink
+     * @example
+     * // Get one FeatureLink
+     * const featureLink = await prisma.featureLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeatureLinkFindFirstOrThrowArgs>(args?: SelectSubset<T, FeatureLinkFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeatureLinks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeatureLinks
+     * const featureLinks = await prisma.featureLink.findMany()
+     * 
+     * // Get first 10 FeatureLinks
+     * const featureLinks = await prisma.featureLink.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const featureLinkWithIdOnly = await prisma.featureLink.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeatureLinkFindManyArgs>(args?: SelectSubset<T, FeatureLinkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeatureLink.
+     * @param {FeatureLinkCreateArgs} args - Arguments to create a FeatureLink.
+     * @example
+     * // Create one FeatureLink
+     * const FeatureLink = await prisma.featureLink.create({
+     *   data: {
+     *     // ... data to create a FeatureLink
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeatureLinkCreateArgs>(args: SelectSubset<T, FeatureLinkCreateArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeatureLinks.
+     * @param {FeatureLinkCreateManyArgs} args - Arguments to create many FeatureLinks.
+     * @example
+     * // Create many FeatureLinks
+     * const featureLink = await prisma.featureLink.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeatureLinkCreateManyArgs>(args?: SelectSubset<T, FeatureLinkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FeatureLinks and returns the data saved in the database.
+     * @param {FeatureLinkCreateManyAndReturnArgs} args - Arguments to create many FeatureLinks.
+     * @example
+     * // Create many FeatureLinks
+     * const featureLink = await prisma.featureLink.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FeatureLinks and only return the `id`
+     * const featureLinkWithIdOnly = await prisma.featureLink.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FeatureLinkCreateManyAndReturnArgs>(args?: SelectSubset<T, FeatureLinkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a FeatureLink.
+     * @param {FeatureLinkDeleteArgs} args - Arguments to delete one FeatureLink.
+     * @example
+     * // Delete one FeatureLink
+     * const FeatureLink = await prisma.featureLink.delete({
+     *   where: {
+     *     // ... filter to delete one FeatureLink
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeatureLinkDeleteArgs>(args: SelectSubset<T, FeatureLinkDeleteArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeatureLink.
+     * @param {FeatureLinkUpdateArgs} args - Arguments to update one FeatureLink.
+     * @example
+     * // Update one FeatureLink
+     * const featureLink = await prisma.featureLink.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeatureLinkUpdateArgs>(args: SelectSubset<T, FeatureLinkUpdateArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeatureLinks.
+     * @param {FeatureLinkDeleteManyArgs} args - Arguments to filter FeatureLinks to delete.
+     * @example
+     * // Delete a few FeatureLinks
+     * const { count } = await prisma.featureLink.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeatureLinkDeleteManyArgs>(args?: SelectSubset<T, FeatureLinkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeatureLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeatureLinks
+     * const featureLink = await prisma.featureLink.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeatureLinkUpdateManyArgs>(args: SelectSubset<T, FeatureLinkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeatureLinks and returns the data updated in the database.
+     * @param {FeatureLinkUpdateManyAndReturnArgs} args - Arguments to update many FeatureLinks.
+     * @example
+     * // Update many FeatureLinks
+     * const featureLink = await prisma.featureLink.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more FeatureLinks and only return the `id`
+     * const featureLinkWithIdOnly = await prisma.featureLink.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends FeatureLinkUpdateManyAndReturnArgs>(args: SelectSubset<T, FeatureLinkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one FeatureLink.
+     * @param {FeatureLinkUpsertArgs} args - Arguments to update or create a FeatureLink.
+     * @example
+     * // Update or create a FeatureLink
+     * const featureLink = await prisma.featureLink.upsert({
+     *   create: {
+     *     // ... data to create a FeatureLink
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeatureLink we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeatureLinkUpsertArgs>(args: SelectSubset<T, FeatureLinkUpsertArgs<ExtArgs>>): Prisma__FeatureLinkClient<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeatureLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkCountArgs} args - Arguments to filter FeatureLinks to count.
+     * @example
+     * // Count the number of FeatureLinks
+     * const count = await prisma.featureLink.count({
+     *   where: {
+     *     // ... the filter for the FeatureLinks we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeatureLinkCountArgs>(
+      args?: Subset<T, FeatureLinkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeatureLinkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeatureLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeatureLinkAggregateArgs>(args: Subset<T, FeatureLinkAggregateArgs>): Prisma.PrismaPromise<GetFeatureLinkAggregateType<T>>
+
+    /**
+     * Group by FeatureLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeatureLinkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeatureLinkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeatureLinkGroupByArgs['orderBy'] }
+        : { orderBy?: FeatureLinkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeatureLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeatureLinkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeatureLink model
+   */
+  readonly fields: FeatureLinkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeatureLink.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeatureLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    feature<T extends FeatureDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeatureDefaultArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeatureLink model
+   */
+  interface FeatureLinkFieldRefs {
+    readonly id: FieldRef<"FeatureLink", 'String'>
+    readonly organizationId: FieldRef<"FeatureLink", 'String'>
+    readonly featureId: FieldRef<"FeatureLink", 'String'>
+    readonly url: FieldRef<"FeatureLink", 'String'>
+    readonly createdAt: FieldRef<"FeatureLink", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeatureLink findUnique
+   */
+  export type FeatureLinkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureLink to fetch.
+     */
+    where: FeatureLinkWhereUniqueInput
+  }
+
+  /**
+   * FeatureLink findUniqueOrThrow
+   */
+  export type FeatureLinkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureLink to fetch.
+     */
+    where: FeatureLinkWhereUniqueInput
+  }
+
+  /**
+   * FeatureLink findFirst
+   */
+  export type FeatureLinkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureLink to fetch.
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureLinks to fetch.
+     */
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeatureLinks.
+     */
+    cursor?: FeatureLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeatureLinks.
+     */
+    distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureLink findFirstOrThrow
+   */
+  export type FeatureLinkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureLink to fetch.
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureLinks to fetch.
+     */
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeatureLinks.
+     */
+    cursor?: FeatureLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeatureLinks.
+     */
+    distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureLink findMany
+   */
+  export type FeatureLinkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which FeatureLinks to fetch.
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeatureLinks to fetch.
+     */
+    orderBy?: FeatureLinkOrderByWithRelationInput | FeatureLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeatureLinks.
+     */
+    cursor?: FeatureLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeatureLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeatureLinks.
+     */
+    skip?: number
+    distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
+   * FeatureLink create
+   */
+  export type FeatureLinkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeatureLink.
+     */
+    data: XOR<FeatureLinkCreateInput, FeatureLinkUncheckedCreateInput>
+  }
+
+  /**
+   * FeatureLink createMany
+   */
+  export type FeatureLinkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeatureLinks.
+     */
+    data: FeatureLinkCreateManyInput | FeatureLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeatureLink createManyAndReturn
+   */
+  export type FeatureLinkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * The data used to create many FeatureLinks.
+     */
+    data: FeatureLinkCreateManyInput | FeatureLinkCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeatureLink update
+   */
+  export type FeatureLinkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeatureLink.
+     */
+    data: XOR<FeatureLinkUpdateInput, FeatureLinkUncheckedUpdateInput>
+    /**
+     * Choose, which FeatureLink to update.
+     */
+    where: FeatureLinkWhereUniqueInput
+  }
+
+  /**
+   * FeatureLink updateMany
+   */
+  export type FeatureLinkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeatureLinks.
+     */
+    data: XOR<FeatureLinkUpdateManyMutationInput, FeatureLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which FeatureLinks to update
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * Limit how many FeatureLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeatureLink updateManyAndReturn
+   */
+  export type FeatureLinkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * The data used to update FeatureLinks.
+     */
+    data: XOR<FeatureLinkUpdateManyMutationInput, FeatureLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which FeatureLinks to update
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * Limit how many FeatureLinks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FeatureLink upsert
+   */
+  export type FeatureLinkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeatureLink to update in case it exists.
+     */
+    where: FeatureLinkWhereUniqueInput
+    /**
+     * In case the FeatureLink found by the `where` argument doesn't exist, create a new FeatureLink with this data.
+     */
+    create: XOR<FeatureLinkCreateInput, FeatureLinkUncheckedCreateInput>
+    /**
+     * In case the FeatureLink was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeatureLinkUpdateInput, FeatureLinkUncheckedUpdateInput>
+  }
+
+  /**
+   * FeatureLink delete
+   */
+  export type FeatureLinkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
+    /**
+     * Filter which FeatureLink to delete.
+     */
+    where: FeatureLinkWhereUniqueInput
+  }
+
+  /**
+   * FeatureLink deleteMany
+   */
+  export type FeatureLinkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeatureLinks to delete
+     */
+    where?: FeatureLinkWhereInput
+    /**
+     * Limit how many FeatureLinks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeatureLink without action
+   */
+  export type FeatureLinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeatureLink
+     */
+    select?: FeatureLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeatureLink
+     */
+    omit?: FeatureLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureLinkInclude<ExtArgs> | null
   }
 
 
@@ -34396,11 +37062,35 @@ export namespace Prisma {
     endDate: 'endDate',
     priority: 'priority',
     assignedToId: 'assignedToId',
+    parentFeatureId: 'parentFeatureId',
+    organizationId: 'organizationId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type FeatureScalarFieldEnum = (typeof FeatureScalarFieldEnum)[keyof typeof FeatureScalarFieldEnum]
+
+
+  export const FeatureDependencyScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    featureId: 'featureId',
+    dependencyId: 'dependencyId',
+    createdAt: 'createdAt'
+  };
+
+  export type FeatureDependencyScalarFieldEnum = (typeof FeatureDependencyScalarFieldEnum)[keyof typeof FeatureDependencyScalarFieldEnum]
+
+
+  export const FeatureLinkScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    featureId: 'featureId',
+    url: 'url',
+    createdAt: 'createdAt'
+  };
+
+  export type FeatureLinkScalarFieldEnum = (typeof FeatureLinkScalarFieldEnum)[keyof typeof FeatureLinkScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -35073,6 +37763,9 @@ export namespace Prisma {
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
     ActivityFeed?: ActivityFeedListRelationFilter
+    Feature?: FeatureListRelationFilter
+    FeatureDependency?: FeatureDependencyListRelationFilter
+    FeatureLink?: FeatureLinkListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -35091,6 +37784,9 @@ export namespace Prisma {
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
     ActivityFeed?: ActivityFeedOrderByRelationAggregateInput
+    Feature?: FeatureOrderByRelationAggregateInput
+    FeatureDependency?: FeatureDependencyOrderByRelationAggregateInput
+    FeatureLink?: FeatureLinkOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -35112,6 +37808,9 @@ export namespace Prisma {
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
     ActivityFeed?: ActivityFeedListRelationFilter
+    Feature?: FeatureListRelationFilter
+    FeatureDependency?: FeatureDependencyListRelationFilter
+    FeatureLink?: FeatureLinkListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -36977,10 +39676,18 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
     priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
     assignedToId?: StringNullableFilter<"Feature"> | string | null
+    parentFeatureId?: StringNullableFilter<"Feature"> | string | null
+    organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    parentFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
+    subFeatures?: FeatureListRelationFilter
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    dependencies?: FeatureDependencyListRelationFilter
+    dependentOn?: FeatureDependencyListRelationFilter
+    FeatureLink?: FeatureLinkListRelationFilter
   }
 
   export type FeatureOrderByWithRelationInput = {
@@ -36995,10 +39702,18 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     priority?: SortOrder
     assignedToId?: SortOrderInput | SortOrder
+    parentFeatureId?: SortOrderInput | SortOrder
+    organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parentFeature?: FeatureOrderByWithRelationInput
+    subFeatures?: FeatureOrderByRelationAggregateInput
+    organization?: OrganizationOrderByWithRelationInput
     assignedTo?: UserOrderByWithRelationInput
     project?: ProjectOrderByWithRelationInput
+    dependencies?: FeatureDependencyOrderByRelationAggregateInput
+    dependentOn?: FeatureDependencyOrderByRelationAggregateInput
+    FeatureLink?: FeatureLinkOrderByRelationAggregateInput
   }
 
   export type FeatureWhereUniqueInput = Prisma.AtLeast<{
@@ -37016,10 +39731,18 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
     priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
     assignedToId?: StringNullableFilter<"Feature"> | string | null
+    parentFeatureId?: StringNullableFilter<"Feature"> | string | null
+    organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
+    parentFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
+    subFeatures?: FeatureListRelationFilter
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    dependencies?: FeatureDependencyListRelationFilter
+    dependentOn?: FeatureDependencyListRelationFilter
+    FeatureLink?: FeatureLinkListRelationFilter
   }, "id">
 
   export type FeatureOrderByWithAggregationInput = {
@@ -37034,6 +39757,8 @@ export namespace Prisma {
     endDate?: SortOrderInput | SortOrder
     priority?: SortOrder
     assignedToId?: SortOrderInput | SortOrder
+    parentFeatureId?: SortOrderInput | SortOrder
+    organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: FeatureCountOrderByAggregateInput
@@ -37058,8 +39783,129 @@ export namespace Prisma {
     endDate?: DateTimeNullableWithAggregatesFilter<"Feature"> | Date | string | null
     priority?: EnumImportanceWithAggregatesFilter<"Feature"> | $Enums.Importance
     assignedToId?: StringNullableWithAggregatesFilter<"Feature"> | string | null
+    parentFeatureId?: StringNullableWithAggregatesFilter<"Feature"> | string | null
+    organizationId?: StringWithAggregatesFilter<"Feature"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Feature"> | Date | string
+  }
+
+  export type FeatureDependencyWhereInput = {
+    AND?: FeatureDependencyWhereInput | FeatureDependencyWhereInput[]
+    OR?: FeatureDependencyWhereInput[]
+    NOT?: FeatureDependencyWhereInput | FeatureDependencyWhereInput[]
+    id?: StringFilter<"FeatureDependency"> | string
+    organizationId?: StringFilter<"FeatureDependency"> | string
+    featureId?: StringFilter<"FeatureDependency"> | string
+    dependencyId?: StringFilter<"FeatureDependency"> | string
+    createdAt?: DateTimeFilter<"FeatureDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    feature?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+    dependency?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+  }
+
+  export type FeatureDependencyOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    feature?: FeatureOrderByWithRelationInput
+    dependency?: FeatureOrderByWithRelationInput
+  }
+
+  export type FeatureDependencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeatureDependencyWhereInput | FeatureDependencyWhereInput[]
+    OR?: FeatureDependencyWhereInput[]
+    NOT?: FeatureDependencyWhereInput | FeatureDependencyWhereInput[]
+    organizationId?: StringFilter<"FeatureDependency"> | string
+    featureId?: StringFilter<"FeatureDependency"> | string
+    dependencyId?: StringFilter<"FeatureDependency"> | string
+    createdAt?: DateTimeFilter<"FeatureDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    feature?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+    dependency?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+  }, "id">
+
+  export type FeatureDependencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    _count?: FeatureDependencyCountOrderByAggregateInput
+    _max?: FeatureDependencyMaxOrderByAggregateInput
+    _min?: FeatureDependencyMinOrderByAggregateInput
+  }
+
+  export type FeatureDependencyScalarWhereWithAggregatesInput = {
+    AND?: FeatureDependencyScalarWhereWithAggregatesInput | FeatureDependencyScalarWhereWithAggregatesInput[]
+    OR?: FeatureDependencyScalarWhereWithAggregatesInput[]
+    NOT?: FeatureDependencyScalarWhereWithAggregatesInput | FeatureDependencyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeatureDependency"> | string
+    organizationId?: StringWithAggregatesFilter<"FeatureDependency"> | string
+    featureId?: StringWithAggregatesFilter<"FeatureDependency"> | string
+    dependencyId?: StringWithAggregatesFilter<"FeatureDependency"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FeatureDependency"> | Date | string
+  }
+
+  export type FeatureLinkWhereInput = {
+    AND?: FeatureLinkWhereInput | FeatureLinkWhereInput[]
+    OR?: FeatureLinkWhereInput[]
+    NOT?: FeatureLinkWhereInput | FeatureLinkWhereInput[]
+    id?: StringFilter<"FeatureLink"> | string
+    organizationId?: StringFilter<"FeatureLink"> | string
+    featureId?: StringFilter<"FeatureLink"> | string
+    url?: StringFilter<"FeatureLink"> | string
+    createdAt?: DateTimeFilter<"FeatureLink"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    feature?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+  }
+
+  export type FeatureLinkOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    feature?: FeatureOrderByWithRelationInput
+  }
+
+  export type FeatureLinkWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeatureLinkWhereInput | FeatureLinkWhereInput[]
+    OR?: FeatureLinkWhereInput[]
+    NOT?: FeatureLinkWhereInput | FeatureLinkWhereInput[]
+    organizationId?: StringFilter<"FeatureLink"> | string
+    featureId?: StringFilter<"FeatureLink"> | string
+    url?: StringFilter<"FeatureLink"> | string
+    createdAt?: DateTimeFilter<"FeatureLink"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    feature?: XOR<FeatureScalarRelationFilter, FeatureWhereInput>
+  }, "id">
+
+  export type FeatureLinkOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+    _count?: FeatureLinkCountOrderByAggregateInput
+    _max?: FeatureLinkMaxOrderByAggregateInput
+    _min?: FeatureLinkMinOrderByAggregateInput
+  }
+
+  export type FeatureLinkScalarWhereWithAggregatesInput = {
+    AND?: FeatureLinkScalarWhereWithAggregatesInput | FeatureLinkScalarWhereWithAggregatesInput[]
+    OR?: FeatureLinkScalarWhereWithAggregatesInput[]
+    NOT?: FeatureLinkScalarWhereWithAggregatesInput | FeatureLinkScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeatureLink"> | string
+    organizationId?: StringWithAggregatesFilter<"FeatureLink"> | string
+    featureId?: StringWithAggregatesFilter<"FeatureLink"> | string
+    url?: StringWithAggregatesFilter<"FeatureLink"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FeatureLink"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -37482,6 +40328,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -37500,6 +40349,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -37518,6 +40370,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -37536,6 +40391,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -39631,8 +42489,14 @@ export namespace Prisma {
     priority: $Enums.Importance
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureUncheckedCreateInput = {
@@ -39647,8 +42511,14 @@ export namespace Prisma {
     endDate?: Date | string | null
     priority: $Enums.Importance
     assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureUpdateInput = {
@@ -39663,8 +42533,14 @@ export namespace Prisma {
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateInput = {
@@ -39679,8 +42555,14 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureCreateManyInput = {
@@ -39695,6 +42577,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     priority: $Enums.Importance
     assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39725,8 +42609,117 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutFeatureDependencyInput
+    feature: FeatureCreateNestedOneWithoutDependenciesInput
+    dependency: FeatureCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type FeatureDependencyUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureDependencyNestedInput
+    feature?: FeatureUpdateOneRequiredWithoutDependenciesNestedInput
+    dependency?: FeatureUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type FeatureDependencyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyCreateManyInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkCreateInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutFeatureLinkInput
+    feature: FeatureCreateNestedOneWithoutFeatureLinkInput
+  }
+
+  export type FeatureLinkUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureLinkNestedInput
+    feature?: FeatureUpdateOneRequiredWithoutFeatureLinkNestedInput
+  }
+
+  export type FeatureLinkUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkCreateManyInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -40172,7 +43165,27 @@ export namespace Prisma {
     none?: SubscriptionWhereInput
   }
 
+  export type FeatureDependencyListRelationFilter = {
+    every?: FeatureDependencyWhereInput
+    some?: FeatureDependencyWhereInput
+    none?: FeatureDependencyWhereInput
+  }
+
+  export type FeatureLinkListRelationFilter = {
+    every?: FeatureLinkWhereInput
+    some?: FeatureLinkWhereInput
+    none?: FeatureLinkWhereInput
+  }
+
   export type SubscriptionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeatureDependencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeatureLinkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -41567,6 +44580,11 @@ export namespace Prisma {
     not?: NestedEnumFeaturePhaseFilter<$PrismaModel> | $Enums.FeaturePhase
   }
 
+  export type FeatureNullableScalarRelationFilter = {
+    is?: FeatureWhereInput | null
+    isNot?: FeatureWhereInput | null
+  }
+
   export type FeatureCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -41579,6 +44597,8 @@ export namespace Prisma {
     endDate?: SortOrder
     priority?: SortOrder
     assignedToId?: SortOrder
+    parentFeatureId?: SortOrder
+    organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41600,6 +44620,8 @@ export namespace Prisma {
     endDate?: SortOrder
     priority?: SortOrder
     assignedToId?: SortOrder
+    parentFeatureId?: SortOrder
+    organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41616,6 +44638,8 @@ export namespace Prisma {
     endDate?: SortOrder
     priority?: SortOrder
     assignedToId?: SortOrder
+    parentFeatureId?: SortOrder
+    organizationId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -41633,6 +44657,59 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeaturePhaseFilter<$PrismaModel>
     _max?: NestedEnumFeaturePhaseFilter<$PrismaModel>
+  }
+
+  export type FeatureScalarRelationFilter = {
+    is?: FeatureWhereInput
+    isNot?: FeatureWhereInput
+  }
+
+  export type FeatureDependencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeatureDependencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeatureDependencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeatureLinkCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeatureLinkMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeatureLinkMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    featureId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -42332,6 +45409,27 @@ export namespace Prisma {
     connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
   }
 
+  export type FeatureCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput> | FeatureCreateWithoutOrganizationInput[] | FeatureUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutOrganizationInput | FeatureCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureCreateManyOrganizationInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type FeatureDependencyCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput> | FeatureDependencyCreateWithoutOrganizationInput[] | FeatureDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutOrganizationInput | FeatureDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureDependencyCreateManyOrganizationInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureLinkCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput> | FeatureLinkCreateWithoutOrganizationInput[] | FeatureLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutOrganizationInput | FeatureLinkCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureLinkCreateManyOrganizationInputEnvelope
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -42393,6 +45491,27 @@ export namespace Prisma {
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
     createMany?: ActivityFeedCreateManyOrganizationInputEnvelope
     connect?: ActivityFeedWhereUniqueInput | ActivityFeedWhereUniqueInput[]
+  }
+
+  export type FeatureUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput> | FeatureCreateWithoutOrganizationInput[] | FeatureUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutOrganizationInput | FeatureCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureCreateManyOrganizationInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput> | FeatureDependencyCreateWithoutOrganizationInput[] | FeatureDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutOrganizationInput | FeatureDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureDependencyCreateManyOrganizationInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput> | FeatureLinkCreateWithoutOrganizationInput[] | FeatureLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutOrganizationInput | FeatureLinkCreateOrConnectWithoutOrganizationInput[]
+    createMany?: FeatureLinkCreateManyOrganizationInputEnvelope
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
   }
 
   export type MemberUpdateManyWithoutOrganizationNestedInput = {
@@ -42521,6 +45640,48 @@ export namespace Prisma {
     deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
   }
 
+  export type FeatureUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput> | FeatureCreateWithoutOrganizationInput[] | FeatureUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutOrganizationInput | FeatureCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutOrganizationInput | FeatureUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureCreateManyOrganizationInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutOrganizationInput | FeatureUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutOrganizationInput | FeatureUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type FeatureDependencyUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput> | FeatureDependencyCreateWithoutOrganizationInput[] | FeatureDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutOrganizationInput | FeatureDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutOrganizationInput | FeatureDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureDependencyCreateManyOrganizationInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutOrganizationInput | FeatureDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutOrganizationInput | FeatureDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureLinkUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput> | FeatureLinkCreateWithoutOrganizationInput[] | FeatureLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutOrganizationInput | FeatureLinkCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureLinkUpsertWithWhereUniqueWithoutOrganizationInput | FeatureLinkUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureLinkCreateManyOrganizationInputEnvelope
+    set?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    disconnect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    delete?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    update?: FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput | FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureLinkUpdateManyWithWhereWithoutOrganizationInput | FeatureLinkUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -42645,6 +45806,48 @@ export namespace Prisma {
     update?: ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput | ActivityFeedUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: ActivityFeedUpdateManyWithWhereWithoutOrganizationInput | ActivityFeedUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: ActivityFeedScalarWhereInput | ActivityFeedScalarWhereInput[]
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput> | FeatureCreateWithoutOrganizationInput[] | FeatureUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutOrganizationInput | FeatureCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutOrganizationInput | FeatureUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureCreateManyOrganizationInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutOrganizationInput | FeatureUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutOrganizationInput | FeatureUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput> | FeatureDependencyCreateWithoutOrganizationInput[] | FeatureDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutOrganizationInput | FeatureDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutOrganizationInput | FeatureDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureDependencyCreateManyOrganizationInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutOrganizationInput | FeatureDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutOrganizationInput | FeatureDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput> | FeatureLinkCreateWithoutOrganizationInput[] | FeatureLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutOrganizationInput | FeatureLinkCreateOrConnectWithoutOrganizationInput[]
+    upsert?: FeatureLinkUpsertWithWhereUniqueWithoutOrganizationInput | FeatureLinkUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: FeatureLinkCreateManyOrganizationInputEnvelope
+    set?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    disconnect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    delete?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    update?: FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput | FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: FeatureLinkUpdateManyWithWhereWithoutOrganizationInput | FeatureLinkUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -43718,6 +46921,25 @@ export namespace Prisma {
     update?: XOR<XOR<WaitlistUpdateToOneWithWhereWithoutEntriesInput, WaitlistUpdateWithoutEntriesInput>, WaitlistUncheckedUpdateWithoutEntriesInput>
   }
 
+  export type FeatureCreateNestedOneWithoutSubFeaturesInput = {
+    create?: XOR<FeatureCreateWithoutSubFeaturesInput, FeatureUncheckedCreateWithoutSubFeaturesInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutSubFeaturesInput
+    connect?: FeatureWhereUniqueInput
+  }
+
+  export type FeatureCreateNestedManyWithoutParentFeatureInput = {
+    create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
+    createMany?: FeatureCreateManyParentFeatureInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutFeatureInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureInput, OrganizationUncheckedCreateWithoutFeatureInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutFeatureInput = {
     create?: XOR<UserCreateWithoutFeatureInput, UserUncheckedCreateWithoutFeatureInput>
     connectOrCreate?: UserCreateOrConnectWithoutFeatureInput
@@ -43730,8 +46952,89 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput
   }
 
+  export type FeatureDependencyCreateNestedManyWithoutFeatureInput = {
+    create?: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput> | FeatureDependencyCreateWithoutFeatureInput[] | FeatureDependencyUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutFeatureInput | FeatureDependencyCreateOrConnectWithoutFeatureInput[]
+    createMany?: FeatureDependencyCreateManyFeatureInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureDependencyCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput> | FeatureDependencyCreateWithoutDependencyInput[] | FeatureDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutDependencyInput | FeatureDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: FeatureDependencyCreateManyDependencyInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureLinkCreateNestedManyWithoutFeatureInput = {
+    create?: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput> | FeatureLinkCreateWithoutFeatureInput[] | FeatureLinkUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutFeatureInput | FeatureLinkCreateOrConnectWithoutFeatureInput[]
+    createMany?: FeatureLinkCreateManyFeatureInputEnvelope
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+  }
+
+  export type FeatureUncheckedCreateNestedManyWithoutParentFeatureInput = {
+    create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
+    createMany?: FeatureCreateManyParentFeatureInputEnvelope
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+  }
+
+  export type FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput = {
+    create?: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput> | FeatureDependencyCreateWithoutFeatureInput[] | FeatureDependencyUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutFeatureInput | FeatureDependencyCreateOrConnectWithoutFeatureInput[]
+    createMany?: FeatureDependencyCreateManyFeatureInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput> | FeatureDependencyCreateWithoutDependencyInput[] | FeatureDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutDependencyInput | FeatureDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: FeatureDependencyCreateManyDependencyInputEnvelope
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+  }
+
+  export type FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput = {
+    create?: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput> | FeatureLinkCreateWithoutFeatureInput[] | FeatureLinkUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutFeatureInput | FeatureLinkCreateOrConnectWithoutFeatureInput[]
+    createMany?: FeatureLinkCreateManyFeatureInputEnvelope
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+  }
+
   export type EnumFeaturePhaseFieldUpdateOperationsInput = {
     set?: $Enums.FeaturePhase
+  }
+
+  export type FeatureUpdateOneWithoutSubFeaturesNestedInput = {
+    create?: XOR<FeatureCreateWithoutSubFeaturesInput, FeatureUncheckedCreateWithoutSubFeaturesInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutSubFeaturesInput
+    upsert?: FeatureUpsertWithoutSubFeaturesInput
+    disconnect?: FeatureWhereInput | boolean
+    delete?: FeatureWhereInput | boolean
+    connect?: FeatureWhereUniqueInput
+    update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutSubFeaturesInput, FeatureUpdateWithoutSubFeaturesInput>, FeatureUncheckedUpdateWithoutSubFeaturesInput>
+  }
+
+  export type FeatureUpdateManyWithoutParentFeatureNestedInput = {
+    create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutParentFeatureInput | FeatureUpsertWithWhereUniqueWithoutParentFeatureInput[]
+    createMany?: FeatureCreateManyParentFeatureInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutParentFeatureInput | FeatureUpdateWithWhereUniqueWithoutParentFeatureInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutParentFeatureInput | FeatureUpdateManyWithWhereWithoutParentFeatureInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutFeatureNestedInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureInput, OrganizationUncheckedCreateWithoutFeatureInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureInput
+    upsert?: OrganizationUpsertWithoutFeatureInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutFeatureInput, OrganizationUpdateWithoutFeatureInput>, OrganizationUncheckedUpdateWithoutFeatureInput>
   }
 
   export type UserUpdateOneWithoutFeatureNestedInput = {
@@ -43750,6 +47053,174 @@ export namespace Prisma {
     upsert?: ProjectUpsertWithoutFeaturesInput
     connect?: ProjectWhereUniqueInput
     update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutFeaturesInput, ProjectUpdateWithoutFeaturesInput>, ProjectUncheckedUpdateWithoutFeaturesInput>
+  }
+
+  export type FeatureDependencyUpdateManyWithoutFeatureNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput> | FeatureDependencyCreateWithoutFeatureInput[] | FeatureDependencyUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutFeatureInput | FeatureDependencyCreateOrConnectWithoutFeatureInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput | FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput[]
+    createMany?: FeatureDependencyCreateManyFeatureInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutFeatureInput | FeatureDependencyUpdateWithWhereUniqueWithoutFeatureInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutFeatureInput | FeatureDependencyUpdateManyWithWhereWithoutFeatureInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureDependencyUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput> | FeatureDependencyCreateWithoutDependencyInput[] | FeatureDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutDependencyInput | FeatureDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutDependencyInput | FeatureDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: FeatureDependencyCreateManyDependencyInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutDependencyInput | FeatureDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutDependencyInput | FeatureDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureLinkUpdateManyWithoutFeatureNestedInput = {
+    create?: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput> | FeatureLinkCreateWithoutFeatureInput[] | FeatureLinkUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutFeatureInput | FeatureLinkCreateOrConnectWithoutFeatureInput[]
+    upsert?: FeatureLinkUpsertWithWhereUniqueWithoutFeatureInput | FeatureLinkUpsertWithWhereUniqueWithoutFeatureInput[]
+    createMany?: FeatureLinkCreateManyFeatureInputEnvelope
+    set?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    disconnect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    delete?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    update?: FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput | FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput[]
+    updateMany?: FeatureLinkUpdateManyWithWhereWithoutFeatureInput | FeatureLinkUpdateManyWithWhereWithoutFeatureInput[]
+    deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput = {
+    create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
+    connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
+    upsert?: FeatureUpsertWithWhereUniqueWithoutParentFeatureInput | FeatureUpsertWithWhereUniqueWithoutParentFeatureInput[]
+    createMany?: FeatureCreateManyParentFeatureInputEnvelope
+    set?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    disconnect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    delete?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    connect?: FeatureWhereUniqueInput | FeatureWhereUniqueInput[]
+    update?: FeatureUpdateWithWhereUniqueWithoutParentFeatureInput | FeatureUpdateWithWhereUniqueWithoutParentFeatureInput[]
+    updateMany?: FeatureUpdateManyWithWhereWithoutParentFeatureInput | FeatureUpdateManyWithWhereWithoutParentFeatureInput[]
+    deleteMany?: FeatureScalarWhereInput | FeatureScalarWhereInput[]
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput> | FeatureDependencyCreateWithoutFeatureInput[] | FeatureDependencyUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutFeatureInput | FeatureDependencyCreateOrConnectWithoutFeatureInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput | FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput[]
+    createMany?: FeatureDependencyCreateManyFeatureInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutFeatureInput | FeatureDependencyUpdateWithWhereUniqueWithoutFeatureInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutFeatureInput | FeatureDependencyUpdateManyWithWhereWithoutFeatureInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput> | FeatureDependencyCreateWithoutDependencyInput[] | FeatureDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: FeatureDependencyCreateOrConnectWithoutDependencyInput | FeatureDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: FeatureDependencyUpsertWithWhereUniqueWithoutDependencyInput | FeatureDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: FeatureDependencyCreateManyDependencyInputEnvelope
+    set?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    disconnect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    delete?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    connect?: FeatureDependencyWhereUniqueInput | FeatureDependencyWhereUniqueInput[]
+    update?: FeatureDependencyUpdateWithWhereUniqueWithoutDependencyInput | FeatureDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: FeatureDependencyUpdateManyWithWhereWithoutDependencyInput | FeatureDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+  }
+
+  export type FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput = {
+    create?: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput> | FeatureLinkCreateWithoutFeatureInput[] | FeatureLinkUncheckedCreateWithoutFeatureInput[]
+    connectOrCreate?: FeatureLinkCreateOrConnectWithoutFeatureInput | FeatureLinkCreateOrConnectWithoutFeatureInput[]
+    upsert?: FeatureLinkUpsertWithWhereUniqueWithoutFeatureInput | FeatureLinkUpsertWithWhereUniqueWithoutFeatureInput[]
+    createMany?: FeatureLinkCreateManyFeatureInputEnvelope
+    set?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    disconnect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    delete?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+    update?: FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput | FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput[]
+    updateMany?: FeatureLinkUpdateManyWithWhereWithoutFeatureInput | FeatureLinkUpdateManyWithWhereWithoutFeatureInput[]
+    deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutFeatureDependencyInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureDependencyInput, OrganizationUncheckedCreateWithoutFeatureDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureDependencyInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type FeatureCreateNestedOneWithoutDependenciesInput = {
+    create?: XOR<FeatureCreateWithoutDependenciesInput, FeatureUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutDependenciesInput
+    connect?: FeatureWhereUniqueInput
+  }
+
+  export type FeatureCreateNestedOneWithoutDependentOnInput = {
+    create?: XOR<FeatureCreateWithoutDependentOnInput, FeatureUncheckedCreateWithoutDependentOnInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutDependentOnInput
+    connect?: FeatureWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutFeatureDependencyNestedInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureDependencyInput, OrganizationUncheckedCreateWithoutFeatureDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureDependencyInput
+    upsert?: OrganizationUpsertWithoutFeatureDependencyInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutFeatureDependencyInput, OrganizationUpdateWithoutFeatureDependencyInput>, OrganizationUncheckedUpdateWithoutFeatureDependencyInput>
+  }
+
+  export type FeatureUpdateOneRequiredWithoutDependenciesNestedInput = {
+    create?: XOR<FeatureCreateWithoutDependenciesInput, FeatureUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutDependenciesInput
+    upsert?: FeatureUpsertWithoutDependenciesInput
+    connect?: FeatureWhereUniqueInput
+    update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutDependenciesInput, FeatureUpdateWithoutDependenciesInput>, FeatureUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type FeatureUpdateOneRequiredWithoutDependentOnNestedInput = {
+    create?: XOR<FeatureCreateWithoutDependentOnInput, FeatureUncheckedCreateWithoutDependentOnInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutDependentOnInput
+    upsert?: FeatureUpsertWithoutDependentOnInput
+    connect?: FeatureWhereUniqueInput
+    update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutDependentOnInput, FeatureUpdateWithoutDependentOnInput>, FeatureUncheckedUpdateWithoutDependentOnInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutFeatureLinkInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureLinkInput, OrganizationUncheckedCreateWithoutFeatureLinkInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureLinkInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type FeatureCreateNestedOneWithoutFeatureLinkInput = {
+    create?: XOR<FeatureCreateWithoutFeatureLinkInput, FeatureUncheckedCreateWithoutFeatureLinkInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutFeatureLinkInput
+    connect?: FeatureWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutFeatureLinkNestedInput = {
+    create?: XOR<OrganizationCreateWithoutFeatureLinkInput, OrganizationUncheckedCreateWithoutFeatureLinkInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutFeatureLinkInput
+    upsert?: OrganizationUpsertWithoutFeatureLinkInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutFeatureLinkInput, OrganizationUpdateWithoutFeatureLinkInput>, OrganizationUncheckedUpdateWithoutFeatureLinkInput>
+  }
+
+  export type FeatureUpdateOneRequiredWithoutFeatureLinkNestedInput = {
+    create?: XOR<FeatureCreateWithoutFeatureLinkInput, FeatureUncheckedCreateWithoutFeatureLinkInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutFeatureLinkInput
+    upsert?: FeatureUpsertWithoutFeatureLinkInput
+    connect?: FeatureWhereUniqueInput
+    update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutFeatureLinkInput, FeatureUpdateWithoutFeatureLinkInput>, FeatureUncheckedUpdateWithoutFeatureLinkInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -44746,7 +48217,13 @@ export namespace Prisma {
     priority: $Enums.Importance
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
     project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutAssignedToInput = {
@@ -44760,8 +48237,14 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     priority: $Enums.Importance
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutAssignedToInput = {
@@ -45245,6 +48728,8 @@ export namespace Prisma {
     endDate?: DateTimeNullableFilter<"Feature"> | Date | string | null
     priority?: EnumImportanceFilter<"Feature"> | $Enums.Importance
     assignedToId?: StringNullableFilter<"Feature"> | string | null
+    parentFeatureId?: StringNullableFilter<"Feature"> | string | null
+    organizationId?: StringFilter<"Feature"> | string
     createdAt?: DateTimeFilter<"Feature"> | Date | string
     updatedAt?: DateTimeFilter<"Feature"> | Date | string
   }
@@ -45851,6 +49336,106 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeatureCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutOrganizationInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureCreateManyOrganizationInputEnvelope = {
+    data: FeatureCreateManyOrganizationInput | FeatureCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureDependencyCreateWithoutOrganizationInput = {
+    id?: string
+    createdAt?: Date | string
+    feature: FeatureCreateNestedOneWithoutDependenciesInput
+    dependency: FeatureCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type FeatureDependencyUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    featureId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateOrConnectWithoutOrganizationInput = {
+    where: FeatureDependencyWhereUniqueInput
+    create: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureDependencyCreateManyOrganizationInputEnvelope = {
+    data: FeatureDependencyCreateManyOrganizationInput | FeatureDependencyCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureLinkCreateWithoutOrganizationInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    feature: FeatureCreateNestedOneWithoutFeatureLinkInput
+  }
+
+  export type FeatureLinkUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    featureId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkCreateOrConnectWithoutOrganizationInput = {
+    where: FeatureLinkWhereUniqueInput
+    create: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureLinkCreateManyOrganizationInputEnvelope = {
+    data: FeatureLinkCreateManyOrganizationInput | FeatureLinkCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MemberUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: MemberWhereUniqueInput
     update: XOR<MemberUpdateWithoutOrganizationInput, MemberUncheckedUpdateWithoutOrganizationInput>
@@ -46009,6 +49594,76 @@ export namespace Prisma {
     data: XOR<ActivityFeedUpdateManyMutationInput, ActivityFeedUncheckedUpdateManyWithoutOrganizationInput>
   }
 
+  export type FeatureUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureWhereUniqueInput
+    update: XOR<FeatureUpdateWithoutOrganizationInput, FeatureUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<FeatureCreateWithoutOrganizationInput, FeatureUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureWhereUniqueInput
+    data: XOR<FeatureUpdateWithoutOrganizationInput, FeatureUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type FeatureUpdateManyWithWhereWithoutOrganizationInput = {
+    where: FeatureScalarWhereInput
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type FeatureDependencyUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureDependencyWhereUniqueInput
+    update: XOR<FeatureDependencyUpdateWithoutOrganizationInput, FeatureDependencyUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<FeatureDependencyCreateWithoutOrganizationInput, FeatureDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureDependencyUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureDependencyWhereUniqueInput
+    data: XOR<FeatureDependencyUpdateWithoutOrganizationInput, FeatureDependencyUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type FeatureDependencyUpdateManyWithWhereWithoutOrganizationInput = {
+    where: FeatureDependencyScalarWhereInput
+    data: XOR<FeatureDependencyUpdateManyMutationInput, FeatureDependencyUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type FeatureDependencyScalarWhereInput = {
+    AND?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+    OR?: FeatureDependencyScalarWhereInput[]
+    NOT?: FeatureDependencyScalarWhereInput | FeatureDependencyScalarWhereInput[]
+    id?: StringFilter<"FeatureDependency"> | string
+    organizationId?: StringFilter<"FeatureDependency"> | string
+    featureId?: StringFilter<"FeatureDependency"> | string
+    dependencyId?: StringFilter<"FeatureDependency"> | string
+    createdAt?: DateTimeFilter<"FeatureDependency"> | Date | string
+  }
+
+  export type FeatureLinkUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureLinkWhereUniqueInput
+    update: XOR<FeatureLinkUpdateWithoutOrganizationInput, FeatureLinkUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<FeatureLinkCreateWithoutOrganizationInput, FeatureLinkUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type FeatureLinkUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: FeatureLinkWhereUniqueInput
+    data: XOR<FeatureLinkUpdateWithoutOrganizationInput, FeatureLinkUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type FeatureLinkUpdateManyWithWhereWithoutOrganizationInput = {
+    where: FeatureLinkScalarWhereInput
+    data: XOR<FeatureLinkUpdateManyMutationInput, FeatureLinkUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type FeatureLinkScalarWhereInput = {
+    AND?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+    OR?: FeatureLinkScalarWhereInput[]
+    NOT?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+    id?: StringFilter<"FeatureLink"> | string
+    organizationId?: StringFilter<"FeatureLink"> | string
+    featureId?: StringFilter<"FeatureLink"> | string
+    url?: StringFilter<"FeatureLink"> | string
+    createdAt?: DateTimeFilter<"FeatureLink"> | Date | string
+  }
+
   export type OrganizationCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -46024,6 +49679,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -46041,6 +49699,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -46129,6 +49790,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -46146,6 +49810,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMembersInput = {
@@ -46224,6 +49891,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -46241,6 +49911,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -46329,6 +50002,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -46346,6 +50022,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -46656,6 +50335,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -46673,6 +50355,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -46761,6 +50446,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -46778,6 +50466,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSubscriptionInput = {
@@ -46895,6 +50586,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProjectInput = {
@@ -46912,6 +50606,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProjectInput = {
@@ -47184,7 +50881,13 @@ export namespace Prisma {
     priority: $Enums.Importance
     createdAt?: Date | string
     updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
     assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutProjectInput = {
@@ -47198,8 +50901,14 @@ export namespace Prisma {
     endDate?: Date | string | null
     priority: $Enums.Importance
     assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutProjectInput = {
@@ -47283,6 +50992,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProjectInput = {
@@ -47300,6 +51012,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutProjectInput = {
@@ -47534,6 +51249,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIdeaInput = {
@@ -47551,6 +51269,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIdeaInput = {
@@ -47703,6 +51424,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIdeaInput = {
@@ -47720,6 +51444,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -47753,6 +51480,9 @@ export namespace Prisma {
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueInput = {
@@ -47770,6 +51500,9 @@ export namespace Prisma {
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueInput = {
@@ -47911,6 +51644,9 @@ export namespace Prisma {
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueInput = {
@@ -47928,6 +51664,9 @@ export namespace Prisma {
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithoutIssuesInput = {
@@ -48118,6 +51857,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetInput = {
@@ -48135,6 +51877,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetInput = {
@@ -48282,6 +52027,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetInput = {
@@ -48299,6 +52047,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetInput = {
@@ -48377,6 +52128,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutActivityFeedInput = {
@@ -48394,6 +52148,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutActivityFeedInput = {
@@ -48482,6 +52239,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutActivityFeedInput = {
@@ -48499,6 +52259,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutActivityFeedInput = {
@@ -49583,6 +53346,9 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWaitlistInput = {
@@ -49600,6 +53366,9 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWaitlistInput = {
@@ -49801,6 +53570,9 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWaitlistInput = {
@@ -49818,6 +53590,9 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutWaitlistInput = {
@@ -50007,6 +53782,150 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type FeatureCreateWithoutSubFeaturesInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutSubFeaturesInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutSubFeaturesInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutSubFeaturesInput, FeatureUncheckedCreateWithoutSubFeaturesInput>
+  }
+
+  export type FeatureCreateWithoutParentFeatureInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutParentFeatureInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutParentFeatureInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput>
+  }
+
+  export type FeatureCreateManyParentFeatureInputEnvelope = {
+    data: FeatureCreateManyParentFeatureInput | FeatureCreateManyParentFeatureInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationCreateWithoutFeatureInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutFeatureInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutFeatureInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutFeatureInput, OrganizationUncheckedCreateWithoutFeatureInput>
+  }
+
   export type UserCreateWithoutFeatureInput = {
     id: string
     name: string
@@ -50113,6 +54032,198 @@ export namespace Prisma {
   export type ProjectCreateOrConnectWithoutFeaturesInput = {
     where: ProjectWhereUniqueInput
     create: XOR<ProjectCreateWithoutFeaturesInput, ProjectUncheckedCreateWithoutFeaturesInput>
+  }
+
+  export type FeatureDependencyCreateWithoutFeatureInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutFeatureDependencyInput
+    dependency: FeatureCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type FeatureDependencyUncheckedCreateWithoutFeatureInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateOrConnectWithoutFeatureInput = {
+    where: FeatureDependencyWhereUniqueInput
+    create: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput>
+  }
+
+  export type FeatureDependencyCreateManyFeatureInputEnvelope = {
+    data: FeatureDependencyCreateManyFeatureInput | FeatureDependencyCreateManyFeatureInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureDependencyCreateWithoutDependencyInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutFeatureDependencyInput
+    feature: FeatureCreateNestedOneWithoutDependenciesInput
+  }
+
+  export type FeatureDependencyUncheckedCreateWithoutDependencyInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateOrConnectWithoutDependencyInput = {
+    where: FeatureDependencyWhereUniqueInput
+    create: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type FeatureDependencyCreateManyDependencyInputEnvelope = {
+    data: FeatureDependencyCreateManyDependencyInput | FeatureDependencyCreateManyDependencyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureLinkCreateWithoutFeatureInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutFeatureLinkInput
+  }
+
+  export type FeatureLinkUncheckedCreateWithoutFeatureInput = {
+    id?: string
+    organizationId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkCreateOrConnectWithoutFeatureInput = {
+    where: FeatureLinkWhereUniqueInput
+    create: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput>
+  }
+
+  export type FeatureLinkCreateManyFeatureInputEnvelope = {
+    data: FeatureLinkCreateManyFeatureInput | FeatureLinkCreateManyFeatureInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeatureUpsertWithoutSubFeaturesInput = {
+    update: XOR<FeatureUpdateWithoutSubFeaturesInput, FeatureUncheckedUpdateWithoutSubFeaturesInput>
+    create: XOR<FeatureCreateWithoutSubFeaturesInput, FeatureUncheckedCreateWithoutSubFeaturesInput>
+    where?: FeatureWhereInput
+  }
+
+  export type FeatureUpdateToOneWithWhereWithoutSubFeaturesInput = {
+    where?: FeatureWhereInput
+    data: XOR<FeatureUpdateWithoutSubFeaturesInput, FeatureUncheckedUpdateWithoutSubFeaturesInput>
+  }
+
+  export type FeatureUpdateWithoutSubFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutSubFeaturesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUpsertWithWhereUniqueWithoutParentFeatureInput = {
+    where: FeatureWhereUniqueInput
+    update: XOR<FeatureUpdateWithoutParentFeatureInput, FeatureUncheckedUpdateWithoutParentFeatureInput>
+    create: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput>
+  }
+
+  export type FeatureUpdateWithWhereUniqueWithoutParentFeatureInput = {
+    where: FeatureWhereUniqueInput
+    data: XOR<FeatureUpdateWithoutParentFeatureInput, FeatureUncheckedUpdateWithoutParentFeatureInput>
+  }
+
+  export type FeatureUpdateManyWithWhereWithoutParentFeatureInput = {
+    where: FeatureScalarWhereInput
+    data: XOR<FeatureUpdateManyMutationInput, FeatureUncheckedUpdateManyWithoutParentFeatureInput>
+  }
+
+  export type OrganizationUpsertWithoutFeatureInput = {
+    update: XOR<OrganizationUpdateWithoutFeatureInput, OrganizationUncheckedUpdateWithoutFeatureInput>
+    create: XOR<OrganizationCreateWithoutFeatureInput, OrganizationUncheckedCreateWithoutFeatureInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutFeatureInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutFeatureInput, OrganizationUncheckedUpdateWithoutFeatureInput>
+  }
+
+  export type OrganizationUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutFeatureInput = {
@@ -50233,6 +54344,546 @@ export namespace Prisma {
     assets?: AssetUncheckedUpdateManyWithoutProjectNestedInput
     publicRoadmaps?: PublicRoadmapUncheckedUpdateManyWithoutProjectNestedInput
     waitlists?: WaitlistUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type FeatureDependencyUpsertWithWhereUniqueWithoutFeatureInput = {
+    where: FeatureDependencyWhereUniqueInput
+    update: XOR<FeatureDependencyUpdateWithoutFeatureInput, FeatureDependencyUncheckedUpdateWithoutFeatureInput>
+    create: XOR<FeatureDependencyCreateWithoutFeatureInput, FeatureDependencyUncheckedCreateWithoutFeatureInput>
+  }
+
+  export type FeatureDependencyUpdateWithWhereUniqueWithoutFeatureInput = {
+    where: FeatureDependencyWhereUniqueInput
+    data: XOR<FeatureDependencyUpdateWithoutFeatureInput, FeatureDependencyUncheckedUpdateWithoutFeatureInput>
+  }
+
+  export type FeatureDependencyUpdateManyWithWhereWithoutFeatureInput = {
+    where: FeatureDependencyScalarWhereInput
+    data: XOR<FeatureDependencyUpdateManyMutationInput, FeatureDependencyUncheckedUpdateManyWithoutFeatureInput>
+  }
+
+  export type FeatureDependencyUpsertWithWhereUniqueWithoutDependencyInput = {
+    where: FeatureDependencyWhereUniqueInput
+    update: XOR<FeatureDependencyUpdateWithoutDependencyInput, FeatureDependencyUncheckedUpdateWithoutDependencyInput>
+    create: XOR<FeatureDependencyCreateWithoutDependencyInput, FeatureDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type FeatureDependencyUpdateWithWhereUniqueWithoutDependencyInput = {
+    where: FeatureDependencyWhereUniqueInput
+    data: XOR<FeatureDependencyUpdateWithoutDependencyInput, FeatureDependencyUncheckedUpdateWithoutDependencyInput>
+  }
+
+  export type FeatureDependencyUpdateManyWithWhereWithoutDependencyInput = {
+    where: FeatureDependencyScalarWhereInput
+    data: XOR<FeatureDependencyUpdateManyMutationInput, FeatureDependencyUncheckedUpdateManyWithoutDependencyInput>
+  }
+
+  export type FeatureLinkUpsertWithWhereUniqueWithoutFeatureInput = {
+    where: FeatureLinkWhereUniqueInput
+    update: XOR<FeatureLinkUpdateWithoutFeatureInput, FeatureLinkUncheckedUpdateWithoutFeatureInput>
+    create: XOR<FeatureLinkCreateWithoutFeatureInput, FeatureLinkUncheckedCreateWithoutFeatureInput>
+  }
+
+  export type FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput = {
+    where: FeatureLinkWhereUniqueInput
+    data: XOR<FeatureLinkUpdateWithoutFeatureInput, FeatureLinkUncheckedUpdateWithoutFeatureInput>
+  }
+
+  export type FeatureLinkUpdateManyWithWhereWithoutFeatureInput = {
+    where: FeatureLinkScalarWhereInput
+    data: XOR<FeatureLinkUpdateManyMutationInput, FeatureLinkUncheckedUpdateManyWithoutFeatureInput>
+  }
+
+  export type OrganizationCreateWithoutFeatureDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutFeatureDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutFeatureDependencyInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutFeatureDependencyInput, OrganizationUncheckedCreateWithoutFeatureDependencyInput>
+  }
+
+  export type FeatureCreateWithoutDependenciesInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutDependenciesInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutDependenciesInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutDependenciesInput, FeatureUncheckedCreateWithoutDependenciesInput>
+  }
+
+  export type FeatureCreateWithoutDependentOnInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutDependentOnInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutDependentOnInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutDependentOnInput, FeatureUncheckedCreateWithoutDependentOnInput>
+  }
+
+  export type OrganizationUpsertWithoutFeatureDependencyInput = {
+    update: XOR<OrganizationUpdateWithoutFeatureDependencyInput, OrganizationUncheckedUpdateWithoutFeatureDependencyInput>
+    create: XOR<OrganizationCreateWithoutFeatureDependencyInput, OrganizationUncheckedCreateWithoutFeatureDependencyInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutFeatureDependencyInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutFeatureDependencyInput, OrganizationUncheckedUpdateWithoutFeatureDependencyInput>
+  }
+
+  export type OrganizationUpdateWithoutFeatureDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutFeatureDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type FeatureUpsertWithoutDependenciesInput = {
+    update: XOR<FeatureUpdateWithoutDependenciesInput, FeatureUncheckedUpdateWithoutDependenciesInput>
+    create: XOR<FeatureCreateWithoutDependenciesInput, FeatureUncheckedCreateWithoutDependenciesInput>
+    where?: FeatureWhereInput
+  }
+
+  export type FeatureUpdateToOneWithWhereWithoutDependenciesInput = {
+    where?: FeatureWhereInput
+    data: XOR<FeatureUpdateWithoutDependenciesInput, FeatureUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type FeatureUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUpsertWithoutDependentOnInput = {
+    update: XOR<FeatureUpdateWithoutDependentOnInput, FeatureUncheckedUpdateWithoutDependentOnInput>
+    create: XOR<FeatureCreateWithoutDependentOnInput, FeatureUncheckedCreateWithoutDependentOnInput>
+    where?: FeatureWhereInput
+  }
+
+  export type FeatureUpdateToOneWithWhereWithoutDependentOnInput = {
+    where?: FeatureWhereInput
+    data: XOR<FeatureUpdateWithoutDependentOnInput, FeatureUncheckedUpdateWithoutDependentOnInput>
+  }
+
+  export type FeatureUpdateWithoutDependentOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutDependentOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type OrganizationCreateWithoutFeatureLinkInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutFeatureLinkInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    ActivityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    Feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    FeatureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutFeatureLinkInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutFeatureLinkInput, OrganizationUncheckedCreateWithoutFeatureLinkInput>
+  }
+
+  export type FeatureCreateWithoutFeatureLinkInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type FeatureUncheckedCreateWithoutFeatureLinkInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type FeatureCreateOrConnectWithoutFeatureLinkInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutFeatureLinkInput, FeatureUncheckedCreateWithoutFeatureLinkInput>
+  }
+
+  export type OrganizationUpsertWithoutFeatureLinkInput = {
+    update: XOR<OrganizationUpdateWithoutFeatureLinkInput, OrganizationUncheckedUpdateWithoutFeatureLinkInput>
+    create: XOR<OrganizationCreateWithoutFeatureLinkInput, OrganizationUncheckedCreateWithoutFeatureLinkInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutFeatureLinkInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutFeatureLinkInput, OrganizationUncheckedUpdateWithoutFeatureLinkInput>
+  }
+
+  export type OrganizationUpdateWithoutFeatureLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutFeatureLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    ActivityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    Feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    FeatureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type FeatureUpsertWithoutFeatureLinkInput = {
+    update: XOR<FeatureUpdateWithoutFeatureLinkInput, FeatureUncheckedUpdateWithoutFeatureLinkInput>
+    create: XOR<FeatureCreateWithoutFeatureLinkInput, FeatureUncheckedCreateWithoutFeatureLinkInput>
+    where?: FeatureWhereInput
+  }
+
+  export type FeatureUpdateToOneWithWhereWithoutFeatureLinkInput = {
+    where?: FeatureWhereInput
+    data: XOR<FeatureUpdateWithoutFeatureLinkInput, FeatureUncheckedUpdateWithoutFeatureLinkInput>
+  }
+
+  export type FeatureUpdateWithoutFeatureLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutFeatureLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -50415,6 +55066,8 @@ export namespace Prisma {
     startDate?: Date | string | null
     endDate?: Date | string | null
     priority: $Enums.Importance
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -50952,7 +55605,13 @@ export namespace Prisma {
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutAssignedToInput = {
@@ -50966,8 +55625,14 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutAssignedToInput = {
@@ -50981,6 +55646,8 @@ export namespace Prisma {
     startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -51116,6 +55783,37 @@ export namespace Prisma {
     newValue?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type FeatureCreateManyOrganizationInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateManyOrganizationInput = {
+    id?: string
+    featureId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkCreateManyOrganizationInput = {
+    id?: string
+    featureId: string
+    url: string
+    createdAt?: Date | string
   }
 
   export type MemberUpdateWithoutOrganizationInput = {
@@ -51531,6 +56229,107 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FeatureUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feature?: FeatureUpdateOneRequiredWithoutDependenciesNestedInput
+    dependency?: FeatureUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type FeatureDependencyUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feature?: FeatureUpdateOneRequiredWithoutFeatureLinkNestedInput
+  }
+
+  export type FeatureLinkUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IssueCreateManyProjectInput = {
     id?: string
     title: string
@@ -51617,6 +56416,8 @@ export namespace Prisma {
     endDate?: Date | string | null
     priority: $Enums.Importance
     assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -51866,7 +56667,13 @@ export namespace Prisma {
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
     assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutProjectInput = {
@@ -51880,8 +56687,14 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutProjectInput = {
@@ -51895,6 +56708,8 @@ export namespace Prisma {
     endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -52351,6 +57166,166 @@ export namespace Prisma {
     utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureCreateManyParentFeatureInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateManyFeatureInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureDependencyCreateManyDependencyInput = {
+    id?: string
+    organizationId: string
+    featureId: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureLinkCreateManyFeatureInput = {
+    id?: string
+    organizationId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type FeatureUpdateWithoutParentFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutParentFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateManyWithoutParentFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureDependencyNestedInput
+    dependency?: FeatureUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type FeatureDependencyUncheckedUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureDependencyNestedInput
+    feature?: FeatureUpdateOneRequiredWithoutDependenciesNestedInput
+  }
+
+  export type FeatureDependencyUncheckedUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureDependencyUncheckedUpdateManyWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    featureId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureLinkNestedInput
+  }
+
+  export type FeatureLinkUncheckedUpdateWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeatureLinkUncheckedUpdateManyWithoutFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
