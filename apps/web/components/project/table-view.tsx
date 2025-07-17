@@ -139,19 +139,19 @@ export function TableView({
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
                     >
-                      {project.techStack.auth.split(" ")[0]}
+                      {project?.auth.split(" ")[0]}
                     </Badge>
                     <Badge
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
                     >
-                      {project.techStack.orm}
+                      {project?.orm}
                     </Badge>
                     <Badge
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
                     >
-                      {project.techStack.database.split(" ")[0]}
+                      {project?.database.split(" ")[0]}
                     </Badge>
                   </div>
                 </TableCell>

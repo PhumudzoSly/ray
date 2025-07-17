@@ -24,7 +24,7 @@ import { DATABASE_PROVIDERS } from "@/utils/constants/sources/database";
 import { AUTH_PROVIDERS } from "@/utils/constants/sources/auth";
 import { ORM_PLATFORMS } from "@/utils/constants/sources/orms";
 import { createProject } from "@/actions/project";
-import { JsonValueType, ProjectOptionalDefaults } from "@workspace/backend";
+import { ProjectOptionalDefaults } from "@workspace/backend";
 import { AI_PLATFORMS } from "@/utils/constants/sources/ai";
 
 type CreateProjectDialogProps = {
@@ -56,12 +56,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
     description: "", // Ensure always string
     platform: "web", // Must match allowed types
     status: "review",
-    techStack: {
-      auth: "",
-      orm: "",
-      database: "",
-      ai: "",
-    },
+    auth: "",
+    orm: "",
+    database: "",
+    ai: "",
     ideaId: ideaId ?? undefined, // Ensure string | undefined
   });
 
@@ -86,7 +84,6 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
     try {
       const projectId = await createProjectMutation.mutateAsync({
         ...form,
-        techStack: JSON.parse(JSON.stringify(form.techStack)) as JsonValueType,
         platform: form.platform as any,
       });
 
@@ -141,10 +138,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), ai: value },
+                  ai: value
                 })
               }
-              value={typeof form.techStack === "object" && form.techStack !== null && "ai" in form.techStack ? (form.techStack as any).ai : ""}
+              value={form.ai ?? ""}
               placeholder="Select AI provider"
             />
             <CommandSelect
@@ -155,10 +152,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), auth: value },
+                  auth: value
                 })
               }
-              value={typeof form.techStack === "object" && form.techStack !== null && "auth" in form.techStack ? (form.techStack as any).auth : ""}
+              value={form.auth ?? ""}
               placeholder="Select Auth provider"
             />
             <CommandSelect
@@ -169,10 +166,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), database: value },
+                  database: value
                 })
               }
-              value={typeof form.techStack === "object" && form.techStack !== null && "database" in form.techStack ? (form.techStack as any).database : ""}
+              value={form.database ?? ""}
               placeholder="Select Database provider"
             />
             <CommandSelect
@@ -183,10 +180,10 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  techStack: { ...(typeof form.techStack === "object" && form.techStack !== null ? form.techStack : { auth: "", orm: "", database: "", ai: "" }), orm: value },
+                  orm: value
                 })
               }
-              value={typeof form.techStack === "object" && form.techStack !== null && "orm" in form.techStack ? (form.techStack as any).orm : ""}
+              value={form.orm ?? ""}
               placeholder="Select ORM provider"
             />
           </div>

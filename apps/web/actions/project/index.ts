@@ -34,7 +34,6 @@ export const createProject = async (data: ProjectOptionalDefaults) => {
         data: {
             ...data,
             organizationId: org,
-            techStack: data.techStack || undefined,
         },
     })
 
@@ -49,7 +48,6 @@ export const updateProject = async (id: string, data: ProjectOptionalDefaults) =
         data: {
             ...data,
             organizationId: org,
-            techStack: data.techStack || undefined,
         },
     })
 

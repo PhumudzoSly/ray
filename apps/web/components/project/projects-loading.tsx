@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@workspace/ui/components/card";
 
-const PROJECT_STATUSES = [
+export const PROJECT_STATUSES = [
   { id: "planning", label: "Planning", color: "bg-blue-500" },
   { id: "in-progress", label: "In Progress", color: "bg-yellow-500" },
   { id: "review", label: "Review", color: "bg-purple-500" },
@@ -37,7 +37,7 @@ export function ProjectsLoading({ view }: ProjectsLoadingProps) {
   }
 
   return (
-    <div className="flex gap-6 h-full">
+    <div className="flex gap-6 h-full p-2">
       {PROJECT_STATUSES.map((status) => (
         <div key={status.id} className="flex-1 min-w-[300px]">
           <div className="mb-4">

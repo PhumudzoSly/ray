@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboard, Lightbulb, UsersRound, Bot, Inbox, MessageCircleCode, InfoIcon, Lock, List, Users } from "lucide-react";
+import { LayoutDashboard, Lightbulb, UsersRound, Bot, Inbox, MessageCircleCode, InfoIcon, Lock, List, Users, MessageCircle } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -46,7 +46,7 @@ const data: NavData = {
     {
       name: "Inbox",
       url: "/inbox",
-      icon: MessageCircleCode,
+      icon: MessageCircle,
       badge: {
         text: "Coming Soon",
         variant: 'success'
@@ -88,6 +88,10 @@ const data: NavData = {
       name: "Feedback",
       url: "/feedback",
       icon: Inbox,
+      badge: {
+        text: "Coming Soon",
+        variant: 'warning'
+      }
     },
   ],
   grow: [],
@@ -102,10 +106,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="sm" asChild>
               <div className='flex items-center gap-4'>
-                <div className="relative border border-border h-9 w-9 overflow-hidden rounded-lg">
+                <div className="relative border-border h-9 w-9 overflow-hidden rounded-lg">
                   <img
                     src="/icon.png"
-                    className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-110"
+                    className="h-full w-full object-cover rounded-md transition-transform duration-200"
                     alt=""
                   />
                 </div>

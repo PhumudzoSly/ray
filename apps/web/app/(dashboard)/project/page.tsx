@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
 import NoData from "@/components/shared/no-data";
 import Header from "@/components/shared/header";
+import { ProjectStatus } from "@workspace/backend/prisma/generated/client/client";
 
 export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,8 +35,8 @@ export default function ProjectsPage() {
   });
   // Optimistic update for project status
   const updateProjectStatusMutation = useMutation({
-    mutationFn: async ({ projectId, status }: { projectId: string; status: string }) => {
-      return await projectActions.updateProject(projectId, { status });
+    mutationFn: async ({ projectId, status }: { projectId: string; status: "planning" | "in_progress" | "review" | "completed" | null | undefined }) => {
+      return await projectActions.updateProject(projectId, { status: status as any });
     },
     onMutate: async ({ projectId, status }) => {
       await queryClient.cancelQueries({ queryKey: ["projects"] });
@@ -62,15 +63,15 @@ export default function ProjectsPage() {
   // Get unique tech stack options for filters
   const availableOptions = {
     auths: [
-      ...new Set(projects?.map((p) => p.techStack.auth.split(" ")[0]) || []),
+      ...new Set(projects?.map((p) => p?.auth?.split(" ")[0]) || []),
     ],
     databases: [
       ...new Set(
-        projects?.map((p) => p.techStack.database.split(" ")[0]) || []
+        projects?.map((p) => p?.database?.split(" ")[0]) || []
       ),
     ],
-    orms: [...new Set(projects?.map((p) => p.techStack.orm) || [])],
-    ais: [...new Set(projects?.map((p) => p.techStack.ai) || [])],
+    orms: [...new Set(projects?.map((p) => p.orm) || [])],
+    ais: [...new Set(projects?.map((p) => p.ai) || [])],
   };
 
   // Filter projects based on search and filters
@@ -84,12 +85,12 @@ export default function ProjectsPage() {
       const matchesPlatform =
         !filterPlatform || project.platform === filterPlatform;
       const matchesAuth =
-        !filterAuth || project.techStack.auth.split(" ")[0] === filterAuth;
+        !filterAuth || project?.auth?.split(" ")[0] === filterAuth;
       const matchesDatabase =
         !filterDatabase ||
-        project.techStack.database.split(" ")[0] === filterDatabase;
-      const matchesOrm = !filterOrm || project.techStack.orm === filterOrm;
-      const matchesAi = !filterAi || project.techStack.ai === filterAi;
+        project?.database?.split(" ")[0] === filterDatabase;
+      const matchesOrm = !filterOrm || project.orm === filterOrm;
+      const matchesAi = !filterAi || project.ai === filterAi;
 
       return (
         matchesSearch &&

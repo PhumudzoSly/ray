@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@workspace/ui/components/breadcrumb";
 import Link from "next/link";
+import { ModeToggle } from "./mode-switcher";
 
 type HeaderProps = {
   crumb: {
@@ -49,7 +50,7 @@ const Header = ({ children, crumb }: HeaderProps) => {
       </div>
       <div className="flex items-center gap-2">
         {children}
-        {/* <NotificationBell /> */}
+        <ModeToggle />
       </div>
     </header>
   );

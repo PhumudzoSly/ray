@@ -2,18 +2,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
-import {
-  MoreVertical,
   Clock,
   Bug,
   Rocket,
@@ -25,7 +17,6 @@ import { formatDistanceToNow } from "date-fns";
 import { ProjectTypeSelector } from "../ui/selectors/project-type-selector";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as projectActions from "@/actions/project";
-import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 
 interface ProjectCardProps {
@@ -158,13 +149,13 @@ export function ProjectCard({
           {/* Tech Stack */}
           <div className="flex flex-wrap gap-1">
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {project.techStack.auth.split(" ")[0]}
+              {project?.auth.split(" ")[0]}
             </Badge>
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {project.techStack.orm}
+              {project?.orm}
             </Badge>
             <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-              {project.techStack.database.split(" ")[0]}
+              {project?.database.split(" ")[0]}
             </Badge>
           </div>
 
