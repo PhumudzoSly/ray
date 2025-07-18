@@ -7,25 +7,25 @@ import { getSession } from "../account/user";
 export type Asset = {
     id: string;
     name: string;
-    description?: string;
+    description: string | null;
     type: AssetTypeType;
     projectId: string;
     organizationId: string;
-    storageId?: string;
-    fileName?: string;
-    fileSize?: number;
-    mimeType?: string;
-    url?: string;
-    linkType?: string;
-    tags?: string[];
-    category?: AssetCategoryType;
-    thumbnailUrl?: string;
-    isPublic?: boolean;
-    uploadedById?: string;
+    storageId: string | null;
+    fileName: string | null;
+    fileSize: number | null;
+    mimeType: string | null;
+    url: string | null;
+    linkType: string | null;
+    tags: string[];
+    category: AssetCategoryType | null;
+    thumbnailUrl: string | null;
+    isPublic: boolean | null;
+    uploadedById: string | null;
     createdAt: Date;
     updatedAt: Date;
-    viewCount?: number;
-    downloadCount?: number;
+    viewCount: number | null;
+    downloadCount: number | null;
 };
 
 // Get all assets for a project, with optional type and category filters
@@ -48,7 +48,7 @@ export async function getProjectAssets({
     // Convert tags from JSON to string[] if needed
     return assets.map((a) => ({
         ...a,
-        tags: Array.isArray(a.tags) ? a.tags : (a.tags ? JSON.parse(a.tags as any) : []),
+        tags: a.tags || [],
     }));
 }
 
@@ -89,6 +89,85 @@ export async function getAssetDownloadUrl({ assetId }: { assetId: string }): Pro
     return null;
 }
 
+// Update an asset
+export async function updateAsset({
+    assetId,
+    name,
+    description,
+    category,
+    tags,
+}: {
+    assetId: string;
+    name?: string;
+    description?: string;
+    category?: string;
+    tags?: string[];
+}): Promise<Asset> {
+    const asset = await prisma.asset.update({
+        where: { id: assetId },
+        data: {
+            ...(name && { name }),
+            ...(description !== undefined && { description }),
+            ...(category && { category: category as AssetCategoryType }),
+            ...(tags && { tags }),
+        },
+    });
+
+    return {
+        ...asset,
+        tags: asset.tags || [],
+    };
+}
+
+// Create a new file asset
+export async function createFileAsset({
+    projectId,
+    name,
+    description,
+    url,
+    fileName,
+    fileSize,
+    mimeType,
+    type,
+    category,
+    tags,
+}: {
+    projectId: string;
+    name: string;
+    description?: string;
+    url: string;
+    fileName: string;
+    fileSize: number;
+    mimeType: string;
+    type: AssetTypeType;
+    category?: string;
+    tags?: string[];
+}): Promise<Asset> {
+    const { userId, org } = await getSession();
+
+    const asset = await prisma.asset.create({
+        data: {
+            name,
+            description,
+            type,
+            projectId,
+            organizationId: org,
+            url,
+            fileName,
+            fileSize,
+            mimeType,
+            category: category as AssetCategoryType,
+            tags: tags || [],
+            uploadedById: userId,
+        },
+    });
+
+    return {
+        ...asset,
+        tags: asset.tags || [],
+    };
+}
+
 // Create a new link asset
 export async function createLinkAsset({
     projectId,
@@ -113,19 +192,19 @@ export async function createLinkAsset({
         data: {
             name,
             description,
-            type: "LINK" as AssetTypeType,
+            type: "link" as AssetTypeType,
             projectId,
             organizationId: org,
             url,
-            linkType,
+            linkType: linkType as any,
             category: category as AssetCategoryType,
-            tags: tags ? JSON.stringify(tags) : null,
+            tags: tags || [],
             uploadedById: userId,
         },
     });
 
     return {
         ...asset,
-        tags: tags || [],
+        tags: asset.tags || [],
     };
 }

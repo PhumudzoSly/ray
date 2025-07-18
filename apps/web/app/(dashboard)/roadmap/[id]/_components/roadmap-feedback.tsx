@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import * as roadmapFeedbackActions from "@/actions/roadmap/feedback";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import {
@@ -46,17 +44,23 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useSession } from "@/context/session-context";
+import {
+  moderateFeedback,
+  convertFeedbackToFeature,
+  convertFeedbackToIssue,
+} from "@/actions/roadmap/feedback";
 
 interface FeedbackItem {
   id: string;
   content: string;
   sentiment: "positive" | "neutral" | "negative";
   isApproved: boolean;
-  createdAt: Date;
+  createdAt: number;
   convertedToFeatureId?: string;
   convertedToIssueId?: string;
-  convertedAt?: Date;
-  convertedBy?: string;
+  convertedAt?: number;
+  convertedBy?: any;
   conversionNotes?: string;
   roadmapItem?: {
     id: string;
@@ -74,11 +78,15 @@ interface FeedbackItem {
 }
 
 interface RoadmapFeedbackProps {
-  roadmapId: string;
+  feedback: FeedbackItem[];
+  onRefresh?: () => void;
 }
 
-export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
-  const queryClient = useQueryClient();
+export function RoadmapFeedback({
+  feedback = [],
+  onRefresh,
+}: RoadmapFeedbackProps) {
+  const { token } = useSession();
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(
     null
   );
@@ -86,6 +94,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
     "feature"
   );
   const [showConversionDialog, setShowConversionDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Feature form state
   const [featureForm, setFeatureForm] = useState({
@@ -121,96 +130,6 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
     notes: "",
   });
 
-  // Query for feedback data
-  const { data: feedback = [], isLoading } = useQuery({
-    queryKey: ["roadmapFeedback", roadmapId],
-    queryFn: async () => {
-      const result =
-        await roadmapFeedbackActions.getAllRoadmapFeedbackForRoadmap(roadmapId);
-      if (!result.success) {
-        throw new Error(result.error as string);
-      }
-      return result.data;
-    },
-    enabled: !!roadmapId,
-  });
-
-  // Mutations
-  const convertToFeatureMutation = useMutation({
-    mutationFn: async (data: {
-      feedbackId: string;
-      featureName: string;
-      featureDescription: string;
-      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-      phase:
-        | "PLANNING"
-        | "DEVELOPMENT"
-        | "TESTING"
-        | "DEPLOYMENT"
-        | "COMPLETED";
-      conversionNotes?: string;
-    }) => {
-      const result =
-        await roadmapFeedbackActions.convertFeedbackToFeature(data);
-      if (!result.success) {
-        throw new Error(result.error as string);
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["roadmapFeedback", roadmapId],
-      });
-    },
-  });
-
-  const convertToIssueMutation = useMutation({
-    mutationFn: async (data: {
-      feedbackId: string;
-      issueTitle: string;
-      issueDescription: string;
-      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-      status: "BACKLOG" | "IN_PROGRESS" | "IN_REVIEW" | "DONE" | "CANCELLED";
-      label: "BUG" | "FEATURE" | "IMPROVEMENT" | "TASK" | "DOCUMENTATION";
-      conversionNotes?: string;
-    }) => {
-      const result = await roadmapFeedbackActions.convertFeedbackToIssue(data);
-      if (!result.success) {
-        throw new Error(result.error as string);
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["roadmapFeedback", roadmapId],
-      });
-    },
-  });
-
-  const moderateFeedbackMutation = useMutation({
-    mutationFn: async ({
-      feedbackId,
-      isApproved,
-    }: {
-      feedbackId: string;
-      isApproved: boolean;
-    }) => {
-      const result = await roadmapFeedbackActions.moderateFeedback(
-        feedbackId,
-        isApproved
-      );
-      if (!result.success) {
-        throw new Error(result.error as string);
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["roadmapFeedback", roadmapId],
-      });
-    },
-  });
-
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
       case "positive":
@@ -236,6 +155,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
   const handleConvert = async () => {
     if (!selectedFeedback) return;
 
+    setIsLoading(true);
     try {
       if (conversionType === "feature") {
         if (!featureForm.name) {
@@ -243,7 +163,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
           return;
         }
 
-        await convertToFeatureMutation.mutateAsync({
+        const result = await convertFeedbackToFeature({
           feedbackId: selectedFeedback.id,
           featureName: featureForm.name,
           featureDescription:
@@ -253,14 +173,18 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
           conversionNotes: featureForm.notes,
         });
 
-        toast.success("Feedback converted to feature successfully!");
+        if (result.success) {
+          toast.success("Feedback converted to feature successfully!");
+        } else {
+          toast.error(result.error || "Failed to convert feedback");
+        }
       } else {
         if (!issueForm.title) {
           toast.error("Issue title is required");
           return;
         }
 
-        await convertToIssueMutation.mutateAsync({
+        const result = await convertFeedbackToIssue({
           feedbackId: selectedFeedback.id,
           issueTitle: issueForm.title,
           issueDescription: issueForm.description || selectedFeedback.content,
@@ -270,28 +194,41 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
           conversionNotes: issueForm.notes,
         });
 
-        toast.success("Feedback converted to issue successfully!");
+        if (result.success) {
+          toast.success("Feedback converted to issue successfully!");
+        } else {
+          toast.error(result.error || "Failed to convert feedback");
+        }
       }
 
       setShowConversionDialog(false);
       setSelectedFeedback(null);
       resetForms();
+      onRefresh?.();
     } catch (error) {
       toast.error("Failed to convert feedback");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleApprove = async (feedbackId: string, approved: boolean) => {
+    setIsLoading(true);
     try {
-      await moderateFeedbackMutation.mutateAsync({
-        feedbackId,
-        isApproved: approved,
-      });
-      toast.success(
-        `Feedback ${approved ? "approved" : "rejected"} successfully!`
-      );
+      const result = await moderateFeedback(feedbackId, approved);
+
+      if (result.success) {
+        toast.success(
+          `Feedback ${approved ? "approved" : "rejected"} successfully!`
+        );
+        onRefresh?.();
+      } else {
+        toast.error(result.error || "Failed to moderate feedback");
+      }
     } catch (error) {
       toast.error("Failed to moderate feedback");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -349,22 +286,6 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
   const convertedFeedback = feedback.filter(
     (f) => f.convertedToFeatureId || f.convertedToIssueId
   );
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">User Feedback</h2>
-            <p className="text-sm text-muted-foreground">Loading...</p>
-          </div>
-        </div>
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -433,7 +354,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                             size="sm"
                             variant="outline"
                             onClick={() => handleApprove(item.id, true)}
-                            disabled={moderateFeedbackMutation.isPending}
+                            disabled={isLoading}
                           >
                             <CheckCircle className="w-4 h-4" />
                           </Button>
@@ -441,7 +362,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                             size="sm"
                             variant="outline"
                             onClick={() => handleApprove(item.id, false)}
-                            disabled={moderateFeedbackMutation.isPending}
+                            disabled={isLoading}
                           >
                             <AlertCircle className="w-4 h-4" />
                           </Button>
@@ -450,10 +371,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                       <Button
                         size="sm"
                         onClick={() => openConversionDialog(item, "feature")}
-                        disabled={
-                          convertToFeatureMutation.isPending ||
-                          convertToIssueMutation.isPending
-                        }
+                        disabled={isLoading}
                       >
                         <Plus className="w-4 h-4 mr-1" />
                         Feature
@@ -462,10 +380,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                         size="sm"
                         variant="outline"
                         onClick={() => openConversionDialog(item, "issue")}
-                        disabled={
-                          convertToFeatureMutation.isPending ||
-                          convertToIssueMutation.isPending
-                        }
+                        disabled={isLoading}
                       >
                         <Plus className="w-4 h-4 mr-1" />
                         Issue
@@ -588,7 +503,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleApprove(item.id, true)}
-                                  disabled={moderateFeedbackMutation.isPending}
+                                  disabled={isLoading}
                                 >
                                   <CheckCircle className="w-4 h-4" />
                                 </Button>
@@ -596,7 +511,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleApprove(item.id, false)}
-                                  disabled={moderateFeedbackMutation.isPending}
+                                  disabled={isLoading}
                                 >
                                   <AlertCircle className="w-4 h-4" />
                                 </Button>
@@ -607,10 +522,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                               onClick={() =>
                                 openConversionDialog(item, "feature")
                               }
-                              disabled={
-                                convertToFeatureMutation.isPending ||
-                                convertToIssueMutation.isPending
-                              }
+                              disabled={isLoading}
                             >
                               <Plus className="w-4 h-4 mr-1" />
                               Feature
@@ -621,10 +533,7 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                               onClick={() =>
                                 openConversionDialog(item, "issue")
                               }
-                              disabled={
-                                convertToFeatureMutation.isPending ||
-                                convertToIssueMutation.isPending
-                              }
+                              disabled={isLoading}
                             >
                               <Plus className="w-4 h-4 mr-1" />
                               Issue
@@ -911,20 +820,16 @@ export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
                     setSelectedFeedback(null);
                     resetForms();
                   }}
+                  disabled={isLoading}
                 >
                   Cancel
                 </Button>
-                <Button
-                  onClick={handleConvert}
-                  disabled={
-                    convertToFeatureMutation.isPending ||
-                    convertToIssueMutation.isPending
-                  }
-                >
-                  {convertToFeatureMutation.isPending ||
-                  convertToIssueMutation.isPending
+                <Button onClick={handleConvert} disabled={isLoading}>
+                  {isLoading
                     ? "Converting..."
-                    : `Convert to ${conversionType === "feature" ? "Feature" : "Issue"}`}
+                    : `Convert to ${
+                        conversionType === "feature" ? "Feature" : "Issue"
+                      }`}
                 </Button>
               </div>
             </div>

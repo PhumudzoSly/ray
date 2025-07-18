@@ -44,7 +44,7 @@ const ASSET_TYPES = [
   { value: "code", label: "Code", icon: Code },
   { value: "design", label: "Design", icon: Palette },
   { value: "other", label: "Other", icon: File },
-];
+] as const;
 
 const ASSET_CATEGORIES = [
   { value: "all", label: "All Categories" },
@@ -57,7 +57,7 @@ const ASSET_CATEGORIES = [
   { value: "presentations", label: "Presentations" },
   { value: "tutorials", label: "Tutorials" },
   { value: "other", label: "Other" },
-];
+] as const;
 
 interface AssetsClientProps {
   projectId: string;
