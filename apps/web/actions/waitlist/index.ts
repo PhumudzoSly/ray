@@ -27,7 +27,10 @@ export const createWaitlist = async (data: { projectId: string; name: string; sl
 export const getWaitlist = async (id: string) => {
     const { org } = await getSession();
     try {
-        const waitlist = await prisma.waitlist.findFirst({ where: { id, organizationId: org } });
+        const waitlist = await prisma.waitlist.findFirst({
+            where: { id, organizationId: org },
+            include: { project: true }
+        });
         return { success: true, data: waitlist };
     } catch (error) {
         return { success: false, error };
@@ -40,7 +43,7 @@ export const getWaitlist = async (id: string) => {
  */
 export const getWaitlistBySlug = async (slug: string) => {
     try {
-        const waitlist = await prisma.waitlist.findUnique({
+        const waitlist = await prisma.waitlist.findFirst({
             where: { slug },
             include: { project: { select: { name: true } } },
         });

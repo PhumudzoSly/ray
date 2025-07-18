@@ -293,6 +293,9 @@ model Issue {
   // Issue links
   links IssueLink[]
 
+  // Feedback conversion
+  convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToIssue")
+
   @@index([organizationId, achieved])
   @@index([projectId, organizationId, achieved])
   @@index([milestoneId])
@@ -494,6 +497,10 @@ model RoadmapFeedback {
   conversionNotes      String?
   createdAt            DateTime
 
+  // Relations to converted items
+  convertedFeature Feature? @relation("FeedbackToFeature", fields: [convertedToFeatureId], references: [id], onDelete: SetNull)
+  convertedIssue   Issue?   @relation("FeedbackToIssue", fields: [convertedToIssueId], references: [id], onDelete: SetNull)
+
   @@index([roadmapItemId])
   @@index([roadmapItemId, ipAddress])
   @@index([roadmapItemId, userId])
@@ -630,6 +637,9 @@ model Feature {
   dependencies FeatureDependency[] @relation("Dependants")
   dependentOn  FeatureDependency[] @relation("Dependencies")
   FeatureLink  FeatureLink[]
+
+  // Feedback conversion
+  convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToFeature")
 
   @@index([projectId])
   @@index([milestoneId])
@@ -794,7 +804,7 @@ enum ProjectStatus {
 enum IssueStatus {
   BACKLOG
   IN_PROGRESS
-  REVIEW
+  IN_REVIEW
   DONE
   BLOCKED
   CANCELLED
@@ -804,6 +814,8 @@ enum IssueLabel {
   UI
   BUG
   FEATURE
+  IMPROVEMENT
+  TASK
   DOCUMENTATION
   REFACTOR
   PERFORMANCE
@@ -901,6 +913,8 @@ enum FeaturePhase {
   PLANNING
   DEVELOPMENT
   TESTING
+  DEPLOYMENT
+  COMPLETED
   RELEASE
   LIVE
   DEPRECATED

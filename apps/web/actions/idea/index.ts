@@ -2,6 +2,7 @@
 
 import { prisma, IdeaOptionalDefaults } from "@workspace/backend";
 import { getSession } from "../account/user";
+import { inngest } from "@/inngest";
 
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
@@ -169,34 +170,120 @@ export const changeStatus = async ({ id, status }: { id: string; status: string 
 	});
 };
 
-// Trigger AI validation for an idea (stub)
+// Trigger AI validation for an idea using Inngest background processing
 export const triggerValidation = async ({ ideaId }: { ideaId: string }) => {
-	// TODO: Implement AI validation logic
-	// For now, return a stub result
+	const { org } = await getSession();
+
+	// Verify the idea exists and belongs to the organization
+	const idea = await prisma.idea.findFirst({
+		where: { id: ideaId, organizationId: org },
+	});
+
+	if (!idea) {
+		throw new Error("Idea not found");
+	}
+
+	// Update idea status to IN_PROGRESS
+	await prisma.idea.update({
+		where: { id: ideaId },
+		data: { status: "IN_PROGRESS" },
+	});
+
+	// Trigger background validation using Inngest
+	await inngest.send({
+		name: "idea/validate",
+		data: { ideaId },
+	});
+
 	return {
 		success: true,
-		results: {
-			overallScore: 80,
-			recommendation: "Strong validation (stub)",
-			// Add more fields as needed
-		},
+		message: "Validation started in background",
 	};
 };
 
 // Get detailed validation results for an idea
 export const getValidationDetails = async ({ ideaId }: { ideaId: string }) => {
+	const { org } = await getSession();
+
 	// Fetch the idea and related validation fields
-	const idea = await prisma.idea.findUnique({
-		where: { id: ideaId },
+	const idea = await prisma.idea.findFirst({
+		where: { id: ideaId, organizationId: org },
 		include: {
 			aiOverallValidation: true,
 			// Add more relations as needed
 		},
 	});
+
+	if (!idea) {
+		throw new Error("Idea not found");
+	}
+
 	// Return a shape similar to what the component expects
 	return {
 		validation: idea?.aiOverallValidation || null,
+		idea,
 		// Add more fields as needed
 	};
+};
+
+// Update idea validation results (called by Inngest after background processing)
+export const updateValidationResults = async ({
+	ideaId,
+	validationResults
+}: {
+	ideaId: string;
+	validationResults: any;
+}) => {
+	const { org } = await getSession();
+
+	// Verify the idea exists and belongs to the organization
+	const idea = await prisma.idea.findFirst({
+		where: { id: ideaId, organizationId: org },
+	});
+
+	if (!idea) {
+		throw new Error("Idea not found");
+	}
+
+	const status = validationResults.overallScore >= 70 ? "VALIDATED" : "FAILED";
+
+	// Update the idea with validation results
+	const updated = await prisma.idea.update({
+		where: { id: ideaId },
+		data: {
+			status,
+			aiOverallValidation: {
+				upsert: {
+					create: {
+						overallRating: validationResults.overallScore,
+						overallComment: validationResults.recommendation,
+						lastValidated: new Date(),
+						marketSize: validationResults.marketSize,
+						competitorAnalysis: validationResults.competitorAnalysis,
+						customerFit: validationResults.customerFit,
+						feasibility: validationResults.feasibility,
+						financials: validationResults.financials,
+						userStories: validationResults.userStories,
+					},
+					update: {
+						overallRating: validationResults.overallScore,
+						overallComment: validationResults.recommendation,
+						lastValidated: new Date(),
+						marketSize: validationResults.marketSize,
+						competitorAnalysis: validationResults.competitorAnalysis,
+						customerFit: validationResults.customerFit,
+						feasibility: validationResults.feasibility,
+						financials: validationResults.financials,
+						userStories: validationResults.userStories,
+					},
+				},
+			},
+		},
+		include: {
+			aiOverallValidation: true,
+		},
+	});
+
+	return updated;
 };
 

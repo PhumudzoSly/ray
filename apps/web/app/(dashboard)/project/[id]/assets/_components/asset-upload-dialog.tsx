@@ -43,6 +43,7 @@ import { UploadDropzone } from "@/lib/uploadthing";
 interface AssetUploadDialogProps {
   projectId: string;
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
 }
 
@@ -102,6 +103,7 @@ const ASSET_CATEGORIES = [
 export function AssetUploadDialog({
   projectId,
   onClose,
+  onSuccess,
   open,
 }: AssetUploadDialogProps) {
   const { token } = useSession();
@@ -312,6 +314,7 @@ export function AssetUploadDialog({
         tags: assetTags.length > 0 ? assetTags : undefined,
       });
       toast.success("Asset uploaded successfully");
+      onSuccess?.();
       onClose();
     } catch (error) {
       console.error("Upload failed:", error);

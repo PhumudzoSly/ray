@@ -60,20 +60,22 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
 
   // Mutation to trigger validation
   const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ token, ideaId }),
+    mutationFn: async () => ideaActions.triggerValidation({ ideaId }),
     onSuccess: (result) => {
       if (result && result.success) {
         setValidationResults(result.results);
         setShowResults(true);
         setActiveTab("summary");
-        toast.success("Idea validation completed successfully!");
+        toast.success("Idea validation started in background!");
         if (onSuccess) onSuccess();
       } else {
         toast.error("Validation failed");
       }
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to validate idea");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to validate idea"
+      );
     },
     onSettled: () => setIsValidating(false),
   });
@@ -81,7 +83,7 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   // Query to get detailed validation results
   const { data: validationDetails } = useQuery({
     queryKey: ["validationDetails", ideaId],
-    queryFn: () => ideaActions.getValidationDetails({ token, ideaId }),
+    queryFn: () => ideaActions.getValidationDetails({ ideaId }),
   });
 
   const handleValidate = async () => {
@@ -127,15 +129,15 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   // Use detailed validation data if available, otherwise fall back to session data
   const currentValidationData = validationDetails
     ? {
-      overallScore: validationDetails.validation?.overallScore || 0,
-      recommendation: validationDetails.validation?.recommendation || "",
-      marketSize: validationDetails.marketSize,
-      competitorAnalysis: validationDetails.competitorAnalysis,
-      customerFit: validationDetails.customerFit,
-      feasibility: validationDetails.feasibility,
-      financials: validationDetails.financials,
-      userStories: validationDetails.userStories || [],
-    }
+        overallScore: validationDetails.validation?.overallScore || 0,
+        recommendation: validationDetails.validation?.recommendation || "",
+        marketSize: validationDetails.marketSize,
+        competitorAnalysis: validationDetails.competitorAnalysis,
+        customerFit: validationDetails.customerFit,
+        feasibility: validationDetails.feasibility,
+        financials: validationDetails.financials,
+        userStories: validationDetails.userStories || [],
+      }
     : validationResults;
 
   return (
@@ -364,17 +366,17 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
                     </p>
                     {currentValidationData.competitorAnalysis.competitors
                       ?.length > 0 && (
-                        <div>
-                          <strong className="text-sm">Key Competitors:</strong>
-                          <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
-                            {currentValidationData.competitorAnalysis.competitors.map(
-                              (competitor: string, index: number) => (
-                                <li key={index}>{competitor}</li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                      <div>
+                        <strong className="text-sm">Key Competitors:</strong>
+                        <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
+                          {currentValidationData.competitorAnalysis.competitors.map(
+                            (competitor: string, index: number) => (
+                              <li key={index}>{competitor}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <p className="text-muted-foreground">
@@ -410,17 +412,17 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
                     </p>
                     {currentValidationData.customerFit.painPoints?.length >
                       0 && (
-                        <div>
-                          <strong className="text-sm">Key Pain Points:</strong>
-                          <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
-                            {currentValidationData.customerFit.painPoints.map(
-                              (point: string, index: number) => (
-                                <li key={index}>{point}</li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                      <div>
+                        <strong className="text-sm">Key Pain Points:</strong>
+                        <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
+                          {currentValidationData.customerFit.painPoints.map(
+                            (point: string, index: number) => (
+                              <li key={index}>{point}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <p className="text-muted-foreground">
@@ -463,19 +465,19 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
                     </div>
                     {currentValidationData.feasibility.technicalChallenges
                       ?.length > 0 && (
-                        <div>
-                          <strong className="text-sm">
-                            Technical Challenges:
-                          </strong>
-                          <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
-                            {currentValidationData.feasibility.technicalChallenges.map(
-                              (challenge: string, index: number) => (
-                                <li key={index}>{challenge}</li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                      <div>
+                        <strong className="text-sm">
+                          Technical Challenges:
+                        </strong>
+                        <ul className="list-disc list-inside text-sm text-muted-foreground mt-1">
+                          {currentValidationData.feasibility.technicalChallenges.map(
+                            (challenge: string, index: number) => (
+                              <li key={index}>{challenge}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <p className="text-muted-foreground">

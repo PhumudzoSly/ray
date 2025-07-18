@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma, AssetTypeType, AssetCategoryType } from "@workspace/backend";
+import { getSession } from "../account/user";
 
 // Asset type for client and server
 export type Asset = {
@@ -54,4 +55,77 @@ export async function getProjectAssets({
 // Delete an asset by ID
 export async function deleteAsset({ assetId }: { assetId: string }): Promise<void> {
     await prisma.asset.delete({ where: { id: assetId } });
+}
+
+// Increment view count for an asset
+export async function incrementViewCount({ assetId }: { assetId: string }): Promise<void> {
+    await prisma.asset.update({
+        where: { id: assetId },
+        data: {
+            viewCount: {
+                increment: 1
+            }
+        }
+    });
+}
+
+// Get download URL for an asset
+export async function getAssetDownloadUrl({ assetId }: { assetId: string }): Promise<string | null> {
+    const asset = await prisma.asset.findUnique({
+        where: { id: assetId },
+        select: { storageId: true, fileName: true, url: true }
+    });
+
+    if (!asset) return null;
+
+    // If it's a link asset, return the URL
+    if (asset.url) return asset.url;
+
+    // For file assets, return the storage URL
+    if (asset.storageId) {
+        return `/api/storage/${asset.storageId}`;
+    }
+
+    return null;
+}
+
+// Create a new link asset
+export async function createLinkAsset({
+    projectId,
+    name,
+    description,
+    url,
+    linkType,
+    category,
+    tags,
+}: {
+    projectId: string;
+    name: string;
+    description?: string;
+    url: string;
+    linkType: string;
+    category?: string;
+    tags?: string[];
+}): Promise<Asset> {
+    const { userId, org } = await getSession();
+
+    const asset = await prisma.asset.create({
+        data: {
+            name,
+            description,
+            type: "LINK" as AssetTypeType,
+            projectId,
+            organizationId: org,
+            url,
+            linkType,
+            category: category as AssetCategoryType,
+            tags: tags ? JSON.stringify(tags) : null,
+            uploadedById: userId,
+        },
+    });
+
+    return {
+        ...asset,
+        tags: tags || [],
+    };
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@workspace/backend";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createRoadmapChangelog } from "@/actions/roadmap/changelogs";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -15,23 +16,20 @@ import {
   DialogFooter,
 } from "@workspace/ui/components/dialog";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
 import { DateSelector } from "@/components/ui/selectors";
 
 interface ChangelogDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  roadmapId: Id<"publicRoadmaps">;
-  token: string;
+  roadmapId: string;
 }
 
 export function ChangelogDialog({
   isOpen,
   onClose,
   roadmapId,
-  token,
 }: ChangelogDialogProps) {
-  //
+  const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
     title: "",
@@ -40,7 +38,34 @@ export function ChangelogDialog({
     isPublished: false,
   });
 
-  const createChangelog = api.roadmap.changelog.createChangelog;
+  const createChangelogMutation = useMutation({
+    mutationFn: async (data: {
+      roadmapId: string;
+      title: string;
+      description: string;
+      publishDate: Date;
+      isPublished: boolean;
+    }) => {
+      return createRoadmapChangelog(data);
+    },
+    onSuccess: (result) => {
+      if (result.success) {
+        toast.success("Changelog created successfully!");
+        resetForm();
+        onClose();
+        // Invalidate and refetch changelogs
+        queryClient.invalidateQueries({
+          queryKey: ["roadmapChangelogs", roadmapId],
+        });
+      } else {
+        toast.error("Failed to create changelog");
+      }
+    },
+    onError: (error) => {
+      toast.error("Failed to create changelog");
+      console.error("Changelog creation error:", error);
+    },
+  });
 
   const resetForm = () => {
     setFormData({
@@ -57,27 +82,17 @@ export function ChangelogDialog({
       return;
     }
 
-    try {
-      const publishDate = formData.publishDate
-        ? new Date(formData.publishDate).getTime()
-        : Date.now();
+    const publishDate = formData.publishDate
+      ? new Date(formData.publishDate).getTime()
+      : Date.now();
 
-      await createChangelog({
-        roadmapId,
-        title: formData.title,
-        description: formData.description,
-        items: [], // Will be populated later
-        publishDate,
-        isPublished: formData.isPublished,
-        token,
-      });
-
-      toast.success("Changelog created successfully!");
-      resetForm();
-      onClose();
-    } catch (error) {
-      toast.error("Failed to create changelog");
-    }
+    createChangelogMutation.mutate({
+      roadmapId,
+      title: formData.title,
+      description: formData.description,
+      publishDate: new Date(publishDate),
+      isPublished: formData.isPublished,
+    });
   };
 
   const handleClose = () => {
@@ -130,7 +145,7 @@ export function ChangelogDialog({
               <DateSelector
                 value={formData.publishDate}
                 onChange={(date) =>
-                  setFormData({ ...formData, publishDate: date })
+                  setFormData({ ...formData, publishDate: date || new Date() })
                 }
               />
             </div>
@@ -141,7 +156,14 @@ export function ChangelogDialog({
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit}>Create Changelog</Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={createChangelogMutation.isPending}
+          >
+            {createChangelogMutation.isPending
+              ? "Creating..."
+              : "Create Changelog"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

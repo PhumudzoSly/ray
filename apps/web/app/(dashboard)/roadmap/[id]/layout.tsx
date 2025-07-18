@@ -1,72 +1,27 @@
-"use client";
-import { getSession } from "@/actions/account/user";
-import { Button } from "@workspace/ui/components/button";
-import { api } from "@workspace/backend";
-import {
-  ExternalLink,
-  Eye,
-  MessageSquare,
-  Rocket,
-  ThumbsUp,
-} from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+import { getRoadmap } from "@/actions/roadmap";
+import { redirect } from "next/navigation";
 import { Badge } from "@workspace/ui/components/badge";
 import Link from "next/link";
 import React from "react";
-import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { redirect, useRouter } from "next/navigation";
-import { Id } from "@workspace/backend";
-import { useParams } from "next/navigation";
-import { useSession } from "@/context/session-context";
-import { Separator } from "@workspace/ui/components/separator";
+import { Button } from "@workspace/ui/components/button";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { RoadmapTabs } from "./_components/tabs";
 import { RoadmapForm } from "../components/new-roadmap";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { useQuery } from "@tanstack/react-query";
 
-function RoadmapHeaderSkeleton() {
-  return (
-    <div className="space-y-4 container">
-      <div className="flex items-center gap-4 flex-wrap justify-between">
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-10 w-10 rounded-md" />
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Skeleton className="h-6 w-48" />
-              <Skeleton className="h-5 w-16" />
-            </div>
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-10 w-32" />
-          <Skeleton className="h-10 w-28" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function RoadmapLayout({
+export default async function RoadmapLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: { id: string };
 }) {
-  const params = useParams();
-  const router = useRouter();
-  const roadmapId = params.id as Id<"publicRoadmaps">;
-  const { token } = useSession();
+  const roadmapId = params.id;
+  const res = await getRoadmap(roadmapId);
+  const roadmap = res?.data;
 
-  const { data: roadmap, isPending } = useQuery({
-    queryKey: ["roadmap", roadmapId],
-    queryFn: () => api.roadmap.getRoadmap({ id: roadmapId }),
-  });
-
-  if (isPending || roadmap === undefined) return <RoadmapHeaderSkeleton />;
-
-  if (roadmap === null) {
-    router.push("/roadmap");
+  if (!roadmap) {
+    redirect("/roadmap");
   }
 
   return (
@@ -90,7 +45,6 @@ export default function RoadmapLayout({
             </p>
           </div>
         </div>
-
         <div className="flex items-center gap-2">
           <Button variant="secondary" asChild>
             <Link href={`/rm/${roadmap?.slug}`} target="_blank">
@@ -101,7 +55,6 @@ export default function RoadmapLayout({
           <RoadmapForm mode="edit" roadmap={roadmap} />
         </div>
       </div>
-
       <>
         <RoadmapTabs roadmapId={roadmapId} />
         {children}

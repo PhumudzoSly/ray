@@ -5,7 +5,7 @@ import { getSession } from "../account/user";
 /**
  * Create a new API key
  */
-export const createApiKey = async (data: { name: string; keyHash: string; keyPreview: string; permissions?: any; isActive: boolean; expiresAt?: Date }) => {
+export const createApiKey = async (data: { name: string; keyHash: string; keyPreview: string; isActive: boolean; expiresAt?: Date }) => {
     const { org, userId } = await getSession();
     try {
         const apiKey = await prisma.apiKey.create({
@@ -13,6 +13,7 @@ export const createApiKey = async (data: { name: string; keyHash: string; keyPre
                 ...data,
                 organizationId: org,
                 createdBy: userId,
+                createdAt: new Date(),
             },
         });
         return { success: true, data: apiKey };

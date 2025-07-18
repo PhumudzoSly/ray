@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { api } from "@workspace/backend";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import * as roadmapFeedbackActions from "@/actions/roadmap/feedback";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import {
@@ -45,45 +46,39 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useSession } from "@/context/session-context";
-import { Id } from "@workspace/backend";
 
 interface FeedbackItem {
-  id: Id<"roadmapFeedback">;
+  id: string;
   content: string;
   sentiment: "positive" | "neutral" | "negative";
   isApproved: boolean;
-  createdAt: number;
-  convertedToFeatureId?: Id<"feature">;
-  convertedToIssueId?: Id<"issues">;
-  convertedAt?: number;
-  convertedBy?: any;
+  createdAt: Date;
+  convertedToFeatureId?: string;
+  convertedToIssueId?: string;
+  convertedAt?: Date;
+  convertedBy?: string;
   conversionNotes?: string;
   roadmapItem?: {
-    id: Id<"roadmapItems">;
+    id: string;
     title: string;
     category: string;
   };
   convertedFeature?: {
-    id: Id<"feature">;
+    id: string;
     name: string;
   };
   convertedIssue?: {
-    id: Id<"issues">;
+    id: string;
     title: string;
   };
 }
 
 interface RoadmapFeedbackProps {
-  feedback: FeedbackItem[];
-  onRefresh?: () => void;
+  roadmapId: string;
 }
 
-export function RoadmapFeedback({
-  feedback = [],
-  onRefresh,
-}: RoadmapFeedbackProps) {
-  const { token } = useSession();
+export function RoadmapFeedback({ roadmapId }: RoadmapFeedbackProps) {
+  const queryClient = useQueryClient();
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(
     null
   );
@@ -126,14 +121,95 @@ export function RoadmapFeedback({
     notes: "",
   });
 
+  // Query for feedback data
+  const { data: feedback = [], isLoading } = useQuery({
+    queryKey: ["roadmapFeedback", roadmapId],
+    queryFn: async () => {
+      const result =
+        await roadmapFeedbackActions.getAllRoadmapFeedbackForRoadmap(roadmapId);
+      if (!result.success) {
+        throw new Error(result.error as string);
+      }
+      return result.data;
+    },
+    enabled: !!roadmapId,
+  });
+
   // Mutations
-  // Removed: const convertToFeature = useMutation(
-  // Removed:   api.roadmap.feedback.convertFeedbackToFeature
-  // Removed: );
-  // Removed: const convertToIssue = useMutation(
-  // Removed:   api.roadmap.feedback.convertFeedbackToIssue
-  // Removed: );
-  // Removed: const moderateFeedback = useMutation(api.roadmap.feedback.moderateFeedback);
+  const convertToFeatureMutation = useMutation({
+    mutationFn: async (data: {
+      feedbackId: string;
+      featureName: string;
+      featureDescription: string;
+      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+      phase:
+        | "PLANNING"
+        | "DEVELOPMENT"
+        | "TESTING"
+        | "DEPLOYMENT"
+        | "COMPLETED";
+      conversionNotes?: string;
+    }) => {
+      const result =
+        await roadmapFeedbackActions.convertFeedbackToFeature(data);
+      if (!result.success) {
+        throw new Error(result.error as string);
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["roadmapFeedback", roadmapId],
+      });
+    },
+  });
+
+  const convertToIssueMutation = useMutation({
+    mutationFn: async (data: {
+      feedbackId: string;
+      issueTitle: string;
+      issueDescription: string;
+      priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+      status: "BACKLOG" | "IN_PROGRESS" | "IN_REVIEW" | "DONE" | "CANCELLED";
+      label: "BUG" | "FEATURE" | "IMPROVEMENT" | "TASK" | "DOCUMENTATION";
+      conversionNotes?: string;
+    }) => {
+      const result = await roadmapFeedbackActions.convertFeedbackToIssue(data);
+      if (!result.success) {
+        throw new Error(result.error as string);
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["roadmapFeedback", roadmapId],
+      });
+    },
+  });
+
+  const moderateFeedbackMutation = useMutation({
+    mutationFn: async ({
+      feedbackId,
+      isApproved,
+    }: {
+      feedbackId: string;
+      isApproved: boolean;
+    }) => {
+      const result = await roadmapFeedbackActions.moderateFeedback(
+        feedbackId,
+        isApproved
+      );
+      if (!result.success) {
+        throw new Error(result.error as string);
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["roadmapFeedback", roadmapId],
+      });
+    },
+  });
 
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
@@ -158,7 +234,7 @@ export function RoadmapFeedback({
   };
 
   const handleConvert = async () => {
-    if (!selectedFeedback || !token) return;
+    if (!selectedFeedback) return;
 
     try {
       if (conversionType === "feature") {
@@ -167,16 +243,15 @@ export function RoadmapFeedback({
           return;
         }
 
-        // Removed: await convertToFeature({
-        // Removed:   token,
-        // Removed:   feedbackId: selectedFeedback.id,
-        // Removed:   featureName: featureForm.name,
-        // Removed:   featureDescription:
-        // Removed:     featureForm.description || selectedFeedback.content,
-        // Removed:   priority: featureForm.priority,
-        // Removed:   phase: featureForm.phase,
-        // Removed:   conversionNotes: featureForm.notes,
-        // Removed: });
+        await convertToFeatureMutation.mutateAsync({
+          feedbackId: selectedFeedback.id,
+          featureName: featureForm.name,
+          featureDescription:
+            featureForm.description || selectedFeedback.content,
+          priority: featureForm.priority,
+          phase: featureForm.phase,
+          conversionNotes: featureForm.notes,
+        });
 
         toast.success("Feedback converted to feature successfully!");
       } else {
@@ -185,16 +260,15 @@ export function RoadmapFeedback({
           return;
         }
 
-        // Removed: await convertToIssue({
-        // Removed:   token,
-        // Removed:   feedbackId: selectedFeedback.id,
-        // Removed:   issueTitle: issueForm.title,
-        // Removed:   issueDescription: issueForm.description || selectedFeedback.content,
-        // Removed:   priority: issueForm.priority,
-        // Removed:   status: issueForm.status,
-        // Removed:   label: issueForm.label,
-        // Removed:   conversionNotes: issueForm.notes,
-        // Removed: });
+        await convertToIssueMutation.mutateAsync({
+          feedbackId: selectedFeedback.id,
+          issueTitle: issueForm.title,
+          issueDescription: issueForm.description || selectedFeedback.content,
+          priority: issueForm.priority,
+          status: issueForm.status,
+          label: issueForm.label,
+          conversionNotes: issueForm.notes,
+        });
 
         toast.success("Feedback converted to issue successfully!");
       }
@@ -202,29 +276,20 @@ export function RoadmapFeedback({
       setShowConversionDialog(false);
       setSelectedFeedback(null);
       resetForms();
-      onRefresh?.();
     } catch (error) {
       toast.error("Failed to convert feedback");
     }
   };
 
-  const handleApprove = async (
-    feedbackId: Id<"roadmapFeedback">,
-    approved: boolean
-  ) => {
-    if (!token) return;
-
+  const handleApprove = async (feedbackId: string, approved: boolean) => {
     try {
-      // Removed: await moderateFeedback({
-      // Removed:   token,
-      // Removed:   id: feedbackId,
-      // Removed:   isApproved: approved,
-      // Removed: });
-
+      await moderateFeedbackMutation.mutateAsync({
+        feedbackId,
+        isApproved: approved,
+      });
       toast.success(
         `Feedback ${approved ? "approved" : "rejected"} successfully!`
       );
-      onRefresh?.();
     } catch (error) {
       toast.error("Failed to moderate feedback");
     }
@@ -284,6 +349,22 @@ export function RoadmapFeedback({
   const convertedFeedback = feedback.filter(
     (f) => f.convertedToFeatureId || f.convertedToIssueId
   );
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-semibold">User Feedback</h2>
+            <p className="text-sm text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -352,6 +433,7 @@ export function RoadmapFeedback({
                             size="sm"
                             variant="outline"
                             onClick={() => handleApprove(item.id, true)}
+                            disabled={moderateFeedbackMutation.isPending}
                           >
                             <CheckCircle className="w-4 h-4" />
                           </Button>
@@ -359,6 +441,7 @@ export function RoadmapFeedback({
                             size="sm"
                             variant="outline"
                             onClick={() => handleApprove(item.id, false)}
+                            disabled={moderateFeedbackMutation.isPending}
                           >
                             <AlertCircle className="w-4 h-4" />
                           </Button>
@@ -367,6 +450,10 @@ export function RoadmapFeedback({
                       <Button
                         size="sm"
                         onClick={() => openConversionDialog(item, "feature")}
+                        disabled={
+                          convertToFeatureMutation.isPending ||
+                          convertToIssueMutation.isPending
+                        }
                       >
                         <Plus className="w-4 h-4 mr-1" />
                         Feature
@@ -375,6 +462,10 @@ export function RoadmapFeedback({
                         size="sm"
                         variant="outline"
                         onClick={() => openConversionDialog(item, "issue")}
+                        disabled={
+                          convertToFeatureMutation.isPending ||
+                          convertToIssueMutation.isPending
+                        }
                       >
                         <Plus className="w-4 h-4 mr-1" />
                         Issue
@@ -481,11 +572,11 @@ export function RoadmapFeedback({
                       )}
                       {(item.convertedToFeatureId ||
                         item.convertedToIssueId) && (
-                          <Badge variant="default" className="text-xs">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Converted
-                          </Badge>
-                        )}
+                        <Badge variant="default" className="text-xs">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Converted
+                        </Badge>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       {!item.convertedToFeatureId &&
@@ -497,6 +588,7 @@ export function RoadmapFeedback({
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleApprove(item.id, true)}
+                                  disabled={moderateFeedbackMutation.isPending}
                                 >
                                   <CheckCircle className="w-4 h-4" />
                                 </Button>
@@ -504,6 +596,7 @@ export function RoadmapFeedback({
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleApprove(item.id, false)}
+                                  disabled={moderateFeedbackMutation.isPending}
                                 >
                                   <AlertCircle className="w-4 h-4" />
                                 </Button>
@@ -514,6 +607,10 @@ export function RoadmapFeedback({
                               onClick={() =>
                                 openConversionDialog(item, "feature")
                               }
+                              disabled={
+                                convertToFeatureMutation.isPending ||
+                                convertToIssueMutation.isPending
+                              }
                             >
                               <Plus className="w-4 h-4 mr-1" />
                               Feature
@@ -523,6 +620,10 @@ export function RoadmapFeedback({
                               variant="outline"
                               onClick={() =>
                                 openConversionDialog(item, "issue")
+                              }
+                              disabled={
+                                convertToFeatureMutation.isPending ||
+                                convertToIssueMutation.isPending
                               }
                             >
                               <Plus className="w-4 h-4 mr-1" />
@@ -813,9 +914,17 @@ export function RoadmapFeedback({
                 >
                   Cancel
                 </Button>
-                <Button onClick={handleConvert}>
-                  Convert to{" "}
-                  {conversionType === "feature" ? "Feature" : "Issue"}
+                <Button
+                  onClick={handleConvert}
+                  disabled={
+                    convertToFeatureMutation.isPending ||
+                    convertToIssueMutation.isPending
+                  }
+                >
+                  {convertToFeatureMutation.isPending ||
+                  convertToIssueMutation.isPending
+                    ? "Converting..."
+                    : `Convert to ${conversionType === "feature" ? "Feature" : "Issue"}`}
                 </Button>
               </div>
             </div>

@@ -1,5 +1,4 @@
 "use client";
-import { useSession } from "@/context/session-context";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
@@ -10,14 +9,13 @@ import { RoadmapChangelogs } from "./_components/roadmap-changelogs";
 
 const ChangelogsPage = () => {
   const { id } = useParams();
-  const { token } = useSession();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Fetch changelogs
   const { data: changelogs = [], isLoading } = useQuery({
     queryKey: ["roadmapChangelogs", id],
     queryFn: () => getAllRoadmapChangelogs(id as string),
-    select: (res) => res?.success ? res.data : [],
+    select: (res) => (res?.success ? res.data : []),
   });
 
   const handleCreateChangelog = () => {
@@ -41,7 +39,6 @@ const ChangelogsPage = () => {
         isOpen={isDialogOpen}
         onClose={handleCloseDialog}
         roadmapId={id as string}
-        token={token}
       />
     </div>
   );

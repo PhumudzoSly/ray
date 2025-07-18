@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -23,12 +22,12 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
+import { updatePublicRoadmap } from "@/actions/roadmap";
 
 interface EditRoadmapDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  roadmapId: Id<"publicRoadmaps">;
+  roadmapId: string;
   token: string;
   roadmap?: {
     name: string;
@@ -62,8 +61,6 @@ export function EditRoadmapDialog({
     showChangelog: true,
   });
 
-  // Removed: const updateRoadmap = useMutation(api.roadmap.updateRoadmap);
-
   // Initialize form data when roadmap is loaded
   useEffect(() => {
     if (roadmap) {
@@ -88,22 +85,24 @@ export function EditRoadmapDialog({
     }
 
     try {
-      // Removed: await updateRoadmap({
-      // Removed:   id: roadmapId,
-      // Removed:   name: formData.name,
-      // Removed:   slug: formData.slug,
-      // Removed:   description: formData.description,
-      // Removed:   isPublic: formData.isPublic,
-      // Removed:   customDomain: formData.customDomain || undefined,
-      // Removed:   theme: formData.theme,
-      // Removed:   allowVoting: formData.allowVoting,
-      // Removed:   allowFeedback: formData.allowFeedback,
-      // Removed:   showChangelog: formData.showChangelog,
-      // Removed:   token,
-      // Removed: });
+      const result = await updatePublicRoadmap(roadmapId, {
+        name: formData.name,
+        slug: formData.slug,
+        description: formData.description,
+        isPublic: formData.isPublic,
+        customDomain: formData.customDomain || undefined,
+        theme: formData.theme,
+        allowVoting: formData.allowVoting,
+        allowFeedback: formData.allowFeedback,
+        showChangelog: formData.showChangelog,
+      });
 
-      toast.success("Roadmap updated successfully!");
-      onClose();
+      if (result.success) {
+        toast.success("Roadmap updated successfully!");
+        onClose();
+      } else {
+        toast.error("Failed to update roadmap");
+      }
     } catch (error) {
       toast.error("Failed to update roadmap");
     }

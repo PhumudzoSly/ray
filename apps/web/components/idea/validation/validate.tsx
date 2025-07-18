@@ -33,18 +33,43 @@ import {
 } from "@workspace/ui/components/hover-card";
 import { cn } from "@/lib/utils";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { ValidationPanel } from "@/components/ideas/validation/validation-panel";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getSingleIdea,
+  getValidationDetails,
+  updateProblemSolved,
+  updateSolutionOffered,
+} from "@/actions/idea";
+import { toast } from "sonner";
 
 const Validate = ({ id }: { id: string }) => {
-  //
-
   const { token } = useSession();
-  const { data: idea, isPending } = api.idea.getSingleIdea({
-    id: id as Id<"idea">,
-    token,
+
+  // Use server actions to fetch idea data with polling for validation updates
+  const { data: idea, isPending } = useQuery({
+    queryKey: ["idea", id],
+    queryFn: () => getSingleIdea(id),
+    refetchInterval: (data: any) => {
+      // Poll more frequently if validation is in progress
+      if (data?.status === "IN_PROGRESS") {
+        return 2000; // Poll every 2 seconds during validation
+      }
+      return false; // Don't poll if not validating
+    },
+  });
+
+  const { data: validationDetails } = useQuery({
+    queryKey: ["validationDetails", id],
+    queryFn: () => getValidationDetails({ ideaId: id }),
+    refetchInterval: (data) => {
+      // Poll more frequently if validation is in progress
+      if (idea?.status === "IN_PROGRESS") {
+        return 2000; // Poll every 2 seconds during validation
+      }
+      return false; // Don't poll if not validating
+    },
   });
 
   const getScoreColor = (score: number | null | undefined) => {
@@ -71,25 +96,24 @@ const Validate = ({ id }: { id: string }) => {
 
   const handleUpdateField = async (field: string, value: string) => {
     try {
-      // if (!idea) return;
-      // await toast.promise(
-      //   updateIdea({
-      //     // @ts-ignore
-      //     data: {
-      //       id,
-      //       [field]: value,
-      //       industry: idea.industry,
-      //       organizationId: idea.organizationId,
-      //       ownerId: idea.ownerId,
-      //     },
-      //   }),
-      //   {
-      //     pending: "Updating...",
-      //     success: "Updated successfully",
-      //     error: "Failed to update",
-      //   }
-      // );
-      // await refetch();
+      if (!idea) return;
+
+      if (field === "problemSolved") {
+        await toast.promise(updateProblemSolved({ id, problemSolved: value }), {
+          loading: "Updating...",
+          success: "Updated successfully",
+          error: "Failed to update",
+        });
+      } else if (field === "solutionOffered") {
+        await toast.promise(
+          updateSolutionOffered({ id, solutionOffered: value }),
+          {
+            loading: "Updating...",
+            success: "Updated successfully",
+            error: "Failed to update",
+          }
+        );
+      }
     } catch (error) {
       console.error("Error updating field:", error);
     }
@@ -101,7 +125,7 @@ const Validate = ({ id }: { id: string }) => {
       icon: Target,
       iconColor: "text-red-500",
       title: "Main Problem",
-      field: "problemSolved",
+      field: "problemSolved" as const,
       placeholder: "Describe the main problem your idea solves...",
     },
     {
@@ -109,16 +133,38 @@ const Validate = ({ id }: { id: string }) => {
       icon: LightbulbIcon,
       iconColor: "text-green-500",
       title: "Proposed Solution",
-      field: "solutionOffered",
+      field: "solutionOffered" as const,
       placeholder: "Describe your proposed solution...",
     },
   ];
+
+  if (isPending) {
+    return (
+      <div className="w-full space-y-6">
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+        </div>
+        {businessSections.map((section) => (
+          <Card key={section.id} className="border">
+            <div className="border-b p-3">
+              <Skeleton className="h-4 w-32" />
+            </div>
+            <div className="p-4">
+              <Skeleton className="h-20 w-full" />
+            </div>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   if (!idea) return null;
 
   return (
     <div className="w-full space-y-6">
-      <ValidationPanel ideaId={id as Id<"idea">} idea={idea} />
+      <ValidationPanel ideaId={id} idea={idea} />
 
       {businessSections.map((section) => (
         <div key={section.id}>
@@ -143,8 +189,7 @@ const Validate = ({ id }: { id: string }) => {
             </div>
             <div className="bg-background">
               <InlineEditTextArea
-                // @ts-ignore
-                value={idea?.[section.field] || ""}
+                value={idea[section.field] || ""}
                 placeholder={section.placeholder}
                 onSave={(value) => handleUpdateField(section.field, value)}
               />
@@ -170,8 +215,9 @@ const Validate = ({ id }: { id: string }) => {
                 Summary
               </h3>
               <p className="text-sm text-muted-foreground">
-                {idea?.aiOverallValidation?.overallComment ||
-                  "No summary available yet. Complete more validation stages and click 'Revalidate' to generate an AI analysis."}
+                {validationDetails?.idea?.aiOverallValidation
+                  ? `AI Validation Score: ${validationDetails.idea.aiOverallValidation}/100`
+                  : "No summary available yet. Complete more validation stages and click 'Revalidate' to generate an AI analysis."}
               </p>
             </div>
           </div>

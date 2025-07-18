@@ -5,13 +5,19 @@ import { getSession } from "../account/user";
 /**
  * Create a new roadmap changelog
  */
-export const createRoadmapChangelog = async (data: { roadmapId: string; title: string; description: string; publishDate: Date; isPublished: boolean; items?: any }) => {
+export const createRoadmapChangelog = async (data: { roadmapId: string; title: string; description: string; publishDate: Date; isPublished: boolean; fixes?: string[]; newFeatures?: string[] }) => {
     const { org } = await getSession();
     try {
         // Ensure the roadmap belongs to the org
         const roadmap = await prisma.publicRoadmap.findFirst({ where: { id: data.roadmapId, project: { organizationId: org } } });
         if (!roadmap) return { success: false, error: 'Roadmap not found or not in your organization' };
-        const changelog = await prisma.roadmapChangelog.create({ data });
+        const changelog = await prisma.roadmapChangelog.create({ 
+            data: {
+                ...data,
+                fixes: data.fixes || [],
+                newFeatures: data.newFeatures || [],
+            }
+        });
         return { success: true, data: changelog };
     } catch (error) {
         return { success: false, error };

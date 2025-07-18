@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 import * as assetActions from "@/actions/project/assets";
-import { api } from "@workspace/backend";
-import { useSession } from "@/context/session-context";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -40,7 +37,12 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 interface AssetCardProps {
-  asset: any;
+  asset: assetActions.Asset & {
+    uploadedByUser?: {
+      name?: string;
+      image?: string;
+    };
+  };
   onDelete: (assetId: string) => void;
   onUpdate?: (assetId: string) => void;
   className?: string;
@@ -82,7 +84,6 @@ export function AssetCard({
   onUpdate,
   className,
 }: AssetCardProps) {
-  const { token } = useSession();
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Mutations
@@ -118,26 +119,22 @@ export function AssetCard({
       }
 
       // Increment view count
-      if (token) {
-        try {
-          await assetActions.incrementViewCount({
-            token: token,
-            assetId: asset.id,
-          });
-        } catch (error) {
-          console.error("Failed to increment view count:", error);
-        }
+      try {
+        await assetActions.incrementViewCount({
+          assetId: asset.id,
+        });
+      } catch (error) {
+        console.error("Failed to increment view count:", error);
       }
     }
   };
 
   const handleDownload = async () => {
-    if (!token || asset.type === "link") return;
+    if (asset.type === "link") return;
 
     setIsDownloading(true);
     try {
       const downloadUrl = await assetActions.getAssetDownloadUrl({
-        token: token,
         assetId: asset.id,
       });
 
@@ -340,7 +337,7 @@ export function AssetCard({
                 {asset.fileSize && (
                   <span>{formatFileSize(asset.fileSize)}</span>
                 )}
-                <span>{formatDate(asset.uploadedAt)}</span>
+                <span>{formatDate(asset.createdAt.getTime())}</span>
               </div>
 
               <div className="flex items-center gap-2">

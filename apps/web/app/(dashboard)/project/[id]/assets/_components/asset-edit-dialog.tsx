@@ -29,6 +29,7 @@ import { toast } from "sonner";
 interface AssetEditDialogProps {
   asset: any;
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
 }
 
@@ -47,6 +48,7 @@ const ASSET_CATEGORIES = [
 export function AssetEditDialog({
   asset,
   onClose,
+  onSuccess,
   open,
 }: AssetEditDialogProps) {
   const { token } = useSession();
@@ -77,7 +79,9 @@ export function AssetEditDialog({
       const previousAssets = queryClient.getQueryData(["assets"]);
       queryClient.setQueryData(["assets"], (old: any) => {
         if (!old) return old;
-        return old.map((a: any) => a.id === updates.assetId ? { ...a, ...updates } : a);
+        return old.map((a: any) =>
+          a.id === updates.assetId ? { ...a, ...updates } : a
+        );
       });
       return { previousAssets };
     },

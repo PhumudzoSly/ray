@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as roadmapItemActions from "@/actions/roadmap/items";
-import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -25,7 +24,6 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { toast } from "sonner";
-import { Id } from "@workspace/backend";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { IssueSelector } from "@/components/ui/selectors/issue-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
@@ -43,7 +41,7 @@ import {
 interface AddItemDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  roadmapId: Id<"publicRoadmaps">;
+  roadmapId: string;
   token: string;
   initialStatus?: string;
 }
@@ -207,10 +205,10 @@ export function AddItemDialog({
               status={formData.status}
             />
             <IssueSelector
-              onChange={(issueId) =>
+              value={formData.issueId}
+              onValueChange={(issueId) =>
                 setFormData({ ...formData, issueId: issueId || "" })
               }
-              currentIssue={formData.issueId}
             />
             <PrioritySelector
               onChange={(priority) =>

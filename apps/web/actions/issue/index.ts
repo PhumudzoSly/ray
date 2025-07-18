@@ -424,7 +424,7 @@ export const getIssueActivity = async (issueId: string, limit = 50) => {
                 entityId: issueId,
                 organizationId: org,
             },
-            orderBy: { createdAt: "desc" },
+            orderBy: { createdAt: "asc" },
             take: limit,
             include: {
                 user: true,

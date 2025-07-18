@@ -91,6 +91,19 @@ export const getRoadmapBySlug = async (slug: string) => {
   }
 };
 
+export const getRoadmap = async (id: string) => {
+  const { org } = await getSession();
+  try {
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { id, project: { organizationId: org } },
+      include: { project: true },
+    });
+    return { success: true, data: roadmap };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
 export * from "./items";
 export * from "./changelogs";
 export * from "./votes";

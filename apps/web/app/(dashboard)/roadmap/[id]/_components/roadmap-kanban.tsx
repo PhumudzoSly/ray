@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as roadmapItemActions from "@/actions/roadmap/items";
-import { api } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { Input } from "@workspace/ui/components/input";
@@ -23,13 +22,6 @@ import {
   Hourglass,
   Rocket,
 } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -76,7 +68,8 @@ export function RoadmapKanban({
 }: RoadmapKanbanProps) {
   const { token } = useSession();
   const updateRoadmapItemMutation = useMutation({
-    mutationFn: async ({ id, ...data }: any) => roadmapItemActions.updateRoadmapItem(id, data),
+    mutationFn: async ({ id, ...data }: any) =>
+      roadmapItemActions.updateRoadmapItem(id, data),
   });
   const deleteRoadmapItemMutation = useMutation({
     mutationFn: async ({ id }: any) => roadmapItemActions.deleteRoadmapItem(id),
@@ -329,10 +322,11 @@ export function RoadmapKanban({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-[60vh] p-2 rounded-lg border-2 border-dashed transition-colors ${snapshot.isDraggingOver
-              ? "border-primary bg-primary/5"
-              : "border-muted bg-muted/20"
-              }`}
+            className={`min-h-[60vh] p-2 rounded-lg border-2 border-dashed transition-colors ${
+              snapshot.isDraggingOver
+                ? "border-primary bg-primary/5"
+                : "border-muted bg-muted/20"
+            }`}
           >
             {items.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>

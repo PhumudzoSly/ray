@@ -1,8 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as assetActions from "@/actions/project/assets";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
@@ -77,10 +76,25 @@ const LINK_TYPE_ICONS = {
 export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
   const { token } = useSession();
   const [isDownloading, setIsDownloading] = useState(false);
+  const queryClient = useQueryClient();
 
   // Mutations
-  // Replace with TanStack Query and server actions as needed
-  // ... implement download URL and increment view count using assetActions ...
+  const incrementViewMutation = useMutation({
+    mutationFn: ({ assetId }: { assetId: string }) =>
+      assetActions.incrementViewCount({ assetId }),
+    onError: (error) => {
+      console.error("Failed to increment view count:", error);
+    },
+  });
+
+  const downloadUrlMutation = useMutation({
+    mutationFn: ({ assetId }: { assetId: string }) =>
+      assetActions.getAssetDownloadUrl({ assetId }),
+    onError: (error) => {
+      console.error("Failed to get download URL:", error);
+      toast.error("Failed to get download URL");
+    },
+  });
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 B";
@@ -106,14 +120,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
 
       // Increment view count
       if (token) {
-        try {
-          await assetActions.incrementViewCount({
-            token: token,
-            assetId: asset.id,
-          });
-        } catch (error) {
-          console.error("Failed to increment view count:", error);
-        }
+        incrementViewMutation.mutate({ assetId: asset.id });
       }
     }
   };
@@ -123,8 +130,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
 
     setIsDownloading(true);
     try {
-      const downloadUrl = await assetActions.getAssetDownloadUrl({
-        token: token,
+      const downloadUrl = await downloadUrlMutation.mutateAsync({
         assetId: asset.id,
       });
 

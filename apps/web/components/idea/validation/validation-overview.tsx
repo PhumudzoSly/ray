@@ -33,9 +33,9 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
   const { token } = useSession();
   const [isValidating, setIsValidating] = useState(false);
   const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ token, ideaId: idea.id }),
+    mutationFn: async () => ideaActions.triggerValidation({ ideaId: idea.id }),
     onSuccess: () => {
-      toast.success("Validation completed successfully!");
+      toast.success("Validation started in background!");
       window.location.reload();
     },
     onError: (error) => {

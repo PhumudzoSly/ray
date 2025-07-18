@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as assetActions from "@/actions/project/assets";
-import { api } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -40,6 +39,7 @@ import { toast } from "sonner";
 interface AssetLinkDialogProps {
   projectId: string;
   onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
 }
 
@@ -88,6 +88,7 @@ const ASSET_CATEGORIES = [
 export function AssetLinkDialog({
   projectId,
   onClose,
+  onSuccess,
   open,
 }: AssetLinkDialogProps) {
   const { token } = useSession();
@@ -174,12 +175,11 @@ export function AssetLinkDialog({
     setIsCreating(true);
     try {
       await assetActions.createLinkAsset({
-        token: token,
-        projectId: projectId as any,
+        projectId: projectId,
         name: assetName,
         description: assetDescription,
         url: linkUrl,
-        linkType: linkType as any,
+        linkType: linkType,
         category: assetCategory || "other",
         tags: assetTags.length > 0 ? assetTags : undefined,
       });

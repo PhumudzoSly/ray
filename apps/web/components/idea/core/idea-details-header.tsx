@@ -15,9 +15,8 @@ import {
   Archive,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "@/context/session-context";
-import { api } from "@workspace/backend";
-import { Id } from "@workspace/backend";
+import { useQuery } from "@tanstack/react-query";
+import { getSingleIdea } from "@/actions/idea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,11 +34,11 @@ export const IdeaDetailsHeader: React.FC<IdeaDetailsHeaderProps> = ({
   ideaId,
 }) => {
   const router = useRouter();
-  const { token } = useSession();
 
-  const { data: idea, isPending } = api.idea.getSingleIdea({
-    id: ideaId as Id<"idea">,
-    token,
+  const { data: idea, isPending } = useQuery({
+    queryKey: ["idea", ideaId],
+    queryFn: () => getSingleIdea(ideaId),
+    enabled: !!ideaId,
   });
 
   const getStatusColor = (status: string) => {
