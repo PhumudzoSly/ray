@@ -8,9 +8,10 @@ import { IssueKanbanCard } from "./issue-kanbab-card";
 import { status as issueStatuses } from "@/utils/constants/issues/status";
 import { toast } from "sonner";
 import { CustomIssue } from "@/types/project";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
+import { useRouter } from "next/navigation";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
 interface IssuesKanbanProps {
@@ -19,13 +20,75 @@ interface IssuesKanbanProps {
 }
 
 export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   // Local state for optimistic updates
   const [optimisticIssues, setOptimisticIssues] = useState<CustomIssue[]>([]);
-  const { token } = useSession();
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+
   const updateStatusMutation = useMutation({
-    mutationFn: async ({ issueId, status, token }: any) => issueActions.updateIssue(issueId, { status, token }),
-    onSuccess: () => setOptimisticIssues([]),
-    onError: () => setOptimisticIssues([]),
+    mutationFn: async ({
+      issueId,
+      status,
+    }: {
+      issueId: string;
+      status: string;
+    }) => issueActions.updateIssue(issueId, { status }),
+    onMutate: async ({ issueId, status }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+
+      // Snapshot the previous value
+      const previousIssues = queryClient.getQueryData(["issues"]);
+
+      // Optimistically update to the new value
+      const currentIssues =
+        optimisticIssues.length > 0 ? optimisticIssues : issues;
+      const updatedIssues = currentIssues.map((issue) =>
+        issue.id === issueId ? { ...issue, status } : issue
+      );
+      setOptimisticIssues(updatedIssues);
+      setIsUpdating(issueId);
+
+      // Return a context object with the snapshotted value
+      return { previousIssues };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousIssues) {
+        setOptimisticIssues([]);
+      }
+      setIsUpdating(null);
+
+      console.error("Failed to update issue status:", err);
+      if (
+        err instanceof Error &&
+        err.message?.includes("Cannot mark issue as DONE")
+      ) {
+        toast.error(err.message);
+      } else {
+        toast.error("Failed to update issue status");
+      }
+    },
+    onSuccess: (data, variables) => {
+      // Clear optimistic state
+      setOptimisticIssues([]);
+      setIsUpdating(null);
+
+      // Show success message
+      toast.success("Issue status updated successfully");
+
+      // Refresh the route to get the latest data
+      router.refresh();
+
+      // Invalidate and refetch issues
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+    },
+    onSettled: () => {
+      // Always clear loading state
+      setIsUpdating(null);
+    },
   });
 
   // Use optimistic issues if available, otherwise use props
@@ -64,30 +127,14 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
 
     // Only update status if column changed
     if (sourceStatus !== destinationStatus) {
-      // Optimistic update
-      const currentIssues =
-        optimisticIssues.length > 0 ? optimisticIssues : issues;
-      const updatedIssues = currentIssues.map((issue) =>
-        issue.id === draggableId
-          ? { ...issue, status: destinationStatus }
-          : issue
-      );
-      setOptimisticIssues(updatedIssues);
-
       try {
         await updateStatusMutation.mutateAsync({
           issueId: draggableId,
           status: destinationStatus,
-          token: token,
         });
-      } catch (error: any) {
-        console.error("Failed to update issue status:", error);
-        setOptimisticIssues([]);
-        if (error.message?.includes("Cannot mark issue as DONE")) {
-          toast.error(error.message);
-        } else {
-          toast.error("Failed to update issue status");
-        }
+      } catch (error) {
+        // Error handling is done in the mutation's onError callback
+        console.error("Drag and drop failed:", error);
       }
     }
   };
@@ -132,8 +179,10 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     className={cn(
-                      "bg-card rounded-lg border",
-                      snapshot.isDragging && "rotate-1 shadow-lg"
+                      "bg-card rounded-lg border transition-all",
+                      snapshot.isDragging && "rotate-1 shadow-lg",
+                      isUpdating === issue.id &&
+                        "opacity-50 pointer-events-none"
                     )}
                   >
                     <IssueKanbanCard

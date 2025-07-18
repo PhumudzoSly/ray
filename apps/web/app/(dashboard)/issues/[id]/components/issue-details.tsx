@@ -10,7 +10,7 @@ import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import { GitBranch, Clock, Inbox, Plug } from "lucide-react";
 import { NewIssue } from "@/components/project/issues/new-issue";
-import { ActivityFeed, BlockEditor, NoData } from "@/components/shared";
+import { ActivityFeed, NoData } from "@/components/shared";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
@@ -25,7 +25,9 @@ const IssueDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<"details" | "relationship" | "activity">(
     "details"
   );
+
   const queryClient = useQueryClient();
+
   // Fetch issue details
   const { data: issue, isLoading: isPending } = useQuery({
     queryKey: ["issue", id],
@@ -35,6 +37,7 @@ const IssueDetails = ({ id }: { id: string }) => {
       return data;
     },
   });
+
   // Fetch issue hierarchy
   const { data: issueHierarchy } = useQuery({
     queryKey: ["issueHierarchy", id],
@@ -42,46 +45,42 @@ const IssueDetails = ({ id }: { id: string }) => {
       return await issueActions.getIssueHierarchy(id);
     },
   });
-  // Optimistic update for title
-  const updateTitleMutation = useMutation({
-    mutationFn: async ({ issueId, title }: { issueId: string; title: string }) => {
-      return await issueActions.updateIssue(issueId, { title });
-    },
-    onMutate: async ({ issueId, title }) => {
-      await queryClient.cancelQueries({ queryKey: ["issue", id] });
-      const previousIssue = queryClient.getQueryData(["issue", id]);
-      queryClient.setQueryData(["issue", id], (old: any) => ({ ...old, title }));
-      return { previousIssue };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousIssue) {
-        queryClient.setQueryData(["issue", id], context.previousIssue);
-      }
-      toast.error("Failed to update title");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["issue", id] });
+
+  // Fetch issue activities
+  const { data: issueActivities } = useQuery({
+    queryKey: ["issueActivities", id],
+    queryFn: async () => {
+      const { success, data } = await issueActions.getIssueActivity(id);
+      if (!success) throw new Error("Failed to fetch issue activities");
+      return data;
     },
   });
-  // Optimistic update for description
-  const updateDescriptionMutation = useMutation({
-    mutationFn: async ({ issueId, description }: { issueId: string; description: string }) => {
-      return await issueActions.updateIssue(issueId, { description });
+
+  // Generic optimistic update mutation for any field
+  const updateIssueFieldMutation = useMutation({
+    mutationFn: async (update: { issueId: string } & Record<string, any>) => {
+      const { issueId, ...fields } = update;
+      return await issueActions.updateIssue(issueId, fields);
     },
-    onMutate: async ({ issueId, description }) => {
+    onMutate: async (update) => {
+      const { issueId, ...fields } = update;
       await queryClient.cancelQueries({ queryKey: ["issue", id] });
       const previousIssue = queryClient.getQueryData(["issue", id]);
-      queryClient.setQueryData(["issue", id], (old: any) => ({ ...old, description }));
+      queryClient.setQueryData(["issue", id], (old: any) => ({
+        ...old,
+        ...fields,
+      }));
       return { previousIssue };
     },
     onError: (err, variables, context) => {
       if (context?.previousIssue) {
         queryClient.setQueryData(["issue", id], context.previousIssue);
       }
-      toast.error("Failed to update description");
+      toast.error("Failed to update issue");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["issue", id] });
+      queryClient.invalidateQueries({ queryKey: ["issueActivities", id] });
     },
   });
 
@@ -111,7 +110,10 @@ const IssueDetails = ({ id }: { id: string }) => {
         <InlineEditField
           value={issue.title}
           onSave={async (value) => {
-            await updateTitleMutation.mutateAsync({ issueId: id, title: value });
+            await updateIssueFieldMutation.mutateAsync({
+              issueId: id,
+              title: value,
+            });
           }}
           displayValue={
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
@@ -126,7 +128,10 @@ const IssueDetails = ({ id }: { id: string }) => {
         <InlineEditTextArea
           value={issue.description || ""}
           onSave={async (value) => {
-            await updateDescriptionMutation.mutateAsync({ issueId: id, description: value });
+            await updateIssueFieldMutation.mutateAsync({
+              issueId: id,
+              description: value,
+            });
           }}
           placeholder="No description provided."
         />
@@ -219,10 +224,10 @@ const IssueDetails = ({ id }: { id: string }) => {
                     <Badge variant="secondary">
                       {issueHierarchy.parentIssue.status}
                     </Badge>
-                    {issueHierarchy.parentIssue.user && (
+                    {issueHierarchy.parentIssue.assignedTo && (
                       <div className="flex items-center gap-1">
                         <span className="text-xs text-muted-foreground">
-                          {issueHierarchy.parentIssue.user.name}
+                          {issueHierarchy.parentIssue.assignedTo.name}
                         </span>
                       </div>
                     )}
@@ -284,23 +289,36 @@ const IssueDetails = ({ id }: { id: string }) => {
           {/* Add Sub-Issue Button for issues without sub-issues */}
           {(!issueHierarchy?.subIssues ||
             issueHierarchy.subIssues.length === 0) && (
-              <div className="mt-6">
-                <NewIssue
-                  projectId={issue.projectId}
-                  parentIssueId={id}
-                  variant="sub-issue"
-                />
-              </div>
-            )}
+            <div className="mt-6">
+              <NewIssue
+                projectId={issue.projectId}
+                parentIssueId={id}
+                variant="sub-issue"
+              />
+            </div>
+          )}
         </div>
       ) : null}
 
       {view === "activity" ? (
-        <ActivityFeed
-          entityType="issue"
-          entityId={id}
-          emptyMessage="No issue activity yet"
-        />
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-muted-foreground" />
+              <h3 className="text-lg font-semibold">Activity Timeline</h3>
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {issueActivities?.length || 0} activities
+            </Badge>
+          </div>
+
+          <ActivityFeed
+            entityType="ISSUE"
+            entityId={id}
+            emptyMessage="No issue activity yet"
+            limit={50}
+          />
+        </div>
       ) : null}
     </div>
   );

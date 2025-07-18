@@ -286,6 +286,22 @@ exports.Prisma.IssueScalarFieldEnum = {
   sourceFeedbackId: 'sourceFeedbackId'
 };
 
+exports.Prisma.IssueDependencyScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  issueId: 'issueId',
+  dependencyId: 'dependencyId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.IssueLinkScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  issueId: 'issueId',
+  url: 'url',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.AssetScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -703,6 +719,8 @@ exports.Prisma.ModelName = {
   Project: 'Project',
   Idea: 'Idea',
   Issue: 'Issue',
+  IssueDependency: 'IssueDependency',
+  IssueLink: 'IssueLink',
   Asset: 'Asset',
   ApiKey: 'ApiKey',
   ActivityFeed: 'ActivityFeed',

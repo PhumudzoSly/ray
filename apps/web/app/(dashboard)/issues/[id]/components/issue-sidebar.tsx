@@ -102,8 +102,13 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
 
   // Optimistic update for changing assignee
   const changeLeaderMutation = useMutation({
-    mutationFn: async ({ issueId, userId }: { issueId: string; userId: string }) => 
-      issueActions.updateIssue(issueId, { assignedToId: userId }),
+    mutationFn: async ({
+      issueId,
+      userId,
+    }: {
+      issueId: string;
+      userId: string;
+    }) => issueActions.updateIssue(issueId, { assignedToId: userId }),
     onMutate: async ({ issueId, userId }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issue", issueId] });
@@ -124,7 +129,10 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousIssue) {
-        queryClient.setQueryData(["issue", variables.issueId], context.previousIssue);
+        queryClient.setQueryData(
+          ["issue", variables.issueId],
+          context.previousIssue
+        );
       }
       toast.error("Failed to change issue leader");
     },
@@ -161,41 +169,67 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
 
   // Optimistic update for adding dependency
   const addDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => 
-      issueActions.addIssueDependency({ parentId, dependentIssueId }),
+    mutationFn: async ({
+      parentId,
+      dependentIssueId,
+    }: {
+      parentId: string;
+      dependentIssueId: string;
+    }) => issueActions.addIssueDependency({ parentId, dependentIssueId }),
     onMutate: async ({ parentId, dependentIssueId }) => {
-      await queryClient.cancelQueries({ queryKey: ["issueDependencies", dependentIssueId] });
-      const previousDependencies = queryClient.getQueryData(["issueDependencies", dependentIssueId]);
+      await queryClient.cancelQueries({
+        queryKey: ["issueDependencies", dependentIssueId],
+      });
+      const previousDependencies = queryClient.getQueryData([
+        "issueDependencies",
+        dependentIssueId,
+      ]);
 
       // Optimistically add the dependency
-      queryClient.setQueryData(["issueDependencies", dependentIssueId], (old: any) => {
-        if (!old) return { dependencies: [], dependents: [] };
-        
-        // Create a placeholder dependency object
-        const newDependency = {
-          id: parentId,
-          title: "Loading...",
-          status: "TODO",
-          assignedTo: null,
-          project: null,
-        };
+      queryClient.setQueryData(
+        ["issueDependencies", dependentIssueId],
+        (old: any) => {
+          if (!old) return { dependencies: [], dependents: [] };
 
-        return {
-          ...old,
-          dependencies: [...old.dependencies, newDependency],
-        };
-      });
+          // Check if dependency already exists to prevent duplicates
+          const dependencyExists = old.dependencies.some(
+            (dep: any) => dep.id === parentId
+          );
+          if (dependencyExists) {
+            return old; // Don't add if already exists
+          }
+
+          // Create a placeholder dependency object
+          const newDependency = {
+            id: parentId,
+            title: "Loading...",
+            status: "TODO",
+            assignedTo: null,
+            project: null,
+          };
+
+          return {
+            ...old,
+            dependencies: [...old.dependencies, newDependency],
+          };
+        }
+      );
 
       return { previousDependencies };
     },
     onError: (err, variables, context) => {
       if (context?.previousDependencies) {
-        queryClient.setQueryData(["issueDependencies", variables.dependentIssueId], context.previousDependencies);
+        queryClient.setQueryData(
+          ["issueDependencies", variables.dependentIssueId],
+          context.previousDependencies
+        );
       }
-      
+
       if (err instanceof Error) {
         if (err.message?.includes("circular dependency")) {
-          toast.error("Cannot add dependency: would create circular dependency");
+          toast.error(
+            "Cannot add dependency: would create circular dependency"
+          );
         } else if (err.message?.includes("already exists")) {
           toast.error("Dependency already exists");
         } else {
@@ -211,33 +245,53 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
       setIsAddingDependency(false);
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["issueDependencies", variables.dependentIssueId] });
+      queryClient.invalidateQueries({
+        queryKey: ["issueDependencies", variables.dependentIssueId],
+      });
     },
   });
 
   // Optimistic update for removing dependency
   const removeDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => 
-      issueActions.removeIssueDependency({ parentId, dependentIssueId }),
+    mutationFn: async ({
+      parentId,
+      dependentIssueId,
+    }: {
+      parentId: string;
+      dependentIssueId: string;
+    }) => issueActions.removeIssueDependency({ parentId, dependentIssueId }),
     onMutate: async ({ parentId, dependentIssueId }) => {
-      await queryClient.cancelQueries({ queryKey: ["issueDependencies", dependentIssueId] });
-      const previousDependencies = queryClient.getQueryData(["issueDependencies", dependentIssueId]);
+      await queryClient.cancelQueries({
+        queryKey: ["issueDependencies", dependentIssueId],
+      });
+      const previousDependencies = queryClient.getQueryData([
+        "issueDependencies",
+        dependentIssueId,
+      ]);
 
       // Optimistically remove the dependency
-      queryClient.setQueryData(["issueDependencies", dependentIssueId], (old: any) => {
-        if (!old) return { dependencies: [], dependents: [] };
-        
-        return {
-          ...old,
-          dependencies: old.dependencies.filter((dep: any) => dep.id !== parentId),
-        };
-      });
+      queryClient.setQueryData(
+        ["issueDependencies", dependentIssueId],
+        (old: any) => {
+          if (!old) return { dependencies: [], dependents: [] };
+
+          return {
+            ...old,
+            dependencies: old.dependencies.filter(
+              (dep: any) => dep.id !== parentId
+            ),
+          };
+        }
+      );
 
       return { previousDependencies };
     },
     onError: (err, variables, context) => {
       if (context?.previousDependencies) {
-        queryClient.setQueryData(["issueDependencies", variables.dependentIssueId], context.previousDependencies);
+        queryClient.setQueryData(
+          ["issueDependencies", variables.dependentIssueId],
+          context.previousDependencies
+        );
       }
       toast.error("Failed to remove dependency");
     },
@@ -245,7 +299,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
       toast.success("Dependency removed successfully");
     },
     onSettled: (data, error, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["issueDependencies", variables.dependentIssueId] });
+      queryClient.invalidateQueries({
+        queryKey: ["issueDependencies", variables.dependentIssueId],
+      });
     },
   });
 
@@ -257,7 +313,7 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
 
   const handleAddDependency = async () => {
     if (!selectedIssue) return;
-    
+
     addDependencyMutation.mutate({
       parentId: selectedIssue,
       dependentIssueId: issueId,
@@ -328,7 +384,11 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
             Assignee
           </h3>
           <AssigneeSelector
-            assignee={typeof issue.assignedTo === 'string' ? issue.assignedTo : (issue.assignedTo?.id || "")}
+            assignee={
+              typeof issue.assignedTo === "string"
+                ? issue.assignedTo
+                : issue.assignedTo?.id || ""
+            }
             onChange={async (e) => {
               changeLeaderMutation.mutate({
                 issueId,
@@ -342,7 +402,13 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <div>
-                  <IssueStatusField issueId={issueId} value={issue?.status} />
+                  <IssueStatusField
+                    issueId={issueId}
+                    value={issue?.status}
+                    onChange={async (status) => {
+                      updateIssueMutation.mutate({ status });
+                    }}
+                  />
                 </div>
               </TooltipTrigger>
               {validationResult && !validationResult.canComplete && (
@@ -359,10 +425,22 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
           <h3 className="text-sm font-medium text-muted-foreground">
             Priority
           </h3>
-          <IssuePriorityField issueId={issueId} value={issue?.priority} />
+          <IssuePriorityField
+            issueId={issueId}
+            value={issue?.priority}
+            onChange={async (priority) => {
+              updateIssueMutation.mutate({ priority });
+            }}
+          />
 
           <h3 className="text-sm font-medium text-muted-foreground">Label</h3>
-          <IssueLabelField issueId={issueId} value={issue?.label} />
+          <IssueLabelField
+            issueId={issueId}
+            value={issue?.label}
+            onChange={async (label) => {
+              updateIssueMutation.mutate({ label });
+            }}
+          />
 
           <h3 className="text-sm font-medium text-muted-foreground">
             Due Date
@@ -370,6 +448,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
           <IssueDueDateField
             issueId={issueId}
             value={issue?.dueDate ? new Date(issue?.dueDate) : null}
+            onChange={async (dueDate) => {
+              updateIssueMutation.mutate({ dueDate: dueDate || undefined });
+            }}
           />
 
           <h3 className="text-sm font-medium text-muted-foreground">
@@ -430,7 +511,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
                     onClick={handleAddDependency}
                     disabled={!selectedIssue || addDependencyMutation.isPending}
                   >
-                    {addDependencyMutation.isPending ? "Adding..." : "Add Dependency"}
+                    {addDependencyMutation.isPending
+                      ? "Adding..."
+                      : "Add Dependency"}
                   </Button>
                 </div>
               </div>
@@ -441,10 +524,11 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
         {/* Completion Status */}
         {validationResult && (
           <Alert
-            className={`${validationResult.canComplete
-              ? "border-green-200 bg-green-50"
-              : "border-red-200 bg-red-50"
-              }`}
+            className={`${
+              validationResult.canComplete
+                ? "border-green-200 bg-green-50"
+                : "border-red-200 bg-red-50"
+            }`}
           >
             <AlertDescription className="text-xs">
               {validationResult.canComplete ? (
@@ -493,9 +577,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
           <TabsContent value="dependencies" className="mt-4 space-y-3">
             {dependencies && dependencies.dependencies.length > 0 ? (
               <div className="space-y-2">
-                {dependencies.dependencies.map((dep) => (
+                {dependencies.dependencies.map((dep, index) => (
                   <DependencyCard
-                    key={dep.id}
+                    key={`${dep.id}-${index}`}
                     dep={dep}
                     showRemove={true}
                     onRemove={() => dep.id && handleRemoveDependency(dep.id)}
@@ -514,8 +598,8 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
           <TabsContent value="dependents" className="mt-4 space-y-3">
             {dependencies && dependencies.dependents.length > 0 ? (
               <div className="space-y-2">
-                {dependencies.dependents.map((dep) => (
-                  <DependencyCard key={dep.id} dep={dep} />
+                {dependencies.dependents.map((dep, index) => (
+                  <DependencyCard key={`${dep.id}-${index}`} dep={dep} />
                 ))}
               </div>
             ) : (

@@ -84,7 +84,7 @@ export default function IssueLinks({ issueId }: IssueLinksProps) {
     if (!result) return;
 
     try {
-      const deleteResult = await deleteLink({ id, issueId });
+      const deleteResult = await deleteLink({ id });
 
       toast.promise(Promise.resolve(), {
         loading: "Removing link...",

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
@@ -26,9 +26,86 @@ export function IssueKanbanCard({
   isDragging = false,
 }: IssueKanbanCardProps) {
   const router = useRouter();
-  const { token } = useSession();
+  const queryClient = useQueryClient();
+
   const changeLeaderMutation = useMutation({
-    mutationFn: async ({ issueId, userId, token }: any) => issueActions.updateIssue(issueId, { assignedToId: userId, token }),
+    mutationFn: async ({
+      issueId,
+      userId,
+    }: {
+      issueId: string;
+      userId: string;
+    }) => issueActions.updateIssue(issueId, { assignedToId: userId }),
+    onMutate: async ({ issueId, userId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      await queryClient.cancelQueries({ queryKey: ["issues-grouped"] });
+
+      // Snapshot the previous values
+      const previousIssues = queryClient.getQueryData(["issues"]);
+      const previousGroupedIssues = queryClient.getQueryData([
+        "issues-grouped",
+      ]);
+
+      // Optimistically update the grouped issues structure
+      queryClient.setQueryData(["issues-grouped"], (old: any[] | undefined) => {
+        if (!old) return old;
+        return old.map((group) => ({
+          ...group,
+          items: group.items.map((issue: any) =>
+            issue.id === issueId
+              ? {
+                  ...issue,
+                  assignedToId: userId,
+                  assignedTo: { id: userId, name: "Loading..." },
+                }
+              : issue
+          ),
+        }));
+      });
+
+      // Also update the flat issues array if it exists
+      queryClient.setQueryData(["issues"], (old: any[] | undefined) => {
+        if (!old) return old;
+        return old.map((issue: any) =>
+          issue.id === issueId
+            ? {
+                ...issue,
+                assignedToId: userId,
+                assignedTo: { id: userId, name: "Loading..." },
+              }
+            : issue
+        );
+      });
+
+      return { previousIssues, previousGroupedIssues };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+      if (context?.previousGroupedIssues) {
+        queryClient.setQueryData(
+          ["issues-grouped"],
+          context.previousGroupedIssues
+        );
+      }
+
+      console.error("Failed to change issue assignee:", err);
+      toast.error("Failed to change issue assignee");
+    },
+    onSuccess: (data, variables) => {
+      // Show success message
+      toast.success("Assignee updated successfully");
+
+      // Refresh the route to get the latest data
+      router.refresh();
+
+      // Invalidate and refetch issues
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issues-grouped"] });
+    },
   });
 
   // Handler for interactive element clicks
@@ -82,11 +159,11 @@ export function IssueKanbanCard({
             try {
               await changeLeaderMutation.mutateAsync({
                 issueId: issue.id,
-                userId: userId as any,
-                token,
+                userId: userId as string,
               });
             } catch (error) {
-              toast.error("Failed to change issue assignee");
+              // Error handling is done in the mutation's onError callback
+              console.error("Assignee update failed:", error);
             }
           }}
         />

@@ -121,6 +121,8 @@ model Organization {
   featureLink         FeatureLink[]
   milestone           Milestone[]
   milestoneDependency MilestoneDependency[]
+  issueDependency     IssueDependency[]
+  issueLink           IssueLink[]
 
   @@unique([slug])
   @@map("organization")
@@ -280,11 +282,57 @@ model Issue {
   sourceType       String?
   sourceFeedbackId String?
 
+  // Self-referencing relationships for parent/child issues
+  parentIssue Issue?  @relation("IssueHierarchy", fields: [parentIssueId], references: [id], onDelete: SetNull)
+  subIssues   Issue[] @relation("IssueHierarchy")
+
+  // Issue dependencies
+  dependencies IssueDependency[] @relation("Dependants")
+  dependentOn  IssueDependency[] @relation("Dependencies")
+
+  // Issue links
+  links IssueLink[]
+
   @@index([organizationId, achieved])
   @@index([projectId, organizationId, achieved])
   @@index([milestoneId])
   @@index([parentIssueId])
   @@index([assignedToId])
+}
+
+model IssueDependency {
+  id             String   @id @default(uuid())
+  organizationId String
+  issueId        String
+  dependencyId   String
+  createdAt      DateTime @default(now())
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  issue        Issue        @relation("Dependants", fields: [issueId], references: [id], onDelete: Cascade)
+  dependency   Issue        @relation("Dependencies", fields: [dependencyId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([issueId])
+  @@index([dependencyId])
+  @@index([organizationId, issueId])
+  @@index([organizationId, dependencyId])
+  @@map("issueDependency")
+}
+
+model IssueLink {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  issueId        String
+  issue          Issue        @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  url            String
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([issueId])
+  @@index([organizationId, issueId])
+  @@map("issueLink")
 }
 
 model Asset {

@@ -32,23 +32,6 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
   const searchParams = useSearchParams();
   const [viewMode, setViewMode] = React.useState<ViewMode>("list");
 
-  const createQueryString = React.useCallback(
-    (params: Record<string, string | number | null>) => {
-      const newSearchParams = new URLSearchParams(searchParams.toString());
-
-      Object.entries(params).forEach(([key, value]) => {
-        if (value === null) {
-          newSearchParams.delete(key);
-        } else {
-          newSearchParams.set(key, String(value));
-        }
-      });
-
-      return newSearchParams.toString();
-    },
-    [searchParams]
-  );
-
   // Client-side filtering logic
   const filteredIssues = React.useMemo(() => {
     let filtered = [...issues];

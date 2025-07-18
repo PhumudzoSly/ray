@@ -3,7 +3,7 @@
 import { IssueFieldBase } from "./issue-field-base";
 import { status } from "@/utils/constants/issues/status";
 import { IssueStatusBadge } from "@/components/project/issues/issue-badge";
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 
 interface IssueStatusFieldProps {
@@ -12,6 +12,7 @@ interface IssueStatusFieldProps {
   className?: string;
   disabled?: boolean;
   align?: "start" | "center" | "end";
+  onChange?: (status: string) => Promise<void>;
 }
 
 export function IssueStatusField({
@@ -19,39 +20,13 @@ export function IssueStatusField({
   value,
   disabled,
   align,
+  onChange,
 }: IssueStatusFieldProps) {
-  const queryClient = useQueryClient();
-  // TanStack mutation for updating status
-  const updateStatusMutation = useMutation({
-    mutationFn: async ({ issueId, status }: { issueId: string; status: string }) => {
-      return await issueActions.updateIssue(issueId, { status });
-    },
-    onMutate: async ({ issueId, status }) => {
-      await queryClient.cancelQueries({ queryKey: ["issues"] });
-      const previousIssues = queryClient.getQueryData<any[]>(["issues"]);
-      queryClient.setQueryData<any[]>(["issues"], (old) => {
-        if (!old) return old;
-        return old.map((i) =>
-          i.id === issueId ? { ...i, status } : i
-        );
-      });
-      return { previousIssues };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousIssues) {
-        queryClient.setQueryData(["issues"], context.previousIssues);
-      }
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
-    },
-  });
-
   // Fetch dependency validation to check if issue can be marked as DONE
   const { data: validationResult } = useQuery({
     queryKey: ["issue-completion-validation", issueId],
     queryFn: async () => {
-      const response = await issueActions.validateIssueCompletion(issueId);
+      const response = await issueActions.validateIssueCompletion({ issueId });
       return response;
     },
   });
@@ -67,16 +42,18 @@ export function IssueStatusField({
     <IssueFieldBase
       value={value}
       onSave={async (newValue: string) => {
-        try {
-          await updateStatusMutation.mutateAsync({
-            issueId,
-            status: newValue,
-          });
-        } catch (error: any) {
-          if (error.message?.includes("Cannot mark issue as DONE")) {
-            throw new Error(error.message);
-          } else {
-            throw new Error("Failed to update status");
+        if (onChange) {
+          await onChange(newValue);
+        } else {
+          // Fallback to direct API call if no onChange provided
+          try {
+            await issueActions.updateIssue(issueId, { status: newValue });
+          } catch (error: any) {
+            if (error.message?.includes("Cannot mark issue as DONE")) {
+              throw new Error(error.message);
+            } else {
+              throw new Error("Failed to update status");
+            }
           }
         }
       }}

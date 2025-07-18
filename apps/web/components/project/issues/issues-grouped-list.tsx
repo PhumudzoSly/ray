@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Badge } from "@workspace/ui/components/badge";
 import { cn } from "@workspace/ui/lib/utils";
 import {
@@ -20,6 +20,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface IssueItem {
   id: string;
@@ -98,35 +99,93 @@ function IssueItemComponent({
   onItemClick?: (item: IssueItem) => void;
   className?: string;
 }) {
-  //
+  const router = useRouter();
   const queryClient = useQueryClient();
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   // Optimistic update mutation for issue
   const updateIssueMutation = useMutation({
-    mutationFn: async ({ issueId, updates }: { issueId: string; updates: any }) => {
-      // Call the server action
+    mutationFn: async ({
+      issueId,
+      updates,
+    }: {
+      issueId: string;
+      updates: any;
+    }) => {
       return await issueActions.updateIssue(issueId, updates);
     },
-    // Optimistic update
     onMutate: async ({ issueId, updates }) => {
+      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issues"] });
-      const previousIssues = queryClient.getQueryData<IssueItem[]>(["issues"]);
-      queryClient.setQueryData<IssueItem[]>(["issues"], (old) => {
+      await queryClient.cancelQueries({ queryKey: ["issues-grouped"] });
+
+      // Snapshot the previous value
+      const previousIssues = queryClient.getQueryData(["issues"]);
+      const previousGroupedIssues = queryClient.getQueryData([
+        "issues-grouped",
+      ]);
+
+      // Set loading state
+      setIsUpdating(issueId);
+
+      // Optimistically update the grouped issues structure
+      queryClient.setQueryData(
+        ["issues-grouped"],
+        (old: IssueGroup[] | undefined) => {
+          if (!old) return old;
+          return old.map((group) => ({
+            ...group,
+            items: group.items.map((issue) =>
+              issue.id === issueId ? { ...issue, ...updates } : issue
+            ),
+            count: group.items.length, // Recalculate count if needed
+          }));
+        }
+      );
+
+      // Also update the flat issues array if it exists
+      queryClient.setQueryData(["issues"], (old: IssueItem[] | undefined) => {
         if (!old) return old;
-        return old.map((i) =>
-          i.id === issueId ? { ...i, ...updates } : i
+        return old.map((issue) =>
+          issue.id === issueId ? { ...issue, ...updates } : issue
         );
       });
-      return { previousIssues };
+
+      return { previousIssues, previousGroupedIssues };
     },
     onError: (err, variables, context) => {
+      // Rollback on error
       if (context?.previousIssues) {
         queryClient.setQueryData(["issues"], context.previousIssues);
       }
+      if (context?.previousGroupedIssues) {
+        queryClient.setQueryData(
+          ["issues-grouped"],
+          context.previousGroupedIssues
+        );
+      }
+      setIsUpdating(null);
+
+      console.error("Failed to update issue:", err);
       toast.error("Failed to update issue");
     },
-    onSettled: () => {
+    onSuccess: (data, variables) => {
+      // Clear loading state
+      setIsUpdating(null);
+
+      // Show success message
+      toast.success("Issue updated successfully");
+
+      // Refresh the route to get the latest data
+      router.refresh();
+
+      // Invalidate and refetch issues
       queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issues-grouped"] });
+    },
+    onSettled: () => {
+      // Always clear loading state
+      setIsUpdating(null);
     },
   });
 
@@ -135,10 +194,59 @@ function IssueItemComponent({
     e.stopPropagation();
   };
 
+  const handlePriorityChange = async (priority: string) => {
+    try {
+      await updateIssueMutation.mutateAsync({
+        issueId: item.id,
+        updates: {
+          priority: priority as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
+        },
+      });
+    } catch (error) {
+      // Error handling is done in the mutation's onError callback
+      console.error("Priority update failed:", error);
+    }
+  };
+
+  const handleStatusChange = async (status: string) => {
+    try {
+      await updateIssueMutation.mutateAsync({
+        issueId: item.id,
+        updates: {
+          status: status as
+            | "BACKLOG"
+            | "IN_PROGRESS"
+            | "REVIEW"
+            | "DONE"
+            | "BLOCKED"
+            | "CANCELLED",
+        },
+      });
+    } catch (error) {
+      // Error handling is done in the mutation's onError callback
+      console.error("Status update failed:", error);
+    }
+  };
+
+  const handleAssigneeChange = async (assignee: any) => {
+    try {
+      await updateIssueMutation.mutateAsync({
+        issueId: item.id,
+        updates: {
+          assignedToId: assignee,
+        },
+      });
+    } catch (error) {
+      // Error handling is done in the mutation's onError callback
+      console.error("Assignee update failed:", error);
+    }
+  };
+
   return (
     <div
       className={cn(
         "group flex justify-between w-full items-center gap-3 py-2 px-3 hover:bg-accent/50 cursor-pointer transition-colors duration-150",
+        isUpdating === item.id && "opacity-50 pointer-events-none",
         className
       )}
       onClick={() => onItemClick?.(item)}
@@ -146,14 +254,7 @@ function IssueItemComponent({
       <div className="flex items-center gap-2">
         <div onClick={handleInteractiveClick}>
           <PrioritySelector
-            onChange={async (e) => {
-              updateIssueMutation.mutate({
-                issueId: item.id,
-                updates: {
-                  priority: e as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW",
-                },
-              });
-            }}
+            onChange={handlePriorityChange}
             iconOnly={true}
             priority={item.priority}
           />
@@ -165,20 +266,7 @@ function IssueItemComponent({
         </div>
         <div onClick={handleInteractiveClick}>
           <StatusSelector
-            onChange={async (e) => {
-              updateIssueMutation.mutate({
-                issueId: item.id,
-                updates: {
-                  status: e as
-                    | "BACKLOG"
-                    | "IN_PROGRESS"
-                    | "REVIEW"
-                    | "DONE"
-                    | "BLOCKED"
-                    | "CANCELLED",
-                },
-              });
-            }}
+            onChange={handleStatusChange}
             iconOnly
             status={item.status}
           />
@@ -194,14 +282,7 @@ function IssueItemComponent({
         <Badge variant="neutral">{item.project?.name}</Badge>
         <IssueLabelField issueId={item.id} value={item?.label} />
         <AssigneeSelector
-          onChange={async (e) => {
-            updateIssueMutation.mutate({
-              issueId: item.id,
-              updates: {
-                assignedTo: e as any,
-              },
-            });
-          }}
+          onChange={handleAssigneeChange}
           assignee={item.assignedTo}
           iconOnly
         />

@@ -3,9 +3,7 @@
 import { IssueFieldBase } from "./issue-field-base";
 import { priorities } from "@/utils/constants/issues/priority";
 import { IssuePriorityBadge } from "@/components/project/issues/issue-badge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
-import { toast } from "sonner";
 
 interface IssuePriorityFieldProps {
   issueId: string;
@@ -13,6 +11,7 @@ interface IssuePriorityFieldProps {
   className?: string;
   disabled?: boolean;
   align?: "start" | "center" | "end";
+  onChange?: (priority: string) => Promise<void>;
 }
 
 export function IssuePriorityField({
@@ -20,43 +19,18 @@ export function IssuePriorityField({
   value,
   disabled,
   align,
+  onChange,
 }: IssuePriorityFieldProps) {
-  const queryClient = useQueryClient();
-  // TanStack mutation for updating priority
-  const updatePriorityMutation = useMutation({
-    mutationFn: async ({ issueId, priority }: { issueId: string; priority: string }) => {
-      return await issueActions.updateIssue(issueId, { priority });
-    },
-    onMutate: async ({ issueId, priority }) => {
-      await queryClient.cancelQueries({ queryKey: ["issues"] });
-      const previousIssues = queryClient.getQueryData<any[]>(["issues"]);
-      queryClient.setQueryData<any[]>(["issues"], (old) => {
-        if (!old) return old;
-        return old.map((i) =>
-          i.id === issueId ? { ...i, priority } : i
-        );
-      });
-      return { previousIssues };
-    },
-    onError: (err, variables, context) => {
-      if (context?.previousIssues) {
-        queryClient.setQueryData(["issues"], context.previousIssues);
-      }
-      toast.error("Failed to update priority");
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["issues"] });
-    },
-  });
-
   return (
     <IssueFieldBase
       value={value}
       onSave={async (newValue: string) => {
-        await updatePriorityMutation.mutateAsync({
-          issueId,
-          priority: newValue,
-        });
+        if (onChange) {
+          await onChange(newValue);
+        } else {
+          // Fallback to direct API call if no onChange provided
+          await issueActions.updateIssue(issueId, { priority: newValue });
+        }
       }}
       options={priorities.map((p) => ({
         id: p.id,

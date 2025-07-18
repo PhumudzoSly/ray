@@ -38,6 +38,10 @@ export const IdeaScalarFieldEnumSchema = z.enum(['id','name','description','indu
 
 export const IssueScalarFieldEnumSchema = z.enum(['id','title','description','organizationId','projectId','milestoneId','featureId','parentIssueId','status','priority','label','dueDate','assignedToId','achieved','isPublic','sourceType','sourceFeedbackId']);
 
+export const IssueDependencyScalarFieldEnumSchema = z.enum(['id','organizationId','issueId','dependencyId','createdAt']);
+
+export const IssueLinkScalarFieldEnumSchema = z.enum(['id','organizationId','issueId','url','createdAt']);
+
 export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','type','projectId','organizationId','storageId','fileName','fileSize','mimeType','url','linkType','tags','category','thumbnailUrl','isPublic','uploadedById','createdAt','updatedAt','viewCount','downloadCount']);
 
 export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','createdBy','createdAt','lastUsed','isActive','expiresAt']);
@@ -536,6 +540,54 @@ export const IssueOptionalDefaultsSchema = IssueSchema.merge(z.object({
 }))
 
 export type IssueOptionalDefaults = z.infer<typeof IssueOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// ISSUE DEPENDENCY SCHEMA
+/////////////////////////////////////////
+
+export const IssueDependencySchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  issueId: z.string(),
+  dependencyId: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type IssueDependency = z.infer<typeof IssueDependencySchema>
+
+// ISSUE DEPENDENCY OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const IssueDependencyOptionalDefaultsSchema = IssueDependencySchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type IssueDependencyOptionalDefaults = z.infer<typeof IssueDependencyOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// ISSUE LINK SCHEMA
+/////////////////////////////////////////
+
+export const IssueLinkSchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  issueId: z.string(),
+  url: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type IssueLink = z.infer<typeof IssueLinkSchema>
+
+// ISSUE LINK OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const IssueLinkOptionalDefaultsSchema = IssueLinkSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type IssueLinkOptionalDefaults = z.infer<typeof IssueLinkOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // ASSET SCHEMA

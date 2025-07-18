@@ -79,6 +79,16 @@ export type Idea = $Result.DefaultSelection<Prisma.$IdeaPayload>
  */
 export type Issue = $Result.DefaultSelection<Prisma.$IssuePayload>
 /**
+ * Model IssueDependency
+ * 
+ */
+export type IssueDependency = $Result.DefaultSelection<Prisma.$IssueDependencyPayload>
+/**
+ * Model IssueLink
+ * 
+ */
+export type IssueLink = $Result.DefaultSelection<Prisma.$IssueLinkPayload>
+/**
  * Model Asset
  * 
  */
@@ -765,6 +775,26 @@ export class PrismaClient<
   get issue(): Prisma.IssueDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.issueDependency`: Exposes CRUD operations for the **IssueDependency** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IssueDependencies
+    * const issueDependencies = await prisma.issueDependency.findMany()
+    * ```
+    */
+  get issueDependency(): Prisma.IssueDependencyDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.issueLink`: Exposes CRUD operations for the **IssueLink** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IssueLinks
+    * const issueLinks = await prisma.issueLink.findMany()
+    * ```
+    */
+  get issueLink(): Prisma.IssueLinkDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.asset`: Exposes CRUD operations for the **Asset** model.
     * Example usage:
     * ```ts
@@ -1376,6 +1406,8 @@ export namespace Prisma {
     Project: 'Project',
     Idea: 'Idea',
     Issue: 'Issue',
+    IssueDependency: 'IssueDependency',
+    IssueLink: 'IssueLink',
     Asset: 'Asset',
     ApiKey: 'ApiKey',
     ActivityFeed: 'ActivityFeed',
@@ -1410,7 +1442,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2373,6 +2405,154 @@ export namespace Prisma {
           count: {
             args: Prisma.IssueCountArgs<ExtArgs>
             result: $Utils.Optional<IssueCountAggregateOutputType> | number
+          }
+        }
+      }
+      IssueDependency: {
+        payload: Prisma.$IssueDependencyPayload<ExtArgs>
+        fields: Prisma.IssueDependencyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IssueDependencyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IssueDependencyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          findFirst: {
+            args: Prisma.IssueDependencyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IssueDependencyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          findMany: {
+            args: Prisma.IssueDependencyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>[]
+          }
+          create: {
+            args: Prisma.IssueDependencyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          createMany: {
+            args: Prisma.IssueDependencyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IssueDependencyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>[]
+          }
+          delete: {
+            args: Prisma.IssueDependencyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          update: {
+            args: Prisma.IssueDependencyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          deleteMany: {
+            args: Prisma.IssueDependencyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IssueDependencyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IssueDependencyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>[]
+          }
+          upsert: {
+            args: Prisma.IssueDependencyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueDependencyPayload>
+          }
+          aggregate: {
+            args: Prisma.IssueDependencyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIssueDependency>
+          }
+          groupBy: {
+            args: Prisma.IssueDependencyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IssueDependencyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IssueDependencyCountArgs<ExtArgs>
+            result: $Utils.Optional<IssueDependencyCountAggregateOutputType> | number
+          }
+        }
+      }
+      IssueLink: {
+        payload: Prisma.$IssueLinkPayload<ExtArgs>
+        fields: Prisma.IssueLinkFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IssueLinkFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IssueLinkFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          findFirst: {
+            args: Prisma.IssueLinkFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IssueLinkFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          findMany: {
+            args: Prisma.IssueLinkFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>[]
+          }
+          create: {
+            args: Prisma.IssueLinkCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          createMany: {
+            args: Prisma.IssueLinkCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IssueLinkCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>[]
+          }
+          delete: {
+            args: Prisma.IssueLinkDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          update: {
+            args: Prisma.IssueLinkUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          deleteMany: {
+            args: Prisma.IssueLinkDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IssueLinkUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IssueLinkUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>[]
+          }
+          upsert: {
+            args: Prisma.IssueLinkUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IssueLinkPayload>
+          }
+          aggregate: {
+            args: Prisma.IssueLinkAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIssueLink>
+          }
+          groupBy: {
+            args: Prisma.IssueLinkGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IssueLinkGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IssueLinkCountArgs<ExtArgs>
+            result: $Utils.Optional<IssueLinkCountAggregateOutputType> | number
           }
         }
       }
@@ -3657,6 +3837,8 @@ export namespace Prisma {
     project?: ProjectOmit
     idea?: IdeaOmit
     issue?: IssueOmit
+    issueDependency?: IssueDependencyOmit
+    issueLink?: IssueLinkOmit
     asset?: AssetOmit
     apiKey?: ApiKeyOmit
     activityFeed?: ActivityFeedOmit
@@ -3929,6 +4111,8 @@ export namespace Prisma {
     featureLink: number
     milestone: number
     milestoneDependency: number
+    issueDependency: number
+    issueLink: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3946,6 +4130,8 @@ export namespace Prisma {
     featureLink?: boolean | OrganizationCountOutputTypeCountFeatureLinkArgs
     milestone?: boolean | OrganizationCountOutputTypeCountMilestoneArgs
     milestoneDependency?: boolean | OrganizationCountOutputTypeCountMilestoneDependencyArgs
+    issueDependency?: boolean | OrganizationCountOutputTypeCountIssueDependencyArgs
+    issueLink?: boolean | OrganizationCountOutputTypeCountIssueLinkArgs
   }
 
   // Custom InputTypes
@@ -4057,6 +4243,20 @@ export namespace Prisma {
     where?: MilestoneDependencyWhereInput
   }
 
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountIssueDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueDependencyWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountIssueLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueLinkWhereInput
+  }
+
 
   /**
    * Count Type ProjectCountOutputType
@@ -4162,6 +4362,64 @@ export namespace Prisma {
    */
   export type IdeaCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+
+  /**
+   * Count Type IssueCountOutputType
+   */
+
+  export type IssueCountOutputType = {
+    subIssues: number
+    dependencies: number
+    dependentOn: number
+    links: number
+  }
+
+  export type IssueCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subIssues?: boolean | IssueCountOutputTypeCountSubIssuesArgs
+    dependencies?: boolean | IssueCountOutputTypeCountDependenciesArgs
+    dependentOn?: boolean | IssueCountOutputTypeCountDependentOnArgs
+    links?: boolean | IssueCountOutputTypeCountLinksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueCountOutputType
+     */
+    select?: IssueCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeCountSubIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueWhereInput
+  }
+
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeCountDependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueDependencyWhereInput
+  }
+
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeCountDependentOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueDependencyWhereInput
+  }
+
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeCountLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueLinkWhereInput
   }
 
 
@@ -9431,6 +9689,8 @@ export namespace Prisma {
     featureLink?: boolean | Organization$featureLinkArgs<ExtArgs>
     milestone?: boolean | Organization$milestoneArgs<ExtArgs>
     milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
+    issueDependency?: boolean | Organization$issueDependencyArgs<ExtArgs>
+    issueLink?: boolean | Organization$issueLinkArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -9477,6 +9737,8 @@ export namespace Prisma {
     featureLink?: boolean | Organization$featureLinkArgs<ExtArgs>
     milestone?: boolean | Organization$milestoneArgs<ExtArgs>
     milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
+    issueDependency?: boolean | Organization$issueDependencyArgs<ExtArgs>
+    issueLink?: boolean | Organization$issueLinkArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -9499,6 +9761,8 @@ export namespace Prisma {
       featureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
       milestone: Prisma.$MilestonePayload<ExtArgs>[]
       milestoneDependency: Prisma.$MilestoneDependencyPayload<ExtArgs>[]
+      issueDependency: Prisma.$IssueDependencyPayload<ExtArgs>[]
+      issueLink: Prisma.$IssueLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9915,6 +10179,8 @@ export namespace Prisma {
     featureLink<T extends Organization$featureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     milestone<T extends Organization$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, Organization$milestoneArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     milestoneDependency<T extends Organization$milestoneDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$milestoneDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    issueDependency<T extends Organization$issueDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    issueLink<T extends Organization$issueLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10671,6 +10937,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MilestoneDependencyScalarFieldEnum | MilestoneDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.issueDependency
+   */
+  export type Organization$issueDependencyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    where?: IssueDependencyWhereInput
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    cursor?: IssueDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.issueLink
+   */
+  export type Organization$issueLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    where?: IssueLinkWhereInput
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    cursor?: IssueLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
   }
 
   /**
@@ -19252,6 +19566,12 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
+    subIssues?: boolean | Issue$subIssuesArgs<ExtArgs>
+    dependencies?: boolean | Issue$dependenciesArgs<ExtArgs>
+    dependentOn?: boolean | Issue$dependentOnArgs<ExtArgs>
+    links?: boolean | Issue$linksArgs<ExtArgs>
+    _count?: boolean | IssueCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
   export type IssueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19276,6 +19596,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
   export type IssueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19300,6 +19621,7 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
   export type IssueSelectScalar = {
@@ -19328,18 +19650,26 @@ export namespace Prisma {
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
+    subIssues?: boolean | Issue$subIssuesArgs<ExtArgs>
+    dependencies?: boolean | Issue$dependenciesArgs<ExtArgs>
+    dependentOn?: boolean | Issue$dependentOnArgs<ExtArgs>
+    links?: boolean | Issue$linksArgs<ExtArgs>
+    _count?: boolean | IssueCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type IssueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
   }
   export type IssueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     milestone?: boolean | Issue$milestoneArgs<ExtArgs>
     assignedTo?: boolean | Issue$assignedToArgs<ExtArgs>
+    parentIssue?: boolean | Issue$parentIssueArgs<ExtArgs>
   }
 
   export type $IssuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19349,6 +19679,11 @@ export namespace Prisma {
       project: Prisma.$ProjectPayload<ExtArgs>
       milestone: Prisma.$MilestonePayload<ExtArgs> | null
       assignedTo: Prisma.$UserPayload<ExtArgs> | null
+      parentIssue: Prisma.$IssuePayload<ExtArgs> | null
+      subIssues: Prisma.$IssuePayload<ExtArgs>[]
+      dependencies: Prisma.$IssueDependencyPayload<ExtArgs>[]
+      dependentOn: Prisma.$IssueDependencyPayload<ExtArgs>[]
+      links: Prisma.$IssueLinkPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -19766,6 +20101,11 @@ export namespace Prisma {
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     milestone<T extends Issue$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, Issue$milestoneArgs<ExtArgs>>): Prisma__MilestoneClient<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     assignedTo<T extends Issue$assignedToArgs<ExtArgs> = {}>(args?: Subset<T, Issue$assignedToArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parentIssue<T extends Issue$parentIssueArgs<ExtArgs> = {}>(args?: Subset<T, Issue$parentIssueArgs<ExtArgs>>): Prisma__IssueClient<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    subIssues<T extends Issue$subIssuesArgs<ExtArgs> = {}>(args?: Subset<T, Issue$subIssuesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dependencies<T extends Issue$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Issue$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dependentOn<T extends Issue$dependentOnArgs<ExtArgs> = {}>(args?: Subset<T, Issue$dependentOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    links<T extends Issue$linksArgs<ExtArgs> = {}>(args?: Subset<T, Issue$linksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20246,6 +20586,121 @@ export namespace Prisma {
   }
 
   /**
+   * Issue.parentIssue
+   */
+  export type Issue$parentIssueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Issue
+     */
+    select?: IssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Issue
+     */
+    omit?: IssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueInclude<ExtArgs> | null
+    where?: IssueWhereInput
+  }
+
+  /**
+   * Issue.subIssues
+   */
+  export type Issue$subIssuesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Issue
+     */
+    select?: IssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Issue
+     */
+    omit?: IssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueInclude<ExtArgs> | null
+    where?: IssueWhereInput
+    orderBy?: IssueOrderByWithRelationInput | IssueOrderByWithRelationInput[]
+    cursor?: IssueWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueScalarFieldEnum | IssueScalarFieldEnum[]
+  }
+
+  /**
+   * Issue.dependencies
+   */
+  export type Issue$dependenciesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    where?: IssueDependencyWhereInput
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    cursor?: IssueDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Issue.dependentOn
+   */
+  export type Issue$dependentOnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    where?: IssueDependencyWhereInput
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    cursor?: IssueDependencyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * Issue.links
+   */
+  export type Issue$linksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    where?: IssueLinkWhereInput
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    cursor?: IssueLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
+  }
+
+  /**
    * Issue without action
    */
   export type IssueDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20261,6 +20716,2146 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: IssueInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IssueDependency
+   */
+
+  export type AggregateIssueDependency = {
+    _count: IssueDependencyCountAggregateOutputType | null
+    _min: IssueDependencyMinAggregateOutputType | null
+    _max: IssueDependencyMaxAggregateOutputType | null
+  }
+
+  export type IssueDependencyMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    issueId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type IssueDependencyMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    issueId: string | null
+    dependencyId: string | null
+    createdAt: Date | null
+  }
+
+  export type IssueDependencyCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    issueId: number
+    dependencyId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type IssueDependencyMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type IssueDependencyMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    dependencyId?: true
+    createdAt?: true
+  }
+
+  export type IssueDependencyCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    dependencyId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type IssueDependencyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IssueDependency to aggregate.
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueDependencies to fetch.
+     */
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IssueDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IssueDependencies
+    **/
+    _count?: true | IssueDependencyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IssueDependencyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IssueDependencyMaxAggregateInputType
+  }
+
+  export type GetIssueDependencyAggregateType<T extends IssueDependencyAggregateArgs> = {
+        [P in keyof T & keyof AggregateIssueDependency]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIssueDependency[P]>
+      : GetScalarType<T[P], AggregateIssueDependency[P]>
+  }
+
+
+
+
+  export type IssueDependencyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueDependencyWhereInput
+    orderBy?: IssueDependencyOrderByWithAggregationInput | IssueDependencyOrderByWithAggregationInput[]
+    by: IssueDependencyScalarFieldEnum[] | IssueDependencyScalarFieldEnum
+    having?: IssueDependencyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IssueDependencyCountAggregateInputType | true
+    _min?: IssueDependencyMinAggregateInputType
+    _max?: IssueDependencyMaxAggregateInputType
+  }
+
+  export type IssueDependencyGroupByOutputType = {
+    id: string
+    organizationId: string
+    issueId: string
+    dependencyId: string
+    createdAt: Date
+    _count: IssueDependencyCountAggregateOutputType | null
+    _min: IssueDependencyMinAggregateOutputType | null
+    _max: IssueDependencyMaxAggregateOutputType | null
+  }
+
+  type GetIssueDependencyGroupByPayload<T extends IssueDependencyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IssueDependencyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IssueDependencyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IssueDependencyGroupByOutputType[P]>
+            : GetScalarType<T[P], IssueDependencyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IssueDependencySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueDependency"]>
+
+  export type IssueDependencySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueDependency"]>
+
+  export type IssueDependencySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueDependency"]>
+
+  export type IssueDependencySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    dependencyId?: boolean
+    createdAt?: boolean
+  }
+
+  export type IssueDependencyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "issueId" | "dependencyId" | "createdAt", ExtArgs["result"]["issueDependency"]>
+  export type IssueDependencyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+  export type IssueDependencyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+  export type IssueDependencyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+    dependency?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+
+  export type $IssueDependencyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IssueDependency"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      issue: Prisma.$IssuePayload<ExtArgs>
+      dependency: Prisma.$IssuePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      issueId: string
+      dependencyId: string
+      createdAt: Date
+    }, ExtArgs["result"]["issueDependency"]>
+    composites: {}
+  }
+
+  type IssueDependencyGetPayload<S extends boolean | null | undefined | IssueDependencyDefaultArgs> = $Result.GetResult<Prisma.$IssueDependencyPayload, S>
+
+  type IssueDependencyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IssueDependencyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IssueDependencyCountAggregateInputType | true
+    }
+
+  export interface IssueDependencyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IssueDependency'], meta: { name: 'IssueDependency' } }
+    /**
+     * Find zero or one IssueDependency that matches the filter.
+     * @param {IssueDependencyFindUniqueArgs} args - Arguments to find a IssueDependency
+     * @example
+     * // Get one IssueDependency
+     * const issueDependency = await prisma.issueDependency.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IssueDependencyFindUniqueArgs>(args: SelectSubset<T, IssueDependencyFindUniqueArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IssueDependency that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IssueDependencyFindUniqueOrThrowArgs} args - Arguments to find a IssueDependency
+     * @example
+     * // Get one IssueDependency
+     * const issueDependency = await prisma.issueDependency.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IssueDependencyFindUniqueOrThrowArgs>(args: SelectSubset<T, IssueDependencyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IssueDependency that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyFindFirstArgs} args - Arguments to find a IssueDependency
+     * @example
+     * // Get one IssueDependency
+     * const issueDependency = await prisma.issueDependency.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IssueDependencyFindFirstArgs>(args?: SelectSubset<T, IssueDependencyFindFirstArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IssueDependency that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyFindFirstOrThrowArgs} args - Arguments to find a IssueDependency
+     * @example
+     * // Get one IssueDependency
+     * const issueDependency = await prisma.issueDependency.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IssueDependencyFindFirstOrThrowArgs>(args?: SelectSubset<T, IssueDependencyFindFirstOrThrowArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IssueDependencies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IssueDependencies
+     * const issueDependencies = await prisma.issueDependency.findMany()
+     * 
+     * // Get first 10 IssueDependencies
+     * const issueDependencies = await prisma.issueDependency.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const issueDependencyWithIdOnly = await prisma.issueDependency.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IssueDependencyFindManyArgs>(args?: SelectSubset<T, IssueDependencyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IssueDependency.
+     * @param {IssueDependencyCreateArgs} args - Arguments to create a IssueDependency.
+     * @example
+     * // Create one IssueDependency
+     * const IssueDependency = await prisma.issueDependency.create({
+     *   data: {
+     *     // ... data to create a IssueDependency
+     *   }
+     * })
+     * 
+     */
+    create<T extends IssueDependencyCreateArgs>(args: SelectSubset<T, IssueDependencyCreateArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IssueDependencies.
+     * @param {IssueDependencyCreateManyArgs} args - Arguments to create many IssueDependencies.
+     * @example
+     * // Create many IssueDependencies
+     * const issueDependency = await prisma.issueDependency.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IssueDependencyCreateManyArgs>(args?: SelectSubset<T, IssueDependencyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IssueDependencies and returns the data saved in the database.
+     * @param {IssueDependencyCreateManyAndReturnArgs} args - Arguments to create many IssueDependencies.
+     * @example
+     * // Create many IssueDependencies
+     * const issueDependency = await prisma.issueDependency.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IssueDependencies and only return the `id`
+     * const issueDependencyWithIdOnly = await prisma.issueDependency.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IssueDependencyCreateManyAndReturnArgs>(args?: SelectSubset<T, IssueDependencyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IssueDependency.
+     * @param {IssueDependencyDeleteArgs} args - Arguments to delete one IssueDependency.
+     * @example
+     * // Delete one IssueDependency
+     * const IssueDependency = await prisma.issueDependency.delete({
+     *   where: {
+     *     // ... filter to delete one IssueDependency
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IssueDependencyDeleteArgs>(args: SelectSubset<T, IssueDependencyDeleteArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IssueDependency.
+     * @param {IssueDependencyUpdateArgs} args - Arguments to update one IssueDependency.
+     * @example
+     * // Update one IssueDependency
+     * const issueDependency = await prisma.issueDependency.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IssueDependencyUpdateArgs>(args: SelectSubset<T, IssueDependencyUpdateArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IssueDependencies.
+     * @param {IssueDependencyDeleteManyArgs} args - Arguments to filter IssueDependencies to delete.
+     * @example
+     * // Delete a few IssueDependencies
+     * const { count } = await prisma.issueDependency.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IssueDependencyDeleteManyArgs>(args?: SelectSubset<T, IssueDependencyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IssueDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IssueDependencies
+     * const issueDependency = await prisma.issueDependency.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IssueDependencyUpdateManyArgs>(args: SelectSubset<T, IssueDependencyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IssueDependencies and returns the data updated in the database.
+     * @param {IssueDependencyUpdateManyAndReturnArgs} args - Arguments to update many IssueDependencies.
+     * @example
+     * // Update many IssueDependencies
+     * const issueDependency = await prisma.issueDependency.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IssueDependencies and only return the `id`
+     * const issueDependencyWithIdOnly = await prisma.issueDependency.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IssueDependencyUpdateManyAndReturnArgs>(args: SelectSubset<T, IssueDependencyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IssueDependency.
+     * @param {IssueDependencyUpsertArgs} args - Arguments to update or create a IssueDependency.
+     * @example
+     * // Update or create a IssueDependency
+     * const issueDependency = await prisma.issueDependency.upsert({
+     *   create: {
+     *     // ... data to create a IssueDependency
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IssueDependency we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IssueDependencyUpsertArgs>(args: SelectSubset<T, IssueDependencyUpsertArgs<ExtArgs>>): Prisma__IssueDependencyClient<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IssueDependencies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyCountArgs} args - Arguments to filter IssueDependencies to count.
+     * @example
+     * // Count the number of IssueDependencies
+     * const count = await prisma.issueDependency.count({
+     *   where: {
+     *     // ... the filter for the IssueDependencies we want to count
+     *   }
+     * })
+    **/
+    count<T extends IssueDependencyCountArgs>(
+      args?: Subset<T, IssueDependencyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IssueDependencyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IssueDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IssueDependencyAggregateArgs>(args: Subset<T, IssueDependencyAggregateArgs>): Prisma.PrismaPromise<GetIssueDependencyAggregateType<T>>
+
+    /**
+     * Group by IssueDependency.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueDependencyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IssueDependencyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IssueDependencyGroupByArgs['orderBy'] }
+        : { orderBy?: IssueDependencyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IssueDependencyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIssueDependencyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IssueDependency model
+   */
+  readonly fields: IssueDependencyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IssueDependency.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IssueDependencyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    issue<T extends IssueDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IssueDefaultArgs<ExtArgs>>): Prisma__IssueClient<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    dependency<T extends IssueDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IssueDefaultArgs<ExtArgs>>): Prisma__IssueClient<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IssueDependency model
+   */
+  interface IssueDependencyFieldRefs {
+    readonly id: FieldRef<"IssueDependency", 'String'>
+    readonly organizationId: FieldRef<"IssueDependency", 'String'>
+    readonly issueId: FieldRef<"IssueDependency", 'String'>
+    readonly dependencyId: FieldRef<"IssueDependency", 'String'>
+    readonly createdAt: FieldRef<"IssueDependency", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IssueDependency findUnique
+   */
+  export type IssueDependencyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueDependency to fetch.
+     */
+    where: IssueDependencyWhereUniqueInput
+  }
+
+  /**
+   * IssueDependency findUniqueOrThrow
+   */
+  export type IssueDependencyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueDependency to fetch.
+     */
+    where: IssueDependencyWhereUniqueInput
+  }
+
+  /**
+   * IssueDependency findFirst
+   */
+  export type IssueDependencyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueDependency to fetch.
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueDependencies to fetch.
+     */
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IssueDependencies.
+     */
+    cursor?: IssueDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IssueDependencies.
+     */
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * IssueDependency findFirstOrThrow
+   */
+  export type IssueDependencyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueDependency to fetch.
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueDependencies to fetch.
+     */
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IssueDependencies.
+     */
+    cursor?: IssueDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueDependencies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IssueDependencies.
+     */
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * IssueDependency findMany
+   */
+  export type IssueDependencyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueDependencies to fetch.
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueDependencies to fetch.
+     */
+    orderBy?: IssueDependencyOrderByWithRelationInput | IssueDependencyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IssueDependencies.
+     */
+    cursor?: IssueDependencyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueDependencies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueDependencies.
+     */
+    skip?: number
+    distinct?: IssueDependencyScalarFieldEnum | IssueDependencyScalarFieldEnum[]
+  }
+
+  /**
+   * IssueDependency create
+   */
+  export type IssueDependencyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IssueDependency.
+     */
+    data: XOR<IssueDependencyCreateInput, IssueDependencyUncheckedCreateInput>
+  }
+
+  /**
+   * IssueDependency createMany
+   */
+  export type IssueDependencyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IssueDependencies.
+     */
+    data: IssueDependencyCreateManyInput | IssueDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IssueDependency createManyAndReturn
+   */
+  export type IssueDependencyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to create many IssueDependencies.
+     */
+    data: IssueDependencyCreateManyInput | IssueDependencyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IssueDependency update
+   */
+  export type IssueDependencyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IssueDependency.
+     */
+    data: XOR<IssueDependencyUpdateInput, IssueDependencyUncheckedUpdateInput>
+    /**
+     * Choose, which IssueDependency to update.
+     */
+    where: IssueDependencyWhereUniqueInput
+  }
+
+  /**
+   * IssueDependency updateMany
+   */
+  export type IssueDependencyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IssueDependencies.
+     */
+    data: XOR<IssueDependencyUpdateManyMutationInput, IssueDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which IssueDependencies to update
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * Limit how many IssueDependencies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IssueDependency updateManyAndReturn
+   */
+  export type IssueDependencyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * The data used to update IssueDependencies.
+     */
+    data: XOR<IssueDependencyUpdateManyMutationInput, IssueDependencyUncheckedUpdateManyInput>
+    /**
+     * Filter which IssueDependencies to update
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * Limit how many IssueDependencies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IssueDependency upsert
+   */
+  export type IssueDependencyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IssueDependency to update in case it exists.
+     */
+    where: IssueDependencyWhereUniqueInput
+    /**
+     * In case the IssueDependency found by the `where` argument doesn't exist, create a new IssueDependency with this data.
+     */
+    create: XOR<IssueDependencyCreateInput, IssueDependencyUncheckedCreateInput>
+    /**
+     * In case the IssueDependency was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IssueDependencyUpdateInput, IssueDependencyUncheckedUpdateInput>
+  }
+
+  /**
+   * IssueDependency delete
+   */
+  export type IssueDependencyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+    /**
+     * Filter which IssueDependency to delete.
+     */
+    where: IssueDependencyWhereUniqueInput
+  }
+
+  /**
+   * IssueDependency deleteMany
+   */
+  export type IssueDependencyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IssueDependencies to delete
+     */
+    where?: IssueDependencyWhereInput
+    /**
+     * Limit how many IssueDependencies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IssueDependency without action
+   */
+  export type IssueDependencyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueDependency
+     */
+    select?: IssueDependencySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueDependency
+     */
+    omit?: IssueDependencyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueDependencyInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IssueLink
+   */
+
+  export type AggregateIssueLink = {
+    _count: IssueLinkCountAggregateOutputType | null
+    _min: IssueLinkMinAggregateOutputType | null
+    _max: IssueLinkMaxAggregateOutputType | null
+  }
+
+  export type IssueLinkMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    issueId: string | null
+    url: string | null
+    createdAt: Date | null
+  }
+
+  export type IssueLinkMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    issueId: string | null
+    url: string | null
+    createdAt: Date | null
+  }
+
+  export type IssueLinkCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    issueId: number
+    url: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type IssueLinkMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    url?: true
+    createdAt?: true
+  }
+
+  export type IssueLinkMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    url?: true
+    createdAt?: true
+  }
+
+  export type IssueLinkCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    issueId?: true
+    url?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type IssueLinkAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IssueLink to aggregate.
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueLinks to fetch.
+     */
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IssueLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IssueLinks
+    **/
+    _count?: true | IssueLinkCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IssueLinkMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IssueLinkMaxAggregateInputType
+  }
+
+  export type GetIssueLinkAggregateType<T extends IssueLinkAggregateArgs> = {
+        [P in keyof T & keyof AggregateIssueLink]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIssueLink[P]>
+      : GetScalarType<T[P], AggregateIssueLink[P]>
+  }
+
+
+
+
+  export type IssueLinkGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IssueLinkWhereInput
+    orderBy?: IssueLinkOrderByWithAggregationInput | IssueLinkOrderByWithAggregationInput[]
+    by: IssueLinkScalarFieldEnum[] | IssueLinkScalarFieldEnum
+    having?: IssueLinkScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IssueLinkCountAggregateInputType | true
+    _min?: IssueLinkMinAggregateInputType
+    _max?: IssueLinkMaxAggregateInputType
+  }
+
+  export type IssueLinkGroupByOutputType = {
+    id: string
+    organizationId: string
+    issueId: string
+    url: string
+    createdAt: Date
+    _count: IssueLinkCountAggregateOutputType | null
+    _min: IssueLinkMinAggregateOutputType | null
+    _max: IssueLinkMaxAggregateOutputType | null
+  }
+
+  type GetIssueLinkGroupByPayload<T extends IssueLinkGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IssueLinkGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IssueLinkGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IssueLinkGroupByOutputType[P]>
+            : GetScalarType<T[P], IssueLinkGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IssueLinkSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueLink"]>
+
+  export type IssueLinkSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueLink"]>
+
+  export type IssueLinkSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    url?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["issueLink"]>
+
+  export type IssueLinkSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    issueId?: boolean
+    url?: boolean
+    createdAt?: boolean
+  }
+
+  export type IssueLinkOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "issueId" | "url" | "createdAt", ExtArgs["result"]["issueLink"]>
+  export type IssueLinkInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+  export type IssueLinkIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+  export type IssueLinkIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    issue?: boolean | IssueDefaultArgs<ExtArgs>
+  }
+
+  export type $IssueLinkPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IssueLink"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      issue: Prisma.$IssuePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      issueId: string
+      url: string
+      createdAt: Date
+    }, ExtArgs["result"]["issueLink"]>
+    composites: {}
+  }
+
+  type IssueLinkGetPayload<S extends boolean | null | undefined | IssueLinkDefaultArgs> = $Result.GetResult<Prisma.$IssueLinkPayload, S>
+
+  type IssueLinkCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IssueLinkFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IssueLinkCountAggregateInputType | true
+    }
+
+  export interface IssueLinkDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IssueLink'], meta: { name: 'IssueLink' } }
+    /**
+     * Find zero or one IssueLink that matches the filter.
+     * @param {IssueLinkFindUniqueArgs} args - Arguments to find a IssueLink
+     * @example
+     * // Get one IssueLink
+     * const issueLink = await prisma.issueLink.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IssueLinkFindUniqueArgs>(args: SelectSubset<T, IssueLinkFindUniqueArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IssueLink that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IssueLinkFindUniqueOrThrowArgs} args - Arguments to find a IssueLink
+     * @example
+     * // Get one IssueLink
+     * const issueLink = await prisma.issueLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IssueLinkFindUniqueOrThrowArgs>(args: SelectSubset<T, IssueLinkFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IssueLink that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkFindFirstArgs} args - Arguments to find a IssueLink
+     * @example
+     * // Get one IssueLink
+     * const issueLink = await prisma.issueLink.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IssueLinkFindFirstArgs>(args?: SelectSubset<T, IssueLinkFindFirstArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IssueLink that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkFindFirstOrThrowArgs} args - Arguments to find a IssueLink
+     * @example
+     * // Get one IssueLink
+     * const issueLink = await prisma.issueLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IssueLinkFindFirstOrThrowArgs>(args?: SelectSubset<T, IssueLinkFindFirstOrThrowArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IssueLinks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IssueLinks
+     * const issueLinks = await prisma.issueLink.findMany()
+     * 
+     * // Get first 10 IssueLinks
+     * const issueLinks = await prisma.issueLink.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const issueLinkWithIdOnly = await prisma.issueLink.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IssueLinkFindManyArgs>(args?: SelectSubset<T, IssueLinkFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IssueLink.
+     * @param {IssueLinkCreateArgs} args - Arguments to create a IssueLink.
+     * @example
+     * // Create one IssueLink
+     * const IssueLink = await prisma.issueLink.create({
+     *   data: {
+     *     // ... data to create a IssueLink
+     *   }
+     * })
+     * 
+     */
+    create<T extends IssueLinkCreateArgs>(args: SelectSubset<T, IssueLinkCreateArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IssueLinks.
+     * @param {IssueLinkCreateManyArgs} args - Arguments to create many IssueLinks.
+     * @example
+     * // Create many IssueLinks
+     * const issueLink = await prisma.issueLink.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IssueLinkCreateManyArgs>(args?: SelectSubset<T, IssueLinkCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IssueLinks and returns the data saved in the database.
+     * @param {IssueLinkCreateManyAndReturnArgs} args - Arguments to create many IssueLinks.
+     * @example
+     * // Create many IssueLinks
+     * const issueLink = await prisma.issueLink.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IssueLinks and only return the `id`
+     * const issueLinkWithIdOnly = await prisma.issueLink.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IssueLinkCreateManyAndReturnArgs>(args?: SelectSubset<T, IssueLinkCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IssueLink.
+     * @param {IssueLinkDeleteArgs} args - Arguments to delete one IssueLink.
+     * @example
+     * // Delete one IssueLink
+     * const IssueLink = await prisma.issueLink.delete({
+     *   where: {
+     *     // ... filter to delete one IssueLink
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IssueLinkDeleteArgs>(args: SelectSubset<T, IssueLinkDeleteArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IssueLink.
+     * @param {IssueLinkUpdateArgs} args - Arguments to update one IssueLink.
+     * @example
+     * // Update one IssueLink
+     * const issueLink = await prisma.issueLink.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IssueLinkUpdateArgs>(args: SelectSubset<T, IssueLinkUpdateArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IssueLinks.
+     * @param {IssueLinkDeleteManyArgs} args - Arguments to filter IssueLinks to delete.
+     * @example
+     * // Delete a few IssueLinks
+     * const { count } = await prisma.issueLink.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IssueLinkDeleteManyArgs>(args?: SelectSubset<T, IssueLinkDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IssueLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IssueLinks
+     * const issueLink = await prisma.issueLink.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IssueLinkUpdateManyArgs>(args: SelectSubset<T, IssueLinkUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IssueLinks and returns the data updated in the database.
+     * @param {IssueLinkUpdateManyAndReturnArgs} args - Arguments to update many IssueLinks.
+     * @example
+     * // Update many IssueLinks
+     * const issueLink = await prisma.issueLink.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IssueLinks and only return the `id`
+     * const issueLinkWithIdOnly = await prisma.issueLink.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IssueLinkUpdateManyAndReturnArgs>(args: SelectSubset<T, IssueLinkUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IssueLink.
+     * @param {IssueLinkUpsertArgs} args - Arguments to update or create a IssueLink.
+     * @example
+     * // Update or create a IssueLink
+     * const issueLink = await prisma.issueLink.upsert({
+     *   create: {
+     *     // ... data to create a IssueLink
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IssueLink we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IssueLinkUpsertArgs>(args: SelectSubset<T, IssueLinkUpsertArgs<ExtArgs>>): Prisma__IssueLinkClient<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IssueLinks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkCountArgs} args - Arguments to filter IssueLinks to count.
+     * @example
+     * // Count the number of IssueLinks
+     * const count = await prisma.issueLink.count({
+     *   where: {
+     *     // ... the filter for the IssueLinks we want to count
+     *   }
+     * })
+    **/
+    count<T extends IssueLinkCountArgs>(
+      args?: Subset<T, IssueLinkCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IssueLinkCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IssueLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IssueLinkAggregateArgs>(args: Subset<T, IssueLinkAggregateArgs>): Prisma.PrismaPromise<GetIssueLinkAggregateType<T>>
+
+    /**
+     * Group by IssueLink.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IssueLinkGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IssueLinkGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IssueLinkGroupByArgs['orderBy'] }
+        : { orderBy?: IssueLinkGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IssueLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIssueLinkGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IssueLink model
+   */
+  readonly fields: IssueLinkFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IssueLink.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IssueLinkClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    issue<T extends IssueDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IssueDefaultArgs<ExtArgs>>): Prisma__IssueClient<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IssueLink model
+   */
+  interface IssueLinkFieldRefs {
+    readonly id: FieldRef<"IssueLink", 'String'>
+    readonly organizationId: FieldRef<"IssueLink", 'String'>
+    readonly issueId: FieldRef<"IssueLink", 'String'>
+    readonly url: FieldRef<"IssueLink", 'String'>
+    readonly createdAt: FieldRef<"IssueLink", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IssueLink findUnique
+   */
+  export type IssueLinkFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueLink to fetch.
+     */
+    where: IssueLinkWhereUniqueInput
+  }
+
+  /**
+   * IssueLink findUniqueOrThrow
+   */
+  export type IssueLinkFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueLink to fetch.
+     */
+    where: IssueLinkWhereUniqueInput
+  }
+
+  /**
+   * IssueLink findFirst
+   */
+  export type IssueLinkFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueLink to fetch.
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueLinks to fetch.
+     */
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IssueLinks.
+     */
+    cursor?: IssueLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IssueLinks.
+     */
+    distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
+  }
+
+  /**
+   * IssueLink findFirstOrThrow
+   */
+  export type IssueLinkFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueLink to fetch.
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueLinks to fetch.
+     */
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IssueLinks.
+     */
+    cursor?: IssueLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueLinks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IssueLinks.
+     */
+    distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
+  }
+
+  /**
+   * IssueLink findMany
+   */
+  export type IssueLinkFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter, which IssueLinks to fetch.
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IssueLinks to fetch.
+     */
+    orderBy?: IssueLinkOrderByWithRelationInput | IssueLinkOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IssueLinks.
+     */
+    cursor?: IssueLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IssueLinks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IssueLinks.
+     */
+    skip?: number
+    distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
+  }
+
+  /**
+   * IssueLink create
+   */
+  export type IssueLinkCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IssueLink.
+     */
+    data: XOR<IssueLinkCreateInput, IssueLinkUncheckedCreateInput>
+  }
+
+  /**
+   * IssueLink createMany
+   */
+  export type IssueLinkCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IssueLinks.
+     */
+    data: IssueLinkCreateManyInput | IssueLinkCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IssueLink createManyAndReturn
+   */
+  export type IssueLinkCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * The data used to create many IssueLinks.
+     */
+    data: IssueLinkCreateManyInput | IssueLinkCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IssueLink update
+   */
+  export type IssueLinkUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IssueLink.
+     */
+    data: XOR<IssueLinkUpdateInput, IssueLinkUncheckedUpdateInput>
+    /**
+     * Choose, which IssueLink to update.
+     */
+    where: IssueLinkWhereUniqueInput
+  }
+
+  /**
+   * IssueLink updateMany
+   */
+  export type IssueLinkUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IssueLinks.
+     */
+    data: XOR<IssueLinkUpdateManyMutationInput, IssueLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which IssueLinks to update
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * Limit how many IssueLinks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IssueLink updateManyAndReturn
+   */
+  export type IssueLinkUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * The data used to update IssueLinks.
+     */
+    data: XOR<IssueLinkUpdateManyMutationInput, IssueLinkUncheckedUpdateManyInput>
+    /**
+     * Filter which IssueLinks to update
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * Limit how many IssueLinks to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IssueLink upsert
+   */
+  export type IssueLinkUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IssueLink to update in case it exists.
+     */
+    where: IssueLinkWhereUniqueInput
+    /**
+     * In case the IssueLink found by the `where` argument doesn't exist, create a new IssueLink with this data.
+     */
+    create: XOR<IssueLinkCreateInput, IssueLinkUncheckedCreateInput>
+    /**
+     * In case the IssueLink was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IssueLinkUpdateInput, IssueLinkUncheckedUpdateInput>
+  }
+
+  /**
+   * IssueLink delete
+   */
+  export type IssueLinkDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
+    /**
+     * Filter which IssueLink to delete.
+     */
+    where: IssueLinkWhereUniqueInput
+  }
+
+  /**
+   * IssueLink deleteMany
+   */
+  export type IssueLinkDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IssueLinks to delete
+     */
+    where?: IssueLinkWhereInput
+    /**
+     * Limit how many IssueLinks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IssueLink without action
+   */
+  export type IssueLinkDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IssueLink
+     */
+    select?: IssueLinkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IssueLink
+     */
+    omit?: IssueLinkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueLinkInclude<ExtArgs> | null
   }
 
 
@@ -39662,6 +42257,28 @@ export namespace Prisma {
   export type IssueScalarFieldEnum = (typeof IssueScalarFieldEnum)[keyof typeof IssueScalarFieldEnum]
 
 
+  export const IssueDependencyScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    issueId: 'issueId',
+    dependencyId: 'dependencyId',
+    createdAt: 'createdAt'
+  };
+
+  export type IssueDependencyScalarFieldEnum = (typeof IssueDependencyScalarFieldEnum)[keyof typeof IssueDependencyScalarFieldEnum]
+
+
+  export const IssueLinkScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    issueId: 'issueId',
+    url: 'url',
+    createdAt: 'createdAt'
+  };
+
+  export type IssueLinkScalarFieldEnum = (typeof IssueLinkScalarFieldEnum)[keyof typeof IssueLinkScalarFieldEnum]
+
+
   export const AssetScalarFieldEnum: {
     id: 'id',
     name: 'name',
@@ -40643,6 +43260,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkListRelationFilter
     milestone?: MilestoneListRelationFilter
     milestoneDependency?: MilestoneDependencyListRelationFilter
+    issueDependency?: IssueDependencyListRelationFilter
+    issueLink?: IssueLinkListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -40666,6 +43285,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkOrderByRelationAggregateInput
     milestone?: MilestoneOrderByRelationAggregateInput
     milestoneDependency?: MilestoneDependencyOrderByRelationAggregateInput
+    issueDependency?: IssueDependencyOrderByRelationAggregateInput
+    issueLink?: IssueLinkOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -40692,6 +43313,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkListRelationFilter
     milestone?: MilestoneListRelationFilter
     milestoneDependency?: MilestoneDependencyListRelationFilter
+    issueDependency?: IssueDependencyListRelationFilter
+    issueLink?: IssueLinkListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -41326,6 +43949,11 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    parentIssue?: XOR<IssueNullableScalarRelationFilter, IssueWhereInput> | null
+    subIssues?: IssueListRelationFilter
+    dependencies?: IssueDependencyListRelationFilter
+    dependentOn?: IssueDependencyListRelationFilter
+    links?: IssueLinkListRelationFilter
   }
 
   export type IssueOrderByWithRelationInput = {
@@ -41350,6 +43978,11 @@ export namespace Prisma {
     project?: ProjectOrderByWithRelationInput
     milestone?: MilestoneOrderByWithRelationInput
     assignedTo?: UserOrderByWithRelationInput
+    parentIssue?: IssueOrderByWithRelationInput
+    subIssues?: IssueOrderByRelationAggregateInput
+    dependencies?: IssueDependencyOrderByRelationAggregateInput
+    dependentOn?: IssueDependencyOrderByRelationAggregateInput
+    links?: IssueLinkOrderByRelationAggregateInput
   }
 
   export type IssueWhereUniqueInput = Prisma.AtLeast<{
@@ -41377,6 +44010,11 @@ export namespace Prisma {
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     milestone?: XOR<MilestoneNullableScalarRelationFilter, MilestoneWhereInput> | null
     assignedTo?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    parentIssue?: XOR<IssueNullableScalarRelationFilter, IssueWhereInput> | null
+    subIssues?: IssueListRelationFilter
+    dependencies?: IssueDependencyListRelationFilter
+    dependentOn?: IssueDependencyListRelationFilter
+    links?: IssueLinkListRelationFilter
   }, "id">
 
   export type IssueOrderByWithAggregationInput = {
@@ -41423,6 +44061,125 @@ export namespace Prisma {
     isPublic?: BoolNullableWithAggregatesFilter<"Issue"> | boolean | null
     sourceType?: StringNullableWithAggregatesFilter<"Issue"> | string | null
     sourceFeedbackId?: StringNullableWithAggregatesFilter<"Issue"> | string | null
+  }
+
+  export type IssueDependencyWhereInput = {
+    AND?: IssueDependencyWhereInput | IssueDependencyWhereInput[]
+    OR?: IssueDependencyWhereInput[]
+    NOT?: IssueDependencyWhereInput | IssueDependencyWhereInput[]
+    id?: StringFilter<"IssueDependency"> | string
+    organizationId?: StringFilter<"IssueDependency"> | string
+    issueId?: StringFilter<"IssueDependency"> | string
+    dependencyId?: StringFilter<"IssueDependency"> | string
+    createdAt?: DateTimeFilter<"IssueDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    issue?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+    dependency?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+  }
+
+  export type IssueDependencyOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    issue?: IssueOrderByWithRelationInput
+    dependency?: IssueOrderByWithRelationInput
+  }
+
+  export type IssueDependencyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IssueDependencyWhereInput | IssueDependencyWhereInput[]
+    OR?: IssueDependencyWhereInput[]
+    NOT?: IssueDependencyWhereInput | IssueDependencyWhereInput[]
+    organizationId?: StringFilter<"IssueDependency"> | string
+    issueId?: StringFilter<"IssueDependency"> | string
+    dependencyId?: StringFilter<"IssueDependency"> | string
+    createdAt?: DateTimeFilter<"IssueDependency"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    issue?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+    dependency?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+  }, "id">
+
+  export type IssueDependencyOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+    _count?: IssueDependencyCountOrderByAggregateInput
+    _max?: IssueDependencyMaxOrderByAggregateInput
+    _min?: IssueDependencyMinOrderByAggregateInput
+  }
+
+  export type IssueDependencyScalarWhereWithAggregatesInput = {
+    AND?: IssueDependencyScalarWhereWithAggregatesInput | IssueDependencyScalarWhereWithAggregatesInput[]
+    OR?: IssueDependencyScalarWhereWithAggregatesInput[]
+    NOT?: IssueDependencyScalarWhereWithAggregatesInput | IssueDependencyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IssueDependency"> | string
+    organizationId?: StringWithAggregatesFilter<"IssueDependency"> | string
+    issueId?: StringWithAggregatesFilter<"IssueDependency"> | string
+    dependencyId?: StringWithAggregatesFilter<"IssueDependency"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"IssueDependency"> | Date | string
+  }
+
+  export type IssueLinkWhereInput = {
+    AND?: IssueLinkWhereInput | IssueLinkWhereInput[]
+    OR?: IssueLinkWhereInput[]
+    NOT?: IssueLinkWhereInput | IssueLinkWhereInput[]
+    id?: StringFilter<"IssueLink"> | string
+    organizationId?: StringFilter<"IssueLink"> | string
+    issueId?: StringFilter<"IssueLink"> | string
+    url?: StringFilter<"IssueLink"> | string
+    createdAt?: DateTimeFilter<"IssueLink"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    issue?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+  }
+
+  export type IssueLinkOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    issue?: IssueOrderByWithRelationInput
+  }
+
+  export type IssueLinkWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IssueLinkWhereInput | IssueLinkWhereInput[]
+    OR?: IssueLinkWhereInput[]
+    NOT?: IssueLinkWhereInput | IssueLinkWhereInput[]
+    organizationId?: StringFilter<"IssueLink"> | string
+    issueId?: StringFilter<"IssueLink"> | string
+    url?: StringFilter<"IssueLink"> | string
+    createdAt?: DateTimeFilter<"IssueLink"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    issue?: XOR<IssueScalarRelationFilter, IssueWhereInput>
+  }, "id">
+
+  export type IssueLinkOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+    _count?: IssueLinkCountOrderByAggregateInput
+    _max?: IssueLinkMaxOrderByAggregateInput
+    _min?: IssueLinkMinOrderByAggregateInput
+  }
+
+  export type IssueLinkScalarWhereWithAggregatesInput = {
+    AND?: IssueLinkScalarWhereWithAggregatesInput | IssueLinkScalarWhereWithAggregatesInput[]
+    OR?: IssueLinkScalarWhereWithAggregatesInput[]
+    NOT?: IssueLinkScalarWhereWithAggregatesInput | IssueLinkScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IssueLink"> | string
+    organizationId?: StringWithAggregatesFilter<"IssueLink"> | string
+    issueId?: StringWithAggregatesFilter<"IssueLink"> | string
+    url?: StringWithAggregatesFilter<"IssueLink"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"IssueLink"> | Date | string
   }
 
   export type AssetWhereInput = {
@@ -43396,6 +46153,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -43419,6 +46178,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -43442,6 +46203,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -43465,6 +46228,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -44123,7 +46888,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     featureId?: string | null
-    parentIssueId?: string | null
     status: $Enums.IssueStatus
     priority: $Enums.Importance
     label: $Enums.IssueLabel
@@ -44136,6 +46900,11 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutIssuesInput
     milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUncheckedCreateInput = {
@@ -44156,6 +46925,10 @@ export namespace Prisma {
     isPublic?: boolean | null
     sourceType?: string | null
     sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUpdateInput = {
@@ -44163,7 +46936,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -44176,6 +46948,11 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
     milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateInput = {
@@ -44196,6 +46973,10 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueCreateManyInput = {
@@ -44223,7 +47004,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -44252,6 +47032,113 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IssueDependencyCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIssueDependencyInput
+    issue: IssueCreateNestedOneWithoutDependenciesInput
+    dependency: IssueCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type IssueDependencyUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIssueDependencyNestedInput
+    issue?: IssueUpdateOneRequiredWithoutDependenciesNestedInput
+    dependency?: IssueUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type IssueDependencyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyCreateManyInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkCreateInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIssueLinkInput
+    issue: IssueCreateNestedOneWithoutLinksInput
+  }
+
+  export type IssueLinkUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIssueLinkNestedInput
+    issue?: IssueUpdateOneRequiredWithoutLinksNestedInput
+  }
+
+  export type IssueLinkUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkCreateManyInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AssetCreateInput = {
@@ -46437,6 +49324,18 @@ export namespace Prisma {
     none?: MilestoneDependencyWhereInput
   }
 
+  export type IssueDependencyListRelationFilter = {
+    every?: IssueDependencyWhereInput
+    some?: IssueDependencyWhereInput
+    none?: IssueDependencyWhereInput
+  }
+
+  export type IssueLinkListRelationFilter = {
+    every?: IssueLinkWhereInput
+    some?: IssueLinkWhereInput
+    none?: IssueLinkWhereInput
+  }
+
   export type SubscriptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -46450,6 +49349,14 @@ export namespace Prisma {
   }
 
   export type MilestoneDependencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IssueDependencyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IssueLinkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -46918,6 +49825,11 @@ export namespace Prisma {
     isNot?: MilestoneWhereInput | null
   }
 
+  export type IssueNullableScalarRelationFilter = {
+    is?: IssueWhereInput | null
+    isNot?: IssueWhereInput | null
+  }
+
   export type IssueCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -47006,6 +49918,59 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumIssueLabelFilter<$PrismaModel>
     _max?: NestedEnumIssueLabelFilter<$PrismaModel>
+  }
+
+  export type IssueScalarRelationFilter = {
+    is?: IssueWhereInput
+    isNot?: IssueWhereInput
+  }
+
+  export type IssueDependencyCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IssueDependencyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IssueDependencyMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    dependencyId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IssueLinkCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IssueLinkMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IssueLinkMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    issueId?: SortOrder
+    url?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type EnumAssetTypeFilter<$PrismaModel = never> = {
@@ -48846,6 +51811,20 @@ export namespace Prisma {
     connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
   }
 
+  export type IssueDependencyCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput> | IssueDependencyCreateWithoutOrganizationInput[] | IssueDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutOrganizationInput | IssueDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IssueDependencyCreateManyOrganizationInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueLinkCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput> | IssueLinkCreateWithoutOrganizationInput[] | IssueLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutOrganizationInput | IssueLinkCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IssueLinkCreateManyOrganizationInputEnvelope
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -48942,6 +51921,20 @@ export namespace Prisma {
     connectOrCreate?: MilestoneDependencyCreateOrConnectWithoutOrganizationInput | MilestoneDependencyCreateOrConnectWithoutOrganizationInput[]
     createMany?: MilestoneDependencyCreateManyOrganizationInputEnvelope
     connect?: MilestoneDependencyWhereUniqueInput | MilestoneDependencyWhereUniqueInput[]
+  }
+
+  export type IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput> | IssueDependencyCreateWithoutOrganizationInput[] | IssueDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutOrganizationInput | IssueDependencyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IssueDependencyCreateManyOrganizationInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput> | IssueLinkCreateWithoutOrganizationInput[] | IssueLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutOrganizationInput | IssueLinkCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IssueLinkCreateManyOrganizationInputEnvelope
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
   }
 
   export type MemberUpdateManyWithoutOrganizationNestedInput = {
@@ -49140,6 +52133,34 @@ export namespace Prisma {
     deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
   }
 
+  export type IssueDependencyUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput> | IssueDependencyCreateWithoutOrganizationInput[] | IssueDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutOrganizationInput | IssueDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutOrganizationInput | IssueDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IssueDependencyCreateManyOrganizationInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutOrganizationInput | IssueDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutOrganizationInput | IssueDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueLinkUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput> | IssueLinkCreateWithoutOrganizationInput[] | IssueLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutOrganizationInput | IssueLinkCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IssueLinkUpsertWithWhereUniqueWithoutOrganizationInput | IssueLinkUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IssueLinkCreateManyOrganizationInputEnvelope
+    set?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    disconnect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    delete?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    update?: IssueLinkUpdateWithWhereUniqueWithoutOrganizationInput | IssueLinkUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IssueLinkUpdateManyWithWhereWithoutOrganizationInput | IssueLinkUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -49334,6 +52355,34 @@ export namespace Prisma {
     update?: MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput | MilestoneDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput | MilestoneDependencyUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: MilestoneDependencyScalarWhereInput | MilestoneDependencyScalarWhereInput[]
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput> | IssueDependencyCreateWithoutOrganizationInput[] | IssueDependencyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutOrganizationInput | IssueDependencyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutOrganizationInput | IssueDependencyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IssueDependencyCreateManyOrganizationInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutOrganizationInput | IssueDependencyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutOrganizationInput | IssueDependencyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput> | IssueLinkCreateWithoutOrganizationInput[] | IssueLinkUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutOrganizationInput | IssueLinkCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IssueLinkUpsertWithWhereUniqueWithoutOrganizationInput | IssueLinkUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IssueLinkCreateManyOrganizationInputEnvelope
+    set?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    disconnect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    delete?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    update?: IssueLinkUpdateWithWhereUniqueWithoutOrganizationInput | IssueLinkUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IssueLinkUpdateManyWithWhereWithoutOrganizationInput | IssueLinkUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -49882,6 +52931,68 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type IssueCreateNestedOneWithoutSubIssuesInput = {
+    create?: XOR<IssueCreateWithoutSubIssuesInput, IssueUncheckedCreateWithoutSubIssuesInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutSubIssuesInput
+    connect?: IssueWhereUniqueInput
+  }
+
+  export type IssueCreateNestedManyWithoutParentIssueInput = {
+    create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
+    createMany?: IssueCreateManyParentIssueInputEnvelope
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+  }
+
+  export type IssueDependencyCreateNestedManyWithoutIssueInput = {
+    create?: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput> | IssueDependencyCreateWithoutIssueInput[] | IssueDependencyUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutIssueInput | IssueDependencyCreateOrConnectWithoutIssueInput[]
+    createMany?: IssueDependencyCreateManyIssueInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueDependencyCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput> | IssueDependencyCreateWithoutDependencyInput[] | IssueDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutDependencyInput | IssueDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: IssueDependencyCreateManyDependencyInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueLinkCreateNestedManyWithoutIssueInput = {
+    create?: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput> | IssueLinkCreateWithoutIssueInput[] | IssueLinkUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutIssueInput | IssueLinkCreateOrConnectWithoutIssueInput[]
+    createMany?: IssueLinkCreateManyIssueInputEnvelope
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+  }
+
+  export type IssueUncheckedCreateNestedManyWithoutParentIssueInput = {
+    create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
+    createMany?: IssueCreateManyParentIssueInputEnvelope
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+  }
+
+  export type IssueDependencyUncheckedCreateNestedManyWithoutIssueInput = {
+    create?: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput> | IssueDependencyCreateWithoutIssueInput[] | IssueDependencyUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutIssueInput | IssueDependencyCreateOrConnectWithoutIssueInput[]
+    createMany?: IssueDependencyCreateManyIssueInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput = {
+    create?: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput> | IssueDependencyCreateWithoutDependencyInput[] | IssueDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutDependencyInput | IssueDependencyCreateOrConnectWithoutDependencyInput[]
+    createMany?: IssueDependencyCreateManyDependencyInputEnvelope
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+  }
+
+  export type IssueLinkUncheckedCreateNestedManyWithoutIssueInput = {
+    create?: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput> | IssueLinkCreateWithoutIssueInput[] | IssueLinkUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutIssueInput | IssueLinkCreateOrConnectWithoutIssueInput[]
+    createMany?: IssueLinkCreateManyIssueInputEnvelope
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+  }
+
   export type EnumIssueStatusFieldUpdateOperationsInput = {
     set?: $Enums.IssueStatus
   }
@@ -49928,6 +53039,198 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIssueInput, UserUpdateWithoutIssueInput>, UserUncheckedUpdateWithoutIssueInput>
+  }
+
+  export type IssueUpdateOneWithoutSubIssuesNestedInput = {
+    create?: XOR<IssueCreateWithoutSubIssuesInput, IssueUncheckedCreateWithoutSubIssuesInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutSubIssuesInput
+    upsert?: IssueUpsertWithoutSubIssuesInput
+    disconnect?: IssueWhereInput | boolean
+    delete?: IssueWhereInput | boolean
+    connect?: IssueWhereUniqueInput
+    update?: XOR<XOR<IssueUpdateToOneWithWhereWithoutSubIssuesInput, IssueUpdateWithoutSubIssuesInput>, IssueUncheckedUpdateWithoutSubIssuesInput>
+  }
+
+  export type IssueUpdateManyWithoutParentIssueNestedInput = {
+    create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
+    upsert?: IssueUpsertWithWhereUniqueWithoutParentIssueInput | IssueUpsertWithWhereUniqueWithoutParentIssueInput[]
+    createMany?: IssueCreateManyParentIssueInputEnvelope
+    set?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    disconnect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    delete?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    update?: IssueUpdateWithWhereUniqueWithoutParentIssueInput | IssueUpdateWithWhereUniqueWithoutParentIssueInput[]
+    updateMany?: IssueUpdateManyWithWhereWithoutParentIssueInput | IssueUpdateManyWithWhereWithoutParentIssueInput[]
+    deleteMany?: IssueScalarWhereInput | IssueScalarWhereInput[]
+  }
+
+  export type IssueDependencyUpdateManyWithoutIssueNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput> | IssueDependencyCreateWithoutIssueInput[] | IssueDependencyUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutIssueInput | IssueDependencyCreateOrConnectWithoutIssueInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutIssueInput | IssueDependencyUpsertWithWhereUniqueWithoutIssueInput[]
+    createMany?: IssueDependencyCreateManyIssueInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutIssueInput | IssueDependencyUpdateWithWhereUniqueWithoutIssueInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutIssueInput | IssueDependencyUpdateManyWithWhereWithoutIssueInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueDependencyUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput> | IssueDependencyCreateWithoutDependencyInput[] | IssueDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutDependencyInput | IssueDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutDependencyInput | IssueDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: IssueDependencyCreateManyDependencyInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutDependencyInput | IssueDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutDependencyInput | IssueDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueLinkUpdateManyWithoutIssueNestedInput = {
+    create?: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput> | IssueLinkCreateWithoutIssueInput[] | IssueLinkUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutIssueInput | IssueLinkCreateOrConnectWithoutIssueInput[]
+    upsert?: IssueLinkUpsertWithWhereUniqueWithoutIssueInput | IssueLinkUpsertWithWhereUniqueWithoutIssueInput[]
+    createMany?: IssueLinkCreateManyIssueInputEnvelope
+    set?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    disconnect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    delete?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    update?: IssueLinkUpdateWithWhereUniqueWithoutIssueInput | IssueLinkUpdateWithWhereUniqueWithoutIssueInput[]
+    updateMany?: IssueLinkUpdateManyWithWhereWithoutIssueInput | IssueLinkUpdateManyWithWhereWithoutIssueInput[]
+    deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+  }
+
+  export type IssueUncheckedUpdateManyWithoutParentIssueNestedInput = {
+    create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
+    connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
+    upsert?: IssueUpsertWithWhereUniqueWithoutParentIssueInput | IssueUpsertWithWhereUniqueWithoutParentIssueInput[]
+    createMany?: IssueCreateManyParentIssueInputEnvelope
+    set?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    disconnect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    delete?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    connect?: IssueWhereUniqueInput | IssueWhereUniqueInput[]
+    update?: IssueUpdateWithWhereUniqueWithoutParentIssueInput | IssueUpdateWithWhereUniqueWithoutParentIssueInput[]
+    updateMany?: IssueUpdateManyWithWhereWithoutParentIssueInput | IssueUpdateManyWithWhereWithoutParentIssueInput[]
+    deleteMany?: IssueScalarWhereInput | IssueScalarWhereInput[]
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput> | IssueDependencyCreateWithoutIssueInput[] | IssueDependencyUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutIssueInput | IssueDependencyCreateOrConnectWithoutIssueInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutIssueInput | IssueDependencyUpsertWithWhereUniqueWithoutIssueInput[]
+    createMany?: IssueDependencyCreateManyIssueInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutIssueInput | IssueDependencyUpdateWithWhereUniqueWithoutIssueInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutIssueInput | IssueDependencyUpdateManyWithWhereWithoutIssueInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput = {
+    create?: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput> | IssueDependencyCreateWithoutDependencyInput[] | IssueDependencyUncheckedCreateWithoutDependencyInput[]
+    connectOrCreate?: IssueDependencyCreateOrConnectWithoutDependencyInput | IssueDependencyCreateOrConnectWithoutDependencyInput[]
+    upsert?: IssueDependencyUpsertWithWhereUniqueWithoutDependencyInput | IssueDependencyUpsertWithWhereUniqueWithoutDependencyInput[]
+    createMany?: IssueDependencyCreateManyDependencyInputEnvelope
+    set?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    disconnect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    delete?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    connect?: IssueDependencyWhereUniqueInput | IssueDependencyWhereUniqueInput[]
+    update?: IssueDependencyUpdateWithWhereUniqueWithoutDependencyInput | IssueDependencyUpdateWithWhereUniqueWithoutDependencyInput[]
+    updateMany?: IssueDependencyUpdateManyWithWhereWithoutDependencyInput | IssueDependencyUpdateManyWithWhereWithoutDependencyInput[]
+    deleteMany?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+  }
+
+  export type IssueLinkUncheckedUpdateManyWithoutIssueNestedInput = {
+    create?: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput> | IssueLinkCreateWithoutIssueInput[] | IssueLinkUncheckedCreateWithoutIssueInput[]
+    connectOrCreate?: IssueLinkCreateOrConnectWithoutIssueInput | IssueLinkCreateOrConnectWithoutIssueInput[]
+    upsert?: IssueLinkUpsertWithWhereUniqueWithoutIssueInput | IssueLinkUpsertWithWhereUniqueWithoutIssueInput[]
+    createMany?: IssueLinkCreateManyIssueInputEnvelope
+    set?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    disconnect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    delete?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+    update?: IssueLinkUpdateWithWhereUniqueWithoutIssueInput | IssueLinkUpdateWithWhereUniqueWithoutIssueInput[]
+    updateMany?: IssueLinkUpdateManyWithWhereWithoutIssueInput | IssueLinkUpdateManyWithWhereWithoutIssueInput[]
+    deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutIssueDependencyInput = {
+    create?: XOR<OrganizationCreateWithoutIssueDependencyInput, OrganizationUncheckedCreateWithoutIssueDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIssueDependencyInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type IssueCreateNestedOneWithoutDependenciesInput = {
+    create?: XOR<IssueCreateWithoutDependenciesInput, IssueUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutDependenciesInput
+    connect?: IssueWhereUniqueInput
+  }
+
+  export type IssueCreateNestedOneWithoutDependentOnInput = {
+    create?: XOR<IssueCreateWithoutDependentOnInput, IssueUncheckedCreateWithoutDependentOnInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutDependentOnInput
+    connect?: IssueWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutIssueDependencyNestedInput = {
+    create?: XOR<OrganizationCreateWithoutIssueDependencyInput, OrganizationUncheckedCreateWithoutIssueDependencyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIssueDependencyInput
+    upsert?: OrganizationUpsertWithoutIssueDependencyInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutIssueDependencyInput, OrganizationUpdateWithoutIssueDependencyInput>, OrganizationUncheckedUpdateWithoutIssueDependencyInput>
+  }
+
+  export type IssueUpdateOneRequiredWithoutDependenciesNestedInput = {
+    create?: XOR<IssueCreateWithoutDependenciesInput, IssueUncheckedCreateWithoutDependenciesInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutDependenciesInput
+    upsert?: IssueUpsertWithoutDependenciesInput
+    connect?: IssueWhereUniqueInput
+    update?: XOR<XOR<IssueUpdateToOneWithWhereWithoutDependenciesInput, IssueUpdateWithoutDependenciesInput>, IssueUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type IssueUpdateOneRequiredWithoutDependentOnNestedInput = {
+    create?: XOR<IssueCreateWithoutDependentOnInput, IssueUncheckedCreateWithoutDependentOnInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutDependentOnInput
+    upsert?: IssueUpsertWithoutDependentOnInput
+    connect?: IssueWhereUniqueInput
+    update?: XOR<XOR<IssueUpdateToOneWithWhereWithoutDependentOnInput, IssueUpdateWithoutDependentOnInput>, IssueUncheckedUpdateWithoutDependentOnInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutIssueLinkInput = {
+    create?: XOR<OrganizationCreateWithoutIssueLinkInput, OrganizationUncheckedCreateWithoutIssueLinkInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIssueLinkInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type IssueCreateNestedOneWithoutLinksInput = {
+    create?: XOR<IssueCreateWithoutLinksInput, IssueUncheckedCreateWithoutLinksInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutLinksInput
+    connect?: IssueWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutIssueLinkNestedInput = {
+    create?: XOR<OrganizationCreateWithoutIssueLinkInput, OrganizationUncheckedCreateWithoutIssueLinkInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIssueLinkInput
+    upsert?: OrganizationUpsertWithoutIssueLinkInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutIssueLinkInput, OrganizationUpdateWithoutIssueLinkInput>, OrganizationUncheckedUpdateWithoutIssueLinkInput>
+  }
+
+  export type IssueUpdateOneRequiredWithoutLinksNestedInput = {
+    create?: XOR<IssueCreateWithoutLinksInput, IssueUncheckedCreateWithoutLinksInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutLinksInput
+    upsert?: IssueUpsertWithoutLinksInput
+    connect?: IssueWhereUniqueInput
+    update?: XOR<XOR<IssueUpdateToOneWithWhereWithoutLinksInput, IssueUpdateWithoutLinksInput>, IssueUncheckedUpdateWithoutLinksInput>
   }
 
   export type AssetCreatetagsInput = {
@@ -51861,7 +55164,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     featureId?: string | null
-    parentIssueId?: string | null
     status: $Enums.IssueStatus
     priority: $Enums.Importance
     label: $Enums.IssueLabel
@@ -51873,6 +55175,11 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIssueInput
     project: ProjectCreateNestedOneWithoutIssuesInput
     milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUncheckedCreateWithoutAssignedToInput = {
@@ -51892,6 +55199,10 @@ export namespace Prisma {
     isPublic?: boolean | null
     sourceType?: string | null
     sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
   }
 
   export type IssueCreateOrConnectWithoutAssignedToInput = {
@@ -53082,7 +56393,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     featureId?: string | null
-    parentIssueId?: string | null
     status: $Enums.IssueStatus
     priority: $Enums.Importance
     label: $Enums.IssueLabel
@@ -53094,6 +56404,11 @@ export namespace Prisma {
     project: ProjectCreateNestedOneWithoutIssuesInput
     milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUncheckedCreateWithoutOrganizationInput = {
@@ -53113,6 +56428,10 @@ export namespace Prisma {
     isPublic?: boolean | null
     sourceType?: string | null
     sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
   }
 
   export type IssueCreateOrConnectWithoutOrganizationInput = {
@@ -53433,6 +56752,54 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IssueDependencyCreateWithoutOrganizationInput = {
+    id?: string
+    createdAt?: Date | string
+    issue: IssueCreateNestedOneWithoutDependenciesInput
+    dependency: IssueCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type IssueDependencyUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    issueId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyCreateOrConnectWithoutOrganizationInput = {
+    where: IssueDependencyWhereUniqueInput
+    create: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IssueDependencyCreateManyOrganizationInputEnvelope = {
+    data: IssueDependencyCreateManyOrganizationInput | IssueDependencyCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IssueLinkCreateWithoutOrganizationInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    issue: IssueCreateNestedOneWithoutLinksInput
+  }
+
+  export type IssueLinkUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    issueId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkCreateOrConnectWithoutOrganizationInput = {
+    where: IssueLinkWhereUniqueInput
+    create: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IssueLinkCreateManyOrganizationInputEnvelope = {
+    data: IssueLinkCreateManyOrganizationInput | IssueLinkCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MemberUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: MemberWhereUniqueInput
     update: XOR<MemberUpdateWithoutOrganizationInput, MemberUncheckedUpdateWithoutOrganizationInput>
@@ -53704,6 +57071,60 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MilestoneDependency"> | Date | string
   }
 
+  export type IssueDependencyUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: IssueDependencyWhereUniqueInput
+    update: XOR<IssueDependencyUpdateWithoutOrganizationInput, IssueDependencyUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<IssueDependencyCreateWithoutOrganizationInput, IssueDependencyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IssueDependencyUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: IssueDependencyWhereUniqueInput
+    data: XOR<IssueDependencyUpdateWithoutOrganizationInput, IssueDependencyUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type IssueDependencyUpdateManyWithWhereWithoutOrganizationInput = {
+    where: IssueDependencyScalarWhereInput
+    data: XOR<IssueDependencyUpdateManyMutationInput, IssueDependencyUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type IssueDependencyScalarWhereInput = {
+    AND?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+    OR?: IssueDependencyScalarWhereInput[]
+    NOT?: IssueDependencyScalarWhereInput | IssueDependencyScalarWhereInput[]
+    id?: StringFilter<"IssueDependency"> | string
+    organizationId?: StringFilter<"IssueDependency"> | string
+    issueId?: StringFilter<"IssueDependency"> | string
+    dependencyId?: StringFilter<"IssueDependency"> | string
+    createdAt?: DateTimeFilter<"IssueDependency"> | Date | string
+  }
+
+  export type IssueLinkUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: IssueLinkWhereUniqueInput
+    update: XOR<IssueLinkUpdateWithoutOrganizationInput, IssueLinkUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<IssueLinkCreateWithoutOrganizationInput, IssueLinkUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IssueLinkUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: IssueLinkWhereUniqueInput
+    data: XOR<IssueLinkUpdateWithoutOrganizationInput, IssueLinkUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type IssueLinkUpdateManyWithWhereWithoutOrganizationInput = {
+    where: IssueLinkScalarWhereInput
+    data: XOR<IssueLinkUpdateManyMutationInput, IssueLinkUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type IssueLinkScalarWhereInput = {
+    AND?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+    OR?: IssueLinkScalarWhereInput[]
+    NOT?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+    id?: StringFilter<"IssueLink"> | string
+    organizationId?: StringFilter<"IssueLink"> | string
+    issueId?: StringFilter<"IssueLink"> | string
+    url?: StringFilter<"IssueLink"> | string
+    createdAt?: DateTimeFilter<"IssueLink"> | Date | string
+  }
+
   export type OrganizationCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -53724,6 +57145,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -53746,6 +57169,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -53841,6 +57266,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -53863,6 +57290,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMembersInput = {
@@ -53948,6 +57377,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -53970,6 +57401,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -54065,6 +57498,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -54087,6 +57522,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -54412,6 +57849,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -54434,6 +57873,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -54529,6 +57970,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -54551,6 +57994,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSubscriptionInput = {
@@ -54675,6 +58120,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProjectInput = {
@@ -54697,6 +58144,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProjectInput = {
@@ -54709,7 +58158,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     featureId?: string | null
-    parentIssueId?: string | null
     status: $Enums.IssueStatus
     priority: $Enums.Importance
     label: $Enums.IssueLabel
@@ -54721,6 +58169,11 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIssueInput
     milestone?: MilestoneCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUncheckedCreateWithoutProjectInput = {
@@ -54740,6 +58193,10 @@ export namespace Prisma {
     isPublic?: boolean | null
     sourceType?: string | null
     sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
   }
 
   export type IssueCreateOrConnectWithoutProjectInput = {
@@ -55133,6 +58590,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProjectInput = {
@@ -55155,6 +58614,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutProjectInput = {
@@ -55414,6 +58875,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIdeaInput = {
@@ -55436,6 +58899,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIdeaInput = {
@@ -55597,6 +59062,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIdeaInput = {
@@ -55619,6 +59086,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -55657,6 +59126,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueInput = {
@@ -55679,6 +59150,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueInput = {
@@ -55837,6 +59310,185 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutIssueInput, UserUncheckedCreateWithoutIssueInput>
   }
 
+  export type IssueCreateWithoutSubIssuesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutSubIssuesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueCreateOrConnectWithoutSubIssuesInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutSubIssuesInput, IssueUncheckedCreateWithoutSubIssuesInput>
+  }
+
+  export type IssueCreateWithoutParentIssueInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutParentIssueInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueCreateOrConnectWithoutParentIssueInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput>
+  }
+
+  export type IssueCreateManyParentIssueInputEnvelope = {
+    data: IssueCreateManyParentIssueInput | IssueCreateManyParentIssueInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IssueDependencyCreateWithoutIssueInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIssueDependencyInput
+    dependency: IssueCreateNestedOneWithoutDependentOnInput
+  }
+
+  export type IssueDependencyUncheckedCreateWithoutIssueInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyCreateOrConnectWithoutIssueInput = {
+    where: IssueDependencyWhereUniqueInput
+    create: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput>
+  }
+
+  export type IssueDependencyCreateManyIssueInputEnvelope = {
+    data: IssueDependencyCreateManyIssueInput | IssueDependencyCreateManyIssueInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IssueDependencyCreateWithoutDependencyInput = {
+    id?: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIssueDependencyInput
+    issue: IssueCreateNestedOneWithoutDependenciesInput
+  }
+
+  export type IssueDependencyUncheckedCreateWithoutDependencyInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyCreateOrConnectWithoutDependencyInput = {
+    where: IssueDependencyWhereUniqueInput
+    create: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type IssueDependencyCreateManyDependencyInputEnvelope = {
+    data: IssueDependencyCreateManyDependencyInput | IssueDependencyCreateManyDependencyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IssueLinkCreateWithoutIssueInput = {
+    id?: string
+    url: string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIssueLinkInput
+  }
+
+  export type IssueLinkUncheckedCreateWithoutIssueInput = {
+    id?: string
+    organizationId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkCreateOrConnectWithoutIssueInput = {
+    where: IssueLinkWhereUniqueInput
+    create: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput>
+  }
+
+  export type IssueLinkCreateManyIssueInputEnvelope = {
+    data: IssueLinkCreateManyIssueInput | IssueLinkCreateManyIssueInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutIssueInput = {
     update: XOR<OrganizationUpdateWithoutIssueInput, OrganizationUncheckedUpdateWithoutIssueInput>
     create: XOR<OrganizationCreateWithoutIssueInput, OrganizationUncheckedCreateWithoutIssueInput>
@@ -55868,6 +59520,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueInput = {
@@ -55890,6 +59544,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithoutIssuesInput = {
@@ -56061,6 +59717,675 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
+  export type IssueUpsertWithoutSubIssuesInput = {
+    update: XOR<IssueUpdateWithoutSubIssuesInput, IssueUncheckedUpdateWithoutSubIssuesInput>
+    create: XOR<IssueCreateWithoutSubIssuesInput, IssueUncheckedCreateWithoutSubIssuesInput>
+    where?: IssueWhereInput
+  }
+
+  export type IssueUpdateToOneWithWhereWithoutSubIssuesInput = {
+    where?: IssueWhereInput
+    data: XOR<IssueUpdateWithoutSubIssuesInput, IssueUncheckedUpdateWithoutSubIssuesInput>
+  }
+
+  export type IssueUpdateWithoutSubIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutSubIssuesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUpsertWithWhereUniqueWithoutParentIssueInput = {
+    where: IssueWhereUniqueInput
+    update: XOR<IssueUpdateWithoutParentIssueInput, IssueUncheckedUpdateWithoutParentIssueInput>
+    create: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput>
+  }
+
+  export type IssueUpdateWithWhereUniqueWithoutParentIssueInput = {
+    where: IssueWhereUniqueInput
+    data: XOR<IssueUpdateWithoutParentIssueInput, IssueUncheckedUpdateWithoutParentIssueInput>
+  }
+
+  export type IssueUpdateManyWithWhereWithoutParentIssueInput = {
+    where: IssueScalarWhereInput
+    data: XOR<IssueUpdateManyMutationInput, IssueUncheckedUpdateManyWithoutParentIssueInput>
+  }
+
+  export type IssueDependencyUpsertWithWhereUniqueWithoutIssueInput = {
+    where: IssueDependencyWhereUniqueInput
+    update: XOR<IssueDependencyUpdateWithoutIssueInput, IssueDependencyUncheckedUpdateWithoutIssueInput>
+    create: XOR<IssueDependencyCreateWithoutIssueInput, IssueDependencyUncheckedCreateWithoutIssueInput>
+  }
+
+  export type IssueDependencyUpdateWithWhereUniqueWithoutIssueInput = {
+    where: IssueDependencyWhereUniqueInput
+    data: XOR<IssueDependencyUpdateWithoutIssueInput, IssueDependencyUncheckedUpdateWithoutIssueInput>
+  }
+
+  export type IssueDependencyUpdateManyWithWhereWithoutIssueInput = {
+    where: IssueDependencyScalarWhereInput
+    data: XOR<IssueDependencyUpdateManyMutationInput, IssueDependencyUncheckedUpdateManyWithoutIssueInput>
+  }
+
+  export type IssueDependencyUpsertWithWhereUniqueWithoutDependencyInput = {
+    where: IssueDependencyWhereUniqueInput
+    update: XOR<IssueDependencyUpdateWithoutDependencyInput, IssueDependencyUncheckedUpdateWithoutDependencyInput>
+    create: XOR<IssueDependencyCreateWithoutDependencyInput, IssueDependencyUncheckedCreateWithoutDependencyInput>
+  }
+
+  export type IssueDependencyUpdateWithWhereUniqueWithoutDependencyInput = {
+    where: IssueDependencyWhereUniqueInput
+    data: XOR<IssueDependencyUpdateWithoutDependencyInput, IssueDependencyUncheckedUpdateWithoutDependencyInput>
+  }
+
+  export type IssueDependencyUpdateManyWithWhereWithoutDependencyInput = {
+    where: IssueDependencyScalarWhereInput
+    data: XOR<IssueDependencyUpdateManyMutationInput, IssueDependencyUncheckedUpdateManyWithoutDependencyInput>
+  }
+
+  export type IssueLinkUpsertWithWhereUniqueWithoutIssueInput = {
+    where: IssueLinkWhereUniqueInput
+    update: XOR<IssueLinkUpdateWithoutIssueInput, IssueLinkUncheckedUpdateWithoutIssueInput>
+    create: XOR<IssueLinkCreateWithoutIssueInput, IssueLinkUncheckedCreateWithoutIssueInput>
+  }
+
+  export type IssueLinkUpdateWithWhereUniqueWithoutIssueInput = {
+    where: IssueLinkWhereUniqueInput
+    data: XOR<IssueLinkUpdateWithoutIssueInput, IssueLinkUncheckedUpdateWithoutIssueInput>
+  }
+
+  export type IssueLinkUpdateManyWithWhereWithoutIssueInput = {
+    where: IssueLinkScalarWhereInput
+    data: XOR<IssueLinkUpdateManyMutationInput, IssueLinkUncheckedUpdateManyWithoutIssueInput>
+  }
+
+  export type OrganizationCreateWithoutIssueDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutIssueDependencyInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutIssueDependencyInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutIssueDependencyInput, OrganizationUncheckedCreateWithoutIssueDependencyInput>
+  }
+
+  export type IssueCreateWithoutDependenciesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutDependenciesInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueCreateOrConnectWithoutDependenciesInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutDependenciesInput, IssueUncheckedCreateWithoutDependenciesInput>
+  }
+
+  export type IssueCreateWithoutDependentOnInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutDependentOnInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueCreateOrConnectWithoutDependentOnInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutDependentOnInput, IssueUncheckedCreateWithoutDependentOnInput>
+  }
+
+  export type OrganizationUpsertWithoutIssueDependencyInput = {
+    update: XOR<OrganizationUpdateWithoutIssueDependencyInput, OrganizationUncheckedUpdateWithoutIssueDependencyInput>
+    create: XOR<OrganizationCreateWithoutIssueDependencyInput, OrganizationUncheckedCreateWithoutIssueDependencyInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutIssueDependencyInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutIssueDependencyInput, OrganizationUncheckedUpdateWithoutIssueDependencyInput>
+  }
+
+  export type OrganizationUpdateWithoutIssueDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutIssueDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type IssueUpsertWithoutDependenciesInput = {
+    update: XOR<IssueUpdateWithoutDependenciesInput, IssueUncheckedUpdateWithoutDependenciesInput>
+    create: XOR<IssueCreateWithoutDependenciesInput, IssueUncheckedCreateWithoutDependenciesInput>
+    where?: IssueWhereInput
+  }
+
+  export type IssueUpdateToOneWithWhereWithoutDependenciesInput = {
+    where?: IssueWhereInput
+    data: XOR<IssueUpdateWithoutDependenciesInput, IssueUncheckedUpdateWithoutDependenciesInput>
+  }
+
+  export type IssueUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutDependenciesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUpsertWithoutDependentOnInput = {
+    update: XOR<IssueUpdateWithoutDependentOnInput, IssueUncheckedUpdateWithoutDependentOnInput>
+    create: XOR<IssueCreateWithoutDependentOnInput, IssueUncheckedCreateWithoutDependentOnInput>
+    where?: IssueWhereInput
+  }
+
+  export type IssueUpdateToOneWithWhereWithoutDependentOnInput = {
+    where?: IssueWhereInput
+    data: XOR<IssueUpdateWithoutDependentOnInput, IssueUncheckedUpdateWithoutDependentOnInput>
+  }
+
+  export type IssueUpdateWithoutDependentOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutDependentOnInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+  }
+
+  export type OrganizationCreateWithoutIssueLinkInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutIssueLinkInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutIssueLinkInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutIssueLinkInput, OrganizationUncheckedCreateWithoutIssueLinkInput>
+  }
+
+  export type IssueCreateWithoutLinksInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+  }
+
+  export type IssueUncheckedCreateWithoutLinksInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+  }
+
+  export type IssueCreateOrConnectWithoutLinksInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutLinksInput, IssueUncheckedCreateWithoutLinksInput>
+  }
+
+  export type OrganizationUpsertWithoutIssueLinkInput = {
+    update: XOR<OrganizationUpdateWithoutIssueLinkInput, OrganizationUncheckedUpdateWithoutIssueLinkInput>
+    create: XOR<OrganizationCreateWithoutIssueLinkInput, OrganizationUncheckedCreateWithoutIssueLinkInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutIssueLinkInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutIssueLinkInput, OrganizationUncheckedUpdateWithoutIssueLinkInput>
+  }
+
+  export type OrganizationUpdateWithoutIssueLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutIssueLinkInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type IssueUpsertWithoutLinksInput = {
+    update: XOR<IssueUpdateWithoutLinksInput, IssueUncheckedUpdateWithoutLinksInput>
+    create: XOR<IssueCreateWithoutLinksInput, IssueUncheckedCreateWithoutLinksInput>
+    where?: IssueWhereInput
+  }
+
+  export type IssueUpdateToOneWithWhereWithoutLinksInput = {
+    where?: IssueWhereInput
+    data: XOR<IssueUpdateWithoutLinksInput, IssueUncheckedUpdateWithoutLinksInput>
+  }
+
+  export type IssueUpdateWithoutLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+  }
+
   export type ProjectCreateWithoutAssetsInput = {
     id?: string
     name: string
@@ -56136,6 +60461,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetInput = {
@@ -56158,6 +60485,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetInput = {
@@ -56314,6 +60643,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetInput = {
@@ -56336,6 +60667,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetInput = {
@@ -56421,6 +60754,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutActivityFeedInput = {
@@ -56443,6 +60778,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutActivityFeedInput = {
@@ -56538,6 +60875,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutActivityFeedInput = {
@@ -56560,6 +60899,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutActivityFeedInput = {
@@ -57657,6 +61998,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWaitlistInput = {
@@ -57679,6 +62022,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWaitlistInput = {
@@ -57889,6 +62234,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWaitlistInput = {
@@ -57911,6 +62258,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutWaitlistInput = {
@@ -58225,6 +62574,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureInput = {
@@ -58247,6 +62598,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureInput = {
@@ -58579,6 +62932,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureInput = {
@@ -58601,6 +62956,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutFeatureInput = {
@@ -58840,6 +63197,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureDependencyInput = {
@@ -58862,6 +63221,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureDependencyInput = {
@@ -58998,6 +63359,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureDependencyInput = {
@@ -59020,6 +63383,8 @@ export namespace Prisma {
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutDependenciesInput = {
@@ -59152,6 +63517,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureLinkInput = {
@@ -59174,6 +63541,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureLinkInput = {
@@ -59261,6 +63630,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureLinkInput = {
@@ -59283,6 +63654,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutFeatureLinkInput = {
@@ -59415,6 +63788,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMilestoneInput = {
@@ -59437,6 +63812,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMilestoneInput = {
@@ -59506,7 +63883,6 @@ export namespace Prisma {
     title: string
     description?: string | null
     featureId?: string | null
-    parentIssueId?: string | null
     status: $Enums.IssueStatus
     priority: $Enums.Importance
     label: $Enums.IssueLabel
@@ -59518,6 +63894,11 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIssueInput
     project: ProjectCreateNestedOneWithoutIssuesInput
     assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
   }
 
   export type IssueUncheckedCreateWithoutMilestoneInput = {
@@ -59537,6 +63918,10 @@ export namespace Prisma {
     isPublic?: boolean | null
     sourceType?: string | null
     sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
   }
 
   export type IssueCreateOrConnectWithoutMilestoneInput = {
@@ -59743,6 +64128,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMilestoneInput = {
@@ -59765,6 +64152,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMilestoneInput = {
@@ -59914,6 +64303,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMilestoneDependencyInput = {
@@ -59936,6 +64327,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMilestoneDependencyInput = {
@@ -60052,6 +64445,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMilestoneDependencyInput = {
@@ -60074,6 +64469,8 @@ export namespace Prisma {
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type MilestoneUpsertWithoutDependsOnInput = {
@@ -60676,7 +65073,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -60688,6 +65084,11 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
     milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutAssignedToInput = {
@@ -60707,6 +65108,10 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutAssignedToInput = {
@@ -61183,6 +65588,20 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type IssueDependencyCreateManyOrganizationInput = {
+    id?: string
+    issueId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkCreateManyOrganizationInput = {
+    id?: string
+    issueId: string
+    url: string
+    createdAt?: Date | string
+  }
+
   export type MemberUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
@@ -61385,7 +65804,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -61397,6 +65815,11 @@ export namespace Prisma {
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
     milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutOrganizationInput = {
@@ -61416,6 +65839,10 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutOrganizationInput = {
@@ -61770,6 +66197,48 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IssueDependencyUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issue?: IssueUpdateOneRequiredWithoutDependenciesNestedInput
+    dependency?: IssueUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type IssueDependencyUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issue?: IssueUpdateOneRequiredWithoutLinksNestedInput
+  }
+
+  export type IssueLinkUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IssueCreateManyProjectInput = {
     id?: string
     title: string
@@ -61881,7 +66350,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -61893,6 +66361,11 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
     milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutProjectInput = {
@@ -61912,6 +66385,10 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutProjectInput = {
@@ -62304,6 +66781,174 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IssueCreateManyParentIssueInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+  }
+
+  export type IssueDependencyCreateManyIssueInput = {
+    id?: string
+    organizationId: string
+    dependencyId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueDependencyCreateManyDependencyInput = {
+    id?: string
+    organizationId: string
+    issueId: string
+    createdAt?: Date | string
+  }
+
+  export type IssueLinkCreateManyIssueInput = {
+    id?: string
+    organizationId: string
+    url: string
+    createdAt?: Date | string
+  }
+
+  export type IssueUpdateWithoutParentIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutParentIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateManyWithoutParentIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IssueDependencyUpdateWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIssueDependencyNestedInput
+    dependency?: IssueUpdateOneRequiredWithoutDependentOnNestedInput
+  }
+
+  export type IssueDependencyUncheckedUpdateWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    dependencyId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIssueDependencyNestedInput
+    issue?: IssueUpdateOneRequiredWithoutDependenciesNestedInput
+  }
+
+  export type IssueDependencyUncheckedUpdateWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueDependencyUncheckedUpdateManyWithoutDependencyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    issueId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkUpdateWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIssueLinkNestedInput
+  }
+
+  export type IssueLinkUncheckedUpdateWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IssueLinkUncheckedUpdateManyWithoutIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RoadmapItemCreateManyRoadmapInput = {
@@ -62894,7 +67539,6 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     featureId?: NullableStringFieldUpdateOperationsInput | string | null
-    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
     priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
     label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
@@ -62906,6 +67550,11 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
     project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
     assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutMilestoneInput = {
@@ -62925,6 +67574,10 @@ export namespace Prisma {
     isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
     sourceType?: NullableStringFieldUpdateOperationsInput | string | null
     sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutMilestoneInput = {
