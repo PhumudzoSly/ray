@@ -27,8 +27,9 @@ import {
 import { formatDate } from "@/lib/format";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProjectMilestones, updateMilestone, CreateMilestoneData } from "@/actions/project/milestone";
+import { MilestoneStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface MilestoneListProps {
   projectId: string;
@@ -73,32 +74,33 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   const [selectedMilestone, setSelectedMilestone] =
     useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const { token } = useSession();
+  const [optimisticMilestones, setOptimisticMilestones] = useState<any[]>([]);
+
+  const queryClient = useQueryClient();
 
   const { data: milestones } = useQuery({
-    queryKey: ["milestones", projectId, token],
+    queryKey: ["milestones", projectId],
     queryFn: async () => {
-      if (!token || !projectId) return [];
+      if (!projectId) return [];
       const raw = await getProjectMilestones(projectId);
-      return (raw ?? []).map((m: any) => ({
-        id: m.id,
-        name: m.name,
-        status: m.status,
-        owner: m.owner ? { name: m.owner.name, image: m.owner.image } : null,
-        endDate: m.endDate,
-        description: m.description,
-      }));
+      return raw
     },
-    enabled: !!token && !!projectId,
   });
 
   const mutation = useMutation({
     mutationFn: async (data: { milestoneId: string; status: string }) => updateMilestone(data.milestoneId, { status: data.status as any }),
     onSuccess: (_data, variables) => {
       toast.success(`Milestone status changed to ${getStatusText(variables.status)}.`);
+      // Invalidate and refetch the milestones query
+      queryClient.invalidateQueries({ queryKey: ["milestones", projectId] });
+      // Clear optimistic state
+      setOptimisticMilestones([]);
     },
-    onError: () => {
+    onError: (error) => {
       toast.error("Failed to update milestone status. Please try again.");
+      // Revert optimistic update on error
+      setOptimisticMilestones([]);
+      console.error("Milestone update error:", error);
     },
   });
 
@@ -108,12 +110,30 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     toGroupId: string,
     newIndex: number
   ) => {
+    // Only update if the status actually changed
+    if (fromGroupId === toGroupId) {
+      return;
+    }
+
+    // Optimistic update - immediately update the UI
+    const currentMilestones = optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
+    const updatedMilestones = currentMilestones.map((milestone) =>
+      milestone.id === itemId
+        ? { ...milestone, status: toGroupId }
+        : milestone
+    );
+    setOptimisticMilestones(updatedMilestones);
+
+    // Perform the actual update
     mutation.mutate({ milestoneId: itemId, status: toGroupId });
   };
 
   const handleItemClick = (item: GroupedListItem) => {
     setSelectedMilestone(item.id);
   };
+
+  // Use optimistic data if available, otherwise use the query data
+  const displayMilestones = optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
 
   if (milestones === undefined) {
     return (
@@ -123,7 +143,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     );
   }
 
-  if (milestones.length === 0) {
+  if (displayMilestones.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
         <Diamond className="h-12 w-12 mb-4 opacity-50" />
@@ -147,31 +167,31 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   // Group milestones by status
   const groupedMilestones: GroupedListGroup[] = [
     {
-      id: "not-started",
+      id: MilestoneStatus.NOT_STARTED,
       title: "Not Started",
       color: getStatusColor("not-started"),
       items: [],
     },
     {
-      id: "in-progress",
+      id: MilestoneStatus.IN_PROGRESS,
       title: "In Progress",
       color: getStatusColor("in-progress"),
       items: [],
     },
     {
-      id: "at-risk",
+      id: MilestoneStatus.AT_RISK,
       title: "At Risk",
       color: getStatusColor("at-risk"),
       items: [],
     },
     {
-      id: "delayed",
+      id: MilestoneStatus.DELAYED,
       title: "Delayed",
       color: getStatusColor("delayed"),
       items: [],
     },
     {
-      id: "completed",
+      id: MilestoneStatus.COMPLETED,
       title: "Completed",
       color: getStatusColor("completed"),
       items: [],
@@ -179,7 +199,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   ];
 
   // Populate groups with milestones
-  milestones.forEach((milestone: any) => {
+  displayMilestones.forEach((milestone: any) => {
     const group = groupedMilestones.find((g) => g.id === milestone.status);
     if (group) {
       const milestoneItem: GroupedListItem = {
@@ -222,8 +242,13 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
           <Diamond className="h-5 w-5 text-muted-foreground" />
           <h2 className="text-2xl font-semibold tracking-tight">Milestones</h2>
           <Badge variant="secondary" className="text-xs font-medium">
-            {milestones.length}
+            {displayMilestones.length}
           </Badge>
+          {optimisticMilestones.length > 0 && (
+            <Badge variant="outline" className="text-xs font-medium text-muted-foreground">
+              Updating...
+            </Badge>
+          )}
         </div>
         <div className="flex gap-2">
           <Button
@@ -231,6 +256,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
             size="sm"
             variant="outline"
             title="Analyze milestone health and update statuses"
+            disabled={mutation.isPending}
           >
             <RefreshCw className="h-4 w-4 mr-2" />
             Analyze Health
@@ -245,8 +271,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
       <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border">
         <p className="font-medium mb-1">💡 Pro tip:</p>
         <p>
-          Drag and drop milestones to different dates to update their target
-          dates.
+          Drag and drop milestones between status columns to update their status.
         </p>
       </div>
 

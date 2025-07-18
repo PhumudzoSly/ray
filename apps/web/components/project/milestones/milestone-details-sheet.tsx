@@ -71,35 +71,34 @@ export function MilestoneDetailsSheet({
 }: MilestoneDetailsSheetProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const { token } = useSession();
   const queryClient = useQueryClient();
 
   const { data: milestone, isLoading } = useQuery<MilestoneWithProgress | null>({
-    queryKey: ["milestone", milestoneId, token],
+    queryKey: ["milestone", milestoneId],
     queryFn: async () => {
-      if (!token || !milestoneId) return null;
+      if (!milestoneId) return null;
       return await getMilestone(milestoneId);
     },
-    enabled: !!token && !!milestoneId,
+    enabled: !!milestoneId,
   });
 
   // Optimistic update for milestone
   const updateMutation = useMutation({
     mutationFn: async (updates: any) => updateMilestone(milestoneId, updates),
     onMutate: async (updates) => {
-      await queryClient.cancelQueries({ queryKey: ["milestone", milestoneId, token] });
-      const previous = queryClient.getQueryData(["milestone", milestoneId, token]);
-      queryClient.setQueryData(["milestone", milestoneId, token], (old: any) => ({ ...old, ...updates }));
+      await queryClient.cancelQueries({ queryKey: ["milestone", milestoneId] });
+      const previous = queryClient.getQueryData(["milestone", milestoneId]);
+      queryClient.setQueryData(["milestone", milestoneId], (old: any) => ({ ...old, ...updates }));
       return { previous };
     },
     onError: (err, updates, context) => {
       if (context?.previous) {
-        queryClient.setQueryData(["milestone", milestoneId, token], context.previous);
+        queryClient.setQueryData(["milestone", milestoneId], context.previous);
       }
       toast.error("Failed to update milestone");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId, token] });
+      queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId] });
     },
     onSuccess: () => {
       toast.success("Milestone updated");

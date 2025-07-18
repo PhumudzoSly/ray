@@ -3,7 +3,7 @@
 import { IssueFieldBase } from "./issue-field-base";
 import { status } from "@/utils/constants/issues/status";
 import { IssueStatusBadge } from "@/components/project/issues/issue-badge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 
 interface IssueStatusFieldProps {

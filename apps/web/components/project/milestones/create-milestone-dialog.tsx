@@ -39,7 +39,6 @@ export function CreateMilestoneDialog({
   open,
   onOpenChange,
 }: CreateMilestoneDialogProps) {
-  const { token } = useSession();
   const [form, setForm] = useState<FormState>({
     name: "",
     description: "",
@@ -48,21 +47,7 @@ export function CreateMilestoneDialog({
     ownerId: undefined,
   });
 
-  // Fetch org members for assignee selector
-  const { data: organizationMembers } = useQuery({
-    queryKey: ["orgMembers", token],
-    queryFn: async () => {
-      if (!token) return [];
-      const raw = await getOrgMembers();
-      return (raw ?? []).map((m: any) => ({
-        id: m.id,
-        name: m.user.name,
-        email: m.user.email,
-        image: m.user.image,
-      }));
-    },
-    enabled: !!token,
-  });
+
 
   // Utility function to validate form fields
   const validateForm = (form: FormState) => {

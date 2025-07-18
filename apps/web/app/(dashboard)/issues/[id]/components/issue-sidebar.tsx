@@ -6,7 +6,7 @@ import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-f
 import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { useSession } from "@/context/session-context";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 import NoData from "@/components/shared/no-data";
 import IssueLinks from "./issue-links";
@@ -68,6 +68,7 @@ function IssueSidebarSkeleton() {
 
 const IssueSidebar = ({ issueId }: { issueId: string }) => {
   const { token } = useSession();
+  const queryClient = useQueryClient();
   const [isAddingDependency, setIsAddingDependency] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null);
 
@@ -99,17 +100,153 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
     enabled: !!issueId,
   });
 
+  // Optimistic update for changing assignee
   const changeLeaderMutation = useMutation({
-    mutationFn: async ({ issueId, userId }: { issueId: string; userId: string }) => issueActions.updateIssue(issueId, { assignedToId: userId }),
+    mutationFn: async ({ issueId, userId }: { issueId: string; userId: string }) => 
+      issueActions.updateIssue(issueId, { assignedToId: userId }),
+    onMutate: async ({ issueId, userId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["issue", issueId] });
+
+      // Snapshot the previous value
+      const previousIssue = queryClient.getQueryData(["issue", issueId]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["issue", issueId], (old: any) => ({
+        ...old,
+        assignedToId: userId,
+        assignedTo: { id: userId, name: "Loading..." }, // Placeholder
+      }));
+
+      // Return a context object with the snapshotted value
+      return { previousIssue };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousIssue) {
+        queryClient.setQueryData(["issue", variables.issueId], context.previousIssue);
+      }
+      toast.error("Failed to change issue leader");
+    },
+    onSettled: (data, error, variables) => {
+      // Always refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ["issue", variables.issueId] });
+    },
   });
+
+  // Optimistic update for general issue updates
   const updateIssueMutation = useMutation({
     mutationFn: async (data: any) => issueActions.updateIssue(issueId, data),
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: ["issue", issueId] });
+      const previousIssue = queryClient.getQueryData(["issue", issueId]);
+
+      queryClient.setQueryData(["issue", issueId], (old: any) => ({
+        ...old,
+        ...newData,
+      }));
+
+      return { previousIssue };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousIssue) {
+        queryClient.setQueryData(["issue", issueId], context.previousIssue);
+      }
+      toast.error("Failed to update issue");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["issue", issueId] });
+    },
   });
+
+  // Optimistic update for adding dependency
   const addDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => issueActions.addIssueDependency({ parentId, dependentIssueId }),
+    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => 
+      issueActions.addIssueDependency({ parentId, dependentIssueId }),
+    onMutate: async ({ parentId, dependentIssueId }) => {
+      await queryClient.cancelQueries({ queryKey: ["issueDependencies", dependentIssueId] });
+      const previousDependencies = queryClient.getQueryData(["issueDependencies", dependentIssueId]);
+
+      // Optimistically add the dependency
+      queryClient.setQueryData(["issueDependencies", dependentIssueId], (old: any) => {
+        if (!old) return { dependencies: [], dependents: [] };
+        
+        // Create a placeholder dependency object
+        const newDependency = {
+          id: parentId,
+          title: "Loading...",
+          status: "TODO",
+          assignedTo: null,
+          project: null,
+        };
+
+        return {
+          ...old,
+          dependencies: [...old.dependencies, newDependency],
+        };
+      });
+
+      return { previousDependencies };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousDependencies) {
+        queryClient.setQueryData(["issueDependencies", variables.dependentIssueId], context.previousDependencies);
+      }
+      
+      if (err instanceof Error) {
+        if (err.message?.includes("circular dependency")) {
+          toast.error("Cannot add dependency: would create circular dependency");
+        } else if (err.message?.includes("already exists")) {
+          toast.error("Dependency already exists");
+        } else {
+          toast.error("Failed to add dependency");
+        }
+      } else {
+        toast.error("Failed to add dependency");
+      }
+    },
+    onSuccess: () => {
+      toast.success("Dependency added successfully");
+      setSelectedIssue(null);
+      setIsAddingDependency(false);
+    },
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["issueDependencies", variables.dependentIssueId] });
+    },
   });
+
+  // Optimistic update for removing dependency
   const removeDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => issueActions.removeIssueDependency({ parentId, dependentIssueId }),
+    mutationFn: async ({ parentId, dependentIssueId }: { parentId: string; dependentIssueId: string }) => 
+      issueActions.removeIssueDependency({ parentId, dependentIssueId }),
+    onMutate: async ({ parentId, dependentIssueId }) => {
+      await queryClient.cancelQueries({ queryKey: ["issueDependencies", dependentIssueId] });
+      const previousDependencies = queryClient.getQueryData(["issueDependencies", dependentIssueId]);
+
+      // Optimistically remove the dependency
+      queryClient.setQueryData(["issueDependencies", dependentIssueId], (old: any) => {
+        if (!old) return { dependencies: [], dependents: [] };
+        
+        return {
+          ...old,
+          dependencies: old.dependencies.filter((dep: any) => dep.id !== parentId),
+        };
+      });
+
+      return { previousDependencies };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousDependencies) {
+        queryClient.setQueryData(["issueDependencies", variables.dependentIssueId], context.previousDependencies);
+      }
+      toast.error("Failed to remove dependency");
+    },
+    onSuccess: () => {
+      toast.success("Dependency removed successfully");
+    },
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["issueDependencies", variables.dependentIssueId] });
+    },
   });
 
   if (isPending || issue === undefined) return <IssueSidebarSkeleton />;
@@ -120,37 +257,18 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
 
   const handleAddDependency = async () => {
     if (!selectedIssue) return;
-    try {
-      await addDependencyMutation.mutateAsync({
-        parentId: selectedIssue,
-        dependentIssueId: issueId,
-      });
-      toast.success("Dependency added successfully");
-      setSelectedIssue(null);
-      setIsAddingDependency(false);
-    } catch (error: any) {
-      console.error("Error adding dependency:", error);
-      if (error.message?.includes("circular dependency")) {
-        toast.error("Cannot add dependency: would create circular dependency");
-      } else if (error.message?.includes("already exists")) {
-        toast.error("Dependency already exists");
-      } else {
-        toast.error("Failed to add dependency");
-      }
-    }
+    
+    addDependencyMutation.mutate({
+      parentId: selectedIssue,
+      dependentIssueId: issueId,
+    });
   };
 
   const handleRemoveDependency = async (parentId: string) => {
-    try {
-      await removeDependencyMutation.mutateAsync({
-        parentId,
-        dependentIssueId: issueId,
-      });
-      toast.success("Dependency removed successfully");
-    } catch (error) {
-      console.error("Error removing dependency:", error);
-      toast.error("Failed to remove dependency");
-    }
+    removeDependencyMutation.mutate({
+      parentId,
+      dependentIssueId: issueId,
+    });
   };
 
   const DependencyCard = ({
@@ -212,14 +330,10 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
           <AssigneeSelector
             assignee={typeof issue.assignedTo === 'string' ? issue.assignedTo : (issue.assignedTo?.id || "")}
             onChange={async (e) => {
-              try {
-                await changeLeaderMutation.mutateAsync({
-                  issueId,
-                  userId: e as any,
-                });
-              } catch (error) {
-                toast.error("Failed to change issue leader");
-              }
+              changeLeaderMutation.mutate({
+                issueId,
+                userId: e as any,
+              });
             }}
           />
 
@@ -265,14 +379,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
             projectId={issue.projectId}
             value={issue.milestoneId || undefined}
             onValueChange={async (milestoneId) => {
-              try {
-                await updateIssueMutation.mutateAsync({
-                  milestoneId,
-                });
-                toast.success("Issue milestone updated");
-              } catch (error) {
-                toast.error("Failed to update issue milestone");
-              }
+              updateIssueMutation.mutate({
+                milestoneId,
+              });
             }}
           />
         </div>
@@ -303,10 +412,6 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
                   Select an issue that this issue depends on. This issue will be
                   blocked until the selected issue is completed.
                 </p>
-                {/* <p className="text-xs text-muted-foreground">
-                  Note: You cannot select this issue's sub-issues or issues that
-                  would create circular dependencies.
-                </p> */}
                 <IssueSelector
                   projectId={issue.projectId}
                   value={selectedIssue || ""}
@@ -323,9 +428,9 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
                   </Button>
                   <Button
                     onClick={handleAddDependency}
-                    disabled={!selectedIssue}
+                    disabled={!selectedIssue || addDependencyMutation.isPending}
                   >
-                    Add Dependency
+                    {addDependencyMutation.isPending ? "Adding..." : "Add Dependency"}
                   </Button>
                 </div>
               </div>

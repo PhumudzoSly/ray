@@ -44,11 +44,11 @@ export function MilestoneTimeline({
     useState<string | null>(null);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
 
-  const { token } = useSession();
+
   const { data: milestones } = useQuery({
-    queryKey: ["milestones", projectId, token],
+    queryKey: ["milestones", projectId],
     queryFn: async () => {
-      if (!token || !projectId) return [];
+      if (!projectId) return [];
       const raw = await getProjectMilestones(projectId);
       return (raw ?? []).map((m: any) => ({
         id: m.id,
@@ -59,7 +59,7 @@ export function MilestoneTimeline({
         endDate: m.endDate,
       }));
     },
-    enabled: !!token && !!projectId,
+    enabled: !!projectId,
   });
 
   const mutation = useMutation({
