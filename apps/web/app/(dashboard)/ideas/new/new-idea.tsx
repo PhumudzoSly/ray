@@ -53,9 +53,9 @@ import {
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { useMutation } from "@tanstack/react-query";
 import * as ideaActions from "@/actions/idea";
-import { useSession } from "@/context/session-context";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useSession } from "@/context/session-context";
 
 // Industries data with modern icons
 export const INDUSTRIES = [
@@ -113,13 +113,13 @@ export const INDUSTRIES = [
 
 const NewIdeaForm = () => {
   const router = useRouter();
+  const { userId, org } = useSession();
   const createIdeaMutation = useMutation({
     mutationFn: async (data: any) => {
       return await ideaActions.createIdea(data);
     },
   });
   const [loading, setLoading] = useState(false);
-  const { userId, org, token } = useSession();
 
   const form = useForm<any>({
     defaultValues: {

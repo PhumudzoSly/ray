@@ -7,180 +7,179 @@ import type { bugReportSchema } from "@/app/report-bugs/_components/bug-report-f
 import type { supportFormSchema } from "@/app/support/_components/support-form";
 import { auth, polarClient } from "@/lib/auth";
 
-
 export async function createOrg({ name }: { name: string }) {
-	const headersList = await headers();
+  const headersList = await headers();
 
-	const session = await auth.api.getSession({ headers: headersList });
-	if (!session?.session || !session.user)
-		throw new Error("You are not authenticated");
+  const session = await auth.api.getSession({ headers: headersList });
+  if (!session?.session || !session.user)
+    throw new Error("You are not authenticated");
 
-	const org = await auth.api.createOrganization({
-		body: {
-			name,
-			slug: `${name.toLowerCase().replace(/\s/g, "-")}-${session.session.userId}`,
-		},
-		headers: headersList,
-	});
+  const org = await auth.api.createOrganization({
+    body: {
+      name,
+      slug: `${name.toLowerCase().replace(/\s/g, "-")}-${session.session.userId}`,
+    },
+    headers: headersList,
+  });
 
-	if (!org) throw new Error("Failed to create organization");
+  if (!org) throw new Error("Failed to create organization");
 
-	auth.api.setActiveOrganization({
-		body: {
-			organizationId: org?.id,
-		},
-		headers: headersList,
-	});
+  auth.api.setActiveOrganization({
+    body: {
+      organizationId: org?.id,
+    },
+    headers: headersList,
+  });
 }
 
 export async function getSession() {
-	const headersList = await headers();
+  const headersList = await headers();
 
-	const [data, member, activeOrg] = await Promise.all([
-		auth.api.getSession({ headers: headersList }),
-		auth.api.getActiveMember({ headers: headersList }),
-		(async () => {
-			const sessionData = await auth.api.getSession({ headers: headersList });
-			if (!sessionData?.session.activeOrganizationId) return null;
-			return auth.api.getFullOrganization({
-				params: {
-					id: sessionData.session.activeOrganizationId,
-				},
-				headers: headersList,
-			});
-		})(),
-	]);
+  const [data, member, activeOrg] = await Promise.all([
+    auth.api.getSession({ headers: headersList }),
+    auth.api.getActiveMember({ headers: headersList }),
+    (async () => {
+      const sessionData = await auth.api.getSession({ headers: headersList });
+      if (!sessionData?.session.activeOrganizationId) return null;
+      return auth.api.getFullOrganization({
+        params: {
+          id: sessionData.session.activeOrganizationId,
+        },
+        headers: headersList,
+      });
+    })(),
+  ]);
 
-	if (!data?.session) {
-		redirect("/auth/sign-in");
-	}
+  if (!data?.session) {
+    redirect("/auth/sign-in");
+  }
 
-	const { session, user } = data;
+  const { session, user } = data;
 
-	if (!session.activeOrganizationId || !activeOrg || !member) {
-		redirect("/switch-org");
-	}
+  if (!session.activeOrganizationId || !activeOrg || !member) {
+    redirect("/switch-org");
+  }
 
-	return {
-		userId: user.id,
-		org: session.activeOrganizationId,
-		email: user.email,
-		name: user.name,
-		image: user.image,
-		role: member.role,
-		orgName: activeOrg.name,
-		memberId: member.id,
-		token: session.token,
-	};
+  return {
+    userId: user.id,
+    org: session.activeOrganizationId,
+    email: user.email,
+    name: user.name,
+    image: user.image,
+    role: member.role,
+    orgName: activeOrg.name,
+    memberId: member.id,
+    token: session.token,
+  };
 }
 
 export async function getMyOrgs() {
-	const myOrgs = await auth.api.listOrganizations({
-		headers: await headers(),
-	});
+  const myOrgs = await auth.api.listOrganizations({
+    headers: await headers(),
+  });
 
-	return myOrgs;
+  return myOrgs;
 }
 
 export async function switchOrg(id: string) {
-	await getSession();
-	const headersList = await headers();
+  await getSession();
+  const headersList = await headers();
 
-	await Promise.all([
-		auth.api.setActiveOrganization({
-			body: {
-				organizationId: id,
-			},
-			headers: headersList,
-		}),
-		auth.api.setActiveOrganization({
-			body: {
-				organizationId: id,
-			},
-			headers: headersList,
-		}),
-	]);
+  await Promise.all([
+    auth.api.setActiveOrganization({
+      body: {
+        organizationId: id,
+      },
+      headers: headersList,
+    }),
+    auth.api.setActiveOrganization({
+      body: {
+        organizationId: id,
+      },
+      headers: headersList,
+    }),
+  ]);
 
-	return { success: true };
+  return { success: true };
 }
 
 export async function getCurrentOrg() {
-	const data = await auth.api.getFullOrganization({
-		headers: await headers(),
-	});
-	return data;
+  const data = await auth.api.getFullOrganization({
+    headers: await headers(),
+  });
+  return data;
 }
 
 export async function getOrgMembers() {
-	const { org } = await getSession();
+  const { org } = await getSession();
 
-	const data = await auth.api.getFullOrganization({
-		params: {
-			id: org,
-		},
-		headers: await headers(),
-	});
+  const data = await auth.api.getFullOrganization({
+    params: {
+      id: org,
+    },
+    headers: await headers(),
+  });
 
-	return data?.members;
+  return data?.members;
 }
 
 export async function updateOrganizationName(
-	organizationId: string,
-	name: string,
+  organizationId: string,
+  name: string
 ) {
-	try {
-		await auth.api.updateOrganization({
-			params: {
-				id: organizationId,
-			},
-			body: {
-				data: {
-					name,
-				},
-			},
-			headers: await headers(),
-		});
+  try {
+    await auth.api.updateOrganization({
+      params: {
+        id: organizationId,
+      },
+      body: {
+        data: {
+          name,
+        },
+      },
+      headers: await headers(),
+    });
 
-		return { success: true };
-	} catch (error) {
-		return { error: "Failed to update organization name" };
-	}
+    return { success: true };
+  } catch (error) {
+    return { error: "Failed to update organization name" };
+  }
 }
 
 export async function deleteAccount() {
-	const { userId } = await getSession();
-	const sub = await polarClient.customers.getStateExternal({
-		externalId: userId,
-	});
+  const { userId } = await getSession();
+  const sub = await polarClient.customers.getStateExternal({
+    externalId: userId,
+  });
 
-	if (sub && sub.activeSubscriptions.length !== 0) {
-		const subscriptions = sub.activeSubscriptions;
-		subscriptions.forEach(async (activeSub) => {
-			await polarClient.subscriptions.revoke({
-				id: activeSub.id,
-			});
-		});
-	}
+  if (sub && sub.activeSubscriptions.length !== 0) {
+    const subscriptions = sub.activeSubscriptions;
+    subscriptions.forEach(async (activeSub) => {
+      await polarClient.subscriptions.revoke({
+        id: activeSub.id,
+      });
+    });
+  }
 }
 
 export async function subscribeToUpdates(active: boolean) {
-	const { userId, email, name } = await getSession();
+  const { userId, email, name } = await getSession();
 }
 
 export async function reportBug({
-	data,
+  data,
 }: {
-	data: z.infer<typeof bugReportSchema>;
+  data: z.infer<typeof bugReportSchema>;
 }) {
-	await getSession();
+  await getSession();
 }
 
 export async function contactSuppport({
-	data,
+  data,
 }: {
-	data: z.infer<typeof supportFormSchema>;
+  data: z.infer<typeof supportFormSchema>;
 }) {
-	await getSession();
+  await getSession();
 }
 
 // export async function createApiKey({
@@ -235,60 +234,60 @@ export async function contactSuppport({
 // }
 
 export async function deleteApiKey(keyId: string) {
-	const { userId, org } = await getSession();
+  const { userId, org } = await getSession();
 
-	try {
-		await prisma.apiKey.delete({
-			where: {
-				id: keyId,
-			},
-		});
+  try {
+    await prisma.apiKey.delete({
+      where: {
+        id: keyId,
+      },
+    });
 
-		return {
-			success: true,
-		};
-	} catch (error) {
-		return {
-			success: false,
-			error:
-				error instanceof Error ? error.message : "Failed to delete API key",
-		};
-	}
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to delete API key",
+    };
+  }
 }
 
 export async function deactivateApiKey(keyId: string) {
-	const { userId, org } = await getSession();
+  const { userId, org } = await getSession();
 
-	try {
-		await prisma.apiKey.update({
-			where: {
-				id: keyId,
-			},
-			data: {
-				isActive: false,
-			},
-		});
+  try {
+    await prisma.apiKey.update({
+      where: {
+        id: keyId,
+      },
+      data: {
+        isActive: false,
+      },
+    });
 
-		return {
-			success: true,
-		};
-	} catch (error) {
-		return {
-			success: false,
-			error:
-				error instanceof Error ? error.message : "Failed to deactivate API key",
-		};
-	}
+    return {
+      success: true,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to deactivate API key",
+    };
+  }
 }
 
 export async function getUser(id: string) {
-	await getSession();
+  await getSession();
 
-	const user = await prisma.user.findFirst({
-		where: {
-			id,
-		},
-	})
+  const user = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+  });
 
-	return user
+  return user;
 }

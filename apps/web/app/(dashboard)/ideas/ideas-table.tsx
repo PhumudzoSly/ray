@@ -36,12 +36,12 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { formatDistanceToNow, format } from "date-fns";
 import { TbProgress } from "react-icons/tb";
-import { useSession } from "@/context/session-context";
 import NoData from "@/components/shared/no-data";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getAllIdeas } from "@/actions/idea";
 import { Idea } from "@workspace/backend";
+import { useSession } from "@/context/session-context";
 
 export function IdeasTable() {
   const router = useRouter();
@@ -55,12 +55,17 @@ export function IdeasTable() {
   const industry = searchParams.get("industry") || "";
   const search = searchParams.get("search") || "";
 
-  const { data: allIdeas, isPending, isError } = useQuery({
-    queryKey: ["ideas"],
+  const { org } = useSession();
+  const {
+    data: allIdeas,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["ideas", org],
     queryFn: async () => {
-      return await getAllIdeas()
+      return await getAllIdeas();
     },
-  })
+  });
 
   // Filter ideas based on search params
   const filteredIdeas =
@@ -136,7 +141,7 @@ export function IdeasTable() {
   const getStatusInfo = (
     idea: Idea
   ): { icon: JSX.Element; badge: JSX.Element; progress: number } => {
-    const progress = 0
+    const progress = 0;
 
     switch (idea.status) {
       case "VALIDATED":

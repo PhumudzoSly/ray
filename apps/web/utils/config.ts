@@ -30,6 +30,7 @@ export const authRoutes = [
   "/",
   "/rm",
   "/home",
+  "/api/inngest",
 ];
 
 /**

@@ -53,13 +53,11 @@ export function NavUser() {
             <button className="group relative w-full overflow-hidden rounded-lg border bg-linear-to-br from-primary/20 to-muted p-1 shadow-lg transition-all duration-200 hover:shadow-xl">
               <div className="absolute inset-0 bg-linear-to-r to-primary/10 from-secondary/10 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
               <div className="relative flex items-center gap-3">
-                <div className="relative h-9 w-9 overflow-hidden rounded-lg">
-                  <Avatar>
-                    <AvatarFallback>
-                      {getInitials(session.orgName)}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
+                <Avatar>
+                  <AvatarFallback>
+                    {getInitials(session.orgName)}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
                     {session.orgName}

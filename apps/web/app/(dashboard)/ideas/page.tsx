@@ -1,4 +1,3 @@
-"use client";
 import { Lightbulb } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { IdeasTable } from "./ideas-table";
@@ -13,10 +12,24 @@ import {
 import NewIdeaForm from "./new/new-idea";
 import Header from "@/components/shared/header";
 import { CommandSearch } from "@workspace/ui/components/command-search";
+import { getSession } from "@/actions/account/user";
+import { getAllIdeas } from "@/actions/idea";
+import getQueryClient from "@/lib/query/getQueryClient";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-export default function IdeasPage() {
+export default async function IdeasPage() {
+  const session = await getSession();
+
+  const queryClient = getQueryClient();
+
+  // Prefetch ideas data
+  await queryClient.prefetchQuery({
+    queryKey: ["ideas", session.org],
+    queryFn: () => getAllIdeas(),
+  });
+
   return (
-    <div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
       <Header
         crumb={[
           {
@@ -58,6 +71,6 @@ export default function IdeasPage() {
           <IdeasTable />
         </div>
       </div>
-    </div>
+    </HydrationBoundary>
   );
 }

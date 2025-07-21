@@ -56,15 +56,6 @@ const data: NavData = {
       url: "/dashboard",
       icon: LayoutDashboard,
     },
-    // {
-    //   name: "Inbox",
-    //   url: "/inbox",
-    //   icon: MessageCircle,
-    //   badge: {
-    //     text: "Coming Soon",
-    //     variant: "success",
-    //   },
-    // },
     {
       name: "Ideas",
       url: "/ideas",
