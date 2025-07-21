@@ -134,6 +134,16 @@ export type RoadmapChangelog = $Result.DefaultSelection<Prisma.$RoadmapChangelog
  */
 export type FeatureRequest = $Result.DefaultSelection<Prisma.$FeatureRequestPayload>
 /**
+ * Model Integration
+ * 
+ */
+export type Integration = $Result.DefaultSelection<Prisma.$IntegrationPayload>
+/**
+ * Model IntegrationUsage
+ * 
+ */
+export type IntegrationUsage = $Result.DefaultSelection<Prisma.$IntegrationUsagePayload>
+/**
  * Model Waitlist
  * 
  */
@@ -433,6 +443,17 @@ export const MilestoneStatus: {
 
 export type MilestoneStatus = (typeof MilestoneStatus)[keyof typeof MilestoneStatus]
 
+
+export const IntegrationType: {
+  RESEND: 'RESEND',
+  LOOPS: 'LOOPS',
+  SENDGRID: 'SENDGRID',
+  MAILCHIMP: 'MAILCHIMP',
+  CONVERTKIT: 'CONVERTKIT'
+};
+
+export type IntegrationType = (typeof IntegrationType)[keyof typeof IntegrationType]
+
 }
 
 export type ActivityType = $Enums.ActivityType
@@ -522,6 +543,10 @@ export const FeaturePhase: typeof $Enums.FeaturePhase
 export type MilestoneStatus = $Enums.MilestoneStatus
 
 export const MilestoneStatus: typeof $Enums.MilestoneStatus
+
+export type IntegrationType = $Enums.IntegrationType
+
+export const IntegrationType: typeof $Enums.IntegrationType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -887,6 +912,26 @@ export class PrismaClient<
     * ```
     */
   get featureRequest(): Prisma.FeatureRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.integration`: Exposes CRUD operations for the **Integration** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Integrations
+    * const integrations = await prisma.integration.findMany()
+    * ```
+    */
+  get integration(): Prisma.IntegrationDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.integrationUsage`: Exposes CRUD operations for the **IntegrationUsage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegrationUsages
+    * const integrationUsages = await prisma.integrationUsage.findMany()
+    * ```
+    */
+  get integrationUsage(): Prisma.IntegrationUsageDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.waitlist`: Exposes CRUD operations for the **Waitlist** model.
@@ -1421,6 +1466,8 @@ export namespace Prisma {
     RoadmapFeedback: 'RoadmapFeedback',
     RoadmapChangelog: 'RoadmapChangelog',
     FeatureRequest: 'FeatureRequest',
+    Integration: 'Integration',
+    IntegrationUsage: 'IntegrationUsage',
     Waitlist: 'Waitlist',
     WaitlistEntry: 'WaitlistEntry',
     Feature: 'Feature',
@@ -1446,7 +1493,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "featureRequest" | "integration" | "integrationUsage" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3226,6 +3273,154 @@ export namespace Prisma {
           }
         }
       }
+      Integration: {
+        payload: Prisma.$IntegrationPayload<ExtArgs>
+        fields: Prisma.IntegrationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegrationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegrationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          findFirst: {
+            args: Prisma.IntegrationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegrationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          findMany: {
+            args: Prisma.IntegrationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+          }
+          create: {
+            args: Prisma.IntegrationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          createMany: {
+            args: Prisma.IntegrationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegrationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+          }
+          delete: {
+            args: Prisma.IntegrationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          update: {
+            args: Prisma.IntegrationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegrationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegrationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IntegrationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>[]
+          }
+          upsert: {
+            args: Prisma.IntegrationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationPayload>
+          }
+          aggregate: {
+            args: Prisma.IntegrationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegration>
+          }
+          groupBy: {
+            args: Prisma.IntegrationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegrationCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationCountAggregateOutputType> | number
+          }
+        }
+      }
+      IntegrationUsage: {
+        payload: Prisma.$IntegrationUsagePayload<ExtArgs>
+        fields: Prisma.IntegrationUsageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegrationUsageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegrationUsageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          findFirst: {
+            args: Prisma.IntegrationUsageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegrationUsageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          findMany: {
+            args: Prisma.IntegrationUsageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>[]
+          }
+          create: {
+            args: Prisma.IntegrationUsageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          createMany: {
+            args: Prisma.IntegrationUsageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegrationUsageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>[]
+          }
+          delete: {
+            args: Prisma.IntegrationUsageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          update: {
+            args: Prisma.IntegrationUsageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegrationUsageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegrationUsageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IntegrationUsageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>[]
+          }
+          upsert: {
+            args: Prisma.IntegrationUsageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationUsagePayload>
+          }
+          aggregate: {
+            args: Prisma.IntegrationUsageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegrationUsage>
+          }
+          groupBy: {
+            args: Prisma.IntegrationUsageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationUsageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegrationUsageCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationUsageCountAggregateOutputType> | number
+          }
+        }
+      }
       Waitlist: {
         payload: Prisma.$WaitlistPayload<ExtArgs>
         fields: Prisma.WaitlistFieldRefs
@@ -3852,6 +4047,8 @@ export namespace Prisma {
     roadmapFeedback?: RoadmapFeedbackOmit
     roadmapChangelog?: RoadmapChangelogOmit
     featureRequest?: FeatureRequestOmit
+    integration?: IntegrationOmit
+    integrationUsage?: IntegrationUsageOmit
     waitlist?: WaitlistOmit
     waitlistEntry?: WaitlistEntryOmit
     feature?: FeatureOmit
@@ -3964,6 +4161,7 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
+    integration: number
     activityFeed: number
     feature: number
     milestone: number
@@ -3981,6 +4179,7 @@ export namespace Prisma {
     issue?: boolean | UserCountOutputTypeCountIssueArgs
     asset?: boolean | UserCountOutputTypeCountAssetArgs
     waitlist?: boolean | UserCountOutputTypeCountWaitlistArgs
+    integration?: boolean | UserCountOutputTypeCountIntegrationArgs
     activityFeed?: boolean | UserCountOutputTypeCountActivityFeedArgs
     feature?: boolean | UserCountOutputTypeCountFeatureArgs
     milestone?: boolean | UserCountOutputTypeCountMilestoneArgs
@@ -4077,6 +4276,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountIntegrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountActivityFeedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ActivityFeedWhereInput
   }
@@ -4109,6 +4315,7 @@ export namespace Prisma {
     issue: number
     asset: number
     waitlist: number
+    integration: number
     activityFeed: number
     feature: number
     featureDependency: number
@@ -4128,6 +4335,7 @@ export namespace Prisma {
     issue?: boolean | OrganizationCountOutputTypeCountIssueArgs
     asset?: boolean | OrganizationCountOutputTypeCountAssetArgs
     waitlist?: boolean | OrganizationCountOutputTypeCountWaitlistArgs
+    integration?: boolean | OrganizationCountOutputTypeCountIntegrationArgs
     activityFeed?: boolean | OrganizationCountOutputTypeCountActivityFeedArgs
     feature?: boolean | OrganizationCountOutputTypeCountFeatureArgs
     featureDependency?: boolean | OrganizationCountOutputTypeCountFeatureDependencyArgs
@@ -4203,6 +4411,13 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountWaitlistArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WaitlistWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountIntegrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationWhereInput
   }
 
   /**
@@ -4522,6 +4737,37 @@ export namespace Prisma {
    */
   export type RoadmapItemCountOutputTypeCountFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RoadmapFeedbackWhereInput
+  }
+
+
+  /**
+   * Count Type IntegrationCountOutputType
+   */
+
+  export type IntegrationCountOutputType = {
+    usages: number
+  }
+
+  export type IntegrationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usages?: boolean | IntegrationCountOutputTypeCountUsagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * IntegrationCountOutputType without action
+   */
+  export type IntegrationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationCountOutputType
+     */
+    select?: IntegrationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationCountOutputType without action
+   */
+  export type IntegrationCountOutputTypeCountUsagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationUsageWhereInput
   }
 
 
@@ -4893,6 +5139,7 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
+    integration?: boolean | User$integrationArgs<ExtArgs>
     activityFeed?: boolean | User$activityFeedArgs<ExtArgs>
     feature?: boolean | User$featureArgs<ExtArgs>
     milestone?: boolean | User$milestoneArgs<ExtArgs>
@@ -4949,6 +5196,7 @@ export namespace Prisma {
     issue?: boolean | User$issueArgs<ExtArgs>
     asset?: boolean | User$assetArgs<ExtArgs>
     waitlist?: boolean | User$waitlistArgs<ExtArgs>
+    integration?: boolean | User$integrationArgs<ExtArgs>
     activityFeed?: boolean | User$activityFeedArgs<ExtArgs>
     feature?: boolean | User$featureArgs<ExtArgs>
     milestone?: boolean | User$milestoneArgs<ExtArgs>
@@ -4972,6 +5220,7 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
+      integration: Prisma.$IntegrationPayload<ExtArgs>[]
       activityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
       feature: Prisma.$FeaturePayload<ExtArgs>[]
       milestone: Prisma.$MilestonePayload<ExtArgs>[]
@@ -5392,6 +5641,7 @@ export namespace Prisma {
     issue<T extends User$issueArgs<ExtArgs> = {}>(args?: Subset<T, User$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends User$assetArgs<ExtArgs> = {}>(args?: Subset<T, User$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends User$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, User$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    integration<T extends User$integrationArgs<ExtArgs> = {}>(args?: Subset<T, User$integrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activityFeed<T extends User$activityFeedArgs<ExtArgs> = {}>(args?: Subset<T, User$activityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feature<T extends User$featureArgs<ExtArgs> = {}>(args?: Subset<T, User$featureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     milestone<T extends User$milestoneArgs<ExtArgs> = {}>(args?: Subset<T, User$milestoneArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestonePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6101,6 +6351,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaitlistScalarFieldEnum | WaitlistScalarFieldEnum[]
+  }
+
+  /**
+   * User.integration
+   */
+  export type User$integrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    where?: IntegrationWhereInput
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    cursor?: IntegrationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
   }
 
   /**
@@ -9705,6 +9979,7 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
+    integration?: boolean | Organization$integrationArgs<ExtArgs>
     activityFeed?: boolean | Organization$activityFeedArgs<ExtArgs>
     feature?: boolean | Organization$featureArgs<ExtArgs>
     featureDependency?: boolean | Organization$featureDependencyArgs<ExtArgs>
@@ -9753,6 +10028,7 @@ export namespace Prisma {
     issue?: boolean | Organization$issueArgs<ExtArgs>
     asset?: boolean | Organization$assetArgs<ExtArgs>
     waitlist?: boolean | Organization$waitlistArgs<ExtArgs>
+    integration?: boolean | Organization$integrationArgs<ExtArgs>
     activityFeed?: boolean | Organization$activityFeedArgs<ExtArgs>
     feature?: boolean | Organization$featureArgs<ExtArgs>
     featureDependency?: boolean | Organization$featureDependencyArgs<ExtArgs>
@@ -9777,6 +10053,7 @@ export namespace Prisma {
       issue: Prisma.$IssuePayload<ExtArgs>[]
       asset: Prisma.$AssetPayload<ExtArgs>[]
       waitlist: Prisma.$WaitlistPayload<ExtArgs>[]
+      integration: Prisma.$IntegrationPayload<ExtArgs>[]
       activityFeed: Prisma.$ActivityFeedPayload<ExtArgs>[]
       feature: Prisma.$FeaturePayload<ExtArgs>[]
       featureDependency: Prisma.$FeatureDependencyPayload<ExtArgs>[]
@@ -10195,6 +10472,7 @@ export namespace Prisma {
     issue<T extends Organization$issueArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     asset<T extends Organization$assetArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     waitlist<T extends Organization$waitlistArgs<ExtArgs> = {}>(args?: Subset<T, Organization$waitlistArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WaitlistPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    integration<T extends Organization$integrationArgs<ExtArgs> = {}>(args?: Subset<T, Organization$integrationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activityFeed<T extends Organization$activityFeedArgs<ExtArgs> = {}>(args?: Subset<T, Organization$activityFeedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ActivityFeedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feature<T extends Organization$featureArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     featureDependency<T extends Organization$featureDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$featureDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10815,6 +11093,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WaitlistScalarFieldEnum | WaitlistScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.integration
+   */
+  export type Organization$integrationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    where?: IntegrationWhereInput
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    cursor?: IntegrationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
   }
 
   /**
@@ -33671,6 +33973,2266 @@ export namespace Prisma {
 
 
   /**
+   * Model Integration
+   */
+
+  export type AggregateIntegration = {
+    _count: IntegrationCountAggregateOutputType | null
+    _min: IntegrationMinAggregateOutputType | null
+    _max: IntegrationMaxAggregateOutputType | null
+  }
+
+  export type IntegrationMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: $Enums.IntegrationType | null
+    isActive: boolean | null
+    organizationId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type IntegrationMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    type: $Enums.IntegrationType | null
+    isActive: boolean | null
+    organizationId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    createdById: string | null
+  }
+
+  export type IntegrationCountAggregateOutputType = {
+    id: number
+    name: number
+    type: number
+    config: number
+    isActive: number
+    organizationId: number
+    createdAt: number
+    updatedAt: number
+    createdById: number
+    _all: number
+  }
+
+
+  export type IntegrationMinAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    isActive?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type IntegrationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    isActive?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+  }
+
+  export type IntegrationCountAggregateInputType = {
+    id?: true
+    name?: true
+    type?: true
+    config?: true
+    isActive?: true
+    organizationId?: true
+    createdAt?: true
+    updatedAt?: true
+    createdById?: true
+    _all?: true
+  }
+
+  export type IntegrationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Integration to aggregate.
+     */
+    where?: IntegrationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Integrations to fetch.
+     */
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegrationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Integrations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Integrations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Integrations
+    **/
+    _count?: true | IntegrationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegrationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegrationMaxAggregateInputType
+  }
+
+  export type GetIntegrationAggregateType<T extends IntegrationAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegration]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegration[P]>
+      : GetScalarType<T[P], AggregateIntegration[P]>
+  }
+
+
+
+
+  export type IntegrationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationWhereInput
+    orderBy?: IntegrationOrderByWithAggregationInput | IntegrationOrderByWithAggregationInput[]
+    by: IntegrationScalarFieldEnum[] | IntegrationScalarFieldEnum
+    having?: IntegrationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegrationCountAggregateInputType | true
+    _min?: IntegrationMinAggregateInputType
+    _max?: IntegrationMaxAggregateInputType
+  }
+
+  export type IntegrationGroupByOutputType = {
+    id: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonValue
+    isActive: boolean
+    organizationId: string
+    createdAt: Date
+    updatedAt: Date
+    createdById: string | null
+    _count: IntegrationCountAggregateOutputType | null
+    _min: IntegrationMinAggregateOutputType | null
+    _max: IntegrationMaxAggregateOutputType | null
+  }
+
+  type GetIntegrationGroupByPayload<T extends IntegrationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegrationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegrationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegrationGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegrationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegrationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    config?: boolean
+    isActive?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+    usages?: boolean | Integration$usagesArgs<ExtArgs>
+    _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integration"]>
+
+  export type IntegrationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    config?: boolean
+    isActive?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["integration"]>
+
+  export type IntegrationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    config?: boolean
+    isActive?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["integration"]>
+
+  export type IntegrationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    type?: boolean
+    config?: boolean
+    isActive?: boolean
+    organizationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    createdById?: boolean
+  }
+
+  export type IntegrationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "config" | "isActive" | "organizationId" | "createdAt" | "updatedAt" | "createdById", ExtArgs["result"]["integration"]>
+  export type IntegrationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+    usages?: boolean | Integration$usagesArgs<ExtArgs>
+    _count?: boolean | IntegrationCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type IntegrationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+  }
+  export type IntegrationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    createdBy?: boolean | Integration$createdByArgs<ExtArgs>
+  }
+
+  export type $IntegrationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Integration"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+      usages: Prisma.$IntegrationUsagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      type: $Enums.IntegrationType
+      config: Prisma.JsonValue
+      isActive: boolean
+      organizationId: string
+      createdAt: Date
+      updatedAt: Date
+      createdById: string | null
+    }, ExtArgs["result"]["integration"]>
+    composites: {}
+  }
+
+  type IntegrationGetPayload<S extends boolean | null | undefined | IntegrationDefaultArgs> = $Result.GetResult<Prisma.$IntegrationPayload, S>
+
+  type IntegrationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IntegrationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IntegrationCountAggregateInputType | true
+    }
+
+  export interface IntegrationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Integration'], meta: { name: 'Integration' } }
+    /**
+     * Find zero or one Integration that matches the filter.
+     * @param {IntegrationFindUniqueArgs} args - Arguments to find a Integration
+     * @example
+     * // Get one Integration
+     * const integration = await prisma.integration.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegrationFindUniqueArgs>(args: SelectSubset<T, IntegrationFindUniqueArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Integration that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IntegrationFindUniqueOrThrowArgs} args - Arguments to find a Integration
+     * @example
+     * // Get one Integration
+     * const integration = await prisma.integration.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegrationFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Integration that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationFindFirstArgs} args - Arguments to find a Integration
+     * @example
+     * // Get one Integration
+     * const integration = await prisma.integration.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegrationFindFirstArgs>(args?: SelectSubset<T, IntegrationFindFirstArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Integration that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationFindFirstOrThrowArgs} args - Arguments to find a Integration
+     * @example
+     * // Get one Integration
+     * const integration = await prisma.integration.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegrationFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Integrations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Integrations
+     * const integrations = await prisma.integration.findMany()
+     * 
+     * // Get first 10 Integrations
+     * const integrations = await prisma.integration.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integrationWithIdOnly = await prisma.integration.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegrationFindManyArgs>(args?: SelectSubset<T, IntegrationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Integration.
+     * @param {IntegrationCreateArgs} args - Arguments to create a Integration.
+     * @example
+     * // Create one Integration
+     * const Integration = await prisma.integration.create({
+     *   data: {
+     *     // ... data to create a Integration
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegrationCreateArgs>(args: SelectSubset<T, IntegrationCreateArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Integrations.
+     * @param {IntegrationCreateManyArgs} args - Arguments to create many Integrations.
+     * @example
+     * // Create many Integrations
+     * const integration = await prisma.integration.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegrationCreateManyArgs>(args?: SelectSubset<T, IntegrationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Integrations and returns the data saved in the database.
+     * @param {IntegrationCreateManyAndReturnArgs} args - Arguments to create many Integrations.
+     * @example
+     * // Create many Integrations
+     * const integration = await prisma.integration.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Integrations and only return the `id`
+     * const integrationWithIdOnly = await prisma.integration.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegrationCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Integration.
+     * @param {IntegrationDeleteArgs} args - Arguments to delete one Integration.
+     * @example
+     * // Delete one Integration
+     * const Integration = await prisma.integration.delete({
+     *   where: {
+     *     // ... filter to delete one Integration
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegrationDeleteArgs>(args: SelectSubset<T, IntegrationDeleteArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Integration.
+     * @param {IntegrationUpdateArgs} args - Arguments to update one Integration.
+     * @example
+     * // Update one Integration
+     * const integration = await prisma.integration.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegrationUpdateArgs>(args: SelectSubset<T, IntegrationUpdateArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Integrations.
+     * @param {IntegrationDeleteManyArgs} args - Arguments to filter Integrations to delete.
+     * @example
+     * // Delete a few Integrations
+     * const { count } = await prisma.integration.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegrationDeleteManyArgs>(args?: SelectSubset<T, IntegrationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Integrations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Integrations
+     * const integration = await prisma.integration.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegrationUpdateManyArgs>(args: SelectSubset<T, IntegrationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Integrations and returns the data updated in the database.
+     * @param {IntegrationUpdateManyAndReturnArgs} args - Arguments to update many Integrations.
+     * @example
+     * // Update many Integrations
+     * const integration = await prisma.integration.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Integrations and only return the `id`
+     * const integrationWithIdOnly = await prisma.integration.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IntegrationUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Integration.
+     * @param {IntegrationUpsertArgs} args - Arguments to update or create a Integration.
+     * @example
+     * // Update or create a Integration
+     * const integration = await prisma.integration.upsert({
+     *   create: {
+     *     // ... data to create a Integration
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Integration we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegrationUpsertArgs>(args: SelectSubset<T, IntegrationUpsertArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Integrations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationCountArgs} args - Arguments to filter Integrations to count.
+     * @example
+     * // Count the number of Integrations
+     * const count = await prisma.integration.count({
+     *   where: {
+     *     // ... the filter for the Integrations we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegrationCountArgs>(
+      args?: Subset<T, IntegrationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegrationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Integration.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegrationAggregateArgs>(args: Subset<T, IntegrationAggregateArgs>): Prisma.PrismaPromise<GetIntegrationAggregateType<T>>
+
+    /**
+     * Group by Integration.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegrationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegrationGroupByArgs['orderBy'] }
+        : { orderBy?: IntegrationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegrationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Integration model
+   */
+  readonly fields: IntegrationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Integration.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegrationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdBy<T extends Integration$createdByArgs<ExtArgs> = {}>(args?: Subset<T, Integration$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    usages<T extends Integration$usagesArgs<ExtArgs> = {}>(args?: Subset<T, Integration$usagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Integration model
+   */
+  interface IntegrationFieldRefs {
+    readonly id: FieldRef<"Integration", 'String'>
+    readonly name: FieldRef<"Integration", 'String'>
+    readonly type: FieldRef<"Integration", 'IntegrationType'>
+    readonly config: FieldRef<"Integration", 'Json'>
+    readonly isActive: FieldRef<"Integration", 'Boolean'>
+    readonly organizationId: FieldRef<"Integration", 'String'>
+    readonly createdAt: FieldRef<"Integration", 'DateTime'>
+    readonly updatedAt: FieldRef<"Integration", 'DateTime'>
+    readonly createdById: FieldRef<"Integration", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Integration findUnique
+   */
+  export type IntegrationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter, which Integration to fetch.
+     */
+    where: IntegrationWhereUniqueInput
+  }
+
+  /**
+   * Integration findUniqueOrThrow
+   */
+  export type IntegrationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter, which Integration to fetch.
+     */
+    where: IntegrationWhereUniqueInput
+  }
+
+  /**
+   * Integration findFirst
+   */
+  export type IntegrationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter, which Integration to fetch.
+     */
+    where?: IntegrationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Integrations to fetch.
+     */
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Integrations.
+     */
+    cursor?: IntegrationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Integrations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Integrations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Integrations.
+     */
+    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
+  }
+
+  /**
+   * Integration findFirstOrThrow
+   */
+  export type IntegrationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter, which Integration to fetch.
+     */
+    where?: IntegrationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Integrations to fetch.
+     */
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Integrations.
+     */
+    cursor?: IntegrationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Integrations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Integrations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Integrations.
+     */
+    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
+  }
+
+  /**
+   * Integration findMany
+   */
+  export type IntegrationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter, which Integrations to fetch.
+     */
+    where?: IntegrationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Integrations to fetch.
+     */
+    orderBy?: IntegrationOrderByWithRelationInput | IntegrationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Integrations.
+     */
+    cursor?: IntegrationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Integrations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Integrations.
+     */
+    skip?: number
+    distinct?: IntegrationScalarFieldEnum | IntegrationScalarFieldEnum[]
+  }
+
+  /**
+   * Integration create
+   */
+  export type IntegrationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Integration.
+     */
+    data: XOR<IntegrationCreateInput, IntegrationUncheckedCreateInput>
+  }
+
+  /**
+   * Integration createMany
+   */
+  export type IntegrationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Integrations.
+     */
+    data: IntegrationCreateManyInput | IntegrationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Integration createManyAndReturn
+   */
+  export type IntegrationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * The data used to create many Integrations.
+     */
+    data: IntegrationCreateManyInput | IntegrationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Integration update
+   */
+  export type IntegrationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Integration.
+     */
+    data: XOR<IntegrationUpdateInput, IntegrationUncheckedUpdateInput>
+    /**
+     * Choose, which Integration to update.
+     */
+    where: IntegrationWhereUniqueInput
+  }
+
+  /**
+   * Integration updateMany
+   */
+  export type IntegrationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Integrations.
+     */
+    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyInput>
+    /**
+     * Filter which Integrations to update
+     */
+    where?: IntegrationWhereInput
+    /**
+     * Limit how many Integrations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Integration updateManyAndReturn
+   */
+  export type IntegrationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * The data used to update Integrations.
+     */
+    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyInput>
+    /**
+     * Filter which Integrations to update
+     */
+    where?: IntegrationWhereInput
+    /**
+     * Limit how many Integrations to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Integration upsert
+   */
+  export type IntegrationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Integration to update in case it exists.
+     */
+    where: IntegrationWhereUniqueInput
+    /**
+     * In case the Integration found by the `where` argument doesn't exist, create a new Integration with this data.
+     */
+    create: XOR<IntegrationCreateInput, IntegrationUncheckedCreateInput>
+    /**
+     * In case the Integration was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegrationUpdateInput, IntegrationUncheckedUpdateInput>
+  }
+
+  /**
+   * Integration delete
+   */
+  export type IntegrationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+    /**
+     * Filter which Integration to delete.
+     */
+    where: IntegrationWhereUniqueInput
+  }
+
+  /**
+   * Integration deleteMany
+   */
+  export type IntegrationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Integrations to delete
+     */
+    where?: IntegrationWhereInput
+    /**
+     * Limit how many Integrations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Integration.createdBy
+   */
+  export type Integration$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Integration.usages
+   */
+  export type Integration$usagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    where?: IntegrationUsageWhereInput
+    orderBy?: IntegrationUsageOrderByWithRelationInput | IntegrationUsageOrderByWithRelationInput[]
+    cursor?: IntegrationUsageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationUsageScalarFieldEnum | IntegrationUsageScalarFieldEnum[]
+  }
+
+  /**
+   * Integration without action
+   */
+  export type IntegrationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Integration
+     */
+    select?: IntegrationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Integration
+     */
+    omit?: IntegrationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IntegrationUsage
+   */
+
+  export type AggregateIntegrationUsage = {
+    _count: IntegrationUsageCountAggregateOutputType | null
+    _min: IntegrationUsageMinAggregateOutputType | null
+    _max: IntegrationUsageMaxAggregateOutputType | null
+  }
+
+  export type IntegrationUsageMinAggregateOutputType = {
+    id: string | null
+    integrationId: string | null
+    entityType: string | null
+    entityId: string | null
+    purpose: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegrationUsageMaxAggregateOutputType = {
+    id: string | null
+    integrationId: string | null
+    entityType: string | null
+    entityId: string | null
+    purpose: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type IntegrationUsageCountAggregateOutputType = {
+    id: number
+    integrationId: number
+    entityType: number
+    entityId: number
+    purpose: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type IntegrationUsageMinAggregateInputType = {
+    id?: true
+    integrationId?: true
+    entityType?: true
+    entityId?: true
+    purpose?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegrationUsageMaxAggregateInputType = {
+    id?: true
+    integrationId?: true
+    entityType?: true
+    entityId?: true
+    purpose?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type IntegrationUsageCountAggregateInputType = {
+    id?: true
+    integrationId?: true
+    entityType?: true
+    entityId?: true
+    purpose?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type IntegrationUsageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationUsage to aggregate.
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationUsages to fetch.
+     */
+    orderBy?: IntegrationUsageOrderByWithRelationInput | IntegrationUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegrationUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegrationUsages
+    **/
+    _count?: true | IntegrationUsageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegrationUsageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegrationUsageMaxAggregateInputType
+  }
+
+  export type GetIntegrationUsageAggregateType<T extends IntegrationUsageAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegrationUsage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegrationUsage[P]>
+      : GetScalarType<T[P], AggregateIntegrationUsage[P]>
+  }
+
+
+
+
+  export type IntegrationUsageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationUsageWhereInput
+    orderBy?: IntegrationUsageOrderByWithAggregationInput | IntegrationUsageOrderByWithAggregationInput[]
+    by: IntegrationUsageScalarFieldEnum[] | IntegrationUsageScalarFieldEnum
+    having?: IntegrationUsageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegrationUsageCountAggregateInputType | true
+    _min?: IntegrationUsageMinAggregateInputType
+    _max?: IntegrationUsageMaxAggregateInputType
+  }
+
+  export type IntegrationUsageGroupByOutputType = {
+    id: string
+    integrationId: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: IntegrationUsageCountAggregateOutputType | null
+    _min: IntegrationUsageMinAggregateOutputType | null
+    _max: IntegrationUsageMaxAggregateOutputType | null
+  }
+
+  type GetIntegrationUsageGroupByPayload<T extends IntegrationUsageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegrationUsageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegrationUsageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegrationUsageGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegrationUsageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegrationUsageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    integrationId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    purpose?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationUsage"]>
+
+  export type IntegrationUsageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    integrationId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    purpose?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationUsage"]>
+
+  export type IntegrationUsageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    integrationId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    purpose?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationUsage"]>
+
+  export type IntegrationUsageSelectScalar = {
+    id?: boolean
+    integrationId?: boolean
+    entityType?: boolean
+    entityId?: boolean
+    purpose?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type IntegrationUsageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "integrationId" | "entityType" | "entityId" | "purpose" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["integrationUsage"]>
+  export type IntegrationUsageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }
+  export type IntegrationUsageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }
+  export type IntegrationUsageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    integration?: boolean | IntegrationDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegrationUsagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegrationUsage"
+    objects: {
+      integration: Prisma.$IntegrationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      integrationId: string
+      entityType: string
+      entityId: string
+      purpose: string
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["integrationUsage"]>
+    composites: {}
+  }
+
+  type IntegrationUsageGetPayload<S extends boolean | null | undefined | IntegrationUsageDefaultArgs> = $Result.GetResult<Prisma.$IntegrationUsagePayload, S>
+
+  type IntegrationUsageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IntegrationUsageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IntegrationUsageCountAggregateInputType | true
+    }
+
+  export interface IntegrationUsageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegrationUsage'], meta: { name: 'IntegrationUsage' } }
+    /**
+     * Find zero or one IntegrationUsage that matches the filter.
+     * @param {IntegrationUsageFindUniqueArgs} args - Arguments to find a IntegrationUsage
+     * @example
+     * // Get one IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegrationUsageFindUniqueArgs>(args: SelectSubset<T, IntegrationUsageFindUniqueArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IntegrationUsage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IntegrationUsageFindUniqueOrThrowArgs} args - Arguments to find a IntegrationUsage
+     * @example
+     * // Get one IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegrationUsageFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationUsageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntegrationUsage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageFindFirstArgs} args - Arguments to find a IntegrationUsage
+     * @example
+     * // Get one IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegrationUsageFindFirstArgs>(args?: SelectSubset<T, IntegrationUsageFindFirstArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IntegrationUsage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageFindFirstOrThrowArgs} args - Arguments to find a IntegrationUsage
+     * @example
+     * // Get one IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegrationUsageFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationUsageFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IntegrationUsages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegrationUsages
+     * const integrationUsages = await prisma.integrationUsage.findMany()
+     * 
+     * // Get first 10 IntegrationUsages
+     * const integrationUsages = await prisma.integrationUsage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integrationUsageWithIdOnly = await prisma.integrationUsage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegrationUsageFindManyArgs>(args?: SelectSubset<T, IntegrationUsageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IntegrationUsage.
+     * @param {IntegrationUsageCreateArgs} args - Arguments to create a IntegrationUsage.
+     * @example
+     * // Create one IntegrationUsage
+     * const IntegrationUsage = await prisma.integrationUsage.create({
+     *   data: {
+     *     // ... data to create a IntegrationUsage
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegrationUsageCreateArgs>(args: SelectSubset<T, IntegrationUsageCreateArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IntegrationUsages.
+     * @param {IntegrationUsageCreateManyArgs} args - Arguments to create many IntegrationUsages.
+     * @example
+     * // Create many IntegrationUsages
+     * const integrationUsage = await prisma.integrationUsage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegrationUsageCreateManyArgs>(args?: SelectSubset<T, IntegrationUsageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegrationUsages and returns the data saved in the database.
+     * @param {IntegrationUsageCreateManyAndReturnArgs} args - Arguments to create many IntegrationUsages.
+     * @example
+     * // Create many IntegrationUsages
+     * const integrationUsage = await prisma.integrationUsage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegrationUsages and only return the `id`
+     * const integrationUsageWithIdOnly = await prisma.integrationUsage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegrationUsageCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationUsageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IntegrationUsage.
+     * @param {IntegrationUsageDeleteArgs} args - Arguments to delete one IntegrationUsage.
+     * @example
+     * // Delete one IntegrationUsage
+     * const IntegrationUsage = await prisma.integrationUsage.delete({
+     *   where: {
+     *     // ... filter to delete one IntegrationUsage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegrationUsageDeleteArgs>(args: SelectSubset<T, IntegrationUsageDeleteArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IntegrationUsage.
+     * @param {IntegrationUsageUpdateArgs} args - Arguments to update one IntegrationUsage.
+     * @example
+     * // Update one IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegrationUsageUpdateArgs>(args: SelectSubset<T, IntegrationUsageUpdateArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IntegrationUsages.
+     * @param {IntegrationUsageDeleteManyArgs} args - Arguments to filter IntegrationUsages to delete.
+     * @example
+     * // Delete a few IntegrationUsages
+     * const { count } = await prisma.integrationUsage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegrationUsageDeleteManyArgs>(args?: SelectSubset<T, IntegrationUsageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegrationUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegrationUsages
+     * const integrationUsage = await prisma.integrationUsage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegrationUsageUpdateManyArgs>(args: SelectSubset<T, IntegrationUsageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegrationUsages and returns the data updated in the database.
+     * @param {IntegrationUsageUpdateManyAndReturnArgs} args - Arguments to update many IntegrationUsages.
+     * @example
+     * // Update many IntegrationUsages
+     * const integrationUsage = await prisma.integrationUsage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IntegrationUsages and only return the `id`
+     * const integrationUsageWithIdOnly = await prisma.integrationUsage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IntegrationUsageUpdateManyAndReturnArgs>(args: SelectSubset<T, IntegrationUsageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IntegrationUsage.
+     * @param {IntegrationUsageUpsertArgs} args - Arguments to update or create a IntegrationUsage.
+     * @example
+     * // Update or create a IntegrationUsage
+     * const integrationUsage = await prisma.integrationUsage.upsert({
+     *   create: {
+     *     // ... data to create a IntegrationUsage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegrationUsage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegrationUsageUpsertArgs>(args: SelectSubset<T, IntegrationUsageUpsertArgs<ExtArgs>>): Prisma__IntegrationUsageClient<$Result.GetResult<Prisma.$IntegrationUsagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IntegrationUsages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageCountArgs} args - Arguments to filter IntegrationUsages to count.
+     * @example
+     * // Count the number of IntegrationUsages
+     * const count = await prisma.integrationUsage.count({
+     *   where: {
+     *     // ... the filter for the IntegrationUsages we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegrationUsageCountArgs>(
+      args?: Subset<T, IntegrationUsageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegrationUsageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegrationUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegrationUsageAggregateArgs>(args: Subset<T, IntegrationUsageAggregateArgs>): Prisma.PrismaPromise<GetIntegrationUsageAggregateType<T>>
+
+    /**
+     * Group by IntegrationUsage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationUsageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegrationUsageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegrationUsageGroupByArgs['orderBy'] }
+        : { orderBy?: IntegrationUsageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegrationUsageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationUsageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegrationUsage model
+   */
+  readonly fields: IntegrationUsageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegrationUsage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegrationUsageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    integration<T extends IntegrationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegrationDefaultArgs<ExtArgs>>): Prisma__IntegrationClient<$Result.GetResult<Prisma.$IntegrationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegrationUsage model
+   */
+  interface IntegrationUsageFieldRefs {
+    readonly id: FieldRef<"IntegrationUsage", 'String'>
+    readonly integrationId: FieldRef<"IntegrationUsage", 'String'>
+    readonly entityType: FieldRef<"IntegrationUsage", 'String'>
+    readonly entityId: FieldRef<"IntegrationUsage", 'String'>
+    readonly purpose: FieldRef<"IntegrationUsage", 'String'>
+    readonly isActive: FieldRef<"IntegrationUsage", 'Boolean'>
+    readonly createdAt: FieldRef<"IntegrationUsage", 'DateTime'>
+    readonly updatedAt: FieldRef<"IntegrationUsage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegrationUsage findUnique
+   */
+  export type IntegrationUsageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationUsage to fetch.
+     */
+    where: IntegrationUsageWhereUniqueInput
+  }
+
+  /**
+   * IntegrationUsage findUniqueOrThrow
+   */
+  export type IntegrationUsageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationUsage to fetch.
+     */
+    where: IntegrationUsageWhereUniqueInput
+  }
+
+  /**
+   * IntegrationUsage findFirst
+   */
+  export type IntegrationUsageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationUsage to fetch.
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationUsages to fetch.
+     */
+    orderBy?: IntegrationUsageOrderByWithRelationInput | IntegrationUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationUsages.
+     */
+    cursor?: IntegrationUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationUsages.
+     */
+    distinct?: IntegrationUsageScalarFieldEnum | IntegrationUsageScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationUsage findFirstOrThrow
+   */
+  export type IntegrationUsageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationUsage to fetch.
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationUsages to fetch.
+     */
+    orderBy?: IntegrationUsageOrderByWithRelationInput | IntegrationUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationUsages.
+     */
+    cursor?: IntegrationUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationUsages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationUsages.
+     */
+    distinct?: IntegrationUsageScalarFieldEnum | IntegrationUsageScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationUsage findMany
+   */
+  export type IntegrationUsageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationUsages to fetch.
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationUsages to fetch.
+     */
+    orderBy?: IntegrationUsageOrderByWithRelationInput | IntegrationUsageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegrationUsages.
+     */
+    cursor?: IntegrationUsageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationUsages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationUsages.
+     */
+    skip?: number
+    distinct?: IntegrationUsageScalarFieldEnum | IntegrationUsageScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationUsage create
+   */
+  export type IntegrationUsageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegrationUsage.
+     */
+    data: XOR<IntegrationUsageCreateInput, IntegrationUsageUncheckedCreateInput>
+  }
+
+  /**
+   * IntegrationUsage createMany
+   */
+  export type IntegrationUsageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegrationUsages.
+     */
+    data: IntegrationUsageCreateManyInput | IntegrationUsageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegrationUsage createManyAndReturn
+   */
+  export type IntegrationUsageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * The data used to create many IntegrationUsages.
+     */
+    data: IntegrationUsageCreateManyInput | IntegrationUsageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationUsage update
+   */
+  export type IntegrationUsageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegrationUsage.
+     */
+    data: XOR<IntegrationUsageUpdateInput, IntegrationUsageUncheckedUpdateInput>
+    /**
+     * Choose, which IntegrationUsage to update.
+     */
+    where: IntegrationUsageWhereUniqueInput
+  }
+
+  /**
+   * IntegrationUsage updateMany
+   */
+  export type IntegrationUsageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegrationUsages.
+     */
+    data: XOR<IntegrationUsageUpdateManyMutationInput, IntegrationUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegrationUsages to update
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * Limit how many IntegrationUsages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntegrationUsage updateManyAndReturn
+   */
+  export type IntegrationUsageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * The data used to update IntegrationUsages.
+     */
+    data: XOR<IntegrationUsageUpdateManyMutationInput, IntegrationUsageUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegrationUsages to update
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * Limit how many IntegrationUsages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationUsage upsert
+   */
+  export type IntegrationUsageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegrationUsage to update in case it exists.
+     */
+    where: IntegrationUsageWhereUniqueInput
+    /**
+     * In case the IntegrationUsage found by the `where` argument doesn't exist, create a new IntegrationUsage with this data.
+     */
+    create: XOR<IntegrationUsageCreateInput, IntegrationUsageUncheckedCreateInput>
+    /**
+     * In case the IntegrationUsage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegrationUsageUpdateInput, IntegrationUsageUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegrationUsage delete
+   */
+  export type IntegrationUsageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+    /**
+     * Filter which IntegrationUsage to delete.
+     */
+    where: IntegrationUsageWhereUniqueInput
+  }
+
+  /**
+   * IntegrationUsage deleteMany
+   */
+  export type IntegrationUsageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationUsages to delete
+     */
+    where?: IntegrationUsageWhereInput
+    /**
+     * Limit how many IntegrationUsages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IntegrationUsage without action
+   */
+  export type IntegrationUsageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationUsage
+     */
+    select?: IntegrationUsageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IntegrationUsage
+     */
+    omit?: IntegrationUsageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationUsageInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Waitlist
    */
 
@@ -42582,6 +45144,35 @@ export namespace Prisma {
   export type FeatureRequestScalarFieldEnum = (typeof FeatureRequestScalarFieldEnum)[keyof typeof FeatureRequestScalarFieldEnum]
 
 
+  export const IntegrationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    type: 'type',
+    config: 'config',
+    isActive: 'isActive',
+    organizationId: 'organizationId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    createdById: 'createdById'
+  };
+
+  export type IntegrationScalarFieldEnum = (typeof IntegrationScalarFieldEnum)[keyof typeof IntegrationScalarFieldEnum]
+
+
+  export const IntegrationUsageScalarFieldEnum: {
+    id: 'id',
+    integrationId: 'integrationId',
+    entityType: 'entityType',
+    entityId: 'entityId',
+    purpose: 'purpose',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type IntegrationUsageScalarFieldEnum = (typeof IntegrationUsageScalarFieldEnum)[keyof typeof IntegrationUsageScalarFieldEnum]
+
+
   export const WaitlistScalarFieldEnum: {
     id: 'id',
     projectId: 'projectId',
@@ -42708,6 +45299,13 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -42722,6 +45320,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -42989,6 +45596,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'IntegrationType'
+   */
+  export type EnumIntegrationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IntegrationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'IntegrationType[]'
+   */
+  export type ListEnumIntegrationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'IntegrationType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
    * Reference to a field of type 'FeaturePhase'
    */
   export type EnumFeaturePhaseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeaturePhase'>
@@ -43044,6 +45679,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    integration?: IntegrationListRelationFilter
     activityFeed?: ActivityFeedListRelationFilter
     feature?: FeatureListRelationFilter
     milestone?: MilestoneListRelationFilter
@@ -43071,6 +45707,7 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
+    integration?: IntegrationOrderByRelationAggregateInput
     activityFeed?: ActivityFeedOrderByRelationAggregateInput
     feature?: FeatureOrderByRelationAggregateInput
     milestone?: MilestoneOrderByRelationAggregateInput
@@ -43101,6 +45738,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    integration?: IntegrationListRelationFilter
     activityFeed?: ActivityFeedListRelationFilter
     feature?: FeatureListRelationFilter
     milestone?: MilestoneListRelationFilter
@@ -43386,6 +46024,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    integration?: IntegrationListRelationFilter
     activityFeed?: ActivityFeedListRelationFilter
     feature?: FeatureListRelationFilter
     featureDependency?: FeatureDependencyListRelationFilter
@@ -43411,6 +46050,7 @@ export namespace Prisma {
     issue?: IssueOrderByRelationAggregateInput
     asset?: AssetOrderByRelationAggregateInput
     waitlist?: WaitlistOrderByRelationAggregateInput
+    integration?: IntegrationOrderByRelationAggregateInput
     activityFeed?: ActivityFeedOrderByRelationAggregateInput
     feature?: FeatureOrderByRelationAggregateInput
     featureDependency?: FeatureDependencyOrderByRelationAggregateInput
@@ -43439,6 +46079,7 @@ export namespace Prisma {
     issue?: IssueListRelationFilter
     asset?: AssetListRelationFilter
     waitlist?: WaitlistListRelationFilter
+    integration?: IntegrationListRelationFilter
     activityFeed?: ActivityFeedListRelationFilter
     feature?: FeatureListRelationFilter
     featureDependency?: FeatureDependencyListRelationFilter
@@ -45205,6 +47846,157 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FeatureRequest"> | Date | string
   }
 
+  export type IntegrationWhereInput = {
+    AND?: IntegrationWhereInput | IntegrationWhereInput[]
+    OR?: IntegrationWhereInput[]
+    NOT?: IntegrationWhereInput | IntegrationWhereInput[]
+    id?: StringFilter<"Integration"> | string
+    name?: StringFilter<"Integration"> | string
+    type?: EnumIntegrationTypeFilter<"Integration"> | $Enums.IntegrationType
+    config?: JsonFilter<"Integration">
+    isActive?: BoolFilter<"Integration"> | boolean
+    organizationId?: StringFilter<"Integration"> | string
+    createdAt?: DateTimeFilter<"Integration"> | Date | string
+    updatedAt?: DateTimeFilter<"Integration"> | Date | string
+    createdById?: StringNullableFilter<"Integration"> | string | null
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    usages?: IntegrationUsageListRelationFilter
+  }
+
+  export type IntegrationOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    config?: SortOrder
+    isActive?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    createdBy?: UserOrderByWithRelationInput
+    usages?: IntegrationUsageOrderByRelationAggregateInput
+  }
+
+  export type IntegrationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IntegrationWhereInput | IntegrationWhereInput[]
+    OR?: IntegrationWhereInput[]
+    NOT?: IntegrationWhereInput | IntegrationWhereInput[]
+    name?: StringFilter<"Integration"> | string
+    type?: EnumIntegrationTypeFilter<"Integration"> | $Enums.IntegrationType
+    config?: JsonFilter<"Integration">
+    isActive?: BoolFilter<"Integration"> | boolean
+    organizationId?: StringFilter<"Integration"> | string
+    createdAt?: DateTimeFilter<"Integration"> | Date | string
+    updatedAt?: DateTimeFilter<"Integration"> | Date | string
+    createdById?: StringNullableFilter<"Integration"> | string | null
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    usages?: IntegrationUsageListRelationFilter
+  }, "id">
+
+  export type IntegrationOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    config?: SortOrder
+    isActive?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    _count?: IntegrationCountOrderByAggregateInput
+    _max?: IntegrationMaxOrderByAggregateInput
+    _min?: IntegrationMinOrderByAggregateInput
+  }
+
+  export type IntegrationScalarWhereWithAggregatesInput = {
+    AND?: IntegrationScalarWhereWithAggregatesInput | IntegrationScalarWhereWithAggregatesInput[]
+    OR?: IntegrationScalarWhereWithAggregatesInput[]
+    NOT?: IntegrationScalarWhereWithAggregatesInput | IntegrationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Integration"> | string
+    name?: StringWithAggregatesFilter<"Integration"> | string
+    type?: EnumIntegrationTypeWithAggregatesFilter<"Integration"> | $Enums.IntegrationType
+    config?: JsonWithAggregatesFilter<"Integration">
+    isActive?: BoolWithAggregatesFilter<"Integration"> | boolean
+    organizationId?: StringWithAggregatesFilter<"Integration"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Integration"> | Date | string
+    createdById?: StringNullableWithAggregatesFilter<"Integration"> | string | null
+  }
+
+  export type IntegrationUsageWhereInput = {
+    AND?: IntegrationUsageWhereInput | IntegrationUsageWhereInput[]
+    OR?: IntegrationUsageWhereInput[]
+    NOT?: IntegrationUsageWhereInput | IntegrationUsageWhereInput[]
+    id?: StringFilter<"IntegrationUsage"> | string
+    integrationId?: StringFilter<"IntegrationUsage"> | string
+    entityType?: StringFilter<"IntegrationUsage"> | string
+    entityId?: StringFilter<"IntegrationUsage"> | string
+    purpose?: StringFilter<"IntegrationUsage"> | string
+    isActive?: BoolFilter<"IntegrationUsage"> | boolean
+    createdAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+    integration?: XOR<IntegrationScalarRelationFilter, IntegrationWhereInput>
+  }
+
+  export type IntegrationUsageOrderByWithRelationInput = {
+    id?: SortOrder
+    integrationId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    purpose?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    integration?: IntegrationOrderByWithRelationInput
+  }
+
+  export type IntegrationUsageWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: IntegrationUsageWhereInput | IntegrationUsageWhereInput[]
+    OR?: IntegrationUsageWhereInput[]
+    NOT?: IntegrationUsageWhereInput | IntegrationUsageWhereInput[]
+    integrationId?: StringFilter<"IntegrationUsage"> | string
+    entityType?: StringFilter<"IntegrationUsage"> | string
+    entityId?: StringFilter<"IntegrationUsage"> | string
+    purpose?: StringFilter<"IntegrationUsage"> | string
+    isActive?: BoolFilter<"IntegrationUsage"> | boolean
+    createdAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+    integration?: XOR<IntegrationScalarRelationFilter, IntegrationWhereInput>
+  }, "id">
+
+  export type IntegrationUsageOrderByWithAggregationInput = {
+    id?: SortOrder
+    integrationId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    purpose?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: IntegrationUsageCountOrderByAggregateInput
+    _max?: IntegrationUsageMaxOrderByAggregateInput
+    _min?: IntegrationUsageMinOrderByAggregateInput
+  }
+
+  export type IntegrationUsageScalarWhereWithAggregatesInput = {
+    AND?: IntegrationUsageScalarWhereWithAggregatesInput | IntegrationUsageScalarWhereWithAggregatesInput[]
+    OR?: IntegrationUsageScalarWhereWithAggregatesInput[]
+    NOT?: IntegrationUsageScalarWhereWithAggregatesInput | IntegrationUsageScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegrationUsage"> | string
+    integrationId?: StringWithAggregatesFilter<"IntegrationUsage"> | string
+    entityType?: StringWithAggregatesFilter<"IntegrationUsage"> | string
+    entityId?: StringWithAggregatesFilter<"IntegrationUsage"> | string
+    purpose?: StringWithAggregatesFilter<"IntegrationUsage"> | string
+    isActive?: BoolWithAggregatesFilter<"IntegrationUsage"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"IntegrationUsage"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"IntegrationUsage"> | Date | string
+  }
+
   export type WaitlistWhereInput = {
     AND?: WaitlistWhereInput | WaitlistWhereInput[]
     OR?: WaitlistWhereInput[]
@@ -45890,6 +48682,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -45917,6 +48710,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -45944,6 +48738,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -45971,6 +48766,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -46291,6 +49087,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -46316,6 +49113,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -46341,6 +49139,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -46366,6 +49165,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -48304,6 +51104,168 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntegrationCreateInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIntegrationInput
+    createdBy?: UserCreateNestedOneWithoutIntegrationInput
+    usages?: IntegrationUsageCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationUncheckedCreateInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    usages?: IntegrationUsageUncheckedCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationNestedInput
+    createdBy?: UserUpdateOneWithoutIntegrationNestedInput
+    usages?: IntegrationUsageUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    usages?: IntegrationUsageUncheckedUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationCreateManyInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type IntegrationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IntegrationUsageCreateInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    integration: IntegrationCreateNestedOneWithoutUsagesInput
+  }
+
+  export type IntegrationUsageUncheckedCreateInput = {
+    id?: string
+    integrationId: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationUsageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    integration?: IntegrationUpdateOneRequiredWithoutUsagesNestedInput
+  }
+
+  export type IntegrationUsageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    integrationId?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUsageCreateManyInput = {
+    id?: string
+    integrationId: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationUsageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUsageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    integrationId?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WaitlistCreateInput = {
     id?: string
     name: string
@@ -49125,6 +52087,12 @@ export namespace Prisma {
     none?: WaitlistWhereInput
   }
 
+  export type IntegrationListRelationFilter = {
+    every?: IntegrationWhereInput
+    some?: IntegrationWhereInput
+    none?: IntegrationWhereInput
+  }
+
   export type ActivityFeedListRelationFilter = {
     every?: ActivityFeedWhereInput
     some?: ActivityFeedWhereInput
@@ -49189,6 +52157,10 @@ export namespace Prisma {
   }
 
   export type WaitlistOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegrationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50817,6 +53789,154 @@ export namespace Prisma {
     _max?: NestedEnumFeatureRequestPriorityFilter<$PrismaModel>
   }
 
+  export type EnumIntegrationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.IntegrationType | EnumIntegrationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumIntegrationTypeFilter<$PrismaModel> | $Enums.IntegrationType
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type IntegrationUsageListRelationFilter = {
+    every?: IntegrationUsageWhereInput
+    some?: IntegrationUsageWhereInput
+    none?: IntegrationUsageWhereInput
+  }
+
+  export type IntegrationUsageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegrationCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    config?: SortOrder
+    isActive?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type IntegrationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type IntegrationMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    type?: SortOrder
+    isActive?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type EnumIntegrationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.IntegrationType | EnumIntegrationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumIntegrationTypeWithAggregatesFilter<$PrismaModel> | $Enums.IntegrationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumIntegrationTypeFilter<$PrismaModel>
+    _max?: NestedEnumIntegrationTypeFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type IntegrationScalarRelationFilter = {
+    is?: IntegrationWhereInput
+    isNot?: IntegrationWhereInput
+  }
+
+  export type IntegrationUsageCountOrderByAggregateInput = {
+    id?: SortOrder
+    integrationId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    purpose?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegrationUsageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    integrationId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    purpose?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type IntegrationUsageMinOrderByAggregateInput = {
+    id?: SortOrder
+    integrationId?: SortOrder
+    entityType?: SortOrder
+    entityId?: SortOrder
+    purpose?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type WaitlistEntryListRelationFilter = {
     every?: WaitlistEntryWhereInput
     some?: WaitlistEntryWhereInput
@@ -51270,6 +54390,13 @@ export namespace Prisma {
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
   }
 
+  export type IntegrationCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput> | IntegrationCreateWithoutCreatedByInput[] | IntegrationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutCreatedByInput | IntegrationCreateOrConnectWithoutCreatedByInput[]
+    createMany?: IntegrationCreateManyCreatedByInputEnvelope
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+  }
+
   export type ActivityFeedCreateNestedManyWithoutUserInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -51372,6 +54499,13 @@ export namespace Prisma {
     connectOrCreate?: WaitlistCreateOrConnectWithoutCreatedByInput | WaitlistCreateOrConnectWithoutCreatedByInput[]
     createMany?: WaitlistCreateManyCreatedByInputEnvelope
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
+  }
+
+  export type IntegrationUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput> | IntegrationCreateWithoutCreatedByInput[] | IntegrationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutCreatedByInput | IntegrationCreateOrConnectWithoutCreatedByInput[]
+    createMany?: IntegrationCreateManyCreatedByInputEnvelope
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
   }
 
   export type ActivityFeedUncheckedCreateNestedManyWithoutUserInput = {
@@ -51577,6 +54711,20 @@ export namespace Prisma {
     update?: WaitlistUpdateWithWhereUniqueWithoutCreatedByInput | WaitlistUpdateWithWhereUniqueWithoutCreatedByInput[]
     updateMany?: WaitlistUpdateManyWithWhereWithoutCreatedByInput | WaitlistUpdateManyWithWhereWithoutCreatedByInput[]
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
+  }
+
+  export type IntegrationUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput> | IntegrationCreateWithoutCreatedByInput[] | IntegrationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutCreatedByInput | IntegrationCreateOrConnectWithoutCreatedByInput[]
+    upsert?: IntegrationUpsertWithWhereUniqueWithoutCreatedByInput | IntegrationUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: IntegrationCreateManyCreatedByInputEnvelope
+    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    update?: IntegrationUpdateWithWhereUniqueWithoutCreatedByInput | IntegrationUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: IntegrationUpdateManyWithWhereWithoutCreatedByInput | IntegrationUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
   }
 
   export type ActivityFeedUpdateManyWithoutUserNestedInput = {
@@ -51785,6 +54933,20 @@ export namespace Prisma {
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
   }
 
+  export type IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput> | IntegrationCreateWithoutCreatedByInput[] | IntegrationUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutCreatedByInput | IntegrationCreateOrConnectWithoutCreatedByInput[]
+    upsert?: IntegrationUpsertWithWhereUniqueWithoutCreatedByInput | IntegrationUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: IntegrationCreateManyCreatedByInputEnvelope
+    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    update?: IntegrationUpdateWithWhereUniqueWithoutCreatedByInput | IntegrationUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: IntegrationUpdateManyWithWhereWithoutCreatedByInput | IntegrationUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
+  }
+
   export type ActivityFeedUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<ActivityFeedCreateWithoutUserInput, ActivityFeedUncheckedCreateWithoutUserInput> | ActivityFeedCreateWithoutUserInput[] | ActivityFeedUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutUserInput | ActivityFeedCreateOrConnectWithoutUserInput[]
@@ -51919,6 +55081,13 @@ export namespace Prisma {
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
   }
 
+  export type IntegrationCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput> | IntegrationCreateWithoutOrganizationInput[] | IntegrationUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutOrganizationInput | IntegrationCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IntegrationCreateManyOrganizationInputEnvelope
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+  }
+
   export type ActivityFeedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<ActivityFeedCreateWithoutOrganizationInput, ActivityFeedUncheckedCreateWithoutOrganizationInput> | ActivityFeedCreateWithoutOrganizationInput[] | ActivityFeedUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: ActivityFeedCreateOrConnectWithoutOrganizationInput | ActivityFeedCreateOrConnectWithoutOrganizationInput[]
@@ -52029,6 +55198,13 @@ export namespace Prisma {
     connectOrCreate?: WaitlistCreateOrConnectWithoutOrganizationInput | WaitlistCreateOrConnectWithoutOrganizationInput[]
     createMany?: WaitlistCreateManyOrganizationInputEnvelope
     connect?: WaitlistWhereUniqueInput | WaitlistWhereUniqueInput[]
+  }
+
+  export type IntegrationUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput> | IntegrationCreateWithoutOrganizationInput[] | IntegrationUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutOrganizationInput | IntegrationCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IntegrationCreateManyOrganizationInputEnvelope
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
   }
 
   export type ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput = {
@@ -52197,6 +55373,20 @@ export namespace Prisma {
     update?: WaitlistUpdateWithWhereUniqueWithoutOrganizationInput | WaitlistUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: WaitlistUpdateManyWithWhereWithoutOrganizationInput | WaitlistUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
+  }
+
+  export type IntegrationUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput> | IntegrationCreateWithoutOrganizationInput[] | IntegrationUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutOrganizationInput | IntegrationCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IntegrationUpsertWithWhereUniqueWithoutOrganizationInput | IntegrationUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IntegrationCreateManyOrganizationInputEnvelope
+    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    update?: IntegrationUpdateWithWhereUniqueWithoutOrganizationInput | IntegrationUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IntegrationUpdateManyWithWhereWithoutOrganizationInput | IntegrationUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
   }
 
   export type ActivityFeedUpdateManyWithoutOrganizationNestedInput = {
@@ -52421,6 +55611,20 @@ export namespace Prisma {
     update?: WaitlistUpdateWithWhereUniqueWithoutOrganizationInput | WaitlistUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: WaitlistUpdateManyWithWhereWithoutOrganizationInput | WaitlistUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: WaitlistScalarWhereInput | WaitlistScalarWhereInput[]
+  }
+
+  export type IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput> | IntegrationCreateWithoutOrganizationInput[] | IntegrationUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationCreateOrConnectWithoutOrganizationInput | IntegrationCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IntegrationUpsertWithWhereUniqueWithoutOrganizationInput | IntegrationUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IntegrationCreateManyOrganizationInputEnvelope
+    set?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    disconnect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    delete?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    connect?: IntegrationWhereUniqueInput | IntegrationWhereUniqueInput[]
+    update?: IntegrationUpdateWithWhereUniqueWithoutOrganizationInput | IntegrationUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IntegrationUpdateManyWithWhereWithoutOrganizationInput | IntegrationUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
   }
 
   export type ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput = {
@@ -53892,6 +57096,96 @@ export namespace Prisma {
     update?: XOR<XOR<PublicRoadmapUpdateToOneWithWhereWithoutFeatureRequestsInput, PublicRoadmapUpdateWithoutFeatureRequestsInput>, PublicRoadmapUncheckedUpdateWithoutFeatureRequestsInput>
   }
 
+  export type OrganizationCreateNestedOneWithoutIntegrationInput = {
+    create?: XOR<OrganizationCreateWithoutIntegrationInput, OrganizationUncheckedCreateWithoutIntegrationInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIntegrationInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutIntegrationInput = {
+    create?: XOR<UserCreateWithoutIntegrationInput, UserUncheckedCreateWithoutIntegrationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntegrationInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IntegrationUsageCreateNestedManyWithoutIntegrationInput = {
+    create?: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput> | IntegrationUsageCreateWithoutIntegrationInput[] | IntegrationUsageUncheckedCreateWithoutIntegrationInput[]
+    connectOrCreate?: IntegrationUsageCreateOrConnectWithoutIntegrationInput | IntegrationUsageCreateOrConnectWithoutIntegrationInput[]
+    createMany?: IntegrationUsageCreateManyIntegrationInputEnvelope
+    connect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+  }
+
+  export type IntegrationUsageUncheckedCreateNestedManyWithoutIntegrationInput = {
+    create?: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput> | IntegrationUsageCreateWithoutIntegrationInput[] | IntegrationUsageUncheckedCreateWithoutIntegrationInput[]
+    connectOrCreate?: IntegrationUsageCreateOrConnectWithoutIntegrationInput | IntegrationUsageCreateOrConnectWithoutIntegrationInput[]
+    createMany?: IntegrationUsageCreateManyIntegrationInputEnvelope
+    connect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+  }
+
+  export type EnumIntegrationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.IntegrationType
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutIntegrationNestedInput = {
+    create?: XOR<OrganizationCreateWithoutIntegrationInput, OrganizationUncheckedCreateWithoutIntegrationInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIntegrationInput
+    upsert?: OrganizationUpsertWithoutIntegrationInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutIntegrationInput, OrganizationUpdateWithoutIntegrationInput>, OrganizationUncheckedUpdateWithoutIntegrationInput>
+  }
+
+  export type UserUpdateOneWithoutIntegrationNestedInput = {
+    create?: XOR<UserCreateWithoutIntegrationInput, UserUncheckedCreateWithoutIntegrationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIntegrationInput
+    upsert?: UserUpsertWithoutIntegrationInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIntegrationInput, UserUpdateWithoutIntegrationInput>, UserUncheckedUpdateWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageUpdateManyWithoutIntegrationNestedInput = {
+    create?: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput> | IntegrationUsageCreateWithoutIntegrationInput[] | IntegrationUsageUncheckedCreateWithoutIntegrationInput[]
+    connectOrCreate?: IntegrationUsageCreateOrConnectWithoutIntegrationInput | IntegrationUsageCreateOrConnectWithoutIntegrationInput[]
+    upsert?: IntegrationUsageUpsertWithWhereUniqueWithoutIntegrationInput | IntegrationUsageUpsertWithWhereUniqueWithoutIntegrationInput[]
+    createMany?: IntegrationUsageCreateManyIntegrationInputEnvelope
+    set?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    disconnect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    delete?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    connect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    update?: IntegrationUsageUpdateWithWhereUniqueWithoutIntegrationInput | IntegrationUsageUpdateWithWhereUniqueWithoutIntegrationInput[]
+    updateMany?: IntegrationUsageUpdateManyWithWhereWithoutIntegrationInput | IntegrationUsageUpdateManyWithWhereWithoutIntegrationInput[]
+    deleteMany?: IntegrationUsageScalarWhereInput | IntegrationUsageScalarWhereInput[]
+  }
+
+  export type IntegrationUsageUncheckedUpdateManyWithoutIntegrationNestedInput = {
+    create?: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput> | IntegrationUsageCreateWithoutIntegrationInput[] | IntegrationUsageUncheckedCreateWithoutIntegrationInput[]
+    connectOrCreate?: IntegrationUsageCreateOrConnectWithoutIntegrationInput | IntegrationUsageCreateOrConnectWithoutIntegrationInput[]
+    upsert?: IntegrationUsageUpsertWithWhereUniqueWithoutIntegrationInput | IntegrationUsageUpsertWithWhereUniqueWithoutIntegrationInput[]
+    createMany?: IntegrationUsageCreateManyIntegrationInputEnvelope
+    set?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    disconnect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    delete?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    connect?: IntegrationUsageWhereUniqueInput | IntegrationUsageWhereUniqueInput[]
+    update?: IntegrationUsageUpdateWithWhereUniqueWithoutIntegrationInput | IntegrationUsageUpdateWithWhereUniqueWithoutIntegrationInput[]
+    updateMany?: IntegrationUsageUpdateManyWithWhereWithoutIntegrationInput | IntegrationUsageUpdateManyWithWhereWithoutIntegrationInput[]
+    deleteMany?: IntegrationUsageScalarWhereInput | IntegrationUsageScalarWhereInput[]
+  }
+
+  export type IntegrationCreateNestedOneWithoutUsagesInput = {
+    create?: XOR<IntegrationCreateWithoutUsagesInput, IntegrationUncheckedCreateWithoutUsagesInput>
+    connectOrCreate?: IntegrationCreateOrConnectWithoutUsagesInput
+    connect?: IntegrationWhereUniqueInput
+  }
+
+  export type IntegrationUpdateOneRequiredWithoutUsagesNestedInput = {
+    create?: XOR<IntegrationCreateWithoutUsagesInput, IntegrationUncheckedCreateWithoutUsagesInput>
+    connectOrCreate?: IntegrationCreateOrConnectWithoutUsagesInput
+    upsert?: IntegrationUpsertWithoutUsagesInput
+    connect?: IntegrationWhereUniqueInput
+    update?: XOR<XOR<IntegrationUpdateToOneWithWhereWithoutUsagesInput, IntegrationUpdateWithoutUsagesInput>, IntegrationUncheckedUpdateWithoutUsagesInput>
+  }
+
   export type ProjectCreateNestedOneWithoutWaitlistsInput = {
     create?: XOR<ProjectCreateWithoutWaitlistsInput, ProjectUncheckedCreateWithoutWaitlistsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutWaitlistsInput
@@ -55078,6 +58372,46 @@ export namespace Prisma {
     _max?: NestedEnumFeatureRequestPriorityFilter<$PrismaModel>
   }
 
+  export type NestedEnumIntegrationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.IntegrationType | EnumIntegrationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumIntegrationTypeFilter<$PrismaModel> | $Enums.IntegrationType
+  }
+
+  export type NestedEnumIntegrationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.IntegrationType | EnumIntegrationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.IntegrationType[] | ListEnumIntegrationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumIntegrationTypeWithAggregatesFilter<$PrismaModel> | $Enums.IntegrationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumIntegrationTypeFilter<$PrismaModel>
+    _max?: NestedEnumIntegrationTypeFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type NestedEnumFeaturePhaseFilter<$PrismaModel = never> = {
     equals?: $Enums.FeaturePhase | EnumFeaturePhaseFieldRefInput<$PrismaModel>
     in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
@@ -55580,6 +58914,40 @@ export namespace Prisma {
 
   export type WaitlistCreateManyCreatedByInputEnvelope = {
     data: WaitlistCreateManyCreatedByInput | WaitlistCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IntegrationCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIntegrationInput
+    usages?: IntegrationUsageCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationUncheckedCreateWithoutCreatedByInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    usages?: IntegrationUsageUncheckedCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationCreateOrConnectWithoutCreatedByInput = {
+    where: IntegrationWhereUniqueInput
+    create: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type IntegrationCreateManyCreatedByInputEnvelope = {
+    data: IntegrationCreateManyCreatedByInput | IntegrationCreateManyCreatedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -56127,6 +59495,37 @@ export namespace Prisma {
     createdById?: StringNullableFilter<"Waitlist"> | string | null
   }
 
+  export type IntegrationUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: IntegrationWhereUniqueInput
+    update: XOR<IntegrationUpdateWithoutCreatedByInput, IntegrationUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<IntegrationCreateWithoutCreatedByInput, IntegrationUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type IntegrationUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: IntegrationWhereUniqueInput
+    data: XOR<IntegrationUpdateWithoutCreatedByInput, IntegrationUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type IntegrationUpdateManyWithWhereWithoutCreatedByInput = {
+    where: IntegrationScalarWhereInput
+    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type IntegrationScalarWhereInput = {
+    AND?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
+    OR?: IntegrationScalarWhereInput[]
+    NOT?: IntegrationScalarWhereInput | IntegrationScalarWhereInput[]
+    id?: StringFilter<"Integration"> | string
+    name?: StringFilter<"Integration"> | string
+    type?: EnumIntegrationTypeFilter<"Integration"> | $Enums.IntegrationType
+    config?: JsonFilter<"Integration">
+    isActive?: BoolFilter<"Integration"> | boolean
+    organizationId?: StringFilter<"Integration"> | string
+    createdAt?: DateTimeFilter<"Integration"> | Date | string
+    updatedAt?: DateTimeFilter<"Integration"> | Date | string
+    createdById?: StringNullableFilter<"Integration"> | string | null
+  }
+
   export type ActivityFeedUpsertWithWhereUniqueWithoutUserInput = {
     where: ActivityFeedWhereUniqueInput
     update: XOR<ActivityFeedUpdateWithoutUserInput, ActivityFeedUncheckedUpdateWithoutUserInput>
@@ -56253,6 +59652,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -56279,6 +59679,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -56321,6 +59722,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -56347,6 +59749,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -56373,6 +59776,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -56399,6 +59803,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -56441,6 +59846,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -56467,6 +59873,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -56813,6 +60220,40 @@ export namespace Prisma {
 
   export type WaitlistCreateManyOrganizationInputEnvelope = {
     data: WaitlistCreateManyOrganizationInput | WaitlistCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IntegrationCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdBy?: UserCreateNestedOneWithoutIntegrationInput
+    usages?: IntegrationUsageCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+    usages?: IntegrationUsageUncheckedCreateNestedManyWithoutIntegrationInput
+  }
+
+  export type IntegrationCreateOrConnectWithoutOrganizationInput = {
+    where: IntegrationWhereUniqueInput
+    create: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IntegrationCreateManyOrganizationInputEnvelope = {
+    data: IntegrationCreateManyOrganizationInput | IntegrationCreateManyOrganizationInput[]
     skipDuplicates?: boolean
   }
 
@@ -57216,6 +60657,22 @@ export namespace Prisma {
     data: XOR<WaitlistUpdateManyMutationInput, WaitlistUncheckedUpdateManyWithoutOrganizationInput>
   }
 
+  export type IntegrationUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: IntegrationWhereUniqueInput
+    update: XOR<IntegrationUpdateWithoutOrganizationInput, IntegrationUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<IntegrationCreateWithoutOrganizationInput, IntegrationUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IntegrationUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: IntegrationWhereUniqueInput
+    data: XOR<IntegrationUpdateWithoutOrganizationInput, IntegrationUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type IntegrationUpdateManyWithWhereWithoutOrganizationInput = {
+    where: IntegrationScalarWhereInput
+    data: XOR<IntegrationUpdateManyMutationInput, IntegrationUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
   export type ActivityFeedUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: ActivityFeedWhereUniqueInput
     update: XOR<ActivityFeedUpdateWithoutOrganizationInput, ActivityFeedUncheckedUpdateWithoutOrganizationInput>
@@ -57413,6 +60870,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -57437,6 +60895,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57473,6 +60932,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -57499,6 +60959,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -57534,6 +60995,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -57558,6 +61020,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57600,6 +61063,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -57626,6 +61090,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -57645,6 +61110,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -57669,6 +61135,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -57705,6 +61172,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -57731,6 +61199,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -57766,6 +61235,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -57790,6 +61260,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -57832,6 +61303,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -57858,6 +61330,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -57884,6 +61357,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -57910,6 +61384,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -57952,6 +61427,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -57978,6 +61454,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -58004,6 +61481,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -58030,6 +61508,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -58072,6 +61551,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -58098,6 +61578,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -58117,6 +61598,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -58141,6 +61623,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -58177,6 +61660,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -58203,6 +61687,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -58238,6 +61723,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -58262,6 +61748,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -58304,6 +61791,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -58330,6 +61818,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -58388,6 +61877,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -58412,6 +61902,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -58506,6 +61997,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -58532,6 +62024,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -58862,6 +62355,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -58886,6 +62380,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -58944,6 +62439,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -58970,6 +62466,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -59097,6 +62594,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -59123,6 +62621,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -59147,6 +62646,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -59171,6 +62671,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -59278,6 +62779,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -59304,6 +62806,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -59334,6 +62837,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -59358,6 +62862,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -59398,6 +62903,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -59422,6 +62928,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -59552,6 +63059,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -59578,6 +63086,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -59836,6 +63345,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -59860,6 +63370,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -60008,6 +63519,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -60034,6 +63546,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -60212,6 +63725,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -60236,6 +63750,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -60382,6 +63897,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -60406,6 +63922,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -60548,6 +64065,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -60572,6 +64090,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -60665,6 +64184,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -60689,6 +64209,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -60826,6 +64347,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -60850,6 +64372,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -60886,6 +64409,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -60912,6 +64436,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -61008,6 +64533,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -61032,6 +64558,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -61074,6 +64601,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -61100,6 +64628,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -61120,6 +64649,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
@@ -61144,6 +64674,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
@@ -61180,6 +64711,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
@@ -61206,6 +64738,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
@@ -61241,6 +64774,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
@@ -61265,6 +64799,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -61307,6 +64842,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
@@ -61333,6 +64869,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
@@ -62495,6 +66032,370 @@ export namespace Prisma {
     changelogs?: RoadmapChangelogUncheckedUpdateManyWithoutRoadmapNestedInput
   }
 
+  export type OrganizationCreateWithoutIntegrationInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutIntegrationInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutIntegrationInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutIntegrationInput, OrganizationUncheckedCreateWithoutIntegrationInput>
+  }
+
+  export type UserCreateWithoutIntegrationInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    members?: MemberCreateNestedManyWithoutUserInput
+    invitations?: InvitationCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionCreateNestedOneWithoutUserInput
+    project?: ProjectCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaCreateNestedManyWithoutOwnerInput
+    issue?: IssueCreateNestedManyWithoutAssignedToInput
+    asset?: AssetCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
+    feature?: FeatureCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutIntegrationInput = {
+    id: string
+    name: string
+    email: string
+    emailVerified: boolean
+    image?: string | null
+    role?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    twoFactorEnabled?: boolean | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    members?: MemberUncheckedCreateNestedManyWithoutUserInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutUserInput
+    passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
+    twofactors?: TwoFactorUncheckedCreateNestedManyWithoutUserInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutUserInput
+    project?: ProjectUncheckedCreateNestedManyWithoutCreatedByInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
+    issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
+    asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutIntegrationInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutIntegrationInput, UserUncheckedCreateWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageCreateWithoutIntegrationInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationUsageUncheckedCreateWithoutIntegrationInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationUsageCreateOrConnectWithoutIntegrationInput = {
+    where: IntegrationUsageWhereUniqueInput
+    create: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageCreateManyIntegrationInputEnvelope = {
+    data: IntegrationUsageCreateManyIntegrationInput | IntegrationUsageCreateManyIntegrationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutIntegrationInput = {
+    update: XOR<OrganizationUpdateWithoutIntegrationInput, OrganizationUncheckedUpdateWithoutIntegrationInput>
+    create: XOR<OrganizationCreateWithoutIntegrationInput, OrganizationUncheckedCreateWithoutIntegrationInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutIntegrationInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutIntegrationInput, OrganizationUncheckedUpdateWithoutIntegrationInput>
+  }
+
+  export type OrganizationUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type UserUpsertWithoutIntegrationInput = {
+    update: XOR<UserUpdateWithoutIntegrationInput, UserUncheckedUpdateWithoutIntegrationInput>
+    create: XOR<UserCreateWithoutIntegrationInput, UserUncheckedCreateWithoutIntegrationInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutIntegrationInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutIntegrationInput, UserUncheckedUpdateWithoutIntegrationInput>
+  }
+
+  export type UserUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    members?: MemberUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUpdateOneWithoutUserNestedInput
+    project?: ProjectUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    twoFactorEnabled?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    members?: MemberUncheckedUpdateManyWithoutUserNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutUserNestedInput
+    passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
+    twofactors?: TwoFactorUncheckedUpdateManyWithoutUserNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutCreatedByNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type IntegrationUsageUpsertWithWhereUniqueWithoutIntegrationInput = {
+    where: IntegrationUsageWhereUniqueInput
+    update: XOR<IntegrationUsageUpdateWithoutIntegrationInput, IntegrationUsageUncheckedUpdateWithoutIntegrationInput>
+    create: XOR<IntegrationUsageCreateWithoutIntegrationInput, IntegrationUsageUncheckedCreateWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageUpdateWithWhereUniqueWithoutIntegrationInput = {
+    where: IntegrationUsageWhereUniqueInput
+    data: XOR<IntegrationUsageUpdateWithoutIntegrationInput, IntegrationUsageUncheckedUpdateWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageUpdateManyWithWhereWithoutIntegrationInput = {
+    where: IntegrationUsageScalarWhereInput
+    data: XOR<IntegrationUsageUpdateManyMutationInput, IntegrationUsageUncheckedUpdateManyWithoutIntegrationInput>
+  }
+
+  export type IntegrationUsageScalarWhereInput = {
+    AND?: IntegrationUsageScalarWhereInput | IntegrationUsageScalarWhereInput[]
+    OR?: IntegrationUsageScalarWhereInput[]
+    NOT?: IntegrationUsageScalarWhereInput | IntegrationUsageScalarWhereInput[]
+    id?: StringFilter<"IntegrationUsage"> | string
+    integrationId?: StringFilter<"IntegrationUsage"> | string
+    entityType?: StringFilter<"IntegrationUsage"> | string
+    entityId?: StringFilter<"IntegrationUsage"> | string
+    purpose?: StringFilter<"IntegrationUsage"> | string
+    isActive?: BoolFilter<"IntegrationUsage"> | boolean
+    createdAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+    updatedAt?: DateTimeFilter<"IntegrationUsage"> | Date | string
+  }
+
+  export type IntegrationCreateWithoutUsagesInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutIntegrationInput
+    createdBy?: UserCreateNestedOneWithoutIntegrationInput
+  }
+
+  export type IntegrationUncheckedCreateWithoutUsagesInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type IntegrationCreateOrConnectWithoutUsagesInput = {
+    where: IntegrationWhereUniqueInput
+    create: XOR<IntegrationCreateWithoutUsagesInput, IntegrationUncheckedCreateWithoutUsagesInput>
+  }
+
+  export type IntegrationUpsertWithoutUsagesInput = {
+    update: XOR<IntegrationUpdateWithoutUsagesInput, IntegrationUncheckedUpdateWithoutUsagesInput>
+    create: XOR<IntegrationCreateWithoutUsagesInput, IntegrationUncheckedCreateWithoutUsagesInput>
+    where?: IntegrationWhereInput
+  }
+
+  export type IntegrationUpdateToOneWithWhereWithoutUsagesInput = {
+    where?: IntegrationWhereInput
+    data: XOR<IntegrationUpdateWithoutUsagesInput, IntegrationUncheckedUpdateWithoutUsagesInput>
+  }
+
+  export type IntegrationUpdateWithoutUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationNestedInput
+    createdBy?: UserUpdateOneWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateWithoutUsagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type ProjectCreateWithoutWaitlistsInput = {
     id?: string
     name: string
@@ -62564,6 +66465,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOrganizationInput
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -62588,6 +66490,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -62624,6 +66527,7 @@ export namespace Prisma {
     idea?: IdeaCreateNestedManyWithoutOwnerInput
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
@@ -62650,6 +66554,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedCreateNestedManyWithoutOwnerInput
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
@@ -62800,6 +66705,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -62824,6 +66730,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -62866,6 +66773,7 @@ export namespace Prisma {
     idea?: IdeaUpdateManyWithoutOwnerNestedInput
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
@@ -62892,6 +66800,7 @@ export namespace Prisma {
     idea?: IdeaUncheckedUpdateManyWithoutOwnerNestedInput
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
@@ -63145,6 +67054,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
@@ -63169,6 +67079,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
@@ -63205,6 +67116,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     milestone?: MilestoneCreateNestedManyWithoutOwnerInput
   }
@@ -63231,6 +67143,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOwnerInput
   }
@@ -63545,6 +67458,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
@@ -63569,6 +67483,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -63611,6 +67526,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     milestone?: MilestoneUpdateManyWithoutOwnerNestedInput
   }
@@ -63637,6 +67553,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     milestone?: MilestoneUncheckedUpdateManyWithoutOwnerNestedInput
   }
@@ -63826,6 +67743,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
@@ -63850,6 +67768,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
@@ -63992,6 +67911,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
@@ -64016,6 +67936,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -64154,6 +68075,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -64178,6 +68100,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -64269,6 +68192,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -64293,6 +68217,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -64429,6 +68354,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -64453,6 +68379,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -64489,6 +68416,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutAssignedToInput
     asset?: AssetCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutUserInput
     feature?: FeatureCreateNestedManyWithoutAssignedToInput
   }
@@ -64515,6 +68443,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutAssignedToInput
     asset?: AssetUncheckedCreateNestedManyWithoutUploadedByInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutCreatedByInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutCreatedByInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutUserInput
     feature?: FeatureUncheckedCreateNestedManyWithoutAssignedToInput
   }
@@ -64773,6 +68702,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -64797,6 +68727,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -64839,6 +68770,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutUserNestedInput
     feature?: FeatureUpdateManyWithoutAssignedToNestedInput
   }
@@ -64865,6 +68797,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutAssignedToNestedInput
     asset?: AssetUncheckedUpdateManyWithoutUploadedByNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutCreatedByNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutCreatedByNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutUserNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutAssignedToNestedInput
   }
@@ -64948,6 +68881,7 @@ export namespace Prisma {
     issue?: IssueCreateNestedManyWithoutOrganizationInput
     asset?: AssetCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
@@ -64972,6 +68906,7 @@ export namespace Prisma {
     issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
     asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
     waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
     activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
     feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
     featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
@@ -65090,6 +69025,7 @@ export namespace Prisma {
     issue?: IssueUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
@@ -65114,6 +69050,7 @@ export namespace Prisma {
     issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
     asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
     waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
     activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
     feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
     featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -65363,6 +69300,17 @@ export namespace Prisma {
     showPosition: boolean
     showSocialProof: boolean
     customMessage?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationCreateManyCreatedByInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
     organizationId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -65904,6 +69852,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntegrationUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationNestedInput
+    usages?: IntegrationUsageUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usages?: IntegrationUsageUncheckedUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ActivityFeedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     type?: EnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType
@@ -66171,6 +70154,17 @@ export namespace Prisma {
     showPosition: boolean
     showSocialProof: boolean
     customMessage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdById?: string | null
+  }
+
+  export type IntegrationCreateManyOrganizationInput = {
+    id?: string
+    name: string
+    type: $Enums.IntegrationType
+    config: JsonNullValueInput | InputJsonValue
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     createdById?: string | null
@@ -66634,6 +70628,41 @@ export namespace Prisma {
     showPosition?: BoolFieldUpdateOperationsInput | boolean
     showSocialProof?: BoolFieldUpdateOperationsInput | boolean
     customMessage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type IntegrationUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneWithoutIntegrationNestedInput
+    usages?: IntegrationUsageUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    usages?: IntegrationUsageUncheckedUpdateManyWithoutIntegrationNestedInput
+  }
+
+  export type IntegrationUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumIntegrationTypeFieldUpdateOperationsInput | $Enums.IntegrationType
+    config?: JsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
@@ -67953,6 +71982,46 @@ export namespace Prisma {
     convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
     conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUsageCreateManyIntegrationInput = {
+    id?: string
+    entityType: string
+    entityId: string
+    purpose: string
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IntegrationUsageUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUsageUncheckedUpdateWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IntegrationUsageUncheckedUpdateManyWithoutIntegrationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    entityType?: StringFieldUpdateOperationsInput | string
+    entityId?: StringFieldUpdateOperationsInput | string
+    purpose?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WaitlistEntryCreateManyWaitlistInput = {

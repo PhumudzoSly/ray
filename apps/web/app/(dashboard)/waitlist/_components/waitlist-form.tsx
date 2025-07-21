@@ -7,12 +7,20 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Switch } from "@workspace/ui/components/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { Badge } from "@workspace/ui/components/badge";
-import { Code, Copy, ExternalLink, Key, Settings, Users } from "lucide-react";
+import { Copy, Key, Mail } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
+import { IntegrationLinker } from "@/components/shared/integration-linker";
 
 type FormState = {
   name: string;
@@ -24,6 +32,8 @@ type FormState = {
   showPosition: boolean;
   showSocialProof: boolean;
   customMessage: string;
+  emailSyncEnabled: boolean;
+  emailIntegrationId: string | null;
 };
 
 interface WaitlistFormProps {
@@ -90,6 +100,8 @@ export default function WaitlistForm({
     showPosition: true,
     showSocialProof: true,
     customMessage: "",
+    emailSyncEnabled: false,
+    emailIntegrationId: null,
   });
 
   // Populate form when editing
@@ -105,6 +117,8 @@ export default function WaitlistForm({
         showPosition: initialData.showPosition,
         showSocialProof: initialData.showSocialProof,
         customMessage: initialData.customMessage || "",
+        emailSyncEnabled: (initialData as any).emailSyncEnabled || false,
+        emailIntegrationId: (initialData as any).emailIntegrationId || null,
       });
     }
   }, [mode, initialData]);
@@ -438,6 +452,60 @@ export default function WaitlistForm({
           </div>
         </div>
 
+        <div className="space-y-4">
+          <div className="text-sm font-medium flex items-center gap-2">
+            <Mail className="h-4 w-4" />
+            Email Sync
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between py-2">
+              <div>
+                <div className="text-sm">Enable Email Sync</div>
+                <div className="text-xs text-muted-foreground">
+                  Automatically sync waitlist subscribers to your email platform
+                </div>
+              </div>
+              <Switch
+                checked={form.emailSyncEnabled}
+                onCheckedChange={(emailSyncEnabled) =>
+                  setForm({ ...form, emailSyncEnabled })
+                }
+              />
+            </div>
+
+            {form.emailSyncEnabled && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Email Integration</label>
+                <Select
+                  value={form.emailIntegrationId || ""}
+                  onValueChange={(integrationId) =>
+                    setForm({
+                      ...form,
+                      emailIntegrationId: integrationId || null,
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an email integration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <IntegrationOptions />
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  <a
+                    href="/settings/integrations"
+                    className="text-primary hover:underline"
+                  >
+                    Manage integrations
+                  </a>{" "}
+                  to connect your email platform
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="flex items-center justify-end gap-3 pt-4 border-t">
           <Button
             variant="outline"
@@ -467,6 +535,51 @@ export default function WaitlistForm({
     <>
       <div className="flex-1">{mainContent}</div>
       <div className="w-80 border-l bg-muted/30">{apiDocsContent}</div>
+    </>
+  );
+}
+function IntegrationOptions() {
+  // Use useQuery to fetch integrations for email_sync
+  const { data, isLoading, isError } =
+    require("@tanstack/react-query").useQuery({
+      queryKey: ["integrations", "email_sync"],
+      queryFn: async () => {
+        // Replace with your actual fetch logic
+        const res = await fetch("/api/integrations?purpose=email_sync");
+        if (!res.ok) throw new Error("Failed to fetch integrations");
+        return res.json();
+      },
+    });
+
+  if (isLoading) {
+    return (
+      <SelectItem value="" disabled>
+        Loading...
+      </SelectItem>
+    );
+  }
+
+  if (
+    isError ||
+    !data ||
+    !data.success ||
+    !data.data ||
+    data.data.length === 0
+  ) {
+    return (
+      <SelectItem value="" disabled>
+        No email integrations found
+      </SelectItem>
+    );
+  }
+
+  return (
+    <>
+      {data.data.map((integration: any) => (
+        <SelectItem key={integration.id} value={integration.id}>
+          {integration.name}
+        </SelectItem>
+      ))}
     </>
   );
 }

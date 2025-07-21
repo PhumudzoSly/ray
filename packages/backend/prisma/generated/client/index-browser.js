@@ -446,6 +446,29 @@ exports.Prisma.FeatureRequestScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.IntegrationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  config: 'config',
+  isActive: 'isActive',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  createdById: 'createdById'
+};
+
+exports.Prisma.IntegrationUsageScalarFieldEnum = {
+  id: 'id',
+  integrationId: 'integrationId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  purpose: 'purpose',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WaitlistScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -548,6 +571,10 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -556,6 +583,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.ProjectPlatform = exports.$Enums.ProjectPlatform = {
   web: 'web',
@@ -689,6 +722,14 @@ exports.FeatureRequestPriority = exports.$Enums.FeatureRequestPriority = {
   urgent: 'urgent'
 };
 
+exports.IntegrationType = exports.$Enums.IntegrationType = {
+  RESEND: 'RESEND',
+  LOOPS: 'LOOPS',
+  SENDGRID: 'SENDGRID',
+  MAILCHIMP: 'MAILCHIMP',
+  CONVERTKIT: 'CONVERTKIT'
+};
+
 exports.FeaturePhase = exports.$Enums.FeaturePhase = {
   DISCOVERY: 'DISCOVERY',
   PLANNING: 'PLANNING',
@@ -734,6 +775,8 @@ exports.Prisma.ModelName = {
   RoadmapFeedback: 'RoadmapFeedback',
   RoadmapChangelog: 'RoadmapChangelog',
   FeatureRequest: 'FeatureRequest',
+  Integration: 'Integration',
+  IntegrationUsage: 'IntegrationUsage',
   Waitlist: 'Waitlist',
   WaitlistEntry: 'WaitlistEntry',
   Feature: 'Feature',

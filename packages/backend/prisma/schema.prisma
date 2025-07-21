@@ -40,6 +40,7 @@ model User {
   issue        Issue[]        @relation("AssignedIssues")
   asset        Asset[]        @relation("UploadedAssets")
   waitlist     Waitlist[]     @relation("CreatedWaitlists")
+  integration  Integration[]  @relation("CreatedIntegrations")
   activityFeed ActivityFeed[]
   feature      Feature[]
   milestone    Milestone[]    @relation("MilestoneOwner")
@@ -115,6 +116,7 @@ model Organization {
   issue               Issue[]
   asset               Asset[]
   waitlist            Waitlist[]
+  integration         Integration[]
   activityFeed        ActivityFeed[]
   feature             Feature[]
   featureDependency   FeatureDependency[]
@@ -549,6 +551,41 @@ model FeatureRequest {
   @@index([roadmapId, status])
 }
 
+model Integration {
+  id             String             @id @default(uuid())
+  name           String
+  type           IntegrationType
+  config         Json
+  isActive       Boolean            @default(true)
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  createdBy      User?              @relation("CreatedIntegrations", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById    String?
+  usages         IntegrationUsage[]
+
+  @@index([organizationId])
+  @@map("integration")
+}
+
+model IntegrationUsage {
+  id            String      @id @default(uuid())
+  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  integrationId String
+  entityType    String // e.g., "waitlist", "project", "organization"
+  entityId      String // ID of the entity (waitlistId, projectId, etc.)
+  purpose       String // e.g., "email_sync", "analytics", "webhook", etc.
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([integrationId])
+  @@index([entityType, entityId])
+  @@index([entityType, entityId, purpose])
+  @@map("integration_usage")
+}
+
 model Waitlist {
   id               String          @id @default(uuid())
   project          Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -926,4 +963,12 @@ enum MilestoneStatus {
   AT_RISK
   COMPLETED
   DELAYED
+}
+
+enum IntegrationType {
+  RESEND
+  LOOPS
+  SENDGRID
+  MAILCHIMP
+  CONVERTKIT
 }

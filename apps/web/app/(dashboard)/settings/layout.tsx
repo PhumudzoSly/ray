@@ -16,6 +16,10 @@ const sidebarNavItems = [
     href: "/settings/organization",
   },
   {
+    title: "Integrations",
+    href: "/settings/integrations",
+  },
+  {
     title: "API Keys",
     href: "/settings/api-keys",
   },

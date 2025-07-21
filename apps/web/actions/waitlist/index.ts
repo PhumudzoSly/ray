@@ -115,7 +115,7 @@ export const getAllWaitlists = async () => {
 /**
  * Update a waitlist (scoped to org)
  */
-export const updateWaitlist = async (id: string, data: Partial<{ name?: string; slug?: string; description?: string; isPublic?: boolean; allowNameCapture?: boolean; showPosition?: boolean; showSocialProof?: boolean; customMessage?: string; }>) => {
+export const updateWaitlist = async (id: string, data: Partial<{ name?: string; slug?: string; description?: string; isPublic?: boolean; allowNameCapture?: boolean; showPosition?: boolean; showSocialProof?: boolean; customMessage?: string; emailSyncEnabled?: boolean; integrationId?: string; }>) => {
     const { org } = await getSession();
     try {
         const waitlist = await prisma.waitlist.update({ where: { id, organizationId: org }, data });

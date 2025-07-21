@@ -1,9 +1,53 @@
 import { z } from 'zod';
-import type { Prisma } from '../client';
+import { Prisma } from '../client';
 
 /////////////////////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////////////////////
+
+// JSON
+//------------------------------------------------------
+
+export type NullableJsonInput = Prisma.JsonValue | null | 'JsonNull' | 'DbNull' | Prisma.NullTypes.DbNull | Prisma.NullTypes.JsonNull;
+
+export const transformJsonNull = (v?: NullableJsonInput) => {
+  if (!v || v === 'DbNull') return Prisma.DbNull;
+  if (v === 'JsonNull') return Prisma.JsonNull;
+  return v;
+};
+
+export const JsonValueSchema: z.ZodType<Prisma.JsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.literal(null),
+    z.record(z.lazy(() => JsonValueSchema.optional())),
+    z.array(z.lazy(() => JsonValueSchema)),
+  ])
+);
+
+export type JsonValueType = z.infer<typeof JsonValueSchema>;
+
+export const NullableJsonValue = z
+  .union([JsonValueSchema, z.literal('DbNull'), z.literal('JsonNull')])
+  .nullable()
+  .transform((v) => transformJsonNull(v));
+
+export type NullableJsonValueType = z.infer<typeof NullableJsonValue>;
+
+export const InputJsonValueSchema: z.ZodType<Prisma.InputJsonValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.object({ toJSON: z.function(z.tuple([]), z.any()) }),
+    z.record(z.lazy(() => z.union([InputJsonValueSchema, z.literal(null)]))),
+    z.array(z.lazy(() => z.union([InputJsonValueSchema, z.literal(null)]))),
+  ])
+);
+
+export type InputJsonValueType = z.infer<typeof InputJsonValueSchema>;
 
 
 /////////////////////////////////////////
@@ -60,6 +104,10 @@ export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','t
 
 export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','upvotes','isPublic','adminNotes','createdAt','updatedAt']);
 
+export const IntegrationScalarFieldEnumSchema = z.enum(['id','name','type','config','isActive','organizationId','createdAt','updatedAt','createdById']);
+
+export const IntegrationUsageScalarFieldEnumSchema = z.enum(['id','integrationId','entityType','entityId','purpose','isActive','createdAt','updatedAt']);
+
 export const WaitlistScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','allowNameCapture','showPosition','showSocialProof','customMessage','organizationId','createdAt','updatedAt','createdById']);
 
 export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','referralCount','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
@@ -76,9 +124,13 @@ export const MilestoneDependencyScalarFieldEnumSchema = z.enum(['id','organizati
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
+export const JsonNullValueInputSchema = z.enum(['JsonNull',]).transform((value) => (value === 'JsonNull' ? Prisma.JsonNull : value));
+
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
 export const NullsOrderSchema = z.enum(['first','last']);
+
+export const JsonNullValueFilterSchema = z.enum(['DbNull','JsonNull','AnyNull',]).transform((value) => value === 'JsonNull' ? Prisma.JsonNull : value === 'DbNull' ? Prisma.JsonNull : value === 'AnyNull' ? Prisma.AnyNull : value);
 
 export const ActivityTypeSchema = z.enum(['CREATED','UPDATED','PHASE_CHANGED','ASSIGNED','UNASSIGNED','DEPENDENCY_ADDED','DEPENDENCY_REMOVED','LINK_ADDED','LINK_REMOVED','PARENT_CHANGED']);
 
@@ -167,6 +219,10 @@ export type FeaturePhaseType = `${z.infer<typeof FeaturePhaseSchema>}`
 export const MilestoneStatusSchema = z.enum(['NOT_STARTED','IN_PROGRESS','AT_RISK','COMPLETED','DELAYED']);
 
 export type MilestoneStatusType = `${z.infer<typeof MilestoneStatusSchema>}`
+
+export const IntegrationTypeSchema = z.enum(['RESEND','LOOPS','SENDGRID','MAILCHIMP','CONVERTKIT']);
+
+export type IntegrationTypeType = `${z.infer<typeof IntegrationTypeSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -879,6 +935,65 @@ export const FeatureRequestOptionalDefaultsSchema = FeatureRequestSchema.merge(z
 }))
 
 export type FeatureRequestOptionalDefaults = z.infer<typeof FeatureRequestOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// INTEGRATION SCHEMA
+/////////////////////////////////////////
+
+export const IntegrationSchema = z.object({
+  type: IntegrationTypeSchema,
+  id: z.string().uuid(),
+  name: z.string(),
+  config: JsonValueSchema,
+  isActive: z.boolean(),
+  organizationId: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  createdById: z.string().nullish(),
+})
+
+export type Integration = z.infer<typeof IntegrationSchema>
+
+// INTEGRATION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const IntegrationOptionalDefaultsSchema = IntegrationSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  isActive: z.boolean().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type IntegrationOptionalDefaults = z.infer<typeof IntegrationOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// INTEGRATION USAGE SCHEMA
+/////////////////////////////////////////
+
+export const IntegrationUsageSchema = z.object({
+  id: z.string().uuid(),
+  integrationId: z.string(),
+  entityType: z.string(),
+  entityId: z.string(),
+  purpose: z.string(),
+  isActive: z.boolean(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type IntegrationUsage = z.infer<typeof IntegrationUsageSchema>
+
+// INTEGRATION USAGE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const IntegrationUsageOptionalDefaultsSchema = IntegrationUsageSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  isActive: z.boolean().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type IntegrationUsageOptionalDefaults = z.infer<typeof IntegrationUsageOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // WAITLIST SCHEMA

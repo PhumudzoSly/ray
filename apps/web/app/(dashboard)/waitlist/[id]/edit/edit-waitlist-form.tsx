@@ -5,6 +5,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Loader2 } from "lucide-react";
 import WaitlistForm from "../../_components/waitlist-form";
 import * as waitlistActions from "@/actions/waitlist";
+import { getIntegrationUsage } from "@/actions/integration/usage";
 
 interface EditWaitlistFormProps {
   mode: "edit";
@@ -20,6 +21,8 @@ interface EditWaitlistFormProps {
     showPosition: boolean;
     showSocialProof: boolean;
     customMessage: string;
+    emailSyncEnabled?: boolean;
+    integrationId?: string;
   };
 }
 
@@ -44,7 +47,21 @@ export default function EditWaitlistForm({
     initialData, // Use the prefetched data
   });
 
-  if (isLoading) {
+  // Get email sync integration usage
+  const { data: emailSyncUsage, isLoading: loadingEmailSync } = useQuery({
+    queryKey: ["waitlist-email-sync", waitlistId],
+    queryFn: async () => {
+      const res = await getIntegrationUsage(
+        "waitlist",
+        waitlistId,
+        "email_sync"
+      );
+      return res.success ? res.data : null;
+    },
+    enabled: !!waitlistId,
+  });
+
+  if (isLoading || loadingEmailSync) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -83,6 +100,8 @@ export default function EditWaitlistForm({
       showPosition: waitlist.showPosition,
       showSocialProof: waitlist.showSocialProof,
       customMessage: waitlist.customMessage || "",
+      emailSyncEnabled: !!emailSyncUsage,
+      emailIntegrationId: emailSyncUsage?.integrationId || null,
     },
   });
 }
