@@ -110,7 +110,9 @@ export function AssetCard({
 
   const handlePreview = async () => {
     if (asset.type === "link") {
-      window.open(asset.url, "_blank");
+      if (asset.url) {
+        window.open(asset.url, "_blank");
+      }
     } else {
       // For file assets, open in a new tab using the storage URL
       if (asset.storageId) {

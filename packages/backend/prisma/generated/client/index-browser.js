@@ -585,7 +585,7 @@ exports.IdeaStatus = exports.$Enums.IdeaStatus = {
 exports.IssueStatus = exports.$Enums.IssueStatus = {
   BACKLOG: 'BACKLOG',
   IN_PROGRESS: 'IN_PROGRESS',
-  REVIEW: 'REVIEW',
+  IN_REVIEW: 'IN_REVIEW',
   DONE: 'DONE',
   BLOCKED: 'BLOCKED',
   CANCELLED: 'CANCELLED'
@@ -602,6 +602,8 @@ exports.IssueLabel = exports.$Enums.IssueLabel = {
   UI: 'UI',
   BUG: 'BUG',
   FEATURE: 'FEATURE',
+  IMPROVEMENT: 'IMPROVEMENT',
+  TASK: 'TASK',
   DOCUMENTATION: 'DOCUMENTATION',
   REFACTOR: 'REFACTOR',
   PERFORMANCE: 'PERFORMANCE',
@@ -692,6 +694,8 @@ exports.FeaturePhase = exports.$Enums.FeaturePhase = {
   PLANNING: 'PLANNING',
   DEVELOPMENT: 'DEVELOPMENT',
   TESTING: 'TESTING',
+  DEPLOYMENT: 'DEPLOYMENT',
+  COMPLETED: 'COMPLETED',
   RELEASE: 'RELEASE',
   LIVE: 'LIVE',
   DEPRECATED: 'DEPRECATED'

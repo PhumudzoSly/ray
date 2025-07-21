@@ -137,7 +137,7 @@ export const convertFeedbackToFeature = async (data: {
     featureName: string;
     featureDescription: string;
     priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-    phase: "DISCOVERY" | "PLANNING" | "DEVELOPMENT" | "TESTING" | "RELEASE" | "LIVE" | "DEPRECATED";
+    phase: "DISCOVERY" | "PLANNING" | "DEVELOPMENT" | "TESTING" | "DEPLOYMENT" | "COMPLETED" | "RELEASE" | "LIVE" | "DEPRECATED";
     conversionNotes?: string;
 }) => {
     const { org, userId } = await getSession();
@@ -205,8 +205,8 @@ export const convertFeedbackToIssue = async (data: {
     issueTitle: string;
     issueDescription: string;
     priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-    status: "BACKLOG" | "IN_PROGRESS" | "REVIEW" | "DONE" | "BLOCKED" | "CANCELLED";
-    label: "UI" | "BUG" | "FEATURE" | "DOCUMENTATION" | "REFACTOR" | "PERFORMANCE" | "DESIGN" | "SECURITY" | "ACCESSIBILITY" | "TESTING" | "INTERNATIONALIZATION";
+    status: "BACKLOG" | "IN_PROGRESS" | "IN_REVIEW" | "DONE" | "BLOCKED" | "CANCELLED";
+    label: "UI" | "BUG" | "FEATURE" | "IMPROVEMENT" | "TASK" | "DOCUMENTATION" | "REFACTOR" | "PERFORMANCE" | "DESIGN" | "SECURITY" | "ACCESSIBILITY" | "TESTING" | "INTERNATIONALIZATION";
     conversionNotes?: string;
 }) => {
     const { org, userId } = await getSession();

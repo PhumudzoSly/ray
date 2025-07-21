@@ -50,6 +50,12 @@ import {
   convertFeedbackToFeature,
   convertFeedbackToIssue,
 } from "@/actions/roadmap/feedback";
+import {
+  Importance,
+  IssueLabel,
+  IssueStatus,
+  FeaturePhase,
+} from "@workspace/backend/prisma/generated/client/client";
 
 interface FeedbackItem {
   id: string;
@@ -100,13 +106,8 @@ export function RoadmapFeedback({
   const [featureForm, setFeatureForm] = useState({
     name: "",
     description: "",
-    priority: "MEDIUM" as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
-    phase: "PLANNING" as
-      | "PLANNING"
-      | "DEVELOPMENT"
-      | "TESTING"
-      | "DEPLOYMENT"
-      | "COMPLETED",
+    priority: "MEDIUM" as Importance,
+    phase: "PLANNING" as FeaturePhase,
     notes: "",
   });
 
@@ -114,19 +115,9 @@ export function RoadmapFeedback({
   const [issueForm, setIssueForm] = useState({
     title: "",
     description: "",
-    priority: "MEDIUM" as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
-    status: "BACKLOG" as
-      | "BACKLOG"
-      | "IN_PROGRESS"
-      | "IN_REVIEW"
-      | "DONE"
-      | "CANCELLED",
-    label: "FEATURE" as
-      | "BUG"
-      | "FEATURE"
-      | "IMPROVEMENT"
-      | "TASK"
-      | "DOCUMENTATION",
+    priority: "MEDIUM" as Importance,
+    status: "BACKLOG" as IssueStatus,
+    label: "FEATURE" as IssueLabel,
     notes: "",
   });
 
@@ -176,7 +167,7 @@ export function RoadmapFeedback({
         if (result.success) {
           toast.success("Feedback converted to feature successfully!");
         } else {
-          toast.error(result.error || "Failed to convert feedback");
+          toast.error("Failed to convert feedback");
         }
       } else {
         if (!issueForm.title) {
@@ -197,7 +188,7 @@ export function RoadmapFeedback({
         if (result.success) {
           toast.success("Feedback converted to issue successfully!");
         } else {
-          toast.error(result.error || "Failed to convert feedback");
+          toast.error("Failed to convert feedback");
         }
       }
 
@@ -223,7 +214,7 @@ export function RoadmapFeedback({
         );
         onRefresh?.();
       } else {
-        toast.error(result.error || "Failed to moderate feedback");
+        toast.error("Failed to moderate feedback");
       }
     } catch (error) {
       toast.error("Failed to moderate feedback");
@@ -669,6 +660,7 @@ export function RoadmapFeedback({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="DISCOVERY">Discovery</SelectItem>
                           <SelectItem value="PLANNING">Planning</SelectItem>
                           <SelectItem value="DEVELOPMENT">
                             Development
@@ -676,6 +668,9 @@ export function RoadmapFeedback({
                           <SelectItem value="TESTING">Testing</SelectItem>
                           <SelectItem value="DEPLOYMENT">Deployment</SelectItem>
                           <SelectItem value="COMPLETED">Completed</SelectItem>
+                          <SelectItem value="RELEASE">Release</SelectItem>
+                          <SelectItem value="LIVE">Live</SelectItem>
+                          <SelectItem value="DEPRECATED">Deprecated</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -766,6 +761,7 @@ export function RoadmapFeedback({
                           </SelectItem>
                           <SelectItem value="IN_REVIEW">In Review</SelectItem>
                           <SelectItem value="DONE">Done</SelectItem>
+                          <SelectItem value="BLOCKED">Blocked</SelectItem>
                           <SelectItem value="CANCELLED">Cancelled</SelectItem>
                         </SelectContent>
                       </Select>
@@ -783,6 +779,7 @@ export function RoadmapFeedback({
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="UI">UI</SelectItem>
                           <SelectItem value="BUG">Bug</SelectItem>
                           <SelectItem value="FEATURE">Feature</SelectItem>
                           <SelectItem value="IMPROVEMENT">
@@ -791,6 +788,19 @@ export function RoadmapFeedback({
                           <SelectItem value="TASK">Task</SelectItem>
                           <SelectItem value="DOCUMENTATION">
                             Documentation
+                          </SelectItem>
+                          <SelectItem value="REFACTOR">Refactor</SelectItem>
+                          <SelectItem value="PERFORMANCE">
+                            Performance
+                          </SelectItem>
+                          <SelectItem value="DESIGN">Design</SelectItem>
+                          <SelectItem value="SECURITY">Security</SelectItem>
+                          <SelectItem value="ACCESSIBILITY">
+                            Accessibility
+                          </SelectItem>
+                          <SelectItem value="TESTING">Testing</SelectItem>
+                          <SelectItem value="INTERNATIONALIZATION">
+                            Internationalization
                           </SelectItem>
                         </SelectContent>
                       </Select>

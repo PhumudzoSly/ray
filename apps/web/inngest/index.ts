@@ -1,22 +1,19 @@
-import { Inngest } from "inngest";
+import { inngest } from "inngest";
 import { prisma } from "@workspace/backend";
 
-export const inngest = new Inngest({ id: "rayai" });
+export const inngestClient = inngest;
 
 // Background task for idea validation
-export const validateIdea = inngest.createFunction(
+export const validateIdea = inngestClient.createFunction(
     { name: "Validate Idea" },
     { event: "idea/validate" },
-    async ({ event, step }) => {
+    async ({ event, step }: { event: any; step: any }) => {
         const { ideaId } = event.data;
 
         // Step 1: Fetch idea data
         const idea = await step.run("fetch-idea", async () => {
             const idea = await prisma.idea.findUnique({
                 where: { id: ideaId },
-                include: {
-                    aiOverallValidation: true,
-                },
             });
 
             if (!idea) {
@@ -56,35 +53,7 @@ export const validateIdea = inngest.createFunction(
                 where: { id: ideaId },
                 data: {
                     status,
-                    aiOverallValidation: {
-                        upsert: {
-                            create: {
-                                overallRating: validationResults.overallScore,
-                                overallComment: validationResults.recommendation,
-                                lastValidated: new Date(),
-                                marketSize: validationResults.marketSize,
-                                competitorAnalysis: validationResults.competitorAnalysis,
-                                customerFit: validationResults.customerFit,
-                                feasibility: validationResults.feasibility,
-                                financials: validationResults.financials,
-                                userStories: validationResults.userStories,
-                            },
-                            update: {
-                                overallRating: validationResults.overallScore,
-                                overallComment: validationResults.recommendation,
-                                lastValidated: new Date(),
-                                marketSize: validationResults.marketSize,
-                                competitorAnalysis: validationResults.competitorAnalysis,
-                                customerFit: validationResults.customerFit,
-                                feasibility: validationResults.feasibility,
-                                financials: validationResults.financials,
-                                userStories: validationResults.userStories,
-                            },
-                        },
-                    },
-                },
-                include: {
-                    aiOverallValidation: true,
+                    aiOverallValidation: validationResults.overallScore,
                 },
             });
 

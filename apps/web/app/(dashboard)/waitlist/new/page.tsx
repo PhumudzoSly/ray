@@ -5,7 +5,7 @@ import { ExpandedLayoutContainer } from "@/components/expanded-layout-container"
 import WaitlistForm from "../_components/waitlist-form";
 
 export default function NewWaitlistPage() {
-  const { mainContent, apiDocsContent } = WaitlistForm({
+  const waitlistFormContent = WaitlistForm({
     mode: "create",
   });
 
@@ -19,9 +19,7 @@ export default function NewWaitlistPage() {
       >
         <></>
       </Header>
-      <ExpandedLayoutContainer sidebar={apiDocsContent}>
-        {mainContent}
-      </ExpandedLayoutContainer>
+      {waitlistFormContent}
     </>
   );
 }

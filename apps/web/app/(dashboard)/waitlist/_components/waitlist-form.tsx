@@ -463,5 +463,10 @@ export default function WaitlistForm({
     </div>
   );
 
-  return { mainContent, apiDocsContent };
+  return (
+    <>
+      <div className="flex-1">{mainContent}</div>
+      <div className="w-80 border-l bg-muted/30">{apiDocsContent}</div>
+    </>
+  );
 }

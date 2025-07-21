@@ -112,11 +112,11 @@ export const ProjectStatusSchema = z.enum(['planning','in_progress','review','co
 
 export type ProjectStatusType = `${z.infer<typeof ProjectStatusSchema>}`
 
-export const IssueStatusSchema = z.enum(['BACKLOG','IN_PROGRESS','REVIEW','DONE','BLOCKED','CANCELLED']);
+export const IssueStatusSchema = z.enum(['BACKLOG','IN_PROGRESS','IN_REVIEW','DONE','BLOCKED','CANCELLED']);
 
 export type IssueStatusType = `${z.infer<typeof IssueStatusSchema>}`
 
-export const IssueLabelSchema = z.enum(['UI','BUG','FEATURE','DOCUMENTATION','REFACTOR','PERFORMANCE','DESIGN','SECURITY','ACCESSIBILITY','TESTING','INTERNATIONALIZATION']);
+export const IssueLabelSchema = z.enum(['UI','BUG','FEATURE','IMPROVEMENT','TASK','DOCUMENTATION','REFACTOR','PERFORMANCE','DESIGN','SECURITY','ACCESSIBILITY','TESTING','INTERNATIONALIZATION']);
 
 export type IssueLabelType = `${z.infer<typeof IssueLabelSchema>}`
 
@@ -160,7 +160,7 @@ export const FeatureRequestPrioritySchema = z.enum(['low','medium','high','urgen
 
 export type FeatureRequestPriorityType = `${z.infer<typeof FeatureRequestPrioritySchema>}`
 
-export const FeaturePhaseSchema = z.enum(['DISCOVERY','PLANNING','DEVELOPMENT','TESTING','RELEASE','LIVE','DEPRECATED']);
+export const FeaturePhaseSchema = z.enum(['DISCOVERY','PLANNING','DEVELOPMENT','TESTING','DEPLOYMENT','COMPLETED','RELEASE','LIVE','DEPRECATED']);
 
 export type FeaturePhaseType = `${z.infer<typeof FeaturePhaseSchema>}`
 

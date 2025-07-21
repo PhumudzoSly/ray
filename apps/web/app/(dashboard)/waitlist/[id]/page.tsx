@@ -20,7 +20,14 @@ export default async function WaitlistPage({ params }: WaitlistPageProps) {
 
   // Fetch waitlist entries
   const entriesResult = await getAllWaitlistEntries(id);
-  const entries = entriesResult.success ? (entriesResult.data ?? []) : [];
+  const entries = entriesResult.success
+    ? (entriesResult.data ?? []).map((entry) => ({
+        ...entry,
+        name: entry.name ?? undefined,
+        createdAt: entry.createdAt.toISOString(),
+        updatedAt: entry.updatedAt.toISOString(),
+      }))
+    : [];
 
   // Fetch analytics
   const analyticsResult = await getWaitlistAnalytics(id);

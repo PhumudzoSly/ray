@@ -268,7 +268,7 @@ export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
 export const IssueStatus: {
   BACKLOG: 'BACKLOG',
   IN_PROGRESS: 'IN_PROGRESS',
-  REVIEW: 'REVIEW',
+  IN_REVIEW: 'IN_REVIEW',
   DONE: 'DONE',
   BLOCKED: 'BLOCKED',
   CANCELLED: 'CANCELLED'
@@ -281,6 +281,8 @@ export const IssueLabel: {
   UI: 'UI',
   BUG: 'BUG',
   FEATURE: 'FEATURE',
+  IMPROVEMENT: 'IMPROVEMENT',
+  TASK: 'TASK',
   DOCUMENTATION: 'DOCUMENTATION',
   REFACTOR: 'REFACTOR',
   PERFORMANCE: 'PERFORMANCE',
@@ -411,6 +413,8 @@ export const FeaturePhase: {
   PLANNING: 'PLANNING',
   DEVELOPMENT: 'DEVELOPMENT',
   TESTING: 'TESTING',
+  DEPLOYMENT: 'DEPLOYMENT',
+  COMPLETED: 'COMPLETED',
   RELEASE: 'RELEASE',
   LIVE: 'LIVE',
   DEPRECATED: 'DEPRECATED'
@@ -4374,6 +4378,7 @@ export namespace Prisma {
     dependencies: number
     dependentOn: number
     links: number
+    convertedFromFeedback: number
   }
 
   export type IssueCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4381,6 +4386,7 @@ export namespace Prisma {
     dependencies?: boolean | IssueCountOutputTypeCountDependenciesArgs
     dependentOn?: boolean | IssueCountOutputTypeCountDependentOnArgs
     links?: boolean | IssueCountOutputTypeCountLinksArgs
+    convertedFromFeedback?: boolean | IssueCountOutputTypeCountConvertedFromFeedbackArgs
   }
 
   // Custom InputTypes
@@ -4420,6 +4426,13 @@ export namespace Prisma {
    */
   export type IssueCountOutputTypeCountLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IssueLinkWhereInput
+  }
+
+  /**
+   * IssueCountOutputType without action
+   */
+  export type IssueCountOutputTypeCountConvertedFromFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoadmapFeedbackWhereInput
   }
 
 
@@ -4552,6 +4565,7 @@ export namespace Prisma {
     dependencies: number
     dependentOn: number
     FeatureLink: number
+    convertedFromFeedback: number
   }
 
   export type FeatureCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4559,6 +4573,7 @@ export namespace Prisma {
     dependencies?: boolean | FeatureCountOutputTypeCountDependenciesArgs
     dependentOn?: boolean | FeatureCountOutputTypeCountDependentOnArgs
     FeatureLink?: boolean | FeatureCountOutputTypeCountFeatureLinkArgs
+    convertedFromFeedback?: boolean | FeatureCountOutputTypeCountConvertedFromFeedbackArgs
   }
 
   // Custom InputTypes
@@ -4598,6 +4613,13 @@ export namespace Prisma {
    */
   export type FeatureCountOutputTypeCountFeatureLinkArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeatureLinkWhereInput
+  }
+
+  /**
+   * FeatureCountOutputType without action
+   */
+  export type FeatureCountOutputTypeCountConvertedFromFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RoadmapFeedbackWhereInput
   }
 
 
@@ -19571,6 +19593,7 @@ export namespace Prisma {
     dependencies?: boolean | Issue$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Issue$dependentOnArgs<ExtArgs>
     links?: boolean | Issue$linksArgs<ExtArgs>
+    convertedFromFeedback?: boolean | Issue$convertedFromFeedbackArgs<ExtArgs>
     _count?: boolean | IssueCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["issue"]>
 
@@ -19655,6 +19678,7 @@ export namespace Prisma {
     dependencies?: boolean | Issue$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Issue$dependentOnArgs<ExtArgs>
     links?: boolean | Issue$linksArgs<ExtArgs>
+    convertedFromFeedback?: boolean | Issue$convertedFromFeedbackArgs<ExtArgs>
     _count?: boolean | IssueCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type IssueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19684,6 +19708,7 @@ export namespace Prisma {
       dependencies: Prisma.$IssueDependencyPayload<ExtArgs>[]
       dependentOn: Prisma.$IssueDependencyPayload<ExtArgs>[]
       links: Prisma.$IssueLinkPayload<ExtArgs>[]
+      convertedFromFeedback: Prisma.$RoadmapFeedbackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20106,6 +20131,7 @@ export namespace Prisma {
     dependencies<T extends Issue$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Issue$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dependentOn<T extends Issue$dependentOnArgs<ExtArgs> = {}>(args?: Subset<T, Issue$dependentOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     links<T extends Issue$linksArgs<ExtArgs> = {}>(args?: Subset<T, Issue$linksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    convertedFromFeedback<T extends Issue$convertedFromFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, Issue$convertedFromFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadmapFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20698,6 +20724,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: IssueLinkScalarFieldEnum | IssueLinkScalarFieldEnum[]
+  }
+
+  /**
+   * Issue.convertedFromFeedback
+   */
+  export type Issue$convertedFromFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadmapFeedback
+     */
+    select?: RoadmapFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadmapFeedback
+     */
+    omit?: RoadmapFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapFeedbackInclude<ExtArgs> | null
+    where?: RoadmapFeedbackWhereInput
+    orderBy?: RoadmapFeedbackOrderByWithRelationInput | RoadmapFeedbackOrderByWithRelationInput[]
+    cursor?: RoadmapFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoadmapFeedbackScalarFieldEnum | RoadmapFeedbackScalarFieldEnum[]
   }
 
   /**
@@ -30296,6 +30346,8 @@ export namespace Prisma {
     conversionNotes?: boolean
     createdAt?: boolean
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }, ExtArgs["result"]["roadmapFeedback"]>
 
   export type RoadmapFeedbackSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -30313,6 +30365,8 @@ export namespace Prisma {
     conversionNotes?: boolean
     createdAt?: boolean
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }, ExtArgs["result"]["roadmapFeedback"]>
 
   export type RoadmapFeedbackSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -30330,6 +30384,8 @@ export namespace Prisma {
     conversionNotes?: boolean
     createdAt?: boolean
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }, ExtArgs["result"]["roadmapFeedback"]>
 
   export type RoadmapFeedbackSelectScalar = {
@@ -30351,18 +30407,26 @@ export namespace Prisma {
   export type RoadmapFeedbackOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "roadmapItemId" | "userId" | "ipAddress" | "content" | "sentiment" | "isApproved" | "convertedToFeatureId" | "convertedToIssueId" | "convertedAt" | "convertedBy" | "conversionNotes" | "createdAt", ExtArgs["result"]["roadmapFeedback"]>
   export type RoadmapFeedbackInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }
   export type RoadmapFeedbackIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }
   export type RoadmapFeedbackIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     roadmapItem?: boolean | RoadmapItemDefaultArgs<ExtArgs>
+    convertedFeature?: boolean | RoadmapFeedback$convertedFeatureArgs<ExtArgs>
+    convertedIssue?: boolean | RoadmapFeedback$convertedIssueArgs<ExtArgs>
   }
 
   export type $RoadmapFeedbackPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "RoadmapFeedback"
     objects: {
       roadmapItem: Prisma.$RoadmapItemPayload<ExtArgs>
+      convertedFeature: Prisma.$FeaturePayload<ExtArgs> | null
+      convertedIssue: Prisma.$IssuePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -30773,6 +30837,8 @@ export namespace Prisma {
   export interface Prisma__RoadmapFeedbackClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     roadmapItem<T extends RoadmapItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoadmapItemDefaultArgs<ExtArgs>>): Prisma__RoadmapItemClient<$Result.GetResult<Prisma.$RoadmapItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    convertedFeature<T extends RoadmapFeedback$convertedFeatureArgs<ExtArgs> = {}>(args?: Subset<T, RoadmapFeedback$convertedFeatureArgs<ExtArgs>>): Prisma__FeatureClient<$Result.GetResult<Prisma.$FeaturePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    convertedIssue<T extends RoadmapFeedback$convertedIssueArgs<ExtArgs> = {}>(args?: Subset<T, RoadmapFeedback$convertedIssueArgs<ExtArgs>>): Prisma__IssueClient<$Result.GetResult<Prisma.$IssuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -31208,6 +31274,44 @@ export namespace Prisma {
      * Limit how many RoadmapFeedbacks to delete.
      */
     limit?: number
+  }
+
+  /**
+   * RoadmapFeedback.convertedFeature
+   */
+  export type RoadmapFeedback$convertedFeatureArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Feature
+     */
+    select?: FeatureSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Feature
+     */
+    omit?: FeatureOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeatureInclude<ExtArgs> | null
+    where?: FeatureWhereInput
+  }
+
+  /**
+   * RoadmapFeedback.convertedIssue
+   */
+  export type RoadmapFeedback$convertedIssueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Issue
+     */
+    select?: IssueSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Issue
+     */
+    omit?: IssueOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IssueInclude<ExtArgs> | null
+    where?: IssueWhereInput
   }
 
   /**
@@ -36396,6 +36500,7 @@ export namespace Prisma {
     dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
     FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
+    convertedFromFeedback?: boolean | Feature$convertedFromFeedbackArgs<ExtArgs>
     _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feature"]>
 
@@ -36477,6 +36582,7 @@ export namespace Prisma {
     dependencies?: boolean | Feature$dependenciesArgs<ExtArgs>
     dependentOn?: boolean | Feature$dependentOnArgs<ExtArgs>
     FeatureLink?: boolean | Feature$FeatureLinkArgs<ExtArgs>
+    convertedFromFeedback?: boolean | Feature$convertedFromFeedbackArgs<ExtArgs>
     _count?: boolean | FeatureCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type FeatureIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36506,6 +36612,7 @@ export namespace Prisma {
       dependencies: Prisma.$FeatureDependencyPayload<ExtArgs>[]
       dependentOn: Prisma.$FeatureDependencyPayload<ExtArgs>[]
       FeatureLink: Prisma.$FeatureLinkPayload<ExtArgs>[]
+      convertedFromFeedback: Prisma.$RoadmapFeedbackPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -36927,6 +37034,7 @@ export namespace Prisma {
     dependencies<T extends Feature$dependenciesArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependenciesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dependentOn<T extends Feature$dependentOnArgs<ExtArgs> = {}>(args?: Subset<T, Feature$dependentOnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     FeatureLink<T extends Feature$FeatureLinkArgs<ExtArgs> = {}>(args?: Subset<T, Feature$FeatureLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeatureLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    convertedFromFeedback<T extends Feature$convertedFromFeedbackArgs<ExtArgs> = {}>(args?: Subset<T, Feature$convertedFromFeedbackArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoadmapFeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -37518,6 +37626,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeatureLinkScalarFieldEnum | FeatureLinkScalarFieldEnum[]
+  }
+
+  /**
+   * Feature.convertedFromFeedback
+   */
+  export type Feature$convertedFromFeedbackArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RoadmapFeedback
+     */
+    select?: RoadmapFeedbackSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RoadmapFeedback
+     */
+    omit?: RoadmapFeedbackOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RoadmapFeedbackInclude<ExtArgs> | null
+    where?: RoadmapFeedbackWhereInput
+    orderBy?: RoadmapFeedbackOrderByWithRelationInput | RoadmapFeedbackOrderByWithRelationInput[]
+    cursor?: RoadmapFeedbackWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RoadmapFeedbackScalarFieldEnum | RoadmapFeedbackScalarFieldEnum[]
   }
 
   /**
@@ -43954,6 +44086,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyListRelationFilter
     dependentOn?: IssueDependencyListRelationFilter
     links?: IssueLinkListRelationFilter
+    convertedFromFeedback?: RoadmapFeedbackListRelationFilter
   }
 
   export type IssueOrderByWithRelationInput = {
@@ -43983,6 +44116,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyOrderByRelationAggregateInput
     dependentOn?: IssueDependencyOrderByRelationAggregateInput
     links?: IssueLinkOrderByRelationAggregateInput
+    convertedFromFeedback?: RoadmapFeedbackOrderByRelationAggregateInput
   }
 
   export type IssueWhereUniqueInput = Prisma.AtLeast<{
@@ -44015,6 +44149,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyListRelationFilter
     dependentOn?: IssueDependencyListRelationFilter
     links?: IssueLinkListRelationFilter
+    convertedFromFeedback?: RoadmapFeedbackListRelationFilter
   }, "id">
 
   export type IssueOrderByWithAggregationInput = {
@@ -44800,6 +44935,8 @@ export namespace Prisma {
     conversionNotes?: StringNullableFilter<"RoadmapFeedback"> | string | null
     createdAt?: DateTimeFilter<"RoadmapFeedback"> | Date | string
     roadmapItem?: XOR<RoadmapItemScalarRelationFilter, RoadmapItemWhereInput>
+    convertedFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
+    convertedIssue?: XOR<IssueNullableScalarRelationFilter, IssueWhereInput> | null
   }
 
   export type RoadmapFeedbackOrderByWithRelationInput = {
@@ -44817,6 +44954,8 @@ export namespace Prisma {
     conversionNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     roadmapItem?: RoadmapItemOrderByWithRelationInput
+    convertedFeature?: FeatureOrderByWithRelationInput
+    convertedIssue?: IssueOrderByWithRelationInput
   }
 
   export type RoadmapFeedbackWhereUniqueInput = Prisma.AtLeast<{
@@ -44837,6 +44976,8 @@ export namespace Prisma {
     conversionNotes?: StringNullableFilter<"RoadmapFeedback"> | string | null
     createdAt?: DateTimeFilter<"RoadmapFeedback"> | Date | string
     roadmapItem?: XOR<RoadmapItemScalarRelationFilter, RoadmapItemWhereInput>
+    convertedFeature?: XOR<FeatureNullableScalarRelationFilter, FeatureWhereInput> | null
+    convertedIssue?: XOR<IssueNullableScalarRelationFilter, IssueWhereInput> | null
   }, "id">
 
   export type RoadmapFeedbackOrderByWithAggregationInput = {
@@ -45334,6 +45475,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyListRelationFilter
     dependentOn?: FeatureDependencyListRelationFilter
     FeatureLink?: FeatureLinkListRelationFilter
+    convertedFromFeedback?: RoadmapFeedbackListRelationFilter
   }
 
   export type FeatureOrderByWithRelationInput = {
@@ -45362,6 +45504,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyOrderByRelationAggregateInput
     dependentOn?: FeatureDependencyOrderByRelationAggregateInput
     FeatureLink?: FeatureLinkOrderByRelationAggregateInput
+    convertedFromFeedback?: RoadmapFeedbackOrderByRelationAggregateInput
   }
 
   export type FeatureWhereUniqueInput = Prisma.AtLeast<{
@@ -45393,6 +45536,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyListRelationFilter
     dependentOn?: FeatureDependencyListRelationFilter
     FeatureLink?: FeatureLinkListRelationFilter
+    convertedFromFeedback?: RoadmapFeedbackListRelationFilter
   }, "id">
 
   export type FeatureOrderByWithAggregationInput = {
@@ -46905,6 +47049,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateInput = {
@@ -46929,6 +47074,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUpdateInput = {
@@ -46953,6 +47099,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateInput = {
@@ -46977,6 +47124,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueCreateManyInput = {
@@ -47839,13 +47987,13 @@ export namespace Prisma {
     content: string
     sentiment: $Enums.RoadmapFeedbackSentiment
     isApproved: boolean
-    convertedToFeatureId?: string | null
-    convertedToIssueId?: string | null
     convertedAt?: Date | string | null
     convertedBy?: string | null
     conversionNotes?: string | null
     createdAt: Date | string
     roadmapItem: RoadmapItemCreateNestedOneWithoutFeedbackInput
+    convertedFeature?: FeatureCreateNestedOneWithoutConvertedFromFeedbackInput
+    convertedIssue?: IssueCreateNestedOneWithoutConvertedFromFeedbackInput
   }
 
   export type RoadmapFeedbackUncheckedCreateInput = {
@@ -47871,13 +48019,13 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
     isApproved?: BoolFieldUpdateOperationsInput | boolean
-    convertedToFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
-    convertedToIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
     conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roadmapItem?: RoadmapItemUpdateOneRequiredWithoutFeedbackNestedInput
+    convertedFeature?: FeatureUpdateOneWithoutConvertedFromFeedbackNestedInput
+    convertedIssue?: IssueUpdateOneWithoutConvertedFromFeedbackNestedInput
   }
 
   export type RoadmapFeedbackUncheckedUpdateInput = {
@@ -47919,8 +48067,6 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
     isApproved?: BoolFieldUpdateOperationsInput | boolean
-    convertedToFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
-    convertedToIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
     conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48459,6 +48605,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateInput = {
@@ -48482,6 +48629,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUpdateInput = {
@@ -48505,6 +48653,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateInput = {
@@ -48528,6 +48677,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureCreateManyInput = {
@@ -49830,6 +49980,16 @@ export namespace Prisma {
     isNot?: IssueWhereInput | null
   }
 
+  export type RoadmapFeedbackListRelationFilter = {
+    every?: RoadmapFeedbackWhereInput
+    some?: RoadmapFeedbackWhereInput
+    none?: RoadmapFeedbackWhereInput
+  }
+
+  export type RoadmapFeedbackOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type IssueCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -50354,17 +50514,7 @@ export namespace Prisma {
     none?: RoadmapVoteWhereInput
   }
 
-  export type RoadmapFeedbackListRelationFilter = {
-    every?: RoadmapFeedbackWhereInput
-    some?: RoadmapFeedbackWhereInput
-    none?: RoadmapFeedbackWhereInput
-  }
-
   export type RoadmapVoteOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type RoadmapFeedbackOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -50471,6 +50621,11 @@ export namespace Prisma {
     in?: $Enums.RoadmapFeedbackSentiment[] | ListEnumRoadmapFeedbackSentimentFieldRefInput<$PrismaModel>
     notIn?: $Enums.RoadmapFeedbackSentiment[] | ListEnumRoadmapFeedbackSentimentFieldRefInput<$PrismaModel>
     not?: NestedEnumRoadmapFeedbackSentimentFilter<$PrismaModel> | $Enums.RoadmapFeedbackSentiment
+  }
+
+  export type FeatureNullableScalarRelationFilter = {
+    is?: FeatureWhereInput | null
+    isNot?: FeatureWhereInput | null
   }
 
   export type RoadmapFeedbackCountOrderByAggregateInput = {
@@ -50812,11 +50967,6 @@ export namespace Prisma {
     in?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
     notIn?: $Enums.FeaturePhase[] | ListEnumFeaturePhaseFieldRefInput<$PrismaModel>
     not?: NestedEnumFeaturePhaseFilter<$PrismaModel> | $Enums.FeaturePhase
-  }
-
-  export type FeatureNullableScalarRelationFilter = {
-    is?: FeatureWhereInput | null
-    isNot?: FeatureWhereInput | null
   }
 
   export type FeatureCountOrderByAggregateInput = {
@@ -52965,6 +53115,13 @@ export namespace Prisma {
     connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
   }
 
+  export type RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput> | RoadmapFeedbackCreateWithoutConvertedIssueInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput | RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedIssueInputEnvelope
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+  }
+
   export type IssueUncheckedCreateNestedManyWithoutParentIssueInput = {
     create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
@@ -52991,6 +53148,13 @@ export namespace Prisma {
     connectOrCreate?: IssueLinkCreateOrConnectWithoutIssueInput | IssueLinkCreateOrConnectWithoutIssueInput[]
     createMany?: IssueLinkCreateManyIssueInputEnvelope
     connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
+  }
+
+  export type RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput> | RoadmapFeedbackCreateWithoutConvertedIssueInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput | RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedIssueInputEnvelope
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
   }
 
   export type EnumIssueStatusFieldUpdateOperationsInput = {
@@ -53107,6 +53271,20 @@ export namespace Prisma {
     deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
   }
 
+  export type RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput> | RoadmapFeedbackCreateWithoutConvertedIssueInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput | RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput[]
+    upsert?: RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedIssueInput | RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedIssueInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedIssueInputEnvelope
+    set?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    disconnect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    delete?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    update?: RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedIssueInput | RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedIssueInput[]
+    updateMany?: RoadmapFeedbackUpdateManyWithWhereWithoutConvertedIssueInput | RoadmapFeedbackUpdateManyWithWhereWithoutConvertedIssueInput[]
+    deleteMany?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
+  }
+
   export type IssueUncheckedUpdateManyWithoutParentIssueNestedInput = {
     create?: XOR<IssueCreateWithoutParentIssueInput, IssueUncheckedCreateWithoutParentIssueInput> | IssueCreateWithoutParentIssueInput[] | IssueUncheckedCreateWithoutParentIssueInput[]
     connectOrCreate?: IssueCreateOrConnectWithoutParentIssueInput | IssueCreateOrConnectWithoutParentIssueInput[]
@@ -53161,6 +53339,20 @@ export namespace Prisma {
     update?: IssueLinkUpdateWithWhereUniqueWithoutIssueInput | IssueLinkUpdateWithWhereUniqueWithoutIssueInput[]
     updateMany?: IssueLinkUpdateManyWithWhereWithoutIssueInput | IssueLinkUpdateManyWithWhereWithoutIssueInput[]
     deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput> | RoadmapFeedbackCreateWithoutConvertedIssueInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput | RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput[]
+    upsert?: RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedIssueInput | RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedIssueInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedIssueInputEnvelope
+    set?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    disconnect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    delete?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    update?: RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedIssueInput | RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedIssueInput[]
+    updateMany?: RoadmapFeedbackUpdateManyWithWhereWithoutConvertedIssueInput | RoadmapFeedbackUpdateManyWithWhereWithoutConvertedIssueInput[]
+    deleteMany?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutIssueDependencyInput = {
@@ -53602,6 +53794,18 @@ export namespace Prisma {
     connect?: RoadmapItemWhereUniqueInput
   }
 
+  export type FeatureCreateNestedOneWithoutConvertedFromFeedbackInput = {
+    create?: XOR<FeatureCreateWithoutConvertedFromFeedbackInput, FeatureUncheckedCreateWithoutConvertedFromFeedbackInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutConvertedFromFeedbackInput
+    connect?: FeatureWhereUniqueInput
+  }
+
+  export type IssueCreateNestedOneWithoutConvertedFromFeedbackInput = {
+    create?: XOR<IssueCreateWithoutConvertedFromFeedbackInput, IssueUncheckedCreateWithoutConvertedFromFeedbackInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutConvertedFromFeedbackInput
+    connect?: IssueWhereUniqueInput
+  }
+
   export type EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput = {
     set?: $Enums.RoadmapFeedbackSentiment
   }
@@ -53612,6 +53816,26 @@ export namespace Prisma {
     upsert?: RoadmapItemUpsertWithoutFeedbackInput
     connect?: RoadmapItemWhereUniqueInput
     update?: XOR<XOR<RoadmapItemUpdateToOneWithWhereWithoutFeedbackInput, RoadmapItemUpdateWithoutFeedbackInput>, RoadmapItemUncheckedUpdateWithoutFeedbackInput>
+  }
+
+  export type FeatureUpdateOneWithoutConvertedFromFeedbackNestedInput = {
+    create?: XOR<FeatureCreateWithoutConvertedFromFeedbackInput, FeatureUncheckedCreateWithoutConvertedFromFeedbackInput>
+    connectOrCreate?: FeatureCreateOrConnectWithoutConvertedFromFeedbackInput
+    upsert?: FeatureUpsertWithoutConvertedFromFeedbackInput
+    disconnect?: FeatureWhereInput | boolean
+    delete?: FeatureWhereInput | boolean
+    connect?: FeatureWhereUniqueInput
+    update?: XOR<XOR<FeatureUpdateToOneWithWhereWithoutConvertedFromFeedbackInput, FeatureUpdateWithoutConvertedFromFeedbackInput>, FeatureUncheckedUpdateWithoutConvertedFromFeedbackInput>
+  }
+
+  export type IssueUpdateOneWithoutConvertedFromFeedbackNestedInput = {
+    create?: XOR<IssueCreateWithoutConvertedFromFeedbackInput, IssueUncheckedCreateWithoutConvertedFromFeedbackInput>
+    connectOrCreate?: IssueCreateOrConnectWithoutConvertedFromFeedbackInput
+    upsert?: IssueUpsertWithoutConvertedFromFeedbackInput
+    disconnect?: IssueWhereInput | boolean
+    delete?: IssueWhereInput | boolean
+    connect?: IssueWhereUniqueInput
+    update?: XOR<XOR<IssueUpdateToOneWithWhereWithoutConvertedFromFeedbackInput, IssueUpdateWithoutConvertedFromFeedbackInput>, IssueUncheckedUpdateWithoutConvertedFromFeedbackInput>
   }
 
   export type RoadmapChangelogCreatefixesInput = {
@@ -53826,6 +54050,13 @@ export namespace Prisma {
     connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
   }
 
+  export type RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput> | RoadmapFeedbackCreateWithoutConvertedFeatureInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput | RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedFeatureInputEnvelope
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+  }
+
   export type FeatureUncheckedCreateNestedManyWithoutParentFeatureInput = {
     create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
     connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
@@ -53852,6 +54083,13 @@ export namespace Prisma {
     connectOrCreate?: FeatureLinkCreateOrConnectWithoutFeatureInput | FeatureLinkCreateOrConnectWithoutFeatureInput[]
     createMany?: FeatureLinkCreateManyFeatureInputEnvelope
     connect?: FeatureLinkWhereUniqueInput | FeatureLinkWhereUniqueInput[]
+  }
+
+  export type RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput> | RoadmapFeedbackCreateWithoutConvertedFeatureInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput | RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedFeatureInputEnvelope
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
   }
 
   export type EnumFeaturePhaseFieldUpdateOperationsInput = {
@@ -53960,6 +54198,20 @@ export namespace Prisma {
     deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
   }
 
+  export type RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput> | RoadmapFeedbackCreateWithoutConvertedFeatureInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput | RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput[]
+    upsert?: RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedFeatureInput | RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedFeatureInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedFeatureInputEnvelope
+    set?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    disconnect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    delete?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    update?: RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedFeatureInput | RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedFeatureInput[]
+    updateMany?: RoadmapFeedbackUpdateManyWithWhereWithoutConvertedFeatureInput | RoadmapFeedbackUpdateManyWithWhereWithoutConvertedFeatureInput[]
+    deleteMany?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
+  }
+
   export type FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput = {
     create?: XOR<FeatureCreateWithoutParentFeatureInput, FeatureUncheckedCreateWithoutParentFeatureInput> | FeatureCreateWithoutParentFeatureInput[] | FeatureUncheckedCreateWithoutParentFeatureInput[]
     connectOrCreate?: FeatureCreateOrConnectWithoutParentFeatureInput | FeatureCreateOrConnectWithoutParentFeatureInput[]
@@ -54014,6 +54266,20 @@ export namespace Prisma {
     update?: FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput | FeatureLinkUpdateWithWhereUniqueWithoutFeatureInput[]
     updateMany?: FeatureLinkUpdateManyWithWhereWithoutFeatureInput | FeatureLinkUpdateManyWithWhereWithoutFeatureInput[]
     deleteMany?: FeatureLinkScalarWhereInput | FeatureLinkScalarWhereInput[]
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput = {
+    create?: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput> | RoadmapFeedbackCreateWithoutConvertedFeatureInput[] | RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput[]
+    connectOrCreate?: RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput | RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput[]
+    upsert?: RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedFeatureInput | RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedFeatureInput[]
+    createMany?: RoadmapFeedbackCreateManyConvertedFeatureInputEnvelope
+    set?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    disconnect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    delete?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    connect?: RoadmapFeedbackWhereUniqueInput | RoadmapFeedbackWhereUniqueInput[]
+    update?: RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedFeatureInput | RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedFeatureInput[]
+    updateMany?: RoadmapFeedbackUpdateManyWithWhereWithoutConvertedFeatureInput | RoadmapFeedbackUpdateManyWithWhereWithoutConvertedFeatureInput[]
+    deleteMany?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutFeatureDependencyInput = {
@@ -55180,6 +55446,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutAssignedToInput = {
@@ -55203,6 +55470,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutAssignedToInput = {
@@ -55373,6 +55641,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutAssignedToInput = {
@@ -55395,6 +55664,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutAssignedToInput = {
@@ -56409,6 +56679,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutOrganizationInput = {
@@ -56432,6 +56703,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutOrganizationInput = {
@@ -56602,6 +56874,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutOrganizationInput = {
@@ -56624,6 +56897,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutOrganizationInput = {
@@ -58174,6 +58448,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutProjectInput = {
@@ -58197,6 +58472,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutProjectInput = {
@@ -58436,6 +58712,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutProjectInput = {
@@ -58458,6 +58735,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutProjectInput = {
@@ -59331,6 +59609,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutSubIssuesInput = {
@@ -59354,6 +59633,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutSubIssuesInput = {
@@ -59382,6 +59662,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutParentIssueInput = {
@@ -59405,6 +59686,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutParentIssueInput = {
@@ -59486,6 +59768,46 @@ export namespace Prisma {
 
   export type IssueLinkCreateManyIssueInputEnvelope = {
     data: IssueLinkCreateManyIssueInput | IssueLinkCreateManyIssueInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RoadmapFeedbackCreateWithoutConvertedIssueInput = {
+    id?: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+    roadmapItem: RoadmapItemCreateNestedOneWithoutFeedbackInput
+    convertedFeature?: FeatureCreateNestedOneWithoutConvertedFromFeedbackInput
+  }
+
+  export type RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput = {
+    id?: string
+    roadmapItemId: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedToFeatureId?: string | null
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+  }
+
+  export type RoadmapFeedbackCreateOrConnectWithoutConvertedIssueInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    create: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput>
+  }
+
+  export type RoadmapFeedbackCreateManyConvertedIssueInputEnvelope = {
+    data: RoadmapFeedbackCreateManyConvertedIssueInput | RoadmapFeedbackCreateManyConvertedIssueInput[]
     skipDuplicates?: boolean
   }
 
@@ -59749,6 +60071,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutSubIssuesInput = {
@@ -59772,6 +60095,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutParentIssueInput = {
@@ -59836,6 +60160,41 @@ export namespace Prisma {
   export type IssueLinkUpdateManyWithWhereWithoutIssueInput = {
     where: IssueLinkScalarWhereInput
     data: XOR<IssueLinkUpdateManyMutationInput, IssueLinkUncheckedUpdateManyWithoutIssueInput>
+  }
+
+  export type RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedIssueInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    update: XOR<RoadmapFeedbackUpdateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedUpdateWithoutConvertedIssueInput>
+    create: XOR<RoadmapFeedbackCreateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedCreateWithoutConvertedIssueInput>
+  }
+
+  export type RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedIssueInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    data: XOR<RoadmapFeedbackUpdateWithoutConvertedIssueInput, RoadmapFeedbackUncheckedUpdateWithoutConvertedIssueInput>
+  }
+
+  export type RoadmapFeedbackUpdateManyWithWhereWithoutConvertedIssueInput = {
+    where: RoadmapFeedbackScalarWhereInput
+    data: XOR<RoadmapFeedbackUpdateManyMutationInput, RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueInput>
+  }
+
+  export type RoadmapFeedbackScalarWhereInput = {
+    AND?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
+    OR?: RoadmapFeedbackScalarWhereInput[]
+    NOT?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
+    id?: StringFilter<"RoadmapFeedback"> | string
+    roadmapItemId?: StringFilter<"RoadmapFeedback"> | string
+    userId?: StringNullableFilter<"RoadmapFeedback"> | string | null
+    ipAddress?: StringFilter<"RoadmapFeedback"> | string
+    content?: StringFilter<"RoadmapFeedback"> | string
+    sentiment?: EnumRoadmapFeedbackSentimentFilter<"RoadmapFeedback"> | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFilter<"RoadmapFeedback"> | boolean
+    convertedToFeatureId?: StringNullableFilter<"RoadmapFeedback"> | string | null
+    convertedToIssueId?: StringNullableFilter<"RoadmapFeedback"> | string | null
+    convertedAt?: DateTimeNullableFilter<"RoadmapFeedback"> | Date | string | null
+    convertedBy?: StringNullableFilter<"RoadmapFeedback"> | string | null
+    conversionNotes?: StringNullableFilter<"RoadmapFeedback"> | string | null
+    createdAt?: DateTimeFilter<"RoadmapFeedback"> | Date | string
   }
 
   export type OrganizationCreateWithoutIssueDependencyInput = {
@@ -59912,6 +60271,7 @@ export namespace Prisma {
     subIssues?: IssueCreateNestedManyWithoutParentIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutDependenciesInput = {
@@ -59935,6 +60295,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutDependenciesInput = {
@@ -59963,6 +60324,7 @@ export namespace Prisma {
     subIssues?: IssueCreateNestedManyWithoutParentIssueInput
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutDependentOnInput = {
@@ -59986,6 +60348,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutDependentOnInput = {
@@ -60084,6 +60447,7 @@ export namespace Prisma {
     subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutDependenciesInput = {
@@ -60107,6 +60471,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUpsertWithoutDependentOnInput = {
@@ -60141,6 +60506,7 @@ export namespace Prisma {
     subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutDependentOnInput = {
@@ -60164,6 +60530,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type OrganizationCreateWithoutIssueLinkInput = {
@@ -60240,6 +60607,7 @@ export namespace Prisma {
     subIssues?: IssueCreateNestedManyWithoutParentIssueInput
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutLinksInput = {
@@ -60263,6 +60631,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutLinksInput = {
@@ -60361,6 +60730,7 @@ export namespace Prisma {
     subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutLinksInput = {
@@ -60384,6 +60754,7 @@ export namespace Prisma {
     subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type ProjectCreateWithoutAssetsInput = {
@@ -61393,12 +61764,12 @@ export namespace Prisma {
     content: string
     sentiment: $Enums.RoadmapFeedbackSentiment
     isApproved: boolean
-    convertedToFeatureId?: string | null
-    convertedToIssueId?: string | null
     convertedAt?: Date | string | null
     convertedBy?: string | null
     conversionNotes?: string | null
     createdAt: Date | string
+    convertedFeature?: FeatureCreateNestedOneWithoutConvertedFromFeedbackInput
+    convertedIssue?: IssueCreateNestedOneWithoutConvertedFromFeedbackInput
   }
 
   export type RoadmapFeedbackUncheckedCreateWithoutRoadmapItemInput = {
@@ -61518,25 +61889,6 @@ export namespace Prisma {
   export type RoadmapFeedbackUpdateManyWithWhereWithoutRoadmapItemInput = {
     where: RoadmapFeedbackScalarWhereInput
     data: XOR<RoadmapFeedbackUpdateManyMutationInput, RoadmapFeedbackUncheckedUpdateManyWithoutRoadmapItemInput>
-  }
-
-  export type RoadmapFeedbackScalarWhereInput = {
-    AND?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
-    OR?: RoadmapFeedbackScalarWhereInput[]
-    NOT?: RoadmapFeedbackScalarWhereInput | RoadmapFeedbackScalarWhereInput[]
-    id?: StringFilter<"RoadmapFeedback"> | string
-    roadmapItemId?: StringFilter<"RoadmapFeedback"> | string
-    userId?: StringNullableFilter<"RoadmapFeedback"> | string | null
-    ipAddress?: StringFilter<"RoadmapFeedback"> | string
-    content?: StringFilter<"RoadmapFeedback"> | string
-    sentiment?: EnumRoadmapFeedbackSentimentFilter<"RoadmapFeedback"> | $Enums.RoadmapFeedbackSentiment
-    isApproved?: BoolFilter<"RoadmapFeedback"> | boolean
-    convertedToFeatureId?: StringNullableFilter<"RoadmapFeedback"> | string | null
-    convertedToIssueId?: StringNullableFilter<"RoadmapFeedback"> | string | null
-    convertedAt?: DateTimeNullableFilter<"RoadmapFeedback"> | Date | string | null
-    convertedBy?: StringNullableFilter<"RoadmapFeedback"> | string | null
-    conversionNotes?: StringNullableFilter<"RoadmapFeedback"> | string | null
-    createdAt?: DateTimeFilter<"RoadmapFeedback"> | Date | string
   }
 
   export type RoadmapItemCreateWithoutVotesInput = {
@@ -61680,6 +62032,110 @@ export namespace Prisma {
     create: XOR<RoadmapItemCreateWithoutFeedbackInput, RoadmapItemUncheckedCreateWithoutFeedbackInput>
   }
 
+  export type FeatureCreateWithoutConvertedFromFeedbackInput = {
+    id?: string
+    name: string
+    description: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentFeature?: FeatureCreateNestedOneWithoutSubFeaturesInput
+    subFeatures?: FeatureCreateNestedManyWithoutParentFeatureInput
+    organization: OrganizationCreateNestedOneWithoutFeatureInput
+    assignedTo?: UserCreateNestedOneWithoutFeatureInput
+    project: ProjectCreateNestedOneWithoutFeaturesInput
+    milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
+    dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureUncheckedCreateWithoutConvertedFromFeedbackInput = {
+    id?: string
+    name: string
+    description: string
+    projectId: string
+    phase: $Enums.FeaturePhase
+    businessValue?: number | null
+    estimatedEffort?: number | null
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    priority: $Enums.Importance
+    assignedToId?: string | null
+    parentFeatureId?: string | null
+    organizationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    milestoneId?: string | null
+    subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
+    dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
+    dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+  }
+
+  export type FeatureCreateOrConnectWithoutConvertedFromFeedbackInput = {
+    where: FeatureWhereUniqueInput
+    create: XOR<FeatureCreateWithoutConvertedFromFeedbackInput, FeatureUncheckedCreateWithoutConvertedFromFeedbackInput>
+  }
+
+  export type IssueCreateWithoutConvertedFromFeedbackInput = {
+    id?: string
+    title: string
+    description?: string | null
+    featureId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    organization: OrganizationCreateNestedOneWithoutIssueInput
+    project: ProjectCreateNestedOneWithoutIssuesInput
+    milestone?: MilestoneCreateNestedOneWithoutIssuesInput
+    assignedTo?: UserCreateNestedOneWithoutIssueInput
+    parentIssue?: IssueCreateNestedOneWithoutSubIssuesInput
+    subIssues?: IssueCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueUncheckedCreateWithoutConvertedFromFeedbackInput = {
+    id?: string
+    title: string
+    description?: string | null
+    organizationId: string
+    projectId: string
+    milestoneId?: string | null
+    featureId?: string | null
+    parentIssueId?: string | null
+    status: $Enums.IssueStatus
+    priority: $Enums.Importance
+    label: $Enums.IssueLabel
+    dueDate?: Date | string | null
+    assignedToId?: string | null
+    achieved?: boolean | null
+    isPublic?: boolean | null
+    sourceType?: string | null
+    sourceFeedbackId?: string | null
+    subIssues?: IssueUncheckedCreateNestedManyWithoutParentIssueInput
+    dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
+    dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+  }
+
+  export type IssueCreateOrConnectWithoutConvertedFromFeedbackInput = {
+    where: IssueWhereUniqueInput
+    create: XOR<IssueCreateWithoutConvertedFromFeedbackInput, IssueUncheckedCreateWithoutConvertedFromFeedbackInput>
+  }
+
   export type RoadmapItemUpsertWithoutFeedbackInput = {
     update: XOR<RoadmapItemUpdateWithoutFeedbackInput, RoadmapItemUncheckedUpdateWithoutFeedbackInput>
     create: XOR<RoadmapItemCreateWithoutFeedbackInput, RoadmapItemUncheckedCreateWithoutFeedbackInput>
@@ -61729,6 +62185,122 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     votes?: RoadmapVoteUncheckedUpdateManyWithoutRoadmapItemNestedInput
+  }
+
+  export type FeatureUpsertWithoutConvertedFromFeedbackInput = {
+    update: XOR<FeatureUpdateWithoutConvertedFromFeedbackInput, FeatureUncheckedUpdateWithoutConvertedFromFeedbackInput>
+    create: XOR<FeatureCreateWithoutConvertedFromFeedbackInput, FeatureUncheckedCreateWithoutConvertedFromFeedbackInput>
+    where?: FeatureWhereInput
+  }
+
+  export type FeatureUpdateToOneWithWhereWithoutConvertedFromFeedbackInput = {
+    where?: FeatureWhereInput
+    data: XOR<FeatureUpdateWithoutConvertedFromFeedbackInput, FeatureUncheckedUpdateWithoutConvertedFromFeedbackInput>
+  }
+
+  export type FeatureUpdateWithoutConvertedFromFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentFeature?: FeatureUpdateOneWithoutSubFeaturesNestedInput
+    subFeatures?: FeatureUpdateManyWithoutParentFeatureNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutFeatureNestedInput
+    assignedTo?: UserUpdateOneWithoutFeatureNestedInput
+    project?: ProjectUpdateOneRequiredWithoutFeaturesNestedInput
+    milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
+    dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type FeatureUncheckedUpdateWithoutConvertedFromFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    phase?: EnumFeaturePhaseFieldUpdateOperationsInput | $Enums.FeaturePhase
+    businessValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedEffort?: NullableFloatFieldUpdateOperationsInput | number | null
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
+    dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
+    dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+  }
+
+  export type IssueUpsertWithoutConvertedFromFeedbackInput = {
+    update: XOR<IssueUpdateWithoutConvertedFromFeedbackInput, IssueUncheckedUpdateWithoutConvertedFromFeedbackInput>
+    create: XOR<IssueCreateWithoutConvertedFromFeedbackInput, IssueUncheckedCreateWithoutConvertedFromFeedbackInput>
+    where?: IssueWhereInput
+  }
+
+  export type IssueUpdateToOneWithWhereWithoutConvertedFromFeedbackInput = {
+    where?: IssueWhereInput
+    data: XOR<IssueUpdateWithoutConvertedFromFeedbackInput, IssueUncheckedUpdateWithoutConvertedFromFeedbackInput>
+  }
+
+  export type IssueUpdateWithoutConvertedFromFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIssueNestedInput
+    project?: ProjectUpdateOneRequiredWithoutIssuesNestedInput
+    milestone?: MilestoneUpdateOneWithoutIssuesNestedInput
+    assignedTo?: UserUpdateOneWithoutIssueNestedInput
+    parentIssue?: IssueUpdateOneWithoutSubIssuesNestedInput
+    subIssues?: IssueUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUpdateManyWithoutIssueNestedInput
+  }
+
+  export type IssueUncheckedUpdateWithoutConvertedFromFeedbackInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    milestoneId?: NullableStringFieldUpdateOperationsInput | string | null
+    featureId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumIssueStatusFieldUpdateOperationsInput | $Enums.IssueStatus
+    priority?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    label?: EnumIssueLabelFieldUpdateOperationsInput | $Enums.IssueLabel
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    assignedToId?: NullableStringFieldUpdateOperationsInput | string | null
+    achieved?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    isPublic?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    sourceType?: NullableStringFieldUpdateOperationsInput | string | null
+    sourceFeedbackId?: NullableStringFieldUpdateOperationsInput | string | null
+    subIssues?: IssueUncheckedUpdateManyWithoutParentIssueNestedInput
+    dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
+    dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
   }
 
   export type PublicRoadmapCreateWithoutChangelogsInput = {
@@ -62471,6 +63043,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutSubFeaturesInput = {
@@ -62493,6 +63066,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutSubFeaturesInput = {
@@ -62520,6 +63094,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutParentFeatureInput = {
@@ -62542,6 +63117,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutParentFeatureInput = {
@@ -62830,6 +63406,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RoadmapFeedbackCreateWithoutConvertedFeatureInput = {
+    id?: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+    roadmapItem: RoadmapItemCreateNestedOneWithoutFeedbackInput
+    convertedIssue?: IssueCreateNestedOneWithoutConvertedFromFeedbackInput
+  }
+
+  export type RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput = {
+    id?: string
+    roadmapItemId: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedToIssueId?: string | null
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+  }
+
+  export type RoadmapFeedbackCreateOrConnectWithoutConvertedFeatureInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    create: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput>
+  }
+
+  export type RoadmapFeedbackCreateManyConvertedFeatureInputEnvelope = {
+    data: RoadmapFeedbackCreateManyConvertedFeatureInput | RoadmapFeedbackCreateManyConvertedFeatureInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FeatureUpsertWithoutSubFeaturesInput = {
     update: XOR<FeatureUpdateWithoutSubFeaturesInput, FeatureUncheckedUpdateWithoutSubFeaturesInput>
     create: XOR<FeatureCreateWithoutSubFeaturesInput, FeatureUncheckedCreateWithoutSubFeaturesInput>
@@ -62861,6 +63477,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutSubFeaturesInput = {
@@ -62883,6 +63500,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUpsertWithWhereUniqueWithoutParentFeatureInput = {
@@ -63177,6 +63795,22 @@ export namespace Prisma {
     data: XOR<FeatureLinkUpdateManyMutationInput, FeatureLinkUncheckedUpdateManyWithoutFeatureInput>
   }
 
+  export type RoadmapFeedbackUpsertWithWhereUniqueWithoutConvertedFeatureInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    update: XOR<RoadmapFeedbackUpdateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedUpdateWithoutConvertedFeatureInput>
+    create: XOR<RoadmapFeedbackCreateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedCreateWithoutConvertedFeatureInput>
+  }
+
+  export type RoadmapFeedbackUpdateWithWhereUniqueWithoutConvertedFeatureInput = {
+    where: RoadmapFeedbackWhereUniqueInput
+    data: XOR<RoadmapFeedbackUpdateWithoutConvertedFeatureInput, RoadmapFeedbackUncheckedUpdateWithoutConvertedFeatureInput>
+  }
+
+  export type RoadmapFeedbackUpdateManyWithWhereWithoutConvertedFeatureInput = {
+    where: RoadmapFeedbackScalarWhereInput
+    data: XOR<RoadmapFeedbackUpdateManyMutationInput, RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureInput>
+  }
+
   export type OrganizationCreateWithoutFeatureDependencyInput = {
     id?: string
     name: string
@@ -63250,6 +63884,7 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutDependenciesInput = {
@@ -63272,6 +63907,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutDependenciesInput = {
@@ -63299,6 +63935,7 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutDependentOnInput = {
@@ -63321,6 +63958,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutDependentOnInput = {
@@ -63418,6 +64056,7 @@ export namespace Prisma {
     milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutDependenciesInput = {
@@ -63440,6 +64079,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUpsertWithoutDependentOnInput = {
@@ -63473,6 +64113,7 @@ export namespace Prisma {
     milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutDependentOnInput = {
@@ -63495,6 +64136,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type OrganizationCreateWithoutFeatureLinkInput = {
@@ -63570,6 +64212,7 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedOneWithoutFeaturesInput
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutFeatureLinkInput = {
@@ -63592,6 +64235,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedCreateNestedManyWithoutParentFeatureInput
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutFeatureLinkInput = {
@@ -63689,6 +64333,7 @@ export namespace Prisma {
     milestone?: MilestoneUpdateOneWithoutFeaturesNestedInput
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutFeatureLinkInput = {
@@ -63711,6 +64356,7 @@ export namespace Prisma {
     subFeatures?: FeatureUncheckedUpdateManyWithoutParentFeatureNestedInput
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type ProjectCreateWithoutMilestonesInput = {
@@ -63899,6 +64545,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyCreateNestedManyWithoutDependencyInput
     links?: IssueLinkCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueUncheckedCreateWithoutMilestoneInput = {
@@ -63922,6 +64569,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedCreateNestedManyWithoutIssueInput
     dependentOn?: IssueDependencyUncheckedCreateNestedManyWithoutDependencyInput
     links?: IssueLinkUncheckedCreateNestedManyWithoutIssueInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedIssueInput
   }
 
   export type IssueCreateOrConnectWithoutMilestoneInput = {
@@ -63954,6 +64602,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureUncheckedCreateWithoutMilestoneInput = {
@@ -63976,6 +64625,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedCreateNestedManyWithoutFeatureInput
     dependentOn?: FeatureDependencyUncheckedCreateNestedManyWithoutDependencyInput
     FeatureLink?: FeatureLinkUncheckedCreateNestedManyWithoutFeatureInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedCreateNestedManyWithoutConvertedFeatureInput
   }
 
   export type FeatureCreateOrConnectWithoutMilestoneInput = {
@@ -65089,6 +65739,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutAssignedToInput = {
@@ -65112,6 +65763,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutAssignedToInput = {
@@ -65314,6 +65966,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutAssignedToInput = {
@@ -65336,6 +65989,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutAssignedToInput = {
@@ -65820,6 +66474,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutOrganizationInput = {
@@ -65843,6 +66498,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutOrganizationInput = {
@@ -66045,6 +66701,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutOrganizationInput = {
@@ -66067,6 +66724,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutOrganizationInput = {
@@ -66366,6 +67024,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutProjectInput = {
@@ -66389,6 +67048,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutProjectInput = {
@@ -66606,6 +67266,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutProjectInput = {
@@ -66628,6 +67289,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutProjectInput = {
@@ -66823,6 +67485,21 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type RoadmapFeedbackCreateManyConvertedIssueInput = {
+    id?: string
+    roadmapItemId: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedToFeatureId?: string | null
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+  }
+
   export type IssueUpdateWithoutParentIssueInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -66844,6 +67521,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutParentIssueInput = {
@@ -66867,6 +67545,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutParentIssueInput = {
@@ -66948,6 +67627,51 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapFeedbackUpdateWithoutConvertedIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    roadmapItem?: RoadmapItemUpdateOneRequiredWithoutFeedbackNestedInput
+    convertedFeature?: FeatureUpdateOneWithoutConvertedFromFeedbackNestedInput
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateWithoutConvertedIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roadmapItemId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedToFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roadmapItemId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedToFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -67193,12 +67917,12 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
     isApproved?: BoolFieldUpdateOperationsInput | boolean
-    convertedToFeatureId?: NullableStringFieldUpdateOperationsInput | string | null
-    convertedToIssueId?: NullableStringFieldUpdateOperationsInput | string | null
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
     conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    convertedFeature?: FeatureUpdateOneWithoutConvertedFromFeedbackNestedInput
+    convertedIssue?: IssueUpdateOneWithoutConvertedFromFeedbackNestedInput
   }
 
   export type RoadmapFeedbackUncheckedUpdateWithoutRoadmapItemInput = {
@@ -67358,6 +68082,21 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type RoadmapFeedbackCreateManyConvertedFeatureInput = {
+    id?: string
+    roadmapItemId: string
+    userId?: string | null
+    ipAddress: string
+    content: string
+    sentiment: $Enums.RoadmapFeedbackSentiment
+    isApproved: boolean
+    convertedToIssueId?: string | null
+    convertedAt?: Date | string | null
+    convertedBy?: string | null
+    conversionNotes?: string | null
+    createdAt: Date | string
+  }
+
   export type FeatureUpdateWithoutParentFeatureInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -67378,6 +68117,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutParentFeatureInput = {
@@ -67400,6 +68140,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutParentFeatureInput = {
@@ -67483,6 +68224,51 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RoadmapFeedbackUpdateWithoutConvertedFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    roadmapItem?: RoadmapItemUpdateOneRequiredWithoutFeedbackNestedInput
+    convertedIssue?: IssueUpdateOneWithoutConvertedFromFeedbackNestedInput
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateWithoutConvertedFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roadmapItemId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedToIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    roadmapItemId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    sentiment?: EnumRoadmapFeedbackSentimentFieldUpdateOperationsInput | $Enums.RoadmapFeedbackSentiment
+    isApproved?: BoolFieldUpdateOperationsInput | boolean
+    convertedToIssueId?: NullableStringFieldUpdateOperationsInput | string | null
+    convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    convertedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    conversionNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IssueCreateManyMilestoneInput = {
     id?: string
     title: string
@@ -67555,6 +68341,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateWithoutMilestoneInput = {
@@ -67578,6 +68365,7 @@ export namespace Prisma {
     dependencies?: IssueDependencyUncheckedUpdateManyWithoutIssueNestedInput
     dependentOn?: IssueDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     links?: IssueLinkUncheckedUpdateManyWithoutIssueNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedIssueNestedInput
   }
 
   export type IssueUncheckedUpdateManyWithoutMilestoneInput = {
@@ -67619,6 +68407,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateWithoutMilestoneInput = {
@@ -67641,6 +68430,7 @@ export namespace Prisma {
     dependencies?: FeatureDependencyUncheckedUpdateManyWithoutFeatureNestedInput
     dependentOn?: FeatureDependencyUncheckedUpdateManyWithoutDependencyNestedInput
     FeatureLink?: FeatureLinkUncheckedUpdateManyWithoutFeatureNestedInput
+    convertedFromFeedback?: RoadmapFeedbackUncheckedUpdateManyWithoutConvertedFeatureNestedInput
   }
 
   export type FeatureUncheckedUpdateManyWithoutMilestoneInput = {
