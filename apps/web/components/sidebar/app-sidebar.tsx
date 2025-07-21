@@ -13,6 +13,7 @@ import {
   Users,
   MessageCircle,
   LinkIcon,
+  ChartBar,
 } from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
@@ -55,15 +56,15 @@ const data: NavData = {
       url: "/dashboard",
       icon: LayoutDashboard,
     },
-    {
-      name: "Inbox",
-      url: "/inbox",
-      icon: MessageCircle,
-      badge: {
-        text: "Coming Soon",
-        variant: "success",
-      },
-    },
+    // {
+    //   name: "Inbox",
+    //   url: "/inbox",
+    //   icon: MessageCircle,
+    //   badge: {
+    //     text: "Coming Soon",
+    //     variant: "success",
+    //   },
+    // },
     {
       name: "Ideas",
       url: "/ideas",
@@ -96,6 +97,8 @@ const data: NavData = {
       url: "/milestones",
       icon: TbProgressCheck,
     },
+  ],
+  grow: [
     {
       name: "Feedback",
       url: "/feedback",
@@ -105,8 +108,16 @@ const data: NavData = {
         variant: "warning",
       },
     },
+    {
+      name: "Analytics",
+      url: "/analytics",
+      icon: ChartBar,
+      badge: {
+        text: "Planned",
+        variant: "default",
+      },
+    },
   ],
-  grow: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -136,6 +147,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <Separator />
             <NavMenu items={data.build} title="Build" />
             <Separator />
+            <NavMenu items={data.grow} title="Grow" />
           </div>
         </ScrollArea>
       </SidebarContent>
@@ -143,30 +155,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div className="flex flex-col gap-4 p-3">
           <Link
             href="/settings/teams"
-            className="flex  text-xs items-center gap-2"
+            className="flex text-xs items-center gap-2"
           >
             <Users className="text-muted-foreground" size={15} /> Teams
           </Link>
           <Link
             href="/settings/integrations"
-            className="flex  text-xs items-center gap-2"
+            className="flex text-xs items-center gap-2"
           >
             <LinkIcon className="text-muted-foreground" size={15} />{" "}
             Integrations
           </Link>
           <Link
             href="/settings/api-keys"
-            className="flex  text-xs items-center gap-2"
+            className="flex text-xs items-center gap-2"
           >
             <Lock className="text-muted-foreground" size={15} /> API Keys
           </Link>
           <Link
             href="https://docs.rayai.dev"
-            className="flex  text-xs items-center gap-2"
+            className="flex text-xs items-center gap-2"
           >
             <List className="text-muted-foreground" size={15} /> Documentation
           </Link>
-          <Link href="/support" className="flex  text-xs items-center gap-2">
+          <Link href="/support" className="flex text-xs items-center gap-2">
             <InfoIcon className="text-muted-foreground" size={15} /> Help &
             Support
           </Link>
