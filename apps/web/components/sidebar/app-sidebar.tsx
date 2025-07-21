@@ -1,6 +1,19 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboard, Lightbulb, UsersRound, Bot, Inbox, MessageCircleCode, InfoIcon, Lock, List, Users, MessageCircle } from "lucide-react";
+import {
+  LayoutDashboard,
+  Lightbulb,
+  UsersRound,
+  Bot,
+  Inbox,
+  MessageCircleCode,
+  InfoIcon,
+  Lock,
+  List,
+  Users,
+  MessageCircle,
+  LinkIcon,
+} from "lucide-react";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -18,7 +31,6 @@ import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { Separator } from "@workspace/ui/components/separator";
 import Link from "next/link";
 import { Badge } from "@workspace/ui/components/badge";
-
 
 type NavGroup = {
   name: string;
@@ -49,8 +61,8 @@ const data: NavData = {
       icon: MessageCircle,
       badge: {
         text: "Coming Soon",
-        variant: 'success'
-      }
+        variant: "success",
+      },
     },
     {
       name: "Ideas",
@@ -90,8 +102,8 @@ const data: NavData = {
       icon: Inbox,
       badge: {
         text: "Coming Soon",
-        variant: 'warning'
-      }
+        variant: "warning",
+      },
     },
   ],
   grow: [],
@@ -104,15 +116,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="sm" asChild>
-              <div className='flex items-center gap-4'>
-                <div className="relative border-border h-9 w-9 overflow-hidden rounded-lg">
-                  <img
-                    src="/icon.png"
-                    className="h-full w-full object-cover rounded-md transition-transform duration-200"
-                    alt=""
-                  />
-                </div>
+            <SidebarMenuButton size="lg" asChild>
+              <div className="flex items-center gap-4">
+                <img
+                  src="/icon.png"
+                  className="h-9 w-9 bg-white object-contain aspect-square transition-transform duration-200"
+                  alt=""
+                />
                 <Badge>Beta</Badge>
               </div>
             </SidebarMenuButton>
@@ -131,17 +141,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <div className="flex flex-col gap-4 p-3">
-          <Link href='/settings/teams' className="flex  text-xs items-center gap-2">
+          <Link
+            href="/settings/teams"
+            className="flex  text-xs items-center gap-2"
+          >
             <Users className="text-muted-foreground" size={15} /> Teams
           </Link>
-          <Link href='/settings/api-keys' className="flex  text-xs items-center gap-2">
+          <Link
+            href="/settings/integrations"
+            className="flex  text-xs items-center gap-2"
+          >
+            <LinkIcon className="text-muted-foreground" size={15} />{" "}
+            Integrations
+          </Link>
+          <Link
+            href="/settings/api-keys"
+            className="flex  text-xs items-center gap-2"
+          >
             <Lock className="text-muted-foreground" size={15} /> API Keys
           </Link>
-          <Link href='https://docs.rayai.dev' className="flex  text-xs items-center gap-2">
+          <Link
+            href="https://docs.rayai.dev"
+            className="flex  text-xs items-center gap-2"
+          >
             <List className="text-muted-foreground" size={15} /> Documentation
           </Link>
-          <Link href='/support' className="flex  text-xs items-center gap-2">
-            <InfoIcon className="text-muted-foreground" size={15} /> Help & Support
+          <Link href="/support" className="flex  text-xs items-center gap-2">
+            <InfoIcon className="text-muted-foreground" size={15} /> Help &
+            Support
           </Link>
           <NavUser />
         </div>

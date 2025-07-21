@@ -1,8 +1,8 @@
-import { inngest } from "@/inngest";
+import { inngestClient } from "@/lib/inngest";
 import { serve } from "inngest/next";
-import { validateIdea } from "@/inngest";
+import { validateIdea } from "@/inngest/idea";
 
 export const { GET, POST, PUT } = serve({
-	client: inngest,
+	client: inngestClient,
 	functions: [validateIdea],
 });

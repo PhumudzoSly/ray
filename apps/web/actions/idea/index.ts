@@ -1,8 +1,8 @@
 "use server";
 
-import { prisma, IdeaOptionalDefaults } from "@workspace/backend";
+import { prisma, IdeaOptionalDefaults, IdeaStatusType } from "@workspace/backend";
 import { getSession } from "../account/user";
-import { inngest } from "@/inngest";
+import { inngestClient } from "@/lib/inngest";
 
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
@@ -162,7 +162,7 @@ export const updateSolutionOffered = async ({ id, solutionOffered }: { id: strin
 	});
 };
 
-export const changeStatus = async ({ id, status }: { id: string; status: string }) => {
+export const changeStatus = async ({ id, status }: { id: string; status: IdeaStatusType }) => {
 	await getSession();
 	return prisma.idea.update({
 		where: { id },
@@ -190,7 +190,7 @@ export const triggerValidation = async ({ ideaId }: { ideaId: string }) => {
 	});
 
 	// Trigger background validation using Inngest
-	await inngest.send({
+	await inngestClient.send({
 		name: "idea/validate",
 		data: { ideaId },
 	});
@@ -208,10 +208,6 @@ export const getValidationDetails = async ({ ideaId }: { ideaId: string }) => {
 	// Fetch the idea and related validation fields
 	const idea = await prisma.idea.findFirst({
 		where: { id: ideaId, organizationId: org },
-		include: {
-			aiOverallValidation: true,
-			// Add more relations as needed
-		},
 	});
 
 	if (!idea) {
@@ -227,63 +223,63 @@ export const getValidationDetails = async ({ ideaId }: { ideaId: string }) => {
 };
 
 // Update idea validation results (called by Inngest after background processing)
-export const updateValidationResults = async ({
-	ideaId,
-	validationResults
-}: {
-	ideaId: string;
-	validationResults: any;
-}) => {
-	const { org } = await getSession();
+// export const updateValidationResults = async ({
+// 	ideaId,
+// 	validationResults
+// }: {
+// 	ideaId: string;
+// 	validationResults: any;
+// }) => {
+// 	const { org } = await getSession();
 
-	// Verify the idea exists and belongs to the organization
-	const idea = await prisma.idea.findFirst({
-		where: { id: ideaId, organizationId: org },
-	});
+// 	// Verify the idea exists and belongs to the organization
+// 	const idea = await prisma.idea.findFirst({
+// 		where: { id: ideaId, organizationId: org },
+// 	});
 
-	if (!idea) {
-		throw new Error("Idea not found");
-	}
+// 	if (!idea) {
+// 		throw new Error("Idea not found");
+// 	}
 
-	const status = validationResults.overallScore >= 70 ? "VALIDATED" : "FAILED";
+// 	const status = validationResults.overallScore >= 70 ? "VALIDATED" : "FAILED";
 
-	// Update the idea with validation results
-	const updated = await prisma.idea.update({
-		where: { id: ideaId },
-		data: {
-			status,
-			aiOverallValidation: {
-				upsert: {
-					create: {
-						overallRating: validationResults.overallScore,
-						overallComment: validationResults.recommendation,
-						lastValidated: new Date(),
-						marketSize: validationResults.marketSize,
-						competitorAnalysis: validationResults.competitorAnalysis,
-						customerFit: validationResults.customerFit,
-						feasibility: validationResults.feasibility,
-						financials: validationResults.financials,
-						userStories: validationResults.userStories,
-					},
-					update: {
-						overallRating: validationResults.overallScore,
-						overallComment: validationResults.recommendation,
-						lastValidated: new Date(),
-						marketSize: validationResults.marketSize,
-						competitorAnalysis: validationResults.competitorAnalysis,
-						customerFit: validationResults.customerFit,
-						feasibility: validationResults.feasibility,
-						financials: validationResults.financials,
-						userStories: validationResults.userStories,
-					},
-				},
-			},
-		},
-		include: {
-			aiOverallValidation: true,
-		},
-	});
+// 	// Update the idea with validation results
+// 	const updated = await prisma.idea.update({
+// 		where: { id: ideaId },
+// 		data: {
+// 			status,
+// 			aiOverallValidation: {
+// 				upsert: {
+// 					create: {
+// 						overallRating: validationResults.overallScore,
+// 						overallComment: validationResults.recommendation,
+// 						lastValidated: new Date(),
+// 						marketSize: validationResults.marketSize,
+// 						competitorAnalysis: validationResults.competitorAnalysis,
+// 						customerFit: validationResults.customerFit,
+// 						feasibility: validationResults.feasibility,
+// 						financials: validationResults.financials,
+// 						userStories: validationResults.userStories,
+// 					},
+// 					update: {
+// 						overallRating: validationResults.overallScore,
+// 						overallComment: validationResults.recommendation,
+// 						lastValidated: new Date(),
+// 						marketSize: validationResults.marketSize,
+// 						competitorAnalysis: validationResults.competitorAnalysis,
+// 						customerFit: validationResults.customerFit,
+// 						feasibility: validationResults.feasibility,
+// 						financials: validationResults.financials,
+// 						userStories: validationResults.userStories,
+// 					},
+// 				},
+// 			},
+// 		},
+// 		include: {
+// 			aiOverallValidation: true,
+// 		},
+// 	});
 
-	return updated;
-};
+// 	return updated;
+// };
 

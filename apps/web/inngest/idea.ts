@@ -1,11 +1,9 @@
-import { inngest } from "inngest";
 import { prisma } from "@workspace/backend";
-
-export const inngestClient = inngest;
+import { inngestClient } from "../lib/inngest";
 
 // Background task for idea validation
 export const validateIdea = inngestClient.createFunction(
-    { name: "Validate Idea" },
+    { name: "Validate Idea", id: "validate-idea" },
     { event: "idea/validate" },
     async ({ event, step }: { event: any; step: any }) => {
         const { ideaId } = event.data;
