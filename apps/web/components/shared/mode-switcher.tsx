@@ -32,7 +32,7 @@ export function ModeToggle() {
   }, [theme]); // Re-run effect when theme changes
 
   return (
-    <div className="hidden md:block">
+    <div>
       <div className="relative inline-grid h-9 grid-cols-[1fr_1fr] items-center text-sm font-medium">
         <Switch
           id={id}
@@ -48,7 +48,7 @@ export function ModeToggle() {
         </span>
       </div>
       <Label htmlFor={id} className="sr-only">
-        Labeled switch
+        Theme switcher
       </Label>
     </div>
   );

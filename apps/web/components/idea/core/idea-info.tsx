@@ -10,10 +10,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-import { useState } from "react";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { Button } from "@workspace/ui/components/button";
-import IdeaEditModal from "./idea-edit-modal";
+import UpdateIdea from "./edit-idea";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
@@ -28,12 +27,11 @@ const IdeaInfo = ({ id }: { id: string }) => {
   const { data: idea, isPending } = useQuery({
     queryKey: ["idea", id],
     queryFn: async () => {
-      return await getSingleIdea(id)
-    }
-  })
+      return await getSingleIdea(id);
+    },
+  });
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  // Remove the editModalOpen state since UpdateIdea handles its own state
 
   const handleUpdateField = async (field: string, value: string) => {
     try {
@@ -71,16 +69,14 @@ const IdeaInfo = ({ id }: { id: string }) => {
           </div>
           <div className="flex items-center gap-2">
             {idea?.status && (
-              <IdeaStatus refetch={() => { }} id={id} status={idea.status} />
+              <IdeaStatus refetch={() => {}} id={id} status={idea.status} />
             )}
             <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => setEditModalOpen(true)}
-              >
-                Edit Idea
-              </Button>
+              <UpdateIdea id={id} idea={idea} onSuccess={() => {}}>
+                <Button variant="outline" className="w-full">
+                  Edit Idea
+                </Button>
+              </UpdateIdea>
               <Button
                 variant="destructive"
                 className="w-full"
@@ -121,17 +117,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
           </Tooltip>
         </TooltipProvider>
       </div>
-
-      {/* Edit Idea Modal */}
-      {idea && (
-        <IdeaEditModal
-          id={id}
-          idea={idea}
-          isOpen={editModalOpen}
-          onOpenChange={setEditModalOpen}
-          onSuccess={() => { }}
-        />
-      )}
     </div>
   );
 };

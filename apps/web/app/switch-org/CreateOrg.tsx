@@ -20,14 +20,15 @@ import { createOrg } from "@/actions/account/user";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  name: z.string().min(1, "Invalid organisation name"),
+  name: z.string().min(1, "Invalid organization name"),
 });
 
 export type NewOrg = z.infer<typeof formSchema>;
 
 export default function CreateOrg({ orgSwitch }: { orgSwitch?: boolean }) {
-  const router = useRouter();
+  //
 
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<NewOrg>({
@@ -48,7 +49,7 @@ export default function CreateOrg({ orgSwitch }: { orgSwitch?: boolean }) {
       await createOrg({ name: values.name });
       router.push("/dashboard");
     } catch (error) {
-      toast.error("Failed to create organisation");
+      toast.error("Failed to create organization");
       setLoading(false);
     }
   }

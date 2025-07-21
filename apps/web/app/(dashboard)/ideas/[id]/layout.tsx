@@ -6,6 +6,7 @@ import NoData from "@/components/shared/no-data";
 import IdeaInfo from "@/components/idea/core/idea-info";
 import { IdeaTabs } from "@/components/idea/core/tabs";
 import Header from "@/components/shared/header";
+import getQueryClient from "@/lib/query/getQueryClient";
 
 const IdeaLayout = async ({
   params,
@@ -46,7 +47,15 @@ const IdeaLayout = async ({
     },
   ];
 
+  const queryClient = getQueryClient();
+
   const idea = await getSingleIdea(id);
+  await queryClient.prefetchQuery({
+    queryKey: ["idea", id],
+    queryFn: () => {
+      return idea;
+    },
+  });
 
   if (!idea) {
     return <NoData />;
@@ -59,6 +68,10 @@ const IdeaLayout = async ({
           {
             title: "Ideas",
             url: "/ideas",
+          },
+          {
+            title: idea.name,
+            url: `/ideas/${id}`,
           },
         ]}
       >

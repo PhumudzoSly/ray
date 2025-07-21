@@ -37,16 +37,6 @@ export default async function IdeasPage() {
           },
         ]}
       >
-        <CommandSearch
-          config={{
-            renderItem: () => {
-              return <div>Hello</div>;
-            },
-            onSelect: () => {
-              return;
-            },
-          }}
-        />
         <Sheet>
           <SheetTrigger asChild>
             <Button variant={"fancy"}>
