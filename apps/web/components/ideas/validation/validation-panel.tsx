@@ -34,10 +34,12 @@ import {
   Zap,
   Clock,
   Sparkles,
+  HelpCircle,
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as ideaActions from "@/actions/idea";
 import { useSession } from "@/context/session-context";
+import { ValidationQuestions } from "../../idea/validation/validation-questions";
 // Note: Individual validation card components will be created later
 
 interface ValidationPanelProps {
@@ -56,28 +58,95 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   const [activeTab, setActiveTab] = useState("summary");
   const [showResults, setShowResults] = useState(false);
   const [validationResults, setValidationResults] = useState<any>(null);
+  const [showQuestions, setShowQuestions] = useState(false);
+  const [validationQuestions, setValidationQuestions] = useState<any[]>([]);
+  const [isCheckingQuestions, setIsCheckingQuestions] = useState(false);
   const queryClient = useQueryClient();
 
-  // Mutation to trigger validation
-  const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ ideaId }),
+  // Mutation to check validation questions
+  const checkQuestionsMutation = useMutation({
+    mutationFn: async () => ideaActions.checkValidationQuestions({ ideaId }),
     onSuccess: (result) => {
       if (result && result.success) {
-        setValidationResults(result.results);
-        setShowResults(true);
-        setActiveTab("summary");
-        toast.success("Idea validation started in background!");
-        if (onSuccess) onSuccess();
+        if (result.questionsRequired && result.requiredQuestions.length > 0) {
+          setValidationQuestions(result.requiredQuestions);
+          setShowQuestions(true);
+        } else {
+          // No questions needed, proceed directly to validation
+          triggerValidationMutation.mutate();
+        }
       } else {
-        toast.error("Validation failed");
+        // Fallback to direct validation
+        triggerValidationMutation.mutate();
       }
     },
     onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to validate idea"
-      );
+      console.error("Error checking questions:", error);
+      // Fallback to direct validation
+      triggerValidationMutation.mutate();
     },
-    onSettled: () => setIsValidating(false),
+    onSettled: () => setIsCheckingQuestions(false),
+  });
+
+  // Mutation to submit validation answers
+  const submitAnswersMutation = useMutation({
+    mutationFn: async (answers: Array<{ question: string; answer: string }>) =>
+      ideaActions.submitValidationAnswers({ ideaId, answers }),
+    onSuccess: async (_, answers) => {
+      setShowQuestions(false);
+
+      // Prepare additional context from answers
+      const additionalContext = {
+        preValidationAnswers: answers,
+        timestamp: new Date().toISOString(),
+        source: "validation-questions",
+      };
+
+      // After submitting answers, proceed with validation using enhanced function
+      await triggerValidationWithContextMutation.mutateAsync({
+        ideaId,
+        additionalContext,
+      });
+    },
+    onError: (error) => {
+      toast.error("Failed to submit answers. Please try again.");
+      console.error("Submit answers error:", error);
+    },
+  });
+
+  // Enhanced mutation to trigger validation with additional context
+  const triggerValidationWithContextMutation = useMutation({
+    mutationFn: async ({
+      ideaId,
+      additionalContext,
+    }: {
+      ideaId: string;
+      additionalContext?: any;
+    }) =>
+      ideaActions.triggerValidationWithContext({ ideaId, additionalContext }),
+    onSuccess: () => {
+      setIsValidating(true);
+      toast.success("Validation started with enhanced context!");
+      queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
+    },
+    onError: (error) => {
+      toast.error("Failed to start validation. Please try again.");
+      console.error("Validation error:", error);
+    },
+  });
+
+  // Original mutation for backward compatibility
+  const triggerValidationMutation = useMutation({
+    mutationFn: async () => ideaActions.triggerValidation({ ideaId }),
+    onSuccess: () => {
+      setIsValidating(true);
+      toast.success("Validation started!");
+      queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
+    },
+    onError: (error) => {
+      toast.error("Failed to start validation. Please try again.");
+      console.error("Validation error:", error);
+    },
   });
 
   // Query to get detailed validation results
@@ -87,8 +156,19 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   });
 
   const handleValidate = async () => {
-    setIsValidating(true);
+    setIsCheckingQuestions(true);
+    checkQuestionsMutation.mutate();
+  };
+
+  const handleSkipQuestions = () => {
+    setShowQuestions(false);
     triggerValidationMutation.mutate();
+  };
+
+  const handleSubmitAnswers = async (
+    answers: Array<{ question: string; answer: string }>
+  ) => {
+    await submitAnswersMutation.mutateAsync(answers);
   };
 
   const handleViewDetails = () => {
@@ -142,6 +222,20 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Validation Questions Step */}
+      {showQuestions && (
+        <Card className="border-l-4 border-l-primary/20">
+          <CardContent className="pt-6">
+            <ValidationQuestions
+              ideaId={ideaId}
+              questions={validationQuestions}
+              onSubmit={handleSubmitAnswers}
+              onSkip={handleSkipQuestions}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       {/* Validation Status & Actions Card */}
       <Card
         className={`border ${validationScore >= 70 ? "border-green-500/20" : validationScore >= 50 ? "border-yellow-500/20" : "border-red-500/20"}`}
@@ -162,13 +256,13 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
             {!hasValidationResults && (
               <Button
                 onClick={handleValidate}
-                disabled={isValidating}
+                disabled={isValidating || isCheckingQuestions}
                 className="w-full md:w-auto"
               >
-                {isValidating ? (
+                {isValidating || isCheckingQuestions ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Validating...
+                    {isCheckingQuestions ? "Checking..." : "Validating..."}
                   </>
                 ) : (
                   <>

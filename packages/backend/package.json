@@ -18,11 +18,14 @@
 		"@better-auth-kit/convex": "^1.2.2",
 		"@prisma/client": "^6.12.0",
 		"ai": "^4.3.17",
+		"axios": "^1.7.9",
+		"jsdom": "^24.0.0",
 		"resend": "^4.6.0",
 		"zod": "^3.25.76",
 		"zod-prisma-types": "^3.2.4"
 	},
 	"devDependencies": {
+		"@types/jsdom": "^21.1.7",
 		"prisma": "^6.12.0"
 	}
 }

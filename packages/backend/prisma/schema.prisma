@@ -125,6 +125,7 @@ model Organization {
   milestoneDependency MilestoneDependency[]
   issueDependency     IssueDependency[]
   issueLink           IssueLink[]
+  marketResearch      MarketResearch[]
 
   @@unique([slug])
   @@map("organization")
@@ -242,13 +243,13 @@ model Project {
 }
 
 model Idea {
-  id                  String       @id @default(uuid())
+  id                  String          @id @default(uuid())
   name                String
   description         String
   industry            String
-  owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  owner               User?           @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId             String?
-  organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId      String
   internal            Boolean
   openSource          Boolean
@@ -257,8 +258,9 @@ model Idea {
   problemSolved       String?
   solutionOffered     String?
   projects            Project[]
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
+  marketResearch      MarketResearch?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
 }
 
 model Issue {
@@ -971,4 +973,773 @@ enum IntegrationType {
   SENDGRID
   MAILCHIMP
   CONVERTKIT
+}
+
+// ============================================================================
+// SAAS VALIDATION MODELS
+// ============================================================================
+
+// ===== CORE VALIDATION MODELS (AI-Generated) =====
+
+model MarketResearch {
+  id             String       @id @default(uuid())
+  ideaId         String       @unique
+  idea           Idea         @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Market Overview (AI-generated)
+  marketSize                   Float? // In billions USD
+  marketGrowthRate             Float? // CAGR percentage
+  marketMaturity               MarketMaturity
+  totalAddressableMarket       Float?
+  serviceableAddressableMarket Float?
+  serviceableObtainableMarket  Float?
+
+  // Market Trends (AI-generated)
+  keyTrends            String[] // Array of trend descriptions
+  emergingTechnologies String[]
+  regulatoryFactors    String[]
+
+  // Market Validation (AI-generated)
+  validationScore Float? // 0-100
+  confidenceLevel ConfidenceLevel
+  lastUpdated     DateTime        @updatedAt
+  createdAt       DateTime        @default(now())
+
+  // Relations
+  targetAudiences      TargetAudience[]
+  marketTrends         MarketTrend[]
+  customerNeeds        CustomerNeed[]
+  competitiveLandscape CompetitiveLandscape?
+  validationInsights   ValidationInsight[]
+  marketSignals        MarketSignal[]
+  validationScorecard  ValidationScorecard?
+  financialProjection  FinancialProjection?
+  technologyAssessment TechnologyAssessment?
+  regulatoryCompliance RegulatoryCompliance?
+
+  @@index([ideaId])
+  @@index([organizationId])
+  @@map("market_research")
+}
+
+model TargetAudience {
+  id               String         @id @default(uuid())
+  marketResearchId String
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Demographics (AI-analyzed)
+  segmentName String
+  ageRange    String?
+  location    String?
+  companySize CompanySize?
+  industry    String?
+
+  // Characteristics (AI-analyzed)
+  painPoints      String[]
+  decisionFactors String[]
+  budgetRange     String?
+  techSavviness   TechSavviness
+
+  // Market Data (AI-calculated)
+  estimatedSize Int?
+  averageSpend  Float?
+  segmentValue  Float?
+
+  // Priority
+  isPrimary Boolean @default(false)
+  priority  Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@map("target_audience")
+}
+
+model MarketTrend {
+  id               String         @id @default(uuid())
+  marketResearchId String
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  trendName    String
+  description  String
+  impact       TrendImpact
+  growthRate   Float?
+  marketSize   Float?
+  adoptionRate Float?
+
+  // Trend Details (AI-analyzed)
+  keyDrivers    String[]
+  challenges    String[]
+  opportunities String[]
+
+  // Validation
+  dataSource      String?
+  confidenceLevel ConfidenceLevel
+  lastUpdated     DateTime        @updatedAt
+  createdAt       DateTime        @default(now())
+
+  @@index([marketResearchId])
+  @@map("market_trend")
+}
+
+model CustomerNeed {
+  id               String         @id @default(uuid())
+  marketResearchId String
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  needType    CustomerNeedType
+  description String
+  priority    Importance
+  frequency   String?
+
+  // Impact (AI-analyzed)
+  businessImpact String?
+  userImpact     String?
+  costImpact     Float?
+
+  // Current Solutions (AI-analyzed)
+  existingSolutions String[]
+  gapsInSolutions   String[]
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@index([needType])
+  @@map("customer_need")
+}
+
+// ===== ENHANCED COMPETITOR INTELLIGENCE (AI-Generated) =====
+
+model CompetitiveLandscape {
+  id               String         @id @default(uuid())
+  marketResearchId String         @unique
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Overall Analysis (AI-generated)
+  competitiveIntensity         CompetitiveIntensity
+  marketPositioning            String?
+  differentiationOpportunities String[]
+  competitiveAdvantage         String?
+
+  // Market Share Analysis (AI-generated)
+  totalMarketShare    Float? // Percentage of total market
+  topCompetitors      Int? // Number of major competitors
+  marketConcentration Float? // Herfindahl-Hirschman Index
+
+  // Competitive Dynamics (AI-generated)
+  entryBarriers  String[]
+  exitBarriers   String[]
+  switchingCosts Float?
+
+  // Market Trends Impact (AI-generated)
+  emergingThreats   String[]
+  marketDisruptions String[]
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  competitors      Competitor[]
+  competitiveMoves CompetitiveMove[]
+
+  @@index([marketResearchId])
+  @@map("competitive_landscape")
+}
+
+model Competitor {
+  id                     String               @id @default(uuid())
+  competitiveLandscapeId String
+  competitiveLandscape   CompetitiveLandscape @relation(fields: [competitiveLandscapeId], references: [id], onDelete: Cascade)
+
+  // Basic Info (AI-generated)
+  name        String
+  website     String?
+  description String?
+  logoUrl     String?
+
+  // Market Position (AI-generated)
+  marketShare   Float? // Percentage
+  annualRevenue Float? // In millions USD
+  fundingRaised Float? // Total funding in millions
+  employeeCount Int?
+  foundedYear   Int?
+  headquarters  String?
+
+  // Product Analysis (AI-generated)
+  productFeatures String[]
+  pricingModel    PricingModel
+  targetAudience  String?
+  techStack       String[]
+  integrations    String[]
+
+  // Strengths & Weaknesses (AI-generated)
+  strengths     String[]
+  weaknesses    String[]
+  opportunities String[]
+  threats       String[]
+
+  // Competitive Analysis (AI-generated)
+  competitiveAdvantage   String?
+  differentiationFactors String[]
+  threatLevel            ThreatLevel
+  competitivePosition    CompetitivePosition
+
+  // Performance Metrics (AI-generated)
+  userGrowthRate       Float?
+  churnRate            Float?
+  customerSatisfaction Float?
+  marketCap            Float? // If public company
+
+  // Pricing (AI-generated)
+  pricingPlans CompetitorPricing[]
+
+  // Tracking
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  // Relations
+  competitiveMoves   CompetitiveMove[]
+  featureComparisons FeatureComparison[]
+
+  @@index([competitiveLandscapeId])
+  @@index([name])
+  @@map("competitor")
+}
+
+model CompetitorPricing {
+  id           String     @id @default(uuid())
+  competitorId String
+  competitor   Competitor @relation(fields: [competitorId], references: [id], onDelete: Cascade)
+
+  planName     String
+  price        Float
+  billingCycle BillingCycle
+  features     String[]
+  limitations  String?
+  userLimit    Int?
+
+  // Pricing Analysis
+  valuePerDollar      Float? // Features per dollar
+  competitivePosition String?
+
+  // Changes Tracking
+  previousPrice     Float?
+  priceChangeDate   DateTime?
+  priceChangeReason String?
+
+  createdAt DateTime @default(now())
+
+  @@index([competitorId])
+  @@map("competitor_pricing")
+}
+
+model CompetitiveMove {
+  id                     String               @id @default(uuid())
+  competitiveLandscapeId String
+  competitiveLandscape   CompetitiveLandscape @relation(fields: [competitiveLandscapeId], references: [id], onDelete: Cascade)
+  competitorId           String?
+  competitor             Competitor?          @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+
+  moveType    CompetitiveMoveType
+  title       String
+  description String
+
+  // Impact Analysis (AI-generated)
+  impactLevel      Impact
+  targetAudience   String?
+  affectedFeatures String[]
+
+  // Timing
+  announcedDate  DateTime?
+  launchDate     DateTime?
+  completionDate DateTime?
+
+  // Market Response (AI-generated)
+  marketReaction MarketReaction?
+  userFeedback   String?
+  pressCoverage  String[]
+
+  // Strategic Implications (AI-generated)
+  opportunities    String[]
+  threats          String[]
+  responseRequired Boolean  @default(false)
+  responseStrategy String?
+
+  createdAt DateTime @default(now())
+
+  @@index([competitiveLandscapeId])
+  @@index([competitorId])
+  @@index([moveType])
+  @@map("competitive_move")
+}
+
+model FeatureComparison {
+  id           String     @id @default(uuid())
+  competitorId String
+  competitor   Competitor @relation(fields: [competitorId], references: [id], onDelete: Cascade)
+
+  featureName         String
+  featureCategory     String
+  isAvailable         Boolean
+  quality             FeatureQuality?
+  implementationNotes String?
+
+  // Comparison Metrics
+  userRating   Float?
+  marketShare  Float?
+  adoptionRate Float?
+
+  // Competitive Analysis
+  competitiveAdvantage  String?
+  differentiationPoints String[]
+
+  createdAt DateTime @default(now())
+
+  @@index([competitorId])
+  @@index([featureName])
+  @@map("feature_comparison")
+}
+
+// ===== AI ENHANCED VALIDATION MODELS =====
+
+model ValidationInsight {
+  id               String         @id @default(uuid())
+  marketResearchId String
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // AI-Generated Insights
+  insightType InsightType
+  title       String
+  description String
+  confidence  Float? // 0-100
+
+  // Data Sources
+  dataSources    String[]
+  analysisMethod String?
+
+  // Impact Assessment
+  impactLevel     Impact
+  affectedAreas   String[]
+  recommendations String[]
+
+  // Validation
+  isVerified         Boolean   @default(false)
+  verificationMethod String?
+  verifiedBy         String?
+  verifiedAt         DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@index([insightType])
+  @@map("validation_insight")
+}
+
+model MarketSignal {
+  id               String         @id @default(uuid())
+  marketResearchId String
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Signal Details (AI-detected)
+  signalType  MarketSignalType
+  title       String
+  description String
+  source      String?
+
+  // Signal Strength (AI-analyzed)
+  strength   SignalStrength
+  confidence Float?
+  trend      TrendDirection?
+
+  // Impact Analysis (AI-generated)
+  marketImpact      String?
+  competitiveImpact String?
+  timing            String?
+
+  // Monitoring
+  isMonitored Boolean  @default(true)
+  lastChecked DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@index([signalType])
+  @@map("market_signal")
+}
+
+model ValidationScorecard {
+  id               String         @id @default(uuid())
+  marketResearchId String         @unique
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Overall Scores (AI-calculated)
+  marketScore      Float? // 0-100
+  competitiveScore Float?
+  technicalScore   Float?
+  financialScore   Float?
+  riskScore        Float?
+
+  // Weighted Components (AI-calculated)
+  weightedScore  Float?
+  scoreBreakdown ValidationScoreBreakdown[]
+
+  // Recommendations (AI-generated)
+  primaryRecommendation    String?
+  secondaryRecommendations String[]
+  riskMitigationStrategies String[]
+
+  // Validation Status
+  validationStatus ValidationStatus
+  nextReviewDate   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([marketResearchId])
+  @@map("validation_scorecard")
+}
+
+model ValidationScoreBreakdown {
+  id                    String              @id @default(uuid())
+  validationScorecardId String
+  validationScorecard   ValidationScorecard @relation(fields: [validationScorecardId], references: [id], onDelete: Cascade)
+
+  category      String
+  score         Float
+  weight        Float
+  weightedScore Float
+  reasoning     String?
+
+  createdAt DateTime @default(now())
+
+  @@index([validationScorecardId])
+  @@map("validation_score_breakdown")
+}
+
+// ===== TECHNOLOGY ASSESSMENT (AI-Generated) =====
+
+model TechnologyAssessment {
+  id               String         @id @default(uuid())
+  marketResearchId String         @unique
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Technical Feasibility (AI-analyzed)
+  technicalComplexity TechnicalComplexity
+  developmentTimeline Int? // Months
+  teamRequirements    String[]
+
+  // Technology Stack (AI-recommended)
+  recommendedStack        String[]
+  alternativeStacks       String[]
+  integrationRequirements String[]
+
+  // Risk Assessment (AI-analyzed)
+  technicalRisks         String[]
+  scalabilityChallenges  String[]
+  securityConsiderations String[]
+
+  // Cost Analysis (AI-estimated)
+  developmentCosts    Float?
+  infrastructureCosts Float?
+  maintenanceCosts    Float?
+
+  // Competitive Advantage (AI-analyzed)
+  technicalAdvantages String[]
+  innovationPotential String?
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@map("technology_assessment")
+}
+
+// ===== MANUAL MANAGEMENT MODELS (For tracking your SaaS performance) =====
+
+model FinancialProjection {
+  id               String         @id @default(uuid())
+  marketResearchId String         @unique
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Your Actual Metrics (Manual entry)
+  projectedRevenue  Float?
+  revenueGrowthRate Float?
+  breakEvenPoint    Int? // Months
+
+  // Your Actual Costs (Manual entry)
+  developmentCosts        Float?
+  marketingCosts          Float?
+  operationalCosts        Float?
+  customerAcquisitionCost Float?
+
+  // Your Unit Economics (Manual entry)
+  averageRevenuePerUser Float?
+  customerLifetimeValue Float?
+  paybackPeriod         Int? // Months
+
+  // Your Funding (Manual entry)
+  fundingNeeded Float?
+  fundingRounds FundingRound[]
+
+  // Risk Analysis (AI-generated insights)
+  riskFactors          String[]
+  mitigationStrategies String[]
+
+  // Scenario Analysis (AI-generated)
+  optimisticScenario  Float?
+  realisticScenario   Float?
+  pessimisticScenario Float?
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@map("financial_projection")
+}
+
+model FundingRound {
+  id                    String              @id @default(uuid())
+  financialProjectionId String
+  financialProjection   FinancialProjection @relation(fields: [financialProjectionId], references: [id], onDelete: Cascade)
+
+  // Your Actual Funding (Manual entry)
+  roundName String // e.g., "Seed", "Series A"
+  amount    Float
+  equity    Float? // Percentage
+  valuation Float?
+  timeline  Int? // Months from now
+
+  // Your Investor Details (Manual entry)
+  investorType InvestorType
+  investorName String?
+
+  // Your Use of Funds (Manual entry)
+  developmentAllocation Float?
+  marketingAllocation   Float?
+  operationsAllocation  Float?
+
+  createdAt DateTime @default(now())
+
+  @@index([financialProjectionId])
+  @@map("funding_round")
+}
+
+model RegulatoryCompliance {
+  id               String         @id @default(uuid())
+  marketResearchId String         @unique
+  marketResearch   MarketResearch @relation(fields: [marketResearchId], references: [id], onDelete: Cascade)
+
+  // Your Compliance Status (Manual entry)
+  applicableRegulations String[]
+  complianceLevel       ComplianceLevel
+  riskLevel             RiskLevel
+
+  // Your Industry Standards (Manual entry)
+  industryStandards         String[]
+  certificationRequirements String[]
+
+  // Your Target Markets (Manual entry)
+  targetMarkets    String[]
+  localRegulations String[]
+
+  // Your Implementation (Manual entry)
+  complianceCosts      Float?
+  timelineToCompliance Int? // Months
+  requiredResources    String[]
+
+  // Risk Mitigation (AI-generated insights)
+  complianceRisks      String[]
+  mitigationStrategies String[]
+
+  createdAt DateTime @default(now())
+
+  @@index([marketResearchId])
+  @@map("regulatory_compliance")
+}
+
+// ===== SAAS VALIDATION ENUMS =====
+
+enum MarketMaturity {
+  EMERGING
+  GROWING
+  MATURE
+  DECLINING
+}
+
+enum ConfidenceLevel {
+  LOW
+  MEDIUM
+  HIGH
+  VERY_HIGH
+}
+
+enum CompanySize {
+  SOLO
+  SMALL_1_10
+  MEDIUM_11_50
+  LARGE_51_200
+  ENTERPRISE_200_PLUS
+}
+
+enum TechSavviness {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum TrendImpact {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum CustomerNeedType {
+  FUNCTIONAL
+  EMOTIONAL
+  SOCIAL
+  FINANCIAL
+  TECHNICAL
+}
+
+enum CompetitiveIntensity {
+  LOW
+  MEDIUM
+  HIGH
+  VERY_HIGH
+}
+
+enum PricingModel {
+  SUBSCRIPTION
+  FREEMIUM
+  ONE_TIME
+  USAGE_BASED
+  HYBRID
+}
+
+enum ThreatLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum CompetitivePosition {
+  MARKET_LEADER
+  STRONG_CHALLENGER
+  WEAK_CHALLENGER
+  NICHE_PLAYER
+  NEW_ENTRANT
+}
+
+enum CompetitiveMoveType {
+  PRODUCT_LAUNCH
+  FEATURE_UPDATE
+  PRICING_CHANGE
+  PARTNERSHIP
+  ACQUISITION
+  MARKETING_CAMPAIGN
+  EXPANSION
+  PIVOT
+}
+
+enum MarketReaction {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+  MIXED
+}
+
+enum Impact {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum InsightType {
+  MARKET_OPPORTUNITY
+  COMPETITIVE_THREAT
+  CUSTOMER_INSIGHT
+  TECHNICAL_CHALLENGE
+  FINANCIAL_RISK
+  REGULATORY_IMPACT
+  TIMING_OPPORTUNITY
+}
+
+enum MarketSignalType {
+  FUNDING_ANNOUNCEMENT
+  PRODUCT_LAUNCH
+  PARTNERSHIP
+  ACQUISITION
+  REGULATORY_CHANGE
+  TECHNOLOGY_BREAKTHROUGH
+  MARKET_TREND
+  COMPETITIVE_MOVE
+}
+
+enum SignalStrength {
+  WEAK
+  MODERATE
+  STRONG
+  CRITICAL
+}
+
+enum TrendDirection {
+  INCREASING
+  DECREASING
+  STABLE
+  VOLATILE
+}
+
+enum ValidationStatus {
+  IN_PROGRESS
+  VALIDATED
+  NEEDS_IMPROVEMENT
+  FAILED
+  REQUIRES_REVIEW
+}
+
+enum TechnicalComplexity {
+  LOW
+  MEDIUM
+  HIGH
+  VERY_HIGH
+}
+
+enum ComplianceLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum InvestorType {
+  ANGEL
+  VENTURE_CAPITAL
+  PRIVATE_EQUITY
+  CORPORATE
+  CROWDFUNDING
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+  ONE_TIME
+}
+
+enum FeatureQuality {
+  EXCELLENT
+  GOOD
+  AVERAGE
+  POOR
+  UNKNOWN
 }

@@ -1,68 +1,93 @@
-import { prisma } from "@workspace/backend";
-import { inngestClient } from "../lib/inngest";
+import { inngestClient } from "@/lib/inngest";
+import { prisma } from "@workspace/backend/prisma/prisma";
 
-// Background task for idea validation
 export const validateIdea = inngestClient.createFunction(
-    { name: "Validate Idea", id: "validate-idea" },
-    { event: "idea/validate" },
-    async ({ event, step }: { event: any; step: any }) => {
-        const { ideaId } = event.data;
+  { name: "Validate Idea", id: "validate-idea" },
+  { event: "idea/validate" },
+  async ({ event, step }: { event: any; step: any }) => {
+    const { ideaId, additionalContext } = event.data;
 
-        // Step 1: Fetch idea data
-        const idea = await step.run("fetch-idea", async () => {
-            const idea = await prisma.idea.findUnique({
-                where: { id: ideaId },
-            });
+    // Step 1: Fetch idea data
+    const idea = await step.run("fetch-idea", async () => {
+      const ideaData = await prisma.idea.findUnique({
+        where: { id: ideaId },
+        include: { organization: true },
+      });
+      if (!ideaData) throw new Error("Idea not found");
+      return ideaData;
+    });
 
-            if (!idea) {
-                throw new Error(`Idea with ID ${ideaId} not found`);
-            }
-
-            return idea;
-        });
-
-        // Step 2: Run AI validation analysis
-        const validationResults = await step.run("run-ai-validation", async () => {
-            // Simulate AI validation process
-            // In a real implementation, this would call AI services
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
-
-            return {
-                overallScore: Math.floor(Math.random() * 40) + 60, // Random score between 60-100
-                recommendation: "This idea shows strong market potential based on our analysis.",
-                marketSize: "Large market opportunity identified",
-                competitorAnalysis: "Competitive landscape analyzed",
-                customerFit: "Strong customer fit indicators",
-                feasibility: "Technically feasible with current resources",
-                financials: "Positive financial projections",
-                userStories: [
-                    "As a user, I want to solve this problem quickly",
-                    "As a business, I need this solution to improve efficiency"
-                ]
-            };
-        });
-
-        // Step 3: Update idea with validation results
-        const updatedIdea = await step.run("update-idea", async () => {
-            const status = validationResults.overallScore >= 70 ? "VALIDATED" : "FAILED";
-
-            // Update the idea with validation results
-            const updated = await prisma.idea.update({
-                where: { id: ideaId },
-                data: {
-                    status,
-                    aiOverallValidation: validationResults.overallScore,
-                },
-            });
-
-            return updated;
-        });
-
+    // Step 2: Run AI validation analysis with sequential data flow
+    const validationResults = await step.run("run-ai-validation", async () => {
+      try {
+        const { runModularResearch } = await import("@workspace/backend/ai/agents/research-orchestrator");
+        
+        // Pass additional context from pre-validation questions if available
+        const researchResult = await runModularResearch(ideaId, additionalContext);
+        
+        // Extract scorecard data for validation score
+        const scorecardAgent = researchResult.researchResults.agents.find(
+          (a: any) => a.type === "validation-scorecard"
+        );
+        
+        const overallScore = scorecardAgent?.data?.overallScore || 0;
+        const validationStatus = scorecardAgent?.data?.validationStatus || "NEEDS_VALIDATION";
+        
         return {
-            success: true,
-            ideaId,
-            validationResults,
-            updatedIdea
+          overallScore,
+          validationStatus,
+          recommendation: scorecardAgent?.data?.strategicRecommendations?.primary?.[0] || "Validation completed successfully.",
+          marketSize: "Market analysis completed with sequential data flow",
+          competitorAnalysis: "Competitive landscape analyzed with enhanced context",
+          customerFit: "Customer segments identified with SaaS-specific insights",
+          feasibility: "Technical assessment completed with comprehensive analysis",
+          financials: "Financial projections generated with unit economics focus",
+          userStories: scorecardAgent?.data?.saasMetrics || {},
+          researchResults: researchResult.researchResults,
+          totalApiCalls: researchResult.totalApiCalls,
         };
-    }
+      } catch (error) {
+        console.error("AI validation failed:", error);
+        return {
+          overallScore: 0,
+          validationStatus: "FAILED",
+          recommendation: "Validation failed due to technical issues. Please try again.",
+          marketSize: "Market analysis failed",
+          competitorAnalysis: "Competitive analysis failed",
+          customerFit: "Customer analysis failed",
+          feasibility: "Technical analysis failed",
+          financials: "Financial analysis failed",
+          userStories: [],
+          researchResults: null,
+          totalApiCalls: 0,
+        };
+      }
+    });
+
+    // Step 3: Update idea with validation results
+    const updatedIdea = await step.run("update-idea", async () => {
+      const updateData: any = {
+        aiValidationStatus: validationResults.validationStatus,
+        aiValidationCompletedAt: new Date(),
+        aiValidationResults: validationResults,
+      };
+
+      // Only update score if validation was successful
+      if (validationResults.overallScore > 0) {
+        updateData.aiOverallValidation = validationResults.overallScore;
+      }
+
+      return await prisma.idea.update({
+        where: { id: ideaId },
+        data: updateData,
+      });
+    });
+
+    return {
+      success: true,
+      ideaId,
+      validationResults,
+      updatedIdea,
+    };
+  }
 );

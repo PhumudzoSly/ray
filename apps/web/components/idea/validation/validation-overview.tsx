@@ -14,12 +14,14 @@ import {
   Users,
   Zap,
   DollarSign,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import * as ideaActions from "@/actions/idea";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
+import { ValidationQuestions } from "./validation-questions";
 
 interface ValidationOverviewProps {
   idea: any;
@@ -32,6 +34,9 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 }) => {
   const { token } = useSession();
   const [isValidating, setIsValidating] = useState(false);
+  const [showQuestions, setShowQuestions] = useState(false);
+  const [validationQuestions, setValidationQuestions] = useState<any[]>([]);
+  const [isCheckingQuestions, setIsCheckingQuestions] = useState(false);
   const triggerValidationMutation = useMutation({
     mutationFn: async () => ideaActions.triggerValidation({ ideaId: idea.id }),
     onSuccess: () => {
@@ -39,9 +44,53 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
       window.location.reload();
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to validate idea");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to validate idea"
+      );
     },
     onSettled: () => setIsValidating(false),
+  });
+
+  // Mutation to check validation questions
+  const checkQuestionsMutation = useMutation({
+    mutationFn: async () =>
+      ideaActions.checkValidationQuestions({ ideaId: idea.id }),
+    onSuccess: (result) => {
+      if (result && result.success) {
+        if (result.questionsRequired && result.requiredQuestions.length > 0) {
+          setValidationQuestions(result.requiredQuestions);
+          setShowQuestions(true);
+        } else {
+          // No questions needed, proceed directly to validation
+          triggerValidationMutation.mutate();
+        }
+      } else {
+        // Fallback to direct validation
+        triggerValidationMutation.mutate();
+      }
+    },
+    onError: (error) => {
+      console.error("Error checking questions:", error);
+      // Fallback to direct validation
+      triggerValidationMutation.mutate();
+    },
+    onSettled: () => setIsCheckingQuestions(false),
+  });
+
+  // Mutation to submit validation answers
+  const submitAnswersMutation = useMutation({
+    mutationFn: async (answers: Array<{ question: string; answer: string }>) =>
+      ideaActions.submitValidationAnswers({ ideaId: idea.id, answers }),
+    onSuccess: () => {
+      setShowQuestions(false);
+      // After submitting answers, proceed with validation
+      triggerValidationMutation.mutate();
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit answers"
+      );
+    },
   });
 
   const validationScore =
@@ -75,8 +124,19 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 
   const handleValidate = async () => {
     if (!idea) return;
-    setIsValidating(true);
+    setIsCheckingQuestions(true);
+    checkQuestionsMutation.mutate();
+  };
+
+  const handleSkipQuestions = () => {
+    setShowQuestions(false);
     triggerValidationMutation.mutate();
+  };
+
+  const handleSubmitAnswers = async (
+    answers: Array<{ question: string; answer: string }>
+  ) => {
+    await submitAnswersMutation.mutateAsync(answers);
   };
 
   // Validation metrics
@@ -120,11 +180,15 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
             competition, feasibility and finances
           </p>
         </div>
-        <Button onClick={handleValidate} disabled={isValidating} size="lg">
-          {isValidating ? (
+        <Button
+          onClick={handleValidate}
+          disabled={isValidating || isCheckingQuestions}
+          size="lg"
+        >
+          {isValidating || isCheckingQuestions ? (
             <>
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Validating...
+              {isCheckingQuestions ? "Checking..." : "Validating..."}
             </>
           ) : (
             <>
@@ -139,6 +203,18 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 
   return (
     <div className="space-y-8">
+      {/* Validation Questions Step */}
+      {showQuestions && (
+        <div className="bg-card border rounded-lg p-6">
+          <ValidationQuestions
+            ideaId={idea.id}
+            questions={validationQuestions}
+            onSubmit={handleSubmitAnswers}
+            onSkip={handleSkipQuestions}
+          />
+        </div>
+      )}
+
       {/* Main Score */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
