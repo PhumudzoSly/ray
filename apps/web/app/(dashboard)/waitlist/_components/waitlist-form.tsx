@@ -21,6 +21,7 @@ import { Copy, Key, Mail, Loader2 } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
 import { getIntegrationsByPurpose } from "@/actions/integration";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
+import { NoData } from "@/components/shared";
 
 type FormState = {
   name: string;
@@ -573,7 +574,16 @@ export default function WaitlistForm({
   );
 
   return (
-    <ExpandedLayoutContainer sidebar={apiDocsContent}>
+    <ExpandedLayoutContainer
+      sidebar={
+        <>
+          <NoData
+            title="API Docs Coming Soon"
+            message="We're working on it! Check back soon."
+          />
+        </>
+      }
+    >
       <div className="flex-1 relative">
         {mainContent}
         {(createWaitlistMutation.isPending ||

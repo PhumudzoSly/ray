@@ -5,12 +5,31 @@ import { getSession } from "../account/user";
 /**
  * Create a new public roadmap
  */
-export const createPublicRoadmap = async (data: { projectId: string; name: string; slug: string; description: string; isPublic: boolean; allowVoting: boolean; allowFeedback: boolean; showChangelog: boolean; customDomain?: string; theme?: string; logoUrl?: string; accentColor?: string }) => {
+export const createPublicRoadmap = async (data: {
+  projectId: string;
+  name: string;
+  slug: string;
+  description: string;
+  isPublic: boolean;
+  allowVoting: boolean;
+  allowFeedback: boolean;
+  showChangelog: boolean;
+  customDomain?: string;
+  theme?: string;
+  logoUrl?: string;
+  accentColor?: string;
+}) => {
   const { org } = await getSession();
   try {
     // Ensure the project belongs to the org
-    const project = await prisma.project.findFirst({ where: { id: data.projectId, organizationId: org } });
-    if (!project) return { success: false, error: 'Project not found or not in your organization' };
+    const project = await prisma.project.findFirst({
+      where: { id: data.projectId, organizationId: org },
+    });
+    if (!project)
+      return {
+        success: false,
+        error: "Project not found or not in your organization",
+      };
     const roadmap = await prisma.publicRoadmap.create({ data });
     return { success: true, data: roadmap };
   } catch (error) {
@@ -24,7 +43,9 @@ export const createPublicRoadmap = async (data: { projectId: string; name: strin
 export const getPublicRoadmap = async (id: string) => {
   const { org } = await getSession();
   try {
-    const roadmap = await prisma.publicRoadmap.findFirst({ where: { id, project: { organizationId: org } } });
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { id, project: { organizationId: org } },
+    });
     return { success: true, data: roadmap };
   } catch (error) {
     return { success: false, error };
@@ -32,13 +53,106 @@ export const getPublicRoadmap = async (id: string) => {
 };
 
 /**
- * List all public roadmaps for the current org
+ * List all public roadmaps for the current org with enriched data
  */
 export const getAllPublicRoadmaps = async () => {
   const { org } = await getSession();
   try {
-    const roadmaps = await prisma.publicRoadmap.findMany({ where: { project: { organizationId: org } } });
-    return { success: true, data: roadmaps };
+    const roadmaps = await prisma.publicRoadmap.findMany({
+      where: { project: { organizationId: org } },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            status: true,
+            platform: true,
+            createdAt: true,
+          },
+        },
+        items: {
+          select: {
+            id: true,
+            status: true,
+            category: true,
+            voteCount: true,
+            feedbackCount: true,
+          },
+        },
+        changelogs: {
+          select: {
+            id: true,
+            createdAt: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+        featureRequests: {
+          select: {
+            id: true,
+            status: true,
+            priority: true,
+          },
+        },
+        _count: {
+          select: {
+            items: true,
+            changelogs: true,
+            featureRequests: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    // Enrich the data with computed fields
+    const enrichedRoadmaps = roadmaps.map((roadmap) => {
+      const statusCounts = roadmap.items.reduce(
+        (acc, item) => {
+          acc[item.status] = (acc[item.status] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+      const categoryCounts = roadmap.items.reduce(
+        (acc, item) => {
+          acc[item.category] = (acc[item.category] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+
+      const totalVotes = roadmap.items.reduce(
+        (sum, item) => sum + item.voteCount,
+        0
+      );
+      const totalFeedback = roadmap.items.reduce(
+        (sum, item) => sum + item.feedbackCount,
+        0
+      );
+
+      return {
+        ...roadmap,
+        stats: {
+          totalItems: roadmap._count.items,
+          totalChangelogs: roadmap._count.changelogs,
+          totalFeatureRequests: roadmap._count.featureRequests,
+          statusCounts,
+          categoryCounts,
+          totalVotes,
+          totalFeedback,
+          lastUpdated: roadmap.changelogs[0]?.createdAt || roadmap.updatedAt,
+        },
+      };
+    });
+
+    return { success: true, data: enrichedRoadmaps };
   } catch (error) {
     return { success: false, error };
   }
@@ -47,12 +161,33 @@ export const getAllPublicRoadmaps = async () => {
 /**
  * Update a public roadmap (scoped to org via parent project)
  */
-export const updatePublicRoadmap = async (id: string, data: Partial<{ name?: string; slug?: string; description?: string; isPublic?: boolean; allowVoting?: boolean; allowFeedback?: boolean; showChangelog?: boolean; customDomain?: string; theme?: string; logoUrl?: string; accentColor?: string }>) => {
+export const updatePublicRoadmap = async (
+  id: string,
+  data: Partial<{
+    name?: string;
+    slug?: string;
+    description?: string;
+    isPublic?: boolean;
+    allowVoting?: boolean;
+    allowFeedback?: boolean;
+    showChangelog?: boolean;
+    customDomain?: string;
+    theme?: string;
+    logoUrl?: string;
+    accentColor?: string;
+  }>
+) => {
   const { org } = await getSession();
   try {
     // Ensure the roadmap belongs to a project in the org
-    const roadmap = await prisma.publicRoadmap.findFirst({ where: { id, project: { organizationId: org } } });
-    if (!roadmap) return { success: false, error: 'Roadmap not found or not in your organization' };
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { id, project: { organizationId: org } },
+    });
+    if (!roadmap)
+      return {
+        success: false,
+        error: "Roadmap not found or not in your organization",
+      };
     const updated = await prisma.publicRoadmap.update({ where: { id }, data });
     return { success: true, data: updated };
   } catch (error) {
@@ -67,8 +202,14 @@ export const deletePublicRoadmap = async (id: string) => {
   const { org } = await getSession();
   try {
     // Ensure the roadmap belongs to a project in the org
-    const roadmap = await prisma.publicRoadmap.findFirst({ where: { id, project: { organizationId: org } } });
-    if (!roadmap) return { success: false, error: 'Roadmap not found or not in your organization' };
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { id, project: { organizationId: org } },
+    });
+    if (!roadmap)
+      return {
+        success: false,
+        error: "Roadmap not found or not in your organization",
+      };
     await prisma.publicRoadmap.delete({ where: { id } });
     return { success: true };
   } catch (error) {
@@ -103,8 +244,3 @@ export const getRoadmap = async (id: string) => {
     return { success: false, error };
   }
 };
-
-export * from "./items";
-export * from "./changelogs";
-export * from "./votes";
-export * from "./feedback"; 

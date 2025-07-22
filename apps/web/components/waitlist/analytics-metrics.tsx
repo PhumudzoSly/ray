@@ -51,7 +51,7 @@ export function MetricCard({
               {title}
             </span>
           </div>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-4">
             <div className="text-3xl font-bold tracking-tight">
               {typeof value === "number" ? value.toLocaleString() : value}
             </div>
@@ -67,10 +67,10 @@ export function MetricCard({
                 {trend.value}%
               </div>
             )}
+            {subtitle && (
+              <p className="text-sm text-muted-foreground">{subtitle}</p>
+            )}
           </div>
-          {subtitle && (
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
-          )}
         </div>
       </div>
     </div>
@@ -145,17 +145,17 @@ export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline gap-4">
                     <div className="text-3xl font-bold tracking-tight">
                       {metric.value}
                       <span className="text-lg font-normal text-muted-foreground ml-1">
                         {metric.suffix}
                       </span>
                     </div>
+                    <p className="text-sm text-muted-foreground">
+                      {metric.description}
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {metric.description}
-                  </p>
                 </div>
               </div>
             </div>

@@ -73,12 +73,6 @@ export default function WaitlistAnalytics({
         <TrafficSources analytics={analytics} />
         <StatusDistribution analytics={analytics} />
       </div>
-
-      {/* Referral Performance */}
-      <ReferralPerformance analytics={analytics} />
-
-      {/* Growth Insights */}
-      <GrowthInsights analytics={analytics} />
     </div>
   );
 }

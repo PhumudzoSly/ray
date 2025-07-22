@@ -16,7 +16,7 @@ import { Switch } from "@workspace/ui/components/switch";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Button } from "@workspace/ui/components/button";
 import { Plus, Check, X, Loader2, Edit } from "lucide-react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as roadmapActions from "@/actions/roadmap";
 import * as projectActions from "@/actions/project";
 import { toast } from "sonner";
@@ -30,6 +30,7 @@ interface RoadmapFormProps {
   roadmap?: any;
   trigger?: React.ReactNode;
   onSuccess?: () => void;
+  navigateOnCreate?: boolean;
 }
 
 const RoadmapForm = ({
@@ -37,9 +38,11 @@ const RoadmapForm = ({
   roadmap,
   trigger,
   onSuccess,
+  navigateOnCreate = true,
 }: RoadmapFormProps) => {
   const router = useRouter();
-  const { token } = useSession();
+  const { org } = useSession();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -80,9 +83,18 @@ const RoadmapForm = ({
   // Mutations
   const createRoadmapMutation = useMutation({
     mutationFn: async (data: any) => roadmapActions.createPublicRoadmap(data),
+    onSuccess: () => {
+      // Invalidate and refetch roadmaps data
+      queryClient.invalidateQueries({ queryKey: ["roadmaps", org] });
+    },
   });
   const updateRoadmapMutation = useMutation({
-    mutationFn: async (data: any) => roadmapActions.updatePublicRoadmap(data.id, data),
+    mutationFn: async (data: any) =>
+      roadmapActions.updatePublicRoadmap(data.id, data),
+    onSuccess: () => {
+      // Invalidate and refetch roadmaps data
+      queryClient.invalidateQueries({ queryKey: ["roadmaps", org] });
+    },
   });
 
   // Debounce slug for availability checking
@@ -233,8 +245,13 @@ const RoadmapForm = ({
           showChangelog: formData.showChangelog,
         });
         if (result && result.success && result.data && result.data.id) {
-          router.push(`/roadmap/${result.data.id}`);
           toast.success("Roadmap created successfully!");
+          setOpen(false);
+          resetForm();
+          // Navigate to the new roadmap if enabled
+          if (navigateOnCreate) {
+            router.push(`/roadmap/${result.data.id}`);
+          }
         }
       } else {
         await updateRoadmapMutation.mutateAsync({
@@ -250,11 +267,10 @@ const RoadmapForm = ({
           showChangelog: formData.showChangelog,
         });
         toast.success("Roadmap updated successfully!");
-        onSuccess?.();
         setOpen(false);
+        resetForm();
+        onSuccess?.();
       }
-
-      resetForm();
     } catch (error) {
       toast.error(
         mode === "create"
@@ -360,12 +376,13 @@ const RoadmapForm = ({
                       setFormData({ ...formData, slug: e.target.value })
                     }
                     placeholder="my-project-roadmap"
-                    className={`pr-10 ${slugStatus.available === false
-                      ? "border-destructive focus-visible:ring-destructive"
-                      : slugStatus.available === true
-                        ? "border-green-500 focus-visible:ring-green-500"
-                        : ""
-                      }`}
+                    className={`pr-10 ${
+                      slugStatus.available === false
+                        ? "border-destructive focus-visible:ring-destructive"
+                        : slugStatus.available === true
+                          ? "border-green-500 focus-visible:ring-green-500"
+                          : ""
+                    }`}
                   />
                   {formData.slug && (
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -383,12 +400,13 @@ const RoadmapForm = ({
               {slugStatus.message && (
                 <div className="space-y-2">
                   <p
-                    className={`text-sm ${slugStatus.available === true
-                      ? "text-green-600"
-                      : slugStatus.available === false
-                        ? "text-destructive"
-                        : "text-muted-foreground"
-                      }`}
+                    className={`text-sm ${
+                      slugStatus.available === true
+                        ? "text-green-600"
+                        : slugStatus.available === false
+                          ? "text-destructive"
+                          : "text-muted-foreground"
+                    }`}
                   >
                     {slugStatus.message}
                   </p>
@@ -499,5 +517,17 @@ const RoadmapForm = ({
 // Export both the form component and a default create component
 export { RoadmapForm };
 
-const NewRoadmap = () => <RoadmapForm mode="create" />;
+const NewRoadmap = ({
+  onSuccess,
+  navigateOnCreate = true,
+}: {
+  onSuccess?: () => void;
+  navigateOnCreate?: boolean;
+}) => (
+  <RoadmapForm
+    mode="create"
+    onSuccess={onSuccess}
+    navigateOnCreate={navigateOnCreate}
+  />
+);
 export default NewRoadmap;

@@ -140,7 +140,7 @@ export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
             </div>
             <div className="flex items-center gap-4 flex-wrap">
               <Button variant="outline" asChild>
-                <Link href={`/${waitlist.id}/edit`}>
+                <Link href={`/waitlist/${waitlist.id}/edit`}>
                   <Edit2 className="mr-2 h-4 w-4" />
                   Edit Waitlist
                 </Link>
