@@ -7,16 +7,22 @@ import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { RoadmapTabs } from "./_components/tabs";
 import { RoadmapForm } from "../components/new-roadmap";
-import { Skeleton } from "@workspace/ui/components/skeleton";
+import getQueryClient from "@/lib/query/getQueryClient";
+import { dehydrate } from "@tanstack/react-query";
+import Hydrate from "@/lib/query/hydrate.client";
+import Header from "@/components/shared/header";
 
 export default async function RoadmapLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const roadmapId = params.id;
+  const roadmapId = (await params).id;
+  const queryClient = getQueryClient();
+
+  // Fetch roadmap data once, then prefill the query cache with it
   const res = await getRoadmap(roadmapId);
   const roadmap = res?.data;
 
@@ -24,41 +30,61 @@ export default async function RoadmapLayout({
     redirect("/roadmap");
   }
 
+  // Set the prefetched data directly in the query cache
+  await queryClient.prefetchQuery({
+    queryKey: ["roadmap", roadmapId],
+    queryFn: () => Promise.resolve(res),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <div className="space-y-4 container">
-      <div className="flex items-center gap-4 flex-wrap justify-between">
-        <div className="flex items-center gap-4">
-          <Link href={`/roadmap`}>
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-          </Link>
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <h1 className="text-xl font-semibold">{roadmap?.name}</h1>
-              <Badge variant={roadmap?.isPublic ? "info" : "dark"}>
-                {roadmap?.isPublic ? "Public" : "Private"}
-              </Badge>
+    <>
+      <Header
+        crumb={[
+          { title: "Roadmaps", url: "/roadmap" },
+          { title: roadmap?.name },
+        ]}
+      >
+        {null}
+      </Header>
+      <Hydrate state={dehydratedState}>
+        <div className="space-y-4 container ">
+          <div className="flex items-center p-4 gap-4 flex-wrap justify-between">
+            <div className="flex items-center gap-4">
+              <Link href={`/roadmap`}>
+                <Button variant="ghost" size="icon">
+                  <ArrowLeft className="w-4 h-4" />
+                </Button>
+              </Link>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h1 className="text-xl font-semibold">{roadmap?.name}</h1>
+                  <Badge variant={roadmap?.isPublic ? "info" : "dark"}>
+                    {roadmap?.isPublic ? "Public" : "Private"}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  {roadmap?.description}
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {roadmap?.description}
-            </p>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" asChild>
+                <Link href={`/rm/${roadmap?.slug}`} target="_blank">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  View Public Page
+                </Link>
+              </Button>
+              <RoadmapForm mode="edit" roadmap={roadmap} />
+            </div>
           </div>
+          <>
+            <RoadmapTabs roadmapId={roadmapId} />
+            <div className="p-4">{children}</div>
+          </>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="secondary" asChild>
-            <Link href={`/rm/${roadmap?.slug}`} target="_blank">
-              <ExternalLink className="w-4 h-4 mr-2" />
-              View Public Page
-            </Link>
-          </Button>
-          <RoadmapForm mode="edit" roadmap={roadmap} />
-        </div>
-      </div>
-      <>
-        <RoadmapTabs roadmapId={roadmapId} />
-        {children}
-      </>
-    </div>
+      </Hydrate>
+    </>
   );
 }
