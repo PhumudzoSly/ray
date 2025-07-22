@@ -1,412 +1,194 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as waitlistEntryActions from "@/actions/waitlist/entries";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
-import { Input } from "@workspace/ui/components/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
-import { Badge } from "@workspace/ui/components/badge";
-import { Checkbox } from "@workspace/ui/components/checkbox";
-import {
-  Search,
-  MoreHorizontal,
-  Mail,
-  Trash2,
-  Download,
-  UserCheck,
-  ExternalLink,
-  Filter,
-  Users,
-  Share2,
-  Calendar,
-} from "lucide-react";
-import { toast } from "sonner";
-import { format } from "date-fns";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { ExternalLink, Users, BarChart3, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-
-interface WaitlistEntry {
-  id: string;
-  email: string;
-  name?: string;
-  status: string;
-  position: number;
-  referralCount: number;
-  createdAt: string;
-}
+import { toast } from "sonner";
+import { InlineEditField } from "@workspace/ui/components/inline-field";
+import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
+import { queryKeys } from "@/lib/query-keys";
+import { getWaitlist, updateWaitlist } from "@/actions/waitlist";
+import WaitlistOverview from "./waitlist-overview";
+import WaitlistAnalytics from "./waitlist-analytics";
 
 interface WaitlistManagerProps {
   waitlistId: string;
-  waitlist: {
-    id: string;
-    name: string;
-    description: string;
-    slug: string;
-    project: {
-      name: string;
-    };
-  };
-  entries: WaitlistEntry[];
-  analytics: {
-    totalEntries: number;
-    totalReferrals: number;
-    recentEntries: number;
-  };
 }
 
-export default function WaitlistManager({
-  waitlistId,
-  waitlist,
-  entries,
-  analytics,
-}: WaitlistManagerProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
   const queryClient = useQueryClient();
+  const [view, setView] = useState<"overview" | "analytics">("overview");
 
-  // Mutations
-  const updateEntryStatusMutation = useMutation({
-    mutationFn: async ({
-      entryId,
-      status,
-    }: {
-      entryId: string;
-      status: string;
-    }) => waitlistEntryActions.updateWaitlistEntry(entryId, { status }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["waitlistEntries", waitlistId],
-      }),
+  // Fetch waitlist data
+  const { data: waitlist, isLoading: waitlistLoading } = useQuery({
+    queryKey: queryKeys.waitlist(waitlistId),
+    queryFn: async () => {
+      const result = await getWaitlist(waitlistId);
+      if (!result.success || !result.data) {
+        throw new Error("Waitlist not found");
+      }
+      return result.data;
+    },
   });
 
-  const deleteWaitlistEntryMutation = useMutation({
-    mutationFn: async ({ entryId }: { entryId: string }) =>
-      waitlistEntryActions.deleteWaitlistEntry(entryId),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["waitlistEntries", waitlistId],
-      }),
-  });
-
-  const filteredEntries = entries.filter(
-    (entry) =>
-      entry.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleStatusChange = async (entryId: string, newStatus: string) => {
-    try {
-      await updateEntryStatusMutation.mutateAsync({
-        entryId,
-        status: newStatus,
+  // Generic mutation for updating waitlist fields with optimistic updates
+  const updateFieldMutation = useMutation({
+    mutationFn: async ({ field, value }: { field: string; value: string }) => {
+      const updateData: any = {};
+      updateData[field] = value;
+      return await updateWaitlist(waitlistId, updateData);
+    },
+    onMutate: async ({ field, value }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: queryKeys.waitlist(waitlistId),
       });
-      toast.success("Status updated successfully");
-    } catch (error) {
-      toast.error("Failed to update status");
-    }
-  };
 
-  const handleDeleteEntry = async (entryId: string) => {
-    try {
-      await deleteWaitlistEntryMutation.mutateAsync({ entryId });
-      toast.success("Entry deleted successfully");
-    } catch (error) {
-      toast.error("Failed to delete entry");
-    }
-  };
-
-  const handleBulkInvite = async () => {
-    try {
-      await Promise.all(
-        selectedEntries.map((entryId) =>
-          updateEntryStatusMutation.mutateAsync({ entryId, status: "invited" })
-        )
+      // Snapshot the previous value
+      const previousWaitlist = queryClient.getQueryData(
+        queryKeys.waitlist(waitlistId)
       );
-      toast.success(`Invited ${selectedEntries.length} users`);
-      setSelectedEntries([]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(queryKeys.waitlist(waitlistId), (old: any) => {
+        if (!old) return old;
+        return { ...old, [field]: value };
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousWaitlist };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousWaitlist) {
+        queryClient.setQueryData(
+          queryKeys.waitlist(waitlistId),
+          context.previousWaitlist
+        );
+      }
+      toast.error(`Failed to update ${variables.field}`);
+    },
+    onSuccess: (data, variables) => {
+      toast.success(`${variables.field} updated successfully`);
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.waitlist(waitlistId),
+      });
+    },
+  });
+
+  const handleUpdateField = async (field: string, value: string) => {
+    // Optimistically update the local copy first
+    const previousWaitlist = queryClient.getQueryData(
+      queryKeys.waitlist(waitlistId)
+    );
+    queryClient.setQueryData(queryKeys.waitlist(waitlistId), (old: any) => {
+      if (!old) return old;
+      return { ...old, [field]: value };
+    });
+
+    try {
+      await updateFieldMutation.mutateAsync({ field, value });
     } catch (error) {
-      toast.error("Failed to send invites");
+      // Revert the optimistic update if the mutation fails
+      queryClient.setQueryData(
+        queryKeys.waitlist(waitlistId),
+        previousWaitlist
+      );
+      console.error("Error updating field:", error);
     }
   };
 
-  const handleExportCSV = () => {
-    const csvData = [
-      ["Email", "Name", "Status", "Position", "Referrals", "Joined Date"],
-      ...filteredEntries.map((entry) => [
-        entry.email,
-        entry.name || "",
-        entry.status,
-        entry.position.toString(),
-        entry.referralCount.toString(),
-        format(new Date(entry.createdAt), "yyyy-MM-dd"),
-      ]),
-    ];
-
-    const csvContent = csvData.map((row) => row.join(",")).join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${waitlist.name}-waitlist.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return <Badge variant="secondary">Pending</Badge>;
-      case "verified":
-        return <Badge variant="default">Verified</Badge>;
-      case "invited":
-        return (
-          <Badge variant="outline" className="border-green-500 text-green-500">
-            Invited
-          </Badge>
-        );
-      case "joined":
-        return (
-          <Badge variant="outline" className="border-blue-500 text-blue-500">
-            Joined
-          </Badge>
-        );
-      case "bounced":
-        return <Badge variant="destructive">Bounced</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
+  if (waitlistLoading || !waitlist) {
+    return (
+      <div className="container flex items-center justify-center py-8">
+        <Loader2 className="h-6 w-6 animate-spin" />
+      </div>
+    );
+  }
 
   return (
-    <div className="p-3 space-y-6">
+    <div className="container space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">{waitlist.name}</h1>
-          <p className="text-muted-foreground mt-1">{waitlist.description}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-sm text-muted-foreground">Project:</span>
-            <span className="text-sm font-medium">
-              {waitlist.project?.name}
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" asChild>
-            <Link href={`/wl/${waitlist.slug}`} target="_blank">
-              <ExternalLink className="w-4 h-4 mr-2" />
-              View Public
-            </Link>
-          </Button>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Total Entries</span>
-          </div>
-          <div className="text-2xl font-bold mt-1">
-            {analytics.totalEntries}
-          </div>
-        </div>
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center gap-2">
-            <Share2 className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
-              Total Referrals
-            </span>
-          </div>
-          <div className="text-2xl font-bold mt-1">
-            {analytics.totalReferrals}
-          </div>
-        </div>
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">
-              Recent Signups
-            </span>
-          </div>
-          <div className="text-2xl font-bold mt-1">
-            {analytics.recentEntries}
-          </div>
-        </div>
-      </div>
-
-      {/* Toolbar */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search entries..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-[300px]"
+      <div className="space-y-3 p-6">
+        <div className="flex items-center flex-wrap gap-4 justify-between">
+          <div className="space-y-1">
+            <InlineEditField
+              value={waitlist.name || ""}
+              onSave={(value) => handleUpdateField("name", value)}
+              className="text-2xl md:text-3xl font-bold tracking-tight hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
+              disabled={updateFieldMutation.isPending}
+            />
+            <InlineEditTextArea
+              value={waitlist.description || ""}
+              onSave={(value) => handleUpdateField("description", value)}
+              className="text-sm text-muted-foreground hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2 resize-none"
+              disabled={updateFieldMutation.isPending}
+              placeholder="Add a description..."
             />
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Filter className="w-4 h-4 mr-2" />
-                Status: {statusFilter === "all" ? "All" : statusFilter}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setStatusFilter("all")}>
-                All
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("pending")}>
-                Pending
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("verified")}>
-                Verified
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("invited")}>
-                Invited
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("joined")}>
-                Joined
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {selectedEntries.length > 0 && (
-            <Button onClick={handleBulkInvite} size="sm">
-              <Mail className="w-4 h-4 mr-2" />
-              Invite Selected ({selectedEntries.length})
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <span>Project:</span>
+              <span className="font-medium">{waitlist.project?.name}</span>
+            </div>
+            <Button asChild>
+              <Link href={`/wl/${waitlist.slug}`} target="_blank">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                View Public
+              </Link>
             </Button>
-          )}
-          <Button onClick={handleExportCSV} variant="outline" size="sm">
-            <Download className="w-4 h-4 mr-2" />
-            Export CSV
-          </Button>
+          </div>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">
-                <Checkbox
-                  checked={selectedEntries.length === filteredEntries.length}
-                  onCheckedChange={(checked) => {
-                    if (checked) {
-                      setSelectedEntries(filteredEntries.map((e) => e.id));
-                    } else {
-                      setSelectedEntries([]);
-                    }
-                  }}
-                />
-              </TableHead>
-              <TableHead>Position</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Referrals</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead className="w-12"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredEntries.map((entry) => (
-              <TableRow key={entry.id}>
-                <TableCell>
-                  <Checkbox
-                    checked={selectedEntries.includes(entry.id)}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedEntries([...selectedEntries, entry.id]);
-                      } else {
-                        setSelectedEntries(
-                          selectedEntries.filter((id) => id !== entry.id)
-                        );
-                      }
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <div className="font-mono text-sm">#{entry.position}</div>
-                </TableCell>
-                <TableCell>
-                  <div className="font-medium">{entry.email}</div>
-                </TableCell>
-                <TableCell>
-                  <div>{entry.name || "-"}</div>
-                </TableCell>
-                <TableCell>{getStatusBadge(entry.status)}</TableCell>
-                <TableCell>
-                  <div className="text-center">{entry.referralCount}</div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm text-muted-foreground">
-                    {format(new Date(entry.createdAt), "MMM d, yyyy")}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem
-                        onClick={() => handleStatusChange(entry.id, "invited")}
-                        disabled={entry.status === "invited"}
-                      >
-                        <Mail className="w-4 h-4 mr-2" />
-                        Invite
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleStatusChange(entry.id, "joined")}
-                        disabled={entry.status === "joined"}
-                      >
-                        <UserCheck className="w-4 h-4 mr-2" />
-                        Mark as Joined
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handleDeleteEntry(entry.id)}
-                        className="text-red-600"
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        {filteredEntries.length === 0 && (
-          <div className="text-center py-8 text-muted-foreground">
-            No entries found
+      {/* Custom Tabs */}
+      <div className="w-full border-y">
+        <ScrollArea className="w-full whitespace-nowrap">
+          <div className="flex w-full gap-4 p-4">
+            <button
+              onClick={() => setView("overview")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "overview"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <Users size={18} />
+              Overview
+            </button>
+            <button
+              onClick={() => setView("analytics")}
+              className={cn(
+                "inline-flex gap-3 items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                view === "analytics"
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "hover:bg-muted hover:text-muted-foreground"
+              )}
+            >
+              <BarChart3 size={18} />
+              Analytics
+            </button>
           </div>
-        )}
+        </ScrollArea>
+      </div>
+
+      {/* Content */}
+      <div className="p-6">
+        {view === "overview" ? (
+          <WaitlistOverview waitlistId={waitlistId} />
+        ) : null}
+
+        {view === "analytics" ? (
+          <WaitlistAnalytics waitlistId={waitlistId} />
+        ) : null}
       </div>
     </div>
   );

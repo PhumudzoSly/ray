@@ -1,27 +1,51 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Switch } from "@workspace/ui/switch";
-import { Label } from "@workspace/ui/label";
+import { Switch } from "@workspace/ui/components/switch";
+import { Label } from "@workspace/ui/components/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@workspace/ui/select";
-import { Button } from "@workspace/ui/button";
-import { Badge } from "@workspace/ui/badge";
+} from "@workspace/ui/components/select";
+import { Badge } from "@workspace/ui/components/badge";
 import { CheckCircle, XCircle } from "lucide-react";
 import {
   getIntegrationsForPurpose,
   createIntegrationUsage,
   deleteIntegrationUsage,
   getIntegrationUsage,
-  getAvailablePurposes,
 } from "@/actions/integration/usage";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAvailablePurposes } from "@/lib/utils";
+
+// Types based on the Prisma schema and action responses
+interface Integration {
+  id: string;
+  name: string;
+  type: string;
+  config: any;
+  isActive: boolean;
+  organizationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdById?: string | null;
+}
+
+interface IntegrationUsage {
+  id: string;
+  integrationId: string;
+  entityType: string;
+  entityId: string;
+  purpose: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  integration?: Integration;
+}
 
 interface IntegrationLinkerProps {
   entityType: string;
@@ -40,7 +64,6 @@ export function IntegrationLinker({
   description,
   onSuccess,
 }: IntegrationLinkerProps) {
-  const queryClient = useQueryClient();
   const [enabled, setEnabled] = useState(false);
   const [selectedIntegrationId, setSelectedIntegrationId] = useState<
     string | null
@@ -51,7 +74,7 @@ export function IntegrationLinker({
 
   const { data: integrations, isLoading: integrationsLoading } = useQuery({
     queryKey: ["integrations-for-purpose", purpose],
-    queryFn: async () => {
+    queryFn: async (): Promise<Integration[]> => {
       const res = await getIntegrationsForPurpose(purpose);
       if (res.success) return res.data || [];
       throw new Error("Failed to load integrations");
@@ -65,17 +88,24 @@ export function IntegrationLinker({
     refetch: refetchUsage,
   } = useQuery({
     queryKey: ["integration-usage", entityType, entityId, purpose],
-    queryFn: async () => {
+    queryFn: async (): Promise<IntegrationUsage | null> => {
       const res = await getIntegrationUsage(entityType, entityId, purpose);
-      if (res.success && res.data) return res.data;
+      if (res.success && res.data) return res.data as IntegrationUsage;
       return null;
     },
     enabled: !!entityId,
-    onSuccess: (data) => {
-      setEnabled(!!data?.isActive);
-      setSelectedIntegrationId(data?.integrationId || null);
-    },
   });
+
+  // Use useEffect to handle side effects when usage data changes
+  useEffect(() => {
+    if (usage) {
+      setEnabled(!!usage.isActive);
+      setSelectedIntegrationId(usage.integrationId || null);
+    } else {
+      setEnabled(false);
+      setSelectedIntegrationId(null);
+    }
+  }, [usage]);
 
   const unlinkMutation = useMutation({
     mutationFn: async (usageId: string) => {
@@ -187,7 +217,7 @@ export function IntegrationLinker({
                 </SelectItem>
               ) : (
                 integrations &&
-                integrations.map((integration) => (
+                integrations.map((integration: Integration) => (
                   <SelectItem key={integration.id} value={integration.id}>
                     <div className="flex items-center gap-2">
                       <span>{integration.name}</span>

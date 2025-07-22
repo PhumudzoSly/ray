@@ -49,3 +49,36 @@ export const hasErrorInput = [
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/**
+ * Get all available purposes for integrations
+ */
+export const getAvailablePurposes = () => {
+  return [
+    {
+      value: "email_sync",
+      label: "Email Sync",
+      description: "Sync data to email platforms",
+    },
+    {
+      value: "code_sync",
+      label: "Code Sync",
+      description: "Sync data from code repositories",
+    },
+    {
+      value: "analytics",
+      label: "Analytics",
+      description: "Send data to analytics platforms",
+    },
+    {
+      value: "webhook",
+      label: "Webhook",
+      description: "Send webhooks to external services",
+    },
+    {
+      value: "payment",
+      label: "Payment",
+      description: "Process payments",
+    },
+  ] as const;
+};

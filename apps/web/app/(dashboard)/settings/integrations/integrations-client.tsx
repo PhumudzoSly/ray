@@ -9,11 +9,19 @@ import {
   CheckCircle,
   XCircle,
   ExternalLink,
+  Settings,
+  Link,
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Separator } from "@workspace/ui/components/separator";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import {
   getAllIntegrations,
   deleteIntegration,
@@ -43,6 +51,7 @@ const PLATFORMS = [
     key: "resend",
     name: "Resend",
     category: "Email",
+    description: "Transactional email service for sending emails",
     icon: Mail,
     managementUrl: (integration: Integration) =>
       integration.config?.dashboardUrl || null,
@@ -51,6 +60,7 @@ const PLATFORMS = [
     key: "loops",
     name: "Loops",
     category: "Email",
+    description: "Email marketing and automation platform",
     icon: Mail,
     managementUrl: (integration: Integration) =>
       integration.config?.dashboardUrl || null,
@@ -59,6 +69,7 @@ const PLATFORMS = [
     key: "github",
     name: "GitHub",
     category: "Code Hosting",
+    description: "Git repository hosting and collaboration platform",
     icon: (props: any) => (
       <svg
         {...props}
@@ -185,6 +196,7 @@ export function IntegrationsClient({
         return type.toLowerCase();
     }
   };
+
   if (integrations) {
     safeIntegrations = integrations.map((integration) => ({
       ...integration,
@@ -204,6 +216,8 @@ export function IntegrationsClient({
       integrationsByPlatform[key].push(integration);
     }
   }
+
+  const hasActiveIntegrations = safeIntegrations.length > 0;
 
   if (isLoading) {
     return (
@@ -246,134 +260,276 @@ export function IntegrationsClient({
         </div>
       </div>
       <Separator />
-      <div className="space-y-8">
-        {CATEGORIES.map((category) => (
-          <div key={category}>
-            <h2 className="text-lg font-semibold mb-2">{category}</h2>
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-              {PLATFORMS.filter((p) => p.category === category).map(
-                (platform) => {
-                  const Icon = platform.icon;
-                  const platformIntegrations =
-                    integrationsByPlatform[platform.key] || [];
-                  return (
-                    <Card
-                      key={platform.key}
-                      className="flex flex-col justify-between"
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-center space-x-4 mb-2">
-                          <span className="p-2 rounded-lg bg-muted">
-                            <Icon className="h-6 w-6 text-primary" />
-                          </span>
-                          <span className="font-medium text-base">
-                            {platform.name}
-                          </span>
-                        </div>
-                        {platformIntegrations.length === 0 ? (
-                          <div className="text-muted-foreground text-sm mb-4">
-                            No integrations connected.
-                          </div>
-                        ) : (
-                          <div className="space-y-2 mb-4">
-                            {platformIntegrations.map((integration) => (
-                              <div
-                                key={integration.id}
-                                className="flex items-center justify-between bg-muted/50 rounded px-3 py-2"
-                              >
-                                <span className="truncate">
-                                  {integration.name}
+
+      <Tabs
+        defaultValue={hasActiveIntegrations ? "active" : "add"}
+        className="space-y-6"
+      >
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="active" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Active Integrations
+            {hasActiveIntegrations && (
+              <Badge variant="secondary" className="ml-1">
+                {safeIntegrations.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger value="add" className="flex items-center gap-2">
+            <Link className="h-4 w-4" />
+            Add New Integration
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="active" className="space-y-6">
+          {!hasActiveIntegrations ? (
+            <div className="text-center py-12">
+              <div className="mx-auto w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-4">
+                <Settings className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-medium mb-2">
+                No active integrations
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                You haven't connected any integrations yet. Add your first
+                integration to get started.
+              </p>
+              <Button
+                onClick={() => {
+                  const tabsTrigger = document.querySelector(
+                    '[data-value="add"]'
+                  ) as HTMLElement;
+                  tabsTrigger?.click();
+                }}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Integration
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {CATEGORIES.map((category) => {
+                const categoryPlatforms = PLATFORMS.filter(
+                  (p) => p.category === category
+                );
+                const hasCategoryIntegrations = categoryPlatforms.some(
+                  (platform) =>
+                    (integrationsByPlatform[platform.key]?.length ?? 0) > 0
+                );
+
+                if (!hasCategoryIntegrations) return null;
+
+                return (
+                  <div key={category}>
+                    <h2 className="text-lg font-semibold mb-4">{category}</h2>
+                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                      {categoryPlatforms
+                        .filter(
+                          (platform) =>
+                            (integrationsByPlatform[platform.key]?.length ??
+                              0) > 0
+                        )
+                        .map((platform) => {
+                          const Icon = platform.icon;
+                          const platformIntegrations =
+                            integrationsByPlatform[platform.key] || [];
+
+                          return (
+                            <Card
+                              key={platform.key}
+                              className="flex flex-col justify-between"
+                            >
+                              <CardContent className="p-6">
+                                <div className="flex items-center space-x-4 mb-4">
+                                  <span className="p-2 rounded-lg bg-muted">
+                                    <Icon className="h-6 w-6 text-primary" />
+                                  </span>
+                                  <div>
+                                    <span className="font-medium text-base block">
+                                      {platform.name}
+                                    </span>
+                                    <span className="text-sm text-muted-foreground">
+                                      {platformIntegrations.length} integration
+                                      {platformIntegrations.length !== 1
+                                        ? "s"
+                                        : ""}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  {platformIntegrations.map((integration) => (
+                                    <div
+                                      key={integration.id}
+                                      className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2"
+                                    >
+                                      <span className="truncate text-sm">
+                                        {integration.name}
+                                      </span>
+                                      <div className="flex items-center space-x-2">
+                                        {integration.isActive ? (
+                                          <Badge
+                                            variant="default"
+                                            className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
+                                          >
+                                            <CheckCircle className="h-3 w-3 mr-1" />
+                                            Active
+                                          </Badge>
+                                        ) : (
+                                          <Badge
+                                            variant="secondary"
+                                            className="text-xs"
+                                          >
+                                            <XCircle className="h-3 w-3 mr-1" />
+                                            Inactive
+                                          </Badge>
+                                        )}
+                                        {platform.managementUrl(integration) ? (
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-7 w-7"
+                                            onClick={() =>
+                                              window.open(
+                                                platform.managementUrl(
+                                                  integration
+                                                )!,
+                                                "_blank"
+                                              )
+                                            }
+                                            title="Manage on platform"
+                                          >
+                                            <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                                          </Button>
+                                        ) : (
+                                          <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="h-7"
+                                            onClick={() => {
+                                              setEditIntegration(
+                                                integration as any
+                                              );
+                                              setModalType(
+                                                getIntegrationPlatformKey(
+                                                  integration.type
+                                                )
+                                              );
+                                              setModalOpen(true);
+                                            }}
+                                          >
+                                            <Edit className="h-3 w-3 mr-1" />
+                                            Edit
+                                          </Button>
+                                        )}
+                                        <Button
+                                          variant="outline"
+                                          size="icon"
+                                          className="h-7 w-7"
+                                          onClick={() =>
+                                            handleDelete(integration.id)
+                                          }
+                                          title="Delete integration"
+                                        >
+                                          <Trash2 className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="add" className="space-y-6">
+          <div className="space-y-8">
+            {CATEGORIES.map((category) => (
+              <div key={category}>
+                <h2 className="text-lg font-semibold mb-4">{category}</h2>
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                  {PLATFORMS.filter((p) => p.category === category).map(
+                    (platform) => {
+                      const Icon = platform.icon;
+                      const platformIntegrations =
+                        integrationsByPlatform[platform.key] || [];
+                      const isConnected = platformIntegrations.length > 0;
+
+                      return (
+                        <Card
+                          key={platform.key}
+                          className="flex flex-col justify-between"
+                        >
+                          <CardContent className="p-6">
+                            <div className="flex items-center space-x-4 mb-3">
+                              <span className="p-2 rounded-lg bg-muted">
+                                <Icon className="h-6 w-6 text-primary" />
+                              </span>
+                              <div className="flex-1">
+                                <span className="font-medium text-base block">
+                                  {platform.name}
                                 </span>
-                                <div className="flex items-center space-x-2">
-                                  {integration.isActive ? (
-                                    <Badge
-                                      variant="default"
-                                      className="bg-green-100 text-green-800 hover:bg-green-100"
-                                    >
-                                      <CheckCircle className="h-3 w-3 mr-1" />
-                                      Active
-                                    </Badge>
-                                  ) : (
-                                    <Badge variant="secondary">
-                                      <XCircle className="h-3 w-3 mr-1" />
-                                      Inactive
-                                    </Badge>
-                                  )}
-                                  {platform.managementUrl(integration) ? (
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() =>
-                                        window.open(
-                                          platform.managementUrl(integration)!,
-                                          "_blank"
-                                        )
-                                      }
-                                      title="Manage on platform"
-                                    >
-                                      <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => {
-                                        setEditIntegration(integration as any);
-                                        setModalType(
-                                          getIntegrationPlatformKey(
-                                            integration.type
-                                          )
-                                        );
-                                        setModalOpen(true);
-                                      }}
-                                    >
-                                      <Edit className="h-4 w-4 mr-1" />
-                                      Manage
-                                    </Button>
-                                  )}
-                                  <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => handleDelete(integration.id)}
-                                    title="Delete integration"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
+                                <span className="text-sm text-muted-foreground">
+                                  {platform.description}
+                                </span>
+                              </div>
+                            </div>
+
+                            {isConnected && (
+                              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <div className="flex items-center text-sm text-green-800">
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  {platformIntegrations.length} integration
+                                  {platformIntegrations.length !== 1
+                                    ? "s"
+                                    : ""}{" "}
+                                  connected
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        )}
-                        <Button
-                          variant="secondary"
-                          className="w-full mt-2"
-                          onClick={() => {
-                            setEditIntegration({
-                              id: "",
-                              name: platform.name,
-                              type: platform.key,
-                              config: getDefaultConfig(platform.key),
-                              isActive: true,
-                              organizationId: "",
-                              createdAt: "",
-                              updatedAt: "",
-                            });
-                            setModalType(platform.key);
-                            setModalOpen(true);
-                          }}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add {platform.name}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  );
-                }
-              )}
-            </div>
+                            )}
+
+                            <Button
+                              variant={isConnected ? "outline" : "default"}
+                              className="w-full"
+                              onClick={() => {
+                                setEditIntegration({
+                                  id: "",
+                                  name: platform.name,
+                                  type: platform.key,
+                                  config: getDefaultConfig(platform.key),
+                                  isActive: true,
+                                  organizationId: "",
+                                  createdAt: "",
+                                  updatedAt: "",
+                                });
+                                setModalType(platform.key);
+                                setModalOpen(true);
+                              }}
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              {isConnected
+                                ? `Add Another ${platform.name}`
+                                : `Connect ${platform.name}`}
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </TabsContent>
+      </Tabs>
+
       {modalType === "resend" && (
         <ResendIntegrationModal
           open={modalOpen}

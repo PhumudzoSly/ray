@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
+import { IntegrationTypeType } from "@workspace/backend";
 
 export type IntegrationUsageData = {
   integrationId: string;
@@ -10,15 +11,23 @@ export type IntegrationUsageData = {
   isActive?: boolean;
 };
 
+export type IntegrationUsageResponse<T = any> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+};
+
 /**
  * Link an integration to an entity for a specific purpose
  */
-export const createIntegrationUsage = async (data: IntegrationUsageData) => {
-  const { org } = await getSession();
+export const createIntegrationUsage = async (
+  data: IntegrationUsageData
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
     // Verify the integration belongs to the org
     const integration = await prisma.integration.findFirst({
-      where: { id: data.integrationId, organizationId: org },
+      where: { id: data.integrationId, organizationId: session.org },
     });
     if (!integration) {
       return {
@@ -54,7 +63,11 @@ export const createIntegrationUsage = async (data: IntegrationUsageData) => {
 
     return { success: true, data: usage };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
@@ -65,21 +78,25 @@ export const getIntegrationUsage = async (
   entityType: string,
   entityId: string,
   purpose: string
-) => {
-  const { org } = await getSession();
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
     const usage = await prisma.integrationUsage.findFirst({
       where: {
         entityType,
         entityId,
         purpose,
-        integration: { organizationId: org },
+        integration: { organizationId: session.org },
       },
       include: { integration: true },
     });
     return { success: true, data: usage };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
@@ -89,41 +106,59 @@ export const getIntegrationUsage = async (
 export const getEntityIntegrationUsages = async (
   entityType: string,
   entityId: string
-) => {
-  const { org } = await getSession();
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
     const usages = await prisma.integrationUsage.findMany({
       where: {
         entityType,
         entityId,
-        integration: { organizationId: org },
+        integration: { organizationId: session.org },
       },
       include: { integration: true },
       orderBy: { createdAt: "desc" },
     });
     return { success: true, data: usages };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
 /**
  * Get all integrations available for a specific purpose
  */
-export const getIntegrationsForPurpose = async (purpose: string) => {
-  const { org } = await getSession();
+export const getIntegrationsForPurpose = async (
+  purpose: string
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
+    const integrationType = getIntegrationTypeForPurpose(purpose);
+    if (!integrationType) {
+      return {
+        success: false,
+        error: `No integration type found for purpose: ${purpose}`,
+      };
+    }
+
     const integrations = await prisma.integration.findMany({
       where: {
-        organizationId: org,
+        organizationId: session.org,
         isActive: true,
-        type: getIntegrationTypeForPurpose(purpose),
+        type: integrationType,
       },
       orderBy: { createdAt: "desc" },
     });
     return { success: true, data: integrations };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
@@ -133,80 +168,63 @@ export const getIntegrationsForPurpose = async (purpose: string) => {
 export const updateIntegrationUsage = async (
   id: string,
   data: Partial<{ isActive: boolean }>
-) => {
-  const { org } = await getSession();
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
     const usage = await prisma.integrationUsage.update({
       where: {
         id,
-        integration: { organizationId: org },
+        integration: { organizationId: session.org },
       },
       data,
       include: { integration: true },
     });
     return { success: true, data: usage };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
 /**
  * Delete integration usage
  */
-export const deleteIntegrationUsage = async (id: string) => {
-  const { org } = await getSession();
+export const deleteIntegrationUsage = async (
+  id: string
+): Promise<IntegrationUsageResponse> => {
+  const session = await getSession();
   try {
     await prisma.integrationUsage.delete({
       where: {
         id,
-        integration: { organizationId: org },
+        integration: { organizationId: session.org },
       },
     });
     return { success: true };
   } catch (error) {
-    return { success: false, error };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 };
 
 /**
  * Helper function to map purpose to integration type
  */
-function getIntegrationTypeForPurpose(purpose: string): string | undefined {
-  const purposeToTypeMap: Record<string, string> = {
+function getIntegrationTypeForPurpose(
+  purpose: string
+): IntegrationTypeType | undefined {
+  const purposeToTypeMap: Record<string, IntegrationTypeType> = {
     email_sync: "RESEND",
     code_sync: "GITHUB",
-    analytics: "POSTHOG", // Future
-    webhook: "WEBHOOK", // Future
-    payment: "STRIPE", // Future
+    analytics: "RESEND", // Using RESEND as placeholder until POSTHOG is added
+    webhook: "RESEND", // Using RESEND as placeholder until WEBHOOK is added
+    payment: "RESEND", // Using RESEND as placeholder until STRIPE is added
   };
   return purposeToTypeMap[purpose];
 }
-
-/**
- * Get all available purposes for integrations
- */
-export const getAvailablePurposes = () => {
-  return [
-    {
-      value: "email_sync",
-      label: "Email Sync",
-      description: "Sync data to email platforms",
-    },
-    {
-      value: "code_sync",
-      label: "Code Sync",
-      description: "Sync data from code repositories",
-    },
-    {
-      value: "analytics",
-      label: "Analytics",
-      description: "Send data to analytics platforms",
-    },
-    {
-      value: "webhook",
-      label: "Webhook",
-      description: "Send webhooks to external services",
-    },
-    { value: "payment", label: "Payment", description: "Process payments" },
-  ];
-};

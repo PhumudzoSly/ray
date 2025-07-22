@@ -30,7 +30,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const client = getQueryClient();
 
   return (
@@ -47,7 +46,7 @@ export default function RootLayout({
               defaultTheme="dark"
             >
               <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-              <Toaster />
+              <Toaster richColors />
             </ThemeProvider>
           </HydrationBoundary>
         </ReactQueryProvider>

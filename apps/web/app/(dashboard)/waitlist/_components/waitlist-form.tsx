@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { Badge } from "@workspace/ui/components/badge";
-import { Copy, Key, Mail } from "lucide-react";
+import { Copy, Key, Mail, Loader2 } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
 import { getIntegrationsByPurpose } from "@/actions/integration";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
@@ -33,7 +33,7 @@ type FormState = {
   showSocialProof: boolean;
   customMessage: string;
   emailSyncEnabled: boolean;
-  emailIntegrationId: string | null;
+  integrationId: string | null;
 };
 
 interface WaitlistFormProps {
@@ -72,7 +72,19 @@ export default function WaitlistForm({
         } else {
           router.push(`/waitlist/${result.data.id}`);
         }
+      } else {
+        // Handle case where server returns success: false
+        const errorMessage = result?.error || "Failed to create waitlist";
+        toast.error(errorMessage);
       }
+    },
+    onError: (error: any) => {
+      console.error("Error creating waitlist:", error);
+      toast.error(
+        error?.message ||
+          error?.toString() ||
+          "An unexpected error occurred while creating the waitlist"
+      );
     },
   });
 
@@ -80,12 +92,26 @@ export default function WaitlistForm({
     mutationFn: async (data: any) =>
       waitlistActions.updateWaitlist(waitlistId!, data),
     onSuccess: (result) => {
-      toast.success("Waitlist updated successfully!");
-      if (onSuccess) {
-        onSuccess(result);
+      if (result && result.success) {
+        toast.success("Waitlist updated successfully!");
+        if (onSuccess) {
+          onSuccess(result);
+        } else {
+          router.push(`/waitlist/${waitlistId}`);
+        }
       } else {
-        router.push(`/waitlist/${waitlistId}`);
+        // Handle case where server returns success: false
+        const errorMessage = result?.error || "Failed to update waitlist";
+        toast.error(errorMessage);
       }
+    },
+    onError: (error: any) => {
+      console.error("Error updating waitlist:", error);
+      toast.error(
+        error?.message ||
+          error?.toString() ||
+          "An unexpected error occurred while updating the waitlist"
+      );
     },
   });
 
@@ -100,7 +126,7 @@ export default function WaitlistForm({
     showSocialProof: true,
     customMessage: "",
     emailSyncEnabled: false,
-    emailIntegrationId: null,
+    integrationId: null,
   });
 
   // Populate form when editing
@@ -117,7 +143,7 @@ export default function WaitlistForm({
         showSocialProof: initialData.showSocialProof,
         customMessage: initialData.customMessage || "",
         emailSyncEnabled: (initialData as any).emailSyncEnabled || false,
-        emailIntegrationId: (initialData as any).emailIntegrationId || null,
+        integrationId: (initialData as any).integrationId || null,
       });
     }
   }, [mode, initialData]);
@@ -140,35 +166,43 @@ export default function WaitlistForm({
 
   // Validate form
   const validateForm = (form: FormState) => {
+    const errors: string[] = [];
+
     if (!form.name.trim()) {
-      toast.error("Name is required");
-      return false;
+      errors.push("Name is required");
     }
     if (mode === "create" && !form.slug.trim()) {
-      toast.error("Slug is required");
-      return false;
+      errors.push("Slug is required");
     }
     if (!form.description.trim()) {
-      toast.error("Description is required");
-      return false;
+      errors.push("Description is required");
     }
     if (mode === "create" && !form.projectId) {
-      toast.error("Project is required");
-      return false;
+      errors.push("Project is required");
     }
-    if (mode === "create" && !/^[a-z0-9-]+$/.test(form.slug)) {
-      toast.error(
+    if (mode === "create" && form.slug && !/^[a-z0-9-]+$/.test(form.slug)) {
+      errors.push(
         "Slug can only contain lowercase letters, numbers, and hyphens"
       );
+    }
+
+    if (errors.length > 0) {
+      errors.forEach((error) => toast.error(error));
       return false;
     }
     return true;
   };
 
   const handleSubmit = async () => {
+    // Prevent double submission
+    if (createWaitlistMutation.isPending || updateWaitlistMutation.isPending) {
+      return;
+    }
+
     if (!validateForm(form)) {
       return;
     }
+
     try {
       const submitData = {
         ...form,
@@ -186,11 +220,7 @@ export default function WaitlistForm({
         `Error ${mode === "create" ? "creating" : "updating"} waitlist:`,
         error
       );
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : `Failed to ${mode === "create" ? "create" : "update"} waitlist`
-      );
+      // Error handling is now done in the mutation's onError callback
     }
   };
 
@@ -305,7 +335,9 @@ export default function WaitlistForm({
 
   const mainContent = (
     <div className="max-w-2xl mx-auto">
-      <div className="space-y-8 p-6">
+      <div
+        className={`space-y-8 p-6 ${createWaitlistMutation.isPending || updateWaitlistMutation.isPending ? "opacity-50 pointer-events-none" : ""}`}
+      >
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">
@@ -476,11 +508,11 @@ export default function WaitlistForm({
               <div className="space-y-2">
                 <label className="text-sm font-medium">Email Integration</label>
                 <Select
-                  value={form.emailIntegrationId || ""}
+                  value={form.integrationId || ""}
                   onValueChange={(integrationId) =>
                     setForm({
                       ...form,
-                      emailIntegrationId: integrationId || null,
+                      integrationId: integrationId || null,
                     })
                   }
                 >
@@ -513,6 +545,10 @@ export default function WaitlistForm({
                 mode === "create" ? "/waitlist" : `/waitlist/${waitlistId}`
               )
             }
+            disabled={
+              createWaitlistMutation.isPending ||
+              updateWaitlistMutation.isPending
+            }
           >
             Cancel
           </Button>
@@ -523,6 +559,10 @@ export default function WaitlistForm({
               updateWaitlistMutation.isPending
             }
           >
+            {(createWaitlistMutation.isPending ||
+              updateWaitlistMutation.isPending) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
             {mode === "create" ? "Create Waitlist" : "Update Waitlist"}
           </Button>
         </div>
@@ -532,7 +572,20 @@ export default function WaitlistForm({
 
   return (
     <ExpandedLayoutContainer sidebar={apiDocsContent}>
-      <div className="flex-1">{mainContent}</div>
+      <div className="flex-1 relative">
+        {mainContent}
+        {(createWaitlistMutation.isPending ||
+          updateWaitlistMutation.isPending) && (
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-10">
+            <div className="flex items-center gap-2 text-sm">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              {mode === "create"
+                ? "Creating waitlist..."
+                : "Updating waitlist..."}
+            </div>
+          </div>
+        )}
+      </div>
     </ExpandedLayoutContainer>
   );
 }
