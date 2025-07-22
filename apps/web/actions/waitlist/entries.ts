@@ -207,3 +207,86 @@ export const updateEntryStatus = async (data: {
 export const deleteEntry = async (data: { entryId: string }) => {
   return deleteWaitlistEntry(data.entryId);
 };
+
+/**
+ * Get filtered waitlist entries with search and status filtering
+ */
+export const getFilteredWaitlistEntries = async (data: {
+  waitlistId: string;
+  search?: string;
+  status?: string;
+  limit?: number;
+  offset?: number;
+}) => {
+  const { org } = await getSession();
+  try {
+    // Ensure the waitlist belongs to the org
+    const waitlist = await prisma.waitlist.findFirst({
+      where: { id: data.waitlistId, organizationId: org },
+    });
+    if (!waitlist)
+      return {
+        success: false,
+        error: "Waitlist not found or not in your organization",
+      };
+
+    // Build where clause
+    const where: any = { waitlistId: data.waitlistId };
+
+    // Add search filter
+    if (data.search) {
+      where.OR = [
+        { email: { contains: data.search, mode: "insensitive" } },
+        { name: { contains: data.search, mode: "insensitive" } },
+      ];
+    }
+
+    // Add status filter
+    if (data.status && data.status !== "all") {
+      where.status = data.status;
+    }
+
+    // Get entries with pagination
+    const entries = await prisma.waitlistEntry.findMany({
+      where,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        status: true,
+        position: true,
+        referralCount: true,
+        verifiedAt: true,
+        invitedAt: true,
+        joinedAt: true,
+        utmSource: true,
+        utmMedium: true,
+        utmCampaign: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: data.limit || 100,
+      skip: data.offset || 0,
+    });
+
+    // Get total count for pagination
+    const totalCount = await prisma.waitlistEntry.count({ where });
+
+    return {
+      success: true,
+      data: {
+        entries: entries.map((entry) => ({
+          ...entry,
+          createdAt: entry.createdAt.toISOString(),
+          verifiedAt: entry.verifiedAt?.toISOString(),
+          invitedAt: entry.invitedAt?.toISOString(),
+          joinedAt: entry.joinedAt?.toISOString(),
+        })),
+        totalCount,
+        hasMore: (data.offset || 0) + (data.limit || 100) < totalCount,
+      },
+    };
+  } catch (error) {
+    return { success: false, error };
+  }
+};

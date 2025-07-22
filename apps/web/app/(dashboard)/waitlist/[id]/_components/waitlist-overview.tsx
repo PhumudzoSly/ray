@@ -19,6 +19,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { Badge } from "@workspace/ui/components/badge";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Card } from "@workspace/ui/components/card";
@@ -41,6 +48,8 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { queryKeys } from "@/lib/query-keys";
 import { useWaitlistAnalytics } from "@/hooks/use-waitlist-analytics";
+import { useFilteredWaitlistEntries } from "@/hooks/use-waitlist-analytics";
+import { useDebounce } from "@/hooks/use-debounce";
 import { MetricCard } from "@/components/waitlist/analytics-metrics";
 
 interface WaitlistOverviewProps {
@@ -57,12 +66,34 @@ export default function WaitlistOverview({
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const queryClient = useQueryClient();
 
+  // Debounce search query
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
+  // Use filtered entries hook
+  const { data: filteredData, isLoading: filteredLoading } =
+    useFilteredWaitlistEntries(
+      waitlistId,
+      debouncedSearchQuery,
+      statusFilter,
+      100,
+      0
+    );
+
   // Mutations
   const updateEntryStatusMutation = useMutation({
     mutationFn: waitlistEntryActions.updateEntryStatus,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.waitlistAnalytics(waitlistId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.filteredWaitlistEntries(
+          waitlistId,
+          debouncedSearchQuery,
+          statusFilter,
+          100,
+          0
+        ),
       });
     },
   });
@@ -72,6 +103,15 @@ export default function WaitlistOverview({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKeys.waitlistAnalytics(waitlistId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.filteredWaitlistEntries(
+          waitlistId,
+          debouncedSearchQuery,
+          statusFilter,
+          100,
+          0
+        ),
       });
     },
   });
@@ -84,15 +124,7 @@ export default function WaitlistOverview({
     );
   }
 
-  // Filter entries based on search and status
-  const filteredEntries = analytics.entries.filter((entry) => {
-    const matchesSearch =
-      entry.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      entry.name?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" || entry.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredEntries = filteredData?.entries || [];
 
   const handleStatusChange = async (entryId: string, newStatus: string) => {
     try {
@@ -187,200 +219,184 @@ export default function WaitlistOverview({
 
   return (
     <div className="space-y-6">
-      {/* Analytics Overview */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <MetricCard
-          icon={Users}
-          title="Total Entries"
-          value={analytics.totalEntries}
-          subtitle={`+${analytics.recentEntries} this week`}
-        />
+      {/* Controls */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-1">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Search entries..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
 
-        <MetricCard
-          icon={CheckCircle}
-          title="Verified"
-          value={analytics.verifiedCount}
-          subtitle={`${analytics.verificationRate}% verified`}
-        />
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="All Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="verified">Verified</SelectItem>
+                <SelectItem value="invited">Invited</SelectItem>
+                <SelectItem value="joined">Joined</SelectItem>
+                <SelectItem value="bounced">Bounced</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-        <MetricCard
-          icon={Share2}
-          title="Referrals"
-          value={analytics.totalReferrals}
-          subtitle={`${analytics.avgReferralsPerUser.toFixed(1)} avg per user`}
-        />
-
-        <MetricCard
-          icon={Target}
-          title="Conversion"
-          value={`${analytics.overallConversionRate.toFixed(1)}%`}
-          subtitle={`${analytics.joinedCount} joined`}
-        />
+        <div className="flex gap-2">
+          {selectedEntries.length > 0 && (
+            <Button
+              onClick={handleBulkInvite}
+              disabled={updateEntryStatusMutation.isPending}
+              size="sm"
+              variant="outline"
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Invite Selected ({selectedEntries.length})
+            </Button>
+          )}
+          <Button onClick={handleExportCSV} size="sm" variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+        </div>
       </div>
 
-      {/* Controls */}
-      <Card className="p-4">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center flex-1">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search entries..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="border border-input bg-background px-3 py-2 rounded-md text-sm"
-              >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="verified">Verified</option>
-                <option value="invited">Invited</option>
-                <option value="joined">Joined</option>
-                <option value="bounced">Bounced</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            {selectedEntries.length > 0 && (
-              <Button
-                onClick={handleBulkInvite}
-                disabled={updateEntryStatusMutation.isPending}
-                size="sm"
-                variant="outline"
-              >
-                <Mail className="h-4 w-4 mr-2" />
-                Invite Selected ({selectedEntries.length})
-              </Button>
-            )}
-            <Button onClick={handleExportCSV} size="sm" variant="outline">
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-          </div>
+      {/* Loading indicator for filtered results */}
+      {filteredLoading && (
+        <div className="flex items-center justify-center py-4">
+          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          <span className="text-sm text-muted-foreground">
+            Loading entries...
+          </span>
         </div>
-      </Card>
+      )}
 
       {/* Entries Table */}
-      <Card>
-        <div className="p-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-12">
-                  <Checkbox
-                    checked={
-                      filteredEntries.length > 0 &&
-                      selectedEntries.length === filteredEntries.length
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-12">
+              <Checkbox
+                checked={
+                  filteredEntries.length > 0 &&
+                  selectedEntries.length === filteredEntries.length
+                }
+                onCheckedChange={(checked) => {
+                  if (checked) {
+                    setSelectedEntries(filteredEntries.map((e) => e.id));
+                  } else {
+                    setSelectedEntries([]);
+                  }
+                }}
+              />
+            </TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Position</TableHead>
+            <TableHead>Referrals</TableHead>
+            <TableHead>Joined</TableHead>
+            <TableHead>Source</TableHead>
+            <TableHead className="w-12"></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredEntries.map((entry) => (
+            <TableRow key={entry.id}>
+              <TableCell>
+                <Checkbox
+                  checked={selectedEntries.includes(entry.id)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedEntries([...selectedEntries, entry.id]);
+                    } else {
+                      setSelectedEntries(
+                        selectedEntries.filter((id) => id !== entry.id)
+                      );
                     }
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedEntries(filteredEntries.map((e) => e.id));
-                      } else {
-                        setSelectedEntries([]);
-                      }
-                    }}
-                  />
-                </TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead>Referrals</TableHead>
-                <TableHead>Joined</TableHead>
-                <TableHead>Source</TableHead>
-                <TableHead className="w-12"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredEntries.map((entry) => (
-                <TableRow key={entry.id}>
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedEntries.includes(entry.id)}
-                      onCheckedChange={(checked) => {
-                        if (checked) {
-                          setSelectedEntries([...selectedEntries, entry.id]);
-                        } else {
-                          setSelectedEntries(
-                            selectedEntries.filter((id) => id !== entry.id)
-                          );
-                        }
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{entry.email}</TableCell>
-                  <TableCell>{entry.name || "-"}</TableCell>
-                  <TableCell>{getStatusBadge(entry.status)}</TableCell>
-                  <TableCell>#{entry.position}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Share2 className="h-3 w-3" />
-                      {entry.referralCount}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {entry.joinedAt
-                      ? format(new Date(entry.joinedAt), "MMM d, yyyy")
-                      : "-"}
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-xs text-muted-foreground capitalize">
-                      {entry.utmSource || "direct"}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        {entry.status === "verified" && (
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleStatusChange(entry.id, "invited")
-                            }
-                          >
-                            <Mail className="h-4 w-4 mr-2" />
-                            Send Invite
-                          </DropdownMenuItem>
-                        )}
-                        {entry.status === "pending" && (
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleStatusChange(entry.id, "verified")
-                            }
-                          >
-                            <UserCheck className="h-4 w-4 mr-2" />
-                            Mark Verified
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteEntry(entry.id)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  }}
+                />
+              </TableCell>
+              <TableCell className="font-medium">{entry.email}</TableCell>
+              <TableCell>{entry.name || "-"}</TableCell>
+              <TableCell>{getStatusBadge(entry.status)}</TableCell>
+              <TableCell>#{entry.position}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  <Share2 className="h-3 w-3" />
+                  {entry.referralCount}
+                </div>
+              </TableCell>
+              <TableCell>
+                {entry.joinedAt
+                  ? format(new Date(entry.joinedAt), "MMM d, yyyy")
+                  : "-"}
+              </TableCell>
+              <TableCell>
+                <span className="text-xs text-muted-foreground capitalize">
+                  {entry.utmSource || "direct"}
+                </span>
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {entry.status === "verified" && (
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange(entry.id, "invited")}
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        Send Invite
+                      </DropdownMenuItem>
+                    )}
+                    {entry.status === "pending" && (
+                      <DropdownMenuItem
+                        onClick={() => handleStatusChange(entry.id, "verified")}
+                      >
+                        <UserCheck className="h-4 w-4 mr-2" />
+                        Mark Verified
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem
+                      onClick={() => handleDeleteEntry(entry.id)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {/* No results message */}
+      {!filteredLoading && filteredEntries.length === 0 && (
+        <div className="text-center py-8">
+          <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-muted-foreground mb-2">
+            No entries found
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {searchQuery || statusFilter !== "all"
+              ? "Try adjusting your search or filter criteria"
+              : "No entries have been added to this waitlist yet"}
+          </p>
         </div>
-      </Card>
+      )}
     </div>
   );
 }

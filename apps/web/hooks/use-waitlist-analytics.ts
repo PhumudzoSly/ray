@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/query-keys";
 import { getWaitlistAnalytics } from "@/actions/waitlist";
+import { getFilteredWaitlistEntries } from "@/actions/waitlist/entries";
 
 export interface WaitlistAnalyticsData {
   // Basic counts
@@ -52,6 +53,52 @@ export function useWaitlistAnalytics(waitlistId: string) {
       }
       return result.data as WaitlistAnalyticsData;
     },
+  });
+}
+
+export interface FilteredWaitlistEntriesData {
+  entries: Array<{
+    id: string;
+    email: string;
+    name?: string;
+    status: string;
+    position: number;
+    referralCount: number;
+    verifiedAt?: string;
+    invitedAt?: string;
+    joinedAt?: string;
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    createdAt: string;
+  }>;
+  totalCount: number;
+  hasMore: boolean;
+}
+
+export function useFilteredWaitlistEntries(
+  waitlistId: string,
+  search?: string,
+  status?: string,
+  limit?: number,
+  offset?: number
+) {
+  return useQuery({
+    queryKey: queryKeys.filteredWaitlistEntries(waitlistId, search, status, limit, offset),
+    queryFn: async (): Promise<FilteredWaitlistEntriesData> => {
+      const result = await getFilteredWaitlistEntries({
+        waitlistId,
+        search,
+        status,
+        limit,
+        offset,
+      });
+      if (!result.success) {
+        throw new Error("Failed to fetch filtered entries");
+      }
+      return result.data as FilteredWaitlistEntriesData;
+    },
+    enabled: !!waitlistId,
   });
 }
 

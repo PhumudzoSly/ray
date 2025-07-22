@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { ExternalLink, Users, BarChart3, Loader2 } from "lucide-react";
+import { ExternalLink, Users, BarChart3, Loader2, Edit2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -114,11 +114,11 @@ export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
   }
 
   return (
-    <div className="container space-y-4">
+    <div className="container ">
       {/* Header */}
       <div className="space-y-3 p-6">
         <div className="flex items-center flex-wrap gap-4 justify-between">
-          <div className="space-y-1">
+          <div className="space-y-1 grow flex-1 max-w-4xl">
             <InlineEditField
               value={waitlist.name || ""}
               onSave={(value) => handleUpdateField("name", value)}
@@ -133,17 +133,28 @@ export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
               placeholder="Add a description..."
             />
           </div>
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <span>Project:</span>
               <span className="font-medium">{waitlist.project?.name}</span>
             </div>
-            <Button asChild>
-              <Link href={`/wl/${waitlist.slug}`} target="_blank">
-                <ExternalLink className="mr-2 h-4 w-4" />
-                View Public
-              </Link>
-            </Button>
+            <div className="flex items-center gap-4 flex-wrap">
+              <Button variant="outline" asChild>
+                <Link href={`/${waitlist.id}/edit`}>
+                  <Edit2 className="mr-2 h-4 w-4" />
+                  Edit Waitlist
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link
+                  href={`https://rayai.dev/wl/${waitlist.slug}`}
+                  target="_blank"
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  View Public
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -31,12 +31,13 @@ export default function WaitlistAnalytics({
   return (
     <div className="space-y-8">
       {/* Main Metrics Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         <MetricCard
           icon={Users}
           title="Total Entries"
           value={analytics.totalEntries}
           subtitle={`+${analytics.recentEntries} this week`}
+          iconColor="text-blue-500"
         />
 
         <MetricCard
@@ -44,6 +45,7 @@ export default function WaitlistAnalytics({
           title="Verified"
           value={analytics.verifiedCount}
           subtitle={`${analytics.verificationRate}% verified`}
+          iconColor="text-green-500"
         />
 
         <MetricCard
@@ -51,6 +53,7 @@ export default function WaitlistAnalytics({
           title="Referrals"
           value={analytics.totalReferrals}
           subtitle={`${analytics.avgReferralsPerUser.toFixed(1)} avg per user`}
+          iconColor="text-purple-500"
         />
 
         <MetricCard
@@ -58,6 +61,7 @@ export default function WaitlistAnalytics({
           title="Conversion"
           value={`${analytics.overallConversionRate.toFixed(1)}%`}
           subtitle={`${analytics.joinedCount} joined`}
+          iconColor="text-orange-500"
         />
       </div>
 
