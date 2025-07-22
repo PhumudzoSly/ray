@@ -117,6 +117,16 @@ export function IntegrationsClient({
     null
   );
 
+  // Show success/error messages
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(decodeURIComponent(successMessage));
+    }
+    if (errorMessage) {
+      toast.error(decodeURIComponent(errorMessage));
+    }
+  }, [successMessage, errorMessage]);
+
   const {
     data: integrations,
     isLoading,
@@ -151,11 +161,11 @@ export function IntegrationsClient({
   };
 
   const handleModalSuccess = () => {
+    console.log("Modal success callback called");
     setModalOpen(false);
     setModalType("");
     setEditIntegration(null);
     queryClient.invalidateQueries({ queryKey: ["integrations"] });
-    toast.success("Integration saved successfully");
   };
 
   // Group integrations by platform key
@@ -222,16 +232,6 @@ export function IntegrationsClient({
       </div>
     );
   }
-
-  // Show success/error messages
-  useEffect(() => {
-    if (successMessage) {
-      toast.success(decodeURIComponent(successMessage));
-    }
-    if (errorMessage) {
-      toast.error(decodeURIComponent(errorMessage));
-    }
-  }, [successMessage, errorMessage]);
 
   return (
     <div className="space-y-6">

@@ -66,7 +66,38 @@ export function ResendIntegrationModal({
         apiKey: formData.apiKey,
       };
       if (formData.audienceId) config.audienceId = formData.audienceId;
-      if (integration) {
+
+      // Check if this is an existing integration (has a valid id)
+      const isExistingIntegration =
+        integration && integration.id && integration.id.trim() !== "";
+
+      const payload = isExistingIntegration
+        ? {
+            id: integration.id,
+            data: {
+              name: formData.name,
+              config,
+              isActive: formData.isActive,
+            },
+          }
+        : {
+            data: {
+              name: formData.name,
+              type: "RESEND" as const,
+              config,
+            },
+          };
+
+      console.log("Mutation payload:", {
+        ...payload,
+        data: {
+          ...payload.data,
+          config: { ...payload.data.config, apiKey: "***" },
+        },
+        isExistingIntegration,
+      });
+
+      if (isExistingIntegration) {
         return updateIntegration(integration.id, {
           name: formData.name,
           config,
@@ -81,32 +112,81 @@ export function ResendIntegrationModal({
       }
     },
     onSuccess: (result) => {
+      console.log("Integration mutation success:", result);
       if (result.success) {
+        toast.success("Integration saved successfully");
+        console.log("Calling onSuccess callback");
         onSuccess();
       } else {
-        toast.error("Failed to save integration");
+        console.error("Integration save failed:", result.error);
+        toast.error(result.error?.message || "Failed to save integration");
       }
     },
-    onError: () => {
-      toast.error("Failed to save integration");
+    onError: (error) => {
+      console.error("Integration mutation error:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save integration"
+      );
     },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Prevent multiple submissions
+    if (mutation.isPending) {
+      return;
+    }
+
+    // Validate required fields
+    if (!formData.name.trim()) {
+      toast.error("Integration name is required");
+      return;
+    }
+
+    if (!formData.apiKey.trim()) {
+      toast.error("API key is required");
+      return;
+    }
+
+    console.log("Submitting integration data:", {
+      name: formData.name,
+      apiKey: formData.apiKey ? "***" : "missing",
+      audienceId: formData.audienceId || "not set",
+      isActive: formData.isActive,
+      isUpdate: !!(
+        integration &&
+        integration.id &&
+        integration.id.trim() !== ""
+      ),
+    });
+
     mutation.mutate();
   };
 
+  const handleOpenChange = (newOpen: boolean) => {
+    console.log("Modal open state changing:", {
+      from: open,
+      to: newOpen,
+      isPending: mutation.isPending,
+    });
+    if (!mutation.isPending) {
+      onOpenChange(newOpen);
+    }
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
-            {integration ? "Edit Resend Integration" : "Add Resend Integration"}
+            {integration && integration.id && integration.id.trim() !== ""
+              ? "Edit Resend Integration"
+              : "Add Resend Integration"}
           </DialogTitle>
           <DialogDescription>
-            {integration
+            {integration && integration.id && integration.id.trim() !== ""
               ? "Update your Resend integration settings."
               : "Connect your Resend account to automatically sync waitlist subscribers."}
           </DialogDescription>
@@ -178,16 +258,17 @@ export function ResendIntegrationModal({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
+              disabled={mutation.isPending}
             >
               Cancel
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending
-                ? integration
+                ? integration && integration.id && integration.id.trim() !== ""
                   ? "Updating..."
                   : "Creating..."
-                : integration
+                : integration && integration.id && integration.id.trim() !== ""
                   ? "Update Integration"
                   : "Create Integration"}
             </Button>

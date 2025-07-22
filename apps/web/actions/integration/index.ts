@@ -20,8 +20,16 @@ export const createIntegration = async (data: {
   type: "RESEND" | "LOOPS" | "SENDGRID" | "MAILCHIMP" | "CONVERTKIT" | "GITHUB";
   config: IntegrationConfig;
 }) => {
-  const { org, userId } = await getSession();
   try {
+    const { org, userId } = await getSession();
+
+    console.log("Creating integration with data:", {
+      ...data,
+      config: { ...data.config, apiKey: "***" },
+      organizationId: org,
+      createdById: userId,
+    });
+
     const integration = await prisma.integration.create({
       data: {
         ...data,
@@ -29,9 +37,16 @@ export const createIntegration = async (data: {
         createdById: userId,
       },
     });
+
+    console.log("Integration created successfully:", integration.id);
     return { success: true, data: integration };
   } catch (error) {
-    return { success: false, error };
+    console.error("Error creating integration:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error : new Error("Unknown error occurred"),
+    };
   }
 };
 
@@ -77,15 +92,32 @@ export const updateIntegration = async (
     isActive: boolean;
   }>
 ) => {
-  const { org } = await getSession();
   try {
+    const { org } = await getSession();
+
+    console.log("Updating integration:", {
+      id,
+      data: {
+        ...data,
+        config: data.config ? { ...data.config, apiKey: "***" } : undefined,
+      },
+      organizationId: org,
+    });
+
     const integration = await prisma.integration.update({
       where: { id, organizationId: org },
       data,
     });
+
+    console.log("Integration updated successfully:", integration.id);
     return { success: true, data: integration };
   } catch (error) {
-    return { success: false, error };
+    console.error("Error updating integration:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error : new Error("Unknown error occurred"),
+    };
   }
 };
 
@@ -151,8 +183,15 @@ export const getIntegrationsByPurpose = async (purpose: string) => {
             purpose === "email_sync"
               ? ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT"]
               : purpose === "code_sync"
-              ? ["GITHUB"]
-              : ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT", "GITHUB"],
+                ? ["GITHUB"]
+                : [
+                    "RESEND",
+                    "LOOPS",
+                    "SENDGRID",
+                    "MAILCHIMP",
+                    "CONVERTKIT",
+                    "GITHUB",
+                  ],
         },
         isActive: true,
       },

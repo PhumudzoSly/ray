@@ -62,7 +62,12 @@ export function LoopsIntegrationModal({
       const config: IntegrationConfig = {
         apiKey: formData.apiKey,
       };
-      if (integration) {
+
+      // Check if this is an existing integration (has a valid id)
+      const isExistingIntegration =
+        integration && integration.id && integration.id.trim() !== "";
+
+      if (isExistingIntegration) {
         return updateIntegration(integration.id, {
           name: formData.name,
           config,
@@ -99,10 +104,12 @@ export function LoopsIntegrationModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
-            {integration ? "Edit Loops Integration" : "Add Loops Integration"}
+            {integration && integration.id && integration.id.trim() !== ""
+              ? "Edit Loops Integration"
+              : "Add Loops Integration"}
           </DialogTitle>
           <DialogDescription>
-            {integration
+            {integration && integration.id && integration.id.trim() !== ""
               ? "Update your Loops integration settings."
               : "Connect your Loops account to automatically sync waitlist subscribers."}
           </DialogDescription>
@@ -166,10 +173,10 @@ export function LoopsIntegrationModal({
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending
-                ? integration
+                ? integration && integration.id && integration.id.trim() !== ""
                   ? "Updating..."
                   : "Creating..."
-                : integration
+                : integration && integration.id && integration.id.trim() !== ""
                   ? "Update Integration"
                   : "Create Integration"}
             </Button>
