@@ -1,6 +1,11 @@
-import { WebCrawler, CrawlOptions } from "./web-crawler";
+// ============================================================================
+// WEB SEARCH SERVICE - UPDATED TO USE SEARCH APIS
+// ============================================================================
+
+import { WebCrawler } from "./web-crawler";
 import { CacheManager } from "./cache-manager";
-import { SaasDataExtractor } from "./data-extractors";
+import { UnifiedSearchAPIService } from "../search/search-apis";
+import type { CrawlOptions } from "./web-crawler";
 
 // ============================================================================
 // SEARCH CONFIGURATION
@@ -13,6 +18,7 @@ interface SearchConfig {
   enableCache: boolean;
   searchEngines: string[];
   resultFiltering: boolean;
+  includeContent: boolean;
 }
 
 const DEFAULT_SEARCH_CONFIG: SearchConfig = {
@@ -20,8 +26,9 @@ const DEFAULT_SEARCH_CONFIG: SearchConfig = {
   maxDepth: 2,
   timeout: 30000,
   enableCache: true,
-  searchEngines: ["google", "bing", "duckduckgo"],
+  searchEngines: ["duckduckgo", "searx"],
   resultFiltering: true,
+  includeContent: true,
 };
 
 // ============================================================================
@@ -57,17 +64,31 @@ export interface SearchQuery {
 export class WebSearchService {
   private crawler: WebCrawler;
   private cache: CacheManager;
+  private searchAPI: UnifiedSearchAPIService;
   private config: SearchConfig;
 
   constructor(config: Partial<SearchConfig> = {}) {
     this.config = { ...DEFAULT_SEARCH_CONFIG, ...config };
     this.crawler = new WebCrawler({
-      rateLimit: 1, // Slower rate for search
-      maxConcurrent: 3,
+      rateLimit: 2, // Faster rate since we're not hitting search engines
+      maxConcurrent: 5,
     });
     this.cache = new CacheManager({
       maxSize: 500,
       ttl: 12 * 60 * 60 * 1000, // 12 hours
+    });
+
+    // Initialize search API with free engines
+    this.searchAPI = new UnifiedSearchAPIService({
+      enableDuckDuckGo: true,
+      enableSearx: true,
+      enableBrave: false, // Requires API key
+      enableSerpapi: false, // Requires API key
+      enableSerper: false, // Requires API key
+      enableSerpstack: false, // Requires API key
+      maxResults: this.config.maxResults,
+      timeout: this.config.timeout,
+      retryAttempts: 3,
     });
   }
 
@@ -79,20 +100,26 @@ export class WebSearchService {
     console.log(`🔍 Web Search: Searching for "${query.query}"`);
 
     try {
-      // Step 1: Generate search URLs
-      const searchUrls = await this.generateSearchUrls(query.query);
+      // Step 1: Use search APIs to find URLs
+      const searchResponse = await this.searchAPI.search(query.query, {
+        maxResults: this.config.maxResults,
+        includeContent: this.config.includeContent,
+      });
 
-      // Step 2: Crawl search results
-      const crawlResults = await this.crawlSearchResults(
-        searchUrls,
-        query.options
+      if (!searchResponse.success || searchResponse.results.length === 0) {
+        console.log("❌ No search results found");
+        return [];
+      }
+
+      // Step 2: Convert search results to our format
+      const searchResults = await this.convertSearchResults(
+        searchResponse.results
       );
 
-      // Step 3: Extract and process content
-      const searchResults = await this.processSearchResults(
-        crawlResults,
-        query
-      );
+      // Step 3: Optionally enrich with content crawling
+      if (this.config.includeContent) {
+        await this.enrichWithContent(searchResults);
+      }
 
       // Step 4: Filter and rank results
       const filteredResults = this.filterAndRankResults(searchResults, query);
@@ -109,342 +136,103 @@ export class WebSearchService {
   }
 
   // ============================================================================
-  // SEARCH URL GENERATION
+  // SEARCH RESULT CONVERSION
   // ============================================================================
 
-  private async generateSearchUrls(query: string): Promise<string[]> {
-    const searchUrls: string[] = [];
+  private async convertSearchResults(
+    apiResults: any[]
+  ): Promise<SearchResult[]> {
+    const results: SearchResult[] = [];
 
-    // Generate URLs for different search engines
-    for (const engine of this.config.searchEngines) {
-      const engineUrls = this.generateEngineUrls(engine, query);
-      searchUrls.push(...engineUrls);
+    for (const apiResult of apiResults) {
+      const result: SearchResult = {
+        url: apiResult.url,
+        title: apiResult.title,
+        description: apiResult.snippet,
+        content: apiResult.snippet, // Will be enriched later if needed
+        relevance: this.calculateRelevance(apiResult),
+        source: apiResult.source,
+        timestamp: apiResult.timestamp,
+      };
+
+      results.push(result);
     }
 
-    // Add direct competitor/industry URLs
-    const industryUrls = this.generateIndustryUrls(query);
-    searchUrls.push(...industryUrls);
-
-    return searchUrls;
+    return results;
   }
 
-  private generateEngineUrls(engine: string, query: string): string[] {
-    const encodedQuery = encodeURIComponent(query);
+  private calculateRelevance(apiResult: any): number {
+    let relevance = 0.5; // Base relevance
 
-    switch (engine) {
-      case "google":
-        return [
-          `https://www.google.com/search?q=${encodedQuery}`,
-          `https://www.google.com/search?q=${encodedQuery}&tbm=nws`, // News
-          `https://www.google.com/search?q=${encodedQuery}&tbm=blg`, // Blogs
-        ];
-
-      case "bing":
-        return [
-          `https://www.bing.com/search?q=${encodedQuery}`,
-          `https://www.bing.com/news/search?q=${encodedQuery}`,
-        ];
-
-      case "duckduckgo":
-        return [`https://duckduckgo.com/?q=${encodedQuery}`];
-
-      default:
-        return [];
-    }
-  }
-
-  private generateIndustryUrls(query: string): string[] {
-    const industryUrls: string[] = [];
-    const keywords = query.toLowerCase().split(" ");
-
-    // Common SaaS industry sites
-    const industrySites = [
-      "producthunt.com",
-      "saasradar.net",
-      "saaslist.co",
-      "g2.com",
-      "capterra.com",
-      "trustpilot.com",
-      "crunchbase.com",
-      "linkedin.com/company",
-      "techcrunch.com",
-      "venturebeat.com",
-    ];
-
-    for (const site of industrySites) {
-      for (const keyword of keywords) {
-        if (keyword.length > 3) {
-          industryUrls.push(
-            `https://${site}/search?q=${encodeURIComponent(keyword)}`
-          );
-        }
-      }
+    // Boost based on confidence
+    if (apiResult.confidence) {
+      relevance += apiResult.confidence * 0.3;
     }
 
-    return industryUrls;
+    // Boost based on rank (lower rank = higher relevance)
+    if (apiResult.rank) {
+      relevance += (1 / apiResult.rank) * 0.2;
+    }
+
+    return Math.min(relevance, 1.0);
   }
 
   // ============================================================================
-  // CRAWLING SEARCH RESULTS
+  // CONTENT ENRICHMENT
   // ============================================================================
 
-  private async crawlSearchResults(
-    urls: string[],
-    options?: CrawlOptions
-  ): Promise<any[]> {
-    const results: any[] = [];
+  private async enrichWithContent(results: SearchResult[]): Promise<void> {
+    console.log("📄 Enriching results with content...");
 
-    for (const url of urls) {
+    const enrichmentPromises = results.slice(0, 5).map(async (result) => {
       try {
         // Check cache first
-        if (this.config.enableCache) {
-          const cached = await this.cache.get(url);
-          if (cached) {
-            results.push(cached);
-            continue;
-          }
+        const cached = await this.cache.get(result.url);
+        if (cached && cached.success) {
+          result.content = this.extractRelevantContent(cached.parsedContent);
+          return;
         }
 
         // Crawl the URL
-        const result = await this.crawler.crawl(url, {
-          ...options,
-          textSelectors: [
-            "h1",
-            "h2",
-            "h3",
-            "h4",
-            "h5",
-            "h6",
-            "p",
-            "article",
-            "section",
-            ".search-result",
-            ".result",
-            ".listing",
-            '[data-testid*="result"]',
-            '[class*="result"]',
-          ],
+        const crawlResult = await this.crawler.crawl(result.url, {
+          timeout: 10000,
         });
 
-        // Cache the result
-        if (this.config.enableCache && result.success) {
-          await this.cache.set(url, result);
-        }
+        if (crawlResult.success && crawlResult.parsedContent) {
+          result.content = this.extractRelevantContent(
+            crawlResult.parsedContent
+          );
 
-        results.push(result);
+          // Cache the result
+          await this.cache.set(result.url, crawlResult);
+        }
       } catch (error) {
-        console.warn(`Failed to crawl ${url}:`, error);
+        console.warn(`Failed to enrich ${result.url}:`, error);
       }
-    }
+    });
 
-    return results;
+    await Promise.allSettled(enrichmentPromises);
   }
 
-  // ============================================================================
-  // PROCESSING SEARCH RESULTS
-  // ============================================================================
-
-  private async processSearchResults(
-    crawlResults: any[],
-    query: SearchQuery
-  ): Promise<SearchResult[]> {
-    const searchResults: SearchResult[] = [];
-
-    for (const result of crawlResults) {
-      if (!result.success || !result.parsedContent) {
-        continue;
-      }
-
-      // Extract search results from the page
-      const extractedResults = this.extractSearchResults(result, query.query);
-      searchResults.push(...extractedResults);
-
-      // Extract SaaS-specific data if available
-      if (this.isSaaSRelevant(result)) {
-        const extractedData = SaasDataExtractor.extractAll(result);
-        if (extractedData) {
-          // Add extracted data to relevant results
-          for (const searchResult of searchResults) {
-            if (searchResult.url === result.url) {
-              searchResult.extractedData = extractedData;
-              break;
-            }
-          }
-        }
-      }
+  private extractRelevantContent(parsedContent: any): string {
+    if (!parsedContent || parsedContent.type !== "html") {
+      return "";
     }
 
-    return searchResults;
-  }
+    const data = parsedContent.data;
+    if (!data) return "";
 
-  private extractSearchResults(
-    crawlResult: any,
-    query: string
-  ): SearchResult[] {
-    const results: SearchResult[] = [];
-    const { parsedContent } = crawlResult;
+    // Extract title and description
+    const title = data.title || "";
+    const description = data.description || "";
+    const text = data.text || "";
 
-    if (parsedContent.type !== "html") {
-      return results;
-    }
+    // Combine relevant content
+    const content = [title, description, text.substring(0, 500)]
+      .filter(Boolean)
+      .join(" ");
 
-    const document = parsedContent.data;
-    const text = document.text || "";
-
-    // Extract search result links
-    const links = document.links || [];
-
-    for (const link of links) {
-      if (this.isValidSearchResult(link, query)) {
-        const result: SearchResult = {
-          url: link.href,
-          title: link.text || link.href,
-          description: this.extractDescription(text, link),
-          content: text,
-          relevance: this.calculateRelevance(link, query),
-          source: this.extractSource(crawlResult.url),
-          timestamp: new Date(),
-        };
-
-        results.push(result);
-      }
-    }
-
-    return results;
-  }
-
-  private isValidSearchResult(link: any, query: string): boolean {
-    const href = link.href || "";
-    const text = link.text || "";
-
-    // Skip internal links, ads, and non-relevant content
-    if (
-      href.includes("#") ||
-      href.includes("javascript:") ||
-      href.includes("mailto:")
-    ) {
-      return false;
-    }
-
-    // Skip common non-result links
-    const skipPatterns = [
-      "google.com/search",
-      "bing.com/search",
-      "duckduckgo.com",
-      "youtube.com",
-      "facebook.com",
-      "twitter.com",
-      "instagram.com",
-    ];
-
-    for (const pattern of skipPatterns) {
-      if (href.includes(pattern)) {
-        return false;
-      }
-    }
-
-    // Check if link text is relevant to query
-    const queryWords = query.toLowerCase().split(" ");
-    const linkWords = text.toLowerCase().split(" ");
-
-    const relevanceScore = queryWords.filter((word) =>
-      linkWords.some((linkWord: string) => linkWord.includes(word))
-    ).length;
-
-    return relevanceScore > 0;
-  }
-
-  private extractDescription(text: string, link: any): string {
-    // Try to find description near the link
-    const linkText = link.text || "";
-    const linkIndex = text.indexOf(linkText);
-
-    if (linkIndex > -1) {
-      const start = Math.max(0, linkIndex - 100);
-      const end = Math.min(text.length, linkIndex + linkText.length + 100);
-      return text.substring(start, end).trim();
-    }
-
-    return linkText;
-  }
-
-  private calculateRelevance(link: any, query: string): number {
-    let relevance = 0;
-    const href = link.href || "";
-    const text = link.text || "";
-    const queryWords = query.toLowerCase().split(" ");
-
-    // URL relevance
-    for (const word of queryWords) {
-      if (href.toLowerCase().includes(word)) {
-        relevance += 2;
-      }
-    }
-
-    // Text relevance
-    for (const word of queryWords) {
-      if (text.toLowerCase().includes(word)) {
-        relevance += 1;
-      }
-    }
-
-    // Domain authority bonus
-    if (this.isAuthoritativeDomain(href)) {
-      relevance += 3;
-    }
-
-    return relevance;
-  }
-
-  private isAuthoritativeDomain(url: string): boolean {
-    const authoritativeDomains = [
-      "crunchbase.com",
-      "linkedin.com",
-      "techcrunch.com",
-      "venturebeat.com",
-      "g2.com",
-      "capterra.com",
-      "producthunt.com",
-      "saasradar.net",
-    ];
-
-    return authoritativeDomains.some((domain) => url.includes(domain));
-  }
-
-  private extractSource(url: string): string {
-    try {
-      const urlObj = new URL(url);
-      return urlObj.hostname;
-    } catch {
-      return "unknown";
-    }
-  }
-
-  private isSaaSRelevant(result: any): boolean {
-    const text = result.parsedContent?.text || "";
-    const url = result.url || "";
-
-    const saasKeywords = [
-      "saas",
-      "software as a service",
-      "subscription",
-      "pricing",
-      "features",
-      "integrations",
-      "api",
-      "cloud",
-      "platform",
-      "startup",
-      "company",
-      "business",
-      "enterprise",
-    ];
-
-    return saasKeywords.some(
-      (keyword) =>
-        text.toLowerCase().includes(keyword) ||
-        url.toLowerCase().includes(keyword)
-    );
+    return content.substring(0, 1000);
   }
 
   // ============================================================================
@@ -455,44 +243,62 @@ export class WebSearchService {
     results: SearchResult[],
     query: SearchQuery
   ): SearchResult[] {
-    let filteredResults = results;
+    let filtered = results;
 
-    // Apply filters
-    if (query.filters) {
-      if (query.filters.domain) {
-        filteredResults = filteredResults.filter((result) =>
-          result.url.includes(query.filters!.domain!)
-        );
-      }
+    // Apply domain filter
+    if (query.filters?.domain) {
+      filtered = filtered.filter((result) =>
+        result.url.includes(query.filters!.domain!)
+      );
+    }
 
-      if (query.filters.dateRange) {
-        filteredResults = filteredResults.filter(
-          (result) =>
-            result.timestamp >= query.filters!.dateRange!.start &&
-            result.timestamp <= query.filters!.dateRange!.end
-        );
-      }
+    // Apply content type filter
+    if (query.filters?.contentType) {
+      filtered = filtered.filter((result) =>
+        query.filters!.contentType!.some((type) => result.url.includes(type))
+      );
+    }
+
+    // Apply language filter
+    if (query.filters?.language) {
+      // Simple language detection based on URL
+      filtered = filtered.filter((result) => {
+        const url = result.url.toLowerCase();
+        return url.includes(query.filters!.language!.toLowerCase());
+      });
     }
 
     // Remove duplicates
-    filteredResults = this.removeDuplicates(filteredResults);
+    filtered = this.removeDuplicates(filtered);
 
     // Sort by relevance
-    filteredResults.sort((a, b) => b.relevance - a.relevance);
+    filtered.sort((a, b) => b.relevance - a.relevance);
 
-    return filteredResults;
+    return filtered;
   }
 
   private removeDuplicates(results: SearchResult[]): SearchResult[] {
     const seen = new Set<string>();
-    return results.filter((result) => {
-      const key = result.url;
-      if (seen.has(key)) {
-        return false;
+    const unique: SearchResult[] = [];
+
+    for (const result of results) {
+      const normalizedUrl = this.normalizeUrl(result.url);
+      if (!seen.has(normalizedUrl)) {
+        seen.add(normalizedUrl);
+        unique.push(result);
       }
-      seen.add(key);
-      return true;
-    });
+    }
+
+    return unique;
+  }
+
+  private normalizeUrl(url: string): string {
+    try {
+      const urlObj = new URL(url);
+      return `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`;
+    } catch {
+      return url;
+    }
   }
 
   // ============================================================================
@@ -503,64 +309,22 @@ export class WebSearchService {
     companyName: string,
     industry: string
   ): Promise<SearchResult[]> {
-    const queries = [
-      `${companyName} competitors alternatives`,
-      `${industry} SaaS companies`,
-      `${companyName} vs competitors`,
-      `best ${industry} software`,
-      `${industry} market leaders`,
-    ];
-
-    const results: SearchResult[] = [];
-
-    for (const query of queries) {
-      const searchResults = await this.search({ query });
-      results.push(...searchResults);
-    }
-
-    return this.removeDuplicates(results);
+    const query = `${companyName} competitors ${industry}`;
+    return this.search({ query });
   }
 
   async searchMarketData(industry: string): Promise<SearchResult[]> {
-    const queries = [
-      `${industry} market size 2024`,
-      `${industry} industry report`,
-      `${industry} growth rate`,
-      `${industry} market analysis`,
-      `${industry} TAM SAM SOM`,
-    ];
-
-    const results: SearchResult[] = [];
-
-    for (const query of queries) {
-      const searchResults = await this.search({ query });
-      results.push(...searchResults);
-    }
-
-    return this.removeDuplicates(results);
+    const query = `${industry} market size TAM SAM SOM`;
+    return this.search({ query });
   }
 
   async searchCustomerReviews(companyName: string): Promise<SearchResult[]> {
-    const queries = [
-      `${companyName} reviews`,
-      `${companyName} customer feedback`,
-      `${companyName} G2 reviews`,
-      `${companyName} Capterra reviews`,
-      `${companyName} Trustpilot`,
-    ];
-
-    const results: SearchResult[] = [];
-
-    for (const query of queries) {
-      const searchResults = await this.search({ query });
-      results.push(...searchResults);
-    }
-
-    return this.removeDuplicates(results);
+    const query = `${companyName} reviews customer feedback`;
+    return this.search({ query });
   }
 
   // ============================================================================
-  // UTILITY METHODS
+  // CACHE MANAGEMENT
   // ============================================================================
 
   getCacheStats() {
@@ -571,13 +335,12 @@ export class WebSearchService {
     return this.cache.clear();
   }
 
-  destroy() {
+  // ============================================================================
+  // CLEANUP
+  // ============================================================================
+
+  destroy(): void {
     this.cache.destroy();
+    this.searchAPI.destroy();
   }
 }
-
-// ============================================================================
-// EXPORT
-// ============================================================================
-
-export default WebSearchService;

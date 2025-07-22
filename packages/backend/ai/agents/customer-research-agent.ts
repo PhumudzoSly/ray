@@ -1,5 +1,6 @@
-import { generateText } from '@ai-sdk/google';
-import { UnifiedCrawlerService } from '../crawler';
+import { generateText } from "ai";
+import { google } from "@ai-sdk/google";
+import { UnifiedCrawlerService } from "../crawler";
 
 // ============================================================================
 // CUSTOMER RESEARCH AGENT CONFIGURATION
@@ -23,25 +24,21 @@ const DEFAULT_CUSTOMER_RESEARCH_CONFIG: CustomerResearchConfig = {
   includeNewsArticles: true,
   includeTechnicalAnalysis: true,
   reviewPlatforms: [
-    'g2.com',
-    'capterra.com',
-    'trustpilot.com',
-    'producthunt.com',
-    'alternativeto.net',
-    'saasradar.net',
+    "g2.com",
+    "capterra.com",
+    "trustpilot.com",
+    "producthunt.com",
+    "alternativeto.net",
+    "saasradar.net",
   ],
   newsSources: [
-    'techcrunch.com',
-    'venturebeat.com',
-    'wired.com',
-    'theverge.com',
-    'arstechnica.com',
+    "techcrunch.com",
+    "venturebeat.com",
+    "wired.com",
+    "theverge.com",
+    "arstechnica.com",
   ],
-  socialPlatforms: [
-    'twitter.com',
-    'linkedin.com',
-    'reddit.com',
-  ],
+  socialPlatforms: ["twitter.com", "linkedin.com", "reddit.com"],
 };
 
 // ============================================================================
@@ -55,7 +52,7 @@ export interface CustomerReview {
   content: string;
   author?: string;
   date?: Date;
-  sentiment: 'positive' | 'negative' | 'neutral';
+  sentiment: "positive" | "negative" | "neutral";
   tags: string[];
   pros?: string[];
   cons?: string[];
@@ -63,11 +60,24 @@ export interface CustomerReview {
 
 export interface CustomerFeedback {
   source: string;
-  type: 'review' | 'social_media' | 'news' | 'forum' | 'support' | 'feature_request';
+  type:
+    | "review"
+    | "social_media"
+    | "news"
+    | "forum"
+    | "support"
+    | "feature_request";
   content: string;
-  sentiment: 'positive' | 'negative' | 'neutral';
-  category: 'pricing' | 'features' | 'support' | 'performance' | 'usability' | 'integration' | 'other';
-  impact: 'high' | 'medium' | 'low';
+  sentiment: "positive" | "negative" | "neutral";
+  category:
+    | "pricing"
+    | "features"
+    | "support"
+    | "performance"
+    | "usability"
+    | "integration"
+    | "other";
+  impact: "high" | "medium" | "low";
   date?: Date;
   author?: string;
   url?: string;
@@ -78,17 +88,30 @@ export interface MissingFeature {
   description: string;
   frequency: number;
   sources: string[];
-  impact: 'high' | 'medium' | 'low';
-  category: 'core' | 'integration' | 'analytics' | 'security' | 'customization' | 'mobile' | 'other';
+  impact: "high" | "medium" | "low";
+  category:
+    | "core"
+    | "integration"
+    | "analytics"
+    | "security"
+    | "customization"
+    | "mobile"
+    | "other";
   requestedBy: string[];
 }
 
 export interface CustomerInsight {
   insight: string;
-  type: 'strength' | 'weakness' | 'opportunity' | 'threat' | 'trend' | 'pattern';
+  type:
+    | "strength"
+    | "weakness"
+    | "opportunity"
+    | "threat"
+    | "trend"
+    | "pattern";
   confidence: number;
   sources: string[];
-  impact: 'high' | 'medium' | 'low';
+  impact: "high" | "medium" | "low";
   category: string;
 }
 
@@ -96,13 +119,13 @@ export interface CustomerResearchData {
   companyName: string;
   industry: string;
   researchDate: Date;
-  
+
   // Reviews and Ratings
   reviews: CustomerReview[];
   averageRating?: number;
   totalReviews: number;
   ratingDistribution: Record<string, number>;
-  
+
   // Feedback Analysis
   feedback: CustomerFeedback[];
   feedbackSummary: {
@@ -112,18 +135,18 @@ export interface CustomerResearchData {
     byCategory: Record<string, number>;
     byImpact: Record<string, number>;
   };
-  
+
   // Missing Features
   missingFeatures: MissingFeature[];
   topMissingFeatures: MissingFeature[];
-  
+
   // Customer Insights
   insights: CustomerInsight[];
   keyStrengths: string[];
   keyWeaknesses: string[];
   opportunities: string[];
   threats: string[];
-  
+
   // Market Position
   marketPosition: {
     strengths: string[];
@@ -133,7 +156,7 @@ export interface CustomerResearchData {
     competitiveAdvantages: string[];
     competitiveDisadvantages: string[];
   };
-  
+
   // Technical Analysis
   technicalAnalysis?: {
     techStack?: string[];
@@ -142,7 +165,7 @@ export interface CustomerResearchData {
     performanceIssues?: string[];
     securityConcerns?: string[];
   };
-  
+
   // Sources and Metadata
   sources: {
     reviewPlatforms: string[];
@@ -151,7 +174,7 @@ export interface CustomerResearchData {
     forums: string[];
     supportTickets: string[];
   };
-  
+
   researchQuality: {
     confidence: number;
     coverage: number;
@@ -177,43 +200,71 @@ export class CustomerResearchAgent {
   // MAIN RESEARCH METHOD
   // ============================================================================
 
-  async researchCustomer(companyName: string, industry: string): Promise<CustomerResearchData> {
-    console.log(`🔍 Starting comprehensive research for ${companyName} in ${industry}...`);
-    
+  async researchCustomer(
+    companyName: string,
+    industry: string
+  ): Promise<CustomerResearchData> {
+    console.log(
+      `🔍 Starting comprehensive research for ${companyName} in ${industry}...`
+    );
+
     const startTime = Date.now();
     const researchDate = new Date();
-    
+
     try {
       // Step 1: Gather reviews from multiple platforms
-      console.log('📊 Gathering customer reviews...');
+      console.log("📊 Gathering customer reviews...");
       const reviews = await this.gatherCustomerReviews(companyName, industry);
-      
+
       // Step 2: Collect feedback from various sources
-      console.log('💬 Collecting customer feedback...');
+      console.log("💬 Collecting customer feedback...");
       const feedback = await this.gatherCustomerFeedback(companyName, industry);
-      
+
       // Step 3: Identify missing features
-      console.log('🔍 Identifying missing features...');
-      const missingFeatures = await this.identifyMissingFeatures(companyName, industry, feedback);
-      
+      console.log("🔍 Identifying missing features...");
+      const missingFeatures = await this.identifyMissingFeatures(
+        companyName,
+        industry,
+        feedback
+      );
+
       // Step 4: Generate customer insights
-      console.log('🧠 Generating customer insights...');
-      const insights = await this.generateCustomerInsights(companyName, industry, reviews, feedback, missingFeatures);
-      
+      console.log("🧠 Generating customer insights...");
+      const insights = await this.generateCustomerInsights(
+        companyName,
+        industry,
+        reviews,
+        feedback,
+        missingFeatures
+      );
+
       // Step 5: Analyze market position
-      console.log('📈 Analyzing market position...');
-      const marketPosition = await this.analyzeMarketPosition(companyName, industry, reviews, feedback, insights);
-      
+      console.log("📈 Analyzing market position...");
+      const marketPosition = await this.analyzeMarketPosition(
+        companyName,
+        industry,
+        reviews,
+        feedback,
+        insights
+      );
+
       // Step 6: Technical analysis (if enabled)
       let technicalAnalysis;
       if (this.config.includeTechnicalAnalysis) {
-        console.log('⚙️ Performing technical analysis...');
-        technicalAnalysis = await this.performTechnicalAnalysis(companyName, industry);
+        console.log("⚙️ Performing technical analysis...");
+        technicalAnalysis = await this.performTechnicalAnalysis(
+          companyName,
+          industry
+        );
       }
-      
+
       // Step 7: Calculate research quality metrics
-      const researchQuality = this.calculateResearchQuality(reviews, feedback, insights);
-      
+      const researchQuality = this.calculateResearchQuality(
+        reviews,
+        feedback,
+        insights
+      );
+
       // Step 8: Compile final research data
       const researchData: CustomerResearchData = {
         companyName,
@@ -230,22 +281,34 @@ export class CustomerResearchAgent {
           .sort((a, b) => b.frequency - a.frequency)
           .slice(0, 10),
         insights,
-        keyStrengths: insights.filter(i => i.type === 'strength').map(i => i.insight),
-        keyWeaknesses: insights.filter(i => i.type === 'weakness').map(i => i.insight),
-        opportunities: insights.filter(i => i.type === 'opportunity').map(i => i.insight),
-        threats: insights.filter(i => i.type === 'threat').map(i => i.insight),
+        keyStrengths: insights
+          .filter((i) => i.type === "strength")
+          .map((i) => i.insight),
+        keyWeaknesses: insights
+          .filter((i) => i.type === "weakness")
+          .map((i) => i.insight),
+        opportunities: insights
+          .filter((i) => i.type === "opportunity")
+          .map((i) => i.insight),
+        threats: insights
+          .filter((i) => i.type === "threat")
+          .map((i) => i.insight),
         marketPosition,
         technicalAnalysis,
         sources: this.collectSources(reviews, feedback),
         researchQuality,
       };
-      
+
       const researchTime = Date.now() - startTime;
       console.log(`✅ Customer research completed in ${researchTime}ms`);
-      console.log(`📊 Found ${reviews.length} reviews, ${feedback.length} feedback items, ${missingFeatures.length} missing features`);
-      
+      console.log(
+        `📊 Found ${reviews.length} reviews, ${feedback.length} feedback items, ${missingFeatures.length} missing features`
+      );
+
       return researchData;
-      
+    } catch (error) {
+      console.error("Failed to complete customer research:", error);
+      throw error;
     } finally {
       this.crawler.destroy();
     }
@@ -255,19 +318,26 @@ export class CustomerResearchAgent {
   // REVIEW GATHERING
   // ============================================================================
 
-  private async gatherCustomerReviews(companyName: string, industry: string): Promise<CustomerReview[]> {
+  private async gatherCustomerReviews(
+    companyName: string,
+    industry: string
+  ): Promise<CustomerReview[]> {
     const reviews: CustomerReview[] = [];
-    
+
     // Search for reviews on review platforms
     for (const platform of this.config.reviewPlatforms) {
       try {
         const reviewUrls = await this.crawler.discoverReviewURLs(companyName);
-        const platformUrls = reviewUrls.filter(url => url.includes(platform));
-        
-        for (const url of platformUrls.slice(0, 5)) { // Limit per platform
+        const platformUrls = reviewUrls.filter((url) => url.includes(platform));
+
+        for (const url of platformUrls.slice(0, 5)) {
+          // Limit per platform
           const crawlResult = await this.crawler.crawl(url);
           if (crawlResult.success) {
-            const extractedReviews = this.extractReviewsFromPage(crawlResult, platform);
+            const extractedReviews = this.extractReviewsFromPage(
+              crawlResult,
+              platform
+            );
             reviews.push(...extractedReviews);
           }
         }
@@ -275,29 +345,30 @@ export class CustomerResearchAgent {
         console.warn(`Failed to gather reviews from ${platform}:`, error);
       }
     }
-    
+
     // Use AI to analyze and enhance reviews
-    const enhancedReviews = await this.enhanceReviewsWithAI(reviews, companyName);
-    
+    const enhancedReviews = await this.enhanceReviewsWithAI(
+      reviews,
+      companyName
+    );
+
     return enhancedReviews.slice(0, this.config.maxReviews);
   }
 
-  private extractReviewsFromPage(crawlResult: any, platform: string): CustomerReview[] {
+  private extractReviewsFromPage(
+    crawlResult: any,
+    platform: string
+  ): CustomerReview[] {
     const reviews: CustomerReview[] = [];
-    
-    if (crawlResult.parsedContent?.type === 'html') {
-      const content = crawlResult.parsedContent.data.text || '';
-      
-      // Extract review-like content using patterns
-      const reviewPatterns = [
-        /rating[:\s]*(\d+(?:\.\d+)?)/gi,
-        /stars?[:\s]*(\d+(?:\.\d+)?)/gi,
-        /(\d+(?:\.\d+)?)\s*out\s*of\s*\d+/gi,
-      ];
-      
+
+    if (crawlResult.parsedContent?.type === "html") {
+      const content = crawlResult.parsedContent.data.text || "";
+
       // Simple extraction - in a real implementation, you'd use more sophisticated parsing
-      const lines = content.split('\n').filter(line => line.trim().length > 50);
-      
+      const lines = content
+        .split("\n")
+        .filter((line: string) => line.trim().length > 50);
+
       for (const line of lines.slice(0, 10)) {
         if (this.looksLikeReview(line)) {
           reviews.push({
@@ -310,51 +381,104 @@ export class CustomerResearchAgent {
         }
       }
     }
-    
+
     return reviews;
   }
 
   private looksLikeReview(text: string): boolean {
     const reviewKeywords = [
-      'great', 'good', 'bad', 'excellent', 'terrible', 'amazing', 'awful',
-      'love', 'hate', 'like', 'dislike', 'recommend', 'avoid', 'useful',
-      'helpful', 'frustrating', 'easy', 'difficult', 'fast', 'slow',
+      "great",
+      "good",
+      "bad",
+      "excellent",
+      "terrible",
+      "amazing",
+      "awful",
+      "love",
+      "hate",
+      "like",
+      "dislike",
+      "recommend",
+      "avoid",
+      "useful",
+      "helpful",
+      "frustrating",
+      "easy",
+      "difficult",
+      "fast",
+      "slow",
     ];
-    
+
     const lowerText = text.toLowerCase();
-    return reviewKeywords.some(keyword => lowerText.includes(keyword));
+    return reviewKeywords.some((keyword) => lowerText.includes(keyword));
   }
 
-  private analyzeSentiment(text: string): 'positive' | 'negative' | 'neutral' {
-    const positiveWords = ['great', 'good', 'excellent', 'amazing', 'love', 'like', 'recommend', 'useful', 'helpful', 'easy', 'fast'];
-    const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'dislike', 'avoid', 'frustrating', 'difficult', 'slow'];
-    
+  private analyzeSentiment(text: string): "positive" | "negative" | "neutral" {
+    const positiveWords = [
+      "great",
+      "good",
+      "excellent",
+      "amazing",
+      "love",
+      "like",
+      "recommend",
+      "useful",
+      "helpful",
+      "easy",
+      "fast",
+    ];
+    const negativeWords = [
+      "bad",
+      "terrible",
+      "awful",
+      "hate",
+      "dislike",
+      "avoid",
+      "frustrating",
+      "difficult",
+      "slow",
+    ];
+
     const lowerText = text.toLowerCase();
-    const positiveCount = positiveWords.filter(word => lowerText.includes(word)).length;
-    const negativeCount = negativeWords.filter(word => lowerText.includes(word)).length;
-    
-    if (positiveCount > negativeCount) return 'positive';
-    if (negativeCount > positiveCount) return 'negative';
-    return 'neutral';
+    const positiveCount = positiveWords.filter((word) =>
+      lowerText.includes(word)
+    ).length;
+    const negativeCount = negativeWords.filter((word) =>
+      lowerText.includes(word)
+    ).length;
+
+    if (positiveCount > negativeCount) return "positive";
+    if (negativeCount > positiveCount) return "negative";
+    return "neutral";
   }
 
   private extractTags(text: string): string[] {
     const tags: string[] = [];
-    const commonTags = ['pricing', 'features', 'support', 'performance', 'usability', 'integration'];
-    
+    const commonTags = [
+      "pricing",
+      "features",
+      "support",
+      "performance",
+      "usability",
+      "integration",
+    ];
+
     const lowerText = text.toLowerCase();
     for (const tag of commonTags) {
       if (lowerText.includes(tag)) {
         tags.push(tag);
       }
     }
-    
+
     return tags;
   }
 
-  private async enhanceReviewsWithAI(reviews: CustomerReview[], companyName: string): Promise<CustomerReview[]> {
+  private async enhanceReviewsWithAI(
+    reviews: CustomerReview[],
+    companyName: string
+  ): Promise<CustomerReview[]> {
     const enhancedReviews: CustomerReview[] = [];
-    
+
     for (const review of reviews) {
       try {
         const prompt = `
@@ -378,13 +502,13 @@ Format as JSON:
   "tags": ["tag1", "tag2"]
 }
         `;
-        
+
         const response = await generateText({
-          model: 'gemini-1.5-flash',
+          model: google("gemini-1.5-flash"),
           prompt,
           maxTokens: 500,
         });
-        
+
         try {
           const analysis = JSON.parse(response.text);
           enhancedReviews.push({
@@ -398,12 +522,11 @@ Format as JSON:
         } catch (parseError) {
           enhancedReviews.push(review);
         }
-        
       } catch (error) {
         enhancedReviews.push(review);
       }
     }
-    
+
     return enhancedReviews;
   }
 
@@ -411,39 +534,49 @@ Format as JSON:
   // FEEDBACK GATHERING
   // ============================================================================
 
-  private async gatherCustomerFeedback(companyName: string, industry: string): Promise<CustomerFeedback[]> {
+  private async gatherCustomerFeedback(
+    companyName: string,
+    industry: string
+  ): Promise<CustomerFeedback[]> {
     const feedback: CustomerFeedback[] = [];
-    
+
     // Gather feedback from multiple sources
     const sources = [
-      { type: 'social_media' as const, enabled: this.config.includeSocialMedia },
-      { type: 'news' as const, enabled: this.config.includeNewsArticles },
-      { type: 'forum' as const, enabled: true },
-      { type: 'support' as const, enabled: true },
+      {
+        type: "social_media" as const,
+        enabled: this.config.includeSocialMedia,
+      },
+      { type: "news" as const, enabled: this.config.includeNewsArticles },
+      { type: "forum" as const, enabled: true },
+      { type: "support" as const, enabled: true },
     ];
-    
+
     for (const source of sources) {
       if (source.enabled) {
-        const sourceFeedback = await this.gatherFeedbackFromSource(companyName, industry, source.type);
+        const sourceFeedback = await this.gatherFeedbackFromSource(
+          companyName,
+          industry,
+          source.type
+        );
         feedback.push(...sourceFeedback);
       }
     }
-    
+
     return feedback.slice(0, this.config.maxFeedbackSources);
   }
 
   private async gatherFeedbackFromSource(
     companyName: string,
     industry: string,
-    sourceType: CustomerFeedback['type']
+    sourceType: CustomerFeedback["type"]
   ): Promise<CustomerFeedback[]> {
     const feedback: CustomerFeedback[] = [];
-    
+
     try {
       let searchQueries: string[];
-      
+
       switch (sourceType) {
-        case 'social_media':
+        case "social_media":
           searchQueries = [
             `${companyName} review`,
             `${companyName} feedback`,
@@ -452,7 +585,7 @@ Format as JSON:
             `${companyName} complaints`,
           ];
           break;
-        case 'news':
+        case "news":
           searchQueries = [
             `${companyName} review`,
             `${companyName} analysis`,
@@ -460,7 +593,7 @@ Format as JSON:
             `${companyName} issues`,
           ];
           break;
-        case 'forum':
+        case "forum":
           searchQueries = [
             `${companyName} forum`,
             `${companyName} community`,
@@ -468,7 +601,7 @@ Format as JSON:
             `${companyName} problems`,
           ];
           break;
-        case 'support':
+        case "support":
           searchQueries = [
             `${companyName} support`,
             `${companyName} help`,
@@ -479,37 +612,45 @@ Format as JSON:
         default:
           searchQueries = [`${companyName} feedback`];
       }
-      
+
       for (const query of searchQueries) {
-        const urls = await this.crawler.discoverURLs(query, { companyName, industry });
-        
+        const urls = await this.crawler.discoverURLs(query, {
+          companyName,
+          industry,
+        });
+
         for (const url of urls.slice(0, 3)) {
           const crawlResult = await this.crawler.crawl(url);
           if (crawlResult.success) {
-            const extractedFeedback = this.extractFeedbackFromPage(crawlResult, sourceType, url);
+            const extractedFeedback = this.extractFeedbackFromPage(
+              crawlResult,
+              sourceType,
+              url
+            );
             feedback.push(...extractedFeedback);
           }
         }
       }
-      
     } catch (error) {
       console.warn(`Failed to gather ${sourceType} feedback:`, error);
     }
-    
+
     return feedback;
   }
 
   private extractFeedbackFromPage(
     crawlResult: any,
-    sourceType: CustomerFeedback['type'],
+    sourceType: CustomerFeedback["type"],
     url: string
   ): CustomerFeedback[] {
     const feedback: CustomerFeedback[] = [];
-    
-    if (crawlResult.parsedContent?.type === 'html') {
-      const content = crawlResult.parsedContent.data.text || '';
-      const lines = content.split('\n').filter(line => line.trim().length > 30);
-      
+
+    if (crawlResult.parsedContent?.type === "html") {
+      const content = crawlResult.parsedContent.data.text || "";
+      const lines = content
+        .split("\n")
+        .filter((line: string) => line.trim().length > 30);
+
       for (const line of lines.slice(0, 5)) {
         if (this.looksLikeFeedback(line)) {
           feedback.push({
@@ -525,51 +666,104 @@ Format as JSON:
         }
       }
     }
-    
+
     return feedback;
   }
 
   private looksLikeFeedback(text: string): boolean {
     const feedbackKeywords = [
-      'problem', 'issue', 'bug', 'error', 'complaint', 'frustration',
-      'suggestion', 'request', 'need', 'want', 'wish', 'hope',
-      'improvement', 'enhancement', 'feature', 'functionality',
+      "problem",
+      "issue",
+      "bug",
+      "error",
+      "complaint",
+      "frustration",
+      "suggestion",
+      "request",
+      "need",
+      "want",
+      "wish",
+      "hope",
+      "improvement",
+      "enhancement",
+      "feature",
+      "functionality",
     ];
-    
+
     const lowerText = text.toLowerCase();
-    return feedbackKeywords.some(keyword => lowerText.includes(keyword));
+    return feedbackKeywords.some((keyword) => lowerText.includes(keyword));
   }
 
-  private categorizeFeedback(text: string): CustomerFeedback['category'] {
+  private categorizeFeedback(text: string): CustomerFeedback["category"] {
     const categories = {
-      pricing: ['price', 'cost', 'expensive', 'cheap', 'billing', 'subscription'],
-      features: ['feature', 'functionality', 'capability', 'tool', 'option'],
-      support: ['support', 'help', 'assistance', 'customer service', 'response'],
-      performance: ['slow', 'fast', 'performance', 'speed', 'lag', 'crash'],
-      usability: ['easy', 'difficult', 'user-friendly', 'complicated', 'intuitive'],
-      integration: ['integration', 'api', 'connect', 'sync', 'import', 'export'],
+      pricing: [
+        "price",
+        "cost",
+        "expensive",
+        "cheap",
+        "billing",
+        "subscription",
+      ],
+      features: ["feature", "functionality", "capability", "tool", "option"],
+      support: [
+        "support",
+        "help",
+        "assistance",
+        "customer service",
+        "response",
+      ],
+      performance: ["slow", "fast", "performance", "speed", "lag", "crash"],
+      usability: [
+        "easy",
+        "difficult",
+        "user-friendly",
+        "complicated",
+        "intuitive",
+      ],
+      integration: [
+        "integration",
+        "api",
+        "connect",
+        "sync",
+        "import",
+        "export",
+      ],
     };
-    
+
     const lowerText = text.toLowerCase();
-    
+
     for (const [category, keywords] of Object.entries(categories)) {
-      if (keywords.some(keyword => lowerText.includes(keyword))) {
-        return category as CustomerFeedback['category'];
+      if (keywords.some((keyword) => lowerText.includes(keyword))) {
+        return category as CustomerFeedback["category"];
       }
     }
-    
-    return 'other';
+
+    return "other";
   }
 
-  private assessImpact(text: string): 'high' | 'medium' | 'low' {
-    const highImpactWords = ['critical', 'urgent', 'broken', 'unusable', 'terrible', 'awful'];
-    const mediumImpactWords = ['problem', 'issue', 'annoying', 'frustrating', 'difficult'];
-    
+  private assessImpact(text: string): "high" | "medium" | "low" {
+    const highImpactWords = [
+      "critical",
+      "urgent",
+      "broken",
+      "unusable",
+      "terrible",
+      "awful",
+    ];
+    const mediumImpactWords = [
+      "problem",
+      "issue",
+      "annoying",
+      "frustrating",
+      "difficult",
+    ];
+
     const lowerText = text.toLowerCase();
-    
-    if (highImpactWords.some(word => lowerText.includes(word))) return 'high';
-    if (mediumImpactWords.some(word => lowerText.includes(word))) return 'medium';
-    return 'low';
+
+    if (highImpactWords.some((word) => lowerText.includes(word))) return "high";
+    if (mediumImpactWords.some((word) => lowerText.includes(word)))
+      return "medium";
+    return "low";
   }
 
   // ============================================================================
@@ -582,28 +776,35 @@ Format as JSON:
     feedback: CustomerFeedback[]
   ): Promise<MissingFeature[]> {
     const missingFeatures: MissingFeature[] = [];
-    
+
     // Extract feature requests from feedback
-    const featureRequests = feedback.filter(f => 
-      f.category === 'features' && 
-      f.content.toLowerCase().includes('wish') || 
-      f.content.toLowerCase().includes('need') ||
-      f.content.toLowerCase().includes('want') ||
-      f.content.toLowerCase().includes('missing')
+    const featureRequests = feedback.filter(
+      (f) =>
+        f.category === "features" &&
+        (f.content.toLowerCase().includes("wish") ||
+          f.content.toLowerCase().includes("need") ||
+          f.content.toLowerCase().includes("want") ||
+          f.content.toLowerCase().includes("missing"))
     );
-    
+
     // Group similar feature requests
     const featureGroups = this.groupFeatureRequests(featureRequests);
-    
+
     // Use AI to analyze and categorize missing features
-    const analyzedFeatures = await this.analyzeMissingFeaturesWithAI(featureGroups, companyName, industry);
-    
+    const analyzedFeatures = await this.analyzeMissingFeaturesWithAI(
+      featureGroups,
+      companyName,
+      industry
+    );
+
     return analyzedFeatures;
   }
 
-  private groupFeatureRequests(featureRequests: CustomerFeedback[]): Map<string, CustomerFeedback[]> {
+  private groupFeatureRequests(
+    featureRequests: CustomerFeedback[]
+  ): Map<string, CustomerFeedback[]> {
     const groups = new Map<string, CustomerFeedback[]>();
-    
+
     for (const request of featureRequests) {
       const key = this.extractFeatureKey(request.content);
       if (!groups.has(key)) {
@@ -611,27 +812,39 @@ Format as JSON:
       }
       groups.get(key)!.push(request);
     }
-    
+
     return groups;
   }
 
   private extractFeatureKey(content: string): string {
     // Simple keyword extraction - in a real implementation, you'd use NLP
     const featureKeywords = [
-      'mobile app', 'api', 'integration', 'analytics', 'reporting',
-      'automation', 'workflow', 'collaboration', 'security', 'backup',
-      'export', 'import', 'sync', 'notification', 'dashboard',
+      "mobile app",
+      "api",
+      "integration",
+      "analytics",
+      "reporting",
+      "automation",
+      "workflow",
+      "collaboration",
+      "security",
+      "backup",
+      "export",
+      "import",
+      "sync",
+      "notification",
+      "dashboard",
     ];
-    
+
     const lowerContent = content.toLowerCase();
-    
+
     for (const keyword of featureKeywords) {
       if (lowerContent.includes(keyword)) {
         return keyword;
       }
     }
-    
-    return 'other';
+
+    return "other";
   }
 
   private async analyzeMissingFeaturesWithAI(
@@ -640,14 +853,14 @@ Format as JSON:
     industry: string
   ): Promise<MissingFeature[]> {
     const missingFeatures: MissingFeature[] = [];
-    
+
     for (const [featureKey, requests] of featureGroups) {
       try {
         const prompt = `
 Analyze these customer feedback items requesting missing features for ${companyName} in the ${industry} industry:
 
 Feature Key: ${featureKey}
-Requests: ${requests.map(r => r.content).join('\n')}
+Requests: ${requests.map((r) => r.content).join("\n")}
 
 Please provide:
 1. A clear feature name
@@ -665,23 +878,23 @@ Format as JSON:
   "frequency": 5
 }
         `;
-        
+
         const response = await generateText({
-          model: 'gemini-1.5-flash',
+          model: google("gemini-1.5-flash"),
           prompt,
           maxTokens: 500,
         });
-        
+
         try {
           const analysis = JSON.parse(response.text);
           missingFeatures.push({
             feature: analysis.feature,
             description: analysis.description,
             frequency: analysis.frequency || requests.length,
-            sources: requests.map(r => r.source),
+            sources: requests.map((r) => r.source),
             impact: analysis.impact,
             category: analysis.category,
-            requestedBy: requests.map(r => r.author || 'anonymous'),
+            requestedBy: requests.map((r) => r.author || "anonymous"),
           });
         } catch (parseError) {
           // Fallback to basic analysis
@@ -689,18 +902,17 @@ Format as JSON:
             feature: featureKey,
             description: `Requested by ${requests.length} customers`,
             frequency: requests.length,
-            sources: requests.map(r => r.source),
-            impact: 'medium',
-            category: 'other',
-            requestedBy: requests.map(r => r.author || 'anonymous'),
+            sources: requests.map((r) => r.source),
+            impact: "medium",
+            category: "other",
+            requestedBy: requests.map((r) => r.author || "anonymous"),
           });
         }
-        
       } catch (error) {
         console.warn(`Failed to analyze missing feature ${featureKey}:`, error);
       }
     }
-    
+
     return missingFeatures;
   }
 
@@ -716,19 +928,19 @@ Format as JSON:
     missingFeatures: MissingFeature[]
   ): Promise<CustomerInsight[]> {
     const insights: CustomerInsight[] = [];
-    
+
     try {
       const prompt = `
 Analyze this customer research data for ${companyName} in the ${industry} industry and generate strategic insights:
 
 Reviews (${reviews.length}):
-${reviews.map(r => `- ${r.sentiment}: ${r.content.substring(0, 100)}...`).join('\n')}
+${reviews.map((r) => `- ${r.sentiment}: ${r.content.substring(0, 100)}...`).join("\n")}
 
 Feedback (${feedback.length}):
-${feedback.map(f => `- ${f.category} (${f.sentiment}): ${f.content.substring(0, 100)}...`).join('\n')}
+${feedback.map((f) => `- ${f.category} (${f.sentiment}): ${f.content.substring(0, 100)}...`).join("\n")}
 
 Missing Features (${missingFeatures.length}):
-${missingFeatures.map(f => `- ${f.feature}: ${f.description}`).join('\n')}
+${missingFeatures.map((f) => `- ${f.feature}: ${f.description}`).join("\n")}
 
 Generate insights in these categories:
 1. Strengths (what customers love)
@@ -748,30 +960,29 @@ For each insight, provide:
 
 Format as JSON array of insights.
         `;
-        
-        const response = await generateText({
-          model: 'gemini-1.5-flash',
-          prompt,
-          maxTokens: 1000,
-        });
-        
-        try {
-          const aiInsights = JSON.parse(response.text);
-          insights.push(...aiInsights);
-        } catch (parseError) {
-          // Fallback to basic insights
-          insights.push(...this.generateBasicInsights(reviews, feedback, missingFeatures));
-        }
-        
-      } catch (error) {
-        console.warn('Failed to generate AI insights, using fallback:', error);
-        insights.push(...this.generateBasicInsights(reviews, feedback, missingFeatures));
+
+      const response = await generateText({
+        model: google("gemini-1.5-flash"),
+        prompt,
+        maxTokens: 1000,
+      });
+
+      try {
+        const aiInsights = JSON.parse(response.text);
+        insights.push(...aiInsights);
+      } catch (parseError) {
+        // Fallback to basic insights
+        insights.push(
+          ...this.generateBasicInsights(reviews, feedback, missingFeatures)
+        );
       }
-      
     } catch (error) {
-      console.warn('Failed to generate customer insights:', error);
+      console.warn("Failed to generate AI insights, using fallback:", error);
+      insights.push(
+        ...this.generateBasicInsights(reviews, feedback, missingFeatures)
+      );
     }
-    
+
     return insights;
   }
 
@@ -781,48 +992,50 @@ Format as JSON array of insights.
     missingFeatures: MissingFeature[]
   ): CustomerInsight[] {
     const insights: CustomerInsight[] = [];
-    
+
     // Analyze sentiment distribution
-    const positiveReviews = reviews.filter(r => r.sentiment === 'positive');
-    const negativeReviews = reviews.filter(r => r.sentiment === 'negative');
-    
+    const positiveReviews = reviews.filter((r) => r.sentiment === "positive");
+    const negativeReviews = reviews.filter((r) => r.sentiment === "negative");
+
     if (positiveReviews.length > negativeReviews.length) {
       insights.push({
-        insight: 'Customers generally have positive experiences',
-        type: 'strength',
+        insight: "Customers generally have positive experiences",
+        type: "strength",
         confidence: 0.8,
-        sources: positiveReviews.map(r => r.source),
-        impact: 'high',
-        category: 'customer_satisfaction',
+        sources: positiveReviews.map((r) => r.source),
+        impact: "high",
+        category: "customer_satisfaction",
       });
     }
-    
+
     if (negativeReviews.length > 0) {
       insights.push({
-        insight: 'Some customers report negative experiences',
-        type: 'weakness',
+        insight: "Some customers report negative experiences",
+        type: "weakness",
         confidence: 0.7,
-        sources: negativeReviews.map(r => r.source),
-        impact: 'medium',
-        category: 'customer_satisfaction',
+        sources: negativeReviews.map((r) => r.source),
+        impact: "medium",
+        category: "customer_satisfaction",
       });
     }
-    
+
     // Analyze missing features
     if (missingFeatures.length > 0) {
-      const highImpactFeatures = missingFeatures.filter(f => f.impact === 'high');
+      const highImpactFeatures = missingFeatures.filter(
+        (f) => f.impact === "high"
+      );
       if (highImpactFeatures.length > 0) {
         insights.push({
           insight: `High demand for ${highImpactFeatures.length} missing features`,
-          type: 'opportunity',
+          type: "opportunity",
           confidence: 0.9,
-          sources: highImpactFeatures.flatMap(f => f.sources),
-          impact: 'high',
-          category: 'product_development',
+          sources: highImpactFeatures.flatMap((f) => f.sources),
+          impact: "high",
+          category: "product_development",
         });
       }
     }
-    
+
     return insights;
   }
 
@@ -836,7 +1049,7 @@ Format as JSON array of insights.
     reviews: CustomerReview[],
     feedback: CustomerFeedback[],
     insights: CustomerInsight[]
-  ): Promise<CustomerResearchData['marketPosition']> {
+  ): Promise<CustomerResearchData["marketPosition"]> {
     try {
       const prompt = `
 Analyze the market position of ${companyName} in the ${industry} industry based on customer research:
@@ -846,7 +1059,7 @@ Feedback: ${feedback.length}
 Insights: ${insights.length}
 
 Key insights:
-${insights.map(i => `- ${i.type}: ${i.insight}`).join('\n')}
+${insights.map((i) => `- ${i.type}: ${i.insight}`).join("\n")}
 
 Provide a SWOT analysis and competitive positioning:
 
@@ -859,36 +1072,46 @@ Provide a SWOT analysis and competitive positioning:
 
 Format as JSON with these fields.
         `;
-        
-        const response = await generateText({
-          model: 'gemini-1.5-flash',
-          prompt,
-          maxTokens: 800,
-        });
-        
-        try {
-          return JSON.parse(response.text);
-        } catch (parseError) {
-          return this.generateBasicMarketPosition(insights);
-        }
-        
-      } catch (error) {
-        console.warn('Failed to analyze market position:', error);
+
+      const response = await generateText({
+        model: google("gemini-1.5-flash"),
+        prompt,
+        maxTokens: 800,
+      });
+
+      try {
+        return JSON.parse(response.text);
+      } catch (parseError) {
         return this.generateBasicMarketPosition(insights);
       }
     } catch (error) {
+      console.warn("Failed to analyze market position:", error);
       return this.generateBasicMarketPosition(insights);
     }
   }
 
-  private generateBasicMarketPosition(insights: CustomerInsight[]): CustomerResearchData['marketPosition'] {
+  private generateBasicMarketPosition(
+    insights: CustomerInsight[]
+  ): CustomerResearchData["marketPosition"] {
     return {
-      strengths: insights.filter(i => i.type === 'strength').map(i => i.insight),
-      weaknesses: insights.filter(i => i.type === 'weakness').map(i => i.insight),
-      opportunities: insights.filter(i => i.type === 'opportunity').map(i => i.insight),
-      threats: insights.filter(i => i.type === 'threat').map(i => i.insight),
-      competitiveAdvantages: insights.filter(i => i.type === 'strength').map(i => i.insight),
-      competitiveDisadvantages: insights.filter(i => i.type === 'weakness').map(i => i.insight),
+      strengths: insights
+        .filter((i) => i.type === "strength")
+        .map((i) => i.insight),
+      weaknesses: insights
+        .filter((i) => i.type === "weakness")
+        .map((i) => i.insight),
+      opportunities: insights
+        .filter((i) => i.type === "opportunity")
+        .map((i) => i.insight),
+      threats: insights
+        .filter((i) => i.type === "threat")
+        .map((i) => i.insight),
+      competitiveAdvantages: insights
+        .filter((i) => i.type === "strength")
+        .map((i) => i.insight),
+      competitiveDisadvantages: insights
+        .filter((i) => i.type === "weakness")
+        .map((i) => i.insight),
     };
   }
 
@@ -896,16 +1119,23 @@ Format as JSON with these fields.
   // TECHNICAL ANALYSIS
   // ============================================================================
 
-  private async performTechnicalAnalysis(companyName: string, industry: string): Promise<CustomerResearchData['technicalAnalysis']> {
+  private async performTechnicalAnalysis(
+    companyName: string,
+    industry: string
+  ): Promise<CustomerResearchData["technicalAnalysis"]> {
     try {
       // Crawl the company's website for technical information
-      const siteMap = await this.crawler.crawlSite(`https://${companyName.toLowerCase().replace(/\s+/g, '')}.com`);
-      
-      // Look for technical pages
-      const techPages = siteMap.pages.filter(page => 
-        page.dataTypes.some(dt => dt.type === 'api' || dt.type === 'docs')
+      const siteMap = await this.crawler.crawlSite(
+        `https://${companyName.toLowerCase().replace(/\s+/g, "")}.com`
       );
-      
+
+      // Look for technical pages
+      const techPages = siteMap.pages.filter((page: any) =>
+        page.dataTypes.some(
+          (dt: any) => dt.type === "api" || dt.type === "docs"
+        )
+      );
+
       // Extract technical information
       const technicalInfo = {
         techStack: [] as string[],
@@ -914,43 +1144,74 @@ Format as JSON with these fields.
         performanceIssues: [] as string[],
         securityConcerns: [] as string[],
       };
-      
+
       // Analyze technical pages
       for (const page of techPages.slice(0, 5)) {
         const crawlResult = await this.crawler.crawl(page.url);
         if (crawlResult.success) {
           const techData = this.extractTechnicalData(crawlResult);
-          Object.assign(technicalInfo, techData);
+          if (techData && techData.techStack)
+            technicalInfo.techStack.push(...techData.techStack);
+          if (techData && techData.integrations)
+            technicalInfo.integrations.push(...techData.integrations);
+          if (techData && techData.apiCapabilities)
+            technicalInfo.apiCapabilities.push(...techData.apiCapabilities);
         }
       }
-      
+
       return technicalInfo;
-      
     } catch (error) {
-      console.warn('Failed to perform technical analysis:', error);
+      console.warn("Failed to perform technical analysis:", error);
       return undefined;
     }
   }
 
-  private extractTechnicalData(crawlResult: any): Partial<CustomerResearchData['technicalAnalysis']> {
-    const content = crawlResult.parsedContent?.data?.text || '';
+  private extractTechnicalData(
+    crawlResult: any
+  ): Partial<CustomerResearchData["technicalAnalysis"]> {
+    const content = crawlResult.parsedContent?.data?.text || "";
     const lowerContent = content.toLowerCase();
-    
-    const techData: Partial<CustomerResearchData['technicalAnalysis']> = {};
-    
+
+    const techData: Partial<CustomerResearchData["technicalAnalysis"]> = {};
+
     // Extract tech stack mentions
-    const techStackKeywords = ['react', 'angular', 'vue', 'node', 'python', 'java', 'aws', 'azure', 'gcp'];
-    techData.techStack = techStackKeywords.filter(tech => lowerContent.includes(tech));
-    
+    const techStackKeywords = [
+      "react",
+      "angular",
+      "vue",
+      "node",
+      "python",
+      "java",
+      "aws",
+      "azure",
+      "gcp",
+    ];
+    techData.techStack = techStackKeywords.filter((tech) =>
+      lowerContent.includes(tech)
+    );
+
     // Extract integration mentions
-    const integrationKeywords = ['slack', 'zapier', 'salesforce', 'hubspot', 'stripe', 'paypal'];
-    techData.integrations = integrationKeywords.filter(integration => lowerContent.includes(integration));
-    
+    const integrationKeywords = [
+      "slack",
+      "zapier",
+      "salesforce",
+      "hubspot",
+      "stripe",
+      "paypal",
+    ];
+    techData.integrations = integrationKeywords.filter((integration) =>
+      lowerContent.includes(integration)
+    );
+
     // Extract API capabilities
-    if (lowerContent.includes('api') || lowerContent.includes('rest') || lowerContent.includes('graphql')) {
-      techData.apiCapabilities = ['REST API', 'GraphQL', 'Webhooks'];
+    if (
+      lowerContent.includes("api") ||
+      lowerContent.includes("rest") ||
+      lowerContent.includes("graphql")
+    ) {
+      techData.apiCapabilities = ["REST API", "GraphQL", "Webhooks"];
     }
-    
+
     return techData;
   }
 
@@ -958,26 +1219,34 @@ Format as JSON with these fields.
   // UTILITY METHODS
   // ============================================================================
 
-  private calculateAverageRating(reviews: CustomerReview[]): number | undefined {
-    const ratings = reviews.map(r => r.rating).filter(r => r !== undefined);
+  private calculateAverageRating(
+    reviews: CustomerReview[]
+  ): number | undefined {
+    const ratings = reviews
+      .map((r) => r.rating)
+      .filter((r) => r !== undefined) as number[];
     if (ratings.length === 0) return undefined;
-    return ratings.reduce((sum, rating) => sum + rating!, 0) / ratings.length;
+    return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
   }
 
-  private calculateRatingDistribution(reviews: CustomerReview[]): Record<string, number> {
+  private calculateRatingDistribution(
+    reviews: CustomerReview[]
+  ): Record<string, number> {
     const distribution: Record<string, number> = {};
-    
+
     for (const review of reviews) {
       if (review.rating) {
         const rating = Math.floor(review.rating).toString();
         distribution[rating] = (distribution[rating] || 0) + 1;
       }
     }
-    
+
     return distribution;
   }
 
-  private summarizeFeedback(feedback: CustomerFeedback[]): CustomerResearchData['feedbackSummary'] {
+  private summarizeFeedback(
+    feedback: CustomerFeedback[]
+  ): CustomerResearchData["feedbackSummary"] {
     const summary = {
       positive: 0,
       negative: 0,
@@ -985,23 +1254,33 @@ Format as JSON with these fields.
       byCategory: {} as Record<string, number>,
       byImpact: {} as Record<string, number>,
     };
-    
+
     for (const item of feedback) {
       summary[item.sentiment]++;
-      summary.byCategory[item.category] = (summary.byCategory[item.category] || 0) + 1;
+      summary.byCategory[item.category] =
+        (summary.byCategory[item.category] || 0) + 1;
       summary.byImpact[item.impact] = (summary.byImpact[item.impact] || 0) + 1;
     }
-    
+
     return summary;
   }
 
-  private collectSources(reviews: CustomerReview[], feedback: CustomerFeedback[]): CustomerResearchData['sources'] {
+  private collectSources(
+    reviews: CustomerReview[],
+    feedback: CustomerFeedback[]
+  ): CustomerResearchData["sources"] {
     return {
-      reviewPlatforms: [...new Set(reviews.map(r => r.source))],
-      newsArticles: feedback.filter(f => f.type === 'news').map(f => f.source),
-      socialMediaPosts: feedback.filter(f => f.type === 'social_media').map(f => f.source),
-      forums: feedback.filter(f => f.type === 'forum').map(f => f.source),
-      supportTickets: feedback.filter(f => f.type === 'support').map(f => f.source),
+      reviewPlatforms: [...new Set(reviews.map((r) => r.source))],
+      newsArticles: feedback
+        .filter((f) => f.type === "news")
+        .map((f) => f.source),
+      socialMediaPosts: feedback
+        .filter((f) => f.type === "social_media")
+        .map((f) => f.source),
+      forums: feedback.filter((f) => f.type === "forum").map((f) => f.source),
+      supportTickets: feedback
+        .filter((f) => f.type === "support")
+        .map((f) => f.source),
     };
   }
 
@@ -1009,13 +1288,18 @@ Format as JSON with these fields.
     reviews: CustomerReview[],
     feedback: CustomerFeedback[],
     insights: CustomerInsight[]
-  ): CustomerResearchData['researchQuality'] {
+  ): CustomerResearchData["researchQuality"] {
     const totalDataPoints = reviews.length + feedback.length + insights.length;
-    const confidence = insights.reduce((sum, i) => sum + i.confidence, 0) / Math.max(insights.length, 1);
+    const confidence =
+      insights.reduce((sum, i) => sum + i.confidence, 0) /
+      Math.max(insights.length, 1);
     const coverage = Math.min(totalDataPoints / 50, 1); // Normalize to 0-1
     const recency = 0.9; // Assume recent data
-    const sourceDiversity = Math.min((reviews.length + feedback.length) / 20, 1);
-    
+    const sourceDiversity = Math.min(
+      (reviews.length + feedback.length) / 20,
+      1
+    );
+
     return {
       confidence,
       coverage,
@@ -1025,8 +1309,4 @@ Format as JSON with these fields.
   }
 }
 
-// ============================================================================
-// EXPORT
-// ============================================================================
-
-export default CustomerResearchAgent; 
+export default CustomerResearchAgent;

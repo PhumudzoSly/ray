@@ -366,7 +366,7 @@ export const generateCustomerSegmentsData = async (
       dataGaps: z.array(z.string()),
       recommendations: z.array(z.string()),
     }),
-    prompt: `Based on the customer segmentation research and SaaS validation framework, generate structured customer segments data.
+    prompt: `${CUSTOMER_SEGMENTS_PROMPT}
 
 RESEARCH FINDINGS:
 ${customerResearch}

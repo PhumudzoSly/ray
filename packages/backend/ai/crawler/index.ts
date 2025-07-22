@@ -26,7 +26,7 @@ export type {
 // Cache management
 export { CacheManager, CacheUtils } from "./cache-manager";
 
-// Web search service
+// Web search service (now uses search APIs)
 export {
   WebSearchService,
   type SearchResult,
@@ -61,7 +61,12 @@ export class UnifiedCrawlerService {
   constructor() {
     this.crawler = new WebCrawler();
     this.cache = new CacheManager();
-    this.searchService = new WebSearchService();
+    this.searchService = new WebSearchService({
+      // Use search APIs for reliable results
+      searchEngines: ["duckduckgo", "searx"],
+      includeContent: true,
+      maxResults: 15,
+    });
     this.discoveryService = new URLDiscoveryService();
     this.siteCrawler = new SiteCrawler();
   }
@@ -79,7 +84,7 @@ export class UnifiedCrawlerService {
   }
 
   // ============================================================================
-  // SEARCH METHODS
+  // SEARCH METHODS (Now using reliable search APIs)
   // ============================================================================
 
   async search(query: string, options?: any) {

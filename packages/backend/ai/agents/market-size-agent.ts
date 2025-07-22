@@ -265,7 +265,7 @@ export const generateMarketSizeData = async (
       dataGaps: z.array(z.string()),
       recommendations: z.array(z.string()),
     }),
-    prompt: `Based on the comprehensive market size research and SaaS validation framework, generate structured market size data.
+    prompt: `${MARKET_SIZE_PROMPT}
 
 RESEARCH FINDINGS:
 ${marketSizeResearch}

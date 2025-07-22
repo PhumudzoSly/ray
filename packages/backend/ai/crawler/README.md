@@ -1,6 +1,6 @@
 # Web Crawler & Data Extraction System
 
-A comprehensive web crawling and data extraction system built specifically for SaaS validation and market research. This system replaces third-party web search tools with our own crawling infrastructure.
+A comprehensive web crawling and data extraction system built specifically for SaaS validation and market research. This system uses reliable search APIs combined with intelligent web crawling for robust data collection.
 
 ## 🚀 Features
 
@@ -18,8 +18,10 @@ A comprehensive web crawling and data extraction system built specifically for S
 - **Metadata extraction** (title, description, links)
 - **Content cleaning** and text extraction
 
-### Search Capabilities
-- **Multi-engine search** (Google, Bing, DuckDuckGo)
+### Search Capabilities (Now Using Reliable APIs)
+- **DuckDuckGo API** - Free, no API key required
+- **Searx meta-search** - Free, aggregates multiple search engines
+- **Optional paid APIs** - Brave, SerpAPI, Serper, Serpstack (with API keys)
 - **Industry-specific search** on SaaS platforms
 - **Specialized search methods** for competitors, market data, and reviews
 - **Result filtering** and relevance scoring
@@ -98,10 +100,10 @@ const urls = ['https://slack.com', 'https://notion.so'];
 const batchData = await crawler.extractSaaSDataBatch(urls);
 ```
 
-### Web Search
+### Web Search (Now Using Reliable APIs)
 
 ```typescript
-// Basic search
+// Basic search using DuckDuckGo and Searx APIs
 const results = await crawler.search('SaaS project management tools');
 
 // Specialized searches
@@ -113,10 +115,7 @@ const reviews = await crawler.searchCustomerReviews('Notion');
 const filteredResults = await crawler.search('SaaS pricing', {
   filters: {
     domain: 'g2.com',
-    dateRange: {
-      start: new Date('2024-01-01'),
-      end: new Date(),
-    },
+    contentType: ['reviews', 'pricing'],
   },
 });
 ```
@@ -195,10 +194,12 @@ await crawler.clearCache();
    - Cache statistics and cleanup
    - Batch operations
 
-4. **Web Search Service** (`web-search-service.ts`)
-   - Multi-engine search
+4. **Web Search Service** (`web-search-service.ts`) - **UPDATED**
+   - **Uses reliable search APIs** (DuckDuckGo, Searx)
+   - **No more direct search engine crawling**
    - Result processing and ranking
    - Specialized search methods
+   - Content enrichment from discovered URLs
 
 5. **URL Discovery Service** (`url-discovery.ts`)
    - Multiple discovery strategies
@@ -218,7 +219,7 @@ await crawler.clearCache();
 ### Data Flow
 
 ```
-Query → URL Discovery → WebCrawler → Content Parsing → Data Extraction → Cache → Results
+Query → Search APIs → URL Discovery → WebCrawler → Content Parsing → Data Extraction → Cache → Results
 ```
 
 ## ⚙️ Configuration
@@ -247,16 +248,18 @@ const cache = new CacheManager({
 });
 ```
 
-### Search Configuration
+### Search Configuration (Updated)
 
 ```typescript
 const searchService = new WebSearchService({
-  maxResults: 10,
+  maxResults: 15,
   maxDepth: 2,
   timeout: 30000,
   enableCache: true,
-  searchEngines: ['google', 'bing', 'duckduckgo'],
+  // Use reliable search APIs
+  searchEngines: ["duckduckgo", "searx"],
   resultFiltering: true,
+  includeContent: true, // Enrich results with crawled content
 });
 ```
 
@@ -294,12 +297,12 @@ const siteCrawler = new SiteCrawler({
 
 ## 🔄 Integration with AI Agents
 
-The crawler system has been integrated into all AI agents to replace third-party web search tools:
+The crawler system has been integrated into all AI agents to provide reliable web search and data extraction:
 
 ### Updated Agents
 
 1. **Competitor Discovery Agent**
-   - Uses `searchCompetitors()` for competitor analysis
+   - Uses `searchCompetitors()` with reliable search APIs
    - Extracts competitor data from websites
    - Analyzes competitive landscape
 
@@ -325,10 +328,10 @@ The crawler system has been integrated into all AI agents to replace third-party
 const crawlerService = new UnifiedCrawlerService();
 
 try {
-  // Search for relevant data
+  // Search for relevant data using reliable APIs
   const searchResults = await crawlerService.search(query);
   
-  // Extract structured data
+  // Extract structured data from discovered URLs
   const extractedData = await crawlerService.extractSaaSDataBatch(urls);
   
   // Use data in AI analysis
@@ -385,6 +388,7 @@ console.log({
 - **Success rate** for batch operations
 - **Cache hit rate** for performance optimization
 - **Error rates** by error type
+- **Search API success rates**
 
 ## 🔮 Future Enhancements
 
@@ -451,6 +455,7 @@ When contributing to the crawler system:
 2. **Memory Usage**: Reduce `maxSize` in cache configuration
 3. **Network Errors**: Increase `timeout` and `maxRetries`
 4. **Content Parsing**: Check if content type is supported
+5. **Search API Failures**: Check API availability and rate limits
 
 ### Debug Mode
 
@@ -462,4 +467,12 @@ DEBUG_CACHE=true
 DEBUG_SEARCH=true
 ```
 
-This comprehensive crawler system provides a robust foundation for web data extraction and analysis, enabling the AI agents to gather real-time market intelligence without relying on third-party services. 
+## ✅ **Key Improvements Made**
+
+1. **Replaced unreliable direct search engine crawling** with proper search APIs
+2. **DuckDuckGo and Searx APIs** provide free, reliable search results
+3. **Content enrichment** from discovered URLs for better data quality
+4. **Improved error handling** and fallback mechanisms
+5. **Better performance** with faster, more reliable search results
+
+This comprehensive crawler system now provides a robust foundation for web data extraction and analysis, enabling the AI agents to gather real-time market intelligence using reliable search APIs combined with intelligent web crawling. 

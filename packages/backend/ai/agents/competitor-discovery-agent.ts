@@ -261,16 +261,35 @@ export const generateCompetitorData = async (
         try {
           // Crawl competitor website
           const siteMap = await crawlerService.crawlSite(websiteUrl);
-          const saasData =
+          const saasDataArray =
             await crawlerService.extractSaaSDataFromSite(websiteUrl);
 
-          if (saasData) {
+          if (
+            saasDataArray &&
+            Array.isArray(saasDataArray) &&
+            saasDataArray.length > 0
+          ) {
             competitorResearch += `\n\nCOMPETITOR WEBSITE ANALYSIS - ${competitorName.toUpperCase()}:\n`;
             competitorResearch += `Website: ${websiteUrl}\n`;
-            competitorResearch += `Company Data: ${JSON.stringify(saasData.company, null, 2)}\n`;
-            competitorResearch += `Pricing Data: ${JSON.stringify(saasData.pricing, null, 2)}\n`;
-            competitorResearch += `Feature Data: ${JSON.stringify(saasData.features, null, 2)}\n`;
-            competitorResearch += `Market Data: ${JSON.stringify(saasData.market, null, 2)}\n`;
+
+            // Process all extracted data entries
+            for (const dataEntry of saasDataArray) {
+              if (dataEntry.extractedData) {
+                const saasData = dataEntry.extractedData;
+                if (saasData.company) {
+                  competitorResearch += `Company Data: ${JSON.stringify(saasData.company, null, 2)}\n`;
+                }
+                if (saasData.pricing) {
+                  competitorResearch += `Pricing Data: ${JSON.stringify(saasData.pricing, null, 2)}\n`;
+                }
+                if (saasData.features) {
+                  competitorResearch += `Feature Data: ${JSON.stringify(saasData.features, null, 2)}\n`;
+                }
+                if (saasData.market) {
+                  competitorResearch += `Market Data: ${JSON.stringify(saasData.market, null, 2)}\n`;
+                }
+              }
+            }
           }
         } catch (error) {
           console.warn(
@@ -331,13 +350,13 @@ export const generateCompetitorData = async (
       // Add customer research to competitor research
       competitorResearch += `\n\nCUSTOMER RESEARCH FOR ${competitorName.toUpperCase()}:\n`;
       competitorResearch += `Average Rating: ${customerData.averageRating?.toFixed(1) || "N/A"}\n`;
-      competitorResearch += `Total Reviews: ${customerData.totalReviews}\n`;
-      competitorResearch += `Feedback Summary: ${JSON.stringify(customerData.feedbackSummary)}\n`;
-      competitorResearch += `Top Missing Features: ${customerData.topMissingFeatures.map((f) => f.feature).join(", ")}\n`;
-      competitorResearch += `Key Strengths: ${customerData.keyStrengths.join(", ")}\n`;
-      competitorResearch += `Key Weaknesses: ${customerData.keyWeaknesses.join(", ")}\n`;
-      competitorResearch += `Opportunities: ${customerData.opportunities.join(", ")}\n`;
-      competitorResearch += `Threats: ${customerData.threats.join(", ")}\n`;
+      competitorResearch += `Total Reviews: ${customerData.totalReviews || "N/A"}\n`;
+      competitorResearch += `Feedback Summary: ${JSON.stringify(customerData.feedbackSummary || {})}\n`;
+      competitorResearch += `Top Missing Features: ${customerData.topMissingFeatures?.map((f) => f.feature).join(", ") || "N/A"}\n`;
+      competitorResearch += `Key Strengths: ${customerData.keyStrengths?.join(", ") || "N/A"}\n`;
+      competitorResearch += `Key Weaknesses: ${customerData.keyWeaknesses?.join(", ") || "N/A"}\n`;
+      competitorResearch += `Opportunities: ${customerData.opportunities?.join(", ") || "N/A"}\n`;
+      competitorResearch += `Threats: ${customerData.threats?.join(", ") || "N/A"}\n`;
     } catch (error) {
       console.warn(
         `Failed to research customers for ${competitorName}:`,
@@ -452,7 +471,7 @@ export const generateCompetitorData = async (
       dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
       dataGaps: z.array(z.string()),
     }),
-    prompt: `Based on the competitor research and SaaS validation framework, generate structured competitor data.
+    prompt: `${COMPETITOR_DISCOVERY_PROMPT}
 
 RESEARCH FINDINGS:
 ${competitorResearch}
@@ -481,16 +500,15 @@ Generate ONLY competitor analysis with detailed profiles, competitive positionin
           averageRating: customerData.averageRating,
           totalReviews: customerData.totalReviews,
           feedbackSummary: customerData.feedbackSummary,
-          topMissingFeatures: customerData.topMissingFeatures.map(
-            (f: any) => f.feature
-          ),
-          keyStrengths: customerData.keyStrengths,
-          keyWeaknesses: customerData.keyWeaknesses,
-          opportunities: customerData.opportunities,
-          threats: customerData.threats,
+          topMissingFeatures:
+            customerData.topMissingFeatures?.map((f: any) => f.feature) || [],
+          keyStrengths: customerData.keyStrengths || [],
+          keyWeaknesses: customerData.keyWeaknesses || [],
+          opportunities: customerData.opportunities || [],
+          threats: customerData.threats || [],
           researchQuality: {
-            confidence: customerData.researchQuality.confidence,
-            coverage: customerData.researchQuality.coverage,
+            confidence: customerData.researchQuality?.confidence,
+            coverage: customerData.researchQuality?.coverage,
           },
         };
       }

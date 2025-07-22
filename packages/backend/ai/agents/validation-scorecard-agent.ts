@@ -280,7 +280,7 @@ export const generateValidationScorecard = async (
 
       nextReviewDate: z.string().optional(),
     }),
-    prompt: `Based on all available research data and additional validation insights, generate a comprehensive validation scorecard.
+    prompt: `${VALIDATION_SCORECARD_PROMPT}
 
 RESEARCH DATA:
 Market Size Data: ${JSON.stringify(marketSizeData, null, 2)}

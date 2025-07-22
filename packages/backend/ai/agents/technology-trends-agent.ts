@@ -374,7 +374,7 @@ export const generateTechnologyTrendsData = async (
       dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
       dataGaps: z.array(z.string()),
     }),
-    prompt: `Based on the technology trends research and SaaS validation framework, generate structured technology data.
+    prompt: `${TECHNOLOGY_TRENDS_PROMPT}
 
 RESEARCH FINDINGS:
 ${technologyResearch}
