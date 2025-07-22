@@ -9,8 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getFeed } from "@/actions/project/activity-feed";
 import { EntityType } from "@workspace/backend/prisma/generated/client/client";
 
-
-
 interface ActivityFeedProps {
   entityType: EntityType;
   entityId: string;
@@ -54,15 +52,14 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const { token } = useSession();
 
   const { data: activities, isPending } = useQuery({
-    queryKey: ['activity-feed', entityType, entityId],
+    queryKey: ["activity-feed", entityType, entityId],
     queryFn: async () => {
       return await getFeed({
-        entityType, entityId
-      })
-    }
-  })
-
-
+        entityType,
+        entityId,
+      });
+    },
+  });
 
   if (isPending) {
     return (
@@ -82,7 +79,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   }
 
   return (
-    <div className="space-y-3 mt-6">
+    <div className="space-y-3">
       <Separator />
       <div className="flex items-center gap-2">
         <Clock className="h-4 w-4  opacity-50" />
@@ -126,14 +123,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
                 {activity.oldValue && activity.newValue && (
                   <div className="mt-2 text-xs">
-                    {activity?.oldValue as string &&
-                      activity?.newValue as string && (
+                    {(activity?.oldValue as string) &&
+                      (activity?.newValue as string) && (
                         <div className="flex items-center gap-1 text-muted-foreground">
                           <Badge
                             variant="error"
                             className="capitalize bg-muted/60 rounded text-xs"
                           >
-                            {JSON.stringify(activity?.oldValue as string)?.toLocaleLowerCase()}
+                            {JSON.stringify(
+                              activity?.oldValue as string
+                            )?.toLocaleLowerCase()}
                           </Badge>
                           <span className="text-muted-foreground/40 mb-1">
                             →
@@ -146,18 +145,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
                           </Badge>
                         </div>
                       )}
-                    {activity?.newValue &&
-                      !activity?.oldValue && (
-                        <span className="capitalize bg-muted/60 rounded text-xs font-medium">
-                          {activity?.newValue.toLocaleLowerCase()}
-                        </span>
-                      )}
-                    {activity?.oldValue &&
-                      !activity?.newValue && (
-                        <span className="capitalize bg-muted/60 rounded text-xs line-through text-muted-foreground">
-                          {activity?.oldValue.toLocaleLowerCase()}
-                        </span>
-                      )}
+                    {activity?.newValue && !activity?.oldValue && (
+                      <span className="capitalize bg-muted/60 rounded text-xs font-medium">
+                        {activity?.newValue.toLocaleLowerCase()}
+                      </span>
+                    )}
+                    {activity?.oldValue && !activity?.newValue && (
+                      <span className="capitalize bg-muted/60 rounded text-xs line-through text-muted-foreground">
+                        {activity?.oldValue.toLocaleLowerCase()}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>

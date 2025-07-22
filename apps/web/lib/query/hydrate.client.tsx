@@ -1,13 +1,26 @@
 "use client";
 
 import React from "react";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import {
+  HydrationBoundary,
+  DehydratedState,
+  dehydrate,
+} from "@tanstack/react-query";
 import getQueryClient from "./getQueryClient";
 
-const Hydrate = ({ children }: { children: React.ReactNode }) => {
+const Hydrate = ({
+  children,
+  state,
+}: {
+  children: React.ReactNode;
+  state?: any;
+}) => {
   const client = getQueryClient();
+
   return (
-    <HydrationBoundary state={dehydrate(client)}>{children}</HydrationBoundary>
+    <HydrationBoundary state={state || dehydrate(client)}>
+      {children}
+    </HydrationBoundary>
   );
 };
 

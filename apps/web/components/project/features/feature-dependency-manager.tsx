@@ -27,7 +27,11 @@ import {
   DialogTrigger,
   DialogDescription,
 } from "@workspace/ui/components/dialog";
-import { Alert, AlertDescription } from "@workspace/ui/components/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import DependencyGraphVisualization from "./dependency-graph-visualization";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
@@ -85,7 +89,6 @@ const UserAvatar = ({
 export const FeatureDependencyManager: React.FC<
   FeatureDependencyManagerProps
 > = ({ featureId, projectId }) => {
-  const { token } = useSession();
   const [isAddingDependency, setIsAddingDependency] = useState(false);
   const [selectedFeature, setSelectedFeature] = useState<string | null>(null);
   const [showGraphDialog, setShowGraphDialog] = useState(false);
@@ -432,11 +435,16 @@ export const FeatureDependencyManager: React.FC<
       {validationResult?.success &&
         validationResult.data &&
         !validationResult.data.canComplete && (
-          <Alert variant={"destructive"}>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
+          <Alert>
+            <AlertCircle className="h-4 w-4 text-destructive" color="red" />
+            <AlertTitle className="text-destructive">
               Blocked by {validationResult.data.blockers.length} incomplete
               dependencies
+            </AlertTitle>
+            <AlertDescription className="text-muted-foreground">
+              {validationResult.data.blockers.map((blocker: any) => (
+                <div key={blocker.id}>{blocker.name}</div>
+              ))}
             </AlertDescription>
           </Alert>
         )}
@@ -458,8 +466,8 @@ export const FeatureDependencyManager: React.FC<
                 Manage
               </Button>
             </DialogTrigger>
-            <DialogContent className="w-full h-screen min-w-[100vw] p-0 flex flex-col">
-              <DialogHeader className="border-b py-1.5">
+            <DialogContent className="w-full space-y-0 h-screen min-w-[100vw] !p-0 flex flex-col">
+              <DialogHeader className="border-b py-1.5 space-y-0 m-0">
                 <DialogTitle className="text-lg flex-1">
                   Dependency Graph
                 </DialogTitle>
@@ -467,7 +475,7 @@ export const FeatureDependencyManager: React.FC<
                   Manage the flow of your project's features.
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex-1 min-h-0 min-w-0 overflow-auto bg-background">
+              <div className="flex-1 grow p-0 min-h-0 min-w-0 overflow-auto bg-background">
                 <DependencyGraphVisualization
                   features={
                     dependencyGraph?.success && dependencyGraph.data
@@ -515,7 +523,7 @@ export const FeatureDependencyManager: React.FC<
                 <div className="min-w-0 space-y-2 flex-1">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     {item.phase && (
-                      <PhaseSelector disabled={false} phase={item.phase} />
+                      <PhaseSelector disabled={true} phase={item.phase} />
                     )}
                     {item.type === "dependency" ? (
                       <ArrowRight className="h-3 w-3" />

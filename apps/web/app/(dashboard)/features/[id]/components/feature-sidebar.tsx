@@ -1,7 +1,6 @@
 "use client";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
@@ -9,33 +8,24 @@ import { DateInput } from "@workspace/ui/components/date-input";
 import { Separator } from "@workspace/ui/components/separator";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import FeatureLinks from "./feature-links";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFeatureById,
   updateFeature,
   validateFeatureCompletion,
 } from "@/actions/project/features";
 
-const queryClient = new QueryClient();
-
-const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
-  const { token } = useSession();
+const FeatureSidebar = ({ featureId }: { featureId: string }) => {
   const queryClient = useQueryClient();
 
-  // Fetch feature details
+  // Fetch feature details (will use pre-hydrated data from server)
   const { data: featureResult } = useQuery({
     queryKey: ["feature", featureId],
     queryFn: () => getFeatureById(featureId),
   });
   const feature = featureResult?.success ? featureResult.data : null;
 
-  // Fetch validation result
+  // Fetch validation result (will use pre-hydrated data from server)
   const { data: validationResult } = useQuery({
     queryKey: ["featureValidation", featureId],
     queryFn: () => validateFeatureCompletion(featureId),
@@ -270,11 +260,5 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
     </div>
   );
 };
-
-const FeatureSidebar = (props: { featureId: string }) => (
-  <QueryClientProvider client={queryClient}>
-    <FeatureSidebarInner {...props} />
-  </QueryClientProvider>
-);
 
 export default FeatureSidebar;

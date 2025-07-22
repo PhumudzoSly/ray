@@ -19,28 +19,20 @@ import { cn } from "@/lib/utils";
 import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { Comments } from "@/components/liveblocks/comments";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFeatureById,
   getFeatureHierarchy,
   updateFeature,
 } from "@/actions/project/features";
 
-const queryClient = new QueryClient();
-
-const FeatureDetailsInner = ({ id }: { id: string }) => {
+const FeatureDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<
     "details" | "dependencies" | "prd" | "activity"
   >("prd");
   const queryClient = useQueryClient();
 
-  // Fetch feature details
+  // Fetch feature details (will use pre-hydrated data from server)
   const { data: featureResult, isPending: isFeaturePending } = useQuery({
     queryKey: ["feature", id],
     queryFn: () => getFeatureById(id),
@@ -100,7 +92,9 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
         queryClient.invalidateQueries({ queryKey: ["featureHierarchy", id] });
 
         // Invalidate validation results
-        queryClient.invalidateQueries({ queryKey: ["featureValidation", id] });
+        queryClient.invalidateQueries({
+          queryKey: ["featureValidation", id],
+        });
 
         // Invalidate activity feed
         queryClient.invalidateQueries({
@@ -374,11 +368,5 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
     </div>
   );
 };
-
-const FeatureDetails = (props: { id: string }) => (
-  <QueryClientProvider client={queryClient}>
-    <FeatureDetailsInner {...props} />
-  </QueryClientProvider>
-);
 
 export default FeatureDetails;

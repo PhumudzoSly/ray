@@ -134,7 +134,6 @@ const DependencyEdge: React.FC<EdgeProps<DependencyEdgeData>> = ({
           className={`
             flex items-center justify-center gap-1  py-1 rounded-md text-xs font-medium
             transition-all duration-200 pointer-events-auto
-            
           `}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
@@ -461,13 +460,16 @@ const DependencyGraphVisualization: React.FC<
     },
   });
 
-  // Handle dependency removal with confirmation
-  const handleRemoveDependency = (parentId: string, dependentId: string) => {
-    removeDependencyMutation.mutate({
-      parentId,
-      dependentFeatureId: dependentId,
-    });
-  };
+  // Stabilize the remove dependency handler with useCallback
+  const handleRemoveDependency = useCallback(
+    (parentId: string, dependentId: string) => {
+      removeDependencyMutation.mutate({
+        parentId,
+        dependentFeatureId: dependentId,
+      });
+    },
+    [removeDependencyMutation]
+  );
 
   // Confirm dependency removal
   const confirmRemoveDependency = useCallback(async () => {
@@ -490,6 +492,7 @@ const DependencyGraphVisualization: React.FC<
     }
   }, [pendingRemoval, removeDependencyMutation, token]);
 
+  // Memoize the initial layout to prevent recalculation on every render
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     return getLayoutedElements(
       features,
@@ -502,7 +505,7 @@ const DependencyGraphVisualization: React.FC<
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Update nodes when data changes
+  // Update nodes when data changes - removed handleRemoveDependency from dependencies
   React.useEffect(() => {
     const { nodes: newNodes, edges: newEdges } = getLayoutedElements(
       features,
@@ -512,14 +515,7 @@ const DependencyGraphVisualization: React.FC<
     );
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [
-    features,
-    dependencies,
-    currentFeatureId,
-    setNodes,
-    setEdges,
-    handleRemoveDependency,
-  ]);
+  }, [features, dependencies, currentFeatureId, setNodes, setEdges]);
 
   // Handle new connections (creating dependencies)
   const onConnect: OnConnect = useCallback(
@@ -576,7 +572,7 @@ const DependencyGraphVisualization: React.FC<
         );
       }
     },
-    [dependencies, features, token]
+    [dependencies, features, token, addDependencyMutation]
   );
 
   // Handle edge deletion (removing dependencies) - kept for keyboard shortcuts
@@ -594,7 +590,7 @@ const DependencyGraphVisualization: React.FC<
         }
       }
     },
-    [features, handleRemoveDependency]
+    [features, token, handleRemoveDependency]
   );
 
   // Validate connections
@@ -627,77 +623,31 @@ const DependencyGraphVisualization: React.FC<
   }
 
   return (
-    <div>
-      <div className="h-[90vh] w-full border rounded-lg overflow-hidden">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onEdgesDelete={onEdgesDelete}
-          isValidConnection={isValidConnection}
-          nodeTypes={nodeTypes}
-          edgeTypes={edgeTypes}
-          connectionMode={ConnectionMode.Strict}
-          fitView
-          fitViewOptions={{
-            padding: 0.2,
-          }}
-          minZoom={0.5}
-          maxZoom={2}
-          defaultViewport={{ x: 0, y: 0, zoom: 1 }}
-          deleteKeyCode={["Backspace", "Delete"]}
-          multiSelectionKeyCode={["Meta", "Ctrl"]}
-        >
-          <Background color="#f1f5f9" gap={20} />
-          <Controls
-            className="bg-white border shadow-sm"
-            showInteractive={false}
-          />
-        </ReactFlow>
-      </div>
-
-      {/* Confirmation Dialog for Dependency Removal */}
-      <AlertDialog
-        open={!!pendingRemoval}
-        onOpenChange={() => setPendingRemoval(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
-              Remove Dependency
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to remove this dependency?
-              <div className="mt-3 p-3 bg-card rounded-md">
-                <div className="text-sm flex flex-wrap items-center gap-2">
-                  <span className="font-bold">
-                    {pendingRemoval?.dependentName}
-                  </span>
-                  <ArrowRight className="h-4 w-4" />
-                  <span className="text-muted-foreground">
-                    will no longer depend on
-                  </span>
-                  <ArrowRight className="h-4 w-4" />
-                  <span className="font-bold">
-                    {pendingRemoval?.parentName}
-                  </span>
-                </div>
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmRemoveDependency}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Remove
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+    <ReactFlow
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onConnect={onConnect}
+      onEdgesDelete={onEdgesDelete}
+      isValidConnection={isValidConnection}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      connectionMode={ConnectionMode.Strict}
+      fitView
+      fitViewOptions={{
+        padding: 0.2,
+      }}
+      minZoom={0.5}
+      maxZoom={2}
+      className="m-0 p-0"
+      defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+      deleteKeyCode={["Backspace", "Delete"]}
+      multiSelectionKeyCode={["Meta", "Ctrl"]}
+    >
+      <Background color="#f1f5f9" gap={20} />
+      <Controls className="bg-white border shadow-sm" showInteractive={false} />
+    </ReactFlow>
   );
 };
 
