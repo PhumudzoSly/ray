@@ -6,6 +6,9 @@ export type IntegrationConfig = {
   apiKey: string;
   listId?: string;
   audienceId?: string;
+  // GitHub-specific fields
+  repositories?: string[];
+  webhookUrl?: string;
   [key: string]: any;
 };
 
@@ -14,7 +17,7 @@ export type IntegrationConfig = {
  */
 export const createIntegration = async (data: {
   name: string;
-  type: "RESEND" | "LOOPS" | "SENDGRID" | "MAILCHIMP" | "CONVERTKIT";
+  type: "RESEND" | "LOOPS" | "SENDGRID" | "MAILCHIMP" | "CONVERTKIT" | "GITHUB";
   config: IntegrationConfig;
 }) => {
   const { org, userId } = await getSession();
@@ -147,7 +150,9 @@ export const getIntegrationsByPurpose = async (purpose: string) => {
           in:
             purpose === "email_sync"
               ? ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT"]
-              : ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT"],
+              : purpose === "code_sync"
+              ? ["GITHUB"]
+              : ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT", "GITHUB"],
         },
         isActive: true,
       },

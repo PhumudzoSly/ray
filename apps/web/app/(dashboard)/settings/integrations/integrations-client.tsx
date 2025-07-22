@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Mail,
@@ -87,7 +87,7 @@ function getDefaultConfig(type: string): IntegrationConfig {
     case "LOOPS":
       return { apiKey: "" };
     case "GITHUB":
-      return { apiKey: "" };
+      return { apiKey: "", repositories: [], webhookUrl: "" };
     default:
       return { apiKey: "" };
   }
@@ -101,7 +101,15 @@ function ensureIntegrationConfig(config: any): IntegrationConfig {
   return config as IntegrationConfig;
 }
 
-export function IntegrationsClient() {
+interface IntegrationsClientProps {
+  successMessage?: string;
+  errorMessage?: string;
+}
+
+export function IntegrationsClient({
+  successMessage,
+  errorMessage,
+}: IntegrationsClientProps) {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<string>("");
@@ -153,6 +161,20 @@ export function IntegrationsClient() {
   // Group integrations by platform key
   const integrationsByPlatform: Record<string, Integration[]> = {};
   let safeIntegrations: Integration[] = [];
+
+  // Map integration types to platform keys
+  const getIntegrationPlatformKey = (type: string): string => {
+    switch (type.toUpperCase()) {
+      case "RESEND":
+        return "resend";
+      case "LOOPS":
+        return "loops";
+      case "GITHUB":
+        return "github";
+      default:
+        return type.toLowerCase();
+    }
+  };
   if (integrations) {
     safeIntegrations = integrations.map((integration) => ({
       ...integration,
@@ -167,7 +189,7 @@ export function IntegrationsClient() {
       config: ensureIntegrationConfig(integration.config),
     }));
     for (const integration of safeIntegrations) {
-      const key = integration.type.toLowerCase();
+      const key = getIntegrationPlatformKey(integration.type);
       if (!integrationsByPlatform[key]) integrationsByPlatform[key] = [];
       integrationsByPlatform[key].push(integration);
     }
@@ -200,6 +222,16 @@ export function IntegrationsClient() {
       </div>
     );
   }
+
+  // Show success/error messages
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(decodeURIComponent(successMessage));
+    }
+    if (errorMessage) {
+      toast.error(decodeURIComponent(errorMessage));
+    }
+  }, [successMessage, errorMessage]);
 
   return (
     <div className="space-y-6">
@@ -288,7 +320,9 @@ export function IntegrationsClient() {
                                       onClick={() => {
                                         setEditIntegration(integration as any);
                                         setModalType(
-                                          integration.type.toLowerCase()
+                                          getIntegrationPlatformKey(
+                                            integration.type
+                                          )
                                         );
                                         setModalOpen(true);
                                       }}

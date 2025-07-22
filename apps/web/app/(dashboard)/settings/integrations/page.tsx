@@ -1,8 +1,13 @@
 import { getAllIntegrations } from "@/actions/integration";
 import { IntegrationsClient } from "./integrations-client";
 import getQueryClient from "@/lib/query/getQueryClient";
+import { Suspense } from "react";
 
-export default async function IntegrationsPage() {
+export default async function IntegrationsPage({
+  searchParams,
+}: {
+  searchParams: { success?: string; error?: string };
+}) {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
@@ -14,5 +19,12 @@ export default async function IntegrationsPage() {
     },
   });
 
-  return <IntegrationsClient />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <IntegrationsClient
+        successMessage={searchParams.success}
+        errorMessage={searchParams.error}
+      />
+    </Suspense>
+  );
 }

@@ -1050,7 +1050,8 @@ exports.IntegrationType = exports.$Enums.IntegrationType = {
   LOOPS: 'LOOPS',
   SENDGRID: 'SENDGRID',
   MAILCHIMP: 'MAILCHIMP',
-  CONVERTKIT: 'CONVERTKIT'
+  CONVERTKIT: 'CONVERTKIT',
+  GITHUB: 'GITHUB'
 };
 
 exports.FeaturePhase = exports.$Enums.FeaturePhase = {

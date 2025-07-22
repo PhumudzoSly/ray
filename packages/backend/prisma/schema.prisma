@@ -973,6 +973,7 @@ enum IntegrationType {
   SENDGRID
   MAILCHIMP
   CONVERTKIT
+  GITHUB
 }
 
 // ============================================================================

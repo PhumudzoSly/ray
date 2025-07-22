@@ -51,6 +51,11 @@ const integrationTypes = [
     label: "ConvertKit",
     description: "Email marketing for creators",
   },
+  {
+    value: "GITHUB",
+    label: "GitHub",
+    description: "Code hosting and collaboration platform",
+  },
 ];
 
 export function CreateIntegrationDialog({
