@@ -5,9 +5,9 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import Header from "@/components/shared/header";
-import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import * as waitlistActions from "@/actions/waitlist";
-import EditWaitlistForm from "./edit-waitlist-form";
+import { getIntegrationUsage } from "@/actions/integration/usage";
+import WaitlistForm from "../../_components/waitlist-form";
 
 interface EditWaitlistPageProps {
   params: Promise<{ id: string }>;
@@ -32,29 +32,29 @@ export default async function EditWaitlistPage({
     },
   });
 
+  // Get email sync integration usage
+  await queryClient.prefetchQuery({
+    queryKey: ["waitlist-email-sync", waitlistId],
+    queryFn: async () => {
+      const res = await getIntegrationUsage(
+        "waitlist",
+        waitlistId,
+        "email_sync"
+      );
+      return res.success ? res.data : null;
+    },
+  });
+
   // Get the prefetched data
   const waitlist = queryClient.getQueryData(["waitlist", waitlistId]) as any;
+  const emailSyncUsage = queryClient.getQueryData([
+    "waitlist-email-sync",
+    waitlistId,
+  ]) as any;
 
   if (!waitlist) {
     notFound();
   }
-
-  const editFormContent = EditWaitlistForm({
-    mode: "edit",
-    waitlistId,
-    initialData: {
-      name: waitlist.name,
-      slug: waitlist.slug,
-      description: waitlist.description,
-      projectId: waitlist.projectId,
-      projectName: waitlist.project?.name,
-      isPublic: waitlist.isPublic,
-      allowNameCapture: waitlist.allowNameCapture,
-      showPosition: waitlist.showPosition,
-      showSocialProof: waitlist.showSocialProof,
-      customMessage: waitlist.customMessage || "",
-    },
-  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -67,7 +67,24 @@ export default async function EditWaitlistPage({
       >
         <></>
       </Header>
-      {editFormContent}
+      <WaitlistForm
+        mode="edit"
+        waitlistId={waitlistId}
+        initialData={{
+          name: waitlist.name,
+          slug: waitlist.slug,
+          description: waitlist.description,
+          projectId: waitlist.projectId,
+          projectName: waitlist.project?.name,
+          isPublic: waitlist.isPublic,
+          allowNameCapture: waitlist.allowNameCapture,
+          showPosition: waitlist.showPosition,
+          showSocialProof: waitlist.showSocialProof,
+          customMessage: waitlist.customMessage || "",
+          emailSyncEnabled: !!emailSyncUsage,
+          integrationId: emailSyncUsage?.integrationId || null,
+        }}
+      />
     </HydrationBoundary>
   );
 }

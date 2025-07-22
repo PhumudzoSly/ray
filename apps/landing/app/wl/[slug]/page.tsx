@@ -1,383 +1,214 @@
-"use client";
-
-"use client";
-
-import { useState, useEffect } from "react";
-import { useParams, useSearchParams } from "next/navigation";
-import { Button } from "@workspace/ui/components/button";
-import { Input } from "@workspace/ui/components/input";
-import { Label } from "@workspace/ui/components/label";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import { Suspense } from "react";
+import { notFound } from "next/navigation";
+import { getWaitlistBySlug } from "@/actions/waitlist";
 import { Badge } from "@workspace/ui/components/badge";
-import { Separator } from "@workspace/ui/components/separator";
+import { WaitlistForm } from "./waitlist-form";
+import { CheckStatus } from "./check-status";
 import {
-  Users,
-  TrendingUp,
-  Mail,
-  Share2,
-  Check,
-  Loader2,
-  Copy,
-  Twitter,
-  Linkedin,
-  MessageCircle,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { getWaitlistBySlug } from "actions/waitlist";
-import { Waitlist } from "@workspace/backend/prisma/generated/client";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
+import { Users, Search, Sparkles, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-const joinWaitlistSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  name: z.string().min(1, "Name is required").optional(),
-});
+interface WaitlistPageProps {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-type JoinWaitlistForm = z.infer<typeof joinWaitlistSchema>;
+export default async function PublicWaitlistPage({
+  params,
+  searchParams,
+}: WaitlistPageProps) {
+  const { slug } = await params;
+  const searchParamsObj = await searchParams;
+  const referralCode = searchParamsObj.ref as string | undefined;
 
-export default function PublicWaitlistPage() {
-  const params = useParams();
-  const searchParams = useSearchParams();
-  const slug = params.slug as string;
-  const referralCode = searchParams.get("ref");
+  // Fetch waitlist data on the server
+  const { success, data: waitlist } = await getWaitlistBySlug(slug);
 
-  const [waitlist, setWaitlist] = useState<Waitlist | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isJoined, setIsJoined] = useState(false);
-  const [userReferralCode, setUserReferralCode] = useState<string>("");
-  const [position, setPosition] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchWaitlist = async () => {
-      setIsLoading(true);
-      const { success, data } = await getWaitlistBySlug(slug);
-      if (success) {
-        setWaitlist(data);
-      } else {
-        toast.error("Waitlist not found or is not public");
-      }
-      setIsLoading(false);
-    };
-    fetchWaitlist();
-  }, [slug]);
-
-  const form = useForm<JoinWaitlistForm>({
-    resolver: zodResolver(joinWaitlistSchema),
-    defaultValues: {
-      email: "",
-      name: "",
-    },
-  });
-
-  const onSubmit = async (data: JoinWaitlistForm) => {
-    if (!waitlist) return;
-
-    setIsSubmitting(true);
-
-    try {
-      // Get UTM parameters
-      const utmSource = searchParams.get("utm_source") || undefined;
-      const utmMedium = searchParams.get("utm_medium") || undefined;
-      const utmCampaign = searchParams.get("utm_campaign") || undefined;
-
-      const response = await fetch("/api/waitlist/join", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          waitlistId: waitlist.id,
-          email: data.email,
-          name: data.name,
-          referredBy: referralCode,
-          utmSource,
-          utmMedium,
-          utmCampaign,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setIsJoined(true);
-        // You would typically get this from the response
-        setUserReferralCode("ABC123"); // Placeholder
-        setPosition(waitlist.stats.totalEntries + 1);
-        toast.success("Successfully joined the waitlist!");
-      } else {
-        toast.error(result.error || "Failed to join waitlist");
-      }
-    } catch (error) {
-      toast.error("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const shareUrl = `${window.location.origin}/wl/${slug}?ref=${userReferralCode}`;
-
-  const handleShare = (platform: string) => {
-    const text = `Join me on the waitlist for ${waitlist?.name}!`;
-    let url = "";
-
-    switch (platform) {
-      case "twitter":
-        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          text
-        )}&url=${encodeURIComponent(shareUrl)}`;
-        break;
-      case "linkedin":
-        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-          shareUrl
-        )}`;
-        break;
-      case "whatsapp":
-        url = `https://wa.me/?text=${encodeURIComponent(`${text} ${shareUrl}`)}`;
-        break;
-    }
-
-    if (url) {
-      window.open(url, "_blank");
-    }
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shareUrl);
-    toast.success("Link copied to clipboard!");
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!waitlist) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <p>Waitlist not found.</p>
-      </div>
-    );
-  }
-
-  if (isJoined) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-
-            <h1 className="text-4xl font-bold mb-4">You're on the waitlist!</h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              Thanks for joining {waitlist.name}. You're currently position #
-              {position} in line.
-            </p>
-
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5" />
-                  Want to move up faster?
-                </CardTitle>
-                <CardDescription>
-                  Share your unique referral link with friends. For every person
-                  who joins through your link, you'll move up one position!
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={shareUrl}
-                    readOnly
-                    className="font-mono text-sm"
-                  />
-                  <Button onClick={copyToClipboard} size="sm">
-                    <Copy className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <div className="flex justify-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("twitter")}
-                  >
-                    <Twitter className="w-4 h-4 mr-2" />
-                    Twitter
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("linkedin")}
-                  >
-                    <Linkedin className="w-4 h-4 mr-2" />
-                    LinkedIn
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare("whatsapp")}
-                  >
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    WhatsApp
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <div className="text-sm text-muted-foreground">
-              <p>We'll email you when it's your turn for early access.</p>
-              <p>
-                Check your email to verify your address and secure your spot!
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  if (!success || !waitlist) {
+    notFound();
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <h1 className="text-4xl font-bold">{waitlist.name}</h1>
-              <Badge variant="secondary">{waitlist.project?.name}</Badge>
-            </div>
-            <p className="text-xl text-muted-foreground mb-8">
-              {waitlist.description}
-            </p>
-
-            {waitlist.showSocialProof && waitlist.stats && (
-              <div className="flex items-center justify-center gap-8 mb-8">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {waitlist.stats.totalEntries}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    people joined
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {waitlist.stats.verifiedCount}
-                  </div>
-                  <div className="text-sm text-muted-foreground">verified</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {waitlist.stats.todayCount}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    joined today
-                  </div>
+    <div className="h-screen bg-background overflow-hidden">
+      <div className="flex h-full">
+        {/* Left Side - Form */}
+        <div className="flex-1 overflow-y-auto bg-gray-100">
+          <div className="min-h-full flex items-center justify-center p-8 lg:px-16">
+            <div className="w-full max-w-md space-y-8">
+              {/* Header */}
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h1 className="text-4xl font-bold tracking-tight text-foreground">
+                    {waitlist.name}
+                  </h1>
+                  <p className="text-lg text-muted-foreground leading-relaxed"></p>
                 </div>
               </div>
-            )}
-          </div>
 
-          {/* Join Form */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Join the Waitlist
-              </CardTitle>
-              <CardDescription>
-                {referralCode
-                  ? "You've been referred by a friend! Join now to secure your spot."
-                  : "Get early access and be among the first to try our new features."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your@email.com"
-                    {...form.register("email")}
-                  />
-                  {form.formState.errors.email && (
-                    <p className="text-sm text-red-500">
-                      {form.formState.errors.email.message}
-                    </p>
-                  )}
-                </div>
+              {/* Motivational Message */}
+              <div className="space-y-2">
+                <h2 className="text-2xl font-semibold text-foreground">
+                  Good things come to those who join early
+                </h2>
+                <p className="text-muted-foreground">{waitlist.description}</p>
+              </div>
 
-                {waitlist.allowNameCapture && (
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name (Optional)</Label>
-                    <Input
-                      id="name"
-                      placeholder="Your name"
-                      {...form.register("name")}
-                    />
-                    {form.formState.errors.name && (
-                      <p className="text-sm text-red-500">
-                        {form.formState.errors.name.message}
-                      </p>
-                    )}
+              {/* Social Proof */}
+              <div className="flex items-center gap-4">
+                <Badge variant="default" className="text-xs font-medium">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Launching soon
+                </Badge>
+                {waitlist.showSocialProof && waitlist.stats && (
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="flex -space-x-2">
+                      {Array.from({
+                        length: Math.min(
+                          Math.max(1, waitlist.stats.totalEntries),
+                          4
+                        ),
+                      }).map((_, idx) => {
+                        // Generate a random uppercase letter
+                        const randomLetter = String.fromCharCode(
+                          65 + Math.floor(Math.random() * 26)
+                        );
+                        // Array of shadcn color gradients (using only shadcn variables)
+                        const gradients = [
+                          "from-[#6366f1] to-[#a5b4fc]", // indigo-500 to indigo-200
+                          "from-[#10b981] to-[#6ee7b7]", // emerald-500 to emerald-300
+                          "from-[#f59e42] to-[#fcd34d]", // amber-500 to amber-300
+                          "from-[#f43f5e] to-[#fca5a5]", // rose-500 to rose-300
+                          "from-[#3b82f6] to-[#60a5fa]", // blue-500 to blue-400
+                        ];
+                        // Pick a random gradient for each avatar
+                        const gradient =
+                          gradients[
+                            Math.floor(Math.random() * gradients.length)
+                          ];
+                        return (
+                          <div
+                            key={idx}
+                            className={`w-8 h-8 rounded-full bg-gradient-to-r ${gradient} border-2 border-background flex items-center justify-center text-xs font-semibold text-white`}
+                          >
+                            {randomLetter}
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="text-muted-foreground">
+                      <span className="font-semibold text-foreground">
+                        {waitlist.stats.totalEntries.toLocaleString()}+
+                      </span>{" "}
+                      people have already joined
+                    </div>
                   </div>
                 )}
+              </div>
 
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Joining...
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="w-4 h-4 mr-2" />
-                      Join Waitlist
-                    </>
-                  )}
-                </Button>
-              </form>
+              {/* Form Tabs */}
+              <Tabs
+                defaultValue={referralCode ? "check" : "join"}
+                className="w-full"
+              >
+                <TabsList className="grid w-full grid-cols-2 h-11">
+                  <TabsTrigger value="join" className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Join now
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="check"
+                    className="flex items-center gap-2"
+                  >
+                    <Search className="w-4 h-4" />
+                    Check status
+                  </TabsTrigger>
+                </TabsList>
 
-              {waitlist.customMessage && (
-                <div className="mt-4 p-4 bg-muted rounded-lg">
-                  <p className="text-sm text-muted-foreground">
-                    {waitlist.customMessage}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                <TabsContent value="join" className="mt-6">
+                  <Suspense
+                    fallback={
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-pulse text-muted-foreground text-sm">
+                          Loading form...
+                        </div>
+                      </div>
+                    }
+                  >
+                    <WaitlistForm
+                      waitlist={waitlist}
+                      referralCode={referralCode}
+                      searchParams={searchParamsObj}
+                    />
+                  </Suspense>
+                </TabsContent>
 
-          {/* Footer */}
-          <div className="text-center mt-8 text-sm text-muted-foreground">
-            <p>
-              By joining, you agree to receive updates about{" "}
-              {waitlist.project?.name}.
-            </p>
-            <p>We'll never spam you or share your email with third parties.</p>
+                <TabsContent value="check" className="mt-6">
+                  <Suspense
+                    fallback={
+                      <div className="flex items-center justify-center py-8">
+                        <div className="animate-pulse text-muted-foreground text-sm">
+                          Loading status checker...
+                        </div>
+                      </div>
+                    }
+                  >
+                    <CheckStatus
+                      waitlistId={waitlist.id}
+                      waitlistName={waitlist.name}
+                      waitlistSlug={waitlist.slug}
+                    />
+                  </Suspense>
+                </TabsContent>
+              </Tabs>
+
+              {/* Footer */}
+              <div className="space-y-2 text-sm">
+                <p className="text-muted-foreground">
+                  By joining, you agree to receive updates about{" "}
+                  <span className="font-medium text-foreground">
+                    {waitlist.project?.name || "this project"}
+                  </span>
+                  .
+                </p>
+                <p className="text-xs text-muted-foreground/60">
+                  We'll never spam you or share your email with third parties.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Right Side - Image */}
+        <div className="hidden bg-[#F8F8F8] border-l lg:flex flex-1 items-center justify-center relative">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-muted/20" />
+
+          {/* Placeholder Illustration */}
+          <div className="relative z-10 max-w-xl mx-auto">
+            <img
+              src="/waitlist2.jpg"
+              alt="Waitlist Illustration"
+              className="object-contain w-full h-full min-h-full min-w-full"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Back to RayAI Link */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-background/80 backdrop-blur-sm border border-border/50 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-background/90 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to RayAI
+        </Link>
       </div>
     </div>
   );

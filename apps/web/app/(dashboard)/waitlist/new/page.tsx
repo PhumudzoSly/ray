@@ -3,6 +3,8 @@ import Header from "@/components/shared/header";
 import WaitlistForm from "../_components/waitlist-form";
 
 export default function NewWaitlistPage() {
+  //
+
   const waitlistFormContent = WaitlistForm({
     mode: "create",
   });

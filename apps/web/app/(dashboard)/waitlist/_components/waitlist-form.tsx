@@ -50,6 +50,8 @@ interface WaitlistFormProps {
     showPosition: boolean;
     showSocialProof: boolean;
     customMessage?: string;
+    emailSyncEnabled?: boolean;
+    integrationId?: string | null;
   };
   onSuccess?: (result: any) => void;
 }
@@ -142,8 +144,8 @@ export default function WaitlistForm({
         showPosition: initialData.showPosition,
         showSocialProof: initialData.showSocialProof,
         customMessage: initialData.customMessage || "",
-        emailSyncEnabled: (initialData as any).emailSyncEnabled || false,
-        integrationId: (initialData as any).integrationId || null,
+        emailSyncEnabled: initialData.emailSyncEnabled || false,
+        integrationId: initialData.integrationId || null,
       });
     }
   }, [mode, initialData]);
