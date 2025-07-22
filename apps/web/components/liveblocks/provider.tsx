@@ -23,7 +23,7 @@ export function LiveBlockProvider({ children }: { children: ReactNode }) {
         );
         const finalUsers = users.map((user) => {
           return {
-            id: (user?.id) || "",
+            id: user?.id || "",
             name: user?.name || "",
             avatar: user?.image || "",
           };

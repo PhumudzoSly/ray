@@ -9,8 +9,18 @@ import { DateInput } from "@workspace/ui/components/date-input";
 import { Separator } from "@workspace/ui/components/separator";
 import { MilestoneSelector } from "@/components/ui/selectors/milestone-selector";
 import FeatureLinks from "./feature-links";
-import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, updateFeature, validateFeatureCompletion } from "@/actions/project/features";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  getFeatureById,
+  updateFeature,
+  validateFeatureCompletion,
+} from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 
@@ -62,12 +72,58 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
     onError: (err, updates, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousFeature) {
-        queryClient.setQueryData(["feature", featureId], context.previousFeature);
+        queryClient.setQueryData(
+          ["feature", featureId],
+          context.previousFeature
+        );
       }
       toast.error("Failed to update feature");
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
       queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+
+      // Invalidate feature hierarchy if this feature has parent/sub-features
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", featureId],
+      });
+
+      // Invalidate validation results
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", featureId],
+      });
+
+      // Invalidate activity feed
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", featureId],
+      });
+
+      // If feature has a parent, invalidate parent's hierarchy
+      if (feature?.parentFeatureId) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureHierarchy", feature.parentFeatureId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["feature", feature.parentFeatureId],
+        });
+      }
+
+      // Invalidate project-level queries
+      if (feature?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["features", feature.projectId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["featureDependencyGraph", feature.projectId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["projectDependencyStats", feature.projectId],
+        });
+      }
+
+      // Invalidate general feature queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+
       toast.success("Feature updated");
     },
     onSettled: () => {
@@ -104,7 +160,9 @@ const FeatureSidebarInner = ({ featureId }: { featureId: string }) => {
               await handleUpdate({ phase });
             }}
             blockedPhases={
-              validationResult && !validationResult.data?.canComplete ? ["LIVE"] : []
+              validationResult && !validationResult.data?.canComplete
+                ? ["LIVE"]
+                : []
             }
             onBlockedPhaseAttempt={() => {
               toast.error(

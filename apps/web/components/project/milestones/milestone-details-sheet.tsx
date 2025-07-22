@@ -1,15 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-} from "@workspace/ui/components/sheet";
+import { Sheet, SheetContent } from "@workspace/ui/components/sheet";
 import { Badge } from "@workspace/ui/components/badge";
-import { Separator } from "@workspace/ui/components/separator";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Tabs,
@@ -17,13 +11,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,24 +32,62 @@ import {
   Target,
   Activity,
   MoreHorizontal,
+  BarChart3,
+  CheckSquare,
+  Square,
+  TrendingUp,
 } from "lucide-react";
 import { formatDate } from "@/lib/format";
 import { toast } from "sonner";
-import { ActivityFeed } from "@/components/shared/activity-feed";
+import moment from "moment";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { DateInput } from "@workspace/ui/components/date-input";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { StatusSelector } from "@/components/ui/selectors/status-selector";
-import { MilestoneStatusSelector } from "@/components/ui/selectors/milestone-status-selector";
+import { CommandSelect } from "@workspace/ui/components/command-select";
+import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
+import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getMilestone, updateMilestone, deleteMilestone, MilestoneWithProgress } from "@/actions/project/milestone";
+import {
+  getMilestone,
+  updateMilestone,
+  deleteMilestone,
+  MilestoneWithProgress,
+} from "@/actions/project/milestone";
 
 interface MilestoneDetailsSheetProps {
   milestoneId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const MILESTONE_STATUS_OPTIONS = [
+  {
+    value: "NOT_STARTED",
+    label: "Not Started",
+    icon: <Circle className="h-3 w-3" />,
+  },
+  {
+    value: "IN_PROGRESS",
+    label: "In Progress",
+    icon: <Clock className="h-3 w-3" />,
+  },
+  {
+    value: "AT_RISK",
+    label: "At Risk",
+    icon: <AlertTriangle className="h-3 w-3" />,
+  },
+  {
+    value: "COMPLETED",
+    label: "Completed",
+    icon: <CheckCircle2 className="h-3 w-3" />,
+  },
+  {
+    value: "DELAYED",
+    label: "Delayed",
+    icon: <AlertTriangle className="h-3 w-3" />,
+  },
+];
 
 export function MilestoneDetailsSheet({
   milestoneId,
@@ -73,14 +98,16 @@ export function MilestoneDetailsSheet({
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: milestone, isLoading } = useQuery<MilestoneWithProgress | null>({
-    queryKey: ["milestone", milestoneId],
-    queryFn: async () => {
-      if (!milestoneId) return null;
-      return await getMilestone(milestoneId);
-    },
-    enabled: !!milestoneId,
-  });
+  const { data: milestone, isLoading } = useQuery<MilestoneWithProgress | null>(
+    {
+      queryKey: ["milestone", milestoneId],
+      queryFn: async () => {
+        if (!milestoneId) return null;
+        return await getMilestone(milestoneId);
+      },
+      enabled: !!milestoneId,
+    }
+  );
 
   // Optimistic update for milestone
   const updateMutation = useMutation({
@@ -88,7 +115,10 @@ export function MilestoneDetailsSheet({
     onMutate: async (updates) => {
       await queryClient.cancelQueries({ queryKey: ["milestone", milestoneId] });
       const previous = queryClient.getQueryData(["milestone", milestoneId]);
-      queryClient.setQueryData(["milestone", milestoneId], (old: any) => ({ ...old, ...updates }));
+      queryClient.setQueryData(["milestone", milestoneId], (old: any) => ({
+        ...old,
+        ...updates,
+      }));
       return { previous };
     },
     onError: (err, updates, context) => {
@@ -98,7 +128,18 @@ export function MilestoneDetailsSheet({
       toast.error("Failed to update milestone");
     },
     onSettled: () => {
+      // Refresh all milestone-related queries
       queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId] });
+      if (milestone?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["milestones", milestone.projectId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["project", milestone.projectId],
+        });
+      }
+      // Refresh any other milestone queries
+      queryClient.invalidateQueries({ queryKey: ["milestones"] });
     },
     onSuccess: () => {
       toast.success("Milestone updated");
@@ -109,10 +150,19 @@ export function MilestoneDetailsSheet({
     mutationFn: async () => deleteMilestone(milestoneId),
     onSuccess: () => {
       toast.success("Milestone deleted");
+      // Invalidate both individual milestone and project milestones list
+      queryClient.invalidateQueries({ queryKey: ["milestone", milestoneId] });
+      if (milestone?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["milestones", milestone.projectId],
+        });
+      }
       onOpenChange(false);
     },
-    onError: () => {
-      toast.error("Failed to delete milestone");
+    onError: (error: any) => {
+      // Show the specific error message from the server
+      const errorMessage = error?.message || "Failed to delete milestone";
+      toast.error(errorMessage);
     },
   });
 
@@ -126,6 +176,32 @@ export function MilestoneDetailsSheet({
 
   const handleStatusChange = async (status: string) => {
     await handleUpdate({ status });
+  };
+
+  const handleOwnerChange = async (assignee: string | null) => {
+    await handleUpdate({
+      ownerId: assignee === "unassigned" ? undefined : assignee,
+    });
+  };
+
+  const handleStartDateChange = async (date: Date | undefined) => {
+    await handleUpdate({
+      startDate: date ? date.getTime() : undefined,
+    });
+  };
+
+  const handleEndDateChange = async (date: Date | undefined) => {
+    await handleUpdate({
+      endDate: date ? date.getTime() : undefined,
+    });
+  };
+
+  const handleNameChange = async (name: string) => {
+    await handleUpdate({ name });
+  };
+
+  const handleDescriptionChange = async (description: string) => {
+    await handleUpdate({ description: description || undefined });
   };
 
   const handleDelete = async () => {
@@ -162,7 +238,7 @@ export function MilestoneDetailsSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[640px] p-0 overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-[540px] p-0 overflow-y-auto">
         {/* Header */}
         <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
           <div className="p-6 pb-4">
@@ -175,46 +251,11 @@ export function MilestoneDetailsSheet({
                     </h1>
                   }
                   value={milestone.name}
-                  onSave={async (value) => {
-                    await handleUpdate({ name: value });
-                  }}
+                  onSave={handleNameChange}
                   disabled={isUpdating}
                 />
-                <div className="flex items-center gap-2 mt-3">
-                  <MilestoneStatusSelector status={milestone.status} disabled />
-                  {(milestone.startDate || milestone.endDate) && (
-                    <Badge
-                      variant="outline"
-                      className="text-xs font-medium text-muted-foreground"
-                    >
-                      <Calendar className="h-3 w-3 mr-1.5" />
-                      {milestone.startDate &&
-                        formatDate(new Date(milestone.startDate))}
-                      {milestone.startDate && milestone.endDate && " → "}
-                      {milestone.endDate &&
-                        formatDate(new Date(milestone.endDate))}
-                    </Badge>
-                  )}
-                </div>
               </div>
               <div className="flex items-center gap-1">
-                <Select
-                  value={milestone.status}
-                  onValueChange={handleStatusChange}
-                  disabled={isUpdating}
-                >
-                  <SelectTrigger className="w-32 h-8 text-xs border-0 bg-muted/50 hover:bg-muted">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="not-started">Not Started</SelectItem>
-                    <SelectItem value="in-progress">In Progress</SelectItem>
-                    <SelectItem value="at-risk">At Risk</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="delayed">Delayed</SelectItem>
-                  </SelectContent>
-                </Select>
-
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -257,9 +298,7 @@ export function MilestoneDetailsSheet({
             <InlineEditTextArea
               value={milestone.description || ""}
               placeholder="Add a description..."
-              onSave={async (value) => {
-                await handleUpdate({ description: value || undefined });
-              }}
+              onSave={handleDescriptionChange}
               disabled={isUpdating}
               className="text-sm text-muted-foreground leading-relaxed"
             />
@@ -268,112 +307,126 @@ export function MilestoneDetailsSheet({
           {/* Properties */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-foreground">Properties</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-muted-foreground">Owner</span>
-                <AssigneeSelector
-                  assignee={milestone.owner?.id || null}
-                  onChange={async (assignee) => {
-                    await handleUpdate({
-                      ownerId: assignee === "unassigned" ? undefined : assignee,
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-muted-foreground">
-                  Start Date
-                </span>
-                <DateInput
-                  value={
-                    milestone.startDate
-                      ? new Date(milestone.startDate)
-                      : undefined
-                  }
-                  placeholder="Set start date"
-                  onChange={async (date) => {
-                    await handleUpdate({
-                      startDate: date ? date.getTime() : undefined,
-                    });
-                  }}
-                  disabled={isUpdating}
-                />
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <span className="text-sm text-muted-foreground">End Date</span>
-                <DateInput
-                  value={
-                    milestone.endDate ? new Date(milestone.endDate) : undefined
-                  }
-                  placeholder="Set end date"
-                  onChange={async (date) => {
-                    await handleUpdate({
-                      endDate: date ? date.getTime() : undefined,
-                    });
-                  }}
-                  disabled={isUpdating}
-                />
-              </div>
+            <div className="grid grid-cols-[120px_1fr] gap-y-4">
+              <span className="text-xs font-medium text-muted-foreground">
+                Status
+              </span>
+              <CommandSelect
+                options={MILESTONE_STATUS_OPTIONS}
+                value={milestone.status}
+                onValueChange={handleStatusChange}
+                placeholder="Select status"
+                disabled={isUpdating}
+                variant="status"
+                size="sm"
+              />
+
+              <span className="text-xs font-medium text-muted-foreground">
+                Owner
+              </span>
+              <AssigneeSelector
+                assignee={milestone.owner?.id || null}
+                onChange={handleOwnerChange}
+              />
+              <span className="text-xs font-medium text-muted-foreground">
+                Start Date
+              </span>
+              <DateInput
+                value={
+                  milestone.startDate
+                    ? new Date(milestone.startDate)
+                    : undefined
+                }
+                placeholder="Set start date"
+                onChange={handleStartDateChange}
+                disabled={isUpdating}
+              />
+              <span className="text-xs font-medium text-muted-foreground">
+                End Date
+              </span>
+              <DateInput
+                value={
+                  milestone.endDate ? new Date(milestone.endDate) : undefined
+                }
+                placeholder="Set end date"
+                onChange={handleEndDateChange}
+                disabled={isUpdating}
+              />
             </div>
           </div>
 
           {/* Progress */}
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-foreground">Progress</h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">
-                  Completion
-                </span>
-                <span className="text-sm font-medium">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="p-3 rounded-lg border bg-background/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <BarChart3 className="h-4 w-4 text-blue-500" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Completion
+                  </span>
+                </div>
+                <div className="text-lg font-semibold text-foreground">
                   {Math.round(milestone.progress)}%
-                </span>
+                </div>
               </div>
-              <div className="w-full bg-muted rounded-full h-1.5">
-                <div
-                  className="bg-primary h-1.5 rounded-full transition-all duration-300"
-                  style={{ width: `${milestone.progress}%` }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Issues</span>
-                  <span className="font-medium">
-                    {milestone.completedIssueCount}/{milestone.issueCount}
+
+              <div className="p-3 rounded-lg border bg-background/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <CheckSquare className="h-4 w-4 text-green-500" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Issues
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Features</span>
-                  <span className="font-medium">
-                    {milestone.completedFeatureCount}/{milestone.featureCount}
-                  </span>
+                <div className="text-lg font-semibold text-foreground">
+                  {milestone.completedIssueCount}/{milestone.issueCount}
                 </div>
               </div>
-              {milestone.overdueItems > 0 && (
-                <div className="flex items-center gap-1.5 text-xs text-amber-600">
-                  <AlertTriangle className="h-3 w-3" />
-                  {milestone.overdueItems} overdue
+
+              <div className="p-3 rounded-lg border bg-background/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <Target className="h-4 w-4 text-purple-500" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Features
+                  </span>
                 </div>
-              )}
+                <div className="text-lg font-semibold text-foreground">
+                  {milestone.completedFeatureCount}/{milestone.featureCount}
+                </div>
+              </div>
+
+              <div className="p-3 rounded-lg border bg-background/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <span className="text-xs font-medium text-muted-foreground">
+                    Overdue
+                  </span>
+                </div>
+                <div className="text-lg font-semibold text-foreground">
+                  {milestone.overdueItems}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Dependencies */}
           {(milestone.dependsOn.length > 0 ||
             milestone.blocking.length > 0) && (
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium text-foreground">
-                  Dependencies
-                </h3>
-                <div className="space-y-3">
-                  {milestone.dependsOn.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Depends on {milestone.dependsOn.length} milestone
-                        {milestone.dependsOn.length > 1 ? "s" : ""}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {milestone.dependsOn.filter(Boolean).map((dep: { id: string; name: string }) => (
+            <div className="space-y-4">
+              <h3 className="text-sm font-medium text-foreground">
+                Dependencies
+              </h3>
+              <div className="space-y-3">
+                {milestone.dependsOn.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      Depends on {milestone.dependsOn.length} milestone
+                      {milestone.dependsOn.length > 1 ? "s" : ""}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {milestone.dependsOn
+                        .filter(Boolean)
+                        .map((dep: { id: string; name: string }) => (
                           <Badge
                             key={dep?.id}
                             variant="outline"
@@ -382,17 +435,19 @@ export function MilestoneDetailsSheet({
                             {dep?.name}
                           </Badge>
                         ))}
-                      </div>
                     </div>
-                  )}
-                  {milestone.blocking.length > 0 && (
-                    <div className="space-y-2">
-                      <p className="text-xs text-muted-foreground">
-                        Blocking {milestone.blocking.length} milestone
-                        {milestone.blocking.length > 1 ? "s" : ""}
-                      </p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {milestone.blocking.filter(Boolean).map((blocked: { id: string; name: string }) => (
+                  </div>
+                )}
+                {milestone.blocking.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      Blocking {milestone.blocking.length} milestone
+                      {milestone.blocking.length > 1 ? "s" : ""}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {milestone.blocking
+                        .filter(Boolean)
+                        .map((blocked: { id: string; name: string }) => (
                           <Badge
                             key={blocked?.id}
                             variant="outline"
@@ -401,12 +456,12 @@ export function MilestoneDetailsSheet({
                             {blocked?.name}
                           </Badge>
                         ))}
-                      </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
           {/* Assigned Items */}
           {(milestone.issues.length > 0 || milestone.features.length > 0) && (
@@ -430,38 +485,22 @@ export function MilestoneDetailsSheet({
                       {milestone.issues.map((issue: any) => (
                         <div
                           key={issue.id}
-                          className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
+                          className="flex items-start gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
                         >
-                          <div className="flex-shrink-0">
-                            {issue.achieved ? (
-                              <CheckCircle2 className="h-4 w-4 text-green-600" />
-                            ) : issue.dueDate &&
-                              new Date(issue.dueDate).getTime() < Date.now() ? (
-                              <AlertTriangle className="h-4 w-4 text-amber-600" />
-                            ) : (
-                              <Circle className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">
                               {issue.title}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge
-                                variant="outline"
-                                className="text-xs font-normal"
-                              >
-                                {issue.status}
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className="text-xs font-normal"
-                              >
-                                {issue.priority}
-                              </Badge>
+                              <IssueStatusField
+                                issueId={issue.id}
+                                value={issue.status}
+                                disabled={true}
+                                align="start"
+                              />
                               {issue.dueDate && (
                                 <span className="text-xs text-muted-foreground">
-                                  {formatDate(new Date(issue.dueDate))}
+                                  Due {moment(issue.dueDate).fromNow()}
                                 </span>
                               )}
                             </div>
@@ -483,39 +522,20 @@ export function MilestoneDetailsSheet({
                       {milestone.features.map((feature: any) => (
                         <div
                           key={feature.id}
-                          className="flex items-center gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
+                          className="flex items-start gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group"
                         >
-                          <div className="flex-shrink-0">
-                            {feature.achieved || feature.phase === "LIVE" ? (
-                              <CheckCircle2 className="h-4 w-4 text-green-600" />
-                            ) : feature.endDate &&
-                              new Date(feature.endDate).getTime() <
-                              Date.now() ? (
-                              <AlertTriangle className="h-4 w-4 text-amber-600" />
-                            ) : (
-                              <Circle className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-foreground truncate">
                               {feature.name}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge
-                                variant="outline"
-                                className="text-xs font-normal"
-                              >
-                                {feature.phase}
-                              </Badge>
-                              <Badge
-                                variant="outline"
-                                className="text-xs font-normal"
-                              >
-                                {feature.priority}
-                              </Badge>
+                              <PhaseSelector
+                                phase={feature.phase}
+                                disabled={true}
+                              />
                               {feature.endDate && (
                                 <span className="text-xs text-muted-foreground">
-                                  {formatDate(new Date(feature.endDate))}
+                                  Due {moment(feature.endDate).fromNow()}
                                 </span>
                               )}
                             </div>
@@ -533,20 +553,6 @@ export function MilestoneDetailsSheet({
               </Tabs>
             </div>
           )}
-
-          {/* Activity Feed */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-muted-foreground" />
-              <h3 className="text-sm font-medium text-foreground">Activity</h3>
-            </div>
-            <ActivityFeed
-              entityType="MILESTONE"
-              entityId={milestoneId}
-              emptyMessage="No activity yet"
-              limit={10}
-            />
-          </div>
         </div>
       </SheetContent>
     </Sheet>

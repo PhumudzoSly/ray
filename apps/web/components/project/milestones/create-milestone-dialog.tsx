@@ -16,8 +16,11 @@ import {
 import { toast } from "sonner";
 import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createMilestone, CreateMilestoneData } from "@/actions/project/milestone";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createMilestone,
+  CreateMilestoneData,
+} from "@/actions/project/milestone";
 import { getOrgMembers } from "@/actions/account/user";
 
 interface CreateMilestoneDialogProps {
@@ -47,7 +50,7 @@ export function CreateMilestoneDialog({
     ownerId: undefined,
   });
 
-
+  const queryClient = useQueryClient();
 
   // Utility function to validate form fields
   const validateForm = (form: FormState) => {
@@ -74,6 +77,8 @@ export function CreateMilestoneDialog({
     mutationFn: async (data: CreateMilestoneData) => createMilestone(data),
     onSuccess: () => {
       toast.success("Milestone created successfully");
+      // Invalidate and refetch the milestones query
+      queryClient.invalidateQueries({ queryKey: ["milestones", projectId] });
       close();
     },
     onError: () => {
@@ -137,9 +142,7 @@ export function CreateMilestoneDialog({
           <div className="flex items-center gap-4">
             <AssigneeSelector
               assignee={form.ownerId ?? null}
-              onChange={(value) =>
-                setForm({ ...form, ownerId: value })
-              }
+              onChange={(value) => setForm({ ...form, ownerId: value })}
             />
             <DateRangeSelector
               startDate={form.startDate}
@@ -161,7 +164,11 @@ export function CreateMilestoneDialog({
           >
             Cancel
           </Button>
-          <Button className="mb-2" onClick={handleSubmit} disabled={mutation.status === "pending"}>
+          <Button
+            className="mb-2"
+            onClick={handleSubmit}
+            disabled={mutation.status === "pending"}
+          >
             {mutation.status === "pending" ? "Creating..." : "Create Milestone"}
           </Button>
         </DialogFooter>

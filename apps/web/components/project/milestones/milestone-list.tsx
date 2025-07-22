@@ -13,8 +13,9 @@ import {
   Plus,
   Calendar,
   Diamond,
-  RefreshCw, List,
-  CalendarDays
+  RefreshCw,
+  List,
+  CalendarDays,
 } from "lucide-react";
 import { CreateMilestoneDialog } from "./create-milestone-dialog";
 import { MilestoneDetailsSheet } from "./milestone-details-sheet";
@@ -28,7 +29,11 @@ import { formatDate } from "@/lib/format";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getProjectMilestones, updateMilestone, CreateMilestoneData } from "@/actions/project/milestone";
+import {
+  getProjectMilestones,
+  updateMilestone,
+  CreateMilestoneData,
+} from "@/actions/project/milestone";
 import { MilestoneStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface MilestoneListProps {
@@ -71,8 +76,9 @@ const getStatusText = (status: string) => {
 
 export function MilestoneList({ projectId }: MilestoneListProps) {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [selectedMilestone, setSelectedMilestone] =
-    useState<string | null>(null);
+  const [selectedMilestone, setSelectedMilestone] = useState<string | null>(
+    null
+  );
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [optimisticMilestones, setOptimisticMilestones] = useState<any[]>([]);
 
@@ -83,14 +89,17 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     queryFn: async () => {
       if (!projectId) return [];
       const raw = await getProjectMilestones(projectId);
-      return raw
+      return raw;
     },
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: { milestoneId: string; status: string }) => updateMilestone(data.milestoneId, { status: data.status as any }),
+    mutationFn: async (data: { milestoneId: string; status: string }) =>
+      updateMilestone(data.milestoneId, { status: data.status as any }),
     onSuccess: (_data, variables) => {
-      toast.success(`Milestone status changed to ${getStatusText(variables.status)}.`);
+      toast.success(
+        `Milestone status changed to ${getStatusText(variables.status)}.`
+      );
       // Invalidate and refetch the milestones query
       queryClient.invalidateQueries({ queryKey: ["milestones", projectId] });
       // Clear optimistic state
@@ -116,12 +125,12 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
     }
 
     // Optimistic update - immediately update the UI
-    const currentMilestones = optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
+    const currentMilestones =
+      optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
     const updatedMilestones = currentMilestones.map((milestone) =>
-      milestone.id === itemId
-        ? { ...milestone, status: toGroupId }
-        : milestone
+      milestone.id === itemId ? { ...milestone, status: toGroupId } : milestone
     );
+
     setOptimisticMilestones(updatedMilestones);
 
     // Perform the actual update
@@ -133,7 +142,8 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
   };
 
   // Use optimistic data if available, otherwise use the query data
-  const displayMilestones = optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
+  const displayMilestones =
+    optimisticMilestones.length > 0 ? optimisticMilestones : milestones || [];
 
   if (milestones === undefined) {
     return (
@@ -205,9 +215,7 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
       const milestoneItem: GroupedListItem = {
         id: milestone.id,
         title: milestone.name,
-        subtitle: milestone.endDate
-          ? formatDate(new Date(milestone.endDate))
-          : undefined,
+        subtitle: milestone.description,
         avatar: milestone.owner ? (
           <Avatar className="h-6 w-6">
             <AvatarImage
@@ -245,25 +253,34 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
             {displayMilestones.length}
           </Badge>
           {optimisticMilestones.length > 0 && (
-            <Badge variant="outline" className="text-xs font-medium text-muted-foreground">
+            <Badge
+              variant="outline"
+              className="text-xs font-medium text-muted-foreground"
+            >
               Updating...
             </Badge>
           )}
         </div>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => toast.info('Milestone analysis is not implemented in this version.')}
-            size="sm"
-            variant="outline"
-            title="Analyze milestone health and update statuses"
-            disabled={mutation.isPending}
-          >
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Analyze Health
-          </Button>
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center border rounded-lg p-1 w-fit">
+            <Button
+              size="xs"
+              variant={viewMode === "list" ? "default" : "ghost"}
+              onClick={() => setViewMode("list")}
+            >
+              <List />
+            </Button>
+            <Button
+              size="xs"
+              variant={viewMode === "timeline" ? "default" : "ghost"}
+              onClick={() => setViewMode("timeline")}
+            >
+              <CalendarDays />
+            </Button>
+          </div>
           <Button onClick={() => setShowCreateDialog(true)} size="sm">
             <Plus className="h-4 w-4 mr-2" />
-            New Milestone
+            New
           </Button>
         </div>
       </div>
@@ -271,31 +288,12 @@ export function MilestoneList({ projectId }: MilestoneListProps) {
       <div className="text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border">
         <p className="font-medium mb-1">💡 Pro tip:</p>
         <p>
-          Drag and drop milestones between status columns to update their status.
+          Drag and drop milestones between status columns to update their
+          status.
         </p>
       </div>
 
       {/* View Mode Toggle */}
-      <div className="flex items-center border rounded-lg p-1 w-fit">
-        <Button
-          size="sm"
-          variant={viewMode === "list" ? "default" : "ghost"}
-          onClick={() => setViewMode("list")}
-          className="h-8 px-3"
-        >
-          <List className="h-4 w-4 mr-1" />
-          List
-        </Button>
-        <Button
-          size="sm"
-          variant={viewMode === "timeline" ? "default" : "ghost"}
-          onClick={() => setViewMode("timeline")}
-          className="h-8 px-3"
-        >
-          <CalendarDays className="h-4 w-4 mr-1" />
-          Calendar
-        </Button>
-      </div>
 
       {/* Render based on view mode */}
       {viewMode === "timeline" ? (

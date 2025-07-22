@@ -16,7 +16,7 @@ export function StorageTldraw({ id }: { id: string }) {
   const { theme } = useTheme();
 
   return (
-    <div style={{ height: "100vh" }} className="tldraw__editor">
+    <div style={{ height: "calc(100vh - 54px)" }} className="tldraw__editor">
       <Tldraw
         store={store}
         maxAssetSize={2 * 1024 * 1024}
@@ -35,7 +35,6 @@ export function StorageTldraw({ id }: { id: string }) {
                 marginTop: 4,
               }}
             >
-              <Badge id={id} />
               <DefaultStylePanel />
             </div>
           ),

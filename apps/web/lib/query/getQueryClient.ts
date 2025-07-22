@@ -7,6 +7,12 @@ const getQueryClient = cache(
       defaultOptions: {
         queries: {
           staleTime: 30 * 1000,
+          gcTime: 5 * 60 * 1000, // 5 minutes
+          retry: 1,
+          refetchOnWindowFocus: false,
+        },
+        mutations: {
+          retry: 1,
         },
       },
     })

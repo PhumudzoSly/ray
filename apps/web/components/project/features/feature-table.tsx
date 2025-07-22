@@ -36,18 +36,25 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     assignee: "all",
   });
   const [viewMode, setViewMode] = useState<"grid" | "grouped">("grouped");
-  const [selectedFeatureId, setSelectedFeatureId] =
-    useState<string | null>(null);
+  const [selectedFeatureId, setSelectedFeatureId] = useState<string | null>(
+    null
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
 
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature (phase change)
   const updateFeatureMutation = useMutation({
-    mutationFn: async ({ featureId, updates }: { featureId: string; updates: any }) => {
+    mutationFn: async ({
+      featureId,
+      updates,
+    }: {
+      featureId: string;
+      updates: any;
+    }) => {
       const result = await featureActions.updateFeature(featureId, updates);
       if (!result.success) {
-        throw new Error(result.error as string || "Failed to update feature");
+        throw new Error((result.error as string) || "Failed to update feature");
       }
       return result;
     },
@@ -56,14 +63,15 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
       await queryClient.cancelQueries({ queryKey: ["features", projectId] });
 
       // Snapshot the previous value
-      const previousFeatures = queryClient.getQueryData<any[]>(["features", projectId]);
+      const previousFeatures = queryClient.getQueryData<any[]>([
+        "features",
+        projectId,
+      ]);
 
       // Optimistically update to the new value
       queryClient.setQueryData<any[]>(["features", projectId], (old) => {
         if (!old) return old;
-        return old.map((f) =>
-          f.id === featureId ? { ...f, ...updates } : f
-        );
+        return old.map((f) => (f.id === featureId ? { ...f, ...updates } : f));
       });
 
       // Return a context object with the snapshotted value
@@ -72,11 +80,47 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousFeatures) {
-        queryClient.setQueryData(["features", projectId], context.previousFeatures);
+        queryClient.setQueryData(
+          ["features", projectId],
+          context.previousFeatures
+        );
       }
       toast.error(err.message || "Failed to move feature");
     },
     onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { featureId, updates } = variables;
+
+      // Invalidate feature details
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+
+      // Invalidate feature hierarchy
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", featureId],
+      });
+
+      // Invalidate validation results
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", featureId],
+      });
+
+      // Invalidate activity feed
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", featureId],
+      });
+
+      // Invalidate project-level queries
+      queryClient.invalidateQueries({ queryKey: ["features", projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencyGraph", projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projectDependencyStats", projectId],
+      });
+
+      // Invalidate general feature queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+
       toast.success("Feature updated successfully");
     },
     onSettled: () => {
@@ -307,11 +351,7 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredFeatures.map((feature: any, index: number) => (
-            <FeatureCard
-              index={index + 1}
-              key={feature.id}
-              feature={feature}
-            />
+            <FeatureCard index={index + 1} key={feature.id} feature={feature} />
           ))}
         </div>
       ) : (

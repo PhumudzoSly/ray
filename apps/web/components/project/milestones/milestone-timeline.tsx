@@ -15,8 +15,11 @@ import {
 } from "@workspace/ui/components/hover-card";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { getProjectMilestones, updateMilestone } from "@/actions/project/milestone";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getProjectMilestones,
+  updateMilestone,
+} from "@/actions/project/milestone";
 
 interface MilestoneTimelineProps {
   projectId: string;
@@ -40,10 +43,12 @@ export function MilestoneTimeline({
   projectId,
   className,
 }: MilestoneTimelineProps) {
-  const [selectedMilestoneId, setSelectedMilestoneId] =
-    useState<string | null>(null);
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string | null>(
+    null
+  );
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
 
+  const queryClient = useQueryClient();
 
   const { data: milestones } = useQuery({
     queryKey: ["milestones", projectId],
@@ -63,9 +68,12 @@ export function MilestoneTimeline({
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => updateMilestone(data.milestoneId, { endDate: data.endDate }),
+    mutationFn: async (data: any) =>
+      updateMilestone(data.milestoneId, { endDate: data.endDate }),
     onSuccess: () => {
       toast.success("End date has been updated successfully.");
+      // Invalidate and refetch the milestones query
+      queryClient.invalidateQueries({ queryKey: ["milestones", projectId] });
     },
     onError: () => {
       toast.error("Failed to update milestone end date. Please try again.");

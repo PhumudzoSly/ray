@@ -19,14 +19,25 @@ import { cn } from "@/lib/utils";
 import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { Comments } from "@/components/liveblocks/comments";
-import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getFeatureById, getFeatureHierarchy, updateFeature } from "@/actions/project/features";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  getFeatureById,
+  getFeatureHierarchy,
+  updateFeature,
+} from "@/actions/project/features";
 
 const queryClient = new QueryClient();
 
 const FeatureDetailsInner = ({ id }: { id: string }) => {
-  const { token } = useSession();
-  const [view, setView] = useState<"details" | "dependencies" | "prd" | "activity">("prd");
+  const [view, setView] = useState<
+    "details" | "dependencies" | "prd" | "activity"
+  >("prd");
   const queryClient = useQueryClient();
 
   // Fetch feature details
@@ -42,51 +53,93 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
     queryFn: () => getFeatureHierarchy(id),
     enabled: !!feature,
   });
-  const featureHierarchy = hierarchyResult?.success ? hierarchyResult.data : null;
+  const featureHierarchy = hierarchyResult?.success
+    ? hierarchyResult.data
+    : null;
 
   // Mutation for updating feature
-  const { mutateAsync: updateFeatureMutation, isPending: isUpdating } = useMutation({
-    mutationFn: async (updates: any) => {
-      return await updateFeature(id, updates);
-    },
-    onMutate: async (updates) => {
-      // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["feature", id] });
+  const { mutateAsync: updateFeatureMutation, isPending: isUpdating } =
+    useMutation({
+      mutationFn: async (updates: any) => {
+        return await updateFeature(id, updates);
+      },
+      onMutate: async (updates) => {
+        // Cancel any outgoing refetches
+        await queryClient.cancelQueries({ queryKey: ["feature", id] });
 
-      // Snapshot the previous value
-      const previousFeature = queryClient.getQueryData(["feature", id]);
+        // Snapshot the previous value
+        const previousFeature = queryClient.getQueryData(["feature", id]);
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(["feature", id], (old: any) => {
-        if (!old?.success) return old;
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            ...updates,
-          },
-        };
-      });
+        // Optimistically update to the new value
+        queryClient.setQueryData(["feature", id], (old: any) => {
+          if (!old?.success) return old;
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              ...updates,
+            },
+          };
+        });
 
-      // Return a context object with the snapshotted value
-      return { previousFeature };
-    },
-    onError: (err, updates, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
-      if (context?.previousFeature) {
-        queryClient.setQueryData(["feature", id], context.previousFeature);
-      }
-      toast.error("Failed to update feature");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["feature", id] });
-      toast.success("Feature updated");
-    },
-    onSettled: () => {
-      // Always refetch after error or success to ensure we have the latest data
-      queryClient.invalidateQueries({ queryKey: ["feature", id] });
-    },
-  });
+        // Return a context object with the snapshotted value
+        return { previousFeature };
+      },
+      onError: (err, updates, context) => {
+        // If the mutation fails, use the context returned from onMutate to roll back
+        if (context?.previousFeature) {
+          queryClient.setQueryData(["feature", id], context.previousFeature);
+        }
+        toast.error("Failed to update feature");
+      },
+      onSuccess: (data, variables) => {
+        // Comprehensive invalidation for real-time updates
+        queryClient.invalidateQueries({ queryKey: ["feature", id] });
+
+        // Invalidate feature hierarchy
+        queryClient.invalidateQueries({ queryKey: ["featureHierarchy", id] });
+
+        // Invalidate validation results
+        queryClient.invalidateQueries({ queryKey: ["featureValidation", id] });
+
+        // Invalidate activity feed
+        queryClient.invalidateQueries({
+          queryKey: ["activity-feed", "FEATURE", id],
+        });
+
+        // If feature has a parent, invalidate parent's hierarchy
+        if (feature?.parentFeatureId) {
+          queryClient.invalidateQueries({
+            queryKey: ["featureHierarchy", feature.parentFeatureId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["feature", feature.parentFeatureId],
+          });
+        }
+
+        // Invalidate project-level queries
+        if (feature?.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["features", feature.projectId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["featureDependencyGraph", feature.projectId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["projectDependencyStats", feature.projectId],
+          });
+        }
+
+        // Invalidate general feature queries
+        queryClient.invalidateQueries({ queryKey: ["features"] });
+
+        toast.success("Feature updated");
+      },
+      onSettled: () => {
+        // Always refetch after error or success to ensure we have the latest data
+        queryClient.invalidateQueries({ queryKey: ["feature", id] });
+      },
+    });
 
   const handleUpdate = async (updates: any) => {
     if (!id) return;
@@ -246,13 +299,13 @@ const FeatureDetailsInner = ({ id }: { id: string }) => {
 
           {(!featureHierarchy?.subFeatures ||
             featureHierarchy.subFeatures.length === 0) && (
-              <div className="mt-6">
-                <NewFeature
-                  projectId={feature.projectId}
-                  parentFeatureId={feature.id}
-                />
-              </div>
-            )}
+            <div className="mt-6">
+              <NewFeature
+                projectId={feature.projectId}
+                parentFeatureId={feature.id}
+              />
+            </div>
+          )}
 
           {/* Sub-Features Section */}
           {featureHierarchy?.subFeatures &&

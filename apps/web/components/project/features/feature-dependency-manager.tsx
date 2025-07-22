@@ -18,12 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-import {
-  X,
-  ArrowRight,
-  ArrowLeft,
-  AlertCircle,
-} from "lucide-react";
+import { X, ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -97,88 +92,235 @@ export const FeatureDependencyManager: React.FC<
   const queryClient = useQueryClient();
 
   const addDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
-      featureActions.addFeatureDependency({ parentId, dependentFeatureId }),
+    mutationFn: async ({
+      parentId,
+      dependentFeatureId,
+    }: {
+      parentId: string;
+      dependentFeatureId: string;
+    }) => featureActions.addFeatureDependency({ parentId, dependentFeatureId }),
     onMutate: async ({ parentId, dependentFeatureId }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["featureDependencies", featureId] });
+      await queryClient.cancelQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
 
       // Snapshot the previous value
-      const previousDependencies = queryClient.getQueryData(["featureDependencies", featureId]);
+      const previousDependencies = queryClient.getQueryData([
+        "featureDependencies",
+        featureId,
+      ]);
 
       // Optimistically update to the new value
-      queryClient.setQueryData(["featureDependencies", featureId], (old: any) => {
-        if (!old?.success) return old;
+      queryClient.setQueryData(
+        ["featureDependencies", featureId],
+        (old: any) => {
+          if (!old?.success) return old;
 
-        const newDependency = {
-          id: `temp-${Date.now()}`,
-          dependency: {
-            id: parentId,
-            name: "Loading...",
-            description: "",
-            phase: "PLANNING",
-            priority: "MEDIUM",
-            assignedTo: null,
-          },
-        };
+          const newDependency = {
+            id: `temp-${Date.now()}`,
+            dependency: {
+              id: parentId,
+              name: "Loading...",
+              description: "",
+              phase: "PLANNING",
+              priority: "MEDIUM",
+              assignedTo: null,
+            },
+          };
 
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            dependencies: [...old.data.dependencies, newDependency],
-          },
-        };
-      });
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              dependencies: [...old.data.dependencies, newDependency],
+            },
+          };
+        }
+      );
 
       return { previousDependencies };
     },
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousDependencies) {
-        queryClient.setQueryData(["featureDependencies", featureId], context.previousDependencies);
+        queryClient.setQueryData(
+          ["featureDependencies", featureId],
+          context.previousDependencies
+        );
       }
+    },
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { parentId, dependentFeatureId } = variables;
+
+      // Invalidate dependencies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", parentId],
+      });
+
+      // Invalidate feature details for both features
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+      queryClient.invalidateQueries({ queryKey: ["feature", parentId] });
+
+      // Invalidate feature hierarchies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", parentId],
+      });
+
+      // Invalidate validation results for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", parentId],
+      });
+
+      // Invalidate activity feeds for both features
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", parentId],
+      });
+
+      // Invalidate project-level queries
+      if (projectId) {
+        queryClient.invalidateQueries({ queryKey: ["features", projectId] });
+        queryClient.invalidateQueries({
+          queryKey: ["featureDependencyGraph", projectId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["projectDependencyStats", projectId],
+        });
+      }
+
+      // Invalidate general feature queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
     },
     onSettled: () => {
       // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
     },
   });
 
   const removeDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
+    mutationFn: async ({
+      parentId,
+      dependentFeatureId,
+    }: {
+      parentId: string;
+      dependentFeatureId: string;
+    }) =>
       featureActions.removeFeatureDependency({ parentId, dependentFeatureId }),
     onMutate: async ({ parentId, dependentFeatureId }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["featureDependencies", featureId] });
+      await queryClient.cancelQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
 
       // Snapshot the previous value
-      const previousDependencies = queryClient.getQueryData(["featureDependencies", featureId]);
+      const previousDependencies = queryClient.getQueryData([
+        "featureDependencies",
+        featureId,
+      ]);
 
       // Optimistically update to the new value
-      queryClient.setQueryData(["featureDependencies", featureId], (old: any) => {
-        if (!old?.success) return old;
+      queryClient.setQueryData(
+        ["featureDependencies", featureId],
+        (old: any) => {
+          if (!old?.success) return old;
 
-        return {
-          ...old,
-          data: {
-            ...old.data,
-            dependencies: old.data.dependencies.filter((dep: any) => dep.dependency.id !== parentId),
-          },
-        };
-      });
+          return {
+            ...old,
+            data: {
+              ...old.data,
+              dependencies: old.data.dependencies.filter(
+                (dep: any) => dep.dependency.id !== parentId
+              ),
+            },
+          };
+        }
+      );
 
       return { previousDependencies };
     },
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousDependencies) {
-        queryClient.setQueryData(["featureDependencies", featureId], context.previousDependencies);
+        queryClient.setQueryData(
+          ["featureDependencies", featureId],
+          context.previousDependencies
+        );
       }
+    },
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { parentId, dependentFeatureId } = variables;
+
+      // Invalidate dependencies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", parentId],
+      });
+
+      // Invalidate feature details for both features
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+      queryClient.invalidateQueries({ queryKey: ["feature", parentId] });
+
+      // Invalidate feature hierarchies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", parentId],
+      });
+
+      // Invalidate validation results for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", parentId],
+      });
+
+      // Invalidate activity feeds for both features
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", featureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", parentId],
+      });
+
+      // Invalidate project-level queries
+      if (projectId) {
+        queryClient.invalidateQueries({ queryKey: ["features", projectId] });
+        queryClient.invalidateQueries({
+          queryKey: ["featureDependencyGraph", projectId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["projectDependencyStats", projectId],
+        });
+      }
+
+      // Invalidate general feature queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
     },
     onSettled: () => {
       // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: ["featureDependencies", featureId] });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", featureId],
+      });
     },
   });
 
@@ -213,11 +355,13 @@ export const FeatureDependencyManager: React.FC<
           description: dep.dependency.description,
           phase: dep.dependency.phase,
           priority: dep.dependency.priority,
-          user: dep.dependency.assignedTo ? {
-            name: dep.dependency.assignedTo.name,
-            image: dep.dependency.assignedTo.image,
-            email: dep.dependency.assignedTo.email,
-          } : undefined,
+          user: dep.dependency.assignedTo
+            ? {
+                name: dep.dependency.assignedTo.name,
+                image: dep.dependency.assignedTo.image,
+                email: dep.dependency.assignedTo.email,
+              }
+            : undefined,
           type: "dependency",
         });
       }
@@ -232,11 +376,13 @@ export const FeatureDependencyManager: React.FC<
           description: dep.feature.description,
           phase: dep.feature.phase,
           priority: dep.feature.priority,
-          user: dep.feature.assignedTo ? {
-            name: dep.feature.assignedTo.name,
-            image: dep.feature.assignedTo.image,
-            email: dep.feature.assignedTo.email,
-          } : undefined,
+          user: dep.feature.assignedTo
+            ? {
+                name: dep.feature.assignedTo.name,
+                image: dep.feature.assignedTo.image,
+                email: dep.feature.assignedTo.email,
+              }
+            : undefined,
           type: "dependent",
         });
       }
@@ -283,15 +429,17 @@ export const FeatureDependencyManager: React.FC<
   return (
     <div className="space-y-6">
       {/* Status Alert */}
-      {validationResult?.success && validationResult.data && !validationResult.data.canComplete && (
-        <Alert variant={"destructive"}>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Blocked by {validationResult.data.blockers.length} incomplete
-            dependencies
-          </AlertDescription>
-        </Alert>
-      )}
+      {validationResult?.success &&
+        validationResult.data &&
+        !validationResult.data.canComplete && (
+          <Alert variant={"destructive"}>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Blocked by {validationResult.data.blockers.length} incomplete
+              dependencies
+            </AlertDescription>
+          </Alert>
+        )}
 
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -324,18 +472,18 @@ export const FeatureDependencyManager: React.FC<
                   features={
                     dependencyGraph?.success && dependencyGraph.data
                       ? dependencyGraph.data.features.map((feature: any) => ({
-                        id: feature.id,
-                        name: feature.name,
-                        phase: feature.phase,
-                        priority: feature.priority,
-                        assignedTo: feature.assignedTo,
-                        user: feature.assignedTo
-                          ? {
-                            name: feature.assignedTo.name,
-                            image: feature.assignedTo.image,
-                          }
-                          : undefined,
-                      }))
+                          id: feature.id,
+                          name: feature.name,
+                          phase: feature.phase,
+                          priority: feature.priority,
+                          assignedTo: feature.assignedTo,
+                          user: feature.assignedTo
+                            ? {
+                                name: feature.assignedTo.name,
+                                image: feature.assignedTo.image,
+                              }
+                            : undefined,
+                        }))
                       : []
                   }
                   dependencies={

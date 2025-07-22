@@ -1,20 +1,32 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { TrendingUp, AlertTriangle, CheckCircle, Star, Bug, Target, Clock, User, Calendar, Activity } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { getProjectInsights } from "@/actions/project";
 import { Badge } from "@workspace/ui/components/badge";
-import { Progress } from "@workspace/ui/components/progress";
+import {
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle,
+  Star,
+  Bug,
+  Target,
+  Clock,
+  User,
+  Calendar,
+  Activity,
+} from "lucide-react";
 
-export default function ProjectPage() {
-  const params = useParams();
-  const id = params.id as string;
+interface ProjectPageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
-  const { data: insights, isLoading } = useQuery({
-    queryKey: ["project-insights", id],
-    queryFn: () => getProjectInsights(id),
-  });
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { id } = await params;
+
+  const insights = await getProjectInsights(id);
+
+  if (!insights) {
+    return <div>Project not found</div>;
+  }
 
   const getHealthStatusColor = (status: string) => {
     switch (status) {
@@ -43,23 +55,6 @@ export default function ProjectPage() {
         return <CheckCircle className="w-4 h-4 text-blue-600" />;
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
-          ))}
-        </div>
-        <div className="h-96 bg-muted animate-pulse rounded-lg" />
-      </div>
-    );
-  }
-
-  if (!insights) {
-    return <div>Project not found</div>;
-  }
 
   const healthMetrics = insights;
 
@@ -105,9 +100,12 @@ export default function ProjectPage() {
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground">Critical</p>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-2xl font-bold">{insights.criticalIssues + insights.criticalFeatures}</p>
+                  <p className="text-2xl font-bold">
+                    {insights.criticalIssues + insights.criticalFeatures}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {insights.criticalIssues} issues, {insights.criticalFeatures} features
+                    {insights.criticalIssues} issues,{" "}
+                    {insights.criticalFeatures} features
                   </p>
                 </div>
               </div>
@@ -141,9 +139,12 @@ export default function ProjectPage() {
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground">Unassigned</p>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-2xl font-bold">{insights.unassignedIssues + insights.unassignedFeatures}</p>
+                  <p className="text-2xl font-bold">
+                    {insights.unassignedIssues + insights.unassignedFeatures}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {insights.unassignedIssues} issues, {insights.unassignedFeatures} features
+                    {insights.unassignedIssues} issues,{" "}
+                    {insights.unassignedFeatures} features
                   </p>
                 </div>
               </div>
@@ -159,9 +160,12 @@ export default function ProjectPage() {
               <div className="flex-1">
                 <p className="text-sm text-muted-foreground">This Week</p>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-2xl font-bold">{insights.recentIssues + insights.recentFeatures}</p>
+                  <p className="text-2xl font-bold">
+                    {insights.recentIssues + insights.recentFeatures}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    {insights.recentIssues} issues, {insights.recentFeatures} features
+                    {insights.recentIssues} issues, {insights.recentFeatures}{" "}
+                    features
                   </p>
                 </div>
               </div>

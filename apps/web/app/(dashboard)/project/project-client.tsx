@@ -155,17 +155,7 @@ export default function ProjectClient() {
   };
 
   return (
-    <div>
-      <Header
-        crumb={[
-          {
-            title: "Projects",
-            url: "/project",
-          },
-        ]}
-      >
-        <CreateProjectDialog />
-      </Header>
+    <>
       <div className="border-y p-2 5">
         <EnhancedProjectFilters
           searchQuery={searchQuery}
@@ -211,6 +201,6 @@ export default function ProjectClient() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }

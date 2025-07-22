@@ -27,7 +27,12 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as featureActions from "@/actions/project/features";
 import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
-import { Feature, FeaturePhaseType, ImportanceType, FeatureOptionalDefaults } from "@workspace/backend";
+import {
+  Feature,
+  FeaturePhaseType,
+  ImportanceType,
+  FeatureOptionalDefaults,
+} from "@workspace/backend";
 
 interface FeatureCardProps {
   feature: Feature & {
@@ -54,33 +59,86 @@ interface FeatureCardProps {
   onClick?: () => void;
 }
 
-export function FeatureCard({ feature, }: FeatureCardProps) {
+export function FeatureCard({ feature }: FeatureCardProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature
   const updateFeatureMutation = useMutation({
-    mutationFn: async ({ featureId, updates }: { featureId: string; updates: Partial<FeatureOptionalDefaults> }) => {
+    mutationFn: async ({
+      featureId,
+      updates,
+    }: {
+      featureId: string;
+      updates: Partial<FeatureOptionalDefaults>;
+    }) => {
       return await featureActions.updateFeature(featureId, updates as any);
     },
     onMutate: async ({ featureId, updates }) => {
       await queryClient.cancelQueries();
-      const previousFeatures = queryClient.getQueryData<Feature[]>(["features", feature.projectId]);
-      queryClient.setQueryData<Feature[]>(["features", feature.projectId], (old) => {
-        if (!old) return old;
-        return old.map((f) =>
-          f.id === featureId ? { ...f, ...updates } : f
-        );
-      });
+      const previousFeatures = queryClient.getQueryData<Feature[]>([
+        "features",
+        feature.projectId,
+      ]);
+      queryClient.setQueryData<Feature[]>(
+        ["features", feature.projectId],
+        (old) => {
+          if (!old) return old;
+          return old.map((f) =>
+            f.id === featureId ? { ...f, ...updates } : f
+          );
+        }
+      );
       return { previousFeatures };
     },
     onError: (err, variables, context) => {
       if (context?.previousFeatures) {
-        queryClient.setQueryData(["features", feature.projectId], context.previousFeatures);
+        queryClient.setQueryData(
+          ["features", feature.projectId],
+          context.previousFeatures
+        );
       }
       toast.error("Failed to update feature");
     },
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { featureId, updates } = variables;
+
+      // Invalidate feature details
+      queryClient.invalidateQueries({ queryKey: ["feature", featureId] });
+
+      // Invalidate feature hierarchy
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", featureId],
+      });
+
+      // Invalidate validation results
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", featureId],
+      });
+
+      // Invalidate activity feed
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", featureId],
+      });
+
+      // Invalidate project-level queries
+      queryClient.invalidateQueries({
+        queryKey: ["features", feature.projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencyGraph", feature.projectId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projectDependencyStats", feature.projectId],
+      });
+
+      // Invalidate general feature queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+    },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["features", feature.projectId] });
+      queryClient.invalidateQueries({
+        queryKey: ["features", feature.projectId],
+      });
     },
   });
 
@@ -106,12 +164,10 @@ export function FeatureCard({ feature, }: FeatureCardProps) {
     });
   };
 
-
-
   return (
     <Card
       className="hover:shadow-md transition-shadow"
-    // onClick={handleClick}
+      // onClick={handleClick}
     >
       <CardHeader>
         <div className="flex justify-between items-center gap-2">
@@ -158,7 +214,11 @@ export function FeatureCard({ feature, }: FeatureCardProps) {
               await handleUpdate({ phase: phase as FeaturePhaseType });
             }}
             blockedPhases={
-              validationResult && validationResult.success && !validationResult?.data?.canComplete ? ["LIVE"] : []
+              validationResult &&
+              validationResult.success &&
+              !validationResult?.data?.canComplete
+                ? ["LIVE"]
+                : []
             }
             onBlockedPhaseAttempt={() => {
               toast.error(

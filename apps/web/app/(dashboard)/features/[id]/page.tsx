@@ -33,9 +33,7 @@ const SingleFeaturePage = async ({
       >
         {null}
       </Header>
-      <ExpandedLayoutContainer
-        sidebar={<FeatureSidebar featureId={id} />}
-      >
+      <ExpandedLayoutContainer sidebar={<FeatureSidebar featureId={id} />}>
         <div className="py-4 px-6">
           <FeatureDetails id={id} />
         </div>

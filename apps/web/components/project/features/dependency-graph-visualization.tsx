@@ -324,7 +324,7 @@ const getLayoutedElements = (
         data: {
           parentFeature,
           dependentFeature,
-          onRemove: onRemoveDependency || (() => { }),
+          onRemove: onRemoveDependency || (() => {}),
         },
       });
     }
@@ -345,10 +345,120 @@ const DependencyGraphVisualization: React.FC<
   } | null>(null);
 
   const queryClient = useQueryClient();
+
+  const addDependencyMutation = useMutation({
+    mutationFn: async ({
+      parentId,
+      dependentFeatureId,
+    }: {
+      parentId: string;
+      dependentFeatureId: string;
+    }) => featureActions.addFeatureDependency({ parentId, dependentFeatureId }),
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { parentId, dependentFeatureId } = variables;
+
+      // Invalidate dependencies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", parentId],
+      });
+
+      // Invalidate feature details for both features
+      queryClient.invalidateQueries({
+        queryKey: ["feature", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["feature", parentId] });
+
+      // Invalidate feature hierarchies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", parentId],
+      });
+
+      // Invalidate validation results for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", parentId],
+      });
+
+      // Invalidate activity feeds for both features
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", parentId],
+      });
+
+      // Invalidate project-level queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+      queryClient.invalidateQueries({ queryKey: ["featureDependencyGraph"] });
+      queryClient.invalidateQueries({ queryKey: ["projectDependencyStats"] });
+    },
+  });
+
   const removeDependencyMutation = useMutation({
-    mutationFn: async ({ parentId, dependentFeatureId }: { parentId: string; dependentFeatureId: string }) =>
+    mutationFn: async ({
+      parentId,
+      dependentFeatureId,
+    }: {
+      parentId: string;
+      dependentFeatureId: string;
+    }) =>
       featureActions.removeFeatureDependency({ parentId, dependentFeatureId }),
-    onSuccess: () => queryClient.invalidateQueries(),
+    onSuccess: (data, variables) => {
+      // Comprehensive invalidation for real-time updates
+      const { parentId, dependentFeatureId } = variables;
+
+      // Invalidate dependencies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureDependencies", parentId],
+      });
+
+      // Invalidate feature details for both features
+      queryClient.invalidateQueries({
+        queryKey: ["feature", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["feature", parentId] });
+
+      // Invalidate feature hierarchies for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureHierarchy", parentId],
+      });
+
+      // Invalidate validation results for both features
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["featureValidation", parentId],
+      });
+
+      // Invalidate activity feeds for both features
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", dependentFeatureId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["activity-feed", "FEATURE", parentId],
+      });
+
+      // Invalidate project-level queries
+      queryClient.invalidateQueries({ queryKey: ["features"] });
+      queryClient.invalidateQueries({ queryKey: ["featureDependencyGraph"] });
+      queryClient.invalidateQueries({ queryKey: ["projectDependencyStats"] });
+    },
   });
 
   // Handle dependency removal with confirmation
@@ -446,9 +556,8 @@ const DependencyGraphVisualization: React.FC<
       }
 
       try {
-        // Add the dependency
-        await featureActions.addFeatureDependency({
-          token,
+        // Add the dependency using the mutation
+        await addDependencyMutation.mutateAsync({
           parentId: connection.source as string,
           dependentFeatureId: connection.target as string,
         });

@@ -45,10 +45,10 @@ type FormState = {
 
 type DateValidationError = {
   type:
-  | "end_before_start"
-  | "start_in_past"
-  | "end_in_past"
-  | "duration_too_long";
+    | "end_before_start"
+    | "start_in_past"
+    | "end_in_past"
+    | "duration_too_long";
   message: string;
 };
 
@@ -63,8 +63,78 @@ export function NewFeature({
     mutationFn: async (featureData: any) => {
       return await featureActions.createFeature(featureData);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Invalidate general features queries
       queryClient.invalidateQueries({ queryKey: ["features"] });
+
+      // If this is a sub-feature, invalidate the parent feature's hierarchy
+      if (initialParentFeatureId) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureHierarchy", initialParentFeatureId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["feature", initialParentFeatureId],
+        });
+      }
+
+      // If the created feature has a parent, also invalidate the parent's parent hierarchy
+      if (data?.success?.data?.parentFeatureId) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureHierarchy", data.success.data.parentFeatureId],
+        });
+      }
+
+      // Invalidate project-specific features queries
+      if (initialProjectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["features", initialProjectId],
+        });
+      }
+
+      // If the created feature has a project, invalidate that project's features
+      if (data?.success?.data?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["features", data.success.data.projectId],
+        });
+      }
+
+      // Invalidate root features for the project (if this is a root feature)
+      if (
+        data?.success?.data?.projectId &&
+        !data?.success?.data?.parentFeatureId
+      ) {
+        queryClient.invalidateQueries({
+          queryKey: ["rootFeatures", data.success.data.projectId],
+        });
+      }
+
+      // Invalidate activity feed for the project
+      if (data?.success?.data?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["activityFeed", data.success.data.projectId],
+        });
+      }
+
+      // Invalidate any feature dependency graphs
+      if (data?.success?.data?.projectId) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureDependencyGraph", data.success.data.projectId],
+        });
+      }
+
+      // Invalidate feature validation queries for the parent feature (if any)
+      if (initialParentFeatureId) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureValidation", initialParentFeatureId],
+        });
+      }
+
+      // Invalidate feature validation queries for the created feature
+      if (data?.success?.data?.id) {
+        queryClient.invalidateQueries({
+          queryKey: ["featureValidation", data.success.data.id],
+        });
+      }
     },
     onError: () => {
       toast.error("Failed to create feature");
@@ -75,7 +145,10 @@ export function NewFeature({
 
   const { data: currentFeature, isLoading: loadingFeature } = useQuery({
     queryKey: ["feature", initialParentFeatureId],
-    queryFn: () => initialParentFeatureId ? featureActions.getFeatureById(initialParentFeatureId) : null,
+    queryFn: () =>
+      initialParentFeatureId
+        ? featureActions.getFeatureById(initialParentFeatureId)
+        : null,
     enabled: !!initialParentFeatureId,
   });
 
@@ -407,7 +480,7 @@ export function NewFeature({
             <Alert
               variant={
                 dateValidation.type === "end_before_start" ||
-                  dateValidation.type === "end_in_past"
+                dateValidation.type === "end_in_past"
                   ? "destructive"
                   : "default"
               }

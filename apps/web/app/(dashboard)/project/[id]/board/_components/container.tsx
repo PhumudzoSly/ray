@@ -28,11 +28,11 @@ export function BoardContainer({ children, sidebar }: BoardContainerProps) {
         "grid xl:grid-cols-[1fr_320px]", // Only show sidebar on xl screens
         isCollapsed && "grid-cols-[1fr_0px]" // Collapsed state
       )}
-      style={{ height: "calc(100vh - 0px)" }}
+      style={{ height: "calc(100vh - 50px)" }}
     >
       <ScrollArea
         className="w-full overflow-y-auto"
-        style={{ height: "calc(100vh - 0px)" }}
+        style={{ height: "calc(100vh - 54px)" }}
       >
         {children}
       </ScrollArea>
@@ -58,7 +58,7 @@ export function BoardContainer({ children, sidebar }: BoardContainerProps) {
           "transition-all border-l overflow-y-auto border-border duration-300 ease-in-out relative",
           "fixed xl:relative", // Fixed position below xl, relative on xl
           "top-16 xl:top-0 right-0", // Account for app bar height on mobile
-          "h-[calc(100vh-0px)] xl:h-auto", // Adjust height to account for app bar
+          "h-[calc(100vh-54px)] xl:h-auto", // Adjust height to account for app bar
           "bg-background xl:bg-transparent", // Background below xl
           "z-40 xl:z-auto", // Higher z-index below xl
           isCollapsed ? "w-0" : "w-full xl:w-[320px]"

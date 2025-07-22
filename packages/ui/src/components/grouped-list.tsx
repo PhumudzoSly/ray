@@ -97,7 +97,9 @@ function GroupedListItemComponent({
         </div>
 
         {item.subtitle && (
-          <p className="text-xs text-muted-foreground mb-1">{item.subtitle}</p>
+          <p className="text-xs text-muted-foreground mb-1 line-clamp-1">
+            {item.subtitle}
+          </p>
         )}
 
         {item.description && (

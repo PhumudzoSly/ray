@@ -1,7 +1,6 @@
 "use client";
 import { useThreads } from "@liveblocks/react/suspense";
 import { Composer, Thread } from "@liveblocks/react-ui";
-import { Room } from "./room";
 
 export function Comments({ id }: { id: string }) {
   const { threads } = useThreads();

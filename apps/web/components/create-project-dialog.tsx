@@ -31,16 +31,12 @@ type CreateProjectDialogProps = {
   ideaId?: string;
 };
 
-
 export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
   const router = useRouter();
-  const createProjectMutation = useMutation(
-    {
-      mutationFn: createProject,
-    }
-  );
+  const createProjectMutation = useMutation({
+    mutationFn: createProject,
+  });
   const [open, setOpen] = useState(false);
-
 
   const [form, setForm] = useState<ProjectOptionalDefaults>({
     name: "",
@@ -73,14 +69,14 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
     }
 
     try {
-      const projectId = await createProjectMutation.mutateAsync({
+      const project = await createProjectMutation.mutateAsync({
         ...form,
         platform: form.platform as any,
       });
 
       setOpen(false);
+      router.push(`/project/${project.id}`);
       toast.success("Project created successfully!");
-      router.push(`/project/${projectId}`);
     } catch (error) {
       console.error("Error creating project:", error);
       toast.error("Failed to create project. Please try again.");
@@ -129,7 +125,7 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  ai: value
+                  ai: value,
                 })
               }
               value={form.ai ?? ""}
@@ -143,7 +139,7 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  auth: value
+                  auth: value,
                 })
               }
               value={form.auth ?? ""}
@@ -157,7 +153,7 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  database: value
+                  database: value,
                 })
               }
               value={form.database ?? ""}
@@ -171,7 +167,7 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
               onValueChange={(value) =>
                 setForm({
                   ...form,
-                  orm: value
+                  orm: value,
                 })
               }
               value={form.orm ?? ""}
@@ -184,7 +180,16 @@ export function CreateProjectDialog({ ideaId }: CreateProjectDialogProps) {
           </h6>
           <div className="w-full flex items-center justify-start gap-1.5 flex-wrap">
             <ProjectTypeSelector
-              selectedType={form.platform as "web" | "mobile" | "both" | "api" | "plugin" | "desktop" | "cli"}
+              selectedType={
+                form.platform as
+                  | "web"
+                  | "mobile"
+                  | "both"
+                  | "api"
+                  | "plugin"
+                  | "desktop"
+                  | "cli"
+              }
               onChange={(type) => setForm({ ...form, platform: type })}
             />
 
