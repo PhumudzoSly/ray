@@ -21,23 +21,29 @@ import { LabelSelector } from "@/components/ui/selectors/label-selector";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { labels } from "@/utils/constants/issues/labels";
 import { useSession } from "@/context/session-context";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
+import { IssueOptionalDefaults } from "@workspace/backend";
+import {
+  Importance,
+  IssueLabel,
+  IssueStatus,
+} from "@workspace/backend/prisma/generated/client/client";
 
 type NewIssueProps = {
   projectId?: string;
   parentIssueId?: string;
   variant?: "default" | "sub-issue";
   size?: "default" | "sm";
-  defaultStatus?: string;
+  defaultStatus?: IssueStatus;
 };
 
 type FormState = {
   title: string;
   description: string;
-  status: any;
-  priority: any;
-  label: any;
+  status: IssueStatus;
+  priority: Importance;
+  label: IssueLabel;
   projectId: string | null;
   dependencies: string[];
 };
@@ -50,6 +56,7 @@ export function NewIssue({
   defaultStatus,
 }: NewIssueProps) {
   const { token, org } = useSession();
+  const queryClient = useQueryClient();
   const createIssueMutation = useMutation({
     mutationFn: async (data: any) => issueActions.createIssue(data),
   });
@@ -59,7 +66,7 @@ export function NewIssue({
   const [form, setForm] = useState<FormState>({
     title: "",
     description: "",
-    status: defaultStatus || "REVIEW",
+    status: defaultStatus || "IN_REVIEW",
     priority: "MEDIUM",
     label: "FEATURE",
     projectId: initialProjectId || "",
@@ -92,7 +99,7 @@ export function NewIssue({
     setOpen(false);
 
     try {
-      await createIssueMutation.mutateAsync({
+      const result = await createIssueMutation.mutateAsync({
         title: form.title,
         description: form.description,
         status: form.status,
@@ -103,13 +110,52 @@ export function NewIssue({
         organizationId: org,
       });
 
-      toast.success(
-        variant === "sub-issue"
-          ? "Sub-issue created successfully"
-          : "Issue created successfully"
-      );
+      if (result && result.success) {
+        toast.success(
+          variant === "sub-issue"
+            ? "Sub-issue created successfully"
+            : "Issue created successfully"
+        );
 
-      router.refresh();
+        // Invalidate all issue-related queries to ensure data consistency
+        queryClient.invalidateQueries({ queryKey: ["issues"] });
+        queryClient.invalidateQueries({ queryKey: ["issues-grouped"] });
+        queryClient.invalidateQueries({ queryKey: ["issue"] });
+        queryClient.invalidateQueries({ queryKey: ["issueHierarchy"] });
+        queryClient.invalidateQueries({ queryKey: ["issueActivities"] });
+        queryClient.invalidateQueries({ queryKey: ["issueDependencies"] });
+
+        // Invalidate project-specific issue queries
+        if (form.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["issues", form.projectId],
+          });
+          queryClient.invalidateQueries({
+            queryKey: ["issues", form.projectId, token],
+          });
+        }
+
+        // If creating a sub-issue, invalidate parent issue hierarchy
+        if (parentIssueId) {
+          queryClient.invalidateQueries({
+            queryKey: ["issueHierarchy", parentIssueId],
+          });
+          queryClient.invalidateQueries({ queryKey: ["issue", parentIssueId] });
+        }
+
+        router.refresh();
+      } else {
+        const errorMsg =
+          result && result.error
+            ? typeof result.error === "object" &&
+              result.error !== null &&
+              "message" in result.error &&
+              typeof result.error.message === "string"
+              ? result.error.message
+              : String(result.error)
+            : "Failed to create issue";
+        toast.error(errorMsg);
+      }
     } catch (error) {
       console.error("Error creating issue:", error);
       toast.error("Failed to create issue");

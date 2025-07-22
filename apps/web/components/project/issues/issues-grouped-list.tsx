@@ -21,6 +21,10 @@ import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  IssueLabel,
+  IssueStatus,
+} from "@workspace/backend/prisma/generated/client/client";
 
 interface IssueItem {
   id: string;
@@ -64,7 +68,7 @@ const statusConfig = {
     iconColor: "text-yellow-500",
     background: "bg-yellow-500/5",
   },
-  REVIEW: {
+  IN_REVIEW: {
     icon: AlertCircle,
     label: "Technical Review",
     iconColor: "text-blue-500",
@@ -208,7 +212,7 @@ function IssueItemComponent({
     }
   };
 
-  const handleStatusChange = async (status: string) => {
+  const handleStatusChange = async (status: IssueStatus) => {
     try {
       await updateIssueMutation.mutateAsync({
         issueId: item.id,
@@ -216,7 +220,7 @@ function IssueItemComponent({
           status: status as
             | "BACKLOG"
             | "IN_PROGRESS"
-            | "REVIEW"
+            | "IN_REVIEW"
             | "DONE"
             | "BLOCKED"
             | "CANCELLED",
@@ -268,7 +272,7 @@ function IssueItemComponent({
           <StatusSelector
             onChange={handleStatusChange}
             iconOnly
-            status={item.status}
+            status={item.status as IssueStatus}
           />
         </div>
         <div className="flex-1 min-w-0 max-w-lg">
@@ -280,7 +284,7 @@ function IssueItemComponent({
 
       <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
         <Badge variant="neutral">{item.project?.name}</Badge>
-        <IssueLabelField issueId={item.id} value={item?.label} />
+        <IssueLabelField issueId={item.id} value={item?.label as IssueLabel} />
         <AssigneeSelector
           onChange={handleAssigneeChange}
           assignee={item.assignedTo}
@@ -327,7 +331,7 @@ function IssueGroupComponent({
               {group.count}
             </Badge>
           </div>
-          <NewIssue size="sm" defaultStatus={group.id} />
+          <NewIssue size="sm" defaultStatus={group.id as IssueStatus} />
         </div>
       </div>
 

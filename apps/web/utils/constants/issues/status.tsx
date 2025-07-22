@@ -198,7 +198,7 @@ export const status: Status[] = [
     icon: InProgressIcon,
   },
   {
-    id: "REVIEW",
+    id: "IN_REVIEW",
     name: "Review",
     color: "#8b5cf6",
     colorClass: "text-purple-500",

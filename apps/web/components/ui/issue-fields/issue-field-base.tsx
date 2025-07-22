@@ -17,6 +17,7 @@ import {
 } from "@workspace/ui/components/popover";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { IssueLabel } from "@workspace/backend/prisma/generated/client/client";
 
 export interface IssueFieldOption {
   id: string;
@@ -28,8 +29,8 @@ export interface IssueFieldOption {
 }
 
 interface IssueFieldBaseProps {
-  value: string;
-  onSave: (value: string) => Promise<void>;
+  value: string | IssueLabel;
+  onSave: (value: string | IssueLabel) => Promise<void>;
   options: IssueFieldOption[];
   displayValue?: React.ReactNode;
   className?: string;
@@ -60,7 +61,7 @@ export function IssueFieldBase({
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSelect = React.useCallback(
-    async (currentValue: string) => {
+    async (currentValue: string | IssueLabel) => {
       if (currentValue === value) {
         setOpen(false);
         return;

@@ -10,6 +10,8 @@ import {
   IssueGroup,
   IssueItem,
 } from "./issues-grouped-list";
+import { useQuery } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 
 // Use any type for now to avoid type conflicts
 type CustomIssue = any;
@@ -20,13 +22,20 @@ type ViewMode = "list" | "kanban";
 const statusConfig = {
   BACKLOG: { color: "text-muted-foreground", label: "Backlog" },
   IN_PROGRESS: { color: "text-yellow-500", label: "In Progress" },
-  REVIEW: { color: "text-blue-500", label: "Technical Review" },
+  IN_REVIEW: { color: "text-blue-500", label: "Technical Review" },
   DONE: { color: "text-green-500", label: "Completed" },
   BLOCKED: { color: "text-red-500", label: "Blocked" },
   CANCELLED: { color: "text-muted-foreground", label: "Cancelled" },
 };
 
-const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
+const AllIssues = () => {
+  const { data: issues, isLoading } = useQuery({
+    queryKey: ["issues"],
+    queryFn: async () => {
+      const res = await issueActions.getAllIssues();
+      return res?.data || [];
+    },
+  });
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,7 +43,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
 
   // Client-side filtering logic
   const filteredIssues = React.useMemo(() => {
-    let filtered = [...issues];
+    let filtered = [...(issues || [])];
 
     // Filter by search query
     const searchQuery = searchParams.get("search");
@@ -47,7 +56,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
           issue.status?.toLowerCase().includes(query) ||
           issue.priority?.toLowerCase().includes(query) ||
           issue.label?.toLowerCase().includes(query) ||
-          issue.user?.name?.toLowerCase().includes(query) ||
+          issue.assignedTo?.name?.toLowerCase().includes(query) ||
           issue.project?.name?.toLowerCase().includes(query)
       );
     }
@@ -74,10 +83,10 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
     const assigneeFilter = searchParams.get("assignee");
     if (assigneeFilter) {
       if (assigneeFilter === "unassigned") {
-        filtered = filtered.filter((issue) => !issue.user);
+        filtered = filtered.filter((issue) => !issue.assignedTo);
       } else {
         filtered = filtered.filter(
-          (issue) => issue.user?.id === assigneeFilter
+          (issue) => issue.assignedTo?.id === assigneeFilter
         );
       }
     }
@@ -134,7 +143,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
         if (!acc[issue.status]) {
           acc[issue.status] = [];
         }
-        acc[issue.status].push(issue);
+        acc[issue?.status || "BACKLOG"]?.push(issue);
         return acc;
       },
       {} as Record<string, CustomIssue[]>
@@ -144,7 +153,7 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
     const statusOrder: (keyof typeof statusConfig)[] = [
       "BACKLOG",
       "IN_PROGRESS",
-      "REVIEW",
+      "IN_REVIEW",
       "BLOCKED",
       "DONE",
       "CANCELLED",
@@ -185,9 +194,9 @@ const AllIssues = ({ issues }: { issues: CustomIssue[] }) => {
   // Show filtered results message if filters are applied
   const hasActiveFilters = searchParams.toString().length > 0;
   const filteredCount = filteredIssues.length;
-  const totalCount = issues.length;
+  const totalCount = issues?.length;
 
-  if (!issues.length) {
+  if (!issues?.length) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center">
         <div className="max-w-md space-y-2">

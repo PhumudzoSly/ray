@@ -17,10 +17,11 @@ import {
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
 import { status as allStatus } from "@/utils/constants/issues/status";
+import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface StatusSelectorProps {
-  status: string;
-  onChange?: (status: string) => void;
+  status: IssueStatus;
+  onChange?: (status: IssueStatus) => void;
   disabled?: boolean;
   iconOnly?: boolean;
 }
@@ -33,14 +34,14 @@ export function StatusSelector({
 }: StatusSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>(status);
+  const [value, setValue] = useState<IssueStatus>(status);
 
   // Filter out "DONE" option when disabled (blocked by dependencies)
   const availableStatuses = disabled
     ? allStatus.filter((s) => s.id !== "DONE")
     : allStatus;
 
-  const handleStatusChange = (statusId: string) => {
+  const handleStatusChange = (statusId: IssueStatus) => {
     setValue(statusId);
     setOpen(false);
     onChange?.(statusId);
@@ -92,15 +93,15 @@ export function StatusSelector({
                 {availableStatuses.map((item) => (
                   <CommandItem
                     key={item.id}
-                    value={item.id}
-                    onSelect={() => handleStatusChange(item.id)}
+                    value={item.id as IssueStatus}
+                    onSelect={() => handleStatusChange(item.id as IssueStatus)}
                     className="flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2">
                       <item.icon className={item.colorClass} />
                       {item.name}
                     </div>
-                    {value === item.id && (
+                    {value === (item.id as IssueStatus) && (
                       <CheckIcon size={16} className="ml-auto" />
                     )}
                   </CommandItem>

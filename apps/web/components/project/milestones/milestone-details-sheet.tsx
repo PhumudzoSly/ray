@@ -54,6 +54,17 @@ import {
   deleteMilestone,
   MilestoneWithProgress,
 } from "@/actions/project/milestone";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
 
 interface MilestoneDetailsSheetProps {
   milestoneId: string;
@@ -244,16 +255,18 @@ export function MilestoneDetailsSheet({
           <div className="p-6 pb-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <InlineEditField
-                  displayValue={
-                    <h1 className="text-xl font-semibold text-foreground leading-tight">
-                      {milestone.name}
-                    </h1>
-                  }
-                  value={milestone.name}
-                  onSave={handleNameChange}
-                  disabled={isUpdating}
-                />
+                <div className="flex items-center gap-2">
+                  <InlineEditField
+                    displayValue={
+                      <h1 className="text-xl font-semibold text-foreground leading-tight">
+                        {milestone.name}
+                      </h1>
+                    }
+                    value={milestone.name}
+                    onSave={handleNameChange}
+                    disabled={isUpdating}
+                  />
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 <AlertDialog>
@@ -303,6 +316,20 @@ export function MilestoneDetailsSheet({
               className="text-sm text-muted-foreground leading-relaxed"
             />
           </div>
+
+          {/* Overdue milestone alert */}
+          {milestone.endDate &&
+            new Date(milestone.endDate) < new Date() &&
+            milestone.status !== "COMPLETED" && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertTriangle className="h-5 w-5 text-amber-600" />
+                <AlertTitle>Milestone is overdue</AlertTitle>
+                <AlertDescription>
+                  This milestone's end date has passed and it is not marked as
+                  completed.
+                </AlertDescription>
+              </Alert>
+            )}
 
           {/* Properties */}
           <div className="space-y-4">
