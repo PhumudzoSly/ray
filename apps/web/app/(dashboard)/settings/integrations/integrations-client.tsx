@@ -20,6 +20,8 @@ import {
   IntegrationConfig,
 } from "@/actions/integration";
 import { ResendIntegrationModal } from "./modals/resend-integration-modal";
+import { LoopsIntegrationModal } from "./modals/loops-integration-modal";
+import { GitHubIntegrationModal } from "./modals/github-integration-modal";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -102,6 +104,7 @@ function ensureIntegrationConfig(config: any): IntegrationConfig {
 export function IntegrationsClient() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<string>("");
   const [editIntegration, setEditIntegration] = useState<Integration | null>(
     null
   );
@@ -141,6 +144,7 @@ export function IntegrationsClient() {
 
   const handleModalSuccess = () => {
     setModalOpen(false);
+    setModalType("");
     setEditIntegration(null);
     queryClient.invalidateQueries({ queryKey: ["integrations"] });
     toast.success("Integration saved successfully");
@@ -283,6 +287,9 @@ export function IntegrationsClient() {
                                       size="sm"
                                       onClick={() => {
                                         setEditIntegration(integration as any);
+                                        setModalType(
+                                          integration.type.toLowerCase()
+                                        );
                                         setModalOpen(true);
                                       }}
                                     >
@@ -317,6 +324,7 @@ export function IntegrationsClient() {
                               createdAt: "",
                               updatedAt: "",
                             });
+                            setModalType(platform.key);
                             setModalOpen(true);
                           }}
                         >
@@ -332,15 +340,48 @@ export function IntegrationsClient() {
           </div>
         ))}
       </div>
-      <ResendIntegrationModal
-        open={modalOpen}
-        onOpenChange={(open) => {
-          setModalOpen(open);
-          if (!open) setEditIntegration(null);
-        }}
-        integration={editIntegration}
-        onSuccess={handleModalSuccess}
-      />
+      {modalType === "resend" && (
+        <ResendIntegrationModal
+          open={modalOpen}
+          onOpenChange={(open) => {
+            setModalOpen(open);
+            if (!open) {
+              setEditIntegration(null);
+              setModalType("");
+            }
+          }}
+          integration={editIntegration}
+          onSuccess={handleModalSuccess}
+        />
+      )}
+      {modalType === "loops" && (
+        <LoopsIntegrationModal
+          open={modalOpen}
+          onOpenChange={(open) => {
+            setModalOpen(open);
+            if (!open) {
+              setEditIntegration(null);
+              setModalType("");
+            }
+          }}
+          integration={editIntegration}
+          onSuccess={handleModalSuccess}
+        />
+      )}
+      {modalType === "github" && (
+        <GitHubIntegrationModal
+          open={modalOpen}
+          onOpenChange={(open) => {
+            setModalOpen(open);
+            if (!open) {
+              setEditIntegration(null);
+              setModalType("");
+            }
+          }}
+          integration={editIntegration}
+          onSuccess={handleModalSuccess}
+        />
+      )}
     </div>
   );
 }

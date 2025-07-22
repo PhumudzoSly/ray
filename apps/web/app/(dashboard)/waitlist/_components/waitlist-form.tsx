@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -15,12 +15,12 @@ import {
   SelectValue,
 } from "@workspace/ui/components/select";
 import { toast } from "sonner";
-import { useSession } from "@/context/session-context";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { Badge } from "@workspace/ui/components/badge";
 import { Copy, Key, Mail } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
-import { IntegrationLinker } from "@/components/shared/integration-linker";
+import { getIntegrationsByPurpose } from "@/actions/integration";
+import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 
 type FormState = {
   name: string;
@@ -61,7 +61,6 @@ export default function WaitlistForm({
   onSuccess,
 }: WaitlistFormProps) {
   const router = useRouter();
-  const { token } = useSession();
 
   const createWaitlistMutation = useMutation({
     mutationFn: async (data: any) => waitlistActions.createWaitlist(data),
@@ -532,28 +531,23 @@ export default function WaitlistForm({
   );
 
   return (
-    <>
+    <ExpandedLayoutContainer sidebar={apiDocsContent}>
       <div className="flex-1">{mainContent}</div>
-      <div className="w-80 border-l bg-muted/30">{apiDocsContent}</div>
-    </>
+    </ExpandedLayoutContainer>
   );
 }
 function IntegrationOptions() {
   // Use useQuery to fetch integrations for email_sync
-  const { data, isLoading, isError } =
-    require("@tanstack/react-query").useQuery({
-      queryKey: ["integrations", "email_sync"],
-      queryFn: async () => {
-        // Replace with your actual fetch logic
-        const res = await fetch("/api/integrations?purpose=email_sync");
-        if (!res.ok) throw new Error("Failed to fetch integrations");
-        return res.json();
-      },
-    });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["integrations", "email_sync"],
+    queryFn: async () => {
+      return getIntegrationsByPurpose("email_sync");
+    },
+  });
 
   if (isLoading) {
     return (
-      <SelectItem value="" disabled>
+      <SelectItem value="none" disabled>
         Loading...
       </SelectItem>
     );
@@ -567,7 +561,7 @@ function IntegrationOptions() {
     data.data.length === 0
   ) {
     return (
-      <SelectItem value="" disabled>
+      <SelectItem value="no-integrations" disabled>
         No email integrations found
       </SelectItem>
     );

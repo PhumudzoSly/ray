@@ -130,3 +130,38 @@ export const getIntegrationsByType = async (type: string) => {
     return { success: false, error };
   }
 };
+
+/**
+ * Get integrations by purpose (scoped to org)
+ * This is useful for filtering integrations by their intended use case
+ */
+export const getIntegrationsByPurpose = async (purpose: string) => {
+  const { org } = await getSession();
+  try {
+    // For email_sync purpose, we want email-related integrations
+
+    const integrations = await prisma.integration.findMany({
+      where: {
+        organizationId: org,
+        type: {
+          in:
+            purpose === "email_sync"
+              ? ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT"]
+              : ["RESEND", "LOOPS", "SENDGRID", "MAILCHIMP", "CONVERTKIT"],
+        },
+        isActive: true,
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
+    return { success: true, data: integrations };
+  } catch (error) {
+    return { success: false, error };
+  }
+};

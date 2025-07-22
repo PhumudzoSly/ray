@@ -182,7 +182,7 @@ export function IntegrationLinker({
             </SelectTrigger>
             <SelectContent>
               {!integrations || integrations.length === 0 ? (
-                <SelectItem value="" disabled>
+                <SelectItem value="no-integrations" disabled>
                   No integrations available
                 </SelectItem>
               ) : (

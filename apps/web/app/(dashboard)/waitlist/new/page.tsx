@@ -1,7 +1,5 @@
 "use client";
-
 import Header from "@/components/shared/header";
-import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import WaitlistForm from "../_components/waitlist-form";
 
 export default function NewWaitlistPage() {
