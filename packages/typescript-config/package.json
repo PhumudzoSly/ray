@@ -5,8 +5,5 @@
   "license": "PROPRIETARY",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {
-    "@hello-pangea/dnd": "^18.0.1"
   }
 }
