@@ -50,7 +50,7 @@ export function RoadmapDetailClient({ roadmapId }: RoadmapDetailClientProps) {
   return (
     <div className="flex-1 flex flex-col">
       <RoadmapKanban
-        items={items}
+        roadmapId={roadmapId}
         onAddItem={handleAddItemWithStatus}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

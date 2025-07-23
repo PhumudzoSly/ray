@@ -46,6 +46,7 @@ export type CommandSelectProps = {
   clearable?: boolean;
   onClear?: () => void;
   isPending?: boolean;
+  iconOnly?: boolean;
 };
 
 export function CommandSelect({
@@ -67,6 +68,7 @@ export function CommandSelect({
   clearable = false,
   onClear,
   isPending = false,
+  iconOnly = false,
 }: CommandSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -109,37 +111,40 @@ export function CommandSelect({
                 {selectedOption.icon && (
                   <span className="shrink-0">{selectedOption.icon}</span>
                 )}
-                <span
-                  className={cn(
-                    "truncate text-sm",
-                    variant === "status" &&
-                      selectedOption.color &&
-                      "px-1.5 py-0.5 rounded",
-                    selectedOption.color
-                  )}
-                >
-                  {selectedOption.label}
-                </span>
+                {!iconOnly && (
+                  <span
+                    className={cn(
+                      "truncate text-sm",
+                      variant === "status" &&
+                        selectedOption.color &&
+                        "px-1.5 py-0.5 rounded",
+                      selectedOption.color
+                    )}
+                  >
+                    {selectedOption.label}
+                  </span>
+                )}
               </div>
             ) : (
               <span className="text-sm text-muted-foreground">
                 {placeholder}
               </span>
             )}
-            <div className="flex items-center">
-              {clearable && selectedOption && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-4 w-4 p-0 opacity-50 hover:opacity-100 hover:bg-transparent"
-                  onClick={handleClear}
-                >
-                  <span className="sr-only">Clear</span>
-                  <Circle className="h-3 w-3" />
-                </Button>
-              )}
-              {/* <ChevronsUpDown className="h-3.5 w-3.5 opacity-50 ml-0.5" /> */}
-            </div>
+            {!iconOnly && (
+              <div className="flex items-center">
+                {clearable && selectedOption && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-4 w-4 p-0 opacity-50 hover:opacity-100 hover:bg-transparent"
+                    onClick={handleClear}
+                  >
+                    <span className="sr-only">Clear</span>
+                    <Circle className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent

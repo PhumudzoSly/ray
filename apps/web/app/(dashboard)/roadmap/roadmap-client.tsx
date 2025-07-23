@@ -43,6 +43,7 @@ import { useSession } from "@/context/session-context";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { toast } from "sonner";
 import { formatDistanceToNow, format } from "date-fns";
+import { safeFormatDistanceToNow, safeFormatDate } from "@/utils/date-utils";
 
 import NewRoadmap from "./components/new-roadmap";
 import { NoData } from "@/components/shared";
@@ -323,7 +324,7 @@ export default function RoadmapClient() {
                   <div className="flex items-center gap-2">
                     <ThumbsUp className="h-4 w-4 text-green-500" />
                     <span className="font-medium">
-                      {roadmap.stats.totalVotes}
+                      {roadmap.stats.totalVotes || 0}
                     </span>
                   </div>
                 </TableCell>
@@ -331,7 +332,7 @@ export default function RoadmapClient() {
                   <div className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4 text-purple-500" />
                     <span className="font-medium">
-                      {roadmap.stats.totalFeedback}
+                      {roadmap.stats.totalFeedback || 0}
                     </span>
                   </div>
                 </TableCell>
@@ -339,16 +340,19 @@ export default function RoadmapClient() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger className="text-xs">
-                        {formatDistanceToNow(
-                          new Date(roadmap.stats.lastUpdated),
-                          {
-                            addSuffix: true,
-                          }
+                        {safeFormatDistanceToNow(
+                          roadmap.updatedAt,
+                          { addSuffix: true },
+                          "No updates"
                         )}
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>
-                          {format(new Date(roadmap.stats.lastUpdated), "PPP")}
+                          {safeFormatDate(
+                            roadmap.updatedAt,
+                            "PPP",
+                            "No update date available"
+                          )}
                         </p>
                       </TooltipContent>
                     </Tooltip>

@@ -64,6 +64,16 @@ export const getAllPublicRoadmaps = async () => {
             featureRequests: true,
           },
         },
+        items: {
+          include: {
+            _count: {
+              select: {
+                votes: true,
+                feedback: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         updatedAt: "desc",
@@ -72,12 +82,26 @@ export const getAllPublicRoadmaps = async () => {
 
     // Enrich the data with computed fields
     const enrichedRoadmaps = roadmaps.map((roadmap) => {
+      // Calculate total votes and feedback across all items
+      const totalVotes = roadmap.items.reduce(
+        (sum, item) => sum + item._count.votes,
+        0
+      );
+      const totalFeedback = roadmap.items.reduce(
+        (sum, item) => sum + item._count.feedback,
+        0
+      );
+
       return {
         ...roadmap,
+        // Remove the items array to keep response clean
+        items: undefined,
         stats: {
           totalItems: roadmap._count.items,
           totalChangelogs: roadmap._count.changelogs,
           totalFeatureRequests: roadmap._count.featureRequests,
+          totalVotes,
+          totalFeedback,
         },
       };
     });
