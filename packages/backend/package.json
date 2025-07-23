@@ -15,13 +15,12 @@
 	"license": "ISC",
 	"dependencies": {
 		"@ai-sdk/google": "^1.2.22",
-		"@better-auth-kit/convex": "^1.2.2",
 		"@prisma/client": "^6.12.0",
-		"ai": "^4.3.17",
-		"axios": "^1.7.9",
-		"jsdom": "^24.0.0",
-		"resend": "^4.6.0",
-		"zod": "^3.25.76",
+		"ai": "^4.3.19",
+		"axios": "^1.11.0",
+		"jsdom": "^26.1.0",
+		"resend": "^4.7.0",
+		"zod": "^4.0.5",
 		"zod-prisma-types": "^3.2.4"
 	},
 	"devDependencies": {
