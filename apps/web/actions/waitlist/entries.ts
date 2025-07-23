@@ -198,7 +198,18 @@ export const updateEntryStatus = async (data: {
   entryId: string;
   status: string;
 }) => {
-  return updateWaitlistEntry(data.entryId, { status: data.status });
+  // When marking as verified, also set the verifiedAt timestamp
+  const updateData: any = { status: data.status };
+
+  if (data.status === "verified") {
+    updateData.verifiedAt = new Date();
+  } else if (data.status === "invited") {
+    updateData.invitedAt = new Date();
+  } else if (data.status === "joined") {
+    updateData.joinedAt = new Date();
+  }
+
+  return updateWaitlistEntry(data.entryId, updateData);
 };
 
 /**

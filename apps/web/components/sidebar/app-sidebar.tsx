@@ -115,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   //
   return (
     <Sidebar variant="sidebar" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="bg-gray-50 dark:bg-inherit">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
@@ -131,7 +131,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="bg-gray-50 dark:bg-inherit">
         <ScrollArea>
           <div className="grow">
             <NavMenu items={data.platform} title="Platform" />
@@ -142,7 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
         </ScrollArea>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="bg-gray-50 dark:bg-inherit">
         <div className="flex flex-col gap-4 p-3">
           <Link
             href="/settings/teams"

@@ -1,4 +1,4 @@
-import { getOrgMembers } from "@/actions/account/user";
+import { getSession } from "@/actions/account/user";
 import { Liveblocks } from "@liveblocks/node";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -13,24 +13,13 @@ export async function POST(request: NextRequest) {
 
   try {
     // Get organization members
-    const members = await getOrgMembers();
-
-    if (!members || members.length === 0) {
-      return new NextResponse("No organization members found", { status: 404 });
-    }
-
-    // We're generating random users from organization members here.
-    // In a real-world scenario, this is where you'd assign the
-    // user based on their real identity from your auth provider.
-    const userIndex = Math.floor(Math.random() * members.length);
+    const user = await getSession();
 
     // Create a session for the current user (access token auth)
-    const session = liveblocks.prepareSession(`user-${userIndex}`, {
+    const session = liveblocks.prepareSession(user.userId, {
       userInfo: {
-        name: members[userIndex]?.user.name || "Anonymous",
-        avatar: `https://liveblocks.io/avatars/avatar-${Math.floor(
-          Math.random() * 30
-        )}.png`,
+        name: user.name || "Anonymous",
+        avatar: user.image || "",
       },
     });
 

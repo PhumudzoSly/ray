@@ -13,7 +13,7 @@ export function Room({
   roomId: string;
 }) {
   return (
-    <RoomProvider id={roomId}>
+    <RoomProvider id={`rayai:room:${roomId}`}>
       <ErrorBoundary
         fallback={
           <div className="absolute flex h-screen w-screen place-content-center items-center">

@@ -39,20 +39,20 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <div
-      className={`group relative overflow-hidden rounded-xl border bg-card p-6 transition-all hover:shadow-sm ${className}`}
+      className={`group relative overflow-hidden rounded-xl border bg-card p-4 transition-all hover:shadow-sm ${className}`}
     >
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <div className={`rounded-lg p-2 ${iconColor} bg-opacity-10`}>
+            <div className={`rounded-lg p-1.5 ${iconColor} bg-opacity-10`}>
               <Icon className={`h-4 w-4 ${iconColor}`} />
             </div>
             <span className="text-sm font-medium text-muted-foreground">
               {title}
             </span>
           </div>
-          <div className="flex items-baseline gap-4">
-            <div className="text-3xl font-bold tracking-tight">
+          <div className="flex items-baseline gap-3">
+            <div className="text-2xl font-bold tracking-tight">
               {typeof value === "number" ? value.toLocaleString() : value}
             </div>
             {trend && (
@@ -113,10 +113,10 @@ export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-orange-500/10 p-2">
-          <Target className="h-5 w-5 text-orange-500" />
+        <div className="rounded-lg bg-orange-500/10 p-1.5">
+          <Target className="h-4 w-4 text-orange-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold">Conversion Funnel</h3>
@@ -125,17 +125,17 @@ export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {metrics.map((metric, index) => (
           <div
             key={metric.title}
-            className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all hover:shadow-sm"
+            className="group relative overflow-hidden rounded-xl border bg-card p-4 transition-all hover:shadow-sm"
           >
             <div className="flex items-start justify-between">
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className={`rounded-lg p-2.5 ${metric.bgColor}`}>
-                    <metric.icon className={`h-5 w-5 ${metric.iconColor}`} />
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className={`rounded-lg p-1.5 ${metric.bgColor}`}>
+                    <metric.icon className={`h-4 w-4 ${metric.iconColor}`} />
                   </div>
                   <div>
                     <div className="text-sm font-medium">{metric.title}</div>
@@ -145,10 +145,10 @@ export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-baseline gap-4">
-                    <div className="text-3xl font-bold tracking-tight">
+                  <div className="flex items-baseline gap-3">
+                    <div className="text-2xl font-bold tracking-tight">
                       {metric.value}
-                      <span className="text-lg font-normal text-muted-foreground ml-1">
+                      <span className="text-base font-normal text-muted-foreground ml-1">
                         {metric.suffix}
                       </span>
                     </div>
@@ -187,10 +187,10 @@ export function TrafficSources({ analytics }: TrafficSourcesProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-blue-500/10 p-2">
-          <Globe className="h-5 w-5 text-blue-500" />
+        <div className="rounded-lg bg-blue-500/10 p-1.5">
+          <Globe className="h-4 w-4 text-blue-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold">Traffic Sources</h3>
@@ -199,17 +199,17 @@ export function TrafficSources({ analytics }: TrafficSourcesProps) {
           </p>
         </div>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {sortedSources.map(([source, count], index) => {
           const percentage = Math.round((count / analytics.totalEntries) * 100);
           const color = colors[index % colors.length];
           return (
             <div
               key={source}
-              className="group flex items-center justify-between rounded-lg border bg-card p-4 transition-all hover:shadow-sm"
+              className="group flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:shadow-sm"
             >
-              <div className="flex items-center gap-4">
-                <div className={`w-3 h-3 rounded-full ${color}`} />
+              <div className="flex items-center gap-3">
+                <div className={`w-2.5 h-2.5 rounded-full ${color}`} />
                 <div>
                   <span className="font-medium capitalize">{source}</span>
                   <div className="text-sm text-muted-foreground">
@@ -217,7 +217,7 @@ export function TrafficSources({ analytics }: TrafficSourcesProps) {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div className="text-right">
                   <div className="text-sm font-semibold">{percentage}%</div>
                   <div className="text-xs text-muted-foreground">of total</div>
@@ -311,10 +311,10 @@ export function StatusDistribution({ analytics }: StatusDistributionProps) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-green-500/10 p-2">
-          <Activity className="h-5 w-5 text-green-500" />
+        <div className="rounded-lg bg-green-500/10 p-1.5">
+          <Activity className="h-4 w-4 text-green-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold">Status Distribution</h3>
@@ -323,16 +323,16 @@ export function StatusDistribution({ analytics }: StatusDistributionProps) {
           </p>
         </div>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {sortedStatuses.map(([status, count]) => {
           const percentage = Math.round((count / analytics.totalEntries) * 100);
           const config = getStatusConfig(status);
           return (
             <div
               key={status}
-              className="group flex items-center justify-between rounded-lg border bg-card p-4 transition-all hover:shadow-sm"
+              className="group flex items-center justify-between rounded-lg border bg-card p-3 transition-all hover:shadow-sm"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 {config.badge}
                 <div>
                   <div className="text-sm text-muted-foreground capitalize">
@@ -342,7 +342,7 @@ export function StatusDistribution({ analytics }: StatusDistributionProps) {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-lg font-semibold">{percentage}%</div>
+                <div className="text-base font-semibold">{percentage}%</div>
                 <div className="text-xs text-muted-foreground">of total</div>
               </div>
             </div>
@@ -386,10 +386,10 @@ export function ReferralPerformance({ analytics }: ReferralPerformanceProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-indigo-500/10 p-2">
-          <Share2 className="h-5 w-5 text-indigo-500" />
+        <div className="rounded-lg bg-indigo-500/10 p-1.5">
+          <Share2 className="h-4 w-4 text-indigo-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold">Referral Performance</h3>
@@ -398,20 +398,20 @@ export function ReferralPerformance({ analytics }: ReferralPerformanceProps) {
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {metrics.map((metric) => (
           <div
             key={metric.title}
-            className="group relative overflow-hidden rounded-xl border bg-card p-6 text-center transition-all hover:shadow-sm"
+            className="group relative overflow-hidden rounded-xl border bg-card p-4 text-center transition-all hover:shadow-sm"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex justify-center">
-                <div className={`rounded-lg p-3 ${metric.bgColor}`}>
-                  <metric.icon className={`h-6 w-6 ${metric.iconColor}`} />
+                <div className={`rounded-lg p-2 ${metric.bgColor}`}>
+                  <metric.icon className={`h-5 w-5 ${metric.iconColor}`} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="text-3xl font-bold tracking-tight">
+              <div className="space-y-1">
+                <div className="text-2xl font-bold tracking-tight">
                   {metric.value}
                 </div>
                 <div className="text-sm font-medium">{metric.title}</div>
@@ -464,10 +464,10 @@ export function GrowthInsights({ analytics }: GrowthInsightsProps) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-emerald-500/10 p-2">
-          <TrendingUp className="h-5 w-5 text-emerald-500" />
+        <div className="rounded-lg bg-emerald-500/10 p-1.5">
+          <TrendingUp className="h-4 w-4 text-emerald-500" />
         </div>
         <div>
           <h3 className="text-lg font-semibold">Growth Insights</h3>
@@ -476,20 +476,20 @@ export function GrowthInsights({ analytics }: GrowthInsightsProps) {
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {insights.map((insight) => (
           <div
             key={insight.title}
-            className="group relative overflow-hidden rounded-xl border bg-card p-6 text-center transition-all hover:shadow-sm"
+            className="group relative overflow-hidden rounded-xl border bg-card p-4 text-center transition-all hover:shadow-sm"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex justify-center">
-                <div className={`rounded-lg p-3 ${insight.bgColor}`}>
-                  <insight.icon className={`h-6 w-6 ${insight.iconColor}`} />
+                <div className={`rounded-lg p-2 ${insight.bgColor}`}>
+                  <insight.icon className={`h-5 w-5 ${insight.iconColor}`} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="text-2xl font-bold tracking-tight">
+              <div className="space-y-1">
+                <div className="text-xl font-bold tracking-tight">
                   {insight.value}
                 </div>
                 <div className="text-sm text-muted-foreground">

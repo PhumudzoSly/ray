@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as waitlistEntryActions from "@/actions/waitlist/entries";
+import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import {
@@ -65,6 +66,7 @@ export default function WaitlistOverview({
   const [selectedEntries, setSelectedEntries] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const queryClient = useQueryClient();
+  const { org } = useSession();
 
   // Debounce search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -95,6 +97,10 @@ export default function WaitlistOverview({
           0
         ),
       });
+      // Also invalidate the main waitlists query to update the verified count
+      queryClient.invalidateQueries({
+        queryKey: ["waitlists", org],
+      });
     },
   });
 
@@ -112,6 +118,10 @@ export default function WaitlistOverview({
           100,
           0
         ),
+      });
+      // Also invalidate the main waitlists query to update the counts
+      queryClient.invalidateQueries({
+        queryKey: ["waitlists", org],
       });
     },
   });

@@ -182,14 +182,6 @@ export const ImportanceSchema = z.enum(['CRITICAL','HIGH','MEDIUM','LOW']);
 
 export type ImportanceType = `${z.infer<typeof ImportanceSchema>}`
 
-export const CategorySchema = z.enum(['PRODUCT','MARKETING','FINANCIAL','LEGAL','OTHER']);
-
-export type CategoryType = `${z.infer<typeof CategorySchema>}`
-
-export const FinancialResourcesSchema = z.enum(['LIMITED','ADEQUATE','ABUNDANT']);
-
-export type FinancialResourcesType = `${z.infer<typeof FinancialResourcesSchema>}`
-
 export const ProjectPlatformSchema = z.enum(['web','mobile','both','api','plugin','desktop','cli']);
 
 export type ProjectPlatformType = `${z.infer<typeof ProjectPlatformSchema>}`
@@ -222,17 +214,9 @@ export const PrdStatusSchema = z.enum(['draft','approved','archived']);
 
 export type PrdStatusType = `${z.infer<typeof PrdStatusSchema>}`
 
-export const ImplementationPromptCategorySchema = z.enum(['implementation','testing','documentation','debugging','optimization','deployment']);
-
-export type ImplementationPromptCategoryType = `${z.infer<typeof ImplementationPromptCategorySchema>}`
-
 export const AnalysisReportTypeSchema = z.enum(['flow_analysis','missing_flows','recommendations']);
 
 export type AnalysisReportTypeType = `${z.infer<typeof AnalysisReportTypeSchema>}`
-
-export const NotificationDigestFrequencySchema = z.enum(['IMMEDIATE','HOURLY','DAILY','WEEKLY','NEVER']);
-
-export type NotificationDigestFrequencyType = `${z.infer<typeof NotificationDigestFrequencySchema>}`
 
 export const RoadmapFeedbackSentimentSchema = z.enum(['positive','neutral','negative']);
 
@@ -916,16 +900,16 @@ export type PublicRoadmapOptionalDefaults = z.infer<typeof PublicRoadmapOptional
 /////////////////////////////////////////
 
 export const RoadmapItemSchema = z.object({
+  status: IssueStatusSchema,
+  category: IssueLabelSchema,
+  priority: ImportanceSchema,
   id: z.string().uuid(),
   roadmapId: z.string(),
   issueId: z.string().nullish(),
   nodeId: z.string().nullish(),
   title: z.string(),
   description: z.string(),
-  status: z.string(),
-  category: z.string(),
   isPublic: z.boolean(),
-  priority: z.string(),
   targetDate: z.coerce.date().nullish(),
   order: z.number().int(),
   voteCount: z.number().int(),

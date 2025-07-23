@@ -14,15 +14,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@workspace/ui/components/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
 import { toast } from "sonner";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { IssueSelector } from "@/components/ui/selectors/issue-selector";
@@ -37,13 +29,14 @@ import {
   Settings,
   Circle,
 } from "lucide-react";
+import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface AddItemDialogProps {
   isOpen: boolean;
   onClose: () => void;
   roadmapId: string;
   token: string;
-  initialStatus?: string;
+  initialStatus?: IssueStatus;
 }
 
 export function AddItemDialog({
@@ -161,31 +154,31 @@ export function AddItemDialog({
                   label: "Feature",
                   value: "feature",
                   color: "gray",
-                  icon: <Sparkles size={16} />,
+                  icon: <Sparkles size={16} className="text-blue-500" />,
                 },
                 {
                   label: "Enhancement",
                   value: "enhancement",
                   color: "gray",
-                  icon: <TrendingUp size={16} />,
+                  icon: <TrendingUp size={16} className="text-green-500" />,
                 },
                 {
                   label: "Bug Fix",
                   value: "bug-fix",
                   color: "gray",
-                  icon: <Bug size={16} />,
+                  icon: <Bug size={16} className="text-red-500" />,
                 },
                 {
                   label: "Improvement",
                   value: "improvement",
                   color: "gray",
-                  icon: <Wrench size={16} />,
+                  icon: <Wrench size={16} className="text-yellow-500" />,
                 },
                 {
                   label: "Maintenance",
                   value: "maintenance",
                   color: "gray",
-                  icon: <Settings size={16} />,
+                  icon: <Settings size={16} className="text-gray-500" />,
                 },
                 {
                   label: "Other",
@@ -201,7 +194,9 @@ export function AddItemDialog({
               value={formData.category}
             />
             <StatusSelector
-              onChange={(status) => setFormData({ ...formData, status })}
+              onChange={(status) =>
+                setFormData({ ...formData, status: status as IssueStatus })
+              }
               status={formData.status}
             />
             <IssueSelector

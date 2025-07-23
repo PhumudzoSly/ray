@@ -20,7 +20,6 @@ import { Comments } from "@/components/liveblocks/comments";
 import { BiInfoCircle } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 const IssueDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<"details" | "relationship" | "activity">(

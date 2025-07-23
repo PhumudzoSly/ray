@@ -1,11 +1,12 @@
 "use client";
 import { useParams } from "next/navigation";
 import React from "react";
-import { Room } from "./_components/Room";
+// import { Room } from "./_components/Room";
 import { StorageTldraw } from "./_components/storageDraw";
 import { Comments } from "@/components/liveblocks/comments";
 import { Inbox } from "lucide-react";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
+import { Room } from "@/components/liveblocks/room";
 
 const BoardPage = () => {
   //
@@ -22,14 +23,14 @@ const BoardPage = () => {
             <h1 className="font-medium text-lg text-foreground">Comments</h1>
           </div>
           <div className="overflow-y-auto p-2 h-[calc(100vh-102px)]">
-            <Room roomId={`${id}-board-comments`}>
+            <Room id={`${id}-board-comments`}>
               <Comments id={`${id}-board-comments`} />
             </Room>
           </div>
         </div>
       }
     >
-      <Room roomId={`${id}-board`}>
+      <Room id={`${id}-board`}>
         <StorageTldraw id={id} />
       </Room>
     </ExpandedLayoutContainer>

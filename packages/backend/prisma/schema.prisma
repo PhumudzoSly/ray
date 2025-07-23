@@ -452,10 +452,10 @@ model RoadmapItem {
   nodeId        String?
   title         String
   description   String
-  status        String
-  category      String
+  status        IssueStatus
+  category      IssueLabel
   isPublic      Boolean
-  priority      String
+  priority      Importance
   targetDate    DateTime?
   order         Int
   voteCount     Int
@@ -809,20 +809,6 @@ enum Importance {
   LOW
 }
 
-enum Category {
-  PRODUCT
-  MARKETING
-  FINANCIAL
-  LEGAL
-  OTHER
-}
-
-enum FinancialResources {
-  LIMITED
-  ADEQUATE
-  ABUNDANT
-}
-
 enum ProjectPlatform {
   web
   mobile
@@ -903,27 +889,10 @@ enum PrdStatus {
   archived
 }
 
-enum ImplementationPromptCategory {
-  implementation
-  testing
-  documentation
-  debugging
-  optimization
-  deployment
-}
-
 enum AnalysisReportType {
   flow_analysis
   missing_flows
   recommendations
-}
-
-enum NotificationDigestFrequency {
-  IMMEDIATE
-  HOURLY
-  DAILY
-  WEEKLY
-  NEVER
 }
 
 enum RoadmapFeedbackSentiment {

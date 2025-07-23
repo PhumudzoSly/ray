@@ -173,7 +173,7 @@ export default function WaitlistClient() {
   }
 
   return (
-    <div className="space-y-2">
+    <div>
       {/* Title and Description Section */}
       <div className="space-y-2 p-4">
         <h1 className="text-3xl font-bold tracking-tight">Waitlists</h1>
@@ -182,8 +182,6 @@ export default function WaitlistClient() {
           audience before launch.
         </p>
       </div>
-
-      <Separator />
 
       {waitlists && waitlists.length > 0 ? (
         <div className="rounded-md border bg-background">
