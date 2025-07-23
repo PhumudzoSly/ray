@@ -81,9 +81,15 @@ export function AddItemDialog({
     }
 
     try {
-      const targetDate = formData.targetDate
-        ? new Date(formData.targetDate).getTime()
-        : undefined;
+      // Transform category to uppercase enum value
+      const categoryMap: Record<string, string> = {
+        feature: "FEATURE",
+        enhancement: "IMPROVEMENT",
+        "bug-fix": "BUG",
+        improvement: "IMPROVEMENT",
+        maintenance: "TASK",
+        other: "TASK",
+      };
 
       const result = await createRoadmapItemMutation.mutateAsync({
         roadmapId,
@@ -92,10 +98,12 @@ export function AddItemDialog({
         title: formData.title,
         description: formData.description,
         status: formData.status as any,
-        category: formData.category,
+        category: categoryMap[formData.category] || "FEATURE",
         isPublic: formData.isPublic,
         priority: formData.priority,
-        targetDate,
+        targetDate: formData.targetDate
+          ? new Date(formData.targetDate)
+          : undefined,
       });
 
       if (result.success) {
@@ -106,6 +114,7 @@ export function AddItemDialog({
         toast.error(result.error || "Failed to add roadmap item");
       }
     } catch (error) {
+      console.error("Roadmap item creation error:", error);
       toast.error("Failed to add roadmap item");
     }
   };

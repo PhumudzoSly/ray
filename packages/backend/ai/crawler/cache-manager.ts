@@ -103,11 +103,11 @@ export class CacheManager {
     extractedData?: any
   ): Promise<void> {
     if (!this.validateUrl(url)) {
-      throw new Error('Invalid URL provided to cache');
+      throw new Error("Invalid URL provided to cache");
     }
 
     if (!this.validateCrawlResult(crawlResult)) {
-      throw new Error('Invalid crawl result provided to cache');
+      throw new Error("Invalid crawl result provided to cache");
     }
 
     const normalizedUrl = this.normalizeUrl(url);
@@ -115,7 +115,9 @@ export class CacheManager {
 
     // Check entry size limit
     if (entrySize > this.config.maxEntrySize) {
-      throw new Error(`Cache entry too large: ${entrySize} bytes (max: ${this.config.maxEntrySize})`);
+      throw new Error(
+        `Cache entry too large: ${entrySize} bytes (max: ${this.config.maxEntrySize})`
+      );
     }
 
     // Check if cache is full and evict if necessary
@@ -172,9 +174,16 @@ export class CacheManager {
       try {
         entry.extractedData = SaasDataExtractor.extractAll(entry.crawlResult);
         // Recalculate size after extraction
-        entry.size = this.estimateEntrySize(entry.url, entry.crawlResult, entry.extractedData);
+        entry.size = this.estimateEntrySize(
+          entry.url,
+          entry.crawlResult,
+          entry.extractedData
+        );
       } catch (error) {
-        console.warn(`Failed to extract data for ${url}:`, this.sanitizeError(error));
+        console.warn(
+          `Failed to extract data for ${url}:`,
+          this.sanitizeError(error)
+        );
       }
     }
 
@@ -247,7 +256,8 @@ export class CacheManager {
     const hitRate =
       totalHits + totalMisses > 0 ? totalHits / (totalHits + totalMisses) : 0;
     const totalSize = entries.reduce((sum, entry) => sum + entry.size, 0);
-    const averageEntrySize = entries.length > 0 ? totalSize / entries.length : 0;
+    const averageEntrySize =
+      entries.length > 0 ? totalSize / entries.length : 0;
 
     return {
       size: this.cache.size,
@@ -274,11 +284,13 @@ export class CacheManager {
 
   async getBatch(urls: string[]): Promise<Map<string, CrawlResult>> {
     if (!Array.isArray(urls)) {
-      throw new Error('URLs must be an array');
+      throw new Error("URLs must be an array");
     }
 
     if (urls.length > CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE) {
-      throw new Error(`Batch too large: ${urls.length} URLs (max: ${CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE})`);
+      throw new Error(
+        `Batch too large: ${urls.length} URLs (max: ${CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE})`
+      );
     }
 
     const results = new Map<string, CrawlResult>();
@@ -303,11 +315,13 @@ export class CacheManager {
     }>
   ): Promise<void> {
     if (!Array.isArray(entries)) {
-      throw new Error('Entries must be an array');
+      throw new Error("Entries must be an array");
     }
 
     if (entries.length > CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE) {
-      throw new Error(`Batch too large: ${entries.length} entries (max: ${CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE})`);
+      throw new Error(
+        `Batch too large: ${entries.length} entries (max: ${CACHE_SECURITY_CONFIG.MAX_BATCH_SIZE})`
+      );
     }
 
     for (const entry of entries) {
@@ -378,7 +392,7 @@ export class CacheManager {
   // ============================================================================
 
   private validateUrl(url: string): boolean {
-    if (!url || typeof url !== 'string') {
+    if (!url || typeof url !== "string") {
       return false;
     }
 
@@ -395,15 +409,15 @@ export class CacheManager {
   }
 
   private validateCrawlResult(crawlResult: CrawlResult): boolean {
-    if (!crawlResult || typeof crawlResult !== 'object') {
+    if (!crawlResult || typeof crawlResult !== "object") {
       return false;
     }
 
-    if (!crawlResult.url || typeof crawlResult.url !== 'string') {
+    if (!crawlResult.url || typeof crawlResult.url !== "string") {
       return false;
     }
 
-    if (typeof crawlResult.success !== 'boolean') {
+    if (typeof crawlResult.success !== "boolean") {
       return false;
     }
 
@@ -411,7 +425,7 @@ export class CacheManager {
   }
 
   private validateSearchQuery(query: string): boolean {
-    if (!query || typeof query !== 'string') {
+    if (!query || typeof query !== "string") {
       return false;
     }
 
@@ -438,16 +452,18 @@ export class CacheManager {
   }
 
   private validateDomain(domain: string): boolean {
-    if (!domain || typeof domain !== 'string') {
+    if (!domain || typeof domain !== "string") {
       return false;
     }
 
-    if (domain.length > 253) { // Max domain length
+    if (domain.length > 253) {
+      // Max domain length
       return false;
     }
 
     // Check for valid domain pattern
-    const domainPattern = /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/;
+    const domainPattern =
+      /^[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/;
     return domainPattern.test(domain);
   }
 
@@ -509,7 +525,11 @@ export class CacheManager {
     }
   }
 
-  private estimateEntrySize(url: string, crawlResult: CrawlResult, extractedData?: any): number {
+  private estimateEntrySize(
+    url: string,
+    crawlResult: CrawlResult,
+    extractedData?: any
+  ): number {
     let size = 0;
 
     // URL
@@ -559,7 +579,9 @@ export class CacheManager {
     }
 
     if (expiredKeys.length > 0) {
-      console.log(`Cache cleanup: removed ${expiredKeys.length} expired entries`);
+      console.log(
+        `Cache cleanup: removed ${expiredKeys.length} expired entries`
+      );
     }
   }
 
@@ -600,12 +622,15 @@ export class CacheManager {
   private sanitizeError(error: any): string {
     if (error instanceof Error) {
       // Don't expose internal error details
-      if (error.message.includes('Invalid') || error.message.includes('too large')) {
+      if (
+        error.message.includes("Invalid") ||
+        error.message.includes("too large")
+      ) {
         return error.message;
       }
-      return 'Operation failed';
+      return "Operation failed";
     }
-    return 'Unknown error occurred';
+    return "Unknown error occurred";
   }
 
   // ============================================================================
@@ -619,7 +644,7 @@ export class CacheManager {
     try {
       console.log(`Persisting cache entry for ${entry.url} to database`);
     } catch (error) {
-      console.warn('Failed to persist cache entry:', this.sanitizeError(error));
+      console.warn("Failed to persist cache entry:", this.sanitizeError(error));
     }
   }
 
@@ -628,7 +653,10 @@ export class CacheManager {
     try {
       console.log("Clearing cache from database");
     } catch (error) {
-      console.warn('Failed to clear database cache:', this.sanitizeError(error));
+      console.warn(
+        "Failed to clear database cache:",
+        this.sanitizeError(error)
+      );
     }
   }
 
@@ -650,8 +678,8 @@ export class CacheManager {
 
 export class CacheUtils {
   static generateCacheKey(url: string, options?: any): string {
-    if (!url || typeof url !== 'string') {
-      throw new Error('Invalid URL for cache key generation');
+    if (!url || typeof url !== "string") {
+      throw new Error("Invalid URL for cache key generation");
     }
 
     try {
@@ -659,7 +687,7 @@ export class CacheUtils {
       const optionsHash = options ? JSON.stringify(options) : "";
       return `${normalizedUrl}:${optionsHash}`;
     } catch {
-      throw new Error('Invalid URL format for cache key generation');
+      throw new Error("Invalid URL format for cache key generation");
     }
   }
 
@@ -708,11 +736,17 @@ export class CacheUtils {
       return false;
     }
 
-    if (config.ttl && (config.ttl <= 0 || config.ttl > 7 * 24 * 60 * 60 * 1000)) {
+    if (
+      config.ttl &&
+      (config.ttl <= 0 || config.ttl > 7 * 24 * 60 * 60 * 1000)
+    ) {
       return false; // Max 7 days TTL
     }
 
-    if (config.maxEntrySize && (config.maxEntrySize <= 0 || config.maxEntrySize > 50 * 1024 * 1024)) {
+    if (
+      config.maxEntrySize &&
+      (config.maxEntrySize <= 0 || config.maxEntrySize > 50 * 1024 * 1024)
+    ) {
       return false; // Max 50MB per entry
     }
 

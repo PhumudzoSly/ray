@@ -8,19 +8,34 @@ import { getSession } from "../account/user";
 export const createRoadmapItem = async (data: RoadmapItemOptionalDefaults) => {
   const { org } = await getSession();
   try {
+    console.log(
+      "Creating roadmap item with data:",
+      JSON.stringify(data, null, 2)
+    );
+    console.log("Organization ID:", org);
+
     // Ensure the roadmap belongs to the org
     const roadmap = await prisma.publicRoadmap.findFirst({
       where: { id: data.roadmapId, project: { organizationId: org } },
     });
+
+    console.log("Found roadmap:", roadmap ? roadmap.id : "NOT FOUND");
+
     if (!roadmap)
       return {
         success: false,
         error: "Roadmap not found or not in your organization",
       };
+
     const item = await prisma.roadmapItem.create({ data });
+    console.log("Created roadmap item:", item.id);
     return { success: true, data: item };
   } catch (error) {
-    return { success: false, error };
+    console.error("Error creating roadmap item:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
   }
 };
 
