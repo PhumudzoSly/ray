@@ -28,22 +28,24 @@ model User {
 
   twoFactorEnabled Boolean?
 
-  sessions     Session[]
-  accounts     Account[]
-  members      Member[]
-  invitations  Invitation[]
-  passkeys     Passkey[]
-  twofactors   TwoFactor[]
-  subscription Subscription?
-  project      Project[]      @relation("CreatedProjects")
-  idea         Idea[]         @relation("IdeaOwner")
-  issue        Issue[]        @relation("AssignedIssues")
-  asset        Asset[]        @relation("UploadedAssets")
-  waitlist     Waitlist[]     @relation("CreatedWaitlists")
-  integration  Integration[]  @relation("CreatedIntegrations")
-  activityFeed ActivityFeed[]
-  feature      Feature[]
-  milestone    Milestone[]    @relation("MilestoneOwner")
+  sessions       Session[]
+  accounts       Account[]
+  members        Member[]
+  invitations    Invitation[]
+  passkeys       Passkey[]
+  twofactors     TwoFactor[]
+  subscription   Subscription?
+  project        Project[]       @relation("CreatedProjects")
+  idea           Idea[]          @relation("IdeaOwner")
+  issue          Issue[]         @relation("AssignedIssues")
+  asset          Asset[]         @relation("UploadedAssets")
+  waitlist       Waitlist[]      @relation("CreatedWaitlists")
+  integration    Integration[]   @relation("CreatedIntegrations")
+  activityFeed   ActivityFeed[]
+  feature        Feature[]
+  milestone      Milestone[]     @relation("MilestoneOwner")
+  assetViews     AssetView[]
+  assetDownloads AssetDownload[]
 
   @@unique([email])
   @@map("user")
@@ -126,6 +128,9 @@ model Organization {
   issueDependency     IssueDependency[]
   issueLink           IssueLink[]
   marketResearch      MarketResearch[]
+  assetViews          AssetView[]
+  assetDownloads      AssetDownload[]
+  referrals           Referral[]
 
   @@unique([slug])
   @@map("organization")
@@ -365,8 +370,10 @@ model Asset {
   uploadedById   String?
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  viewCount      Int?
-  downloadCount  Int?
+
+  // Relations
+  assetViews     AssetView[]
+  assetDownloads AssetDownload[]
 
   @@index([projectId])
   @@index([organizationId])
@@ -445,25 +452,22 @@ model PublicRoadmap {
 }
 
 model RoadmapItem {
-  id            String            @id @default(uuid())
-  roadmap       PublicRoadmap     @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
-  roadmapId     String
-  issueId       String?
-  nodeId        String?
-  title         String
-  description   String
-  status        IssueStatus
-  category      IssueLabel
-  isPublic      Boolean
-  priority      Importance
-  targetDate    DateTime?
-  order         Int
-  voteCount     Int
-  feedbackCount Int
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  votes         RoadmapVote[]
-  feedback      RoadmapFeedback[]
+  id          String            @id @default(uuid())
+  roadmap     PublicRoadmap     @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  roadmapId   String
+  issueId     String?
+  nodeId      String?
+  title       String
+  description String
+  status      IssueStatus
+  category    IssueLabel
+  isPublic    Boolean
+  priority    Importance
+  targetDate  DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  votes       RoadmapVote[]
+  feedback    RoadmapFeedback[]
 
   @@index([roadmapId])
   @@index([issueId])
@@ -541,7 +545,6 @@ model FeatureRequest {
   ipAddress   String
   status      FeatureRequestStatus
   priority    FeatureRequestPriority
-  upvotes     Int
   isPublic    Boolean
   adminNotes  String?
   createdAt   DateTime               @default(now())
@@ -607,6 +610,7 @@ model Waitlist {
   createdBy        User?           @relation("CreatedWaitlists", fields: [createdById], references: [id], onDelete: SetNull)
   createdById      String?
   entries          WaitlistEntry[]
+  referrals        Referral[]
 
   @@index([projectId])
   @@index([organizationId])
@@ -623,7 +627,6 @@ model WaitlistEntry {
   position          Int
   referralCode      String
   referredBy        String?
-  referralCount     Int
   verificationToken String?
   verifiedAt        DateTime?
   invitedAt         DateTime?
@@ -635,6 +638,9 @@ model WaitlistEntry {
   utmCampaign       String?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
+
+  // Relations
+  referrals Referral[]
 
   @@index([waitlistId])
   @@index([email])
@@ -1712,4 +1718,74 @@ enum FeatureQuality {
   AVERAGE
   POOR
   UNKNOWN
+}
+
+// ============================================================================
+// TRACKING TABLES FOR CALCULATED VALUES
+// ============================================================================
+
+model AssetView {
+  id             String       @id @default(uuid())
+  asset          Asset        @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId        String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ipAddress      String
+  userAgent      String?
+  referrer       String?
+  viewedAt       DateTime     @default(now())
+
+  @@index([assetId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([viewedAt])
+  @@index([assetId, viewedAt])
+  @@map("asset_view")
+}
+
+model AssetDownload {
+  id             String       @id @default(uuid())
+  asset          Asset        @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  assetId        String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ipAddress      String
+  userAgent      String?
+  referrer       String?
+  downloadedAt   DateTime     @default(now())
+
+  @@index([assetId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([downloadedAt])
+  @@index([assetId, downloadedAt])
+  @@map("asset_download")
+}
+
+model Referral {
+  id             String        @id @default(uuid())
+  referrer       WaitlistEntry @relation(fields: [referrerId], references: [id], onDelete: Cascade)
+  referrerId     String
+  referredEmail  String
+  referredName   String?
+  ipAddress      String
+  userAgent      String?
+  referrerCode   String
+  waitlistId     String
+  waitlist       Waitlist      @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+
+  @@index([referrerId])
+  @@index([waitlistId])
+  @@index([organizationId])
+  @@index([referredEmail])
+  @@index([referrerCode])
+  @@index([createdAt])
+  @@map("referral")
 }

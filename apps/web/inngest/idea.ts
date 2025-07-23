@@ -20,28 +20,40 @@ export const validateIdea = inngestClient.createFunction(
     // Step 2: Run AI validation analysis with sequential data flow
     const validationResults = await step.run("run-ai-validation", async () => {
       try {
-        const { runModularResearch } = await import("@workspace/backend/ai/agents/research-orchestrator");
-        
+        const { runModularResearch } = await import(
+          "@workspace/backend/ai/agents/research-orchestrator"
+        );
+
         // Pass additional context from pre-validation questions if available
-        const researchResult = await runModularResearch(ideaId, additionalContext);
-        
+        const researchResult = await runModularResearch(
+          ideaId,
+          additionalContext
+        );
+
         // Extract scorecard data for validation score
         const scorecardAgent = researchResult.researchResults.agents.find(
           (a: any) => a.type === "validation-scorecard"
         );
-        
+
         const overallScore = scorecardAgent?.data?.overallScore || 0;
-        const validationStatus = scorecardAgent?.data?.validationStatus || "NEEDS_VALIDATION";
-        
+        const validationStatus =
+          scorecardAgent?.data?.validationStatus || "NEEDS_VALIDATION";
+
         return {
           overallScore,
           validationStatus,
-          recommendation: scorecardAgent?.data?.strategicRecommendations?.primary?.[0] || "Validation completed successfully.",
+          recommendation:
+            scorecardAgent?.data?.strategicRecommendations?.primary?.[0] ||
+            "Validation completed successfully.",
           marketSize: "Market analysis completed with sequential data flow",
-          competitorAnalysis: "Competitive landscape analyzed with enhanced context",
-          customerFit: "Customer segments identified with SaaS-specific insights",
-          feasibility: "Technical assessment completed with comprehensive analysis",
-          financials: "Financial projections generated with unit economics focus",
+          competitorAnalysis:
+            "Competitive landscape analyzed with enhanced context",
+          customerFit:
+            "Customer segments identified with SaaS-specific insights",
+          feasibility:
+            "Technical assessment completed with comprehensive analysis",
+          financials:
+            "Financial projections generated with unit economics focus",
           userStories: scorecardAgent?.data?.saasMetrics || {},
           researchResults: researchResult.researchResults,
           totalApiCalls: researchResult.totalApiCalls,
@@ -51,7 +63,8 @@ export const validateIdea = inngestClient.createFunction(
         return {
           overallScore: 0,
           validationStatus: "FAILED",
-          recommendation: "Validation failed due to technical issues. Please try again.",
+          recommendation:
+            "Validation failed due to technical issues. Please try again.",
           marketSize: "Market analysis failed",
           competitorAnalysis: "Competitive analysis failed",
           customerFit: "Customer analysis failed",

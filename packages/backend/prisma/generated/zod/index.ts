@@ -86,7 +86,7 @@ export const IssueDependencyScalarFieldEnumSchema = z.enum(['id','organizationId
 
 export const IssueLinkScalarFieldEnumSchema = z.enum(['id','organizationId','issueId','url','createdAt']);
 
-export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','type','projectId','organizationId','storageId','fileName','fileSize','mimeType','url','linkType','tags','category','thumbnailUrl','isPublic','uploadedById','createdAt','updatedAt','viewCount','downloadCount']);
+export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','type','projectId','organizationId','storageId','fileName','fileSize','mimeType','url','linkType','tags','category','thumbnailUrl','isPublic','uploadedById','createdAt','updatedAt']);
 
 export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','createdBy','createdAt','lastUsed','isActive','expiresAt']);
 
@@ -94,7 +94,7 @@ export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','de
 
 export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','customDomain','theme','logoUrl','accentColor','allowVoting','allowFeedback','showChangelog','createdAt','updatedAt']);
 
-export const RoadmapItemScalarFieldEnumSchema = z.enum(['id','roadmapId','issueId','nodeId','title','description','status','category','isPublic','priority','targetDate','order','voteCount','feedbackCount','createdAt','updatedAt']);
+export const RoadmapItemScalarFieldEnumSchema = z.enum(['id','roadmapId','issueId','nodeId','title','description','status','category','isPublic','priority','targetDate','createdAt','updatedAt']);
 
 export const RoadmapVoteScalarFieldEnumSchema = z.enum(['id','roadmapItemId','userId','ipAddress','createdAt']);
 
@@ -102,7 +102,7 @@ export const RoadmapFeedbackScalarFieldEnumSchema = z.enum(['id','roadmapItemId'
 
 export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','fixes','newFeatures','publishDate','isPublished','createdAt','updatedAt']);
 
-export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','upvotes','isPublic','adminNotes','createdAt','updatedAt']);
+export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','isPublic','adminNotes','createdAt','updatedAt']);
 
 export const IntegrationScalarFieldEnumSchema = z.enum(['id','name','type','config','isActive','organizationId','createdAt','updatedAt','createdById']);
 
@@ -110,7 +110,7 @@ export const IntegrationUsageScalarFieldEnumSchema = z.enum(['id','integrationId
 
 export const WaitlistScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','allowNameCapture','showPosition','showSocialProof','customMessage','organizationId','createdAt','updatedAt','createdById']);
 
-export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','referralCount','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
+export const WaitlistEntryScalarFieldEnumSchema = z.enum(['id','waitlistId','email','name','status','position','referralCode','referredBy','verificationToken','verifiedAt','invitedAt','joinedAt','ipAddress','userAgent','utmSource','utmMedium','utmCampaign','createdAt','updatedAt']);
 
 export const FeatureScalarFieldEnumSchema = z.enum(['id','name','description','projectId','phase','businessValue','estimatedEffort','startDate','endDate','priority','assignedToId','parentFeatureId','organizationId','createdAt','updatedAt','milestoneId']);
 
@@ -155,6 +155,12 @@ export const FinancialProjectionScalarFieldEnumSchema = z.enum(['id','marketRese
 export const FundingRoundScalarFieldEnumSchema = z.enum(['id','financialProjectionId','roundName','amount','equity','valuation','timeline','investorType','investorName','developmentAllocation','marketingAllocation','operationsAllocation','createdAt']);
 
 export const RegulatoryComplianceScalarFieldEnumSchema = z.enum(['id','marketResearchId','applicableRegulations','complianceLevel','riskLevel','industryStandards','certificationRequirements','targetMarkets','localRegulations','complianceCosts','timelineToCompliance','requiredResources','complianceRisks','mitigationStrategies','createdAt']);
+
+export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','viewedAt']);
+
+export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','downloadedAt']);
+
+export const ReferralScalarFieldEnumSchema = z.enum(['id','referrerId','referredEmail','referredName','ipAddress','userAgent','referrerCode','waitlistId','organizationId','createdAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -783,8 +789,6 @@ export const AssetSchema = z.object({
   uploadedById: z.string().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  viewCount: z.number().int().nullish(),
-  downloadCount: z.number().int().nullish(),
 })
 
 export type Asset = z.infer<typeof AssetSchema>
@@ -911,9 +915,6 @@ export const RoadmapItemSchema = z.object({
   description: z.string(),
   isPublic: z.boolean(),
   targetDate: z.coerce.date().nullish(),
-  order: z.number().int(),
-  voteCount: z.number().int(),
-  feedbackCount: z.number().int(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -1030,7 +1031,6 @@ export const FeatureRequestSchema = z.object({
   email: z.string(),
   name: z.string().nullish(),
   ipAddress: z.string(),
-  upvotes: z.number().int(),
   isPublic: z.boolean(),
   adminNotes: z.string().nullish(),
   createdAt: z.coerce.date(),
@@ -1156,7 +1156,6 @@ export const WaitlistEntrySchema = z.object({
   position: z.number().int(),
   referralCode: z.string(),
   referredBy: z.string().nullish(),
-  referralCount: z.number().int(),
   verificationToken: z.string().nullish(),
   verifiedAt: z.coerce.date().nullish(),
   invitedAt: z.coerce.date().nullish(),
@@ -1928,3 +1927,86 @@ export const RegulatoryComplianceOptionalDefaultsSchema = RegulatoryComplianceSc
 }))
 
 export type RegulatoryComplianceOptionalDefaults = z.infer<typeof RegulatoryComplianceOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// ASSET VIEW SCHEMA
+/////////////////////////////////////////
+
+export const AssetViewSchema = z.object({
+  id: z.string().uuid(),
+  assetId: z.string(),
+  organizationId: z.string(),
+  userId: z.string().nullish(),
+  ipAddress: z.string(),
+  userAgent: z.string().nullish(),
+  referrer: z.string().nullish(),
+  viewedAt: z.coerce.date(),
+})
+
+export type AssetView = z.infer<typeof AssetViewSchema>
+
+// ASSET VIEW OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const AssetViewOptionalDefaultsSchema = AssetViewSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  viewedAt: z.coerce.date().optional(),
+}))
+
+export type AssetViewOptionalDefaults = z.infer<typeof AssetViewOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// ASSET DOWNLOAD SCHEMA
+/////////////////////////////////////////
+
+export const AssetDownloadSchema = z.object({
+  id: z.string().uuid(),
+  assetId: z.string(),
+  organizationId: z.string(),
+  userId: z.string().nullish(),
+  ipAddress: z.string(),
+  userAgent: z.string().nullish(),
+  referrer: z.string().nullish(),
+  downloadedAt: z.coerce.date(),
+})
+
+export type AssetDownload = z.infer<typeof AssetDownloadSchema>
+
+// ASSET DOWNLOAD OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const AssetDownloadOptionalDefaultsSchema = AssetDownloadSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  downloadedAt: z.coerce.date().optional(),
+}))
+
+export type AssetDownloadOptionalDefaults = z.infer<typeof AssetDownloadOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// REFERRAL SCHEMA
+/////////////////////////////////////////
+
+export const ReferralSchema = z.object({
+  id: z.string().uuid(),
+  referrerId: z.string(),
+  referredEmail: z.string(),
+  referredName: z.string().nullish(),
+  ipAddress: z.string(),
+  userAgent: z.string().nullish(),
+  referrerCode: z.string(),
+  waitlistId: z.string(),
+  organizationId: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type Referral = z.infer<typeof ReferralSchema>
+
+// REFERRAL OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ReferralOptionalDefaultsSchema = ReferralSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type ReferralOptionalDefaults = z.infer<typeof ReferralOptionalDefaultsSchema>

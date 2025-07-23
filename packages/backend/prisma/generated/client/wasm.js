@@ -321,9 +321,7 @@ exports.Prisma.AssetScalarFieldEnum = {
   isPublic: 'isPublic',
   uploadedById: 'uploadedById',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  viewCount: 'viewCount',
-  downloadCount: 'downloadCount'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ApiKeyScalarFieldEnum = {
@@ -384,9 +382,6 @@ exports.Prisma.RoadmapItemScalarFieldEnum = {
   isPublic: 'isPublic',
   priority: 'priority',
   targetDate: 'targetDate',
-  order: 'order',
-  voteCount: 'voteCount',
-  feedbackCount: 'feedbackCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -439,7 +434,6 @@ exports.Prisma.FeatureRequestScalarFieldEnum = {
   ipAddress: 'ipAddress',
   status: 'status',
   priority: 'priority',
-  upvotes: 'upvotes',
   isPublic: 'isPublic',
   adminNotes: 'adminNotes',
   createdAt: 'createdAt',
@@ -495,7 +489,6 @@ exports.Prisma.WaitlistEntryScalarFieldEnum = {
   position: 'position',
   referralCode: 'referralCode',
   referredBy: 'referredBy',
-  referralCount: 'referralCount',
   verificationToken: 'verificationToken',
   verifiedAt: 'verifiedAt',
   invitedAt: 'invitedAt',
@@ -886,6 +879,41 @@ exports.Prisma.RegulatoryComplianceScalarFieldEnum = {
   requiredResources: 'requiredResources',
   complianceRisks: 'complianceRisks',
   mitigationStrategies: 'mitigationStrategies',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.AssetViewScalarFieldEnum = {
+  id: 'id',
+  assetId: 'assetId',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrer: 'referrer',
+  viewedAt: 'viewedAt'
+};
+
+exports.Prisma.AssetDownloadScalarFieldEnum = {
+  id: 'id',
+  assetId: 'assetId',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrer: 'referrer',
+  downloadedAt: 'downloadedAt'
+};
+
+exports.Prisma.ReferralScalarFieldEnum = {
+  id: 'id',
+  referrerId: 'referrerId',
+  referredEmail: 'referredEmail',
+  referredName: 'referredName',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrerCode: 'referrerCode',
+  waitlistId: 'waitlistId',
+  organizationId: 'organizationId',
   createdAt: 'createdAt'
 };
 
@@ -1310,7 +1338,10 @@ exports.Prisma.ModelName = {
   TechnologyAssessment: 'TechnologyAssessment',
   FinancialProjection: 'FinancialProjection',
   FundingRound: 'FundingRound',
-  RegulatoryCompliance: 'RegulatoryCompliance'
+  RegulatoryCompliance: 'RegulatoryCompliance',
+  AssetView: 'AssetView',
+  AssetDownload: 'AssetDownload',
+  Referral: 'Referral'
 };
 
 /**
