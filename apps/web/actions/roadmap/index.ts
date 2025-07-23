@@ -1,24 +1,13 @@
 "use server";
-import { prisma } from "@workspace/backend";
+import { prisma, PublicRoadmapOptionalDefaults } from "@workspace/backend";
 import { getSession } from "../account/user";
 
 /**
  * Create a new public roadmap
  */
-export const createPublicRoadmap = async (data: {
-  projectId: string;
-  name: string;
-  slug: string;
-  description: string;
-  isPublic: boolean;
-  allowVoting: boolean;
-  allowFeedback: boolean;
-  showChangelog: boolean;
-  customDomain?: string;
-  theme?: string;
-  logoUrl?: string;
-  accentColor?: string;
-}) => {
+export const createPublicRoadmap = async (
+  data: PublicRoadmapOptionalDefaults
+) => {
   const { org } = await getSession();
   try {
     // Ensure the project belongs to the org
@@ -65,36 +54,7 @@ export const getAllPublicRoadmaps = async () => {
           select: {
             id: true,
             name: true,
-            description: true,
             status: true,
-            platform: true,
-            createdAt: true,
-          },
-        },
-        items: {
-          select: {
-            id: true,
-            status: true,
-            category: true,
-            voteCount: true,
-            feedbackCount: true,
-          },
-        },
-        changelogs: {
-          select: {
-            id: true,
-            createdAt: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-          take: 1,
-        },
-        featureRequests: {
-          select: {
-            id: true,
-            status: true,
-            priority: true,
           },
         },
         _count: {
@@ -112,42 +72,12 @@ export const getAllPublicRoadmaps = async () => {
 
     // Enrich the data with computed fields
     const enrichedRoadmaps = roadmaps.map((roadmap) => {
-      const statusCounts = roadmap.items.reduce(
-        (acc, item) => {
-          acc[item.status] = (acc[item.status] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-      const categoryCounts = roadmap.items.reduce(
-        (acc, item) => {
-          acc[item.category] = (acc[item.category] || 0) + 1;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-      const totalVotes = roadmap.items.reduce(
-        (sum, item) => sum + item.voteCount,
-        0
-      );
-      const totalFeedback = roadmap.items.reduce(
-        (sum, item) => sum + item.feedbackCount,
-        0
-      );
-
       return {
         ...roadmap,
         stats: {
           totalItems: roadmap._count.items,
           totalChangelogs: roadmap._count.changelogs,
           totalFeatureRequests: roadmap._count.featureRequests,
-          statusCounts,
-          categoryCounts,
-          totalVotes,
-          totalFeedback,
-          lastUpdated: roadmap.changelogs[0]?.createdAt || roadmap.updatedAt,
         },
       };
     });
@@ -163,19 +93,7 @@ export const getAllPublicRoadmaps = async () => {
  */
 export const updatePublicRoadmap = async (
   id: string,
-  data: Partial<{
-    name?: string;
-    slug?: string;
-    description?: string;
-    isPublic?: boolean;
-    allowVoting?: boolean;
-    allowFeedback?: boolean;
-    showChangelog?: boolean;
-    customDomain?: string;
-    theme?: string;
-    logoUrl?: string;
-    accentColor?: string;
-  }>
+  data: PublicRoadmapOptionalDefaults
 ) => {
   const { org } = await getSession();
   try {

@@ -35,7 +35,6 @@ interface AddItemDialogProps {
   isOpen: boolean;
   onClose: () => void;
   roadmapId: string;
-  token: string;
   initialStatus?: IssueStatus;
 }
 
@@ -43,13 +42,12 @@ export function AddItemDialog({
   isOpen,
   onClose,
   roadmapId,
-  token,
-  initialStatus = "BACKLOG",
+  initialStatus = "IN_REVIEW",
 }: AddItemDialogProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    status: initialStatus || "BACKLOG",
+    status: initialStatus || "IN_REVIEW",
     category: "feature",
     isPublic: true,
     priority: "MEDIUM" as "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
@@ -87,7 +85,7 @@ export function AddItemDialog({
         ? new Date(formData.targetDate).getTime()
         : undefined;
 
-      await createRoadmapItemMutation.mutateAsync({
+      const result = await createRoadmapItemMutation.mutateAsync({
         roadmapId,
         issueId: formData.issueId ? (formData.issueId as any) : undefined,
         nodeId: formData.nodeId || undefined,
@@ -98,12 +96,15 @@ export function AddItemDialog({
         isPublic: formData.isPublic,
         priority: formData.priority,
         targetDate,
-        token,
       });
 
-      toast.success("Roadmap item added successfully!");
-      resetForm();
-      onClose();
+      if (result.success) {
+        toast.success("Roadmap item added successfully!");
+        resetForm();
+        onClose();
+      } else {
+        toast.error(result.error || "Failed to add roadmap item");
+      }
     } catch (error) {
       toast.error("Failed to add roadmap item");
     }
@@ -218,23 +219,26 @@ export function AddItemDialog({
               }
               value={new Date(formData.targetDate)}
             />
+
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="isPublic"
+                checked={formData.isPublic}
+                onCheckedChange={(checked) =>
+                  setFormData({ ...formData, isPublic: checked })
+                }
+              />
+              <Label htmlFor="isPublic" className="text-muted-foreground">
+                Public item
+              </Label>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="isPublic"
-            checked={formData.isPublic}
-            onCheckedChange={(checked) =>
-              setFormData({ ...formData, isPublic: checked })
-            }
-          />
-          <Label htmlFor="isPublic" className="text-muted-foreground">
-            Make this item public
-          </Label>
-        </div>
-
-        <div className="flex items-center justify-end py-2.5 px-4 w-full border-t">
+        <div className="flex items-center justify-end gap-2 py-2.5 px-4 w-full border-t">
+          <Button variant="outline" onClick={handleClose}>
+            Cancel
+          </Button>
           <Button onClick={handleSubmit}>Create Item</Button>
         </div>
       </DialogContent>

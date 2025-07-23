@@ -92,7 +92,7 @@ export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name',
 
 export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','description','entityType','entityId','organizationId','userId','oldValue','newValue','createdAt','updatedAt']);
 
-export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','customDomain','theme','logoUrl','accentColor','allowVoting','allowFeedback','showChangelog','createdAt','updatedAt']);
+export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','allowVoting','allowFeedback','createdAt','updatedAt']);
 
 export const RoadmapItemScalarFieldEnumSchema = z.enum(['id','roadmapId','issueId','nodeId','title','description','status','category','isPublic','priority','targetDate','createdAt','updatedAt']);
 
@@ -875,13 +875,8 @@ export const PublicRoadmapSchema = z.object({
   slug: z.string(),
   description: z.string(),
   isPublic: z.boolean(),
-  customDomain: z.string().nullish(),
-  theme: z.string().nullish(),
-  logoUrl: z.string().nullish(),
-  accentColor: z.string().nullish(),
   allowVoting: z.boolean(),
   allowFeedback: z.boolean(),
-  showChangelog: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })

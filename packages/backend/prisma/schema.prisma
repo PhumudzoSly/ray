@@ -434,13 +434,8 @@ model PublicRoadmap {
   slug            String
   description     String
   isPublic        Boolean
-  customDomain    String?
-  theme           String?
-  logoUrl         String?
-  accentColor     String?
   allowVoting     Boolean
   allowFeedback   Boolean
-  showChangelog   Boolean
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
   items           RoadmapItem[]

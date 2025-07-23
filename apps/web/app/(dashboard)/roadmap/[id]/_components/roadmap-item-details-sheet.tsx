@@ -93,20 +93,29 @@ export function RoadmapItemDetailsSheet({
   // Fetch roadmap item details
   const { data: item, isLoading: isLoadingItem } = useQuery({
     queryKey: ["roadmapItem", itemId],
-    queryFn: () => itemId ? roadmapItemActions.getRoadmapItem(itemId).then(res => res.data) : null,
+    queryFn: () =>
+      itemId
+        ? roadmapItemActions.getRoadmapItem(itemId).then((res) => res.data)
+        : null,
     enabled: !!itemId,
   });
 
   // Fetch feedback for the item
   const { data: feedback, isLoading: isLoadingFeedback } = useQuery({
     queryKey: ["roadmapFeedback", itemId],
-    queryFn: () => itemId ? roadmapFeedbackActions.getAllRoadmapFeedback(itemId).then(res => res.data) : [],
+    queryFn: () =>
+      itemId
+        ? roadmapFeedbackActions
+            .getAllRoadmapFeedback(itemId)
+            .then((res) => res.data)
+        : [],
     enabled: !!itemId,
   });
 
   // Mutations
   const addFeedbackMutation = useMutation({
-    mutationFn: async (data: any) => roadmapFeedbackActions.createRoadmapFeedback(data),
+    mutationFn: async (data: any) =>
+      roadmapFeedbackActions.createRoadmapFeedback(data),
   });
   const voteForItemMutation = useMutation({
     mutationFn: async (data: any) => roadmapVoteActions.createRoadmapVote(data),
@@ -221,7 +230,7 @@ export function RoadmapItemDetailsSheet({
           </div>
 
           {/* Stats */}
-          <div className="flex items-center gap-6">
+          {/* <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <ThumbsUp className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm font-medium">{item.voteCount}</span>
@@ -240,7 +249,7 @@ export function RoadmapItemDetailsSheet({
                 </span>
               </div>
             )}
-          </div>
+          </div> */}
 
           {/* Vote Button */}
           <div className="flex gap-2">

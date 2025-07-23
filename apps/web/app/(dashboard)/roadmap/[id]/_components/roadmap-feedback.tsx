@@ -92,7 +92,6 @@ export function RoadmapFeedback({
   feedback = [],
   onRefresh,
 }: RoadmapFeedbackProps) {
-  const { token } = useSession();
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(
     null
   );

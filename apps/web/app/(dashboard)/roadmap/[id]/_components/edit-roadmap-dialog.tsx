@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
@@ -12,33 +14,25 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@workspace/ui/components/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
+
 import { toast } from "sonner";
 import { updatePublicRoadmap } from "@/actions/roadmap";
+import { useSession } from "@/context/session-context";
+import { PublicRoadmapOptionalDefaults } from "@workspace/backend";
 
 interface EditRoadmapDialogProps {
   isOpen: boolean;
   onClose: () => void;
   roadmapId: string;
-  token: string;
   roadmap?: {
     name: string;
     slug: string;
     description: string;
     isPublic: boolean;
-    customDomain?: string;
-    theme?: string;
     allowVoting: boolean;
     allowFeedback: boolean;
-    showChangelog: boolean;
+    project: string;
   };
 }
 
@@ -46,19 +40,20 @@ export function EditRoadmapDialog({
   isOpen,
   onClose,
   roadmapId,
-  token,
   roadmap,
 }: EditRoadmapDialogProps) {
-  const [formData, setFormData] = useState({
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { org } = useSession();
+
+  const [formData, setFormData] = useState<PublicRoadmapOptionalDefaults>({
     name: "",
     slug: "",
     description: "",
     isPublic: true,
-    customDomain: "",
-    theme: "default",
     allowVoting: true,
     allowFeedback: true,
-    showChangelog: true,
+    projectId: "",
   });
 
   // Initialize form data when roadmap is loaded
@@ -69,11 +64,9 @@ export function EditRoadmapDialog({
         slug: roadmap.slug,
         description: roadmap.description,
         isPublic: roadmap.isPublic,
-        customDomain: roadmap.customDomain || "",
-        theme: roadmap.theme || "default",
         allowVoting: roadmap.allowVoting,
         allowFeedback: roadmap.allowFeedback,
-        showChangelog: roadmap.showChangelog,
+        projectId: roadmap.project,
       });
     }
   }, [roadmap]);
@@ -86,19 +79,54 @@ export function EditRoadmapDialog({
 
     try {
       const result = await updatePublicRoadmap(roadmapId, {
-        name: formData.name,
-        slug: formData.slug,
-        description: formData.description,
-        isPublic: formData.isPublic,
-        customDomain: formData.customDomain || undefined,
-        theme: formData.theme,
-        allowVoting: formData.allowVoting,
-        allowFeedback: formData.allowFeedback,
-        showChangelog: formData.showChangelog,
+        ...formData,
       });
 
       if (result.success) {
         toast.success("Roadmap updated successfully!");
+
+        // Comprehensive data revalidation
+        // Invalidate roadmap-specific queries
+        queryClient.invalidateQueries({ queryKey: ["roadmap", roadmapId] });
+        queryClient.invalidateQueries({ queryKey: ["roadmap", formData.slug] });
+
+        // Invalidate roadmap items and related data
+        queryClient.invalidateQueries({
+          queryKey: ["roadmapItems", roadmapId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["publicRoadmapItems", roadmapId],
+        });
+        queryClient.invalidateQueries({ queryKey: ["roadmapItem"] });
+
+        // Invalidate changelogs
+        queryClient.invalidateQueries({ queryKey: ["changelogs", roadmapId] });
+        queryClient.invalidateQueries({
+          queryKey: ["roadmapChangelogs", roadmapId],
+        });
+
+        // Invalidate feature requests
+        queryClient.invalidateQueries({
+          queryKey: ["featureRequests", roadmapId],
+        });
+
+        // Invalidate votes and feedback
+        queryClient.invalidateQueries({
+          queryKey: ["roadmapVotes", roadmapId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["roadmapFeedback", roadmapId],
+        });
+
+        // Invalidate all roadmaps list (for the main roadmap page)
+        queryClient.invalidateQueries({ queryKey: ["roadmaps", org] });
+
+        // Invalidate project-related queries if roadmap has a project
+        queryClient.invalidateQueries({ queryKey: ["projects", org] });
+
+        // Refresh the current route to ensure server-side data is updated
+        router.refresh();
+
         onClose();
       } else {
         toast.error("Failed to update roadmap");
@@ -164,41 +192,6 @@ export function EditRoadmapDialog({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="customDomain">Custom Domain (Optional)</Label>
-            <Input
-              id="customDomain"
-              value={formData.customDomain}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  customDomain: e.target.value,
-                })
-              }
-              placeholder="roadmap.yourdomain.com"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="theme">Theme</Label>
-            <Select
-              value={formData.theme}
-              onValueChange={(value) =>
-                setFormData({ ...formData, theme: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a theme" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="default">Default</SelectItem>
-                <SelectItem value="minimal">Minimal</SelectItem>
-                <SelectItem value="modern">Modern</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center space-x-2">
               <Switch
@@ -241,29 +234,15 @@ export function EditRoadmapDialog({
               />
               <Label htmlFor="allowFeedback">Allow Feedback</Label>
             </div>
-
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="showChangelog"
-                checked={formData.showChangelog}
-                onCheckedChange={(checked) =>
-                  setFormData({
-                    ...formData,
-                    showChangelog: checked,
-                  })
-                }
-              />
-              <Label htmlFor="showChangelog">Show Changelog</Label>
-            </div>
           </div>
         </div>
 
-        <DialogFooter>
+        <div className="flex items-center justify-end gap-2 py-2.5 px-4 w-full border-t">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
           <Button onClick={handleSubmit}>Save Changes</Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

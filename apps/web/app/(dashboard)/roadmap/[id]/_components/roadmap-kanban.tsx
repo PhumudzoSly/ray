@@ -32,6 +32,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
 import { RoadmapItemDetailsSheet } from "./roadmap-item-details-sheet";
+import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 const ROADMAP_STATUSES = [
   { id: "BACKLOG", label: "Backlog", color: "bg-gray-500", icon: AlertCircle },
@@ -49,8 +50,7 @@ const ROADMAP_STATUSES = [
 
 interface RoadmapKanbanProps {
   items: any[];
-  stats: any;
-  onAddItem: (status: string) => void;
+  onAddItem: (status: IssueStatus) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filterCategory: string;
@@ -61,7 +61,6 @@ interface RoadmapKanbanProps {
 
 export function RoadmapKanban({
   items,
-  stats,
   onAddItem,
   searchQuery,
   setSearchQuery,
@@ -307,10 +306,12 @@ export function RoadmapKanban({
 
   const StatusColumn = ({ status, items }: { status: any; items: any[] }) => (
     <div className="flex-1 min-w-[280px]">
-      <div className="mb-4">
-        <div className="flex items-center gap-2 mb-2">
-          <div className={`w-3 h-3 rounded-full ${status.color}`} />
-          <h3 className="font-medium">{status.label}</h3>
+      <div className="mb-4 py-2 px-4 border border-border">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${status.color}`} />
+            <h3 className="font-medium">{status.label}</h3>
+          </div>
           <Badge variant="secondary" className="text-xs">
             {status.count}
           </Badge>
@@ -369,7 +370,7 @@ export function RoadmapKanban({
   return (
     <div className="space-y-6">
       {/* Controls */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center flex-wrap justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -382,56 +383,11 @@ export function RoadmapKanban({
           </div>
         </div>
 
-        <Button onClick={() => onAddItem("REVIEW")}>
+        <Button onClick={() => onAddItem("IN_REVIEW")}>
           <Plus className="w-4 h-4 mr-2" />
           Add Item
         </Button>
       </div>
-
-      {/* Stats */}
-      {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-950/20">
-              <Rocket className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{stats.totalItems}</p>
-              <p className="text-xs text-muted-foreground">Total Items</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-50 dark:bg-green-950/20">
-              <Eye className="w-4 h-4 text-green-600 dark:text-green-400" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{stats.publicCount}</p>
-              <p className="text-xs text-muted-foreground">Public</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-950/20">
-              <ThumbsUp className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{stats.totalVotes}</p>
-              <p className="text-xs text-muted-foreground">Votes</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-50 dark:bg-purple-950/20">
-              <MessageSquare className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            </div>
-            <div>
-              <p className="text-sm font-medium">{stats.totalFeedback}</p>
-              <p className="text-xs text-muted-foreground">Feedback</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Kanban Board */}
       <DragDropContext onDragEnd={onDragEnd}>

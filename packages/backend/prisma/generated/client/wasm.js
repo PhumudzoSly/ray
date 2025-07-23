@@ -359,13 +359,8 @@ exports.Prisma.PublicRoadmapScalarFieldEnum = {
   slug: 'slug',
   description: 'description',
   isPublic: 'isPublic',
-  customDomain: 'customDomain',
-  theme: 'theme',
-  logoUrl: 'logoUrl',
-  accentColor: 'accentColor',
   allowVoting: 'allowVoting',
   allowFeedback: 'allowFeedback',
-  showChangelog: 'showChangelog',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
