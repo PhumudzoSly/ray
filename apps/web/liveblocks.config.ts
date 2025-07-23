@@ -19,14 +19,14 @@ declare global {
       id: string;
       info: {
         name: string;
-        avatar: string
+        avatar: string;
       };
     };
 
     // Custom events, for useBroadcastEvent, useEventListener
     RoomEvent: {};
     // Example has two events, using a union
-    // | { type: "PLAY" } 
+    // | { type: "PLAY" }
     // | { type: "REACTION"; emoji: "🔥" };
 
     // Custom metadata set on threads, for useThreads, useCreateThread, etc.
@@ -45,4 +45,4 @@ declare global {
   }
 }
 
-export { };
+export {};
