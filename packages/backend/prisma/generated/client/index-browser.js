@@ -368,8 +368,6 @@ exports.Prisma.PublicRoadmapScalarFieldEnum = {
 exports.Prisma.RoadmapItemScalarFieldEnum = {
   id: 'id',
   roadmapId: 'roadmapId',
-  issueId: 'issueId',
-  nodeId: 'nodeId',
   title: 'title',
   description: 'description',
   status: 'status',

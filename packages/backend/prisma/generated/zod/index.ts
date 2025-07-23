@@ -94,7 +94,7 @@ export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','de
 
 export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','allowVoting','allowFeedback','createdAt','updatedAt']);
 
-export const RoadmapItemScalarFieldEnumSchema = z.enum(['id','roadmapId','issueId','nodeId','title','description','status','category','isPublic','priority','targetDate','createdAt','updatedAt']);
+export const RoadmapItemScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','status','category','isPublic','priority','targetDate','createdAt','updatedAt']);
 
 export const RoadmapVoteScalarFieldEnumSchema = z.enum(['id','roadmapItemId','userId','ipAddress','createdAt']);
 
@@ -904,8 +904,6 @@ export const RoadmapItemSchema = z.object({
   priority: ImportanceSchema,
   id: z.string().uuid(),
   roadmapId: z.string(),
-  issueId: z.string().nullish(),
-  nodeId: z.string().nullish(),
   title: z.string(),
   description: z.string(),
   isPublic: z.boolean(),

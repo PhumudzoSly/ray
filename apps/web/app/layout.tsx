@@ -15,12 +15,6 @@ const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
 });
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
-
 export const metadata: Metadata = {
   title: "Ray AI - Build SaaS that users want and love.",
   description: "Design structured app flows with AI-generated PRDs",
@@ -35,9 +29,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
-      >
+      <body className={`${fontSans.variable} antialiased `}>
         <ReactQueryProvider>
           <HydrationBoundary state={dehydrate(client)}>
             <ThemeProvider

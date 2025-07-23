@@ -30,6 +30,7 @@ import {
   Circle,
 } from "lucide-react";
 import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
+import { LabelSelector } from "@/components/ui/selectors/label-selector";
 
 interface AddItemDialogProps {
   isOpen: boolean;
@@ -158,50 +159,11 @@ export function AddItemDialog({
           />
 
           <div className="flex items-center gap-3 flex-wrap">
-            <CommandSelect
-              options={[
-                {
-                  label: "Feature",
-                  value: "feature",
-                  color: "gray",
-                  icon: <Sparkles size={16} className="text-blue-500" />,
-                },
-                {
-                  label: "Enhancement",
-                  value: "enhancement",
-                  color: "gray",
-                  icon: <TrendingUp size={16} className="text-green-500" />,
-                },
-                {
-                  label: "Bug Fix",
-                  value: "bug-fix",
-                  color: "gray",
-                  icon: <Bug size={16} className="text-red-500" />,
-                },
-                {
-                  label: "Improvement",
-                  value: "improvement",
-                  color: "gray",
-                  icon: <Wrench size={16} className="text-yellow-500" />,
-                },
-                {
-                  label: "Maintenance",
-                  value: "maintenance",
-                  color: "gray",
-                  icon: <Settings size={16} className="text-gray-500" />,
-                },
-                {
-                  label: "Other",
-                  value: "other",
-                  color: "gray",
-                  icon: <Circle size={16} />,
-                },
-              ]}
-              placeholder="Select a category"
-              onValueChange={(value) =>
-                setFormData({ ...formData, category: value as any })
+            <LabelSelector
+              selectedLabel={formData.category}
+              onChange={(label) =>
+                setFormData({ ...formData, category: label as any })
               }
-              value={formData.category}
             />
             <StatusSelector
               onChange={(status) =>
@@ -209,12 +171,12 @@ export function AddItemDialog({
               }
               status={formData.status}
             />
-            <IssueSelector
+            {/* <IssueSelector
               value={formData.issueId}
               onValueChange={(issueId) =>
                 setFormData({ ...formData, issueId: issueId || "" })
               }
-            />
+            /> */}
             <PrioritySelector
               onChange={(priority) =>
                 setFormData({ ...formData, priority: priority as any })

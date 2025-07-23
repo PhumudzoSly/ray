@@ -380,6 +380,79 @@ export const InternationalizationIcon: React.FC<IconProps> = ({
   );
 };
 
+export const ImprovementIcon: React.FC<IconProps> = ({ className }) => {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M7 1V13"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M1 7H13"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 3L11 11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M11 3L3 11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
+export const TaskIcon: React.FC<IconProps> = ({ className }) => {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M2 3.5C2 2.67157 2.67157 2 3.5 2H10.5C11.3284 2 12 2.67157 12 3.5V10.5C12 11.3284 11.3284 12 10.5 12H3.5C2.67157 12 2 11.3284 2 10.5V3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M4.5 5.5H9.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 7.5H9.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 9.5H7.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
 export const labels: LabelInterface[] = [
   {
     id: "UI",
@@ -401,6 +474,20 @@ export const labels: LabelInterface[] = [
     color: "#22c55e",
     colorClass: "text-green-500",
     icon: FeatureIcon,
+  },
+  {
+    id: "IMPROVEMENT",
+    name: "Improvement",
+    color: "#10b981",
+    colorClass: "text-emerald-500",
+    icon: ImprovementIcon,
+  },
+  {
+    id: "TASK",
+    name: "Task",
+    color: "#f59e0b",
+    colorClass: "text-amber-500",
+    icon: TaskIcon,
   },
   {
     id: "DOCUMENTATION",

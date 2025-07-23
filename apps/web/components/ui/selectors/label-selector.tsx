@@ -56,6 +56,16 @@ export function LabelSelector({
 
   const selectedLabelId = getSelectedLabelId();
 
+  // Debug logging to help identify the issue
+  if (process.env.NODE_ENV === "development") {
+    console.log("LabelSelector Debug:", {
+      selectedLabel,
+      selectedLabelId,
+      availableLabels: labels.map((l) => l.id),
+      foundLabel: labels.find((item) => item.id === selectedLabelId),
+    });
+  }
+
   return (
     <div className="*:not-first:mt-2">
       <Popover open={open} onOpenChange={setOpen}>

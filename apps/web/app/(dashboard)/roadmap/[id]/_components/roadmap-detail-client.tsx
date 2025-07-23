@@ -15,9 +15,6 @@ interface RoadmapDetailClientProps {
 }
 
 export function RoadmapDetailClient({ roadmapId }: RoadmapDetailClientProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("all");
-  const [filterStatus, setFilterStatus] = useState("all");
   const [showAddItemDialog, setShowAddItemDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [addItemInitialStatus, setAddItemInitialStatus] =
@@ -52,12 +49,6 @@ export function RoadmapDetailClient({ roadmapId }: RoadmapDetailClientProps) {
       <RoadmapKanban
         roadmapId={roadmapId}
         onAddItem={handleAddItemWithStatus}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        filterCategory={filterCategory}
-        setFilterCategory={setFilterCategory}
-        filterStatus={filterStatus}
-        setFilterStatus={setFilterStatus}
       />
 
       {/* Dialogs */}

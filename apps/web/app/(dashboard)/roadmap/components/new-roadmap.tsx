@@ -103,8 +103,28 @@ const RoadmapForm = ({
   // Check slug availability only if slug has changed or we're in create mode
   const shouldCheckSlug = mode === "create" || formData.slug !== originalSlug;
 
-  // Slug availability query (implement if needed)
-  // const { data: slugAvailability } = useQuery({ ... });
+  // Slug availability query
+  const { data: slugAvailability } = useQuery({
+    queryKey: ["slugAvailability", debouncedSlug, roadmap?.id],
+    queryFn: async () => {
+      if (!debouncedSlug || debouncedSlug.length === 0) return null;
+      if (!shouldCheckSlug) return null;
+
+      // Validate slug format
+      const slugRegex = /^[a-z0-9-]+$/;
+      if (!slugRegex.test(debouncedSlug)) {
+        return { available: false, slug: debouncedSlug, invalidFormat: true };
+      }
+
+      const result = await roadmapActions.checkSlugAvailability(
+        debouncedSlug,
+        roadmap?.id
+      );
+      return result?.success ? result.data : null;
+    },
+    enabled: !!debouncedSlug && debouncedSlug.length > 0 && shouldCheckSlug,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   // Update slug status based on availability check
   useEffect(() => {
@@ -127,45 +147,50 @@ const RoadmapForm = ({
       return;
     }
 
-    // This part of the logic needs to be re-evaluated as TanStack Query doesn't have a direct "skip" option
-    // For now, we'll keep the original logic, but it might need adjustment depending on how TanStack Query handles "skip"
-    // For slug availability, we'll rely on the TanStack Query's `queryFn` to return `undefined` if not needed.
-    // The `useQuery` hook itself will handle the `skip` case by not fetching if `queryKey` is the same.
-    // We need to ensure the `queryFn` for slug availability is only called when `shouldCheckSlug` is true.
-    // For now, we'll keep the original logic, but it might need refinement.
+    // If we're still loading the availability check
+    if (slugAvailability === undefined && shouldCheckSlug) {
+      setSlugStatus({
+        checking: true,
+        available: null,
+        message: "Checking availability...",
+      });
+      return;
+    }
 
-    // The original logic for slug availability was:
-    // if (slugAvailability === undefined) {
-    //   setSlugStatus({
-    //     checking: true,
-    //     available: null,
-    //     message: "Checking availability...",
-    //   });
-    //   return;
-    // }
-
-    // This part of the logic needs to be re-evaluated as TanStack Query doesn't have a direct "skip" option
-    // For now, we'll keep the original logic, but it might need adjustment depending on how TanStack Query handles "skip"
-    // For slug availability, we'll rely on the TanStack Query's `queryFn` to return `undefined` if not needed.
-    // The `useQuery` hook itself will handle the `skip` case by not fetching if `queryKey` is the same.
-    // We need to ensure the `queryFn` for slug availability is only called when `shouldCheckSlug` is true.
-    // For now, we'll keep the original logic, but it might need refinement.
-
-    // The original logic for slug availability was:
-    // if (slugAvailability?.available) {
-    //   setSlugStatus({
-    //     checking: false,
-    //     available: true,
-    //     message: "Slug is available",
-    //   });
-    // } else {
-    //   setSlugStatus({
-    //     checking: false,
-    //     available: false,
-    //     message: "Slug is already taken",
-    //   });
-    // }
-  }, [debouncedSlug, mode, originalSlug, formData.slug]);
+    // If we have the availability result
+    if (slugAvailability) {
+      if (
+        "invalidFormat" in slugAvailability &&
+        slugAvailability.invalidFormat
+      ) {
+        setSlugStatus({
+          checking: false,
+          available: false,
+          message:
+            "Slug can only contain lowercase letters, numbers, and hyphens",
+        });
+      } else if (slugAvailability.available) {
+        setSlugStatus({
+          checking: false,
+          available: true,
+          message: "Slug is available",
+        });
+      } else {
+        setSlugStatus({
+          checking: false,
+          available: false,
+          message: "Slug is already taken",
+        });
+      }
+    }
+  }, [
+    debouncedSlug,
+    mode,
+    originalSlug,
+    formData.slug,
+    slugAvailability,
+    shouldCheckSlug,
+  ]);
 
   // Reset form
   const resetForm = () => {
@@ -228,6 +253,15 @@ const RoadmapForm = ({
       return;
     }
 
+    // Validate slug format
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(formData.slug)) {
+      toast.error(
+        "Slug can only contain lowercase letters, numbers, and hyphens"
+      );
+      return;
+    }
+
     try {
       setLoading(true);
 
@@ -284,10 +318,14 @@ const RoadmapForm = ({
 
   // Generate slug from name
   const generateSlug = (name: string) => {
-    return name
+    const slug = name
       .toLowerCase()
       .replace(/[^\w\s]/gi, "")
-      .replace(/\s+/g, "-");
+      .replace(/\s+/g, "-")
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
+    // Ensure we don't return an empty string
+    return slug || "roadmap";
   };
 
   // Generate alternative slug suggestions
@@ -322,7 +360,7 @@ const RoadmapForm = ({
               ) : (
                 <>
                   <Edit className="w-4 h-4 mr-2" />
-                  Edit Roadmap
+                  Edit
                 </>
               )}
             </Button>
@@ -496,7 +534,10 @@ const RoadmapForm = ({
             <Button
               onClick={handleSubmit}
               disabled={
-                loading || slugStatus.available === false || slugStatus.checking
+                loading ||
+                slugStatus.available === false ||
+                slugStatus.checking ||
+                (formData.slug && !/^[a-z0-9-]+$/.test(formData.slug))
               }
             >
               {loading

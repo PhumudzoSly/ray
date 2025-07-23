@@ -333,3 +333,128 @@ export const getRoadmapStats = async (roadmapId: string) => {
     return { success: false, error };
   }
 };
+
+/**
+ * Get a roadmap item by ID with all related data for details view
+ */
+export const getRoadmapItemWithDetails = async (id: string) => {
+  const { org } = await getSession();
+  try {
+    const item = await prisma.roadmapItem.findFirst({
+      where: { id, roadmap: { project: { organizationId: org } } },
+      include: {
+        _count: {
+          select: {
+            votes: true,
+            feedback: true,
+          },
+        },
+        votes: {
+          select: {
+            id: true,
+            userId: true,
+            ipAddress: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: "desc" },
+        },
+        feedback: {
+          select: {
+            id: true,
+            userId: true,
+            content: true,
+            sentiment: true,
+            isApproved: true,
+            convertedToFeatureId: true,
+            convertedToIssueId: true,
+            convertedAt: true,
+            conversionNotes: true,
+            createdAt: true,
+            convertedFeature: {
+              select: {
+                id: true,
+                name: true,
+                phase: true,
+              },
+            },
+            convertedIssue: {
+              select: {
+                id: true,
+                title: true,
+                status: true,
+              },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    });
+
+    if (!item) {
+      return {
+        success: false,
+        error: "Roadmap item not found or not in your organization",
+      };
+    }
+
+    // Calculate metrics
+    const positiveFeedbackCount = item.feedback.filter(
+      (f) => f.sentiment === "positive"
+    ).length;
+    const negativeFeedbackCount = item.feedback.filter(
+      (f) => f.sentiment === "negative"
+    ).length;
+    const neutralFeedbackCount = item.feedback.filter(
+      (f) => f.sentiment === "neutral"
+    ).length;
+    const approvedFeedbackCount = item.feedback.filter(
+      (f) => f.isApproved
+    ).length;
+    const convertedFeedbackCount = item.feedback.filter(
+      (f) => f.convertedToFeatureId || f.convertedToIssueId
+    ).length;
+
+    // Calculate progress based on status
+    const statusProgress = {
+      BACKLOG: 0,
+      IN_PROGRESS: 50,
+      IN_REVIEW: 75,
+      DONE: 100,
+      BLOCKED: 25,
+      CANCELLED: 0,
+    };
+
+    const progress =
+      statusProgress[item.status as keyof typeof statusProgress] || 0;
+
+    // Check if overdue
+    const isOverdue =
+      item.targetDate &&
+      new Date(item.targetDate) < new Date() &&
+      item.status !== "DONE";
+
+    const enrichedItem = {
+      ...item,
+      voteCount: item._count.votes,
+      feedbackCount: item._count.feedback,
+      positiveFeedbackCount,
+      negativeFeedbackCount,
+      neutralFeedbackCount,
+      approvedFeedbackCount,
+      convertedFeedbackCount,
+      progress,
+      isOverdue,
+      // Remove the raw arrays and _count to keep the response clean
+      votes: undefined,
+      _count: undefined,
+    };
+
+    return { success: true, data: enrichedItem };
+  } catch (error) {
+    console.error("Error getting roadmap item with details:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+};

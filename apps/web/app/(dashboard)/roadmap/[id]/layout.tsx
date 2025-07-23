@@ -47,10 +47,20 @@ export default async function RoadmapLayout({
           { title: roadmap?.name },
         ]}
       >
-        {null}
+        <div className="flex items-center gap-2">
+          <Button asChild size="icon">
+            <Link
+              href={`https://rayai.dev/rm/${roadmap?.slug}`}
+              target="_blank"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </Link>
+          </Button>
+          <RoadmapForm mode="edit" roadmap={roadmap} />
+        </div>
       </Header>
       <Hydrate state={dehydratedState}>
-        <div className="space-y-4 container ">
+        <div className="space-y-2 container ">
           <div className="flex items-center p-4 gap-4 flex-wrap justify-between">
             <div className="flex items-center gap-4">
               <Link href={`/roadmap`}>
@@ -70,15 +80,7 @@ export default async function RoadmapLayout({
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="secondary" asChild>
-                <Link href={`/rm/${roadmap?.slug}`} target="_blank">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  View Public Page
-                </Link>
-              </Button>
-              <RoadmapForm mode="edit" roadmap={roadmap} />
-            </div>
+            <div className="flex items-center gap-2"></div>
           </div>
           <>
             <RoadmapTabs roadmapId={roadmapId} />

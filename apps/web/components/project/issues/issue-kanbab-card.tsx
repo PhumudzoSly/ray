@@ -2,7 +2,6 @@
 
 import { FolderIcon } from "lucide-react";
 import Link from "next/link";
-import { IssuePriorityField } from "@/components/ui/issue-fields/issue-priority-field";
 import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field";
 import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
 import { toast } from "sonner";
@@ -11,7 +10,6 @@ import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
-import { useSession } from "@/context/session-context";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 
 interface IssueKanbanCardProps {
@@ -35,7 +33,7 @@ export function IssueKanbanCard({
     }: {
       issueId: string;
       userId: string;
-    }) => issueActions.updateIssue(issueId, { assignedToId: userId }),
+    }) => issueActions.updateIssue(issueId, { assignedToId: userId } as any),
     onMutate: async ({ issueId, userId }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issues"] });

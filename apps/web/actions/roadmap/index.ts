@@ -186,3 +186,35 @@ export const getRoadmap = async (id: string) => {
     return { success: false, error };
   }
 };
+
+/**
+ * Check if a slug is available for a roadmap
+ */
+export const checkSlugAvailability = async (
+  slug: string,
+  excludeId?: string
+) => {
+  try {
+    const whereClause: any = { slug };
+
+    // If we're editing an existing roadmap, exclude it from the check
+    if (excludeId) {
+      whereClause.id = { not: excludeId };
+    }
+
+    const existingRoadmap = await prisma.publicRoadmap.findFirst({
+      where: whereClause,
+      select: { id: true },
+    });
+
+    return {
+      success: true,
+      data: {
+        available: !existingRoadmap,
+        slug,
+      },
+    };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
