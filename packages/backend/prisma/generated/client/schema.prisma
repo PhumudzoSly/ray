@@ -305,6 +305,9 @@ model Issue {
   // Feedback conversion
   convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToIssue")
 
+  // Changelog entries
+  changelogEntries ChangelogEntry[]
+
   @@index([organizationId, achieved])
   @@index([projectId, organizationId, achieved])
   @@index([milestoneId])
@@ -513,15 +516,48 @@ model RoadmapChangelog {
   roadmapId   String
   title       String
   description String
-  fixes       String[]
-  newFeatures String[]
+  version     String? // e.g., "1.2.0", "v2.1.0"
   publishDate DateTime
-  isPublished Boolean
+  isPublished Boolean       @default(false)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
+  // Enhanced relationships
+  entries ChangelogEntry[]
+
+  // Legacy fields for backward compatibility
+  fixes       String[] @default([])
+  newFeatures String[] @default([])
+
   @@index([roadmapId])
   @@index([publishDate])
+  @@index([version])
+}
+
+model ChangelogEntry {
+  id          String             @id @default(uuid())
+  changelog   RoadmapChangelog   @relation(fields: [changelogId], references: [id], onDelete: Cascade)
+  changelogId String
+  type        ChangelogEntryType
+  title       String
+  description String?
+
+  // Link to actual items (optional)
+  issueId   String?
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: SetNull)
+  featureId String?
+  feature   Feature? @relation(fields: [featureId], references: [id], onDelete: SetNull)
+
+  // Metadata
+  priority  Importance?
+  category  String?
+  breaking  Boolean     @default(false)
+  createdAt DateTime    @default(now())
+
+  @@index([changelogId])
+  @@index([type])
+  @@index([issueId])
+  @@index([featureId])
 }
 
 model FeatureRequest {
@@ -676,6 +712,9 @@ model Feature {
 
   // Feedback conversion
   convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToFeature")
+
+  // Changelog entries
+  changelogEntries ChangelogEntry[]
 
   @@index([projectId])
   @@index([milestoneId])
@@ -1779,4 +1818,15 @@ model Referral {
   @@index([referrerCode])
   @@index([createdAt])
   @@map("referral")
+}
+
+enum ChangelogEntryType {
+  FEATURE
+  FIX
+  IMPROVEMENT
+  BREAKING
+  SECURITY
+  DEPRECATION
+  DOCUMENTATION
+  PERFORMANCE
 }

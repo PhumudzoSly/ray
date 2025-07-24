@@ -100,7 +100,9 @@ export const RoadmapVoteScalarFieldEnumSchema = z.enum(['id','roadmapItemId','us
 
 export const RoadmapFeedbackScalarFieldEnumSchema = z.enum(['id','roadmapItemId','userId','ipAddress','content','sentiment','isApproved','convertedToFeatureId','convertedToIssueId','convertedAt','convertedBy','conversionNotes','createdAt']);
 
-export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','fixes','newFeatures','publishDate','isPublished','createdAt','updatedAt']);
+export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','version','publishDate','isPublished','createdAt','updatedAt','fixes','newFeatures']);
+
+export const ChangelogEntryScalarFieldEnumSchema = z.enum(['id','changelogId','type','title','description','issueId','featureId','priority','category','breaking','createdAt']);
 
 export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','isPublic','adminNotes','createdAt','updatedAt']);
 
@@ -343,6 +345,10 @@ export type BillingCycleType = `${z.infer<typeof BillingCycleSchema>}`
 export const FeatureQualitySchema = z.enum(['EXCELLENT','GOOD','AVERAGE','POOR','UNKNOWN']);
 
 export type FeatureQualityType = `${z.infer<typeof FeatureQualitySchema>}`
+
+export const ChangelogEntryTypeSchema = z.enum(['FEATURE','FIX','IMPROVEMENT','BREAKING','SECURITY','DEPRECATION','DOCUMENTATION','PERFORMANCE']);
+
+export type ChangelogEntryTypeType = `${z.infer<typeof ChangelogEntryTypeSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -988,12 +994,13 @@ export const RoadmapChangelogSchema = z.object({
   roadmapId: z.string(),
   title: z.string(),
   description: z.string(),
-  fixes: z.string().array(),
-  newFeatures: z.string().array(),
+  version: z.string().nullish(),
   publishDate: z.coerce.date(),
   isPublished: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  fixes: z.string().array(),
+  newFeatures: z.string().array(),
 })
 
 export type RoadmapChangelog = z.infer<typeof RoadmapChangelogSchema>
@@ -1003,11 +1010,45 @@ export type RoadmapChangelog = z.infer<typeof RoadmapChangelogSchema>
 
 export const RoadmapChangelogOptionalDefaultsSchema = RoadmapChangelogSchema.merge(z.object({
   id: z.string().uuid().optional(),
+  isPublished: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
+  fixes: z.string().array().optional(),
+  newFeatures: z.string().array().optional(),
 }))
 
 export type RoadmapChangelogOptionalDefaults = z.infer<typeof RoadmapChangelogOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CHANGELOG ENTRY SCHEMA
+/////////////////////////////////////////
+
+export const ChangelogEntrySchema = z.object({
+  type: ChangelogEntryTypeSchema,
+  priority: ImportanceSchema.nullish(),
+  id: z.string().uuid(),
+  changelogId: z.string(),
+  title: z.string(),
+  description: z.string().nullish(),
+  issueId: z.string().nullish(),
+  featureId: z.string().nullish(),
+  category: z.string().nullish(),
+  breaking: z.boolean(),
+  createdAt: z.coerce.date(),
+})
+
+export type ChangelogEntry = z.infer<typeof ChangelogEntrySchema>
+
+// CHANGELOG ENTRY OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ChangelogEntryOptionalDefaultsSchema = ChangelogEntrySchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  breaking: z.boolean().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type ChangelogEntryOptionalDefaults = z.infer<typeof ChangelogEntryOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // FEATURE REQUEST SCHEMA

@@ -29,6 +29,26 @@ export const createRoadmapFeedback = async (
         createdAt: new Date(),
       },
     });
+
+    // Trigger background sentiment analysis
+    try {
+      // Use fetch to call the API endpoint asynchronously
+      fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/feedback/analyze-sentiment`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ feedbackId: feedback.id }),
+        }
+      ).catch((error) => {
+        console.error("Background sentiment analysis failed:", error);
+      });
+    } catch (error) {
+      console.error("Failed to trigger sentiment analysis:", error);
+    }
+
     return { success: true, data: feedback };
   } catch (error) {
     return { success: false, error };

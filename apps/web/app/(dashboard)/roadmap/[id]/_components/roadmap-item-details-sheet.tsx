@@ -156,17 +156,6 @@ const CATEGORY_OPTIONS = [
   { value: "INTERNATIONALIZATION", label: "Internationalization" },
 ];
 
-const SENTIMENT_OPTIONS = [
-  {
-    value: "positive",
-    label: "Positive",
-    icon: Smile,
-    color: "text-green-600",
-  },
-  { value: "neutral", label: "Neutral", icon: Meh, color: "text-gray-600" },
-  { value: "negative", label: "Negative", icon: Frown, color: "text-red-600" },
-];
-
 interface RoadmapItemDetailsSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -182,9 +171,6 @@ export function RoadmapItemDetailsSheet({
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [feedbackContent, setFeedbackContent] = useState("");
-  const [feedbackSentiment, setFeedbackSentiment] = useState<
-    "positive" | "neutral" | "negative"
-  >("neutral");
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const queryClient = useQueryClient();
 
@@ -256,7 +242,6 @@ export function RoadmapItemDetailsSheet({
     onSuccess: () => {
       toast.success("Feedback submitted successfully!");
       setFeedbackContent("");
-      setFeedbackSentiment("neutral");
       queryClient.invalidateQueries({
         queryKey: ["roadmapItemDetails", itemId],
       });
@@ -335,7 +320,7 @@ export function RoadmapItemDetailsSheet({
       await addFeedbackMutation.mutateAsync({
         roadmapItemId: itemId,
         content: feedbackContent,
-        sentiment: feedbackSentiment,
+        sentiment: "neutral", // Default sentiment, will be analyzed in background
         ipAddress: "127.0.0.1",
         isApproved: true,
       });
@@ -635,33 +620,17 @@ export function RoadmapItemDetailsSheet({
                 <User className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Add your feedback</span>
               </div>
+              <div className="text-sm text-muted-foreground mb-3">
+                💡 Your feedback will be automatically analyzed for sentiment to
+                help us better understand your experience.
+              </div>
               <Textarea
                 placeholder="Share your thoughts about this roadmap item..."
                 value={feedbackContent}
                 onChange={(e) => setFeedbackContent(e.target.value)}
                 className="min-h-[80px]"
               />
-              <div className="flex items-center justify-between">
-                <Select
-                  value={feedbackSentiment}
-                  onValueChange={(value: "positive" | "neutral" | "negative") =>
-                    setFeedbackSentiment(value)
-                  }
-                >
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SENTIMENT_OPTIONS.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        <div className="flex items-center gap-2">
-                          <option.icon className={`w-4 h-4 ${option.color}`} />
-                          {option.label}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <div className="flex items-center justify-end gap-2 mt-3">
                 <Button
                   onClick={handleSubmitFeedback}
                   disabled={isSubmittingFeedback || !feedbackContent.trim()}
@@ -682,10 +651,27 @@ export function RoadmapItemDetailsSheet({
               {item.feedback && item.feedback.length > 0 ? (
                 <div className="space-y-4">
                   {item.feedback.map((fb: any) => {
-                    const sentimentOption = SENTIMENT_OPTIONS.find(
-                      (opt) => opt.value === fb.sentiment
-                    );
-                    const SentimentIcon = sentimentOption?.icon || Meh;
+                    const getSentimentIcon = (sentiment: string) => {
+                      switch (sentiment) {
+                        case "positive":
+                          return <Smile className="w-3 h-3 text-green-600" />;
+                        case "negative":
+                          return <Frown className="w-3 h-3 text-red-600" />;
+                        default:
+                          return <Meh className="w-3 h-3 text-gray-600" />;
+                      }
+                    };
+
+                    const getSentimentColor = (sentiment: string) => {
+                      switch (sentiment) {
+                        case "positive":
+                          return "text-green-600";
+                        case "negative":
+                          return "text-red-600";
+                        default:
+                          return "text-gray-600";
+                      }
+                    };
 
                     return (
                       <div
@@ -704,10 +690,12 @@ export function RoadmapItemDetailsSheet({
                             </span>
                             <Badge
                               variant="outline"
-                              className={`${sentimentOption?.color || "text-gray-600"}`}
+                              className={getSentimentColor(fb.sentiment)}
                             >
-                              <SentimentIcon className="w-3 h-3 mr-1" />
-                              {sentimentOption?.label}
+                              {getSentimentIcon(fb.sentiment)}
+                              <span className="ml-1 capitalize">
+                                {fb.sentiment}
+                              </span>
                             </Badge>
                             {!fb.isApproved && (
                               <Badge variant="secondary" className="text-xs">

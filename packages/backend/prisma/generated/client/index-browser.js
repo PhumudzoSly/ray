@@ -408,12 +408,27 @@ exports.Prisma.RoadmapChangelogScalarFieldEnum = {
   roadmapId: 'roadmapId',
   title: 'title',
   description: 'description',
-  fixes: 'fixes',
-  newFeatures: 'newFeatures',
+  version: 'version',
   publishDate: 'publishDate',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  fixes: 'fixes',
+  newFeatures: 'newFeatures'
+};
+
+exports.Prisma.ChangelogEntryScalarFieldEnum = {
+  id: 'id',
+  changelogId: 'changelogId',
+  type: 'type',
+  title: 'title',
+  description: 'description',
+  issueId: 'issueId',
+  featureId: 'featureId',
+  priority: 'priority',
+  category: 'category',
+  breaking: 'breaking',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.FeatureRequestScalarFieldEnum = {
@@ -1051,6 +1066,17 @@ exports.RoadmapFeedbackSentiment = exports.$Enums.RoadmapFeedbackSentiment = {
   negative: 'negative'
 };
 
+exports.ChangelogEntryType = exports.$Enums.ChangelogEntryType = {
+  FEATURE: 'FEATURE',
+  FIX: 'FIX',
+  IMPROVEMENT: 'IMPROVEMENT',
+  BREAKING: 'BREAKING',
+  SECURITY: 'SECURITY',
+  DEPRECATION: 'DEPRECATION',
+  DOCUMENTATION: 'DOCUMENTATION',
+  PERFORMANCE: 'PERFORMANCE'
+};
+
 exports.FeatureRequestStatus = exports.$Enums.FeatureRequestStatus = {
   pending: 'pending',
   under_review: 'under_review',
@@ -1305,6 +1331,7 @@ exports.Prisma.ModelName = {
   RoadmapVote: 'RoadmapVote',
   RoadmapFeedback: 'RoadmapFeedback',
   RoadmapChangelog: 'RoadmapChangelog',
+  ChangelogEntry: 'ChangelogEntry',
   FeatureRequest: 'FeatureRequest',
   Integration: 'Integration',
   IntegrationUsage: 'IntegrationUsage',

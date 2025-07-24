@@ -6,7 +6,18 @@ import { getSession } from "../account/user";
  * Create a new roadmap changelog
  */
 export const createRoadmapChangelog = async (
-  data: RoadmapChangelogOptionalDefaults
+  data: RoadmapChangelogOptionalDefaults & {
+    entries?: Array<{
+      type: string;
+      title: string;
+      description?: string;
+      issueId?: string;
+      featureId?: string;
+      priority?: string;
+      category?: string;
+      breaking?: boolean;
+    }>;
+  }
 ) => {
   const { org } = await getSession();
   try {
@@ -19,11 +30,34 @@ export const createRoadmapChangelog = async (
         success: false,
         error: "Roadmap not found or not in your organization",
       };
+
     const changelog = await prisma.roadmapChangelog.create({
       data: {
         ...data,
         fixes: data.fixes || [],
         newFeatures: data.newFeatures || [],
+        entries: data.entries
+          ? {
+              create: data.entries.map((entry) => ({
+                type: entry.type as any,
+                title: entry.title,
+                description: entry.description,
+                issueId: entry.issueId,
+                featureId: entry.featureId,
+                priority: entry.priority as any,
+                category: entry.category,
+                breaking: entry.breaking || false,
+              })),
+            }
+          : undefined,
+      },
+      include: {
+        entries: {
+          include: {
+            issue: true,
+            feature: true,
+          },
+        },
       },
     });
     return { success: true, data: changelog };
@@ -40,6 +74,15 @@ export const getRoadmapChangelog = async (id: string) => {
   try {
     const changelog = await prisma.roadmapChangelog.findFirst({
       where: { id, roadmap: { project: { organizationId: org } } },
+      include: {
+        entries: {
+          include: {
+            issue: true,
+            feature: true,
+          },
+          orderBy: { createdAt: "asc" },
+        },
+      },
     });
     return { success: true, data: changelog };
   } catch (error) {
@@ -64,6 +107,16 @@ export const getAllRoadmapChangelogs = async (roadmapId: string) => {
       };
     const changelogs = await prisma.roadmapChangelog.findMany({
       where: { roadmapId },
+      include: {
+        entries: {
+          include: {
+            issue: true,
+            feature: true,
+          },
+          orderBy: { createdAt: "asc" },
+        },
+      },
+      orderBy: { publishDate: "desc" },
     });
     return { success: true, data: changelogs };
   } catch (error) {
@@ -79,9 +132,20 @@ export const updateRoadmapChangelog = async (
   data: Partial<{
     title?: string;
     description?: string;
+    version?: string;
     publishDate?: Date;
     isPublished?: boolean;
-    items?: any;
+    entries?: Array<{
+      id?: string;
+      type: string;
+      title: string;
+      description?: string;
+      issueId?: string;
+      featureId?: string;
+      priority?: string;
+      category?: string;
+      breaking?: boolean;
+    }>;
   }>
 ) => {
   const { org } = await getSession();
@@ -95,9 +159,48 @@ export const updateRoadmapChangelog = async (
         success: false,
         error: "Changelog not found or not in your organization",
       };
+
+    // Handle entries update if provided
+    if (data.entries) {
+      // Delete existing entries
+      await prisma.changelogEntry.deleteMany({
+        where: { changelogId: id },
+      });
+
+      // Create new entries
+      await prisma.changelogEntry.createMany({
+        data: data.entries.map((entry) => ({
+          changelogId: id,
+          type: entry.type as any,
+          title: entry.title,
+          description: entry.description,
+          issueId: entry.issueId,
+          featureId: entry.featureId,
+          priority: entry.priority as any,
+          category: entry.category,
+          breaking: entry.breaking || false,
+        })),
+      });
+    }
+
     const updated = await prisma.roadmapChangelog.update({
       where: { id },
-      data,
+      data: {
+        title: data.title,
+        description: data.description,
+        version: data.version,
+        publishDate: data.publishDate,
+        isPublished: data.isPublished,
+      },
+      include: {
+        entries: {
+          include: {
+            issue: true,
+            feature: true,
+          },
+          orderBy: { createdAt: "asc" },
+        },
+      },
     });
     return { success: true, data: updated };
   } catch (error) {
@@ -122,6 +225,61 @@ export const deleteRoadmapChangelog = async (id: string) => {
       };
     await prisma.roadmapChangelog.delete({ where: { id } });
     return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
+/**
+ * Get available issues and features for linking to changelog entries
+ */
+export const getAvailableItemsForChangelog = async (roadmapId: string) => {
+  const { org } = await getSession();
+  try {
+    const roadmap = await prisma.publicRoadmap.findFirst({
+      where: { id: roadmapId, project: { organizationId: org } },
+    });
+    if (!roadmap)
+      return {
+        success: false,
+        error: "Roadmap not found or not in your organization",
+      };
+
+    const [issues, features] = await Promise.all([
+      prisma.issue.findMany({
+        where: {
+          projectId: roadmap.projectId,
+          status: { in: ["DONE", "COMPLETED"] },
+          achieved: true,
+        },
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          label: true,
+        },
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.feature.findMany({
+        where: {
+          projectId: roadmap.projectId,
+          phase: { in: ["COMPLETED", "RELEASE", "LIVE"] },
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          phase: true,
+        },
+        orderBy: { updatedAt: "desc" },
+      }),
+    ]);
+
+    return {
+      success: true,
+      data: { issues, features },
+    };
   } catch (error) {
     return { success: false, error };
   }

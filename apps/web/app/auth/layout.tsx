@@ -5,16 +5,21 @@ import React, { ReactNode } from "react";
 const AuthLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-5 w-full bg-primary min-h-screen">
-      <div className="lg:col-span-3 mx-auto bg-[#F4F1ED] w-full h-full lg:inline-flex hidden">
+      <div className="lg:col-span-3 mx-auto bg-[#ffffff] w-full h-full lg:inline-flex hidden">
         <div className="w-full max-w-2xl mx-auto  hidden lg:flex lg:flex-col h-full items-center justify-center">
           <h1 className="font-bold text-5xl! text-center text-black capitalize">
-            {AUTH_TITLE}
+            Welcome to {AUTH_TITLE}
           </h1>
-          <p className="text-center font-light text-black">
-            {AUTH_DESCRIPTION}
+          <p className="text-center mt-1 font-light text-black">
+            Build, launch, and grow products your users will love, all in one
+            unified platform.
           </p>
           <br />
-          <img src="/auth-bg.png" alt="Auth background" className=" mt-5" />
+          <img
+            src="/auth-bg.jpg"
+            alt="Auth background"
+            className="max-h-[400px] mt-5"
+          />
         </div>
       </div>
 

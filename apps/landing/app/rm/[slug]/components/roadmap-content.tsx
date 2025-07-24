@@ -32,6 +32,9 @@ import {
 import { format, formatDistanceToNow } from "date-fns";
 import { RoadmapKanbanView } from "./roadmap-kanban-view";
 import { FeatureRequestDialog } from "./feature-request-dialog";
+import { RoadmapFilters } from "./roadmap-filters";
+import { LightbulbIcon } from "lucide-react";
+import { Separator } from "@workspace/ui/components/separator";
 
 interface RoadmapItem {
   id: string;
@@ -45,6 +48,18 @@ interface RoadmapItem {
   updatedAt: number;
 }
 
+interface ChangelogEntry {
+  id: string;
+  type: string;
+  title: string;
+  description?: string;
+  priority?: string;
+  category?: string;
+  breaking?: boolean;
+  issue?: any;
+  feature?: any;
+}
+
 interface ChangelogItem {
   title: string;
   description: string;
@@ -55,17 +70,18 @@ interface Changelog {
   id: string;
   title: string;
   description: string;
+  version?: string;
   publishDate: number;
+  entries: ChangelogEntry[];
   items: ChangelogItem[];
 }
 
 interface RoadmapContentProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  upcomingItems: RoadmapItem[];
   changelogs: Changelog[] | undefined;
   itemsByStatus: {
-    REVIEW: RoadmapItem[];
+    IN_REVIEW: RoadmapItem[];
     IN_PROGRESS: RoadmapItem[];
     DONE: RoadmapItem[];
     CANCELLED: RoadmapItem[];
@@ -76,58 +92,66 @@ interface RoadmapContentProps {
   setSelectedItemId: (id: string | null) => void;
   feedbackContent: string;
   setFeedbackContent: (content: string) => void;
-  feedbackSentiment: "positive" | "neutral" | "negative";
-  setFeedbackSentiment: (
-    sentiment: "positive" | "neutral" | "negative"
-  ) => void;
   handleVote: (itemId: string) => void;
   handleSubmitFeedback: () => void;
+  isFeedbackModalOpen: boolean;
+  setIsFeedbackModalOpen: (open: boolean) => void;
   searchQuery: string;
+  setSearchQuery: (query: string) => void;
   filterCategory: string;
+  setFilterCategory: (category: string) => void;
   filterStatus: string;
+  setFilterStatus: (status: string) => void;
+  filterPriority: string;
+  setFilterPriority: (priority: string) => void;
   roadmapName: string;
   roadmapId: string;
   categories: string[];
+  statuses: string[];
 }
 
 export function RoadmapContent({
   activeTab,
   setActiveTab,
-  upcomingItems,
   changelogs,
   itemsByStatus,
   selectedItemId,
   setSelectedItemId,
   feedbackContent,
   setFeedbackContent,
-  feedbackSentiment,
-  setFeedbackSentiment,
   handleVote,
   handleSubmitFeedback,
+  isFeedbackModalOpen,
+  setIsFeedbackModalOpen,
   searchQuery,
+  setSearchQuery,
   filterCategory,
+  setFilterCategory,
   filterStatus,
+  setFilterStatus,
+  filterPriority,
+  setFilterPriority,
   roadmapName,
   roadmapId,
   categories,
+  statuses,
 }: RoadmapContentProps) {
   // Get status color
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "REVIEW":
-        return "bg-blue-500";
+        return "bg-blue-600";
       case "IN_PROGRESS":
-        return "bg-yellow-500";
+        return "bg-amber-600";
       case "DONE":
-        return "bg-green-500";
+        return "bg-green-600";
       case "BACKLOG":
-        return "bg-gray-500";
+        return "bg-slate-600";
       case "CANCELLED":
-
       case "BLOCKED":
-        return "bg-red-500";
+        return "bg-red-600";
       default:
-        return "bg-gray-500";
+        return "bg-slate-600";
     }
   };
 
@@ -154,227 +178,72 @@ export function RoadmapContent({
     <div className="space-y-8">
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 h-12 bg-muted/50 backdrop-blur-sm border border-border/50">
-          <TabsTrigger
-            value="kanban"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
-          >
-            Kanban View
-          </TabsTrigger>
-          <TabsTrigger
-            value="upcoming"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
-          >
-            Upcoming
-            {upcomingItems.length > 0 && (
-              <Badge
-                variant="secondary"
-                className="ml-2 data-[state=active]:bg-white/20 data-[state=active]:text-white"
-              >
-                {upcomingItems.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            value="changelog"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-200"
-          >
-            Changelog
-            {(changelogs?.length || 0) > 0 && (
-              <Badge
-                variant="secondary"
-                className="ml-2 data-[state=active]:bg-white/20 data-[state=active]:text-white"
-              >
-                {changelogs?.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex flex-col-reverse md:flex-row items-start md:items-center gap-4 flex-wrap justify-between">
+          <TabsList className="h-10 bg-muted/50 backdrop-blur-sm border border-border/50 order-2 md:order-1">
+            <TabsTrigger
+              value="kanban"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-200"
+            >
+              Roadmap
+            </TabsTrigger>
+
+            <TabsTrigger
+              value="changelog"
+              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all duration-200"
+            >
+              Changelog
+              {(changelogs?.length || 0) > 0 && (
+                <Badge
+                  variant="secondary"
+                  className="ml-2 data-[state=active]:bg-primary-foreground/20 data-[state=active]:text-primary-foreground"
+                >
+                  {changelogs?.length}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="flex items-center gap-4 flex-wrap w-full md:w-auto order-1 md:order-2">
+            <RoadmapFilters
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              filterCategory={filterCategory}
+              setFilterCategory={setFilterCategory}
+              filterStatus={filterStatus}
+              setFilterStatus={setFilterStatus}
+              filterPriority={filterPriority}
+              setFilterPriority={setFilterPriority}
+              categories={categories}
+              statuses={statuses}
+            />
+
+            <FeatureRequestDialog
+              roadmapId={roadmapId}
+              categories={categories}
+              roadmapName={roadmapName}
+              trigger={
+                <Button className="w-full sm:w-auto">
+                  <LightbulbIcon className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Request a Feature</span>
+                </Button>
+              }
+            />
+          </div>
+        </div>
 
         {/* Kanban View */}
-        <TabsContent value="kanban" className="mt-6">
+        <TabsContent value="kanban">
           <RoadmapKanbanView
             itemsByStatus={itemsByStatus}
             selectedItemId={selectedItemId}
             setSelectedItemId={setSelectedItemId}
             feedbackContent={feedbackContent}
             setFeedbackContent={setFeedbackContent}
-            feedbackSentiment={feedbackSentiment}
-            setFeedbackSentiment={setFeedbackSentiment}
             handleVote={handleVote}
             handleSubmitFeedback={handleSubmitFeedback}
+            isFeedbackModalOpen={isFeedbackModalOpen}
+            setIsFeedbackModalOpen={setIsFeedbackModalOpen}
           />
-        </TabsContent>
-
-        {/* Upcoming Tab */}
-        <TabsContent value="upcoming" className="mt-6">
-          <div className="space-y-6">
-            {upcomingItems.length === 0 ? (
-              <div className="text-center py-12">
-                <Rocket className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">
-                  No upcoming features
-                </h3>
-                <p className="text-muted-foreground">
-                  {searchQuery ||
-                    filterCategory !== "all" ||
-                    filterStatus !== "all"
-                    ? "No items match your current filters"
-                    : "Check back soon for upcoming features"}
-                </p>
-              </div>
-            ) : (
-              upcomingItems.map((item) => (
-                <Card
-                  key={item.id}
-                  className="group overflow-hidden border-border/50 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card to-card/50 backdrop-blur-sm"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex flex-col md:flex-row md:items-start gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Badge
-                            className={`${getStatusColor(item.status)} text-white`}
-                            variant="secondary"
-                          >
-                            <span className="flex items-center gap-1">
-                              {getStatusIcon(item.status)}
-                              {item.status}
-                            </span>
-                          </Badge>
-                          <Badge variant="outline">{item.category}</Badge>
-                          {item.targetDate && (
-                            <Badge
-                              variant="outline"
-                              className="flex items-center gap-1"
-                            >
-                              <Calendar className="w-3 h-3" />
-                              {format(new Date(item.targetDate), "MMM yyyy")}
-                            </Badge>
-                          )}
-                        </div>
-
-                        <h3 className="text-xl font-semibold mb-2">
-                          {item.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-4">
-                          {item.description}
-                        </p>
-
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <ThumbsUp className="w-4 h-4" />
-                            <span>{item.voteCount} votes</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MessageSquare className="w-4 h-4" />
-                            <span>{item.feedbackCount} comments</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>
-                              Updated{" "}
-                              {formatDistanceToNow(new Date(item.updatedAt), {
-                                addSuffix: true,
-                              })}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-row md:flex-col items-center gap-2 self-start">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleVote(item.id)}
-                          className="flex items-center gap-2 w-full"
-                        >
-                          <ThumbsUp className="w-4 h-4" />
-                          <span>Vote</span>
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setSelectedItemId(item.id)}
-                          className="flex items-center gap-2 w-full"
-                        >
-                          <MessageSquare className="w-4 h-4" />
-                          <span>Comment</span>
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Feedback form */}
-                    {selectedItemId === item.id && (
-                      <div className="mt-6 pt-6 border-t">
-                        <h4 className="font-medium mb-2">Add your feedback</h4>
-                        <Textarea
-                          placeholder="Share your thoughts on this feature..."
-                          value={feedbackContent}
-                          onChange={(e) => setFeedbackContent(e.target.value)}
-                          className="mb-3"
-                          rows={3}
-                        />
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant={
-                                feedbackSentiment === "positive"
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => setFeedbackSentiment("positive")}
-                            >
-                              Positive
-                            </Button>
-                            <Button
-                              variant={
-                                feedbackSentiment === "neutral"
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => setFeedbackSentiment("neutral")}
-                            >
-                              Neutral
-                            </Button>
-                            <Button
-                              variant={
-                                feedbackSentiment === "negative"
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => setFeedbackSentiment("negative")}
-                            >
-                              Negative
-                            </Button>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setSelectedItemId(null)}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={handleSubmitFeedback}
-                              disabled={!feedbackContent.trim()}
-                            >
-                              Submit
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              ))
-            )}
-          </div>
         </TabsContent>
 
         {/* Changelog Tab */}
@@ -391,120 +260,132 @@ export function RoadmapContent({
                 </p>
               </div>
             ) : (
-              changelogs.map((changelog) => (
-                <Card
-                  key={changelog.id}
-                  className="overflow-hidden border-border/50 hover:shadow-md transition-all"
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-xl">
-                          {changelog.title}
-                        </CardTitle>
-                        <div className="text-sm text-muted-foreground">
-                          {format(
-                            new Date(changelog.publishDate),
-                            "MMMM d, yyyy"
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="mb-6">
-                      <p className="whitespace-pre-line">
-                        {changelog.description}
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      {changelog.items.map((item, index) => (
-                        <div
-                          key={index}
-                          className="flex items-start gap-3 pb-3 border-b last:border-0"
-                        >
-                          <div
-                            className={`w-2 h-2 rounded-full mt-2 ${getStatusColor(item.status)}`}
-                          ></div>
-                          <div>
-                            <h4 className="font-medium">{item.title}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {item.description}
-                            </p>
+              changelogs.map((changelog) => {
+                const hasEntries = changelog.entries && changelog.entries.length > 0;
+                
+                return (
+                  <Card
+                    key={changelog.id}
+                    className="overflow-hidden border-border/50 hover:shadow-md transition-all"
+                  >
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <CardTitle className="text-xl">
+                              {changelog.title}
+                            </CardTitle>
+                            {changelog.version && (
+                              <Badge variant="outline" className="text-xs">
+                                {changelog.version}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {format(
+                              new Date(changelog.publishDate),
+                              "MMMM d, yyyy"
+                            )}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="mb-6">
+                        <p className="whitespace-pre-line">
+                          {changelog.description}
+                        </p>
+                      </div>
+
+                      {/* Enhanced Entries Display */}
+                      {hasEntries ? (
+                        <div className="space-y-4">
+                          {changelog.entries.map((entry, index) => (
+                            <div
+                              key={entry.id || index}
+                              className="flex items-start gap-3 pb-3 border-b last:border-0"
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full mt-2 ${
+                                  entry.type === "FEATURE" ? "bg-green-500" :
+                                  entry.type === "FIX" ? "bg-blue-500" :
+                                  entry.type === "IMPROVEMENT" ? "bg-purple-500" :
+                                  entry.type === "BREAKING" ? "bg-red-500" :
+                                  entry.type === "SECURITY" ? "bg-orange-500" :
+                                  entry.type === "DEPRECATION" ? "bg-yellow-500" :
+                                  entry.type === "DOCUMENTATION" ? "bg-gray-500" :
+                                  entry.type === "PERFORMANCE" ? "bg-indigo-500" :
+                                  "bg-gray-500"
+                                }`}
+                              ></div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 flex-wrap mb-1">
+                                  <h4 className="font-medium">{entry.title}</h4>
+                                  <Badge variant="outline" className="text-xs">
+                                    {entry.type}
+                                  </Badge>
+                                  {entry.breaking && (
+                                    <Badge variant="destructive" className="text-xs">
+                                      Breaking
+                                    </Badge>
+                                  )}
+                                  {entry.priority && (
+                                    <Badge variant="secondary" className="text-xs">
+                                      {entry.priority}
+                                    </Badge>
+                                  )}
+                                  {entry.category && (
+                                    <Badge variant="outline" className="text-xs">
+                                      {entry.category}
+                                    </Badge>
+                                  )}
+                                </div>
+                                {entry.description && (
+                                  <p className="text-sm text-muted-foreground mb-1">
+                                    {entry.description}
+                                  </p>
+                                )}
+                                {(entry.issue || entry.feature) && (
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <Link className="w-3 h-3" />
+                                    {entry.issue && `Issue: ${entry.issue.title}`}
+                                    {entry.issue && entry.feature && " • "}
+                                    {entry.feature && `Feature: ${entry.feature.name}`}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        /* Legacy Support - Show old format if no entries */
+                        <div className="space-y-4">
+                          {changelog.items.map((item, index) => (
+                            <div
+                              key={index}
+                              className="flex items-start gap-3 pb-3 border-b last:border-0"
+                            >
+                              <div
+                                className={`w-2 h-2 rounded-full mt-2 ${getStatusColor(item.status)}`}
+                              ></div>
+                              <div>
+                                <h4 className="font-medium">{item.title}</h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {item.description}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })
             )}
           </div>
         </TabsContent>
       </Tabs>
-
-      {/* Footer */}
-      <footer className="relative bg-gradient-to-r from-primary/5 via-purple-500/5 to-pink-500/5 border-t py-12 mt-12 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col items-center text-center space-y-6">
-            {/* Logo and Title */}
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center shadow-lg">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
-                  {roadmapName}
-                </h3>
-                <p className="text-sm text-muted-foreground">Product Roadmap</p>
-              </div>
-            </div>
-
-            {/* Call to Action */}
-            <div className="max-w-md space-y-3">
-              <p className="text-lg font-medium">Have an idea for a feature?</p>
-              <p className="text-muted-foreground">
-                We'd love to hear from you! Share your suggestions and help us
-                build something amazing together.
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <FeatureRequestDialog
-                roadmapId={roadmapId}
-                categories={categories}
-                roadmapName={roadmapName}
-                trigger={
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-primary to-purple-500 hover:from-primary/90 hover:to-purple-500/90 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                  >
-                    <Zap className="w-5 h-5 mr-2" />
-                    Request a Feature
-                  </Button>
-                }
-              />
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Star className="w-4 h-4" />
-                <span>Join thousands of users shaping the future</span>
-              </div>
-            </div>
-
-            {/* Powered by */}
-            <div className="flex items-center gap-2 text-sm text-muted-foreground pt-4 border-t border-border/50">
-              <span>Powered by</span>
-              <span className="font-medium text-foreground">Ray AI</span>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

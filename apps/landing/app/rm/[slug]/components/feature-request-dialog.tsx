@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import * as featureRequestActions from "@/actions/roadmap/feature-requests";
+import * as roadmapActions from "@/actions/roadmap";
 import { toast } from "sonner";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -29,12 +29,12 @@ import {
   Send,
   Star,
   Sparkles,
-  CheckCircle2,
   Mail,
   User,
   MessageSquare,
   Tag,
 } from "lucide-react";
+import { CategoryIcon, categoryConfig } from "./roadmap-category-icons";
 
 interface FeatureRequestDialogProps {
   roadmapId: string;
@@ -55,12 +55,29 @@ export function FeatureRequestDialog({
   const [category, setCategory] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [userIp, setUserIp] = useState("");
 
   const submitFeatureRequestMutation = useMutation({
     mutationFn: async (data: any) => {
-      return await featureRequestActions.createFeatureRequest(data);
+      const res = await roadmapActions.createFeatureRequest(data);
+      if (!res?.success) {
+        throw new Error(res?.error || "Failed to submit feature request");
+      }
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success(
+        "Feature request submitted successfully! We'll review it and get back to you."
+      );
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setCategory("");
+      setEmail("");
+      setName("");
+      setOpen(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Failed to submit feature request");
     },
   });
 
@@ -89,219 +106,258 @@ export function FeatureRequestDialog({
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
       const ip = await getUserIp();
 
-      await submitFeatureRequestMutation.mutateAsync({
+      submitFeatureRequestMutation.mutate({
         roadmapId,
         title: title.trim(),
         description: description.trim(),
         category,
-        status: "PENDING",
-        priority: "MEDIUM",
-        isPublic: true,
-        upvotes: 0,
+        email: email.trim(),
         name: name.trim() || undefined,
         ipAddress: ip,
       });
-
-      toast.success(
-        "Feature request submitted successfully! We'll review it and get back to you."
-      );
-
-      // Reset form
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setEmail("");
-      setName("");
-      setOpen(false);
     } catch (error: any) {
-      toast.error(error.message || "Failed to submit feature request");
-    } finally {
-      setIsSubmitting(false);
+      toast.error(error.message || "Failed to get IP address");
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="text-center pb-2">
-          <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-3">
-            <Lightbulb className="w-6 h-6 text-white" />
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader className="text-center pb-6">
+          <div className="mx-auto w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <Lightbulb className="w-5 h-5 text-primary" />
           </div>
-          <DialogTitle className="text-2xl font-bold">
+          <DialogTitle className="text-xl font-semibold">
             Request a Feature
           </DialogTitle>
-          <DialogDescription className="text-base text-muted-foreground">
-            Have an idea for {roadmapName}? We'd love to hear from you! Share
-            your feature request and we'll consider it for our roadmap.
+          <DialogDescription className="text-sm text-muted-foreground">
+            Share your idea for {roadmapName}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-6 py-4">
-          {/* Feature benefits */}
-          <Card className="border-primary/20 bg-primary/5">
-            <CardContent className="pt-4">
-              <div className="flex items-start space-x-3">
-                <div className="p-2 rounded-full bg-primary/10">
-                  <Star className="w-4 h-4 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm mb-1">
-                    Why request features?
-                  </h4>
-                  <p className="text-sm text-muted-foreground">
-                    Your feedback helps us prioritize development and build
-                    features that matter most to our users.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Feature Title */}
+          <div className="space-y-2">
+            <Label htmlFor="title" className="text-sm font-medium">
+              Feature Title *
+            </Label>
+            <Input
+              id="title"
+              type="text"
+              placeholder="e.g., Dark mode support"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              className="h-9"
+              maxLength={100}
+            />
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Personal Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  Email Address *
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-10"
-                />
-                <p className="text-xs text-muted-foreground">
-                  We'll use this to update you on the status of your request
-                </p>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Name (Optional)
-                </Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="h-10"
-                />
-              </div>
-            </div>
-
-            {/* Category */}
-            <div className="space-y-2">
-              <Label htmlFor="category" className="flex items-center gap-2">
-                <Tag className="w-4 h-4" />
-                Category *
-              </Label>
-              <Select value={category} onValueChange={setCategory} required>
-                <SelectTrigger className="h-10">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.length > 0 ? (
-                    categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <>
-                      <SelectItem value="feature">Feature</SelectItem>
-                      <SelectItem value="enhancement">Enhancement</SelectItem>
-                      <SelectItem value="integration">Integration</SelectItem>
-                      <SelectItem value="ui-ux">UI/UX</SelectItem>
-                      <SelectItem value="performance">Performance</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </>
+          {/* Category */}
+          <div className="space-y-2">
+            <Label htmlFor="category" className="text-sm font-medium">
+              Category *
+            </Label>
+            <Select value={category} onValueChange={setCategory} required>
+              <SelectTrigger className="h-9">
+                <SelectValue placeholder="Select a category">
+                  {category && (
+                    <div className="flex items-center gap-2">
+                      <CategoryIcon categoryId={category} className="w-4 h-4" />
+                      <span>
+                        {categoryConfig[category as keyof typeof categoryConfig]
+                          ?.label || category}
+                      </span>
+                    </div>
                   )}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Feature Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title" className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4" />
-                Feature Title *
-              </Label>
-              <Input
-                id="title"
-                type="text"
-                placeholder="e.g., Dark mode support"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-                className="h-10"
-                maxLength={100}
-              />
-              <p className="text-xs text-muted-foreground">
-                {title.length}/100 characters
-              </p>
-            </div>
-
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description" className="flex items-center gap-2">
-                <MessageSquare className="w-4 h-4" />
-                Description *
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="Describe your feature request in detail. What problem does it solve? How would you use it?"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                className="min-h-[100px] resize-none"
-                maxLength={500}
-              />
-              <p className="text-xs text-muted-foreground">
-                {description.length}/500 characters
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                    Submitting...
-                  </>
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {categories.length > 0 ? (
+                  categories
+                    .filter((cat) => {
+                      const inappropriateCategories = [
+                        "BUG",
+                        "CANCELLED",
+                        "BLOCKED",
+                      ];
+                      return !inappropriateCategories.includes(
+                        cat.toUpperCase()
+                      );
+                    })
+                    .map((cat) => {
+                      const categoryInfo =
+                        categoryConfig[
+                          cat.toUpperCase() as keyof typeof categoryConfig
+                        ];
+                      return (
+                        <SelectItem
+                          key={cat}
+                          value={cat}
+                          className="flex items-center gap-2"
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <CategoryIcon
+                              categoryId={cat.toUpperCase()}
+                              className="w-4 h-4"
+                            />
+                            <span>{categoryInfo?.label || cat}</span>
+                          </div>
+                        </SelectItem>
+                      );
+                    })
                 ) : (
                   <>
-                    <Send className="w-4 h-4 mr-2" />
-                    Submit Request
+                    <SelectItem
+                      value="FEATURE"
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon
+                          categoryId="FEATURE"
+                          className="w-4 h-4"
+                        />
+                        <span>Feature</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem
+                      value="IMPROVEMENT"
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon
+                          categoryId="IMPROVEMENT"
+                          className="w-4 h-4"
+                        />
+                        <span>Improvement</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="UI" className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon categoryId="UI" className="w-4 h-4" />
+                        <span>UI Enhancement</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem
+                      value="PERFORMANCE"
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon
+                          categoryId="PERFORMANCE"
+                          className="w-4 h-4"
+                        />
+                        <span>Performance</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem
+                      value="DESIGN"
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon categoryId="DESIGN" className="w-4 h-4" />
+                        <span>Design</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem
+                      value="DOCUMENTATION"
+                      className="flex items-center gap-2"
+                    >
+                      <div className="flex items-center gap-2 w-full">
+                        <CategoryIcon
+                          categoryId="DOCUMENTATION"
+                          className="w-4 h-4"
+                        />
+                        <span>Documentation</span>
+                      </div>
+                    </SelectItem>
                   </>
                 )}
-              </Button>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description" className="text-sm font-medium">
+              Description *
+            </Label>
+            <Textarea
+              id="description"
+              placeholder="Describe your feature request..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              className="min-h-[80px] resize-none"
+              maxLength={500}
+            />
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-3 pt-2 border-t">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email Address *
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="h-9"
+              />
             </div>
-          </form>
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Name (Optional)
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-9"
+              />
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end gap-2 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+              disabled={submitFeatureRequestMutation.isPending}
+              className="h-9"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={submitFeatureRequestMutation.isPending}
+              className="h-9"
+            >
+              {submitFeatureRequestMutation.isPending ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Submit Request
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
