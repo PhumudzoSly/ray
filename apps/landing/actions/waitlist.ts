@@ -157,7 +157,6 @@ export const joinWaitlist = async (
         utmCampaign: validatedData.utmCampaign,
         referralCode: "", // Will be updated after creation
         referredBy: validatedData.referredBy || null, // Store who referred them
-        referralCount: 0,
         ipAddress: "unknown", // Default value since field is required
       },
     });
@@ -176,8 +175,7 @@ export const joinWaitlist = async (
       data: { referralCode },
     });
 
-    // If referred by someone, update their referral count
-    // This must happen AFTER the referral code is set
+    // If referred by someone, create a referral record
     if (validatedData.referredBy) {
       console.log("Processing referral:", {
         waitlistId: validatedData.waitlistId,
@@ -194,17 +192,22 @@ export const joinWaitlist = async (
 
       console.log("Found referrer:", referrer);
 
-      const updateResult = await prisma.waitlistEntry.updateMany({
-        where: {
-          waitlistId: validatedData.waitlistId,
-          referralCode: validatedData.referredBy,
-        },
-        data: {
-          referralCount: { increment: 1 },
-        },
-      });
+      if (referrer) {
+        // Create a referral record
+        await prisma.referral.create({
+          data: {
+            referrerId: referrer.id,
+            referredEmail: validatedData.email,
+            referredName: validatedData.name || null,
+            ipAddress: "unknown", // Default value since field is required
+            referrerCode: validatedData.referredBy,
+            waitlistId: validatedData.waitlistId,
+            organizationId: waitlist.organizationId,
+          },
+        });
 
-      console.log("Referral count update result:", updateResult);
+        console.log("Created referral record");
+      }
     }
 
     return {
@@ -265,22 +268,23 @@ export const checkWaitlistEntry = async (
       return { success: false, error: "Email not found on this waitlist" };
     }
 
-    // Get people they referred
-    const referredPeople = await prisma.waitlistEntry.findMany({
+    // Get people they referred using the Referral model
+    const referrals = await prisma.referral.findMany({
       where: {
+        referrerId: entry.id,
         waitlistId: validatedData.waitlistId,
-        referredBy: entry.referralCode,
       },
       select: {
         id: true,
-        email: true,
-        name: true,
-        position: true,
+        referredEmail: true,
+        referredName: true,
         createdAt: true,
-        status: true,
       },
       orderBy: { createdAt: "asc" },
     });
+
+    // Get referral count
+    const referralCount = referrals.length;
 
     // Get current position (might have changed due to referrals)
     const currentPosition = await prisma.waitlistEntry.count({
@@ -299,12 +303,17 @@ export const checkWaitlistEntry = async (
           name: entry.name,
           position: currentPosition + 1,
           referralCode: entry.referralCode,
-          referralCount: entry.referralCount,
+          referralCount: referralCount,
           status: entry.status,
           createdAt: entry.createdAt,
           verifiedAt: entry.verifiedAt,
         },
-        referredPeople,
+        referredPeople: referrals.map((referral) => ({
+          id: referral.id,
+          email: referral.referredEmail,
+          name: referral.referredName,
+          createdAt: referral.createdAt,
+        })),
         waitlist: {
           id: waitlist.id,
           name: waitlist.name,

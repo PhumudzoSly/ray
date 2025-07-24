@@ -445,7 +445,13 @@ exports.Prisma.FeatureRequestScalarFieldEnum = {
   isPublic: 'isPublic',
   adminNotes: 'adminNotes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  convertedToFeatureId: 'convertedToFeatureId',
+  convertedToIssueId: 'convertedToIssueId',
+  convertedToRoadmapItemId: 'convertedToRoadmapItemId',
+  convertedAt: 'convertedAt',
+  convertedBy: 'convertedBy',
+  conversionNotes: 'conversionNotes'
 };
 
 exports.Prisma.IntegrationScalarFieldEnum = {

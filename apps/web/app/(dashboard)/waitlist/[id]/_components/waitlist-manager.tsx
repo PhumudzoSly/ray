@@ -138,23 +138,6 @@ export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
               <span>Project:</span>
               <span className="font-medium">{waitlist.project?.name}</span>
             </div>
-            <div className="flex items-center gap-4 flex-wrap">
-              <Button variant="outline" asChild>
-                <Link href={`/waitlist/${waitlist.id}/edit`}>
-                  <Edit2 className="mr-2 h-4 w-4" />
-                  Edit Waitlist
-                </Link>
-              </Button>
-              <Button asChild>
-                <Link
-                  href={`https://rayai.dev/wl/${waitlist.slug}`}
-                  target="_blank"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  View Public
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </div>

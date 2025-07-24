@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Sheet,
   SheetContent,
@@ -35,11 +35,13 @@ import {
   convertFeatureRequestToFeature,
 } from "@/actions/roadmap/conversions";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
+import { getFeatureRequest } from "@/actions/roadmap/feature-requests";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 interface FeatureRequestSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  featureRequest: any;
+  featureId: string;
   roadmapId: string;
   projectId: string;
 }
@@ -47,12 +49,23 @@ interface FeatureRequestSheetProps {
 export function FeatureRequestSheet({
   isOpen,
   onClose,
-  featureRequest,
+  featureId,
   roadmapId,
   projectId,
 }: FeatureRequestSheetProps) {
   const queryClient = useQueryClient();
   const [isConverting, setIsConverting] = useState(false);
+
+  const { data: featureRequest, isLoading } = useQuery({
+    queryKey: ["featureRequest", featureId],
+    queryFn: async () => {
+      const res = await getFeatureRequest(featureId);
+      if (res.success) {
+        return res.data;
+      }
+      return null;
+    },
+  });
 
   // Check if feature request has been converted
   const isConverted =
@@ -143,7 +156,7 @@ export function FeatureRequestSheet({
         queryKey: ["featureRequests", roadmapId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["featureRequest", featureRequest.id],
+        queryKey: ["featureRequest", featureRequest?.id],
       });
     },
   });
@@ -168,7 +181,7 @@ export function FeatureRequestSheet({
         return {
           ...old,
           data: old.data.map((fr: any) =>
-            fr.id === featureRequest.id
+            fr.id === featureRequest?.id
               ? {
                   ...fr,
                   convertedToIssueId: "temp-id",
@@ -222,7 +235,7 @@ export function FeatureRequestSheet({
         return {
           ...old,
           data: old.data.map((fr: any) =>
-            fr.id === featureRequest.id
+            fr.id === featureRequest?.id
               ? {
                   ...fr,
                   convertedToRoadmapItemId: "temp-id",
@@ -276,7 +289,7 @@ export function FeatureRequestSheet({
         return {
           ...old,
           data: old.data.map((fr: any) =>
-            fr.id === featureRequest.id
+            fr.id === featureRequest?.id
               ? {
                   ...fr,
                   convertedToFeatureId: "temp-id",
@@ -314,7 +327,7 @@ export function FeatureRequestSheet({
 
   const handleUpdateField = async (field: string, value: string) => {
     updateMutation.mutate({
-      id: featureRequest.id,
+      id: featureRequest?.id,
       data: { [field]: value },
     });
   };
@@ -322,7 +335,7 @@ export function FeatureRequestSheet({
   const handleConvertToIssue = async () => {
     setIsConverting(true);
     convertToIssueMutation.mutate({
-      featureRequestId: featureRequest.id,
+      featureRequestId: featureRequest?.id,
       projectId,
     });
     setIsConverting(false);
@@ -331,7 +344,7 @@ export function FeatureRequestSheet({
   const handleConvertToRoadmapItem = async () => {
     setIsConverting(true);
     convertToRoadmapItemMutation.mutate({
-      featureRequestId: featureRequest.id,
+      featureRequestId: featureRequest?.id,
       roadmapId,
     });
     setIsConverting(false);
@@ -340,11 +353,15 @@ export function FeatureRequestSheet({
   const handleConvertToFeature = async () => {
     setIsConverting(true);
     convertToFeatureMutation.mutate({
-      featureRequestId: featureRequest.id,
+      featureRequestId: featureRequest?.id,
       projectId,
     });
     setIsConverting(false);
   };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
@@ -360,11 +377,11 @@ export function FeatureRequestSheet({
           {/* Basic Info Section */}
           <div className="space-y-4">
             <InlineEditField
-              value={featureRequest.title}
+              value={featureRequest?.title}
               onSave={(value) => handleUpdateField("title", value)}
               displayValue={
                 <h3 className="text-lg font-bold text-muted-foreground">
-                  {featureRequest.title}
+                  {featureRequest?.title}
                 </h3>
               }
             />
@@ -373,7 +390,7 @@ export function FeatureRequestSheet({
               Description
             </h3>
             <InlineEditTextArea
-              value={featureRequest.description}
+              value={featureRequest?.description}
               onSave={(value) => handleUpdateField("description", value)}
               placeholder="Enter description..."
             />

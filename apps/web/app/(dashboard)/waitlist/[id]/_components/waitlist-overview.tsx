@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import * as waitlistEntryActions from "@/actions/waitlist/entries";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
@@ -48,10 +48,16 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { queryKeys } from "@/lib/query-keys";
-import { useWaitlistAnalytics } from "@/hooks/use-waitlist-analytics";
-import { useFilteredWaitlistEntries } from "@/hooks/use-waitlist-analytics";
+import {
+  useWaitlistAnalytics,
+  type WaitlistAnalyticsData,
+  type FilteredWaitlistEntriesData,
+} from "@/hooks/use-waitlist-analytics";
 import { useDebounce } from "@/hooks/use-debounce";
 import { MetricCard } from "@/components/waitlist/analytics-metrics";
+
+// Define the entry type based on the analytics data structure
+type WaitlistEntry = WaitlistAnalyticsData["entries"][0];
 
 interface WaitlistOverviewProps {
   waitlistId: string;
@@ -71,15 +77,68 @@ export default function WaitlistOverview({
   // Debounce search query
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  // Use filtered entries hook
-  const { data: filteredData, isLoading: filteredLoading } =
-    useFilteredWaitlistEntries(
+  // Check if we have active filters (only search and status)
+  const hasActiveFilters = useMemo(() => {
+    return Boolean(
+      (debouncedSearchQuery && debouncedSearchQuery.trim() !== "") ||
+        (statusFilter && statusFilter !== "all")
+    );
+  }, [debouncedSearchQuery, statusFilter]);
+
+  // Only use filtered entries hook when we have active filters
+  const { data: filteredData, isLoading: filteredLoading } = useQuery({
+    queryKey: queryKeys.filteredWaitlistEntries(
       waitlistId,
-      debouncedSearchQuery,
-      statusFilter,
+      hasActiveFilters ? debouncedSearchQuery : undefined,
+      hasActiveFilters && statusFilter !== "all" ? statusFilter : undefined,
       100,
       0
-    );
+    ),
+    queryFn: async () => {
+      const result = await waitlistEntryActions.getFilteredWaitlistEntries({
+        waitlistId,
+        search: debouncedSearchQuery || undefined,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+        limit: 100,
+        offset: 0,
+      });
+      if (!result.success || !result.data) {
+        throw new Error("Failed to fetch filtered entries");
+      }
+      return result.data.entries;
+    },
+    enabled: hasActiveFilters,
+  });
+
+  // Use analytics data when no filters are applied, filtered data when filters are active
+  const entries = useMemo(() => {
+    let rawEntries;
+    if (hasActiveFilters) {
+      rawEntries = filteredData?.entries || [];
+    } else {
+      rawEntries = analytics?.entries || [];
+    }
+
+    // Convert Map to array if needed
+    if (
+      rawEntries &&
+      typeof rawEntries === "object" &&
+      "map" in rawEntries &&
+      typeof rawEntries.map === "function"
+    ) {
+      // If it's a Map-like object, convert to array
+      return Array.from(
+        rawEntries.map
+          ? rawEntries.map((entry: WaitlistEntry, index: number) => entry)
+          : []
+      );
+    }
+
+    // If it's already an array, return as is
+    return Array.isArray(rawEntries) ? rawEntries : [];
+  }, [hasActiveFilters, filteredData?.entries, analytics?.entries]);
+
+  const isLoading = analyticsLoading || (hasActiveFilters && filteredLoading);
 
   // Mutations
   const updateEntryStatusMutation = useMutation({
@@ -88,15 +147,17 @@ export default function WaitlistOverview({
       queryClient.invalidateQueries({
         queryKey: queryKeys.waitlistAnalytics(waitlistId),
       });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.filteredWaitlistEntries(
-          waitlistId,
-          debouncedSearchQuery,
-          statusFilter,
-          100,
-          0
-        ),
-      });
+      if (hasActiveFilters) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.filteredWaitlistEntries(
+            waitlistId,
+            debouncedSearchQuery,
+            statusFilter !== "all" ? statusFilter : undefined,
+            100,
+            0
+          ),
+        });
+      }
       // Also invalidate the main waitlists query to update the verified count
       queryClient.invalidateQueries({
         queryKey: ["waitlists", org],
@@ -110,15 +171,17 @@ export default function WaitlistOverview({
       queryClient.invalidateQueries({
         queryKey: queryKeys.waitlistAnalytics(waitlistId),
       });
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.filteredWaitlistEntries(
-          waitlistId,
-          debouncedSearchQuery,
-          statusFilter,
-          100,
-          0
-        ),
-      });
+      if (hasActiveFilters) {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.filteredWaitlistEntries(
+            waitlistId,
+            debouncedSearchQuery,
+            statusFilter !== "all" ? statusFilter : undefined,
+            100,
+            0
+          ),
+        });
+      }
       // Also invalidate the main waitlists query to update the counts
       queryClient.invalidateQueries({
         queryKey: ["waitlists", org],
@@ -126,15 +189,13 @@ export default function WaitlistOverview({
     },
   });
 
-  if (analyticsLoading || !analytics) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-6 w-6 animate-spin" />
       </div>
     );
   }
-
-  const filteredEntries = filteredData?.entries || [];
 
   const handleStatusChange = async (entryId: string, newStatus: string) => {
     try {
@@ -184,7 +245,7 @@ export default function WaitlistOverview({
         "UTM Medium",
         "UTM Campaign",
       ],
-      ...filteredEntries.map((entry) => [
+      ...entries.map((entry: WaitlistEntry) => [
         entry.email,
         entry.name || "",
         entry.status,
@@ -194,7 +255,6 @@ export default function WaitlistOverview({
         entry.utmSource || "",
         entry.utmMedium || "",
         entry.utmCampaign || "",
-        "",
       ]),
     ];
 
@@ -278,16 +338,6 @@ export default function WaitlistOverview({
         </div>
       </div>
 
-      {/* Loading indicator for filtered results */}
-      {filteredLoading && (
-        <div className="flex items-center justify-center py-4">
-          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          <span className="text-sm text-muted-foreground">
-            Loading entries...
-          </span>
-        </div>
-      )}
-
       {/* Entries Table */}
       <Table>
         <TableHeader>
@@ -295,12 +345,12 @@ export default function WaitlistOverview({
             <TableHead className="w-12">
               <Checkbox
                 checked={
-                  filteredEntries.length > 0 &&
-                  selectedEntries.length === filteredEntries.length
+                  entries.length > 0 &&
+                  selectedEntries.length === entries.length
                 }
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    setSelectedEntries(filteredEntries.map((e) => e.id));
+                    setSelectedEntries(entries.map((e: WaitlistEntry) => e.id));
                   } else {
                     setSelectedEntries([]);
                   }
@@ -318,7 +368,7 @@ export default function WaitlistOverview({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredEntries.map((entry) => (
+          {entries.map((entry: WaitlistEntry) => (
             <TableRow key={entry.id}>
               <TableCell>
                 <Checkbox
@@ -394,7 +444,7 @@ export default function WaitlistOverview({
       </Table>
 
       {/* No results message */}
-      {!filteredLoading && filteredEntries.length === 0 && (
+      {!isLoading && entries.length === 0 && (
         <div className="text-center py-8">
           <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-muted-foreground mb-2">

@@ -52,7 +52,21 @@ export const createWaitlistEntry = async (data: {
       emailSyncUsage.data.isActive
     ) {
       try {
-        await syncWaitlistEntryToEmail(entry, emailSyncUsage.data.integration);
+        // Get referral count for the entry
+        const referralCount = await prisma.referral.count({
+          where: { referrerId: entry.id },
+        });
+
+        // Create entry with referral count for email sync
+        const entryWithReferralCount = {
+          ...entry,
+          referralCount,
+        };
+
+        await syncWaitlistEntryToEmail(
+          entryWithReferralCount,
+          emailSyncUsage.data.integration
+        );
       } catch (syncError) {
         console.error("Email sync failed:", syncError);
         // Don't fail the entry creation if sync fails
@@ -260,20 +274,8 @@ export const getFilteredWaitlistEntries = async (data: {
     // Get entries with pagination
     const entries = await prisma.waitlistEntry.findMany({
       where,
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        status: true,
-        position: true,
-        referralCount: true,
-        verifiedAt: true,
-        invitedAt: true,
-        joinedAt: true,
-        utmSource: true,
-        utmMedium: true,
-        utmCampaign: true,
-        createdAt: true,
+      include: {
+        referrals: true,
       },
       orderBy: { createdAt: "desc" },
       take: data.limit || 100,

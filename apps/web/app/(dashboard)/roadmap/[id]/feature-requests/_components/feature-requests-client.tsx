@@ -60,7 +60,7 @@ export function FeatureRequestsClient({
       <FeatureRequestSheet
         isOpen={isSheetOpen}
         onClose={handleCloseSheet}
-        featureRequest={selectedRequest}
+        featureId={selectedRequest?.id}
         roadmapId={roadmapId}
         projectId={roadmap.projectId}
       />

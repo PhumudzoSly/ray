@@ -165,11 +165,21 @@ export const getAllWaitlists = async () => {
         const verifiedEntries = await prisma.waitlistEntry.count({
           where: { waitlistId: waitlist.id, verifiedAt: { not: null } },
         });
-        const referralAgg = await prisma.waitlistEntry.aggregate({
-          _sum: { referralCount: true },
+        // Count total referrals by summing up referral counts for each entry
+        const entriesWithReferrals = await prisma.waitlistEntry.findMany({
           where: { waitlistId: waitlist.id },
+          include: {
+            _count: {
+              select: {
+                referrals: true,
+              },
+            },
+          },
         });
-        const totalReferrals = referralAgg._sum.referralCount || 0;
+        const totalReferrals = entriesWithReferrals.reduce(
+          (sum, entry) => sum + entry._count.referrals,
+          0
+        );
         return {
           ...waitlist,
           stats: {
@@ -298,27 +308,19 @@ export const getWaitlistAnalytics = async (waitlistId: string) => {
   // Fetch all entries with their data
   const entries = await prisma.waitlistEntry.findMany({
     where: { waitlistId },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      status: true,
-      position: true,
-      referralCount: true,
-      verifiedAt: true,
-      invitedAt: true,
-      joinedAt: true,
-      utmSource: true,
-      utmMedium: true,
-      utmCampaign: true,
-      createdAt: true,
+    include: {
+      _count: {
+        select: {
+          referrals: true,
+        },
+      },
     },
   });
 
   // Calculate comprehensive analytics
   const totalEntries = entries.length;
   const totalReferrals = entries.reduce(
-    (sum, entry) => sum + entry.referralCount,
+    (sum, entry) => sum + entry._count.referrals,
     0
   );
 
@@ -328,7 +330,7 @@ export const getWaitlistAnalytics = async (waitlistId: string) => {
     (e) => e.status === "invited" || e.status === "joined"
   ).length;
   const joinedCount = entries.filter((e) => e.status === "joined").length;
-  const activeReferrers = entries.filter((e) => e.referralCount > 0).length;
+  const activeReferrers = entries.filter((e) => e._count.referrals > 0).length;
 
   // UTM source breakdown
   const utmSources = entries.reduce(

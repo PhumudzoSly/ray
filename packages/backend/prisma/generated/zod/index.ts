@@ -104,7 +104,7 @@ export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','t
 
 export const ChangelogEntryScalarFieldEnumSchema = z.enum(['id','changelogId','type','title','description','issueId','featureId','priority','category','breaking','createdAt']);
 
-export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','isPublic','adminNotes','createdAt','updatedAt']);
+export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','isPublic','adminNotes','createdAt','updatedAt','convertedToFeatureId','convertedToIssueId','convertedToRoadmapItemId','convertedAt','convertedBy','conversionNotes']);
 
 export const IntegrationScalarFieldEnumSchema = z.enum(['id','name','type','config','isActive','organizationId','createdAt','updatedAt','createdById']);
 
@@ -1069,6 +1069,12 @@ export const FeatureRequestSchema = z.object({
   adminNotes: z.string().nullish(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  convertedToFeatureId: z.string().nullish(),
+  convertedToIssueId: z.string().nullish(),
+  convertedToRoadmapItemId: z.string().nullish(),
+  convertedAt: z.coerce.date().nullish(),
+  convertedBy: z.string().nullish(),
+  conversionNotes: z.string().nullish(),
 })
 
 export type FeatureRequest = z.infer<typeof FeatureRequestSchema>
