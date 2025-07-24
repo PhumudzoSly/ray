@@ -8,7 +8,9 @@ interface RoadmapPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: RoadmapPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: RoadmapPageProps): Promise<Metadata> {
   const { slug } = await params;
   const { success, data: roadmap } = await getRoadmapBySlug(slug);
 

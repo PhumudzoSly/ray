@@ -177,106 +177,27 @@ export function FeatureRequestDialog({
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
-                {categories.length > 0 ? (
-                  categories
-                    .filter((cat) => {
-                      const inappropriateCategories = [
-                        "BUG",
-                        "CANCELLED",
-                        "BLOCKED",
-                      ];
-                      return !inappropriateCategories.includes(
-                        cat.toUpperCase()
-                      );
-                    })
-                    .map((cat) => {
-                      const categoryInfo =
-                        categoryConfig[
-                          cat.toUpperCase() as keyof typeof categoryConfig
-                        ];
-                      return (
-                        <SelectItem
-                          key={cat}
-                          value={cat}
-                          className="flex items-center gap-2"
-                        >
-                          <div className="flex items-center gap-2 w-full">
-                            <CategoryIcon
-                              categoryId={cat.toUpperCase()}
-                              className="w-4 h-4"
-                            />
-                            <span>{categoryInfo?.label || cat}</span>
-                          </div>
-                        </SelectItem>
-                      );
-                    })
-                ) : (
-                  <>
+                {Object.entries(categoryConfig)
+                  .filter(([key]) => {
+                    const inappropriateCategories = [
+                      "BUG",
+                      "CANCELLED",
+                      "BLOCKED",
+                    ];
+                    return !inappropriateCategories.includes(key);
+                  })
+                  .map(([key, config]) => (
                     <SelectItem
-                      value="FEATURE"
+                      key={key}
+                      value={key}
                       className="flex items-center gap-2"
                     >
                       <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon
-                          categoryId="FEATURE"
-                          className="w-4 h-4"
-                        />
-                        <span>Feature</span>
+                        <CategoryIcon categoryId={key} className="w-4 h-4" />
+                        <span>{config.label}</span>
                       </div>
                     </SelectItem>
-                    <SelectItem
-                      value="IMPROVEMENT"
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon
-                          categoryId="IMPROVEMENT"
-                          className="w-4 h-4"
-                        />
-                        <span>Improvement</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="UI" className="flex items-center gap-2">
-                      <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon categoryId="UI" className="w-4 h-4" />
-                        <span>UI Enhancement</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem
-                      value="PERFORMANCE"
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon
-                          categoryId="PERFORMANCE"
-                          className="w-4 h-4"
-                        />
-                        <span>Performance</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem
-                      value="DESIGN"
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon categoryId="DESIGN" className="w-4 h-4" />
-                        <span>Design</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem
-                      value="DOCUMENTATION"
-                      className="flex items-center gap-2"
-                    >
-                      <div className="flex items-center gap-2 w-full">
-                        <CategoryIcon
-                          categoryId="DOCUMENTATION"
-                          className="w-4 h-4"
-                        />
-                        <span>Documentation</span>
-                      </div>
-                    </SelectItem>
-                  </>
-                )}
+                  ))}
               </SelectContent>
             </Select>
           </div>

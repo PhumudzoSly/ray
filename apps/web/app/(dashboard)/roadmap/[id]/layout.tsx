@@ -63,17 +63,12 @@ export default async function RoadmapLayout({
         <div className="space-y-2 container ">
           <div className="flex items-center p-4 gap-4 flex-wrap justify-between">
             <div className="flex items-center gap-4">
-              <Link href={`/roadmap`}>
-                <Button variant="ghost" size="icon">
-                  <ArrowLeft className="w-4 h-4" />
-                </Button>
-              </Link>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-xl font-semibold">{roadmap?.name}</h1>
-                  <Badge variant={roadmap?.isPublic ? "info" : "dark"}>
+                  <Badge variant={roadmap?.isPublic ? "neutral" : "dark"}>
                     {roadmap?.isPublic ? "Public" : "Private"}
                   </Badge>
+                  <h1 className="text-xl font-semibold">{roadmap?.name}</h1>
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {roadmap?.description}

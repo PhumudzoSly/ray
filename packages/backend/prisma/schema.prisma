@@ -303,7 +303,8 @@ model Issue {
   links IssueLink[]
 
   // Feedback conversion
-  convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToIssue")
+  convertedFromFeedback       RoadmapFeedback[] @relation("FeedbackToIssue")
+  convertedFromFeatureRequest FeatureRequest[]  @relation("FeatureRequestToIssue")
 
   // Changelog entries
   changelogEntries ChangelogEntry[]
@@ -465,6 +466,9 @@ model RoadmapItem {
   votes       RoadmapVote[]
   feedback    RoadmapFeedback[]
 
+  // Feature request conversion
+  convertedFromFeatureRequest FeatureRequest[] @relation("FeatureRequestToRoadmapItem")
+
   @@index([roadmapId])
   @@index([roadmapId, status])
   @@index([roadmapId, category])
@@ -577,10 +581,26 @@ model FeatureRequest {
   createdAt   DateTime               @default(now())
   updatedAt   DateTime               @updatedAt
 
+  // Conversion tracking fields
+  convertedToFeatureId     String?
+  convertedToIssueId       String?
+  convertedToRoadmapItemId String?
+  convertedAt              DateTime?
+  convertedBy              String?
+  conversionNotes          String?
+
+  // Relations to converted items
+  convertedFeature     Feature?     @relation("FeatureRequestToFeature", fields: [convertedToFeatureId], references: [id], onDelete: SetNull)
+  convertedIssue       Issue?       @relation("FeatureRequestToIssue", fields: [convertedToIssueId], references: [id], onDelete: SetNull)
+  convertedRoadmapItem RoadmapItem? @relation("FeatureRequestToRoadmapItem", fields: [convertedToRoadmapItemId], references: [id], onDelete: SetNull)
+
   @@index([roadmapId])
   @@index([email])
   @@index([status])
   @@index([roadmapId, status])
+  @@index([convertedToFeatureId])
+  @@index([convertedToIssueId])
+  @@index([convertedToRoadmapItemId])
 }
 
 model Integration {
@@ -711,7 +731,8 @@ model Feature {
   FeatureLink  FeatureLink[]
 
   // Feedback conversion
-  convertedFromFeedback RoadmapFeedback[] @relation("FeedbackToFeature")
+  convertedFromFeedback       RoadmapFeedback[] @relation("FeedbackToFeature")
+  convertedFromFeatureRequest FeatureRequest[]  @relation("FeatureRequestToFeature")
 
   // Changelog entries
   changelogEntries ChangelogEntry[]

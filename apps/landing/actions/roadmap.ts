@@ -158,6 +158,9 @@ export const getAllRoadmapChangelogs = async (roadmapId: string) => {
         roadmapId,
         isPublished: true, // Only show published changelogs
       },
+      include: {
+        entries: true,
+      },
       orderBy: { publishDate: "desc" }, // Newest first
     });
 

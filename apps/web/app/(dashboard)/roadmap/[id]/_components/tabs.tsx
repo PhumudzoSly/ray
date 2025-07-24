@@ -24,12 +24,16 @@ export function RoadmapTabs({ roadmapId }: RoadmapTabsProps) {
       href: `/roadmap/${roadmapId}`,
     },
     {
-      title: "Stats",
-      href: `/roadmap/${roadmapId}/stats`,
+      title: "Feature Requests",
+      href: `/roadmap/${roadmapId}/feature-requests`,
     },
     {
       title: "Changelogs",
       href: `/roadmap/${roadmapId}/changelogs`,
+    },
+    {
+      title: "Analytics",
+      href: `/roadmap/${roadmapId}/stats`,
     },
   ];
 

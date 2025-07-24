@@ -284,3 +284,32 @@ export const getAvailableItemsForChangelog = async (roadmapId: string) => {
     return { success: false, error };
   }
 };
+
+/**
+ * Delete a changelog entry (scoped to org via parent changelog)
+ */
+export const deleteChangelogEntry = async (entryId: string) => {
+  const { org } = await getSession();
+  try {
+    // Ensure the entry belongs to a changelog in the org
+    const entry = await prisma.changelogEntry.findFirst({
+      where: {
+        id: entryId,
+        changelog: {
+          roadmap: {
+            project: { organizationId: org },
+          },
+        },
+      },
+    });
+    if (!entry)
+      return {
+        success: false,
+        error: "Entry not found or not in your organization",
+      };
+    await prisma.changelogEntry.delete({ where: { id: entryId } });
+    return { success: true };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
