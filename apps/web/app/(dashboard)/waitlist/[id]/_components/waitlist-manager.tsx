@@ -14,6 +14,7 @@ import { queryKeys } from "@/lib/query-keys";
 import { getWaitlist, updateWaitlist } from "@/actions/waitlist";
 import WaitlistOverview from "./waitlist-overview";
 import WaitlistAnalytics from "./waitlist-analytics";
+import { Badge } from "@workspace/ui/components/badge";
 
 interface WaitlistManagerProps {
   waitlistId: string;
@@ -119,25 +120,18 @@ export default function WaitlistManager({ waitlistId }: WaitlistManagerProps) {
       <div className="space-y-3 p-6">
         <div className="flex items-center flex-wrap gap-4 justify-between">
           <div className="space-y-1 grow flex-1 max-w-4xl">
-            <InlineEditField
-              value={waitlist.name || ""}
-              onSave={(value) => handleUpdateField("name", value)}
-              className="text-2xl md:text-3xl font-bold tracking-tight hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
-              disabled={updateFieldMutation.isPending}
-            />
-            <InlineEditTextArea
-              value={waitlist.description || ""}
-              onSave={(value) => handleUpdateField("description", value)}
-              className="text-sm text-muted-foreground hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2 resize-none"
-              disabled={updateFieldMutation.isPending}
-              placeholder="Add a description..."
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-              <span>Project:</span>
-              <span className="font-medium">{waitlist.project?.name}</span>
+            <div className="flex items-center gap-4">
+              <Badge variant="outline">{waitlist.project?.name}</Badge>
+              <InlineEditField
+                value={waitlist.name || ""}
+                onSave={(value) => handleUpdateField("name", value)}
+                className="text-2xl md:text-3xl font-bold tracking-tight hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
+                disabled={updateFieldMutation.isPending}
+              />
             </div>
+            <p className="text-sm text-muted-foreground">
+              {waitlist.description}
+            </p>
           </div>
         </div>
       </div>

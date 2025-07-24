@@ -17,11 +17,13 @@ import {
 import { toast } from "sonner";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
 import { Badge } from "@workspace/ui/components/badge";
-import { Copy, Key, Mail, Loader2 } from "lucide-react";
+import { Copy, Key, Mail, Loader2, Check, X } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
 import { getIntegrationsByPurpose } from "@/actions/integration";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import { NoData } from "@/components/shared";
+import { useDebounce } from "@/hooks/use-debounce";
+import APIDocs from "./api-docs";
 
 type FormState = {
   name: string;
@@ -132,6 +134,114 @@ export default function WaitlistForm({
     integrationId: null,
   });
 
+  const [originalSlug, setOriginalSlug] = useState(initialData?.slug || "");
+
+  // Slug availability state
+  const [slugStatus, setSlugStatus] = useState<{
+    checking: boolean;
+    available: boolean | null;
+    message: string;
+  }>({
+    checking: false,
+    available: null,
+    message: "",
+  });
+
+  // Debounce slug for availability checking
+  const debouncedSlug = useDebounce(form.slug, 500);
+
+  // Check slug availability only if slug has changed or we're in create mode
+  const shouldCheckSlug = mode === "create" || form.slug !== originalSlug;
+
+  // Slug availability query
+  const { data: slugAvailability } = useQuery({
+    queryKey: ["slugAvailability", debouncedSlug, waitlistId],
+    queryFn: async () => {
+      if (!debouncedSlug || debouncedSlug.length === 0) return null;
+      if (!shouldCheckSlug) return null;
+
+      // Validate slug format
+      const slugRegex = /^[a-z0-9-]+$/;
+      if (!slugRegex.test(debouncedSlug)) {
+        return { available: false, slug: debouncedSlug, invalidFormat: true };
+      }
+
+      const result = await waitlistActions.checkSlugAvailability(
+        debouncedSlug,
+        waitlistId
+      );
+      return result?.success ? result.data : null;
+    },
+    enabled: !!debouncedSlug && debouncedSlug.length > 0 && shouldCheckSlug,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Update slug status based on availability check
+  useEffect(() => {
+    // If slug hasn't changed in edit mode, don't check availability
+    if (mode === "edit" && form.slug === originalSlug) {
+      setSlugStatus({
+        checking: false,
+        available: true,
+        message: "Slug unchanged",
+      });
+      return;
+    }
+
+    if (!debouncedSlug || debouncedSlug.length === 0) {
+      setSlugStatus({
+        checking: false,
+        available: null,
+        message: "",
+      });
+      return;
+    }
+
+    // If we're still loading the availability check
+    if (slugAvailability === undefined && shouldCheckSlug) {
+      setSlugStatus({
+        checking: true,
+        available: null,
+        message: "Checking availability...",
+      });
+      return;
+    }
+
+    // If we have the availability result
+    if (slugAvailability) {
+      if (
+        "invalidFormat" in slugAvailability &&
+        slugAvailability.invalidFormat
+      ) {
+        setSlugStatus({
+          checking: false,
+          available: false,
+          message:
+            "Slug can only contain lowercase letters, numbers, and hyphens",
+        });
+      } else if (slugAvailability.available) {
+        setSlugStatus({
+          checking: false,
+          available: true,
+          message: "Slug is available",
+        });
+      } else {
+        setSlugStatus({
+          checking: false,
+          available: false,
+          message: "Slug is already taken",
+        });
+      }
+    }
+  }, [
+    debouncedSlug,
+    mode,
+    originalSlug,
+    form.slug,
+    slugAvailability,
+    shouldCheckSlug,
+  ]);
+
   // Populate form when editing
   useEffect(() => {
     if (mode === "edit" && initialData) {
@@ -148,19 +258,35 @@ export default function WaitlistForm({
         emailSyncEnabled: initialData.emailSyncEnabled || false,
         integrationId: initialData.integrationId || null,
       });
+      setOriginalSlug(initialData.slug);
     }
   }, [mode, initialData]);
+
+  // Generate slug from name
+  const generateSlug = (name: string) => {
+    const slug = name
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, "")
+      .replace(/\s+/g, "-")
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
+    // Ensure we don't return an empty string
+    return slug || "waitlist";
+  };
+
+  // Generate alternative slug suggestions
+  const generateAlternativeSlugs = (baseSlug: string) => {
+    const suggestions = [];
+    for (let i = 1; i <= 5; i++) {
+      suggestions.push(`${baseSlug}-${i}`);
+    }
+    return suggestions;
+  };
 
   // Auto-generate slug from name (only for create mode)
   const handleNameChange = (name: string) => {
     if (mode === "create") {
-      const slug = name
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
-
+      const slug = generateSlug(name);
       setForm({ ...form, name, slug });
     } else {
       setForm({ ...form, name });
@@ -206,6 +332,17 @@ export default function WaitlistForm({
       return;
     }
 
+    // Check if slug is available before creating/updating
+    if (slugStatus.available === false) {
+      toast.error("Please choose a different slug - this one is already taken");
+      return;
+    }
+
+    if (slugStatus.checking) {
+      toast.error("Please wait for slug availability check to complete");
+      return;
+    }
+
     try {
       const submitData = {
         ...form,
@@ -226,115 +363,6 @@ export default function WaitlistForm({
       // Error handling is now done in the mutation's onError callback
     }
   };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success("Copied to clipboard");
-  };
-
-  const apiDocsContent = (
-    <div className="space-y-8 p-6">
-      <div>
-        <h3 className="text-sm font-medium mb-1">API Integration</h3>
-        <p className="text-xs text-muted-foreground">
-          Integrate your waitlist with your application
-        </p>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium">Authentication</span>
-            <Badge variant="outline" className="text-xs">
-              Bearer Token
-            </Badge>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/settings/api-keys")}
-            className="w-full text-xs"
-          >
-            <Key className="w-3 h-3 mr-1" />
-            Manage API Keys
-          </Button>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium">Join Waitlist</span>
-            <Badge variant="secondary" className="text-xs">
-              POST
-            </Badge>
-          </div>
-          <div className="bg-muted/50 p-2 rounded text-xs font-mono">
-            POST /api/waitlist/join
-          </div>
-        </div>
-
-        <div>
-          <div className="text-xs font-medium mb-2">Headers</div>
-          <div className="bg-muted/50 p-2 rounded text-xs font-mono space-y-1">
-            <div>Authorization: Bearer YOUR_API_KEY</div>
-            <div>Content-Type: application/json</div>
-          </div>
-        </div>
-
-        <div>
-          <div className="text-xs font-medium mb-2">Request Body</div>
-          <div className="bg-muted/50 p-2 rounded text-xs font-mono">
-            <pre className="text-xs">
-              {`{
-  "waitlistId": "${mode === "edit" && waitlistId ? waitlistId : "your-waitlist-id"}",
-  "email": "user@example.com",
-  "name": "John Doe"
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <div>
-          <div className="text-xs font-medium mb-2">JavaScript Example</div>
-          <div className="bg-muted/50 p-2 rounded text-xs font-mono">
-            <pre className="text-xs">
-              {`fetch('/api/waitlist/join', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    waitlistId: '${mode === "edit" && waitlistId ? waitlistId : "your-waitlist-id"}',
-    email: 'user@example.com'
-  })
-})`}
-            </pre>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() =>
-              copyToClipboard(`fetch('/api/waitlist/join', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    waitlistId: '${mode === "edit" && waitlistId ? waitlistId : "your-waitlist-id"}',
-    email: 'user@example.com'
-  })
-})`)
-            }
-            className="w-full text-xs mt-2"
-          >
-            <Copy className="w-3 h-3 mr-1" />
-            Copy
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
 
   const mainContent = (
     <div className="max-w-2xl mx-auto">
@@ -362,12 +390,76 @@ export default function WaitlistForm({
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">URL Slug</label>
-              <Input
-                placeholder="beta-access-waitlist"
-                value={form.slug}
-                onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                disabled={mode === "edit"}
-              />
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">/wl/</span>
+                <div className="flex-1 relative">
+                  <Input
+                    placeholder="beta-access-waitlist"
+                    value={form.slug}
+                    onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                    disabled={mode === "edit"}
+                    className={`pr-10 ${
+                      slugStatus.available === false
+                        ? "border-destructive focus-visible:ring-destructive"
+                        : slugStatus.available === true
+                          ? "border-green-500 focus-visible:ring-green-500"
+                          : ""
+                    }`}
+                  />
+                  {form.slug && mode === "create" && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      {slugStatus.checking ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                      ) : slugStatus.available === true ? (
+                        <Check className="w-4 h-4 text-green-500" />
+                      ) : slugStatus.available === false ? (
+                        <X className="w-4 h-4 text-destructive" />
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {slugStatus.message && (
+                <div className="space-y-2">
+                  <p
+                    className={`text-sm ${
+                      slugStatus.available === true
+                        ? "text-green-600"
+                        : slugStatus.available === false
+                          ? "text-destructive"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    {slugStatus.message}
+                  </p>
+                  {slugStatus.available === false &&
+                    form.slug &&
+                    mode === "create" && (
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground">
+                          Suggestions:
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {generateAlternativeSlugs(form.slug).map(
+                            (suggestion) => (
+                              <Button
+                                key={suggestion}
+                                variant="outline"
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() =>
+                                  setForm({ ...form, slug: suggestion })
+                                }
+                              >
+                                {suggestion}
+                              </Button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              )}
               {mode === "edit" && (
                 <p className="text-xs text-muted-foreground">
                   URL slug cannot be changed after creation
@@ -559,7 +651,10 @@ export default function WaitlistForm({
             onClick={handleSubmit}
             disabled={
               createWaitlistMutation.isPending ||
-              updateWaitlistMutation.isPending
+              updateWaitlistMutation.isPending ||
+              slugStatus.available === false ||
+              slugStatus.checking ||
+              (form.slug.length > 0 && !/^[a-z0-9-]+$/.test(form.slug))
             }
           >
             {(createWaitlistMutation.isPending ||
@@ -576,12 +671,9 @@ export default function WaitlistForm({
   return (
     <ExpandedLayoutContainer
       sidebar={
-        <>
-          <NoData
-            title="API Docs Coming Soon"
-            message="We're working on it! Check back soon."
-          />
-        </>
+        <div className="p-4">
+          <APIDocs mode={mode} waitlistId={waitlistId || ""} />
+        </div>
       }
     >
       <div className="flex-1 relative">

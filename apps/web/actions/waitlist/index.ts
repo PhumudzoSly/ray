@@ -291,6 +291,38 @@ export const deleteWaitlist = async (id: string) => {
 };
 
 /**
+ * Check if a slug is available for a waitlist
+ */
+export const checkSlugAvailability = async (
+  slug: string,
+  excludeId?: string
+) => {
+  try {
+    const whereClause: any = { slug };
+
+    // If we're editing an existing waitlist, exclude it from the check
+    if (excludeId) {
+      whereClause.id = { not: excludeId };
+    }
+
+    const existingWaitlist = await prisma.waitlist.findFirst({
+      where: whereClause,
+      select: { id: true },
+    });
+
+    return {
+      success: true,
+      data: {
+        available: !existingWaitlist,
+        slug,
+      },
+    };
+  } catch (error) {
+    return { success: false, error };
+  }
+};
+
+/**
  * Get comprehensive analytics for a waitlist
  */
 export const getWaitlistAnalytics = async (waitlistId: string) => {
