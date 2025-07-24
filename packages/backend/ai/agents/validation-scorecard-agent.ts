@@ -2,103 +2,93 @@ import { generateText, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 import { SAAS_VALIDATION_PROMPT } from "../../prompts";
-import { UnifiedCrawlerService } from "../crawler";
 
 // ============================================================================
-// VALIDATION SCORECARD AGENT
+// VALIDATION SCORECARD PROMPT
 // ============================================================================
 
-const VALIDATION_SCORECARD_PROMPT = `You are an expert SaaS validation analyst with 15+ years of experience in comprehensive validation scorecards and strategic business analysis. Your ONLY task is to generate validation scores and strategic recommendations based on all available research data using the comprehensive SaaS validation framework.
+const VALIDATION_SCORECARD_PROMPT = `You are an expert SaaS validation analyst with 15+ years of experience in startup validation and business strategy. Your ONLY task is to create a comprehensive validation scorecard for a specific SaaS idea using the comprehensive SaaS validation framework.
 
 ## SAAS VALIDATION EXPERTISE
 
-### UNDERSTANDING SAAS SUCCESS FACTORS
-You understand the critical success factors for SaaS companies, including:
-- Product-market fit validation and customer success metrics
-- Unit economics optimization (LTV/CAC, gross margins, payback periods)
-- Competitive advantage development through network effects and data moats
-- Customer acquisition optimization through product-led growth
-- Retention and expansion strategies for sustainable growth
-- Scalability and operational excellence in SaaS operations
+### UNDERSTANDING SAAS VALIDATION DYNAMICS
+You understand the unique characteristics of SaaS validation, including:
+- Product-market fit and customer validation in SaaS
+- Unit economics and SaaS business model validation
+- Technical feasibility and scalability validation
+- Competitive positioning and market entry validation
+- Risk assessment and mitigation strategies for SaaS
 
 ### VALIDATION SCORECARD METHODOLOGY
 
-#### 1. MULTI-DIMENSIONAL SCORING FRAMEWORK
-- **Market Opportunity Score (0-100)**: Market size, growth rate, accessibility, maturity
-- **Competitive Positioning Score (0-100)**: Competitive intensity, differentiation, barriers, network effects
-- **Customer Validation Score (0-100)**: Pain points, willingness to pay, adoption barriers, product-led growth
-- **Technical Feasibility Score (0-100)**: Implementation complexity, technology readiness, scalability
-- **Financial Viability Score (0-100)**: Unit economics, funding requirements, profitability potential
-- **Risk Assessment Score (0-100)**: Market risks, technical risks, competitive risks, execution risks
+#### 1. MARKET OPPORTUNITY VALIDATION
+- **Market Size**: TAM/SAM/SOM analysis and validation
+- **Market Growth**: Growth rate and trend validation
+- **Market Maturity**: Market stage and adoption validation
+- **Market Barriers**: Entry barriers and competitive validation
+- **Market Timing**: Market readiness and timing validation
 
-#### 2. SAAS-SPECIFIC SCORING CRITERIA
+#### 2. COMPETITIVE POSITIONING VALIDATION
+- **Competitive Landscape**: Competitor analysis and positioning
+- **Competitive Advantages**: Differentiation and moat validation
+- **Competitive Threats**: Threat assessment and mitigation
+- **Competitive Moves**: Strategic positioning and response
+- **Competitive Intensity**: Market concentration and dynamics
 
-##### Market Opportunity Assessment
-- **Market size and growth**: TAM, SAM, SOM with confidence levels
-- **Market maturity**: Adoption rates, competitive landscape, growth drivers
-- **Accessibility**: Customer acquisition channels, go-to-market complexity
-- **Geographic expansion**: International potential, regulatory considerations
+#### 3. TECHNICAL FEASIBILITY VALIDATION
+- **Technical Complexity**: Implementation complexity assessment
+- **Technical Requirements**: Resource and skill requirements
+- **Technical Risks**: Risk assessment and mitigation
+- **Technical Advantages**: Technology differentiation validation
+- **Technical Scalability**: Growth and performance validation
 
-##### Competitive Positioning Analysis
-- **Competitive intensity**: Market concentration, entry barriers, switching costs
-- **Differentiation potential**: Unique value propositions, competitive moats
-- **Network effects**: Direct, indirect, and data network effects
-- **Platform dynamics**: Ecosystem value, integration opportunities
+#### 4. FINANCIAL VIABILITY VALIDATION
+- **Revenue Model**: Pricing and monetization validation
+- **Cost Structure**: Development and operational costs
+- **Unit Economics**: CAC, LTV, and profitability validation
+- **Funding Requirements**: Capital needs and runway validation
+- **Financial Projections**: Revenue and growth projections
 
-##### Customer Validation Metrics
-- **Pain point intensity**: Frequency, severity, willingness to pay
-- **Product-market fit indicators**: Customer retention, NPS, organic growth
-- **Adoption barriers**: Technical complexity, budget constraints, change management
-- **Product-led growth potential**: Self-service capability, viral mechanics
+#### 5. RISK ASSESSMENT VALIDATION
+- **Market Risks**: Market-related risk factors
+- **Competitive Risks**: Competitive threat assessment
+- **Technical Risks**: Technical implementation risks
+- **Financial Risks**: Financial viability risks
+- **Operational Risks**: Execution and operational risks
 
-##### Technical Feasibility Evaluation
-- **Implementation complexity**: Development timeline, resource requirements
-- **Technology readiness**: Maturity, adoption rates, community support
-- **Scalability considerations**: Performance, cost structure, growth accommodation
-- **Security and compliance**: Data protection, regulatory requirements
+### SAAS-SPECIFIC VALIDATION FACTORS
 
-##### Financial Viability Assessment
-- **Unit economics**: LTV/CAC ratio, gross margins, payback periods
-- **Funding requirements**: Capital needs, runway, funding environment
-- **Profitability potential**: Revenue model, cost structure, margin expansion
-- **Exit potential**: Acquisition interest, IPO readiness, strategic value
+#### Product-Market Fit Validation
+- **Customer Pain Points**: Problem validation and intensity
+- **Solution Validation**: Solution effectiveness and adoption
+- **Value Proposition**: Value delivery and customer satisfaction
+- **Customer Acquisition**: Acquisition cost and channel validation
+- **Customer Retention**: Retention rate and churn validation
 
-##### Risk Assessment Framework
-- **Market risks**: Economic cycles, regulatory changes, technology disruption
-- **Competitive risks**: New entrants, incumbent responses, pricing pressure
-- **Technical risks**: Implementation challenges, security vulnerabilities, scalability issues
-- **Execution risks**: Team capabilities, operational challenges, market timing
+#### Business Model Validation
+- **Revenue Streams**: Revenue model and pricing validation
+- **Cost Structure**: Cost efficiency and optimization
+- **Unit Economics**: Customer economics and profitability
+- **Scalability**: Growth potential and resource requirements
+- **Sustainability**: Long-term viability and competitive moats
 
-#### 3. WEIGHTED SCORING ALGORITHM
-- Apply industry-specific weights based on market maturity and competitive landscape
-- Consider technology complexity and implementation challenges
-- Factor in customer acquisition and retention dynamics
-- Account for regulatory and compliance considerations
-- Include market timing and economic environment factors
+#### Go-to-Market Validation
+- **Market Entry**: Entry strategy and timing validation
+- **Customer Segments**: Target market and segment validation
+- **Distribution Channels**: Channel effectiveness and cost
+- **Marketing Strategy**: Marketing approach and ROI validation
+- **Sales Strategy**: Sales process and conversion validation
 
-#### 4. STRATEGIC RECOMMENDATIONS FRAMEWORK
-- **Primary strategic recommendations**: Core positioning and go-to-market strategy
-- **Secondary tactical recommendations**: Implementation priorities and milestones
-- **Risk mitigation strategies**: Specific actions to address identified risks
-- **Timeline and milestone recommendations**: Development and launch roadmap
-- **Validation status and next steps**: Current validation level and required actions
-
-#### 5. CONFIDENCE ASSESSMENT METHODOLOGY
-- **Data quality evaluation**: Source reliability, completeness, recency
-- **Research completeness**: Coverage of all validation dimensions
-- **Source credibility**: Authoritative sources, expert validation, peer review
-- **Gap analysis**: Missing information and research recommendations
-- **Confidence levels**: Quantitative assessment of validation reliability
-
-### SCORING FRAMEWORK STANDARDS
-- **90-100**: Exceptional opportunity with minimal risks, strong competitive advantages
-- **80-89**: Strong opportunity with manageable risks, clear path to success
-- **70-79**: Good opportunity with moderate risks, requires strategic focus
-- **60-69**: Moderate opportunity with significant risks, needs major improvements
-- **Below 60**: High-risk opportunity requiring fundamental changes or reconsideration
+## ANALYSIS REQUIREMENTS
+- Focus on SaaS-specific validation factors and metrics
+- Consider product-led growth vs. sales-led validation
+- Analyze unit economics and customer lifetime value
+- Evaluate technical feasibility and scalability
+- Assess competitive positioning and market entry
+- Consider risk factors and mitigation strategies
 
 ## OUTPUT FORMAT
-Provide ONLY validation scorecard with detailed scoring rationale and strategic recommendations. Do not include new research or analysis. Focus on comprehensive SaaS validation insights that support strategic decision-making.`;
+Provide ONLY validation scorecard analysis with comprehensive scoring, risk assessment, and strategic recommendations. Do not include market research, competitor analysis, or other topics. Focus on validation insights that support comprehensive SaaS validation.`;
 
 export const generateValidationScorecard = async (
   idea: any,
@@ -106,204 +96,132 @@ export const generateValidationScorecard = async (
   competitorData: any,
   segmentsData: any,
   technologyData: any,
-  additionalContext?: any,
-  crawlerService?: UnifiedCrawlerService
+  additionalContext?: any
 ) => {
   console.log("🔍 Validation Scorecard Agent: Starting validation analysis...");
 
-  // Initialize crawler service if not provided
-  const shouldDestroyCrawler = !crawlerService;
-  if (!crawlerService) {
-    crawlerService = new UnifiedCrawlerService();
-  }
+  // Build comprehensive context from all research data
+  const researchContext = {
+    originalIdea: idea,
+    marketSizeData: marketSizeData || {},
+    competitorData: competitorData || {},
+    segmentsData: segmentsData || {},
+    technologyData: technologyData || {},
+    additionalContext: additionalContext || {},
+    currentFocus: "validation-scorecard",
+  };
 
-  // STEP 1: GATHER ADDITIONAL VALIDATION DATA
-  console.log(
-    "🔍 Validation Scorecard Agent: Gathering additional validation data..."
-  );
-  let additionalValidationData = "";
-
-  try {
-    // Search for validation-specific information
-    const validationQueries = [
-      `${idea.industry} SaaS validation success factors 2024`,
-      `${idea.industry} SaaS failure reasons analysis`,
-      `${idea.industry} SaaS market validation indicators`,
-      `${idea.industry} SaaS product-market fit validation`,
-      `${idea.industry} SaaS validation metrics KPIs`,
-      `${idea.industry} SaaS validation case studies success stories`,
-      `${idea.industry} SaaS validation best practices`,
-      `${idea.industry} SaaS validation red flags warning signs`,
-    ];
-
-    for (const query of validationQueries) {
-      try {
-        const searchResults = await crawlerService.search(query);
-        for (const result of searchResults.slice(0, 2)) {
-          // Limit to top 2 results per query
-          additionalValidationData += `\n\nVALIDATION DATA:\n`;
-          additionalValidationData += `Query: ${query}\nSource: ${result.source}\nTitle: ${result.title}\nContent: ${result.content}\n`;
-        }
-      } catch (error) {
-        console.warn(`Failed to search for validation data "${query}":`, error);
-      }
-    }
-
-    // Search for industry-specific validation insights
-    const industryValidationQueries = [
-      `${idea.industry} market validation 2024`,
-      `${idea.industry} customer validation feedback`,
-      `${idea.industry} technical validation requirements`,
-      `${idea.industry} financial validation metrics`,
-      `${idea.industry} competitive validation analysis`,
-    ];
-
-    for (const query of industryValidationQueries) {
-      try {
-        const searchResults = await crawlerService.search(query);
-        for (const result of searchResults.slice(0, 1)) {
-          // Limit to top 1 result per query
-          additionalValidationData += `\n\nINDUSTRY VALIDATION DATA:\n`;
-          additionalValidationData += `Query: ${query}\nSource: ${result.source}\nTitle: ${result.title}\nContent: ${result.content}\n`;
-        }
-      } catch (error) {
-        console.warn(
-          `Failed to search for industry validation data "${query}":`,
-          error
-        );
-      }
-    }
-
-    // Search for recent SaaS success/failure stories
-    const successFailureQueries = [
-      `${idea.industry} SaaS success stories 2024`,
-      `${idea.industry} SaaS startup failures lessons learned`,
-      `${idea.industry} SaaS validation mistakes common errors`,
-      `${idea.industry} SaaS validation success patterns`,
-    ];
-
-    for (const query of successFailureQueries) {
-      try {
-        const searchResults = await crawlerService.search(query);
-        for (const result of searchResults.slice(0, 1)) {
-          // Limit to top 1 result per query
-          additionalValidationData += `\n\nSUCCESS/FAILURE ANALYSIS:\n`;
-          additionalValidationData += `Query: ${query}\nSource: ${result.source}\nTitle: ${result.title}\nContent: ${result.content}\n`;
-        }
-      } catch (error) {
-        console.warn(
-          `Failed to search for success/failure data "${query}":`,
-          error
-        );
-      }
-    }
-  } catch (error) {
-    console.warn("Failed to gather additional validation data:", error);
-  }
-
-  // STEP 2: GENERATE COMPREHENSIVE VALIDATION SCORECARD
-  console.log(
-    "🔍 Validation Scorecard Agent: Generating validation scorecard..."
-  );
+  // STEP 1: GENERATE STRUCTURED VALIDATION SCORECARD DATA
+  console.log("🔍 Validation Scorecard Agent: Generating structured data...");
 
   try {
     const { object: scorecardData } = await generateObject({
       model: google("gemini-2.0-flash"),
       schema: z.object({
         overallScore: z.number().min(0).max(100),
-        overallConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
         validationStatus: z.enum([
           "VALIDATED",
-          "PARTIALLY_VALIDATED",
           "NEEDS_VALIDATION",
           "NOT_VALIDATED",
         ]),
 
+        // Dimension Scores
         dimensionScores: z.object({
           marketOpportunity: z.object({
             score: z.number().min(0).max(100),
             confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
+            factors: z.array(z.string()),
+            risks: z.array(z.string()),
           }),
           competitivePositioning: z.object({
             score: z.number().min(0).max(100),
             confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
-          }),
-          customerValidation: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
+            factors: z.array(z.string()),
+            risks: z.array(z.string()),
           }),
           technicalFeasibility: z.object({
             score: z.number().min(0).max(100),
             confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
+            factors: z.array(z.string()),
+            risks: z.array(z.string()),
           }),
           financialViability: z.object({
             score: z.number().min(0).max(100),
             confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
+            factors: z.array(z.string()),
+            risks: z.array(z.string()),
           }),
           riskAssessment: z.object({
             score: z.number().min(0).max(100),
             confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            reasoning: z.string(),
-            keyFactors: z.array(z.string()),
+            factors: z.array(z.string()),
+            risks: z.array(z.string()),
           }),
         }),
 
+        // Strategic Recommendations
         strategicRecommendations: z.object({
           primary: z.string(),
           secondary: z.array(z.string()),
-          timeline: z.string(),
-          priorities: z.array(z.string()),
+          immediate: z.array(z.string()),
+          longTerm: z.array(z.string()),
         }),
 
+        // Risk Analysis
         riskAnalysis: z.object({
           highRisks: z.array(z.string()),
           mediumRisks: z.array(z.string()),
           lowRisks: z.array(z.string()),
           mitigationStrategies: z.array(z.string()),
+          riskScore: z.number().min(0).max(100),
         }),
 
-        dataQuality: z.object({
-          overallQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          completeness: z.number().min(0).max(100),
-          recency: z.number().min(0).max(100),
-          sourceCredibility: z.number().min(0).max(100),
-          gaps: z.array(z.string()),
+        // Validation Metrics
+        validationMetrics: z.object({
+          productMarketFit: z.number().min(0).max(100),
+          marketSize: z.number().min(0).max(100),
+          competitiveAdvantage: z.number().min(0).max(100),
+          technicalFeasibility: z.number().min(0).max(100),
+          financialViability: z.number().min(0).max(100),
+          executionRisk: z.number().min(0).max(100),
         }),
 
+        // Next Steps
+        nextSteps: z.object({
+          immediate: z.array(z.string()),
+          shortTerm: z.array(z.string()),
+          mediumTerm: z.array(z.string()),
+          longTerm: z.array(z.string()),
+        }),
+
+        // Timeline
         nextReviewDate: z.string().optional(),
+        validationTimeline: z.string().optional(),
+
+        // Confidence and Quality
+        overallConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        recommendations: z.array(z.string()),
       }),
       prompt: `${VALIDATION_SCORECARD_PROMPT}
 
-RESEARCH DATA:
-Market Size Data: ${JSON.stringify(marketSizeData, null, 2)}
-Competitor Data: ${JSON.stringify(competitorData, null, 2)}
-Customer Segments Data: ${JSON.stringify(segmentsData, null, 2)}
-Technology Data: ${JSON.stringify(technologyData, null, 2)}
-
-ADDITIONAL VALIDATION DATA:
-${additionalValidationData}
-
-ORIGINAL IDEA CONTEXT:
+IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
 
-ADDITIONAL CONTEXT:
-${JSON.stringify(additionalContext, null, 2)}
+RESEARCH DATA:
+${JSON.stringify(researchContext, null, 2)}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.`,
+IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+
+Generate ONLY validation scorecard analysis with comprehensive scoring, risk assessment, and strategic recommendations. Focus on SaaS-specific validation insights and actionable intelligence for this specific idea.`,
     });
+
+    console.log("✅ Validation Scorecard Agent: Completed validation analysis");
 
     return {
       scorecardData,
+      researchText:
+        "AI-based validation scorecard analysis completed using comprehensive research data and SaaS validation framework",
       agentType: "validation-scorecard",
       timestamp: new Date(),
       originalIdeaId: idea.id,
@@ -311,94 +229,127 @@ IMPORTANT: Return a valid JSON object with the exact structure specified in the 
   } catch (error) {
     console.error("❌ Validation Scorecard Agent failed:", error);
 
-    // Return a fallback scorecard with basic validation
-    const fallbackScorecard = {
+    // Return fallback validation scorecard data
+    const fallbackData = {
       overallScore: 50,
-      overallConfidence: "LOW" as const,
       validationStatus: "NEEDS_VALIDATION" as const,
       dimensionScores: {
         marketOpportunity: {
           score: 50,
           confidence: "LOW" as const,
-          reasoning: "Limited market data available for analysis",
-          keyFactors: ["Insufficient market research data"],
+          factors: ["Market analysis needed"],
+          risks: ["Market size unknown"],
         },
         competitivePositioning: {
           score: 50,
           confidence: "LOW" as const,
-          reasoning: "Competitive analysis incomplete",
-          keyFactors: ["Limited competitor data"],
-        },
-        customerValidation: {
-          score: 50,
-          confidence: "LOW" as const,
-          reasoning: "Customer validation data insufficient",
-          keyFactors: ["Need more customer research"],
+          factors: ["Competitive analysis needed"],
+          risks: ["Competitive landscape unknown"],
         },
         technicalFeasibility: {
           score: 50,
           confidence: "LOW" as const,
-          reasoning: "Technical assessment incomplete",
-          keyFactors: ["Technical analysis needed"],
+          factors: ["Technical analysis needed"],
+          risks: ["Technical complexity unknown"],
         },
         financialViability: {
           score: 50,
           confidence: "LOW" as const,
-          reasoning: "Financial analysis incomplete",
-          keyFactors: ["Financial modeling needed"],
+          factors: ["Financial analysis needed"],
+          risks: ["Financial projections unknown"],
         },
         riskAssessment: {
           score: 50,
           confidence: "LOW" as const,
-          reasoning: "Risk assessment incomplete",
-          keyFactors: ["Risk analysis needed"],
+          factors: ["Risk analysis needed"],
+          risks: ["Risk factors unknown"],
         },
       },
       strategicRecommendations: {
-        primary: "Complete comprehensive validation research",
+        primary: "Conduct comprehensive validation research",
         secondary: [
-          "Gather more market data",
-          "Analyze competitors",
-          "Validate customer needs",
+          "Complete market analysis",
+          "Analyze competitive landscape",
+          "Assess technical feasibility",
         ],
-        timeline: "2-4 weeks",
-        priorities: [
-          "Market research",
-          "Customer validation",
-          "Technical assessment",
+        immediate: [
+          "Gather market data",
+          "Research competitors",
+          "Evaluate technical requirements",
+        ],
+        longTerm: [
+          "Build MVP",
+          "Validate with customers",
+          "Iterate based on feedback",
         ],
       },
       riskAnalysis: {
-        highRisks: ["Insufficient validation data"],
-        mediumRisks: ["Limited market understanding"],
-        lowRisks: ["Basic idea structure"],
+        highRisks: [
+          "Insufficient market data",
+          "Unknown competitive landscape",
+          "Unclear technical requirements",
+        ],
+        mediumRisks: [
+          "Limited customer insights",
+          "Uncertain financial projections",
+          "Unclear go-to-market strategy",
+        ],
+        lowRisks: [
+          "Basic validation framework",
+          "General market trends",
+          "Standard technical approaches",
+        ],
         mitigationStrategies: [
           "Conduct comprehensive research",
-          "Validate with potential customers",
+          "Validate with customers",
+          "Build MVP",
+        ],
+        riskScore: 70,
+      },
+      validationMetrics: {
+        productMarketFit: 50,
+        marketSize: 50,
+        competitiveAdvantage: 50,
+        technicalFeasibility: 50,
+        financialViability: 50,
+        executionRisk: 70,
+      },
+      nextSteps: {
+        immediate: [
+          "Complete market research",
+          "Analyze competitors",
+          "Assess technical requirements",
+        ],
+        shortTerm: [
+          "Build MVP",
+          "Validate with customers",
+          "Refine value proposition",
+        ],
+        mediumTerm: ["Launch beta", "Gather feedback", "Iterate product"],
+        longTerm: [
+          "Scale operations",
+          "Expand market",
+          "Build competitive moats",
         ],
       },
-      dataQuality: {
-        overallQuality: "LOW" as const,
-        completeness: 30,
-        recency: 50,
-        sourceCredibility: 50,
-        gaps: ["Market data", "Competitor analysis", "Customer validation"],
-      },
+      nextReviewDate: "3 months",
+      validationTimeline: "6-12 months",
+      overallConfidence: "LOW" as const,
+      dataQuality: "LOW" as const,
+      recommendations: [
+        "Complete comprehensive validation research",
+        "Build MVP for customer validation",
+        "Conduct competitive analysis",
+      ],
     };
 
     return {
-      scorecardData: fallbackScorecard,
+      scorecardData: fallbackData,
+      researchText:
+        "Validation scorecard analysis failed - fallback data provided",
       agentType: "validation-scorecard",
       timestamp: new Date(),
       originalIdeaId: idea.id,
-      error: error instanceof Error ? error.message : String(error),
     };
-  }
-
-  console.log("✅ Validation Scorecard Agent: Completed validation analysis");
-
-  // Cleanup crawler service if it was initialized
-  if (shouldDestroyCrawler && crawlerService) {
-    crawlerService.destroy();
   }
 };

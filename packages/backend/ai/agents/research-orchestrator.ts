@@ -4,7 +4,6 @@ import { generateCompetitorData } from "./competitor-discovery-agent";
 import { generateCustomerSegmentsData } from "./customer-segments-agent";
 import { generateTechnologyTrendsData } from "./technology-trends-agent";
 import { generateValidationScorecard } from "./validation-scorecard-agent";
-import { UnifiedCrawlerService } from "../crawler";
 
 // ============================================================================
 // RESEARCH RESULTS INTERFACE
@@ -19,7 +18,6 @@ export interface ResearchResults {
   totalApiCalls: number;
   originalIdea: any;
   additionalContext: any;
-  crawlerService?: UnifiedCrawlerService;
 }
 
 // ============================================================================
@@ -30,13 +28,8 @@ export const runModularResearch = async (
   ideaId: string,
   additionalContext?: any
 ) => {
-  let crawlerService: UnifiedCrawlerService | undefined;
-
   try {
     console.log("🚀 Starting modular research for idea:", ideaId);
-
-    // Initialize crawler service for all agents
-    crawlerService = new UnifiedCrawlerService();
 
     // Get the idea data
     const idea = await prisma.idea.findUnique({
@@ -62,17 +55,15 @@ export const runModularResearch = async (
       totalApiCalls: 0,
       originalIdea: idea,
       additionalContext: additionalContext || {},
-      crawlerService,
     };
 
-    // STEP 1: MARKET SIZE ANALYSIS (2 API calls)
+    // STEP 1: MARKET SIZE ANALYSIS (1 API call)
     console.log("📊 Step 1/5: Market Size Agent");
     try {
       const marketSizeResult = await generateMarketSizeData(
         idea,
         researchResults.agents, // Pass previous research
-        additionalContext,
-        crawlerService
+        additionalContext
       );
       researchResults.agents.push({
         type: "market-size",
@@ -81,7 +72,7 @@ export const runModularResearch = async (
         researchText: marketSizeResult.researchText,
         timestamp: marketSizeResult.timestamp,
       });
-      researchResults.totalApiCalls += 2;
+      researchResults.totalApiCalls += 1;
       console.log("✅ Market Size Agent completed");
     } catch (error) {
       console.error("❌ Market Size Agent failed:", error);
@@ -92,14 +83,13 @@ export const runModularResearch = async (
       });
     }
 
-    // STEP 2: COMPETITOR DISCOVERY (2 API calls)
+    // STEP 2: COMPETITOR DISCOVERY (1 API call)
     console.log("🏆 Step 2/5: Competitor Discovery Agent");
     try {
       const competitorResult = await generateCompetitorData(
         idea,
         researchResults.agents, // Pass previous research
-        additionalContext,
-        crawlerService
+        additionalContext
       );
       researchResults.agents.push({
         type: "competitor-discovery",
@@ -108,7 +98,7 @@ export const runModularResearch = async (
         researchText: competitorResult.researchText,
         timestamp: competitorResult.timestamp,
       });
-      researchResults.totalApiCalls += 2;
+      researchResults.totalApiCalls += 1;
       console.log("✅ Competitor Discovery Agent completed");
     } catch (error) {
       console.error("❌ Competitor Discovery Agent failed:", error);
@@ -119,14 +109,13 @@ export const runModularResearch = async (
       });
     }
 
-    // STEP 3: CUSTOMER SEGMENTS ANALYSIS (2 API calls)
+    // STEP 3: CUSTOMER SEGMENTS ANALYSIS (1 API call)
     console.log("👥 Step 3/5: Customer Segments Agent");
     try {
       const segmentsResult = await generateCustomerSegmentsData(
         idea,
         researchResults.agents, // Pass previous research
-        additionalContext,
-        crawlerService
+        additionalContext
       );
       researchResults.agents.push({
         type: "customer-segments",
@@ -135,7 +124,7 @@ export const runModularResearch = async (
         researchText: segmentsResult.researchText,
         timestamp: segmentsResult.timestamp,
       });
-      researchResults.totalApiCalls += 2;
+      researchResults.totalApiCalls += 1;
       console.log("✅ Customer Segments Agent completed");
     } catch (error) {
       console.error("❌ Customer Segments Agent failed:", error);
@@ -146,14 +135,13 @@ export const runModularResearch = async (
       });
     }
 
-    // STEP 4: TECHNOLOGY TRENDS ANALYSIS (2 API calls)
+    // STEP 4: TECHNOLOGY TRENDS ANALYSIS (1 API call)
     console.log("🔧 Step 4/5: Technology Trends Agent");
     try {
       const technologyResult = await generateTechnologyTrendsData(
         idea,
         researchResults.agents, // Pass previous research
-        additionalContext,
-        crawlerService
+        additionalContext
       );
       researchResults.agents.push({
         type: "technology-trends",
@@ -162,7 +150,7 @@ export const runModularResearch = async (
         researchText: technologyResult.researchText,
         timestamp: technologyResult.timestamp,
       });
-      researchResults.totalApiCalls += 2;
+      researchResults.totalApiCalls += 1;
       console.log("✅ Technology Trends Agent completed");
     } catch (error) {
       console.error("❌ Technology Trends Agent failed:", error);
@@ -197,8 +185,7 @@ export const runModularResearch = async (
           competitorData,
           segmentsData,
           technologyData,
-          additionalContext,
-          crawlerService
+          additionalContext
         );
         researchResults.agents.push({
           type: "validation-scorecard",
@@ -270,11 +257,6 @@ export const runModularResearch = async (
   } catch (error) {
     console.error("❌ Modular research failed:", error);
     throw error;
-  } finally {
-    // Clean up crawler service
-    if (crawlerService) {
-      crawlerService.destroy();
-    }
   }
 };
 
