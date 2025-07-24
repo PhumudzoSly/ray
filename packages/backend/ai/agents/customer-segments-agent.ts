@@ -269,104 +269,122 @@ export const generateCustomerSegmentsData = async (
   }
 
   // STEP 5: GENERATE STRUCTURED CUSTOMER SEGMENTS DATA
-  const { object: segmentsData } = await generateObject({
-    model: google("gemini-2.0-flash"),
-    schema: z.object({
-      totalAddressableCustomers: z.number().optional(),
-      primarySegments: z.number().optional(),
+  let segmentsData;
 
-      segments: z.array(
-        z.object({
-          segmentName: z.string(),
-          segmentType: z.enum(["PRIMARY", "SECONDARY", "ADJACENT", "EXCLUDED"]),
+  try {
+    const { object: generatedData } = await generateObject({
+      model: google("gemini-2.0-flash"),
+      schema: z.object({
+        totalAddressableCustomers: z.number().optional(),
+        primarySegments: z.number().optional(),
 
-          // Demographics
-          ageRange: z.string().optional(),
-          location: z.string().optional(),
-          companySize: z
-            .enum([
-              "SOLO",
-              "SMALL_1_10",
-              "MEDIUM_11_50",
-              "LARGE_51_200",
-              "ENTERPRISE_200_PLUS",
-            ])
-            .optional(),
-          industry: z.string().optional(),
-          role: z.string().optional(),
+        segments: z.array(
+          z.object({
+            segmentName: z.string(),
+            segmentType: z.enum([
+              "PRIMARY",
+              "SECONDARY",
+              "ADJACENT",
+              "EXCLUDED",
+            ]),
 
-          // Segment Metrics
-          estimatedSize: z.number().optional(),
-          growthRate: z.number().optional(),
-          averageSpend: z.number().optional(),
-          customerLifetimeValue: z.number().optional(),
-          customerAcquisitionCost: z.number().optional(),
+            // Demographics
+            ageRange: z.string().optional(),
+            location: z.string().optional(),
+            companySize: z
+              .enum([
+                "SOLO",
+                "SMALL_1_10",
+                "MEDIUM_11_50",
+                "LARGE_51_200",
+                "ENTERPRISE_200_PLUS",
+              ])
+              .optional(),
+            industry: z.string().optional(),
+            role: z.string().optional(),
 
-          // Pain Points
-          primaryPainPoints: z.array(z.string()),
-          secondaryPainPoints: z.array(z.string()),
-          latentNeeds: z.array(z.string()),
-          painPointIntensity: z.number().optional(), // 1-10 scale
+            // Segment Metrics
+            estimatedSize: z.number().optional(),
+            growthRate: z.number().optional(),
+            averageSpend: z.number().optional(),
+            customerLifetimeValue: z.number().optional(),
+            customerAcquisitionCost: z.number().optional(),
 
-          // Decision Making
-          decisionFactors: z.array(z.string()),
-          decisionTimeline: z.string().optional(),
-          keyDecisionMakers: z.array(z.string()),
-          budgetRange: z.string().optional(),
-          approvalProcess: z.string().optional(),
+            // Pain Points
+            primaryPainPoints: z.array(z.string()),
+            secondaryPainPoints: z.array(z.string()),
+            latentNeeds: z.array(z.string()),
+            painPointIntensity: z.number().optional(), // 1-10 scale
 
-          // Behavior & Preferences
-          techSavviness: z.enum([
-            "BEGINNER",
-            "INTERMEDIATE",
-            "ADVANCED",
-            "EXPERT",
-          ]),
-          platformPreferences: z.array(z.string()),
-          integrationNeeds: z.array(z.string()),
-          supportPreferences: z.array(z.string()),
+            // Decision Making
+            decisionFactors: z.array(z.string()),
+            decisionTimeline: z.string().optional(),
+            keyDecisionMakers: z.array(z.string()),
+            budgetRange: z.string().optional(),
+            approvalProcess: z.string().optional(),
 
-          // SaaS-Specific Factors
-          productLedGrowthReady: z.boolean().optional(),
-          selfServiceCapability: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          viralPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          freemiumConversion: z.number().optional(), // Percentage
-          expansionRevenue: z.number().optional(), // Percentage
+            // Behavior & Preferences
+            techSavviness: z.enum([
+              "BEGINNER",
+              "INTERMEDIATE",
+              "ADVANCED",
+              "EXPERT",
+            ]),
+            platformPreferences: z.array(z.string()),
+            integrationNeeds: z.array(z.string()),
+            supportPreferences: z.array(z.string()),
 
-          // Customer Success
-          onboardingComplexity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          featureAdoption: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          supportNeeds: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          retentionPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            // SaaS-Specific Factors
+            productLedGrowthReady: z.boolean().optional(),
+            selfServiceCapability: z.enum([
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "VERY_HIGH",
+            ]),
+            viralPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            freemiumConversion: z.number().optional(), // Percentage
+            expansionRevenue: z.number().optional(), // Percentage
 
-          // Competitive Analysis
-          currentSolutions: z.array(z.string()),
-          switchingBarriers: z.array(z.string()),
-          competitiveAdvantages: z.array(z.string()),
+            // Customer Success
+            onboardingComplexity: z.enum([
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "VERY_HIGH",
+            ]),
+            featureAdoption: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            supportNeeds: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            retentionPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-          // Validation
-          segmentValue: z.number().optional(),
-          accessibility: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          priority: z.number(), // 1-5 scale
-          confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        })
-      ),
+            // Competitive Analysis
+            currentSolutions: z.array(z.string()),
+            switchingBarriers: z.array(z.string()),
+            competitiveAdvantages: z.array(z.string()),
 
-      // Cross-Segment Analysis
-      segmentOverlap: z.array(z.string()),
-      cannibalizationRisks: z.array(z.string()),
-      expansionOpportunities: z.array(z.string()),
+            // Validation
+            segmentValue: z.number().optional(),
+            accessibility: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            priority: z.number(), // 1-5 scale
+            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          })
+        ),
 
-      // Strategic Insights
-      goToMarketStrategy: z.array(z.string()),
-      messagingRecommendations: z.array(z.string()),
-      pricingStrategy: z.array(z.string()),
+        // Cross-Segment Analysis
+        segmentOverlap: z.array(z.string()),
+        cannibalizationRisks: z.array(z.string()),
+        expansionOpportunities: z.array(z.string()),
 
-      dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      dataGaps: z.array(z.string()),
-      recommendations: z.array(z.string()),
-    }),
-    prompt: `${CUSTOMER_SEGMENTS_PROMPT}
+        // Strategic Insights
+        goToMarketStrategy: z.array(z.string()),
+        messagingRecommendations: z.array(z.string()),
+        pricingStrategy: z.array(z.string()),
+
+        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        dataGaps: z.array(z.string()),
+        recommendations: z.array(z.string()),
+      }),
+      prompt: `${CUSTOMER_SEGMENTS_PROMPT}
 
 RESEARCH FINDINGS:
 ${customerResearch}
@@ -374,8 +392,39 @@ ${customerResearch}
 ORIGINAL IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
 
+IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+
 Generate ONLY customer segmentation analysis with detailed profiles, pain points, and decision-making insights. Focus on SaaS-specific customer factors and actionable insights for validation of this specific idea.`,
-  });
+    });
+
+    segmentsData = generatedData;
+  } catch (error) {
+    console.error("❌ Customer Segments Agent failed:", error);
+
+    // Return fallback customer segments data
+    segmentsData = {
+      totalAddressableCustomers: undefined,
+      primarySegments: undefined,
+      segments: [],
+      segmentOverlap: ["Limited customer segmentation data"],
+      cannibalizationRisks: ["Insufficient customer analysis data"],
+      expansionOpportunities: ["Conduct comprehensive customer research"],
+      goToMarketStrategy: ["Complete customer segmentation analysis"],
+      messagingRecommendations: ["Gather customer insights"],
+      pricingStrategy: ["Analyze customer willingness to pay"],
+      dataQuality: "LOW" as const,
+      dataGaps: [
+        "Customer profiles",
+        "Pain point analysis",
+        "Decision-making insights",
+      ],
+      recommendations: [
+        "Conduct customer interviews",
+        "Analyze customer behavior",
+        "Validate customer needs",
+      ],
+    };
+  }
 
   console.log(
     "✅ Customer Segments Agent: Completed customer segmentation analysis"

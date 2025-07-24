@@ -366,112 +366,115 @@ export const generateCompetitorData = async (
   }
 
   // STEP 2: GENERATE STRUCTURED COMPETITOR DATA
-  const { object: competitorData } = await generateObject({
-    model: google("gemini-2.0-flash"),
-    schema: z.object({
-      competitiveIntensity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      marketConcentration: z.number().optional(), // Percentage controlled by top players
-      entryBarriers: z.array(z.string()),
-      switchingCosts: z.number().optional(), // 1-10 scale
+  let competitorData;
+  
+  try {
+    const { object: generatedData } = await generateObject({
+      model: google("gemini-2.0-flash"),
+      schema: z.object({
+        competitiveIntensity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        marketConcentration: z.number().optional(), // Percentage controlled by top players
+        entryBarriers: z.array(z.string()),
+        switchingCosts: z.number().optional(), // 1-10 scale
 
-      competitors: z.array(
-        z.object({
-          name: z.string(),
-          website: z.string().optional(),
-          description: z.string().optional(),
-          logoUrl: z.string().optional(),
+        competitors: z.array(
+          z.object({
+            name: z.string(),
+            website: z.string().optional(),
+            description: z.string().optional(),
+            logoUrl: z.string().optional(),
 
-          // Company Information
-          foundedYear: z.number().optional(),
-          headquarters: z.string().optional(),
-          employeeCount: z.number().optional(),
-          fundingRaised: z.number().optional(),
-          lastFundingRound: z.string().optional(),
+            // Company Information
+            foundedYear: z.number().optional(),
+            headquarters: z.string().optional(),
+            employeeCount: z.number().optional(),
+            fundingRaised: z.number().optional(),
+            lastFundingRound: z.string().optional(),
 
-          // Market Position
-          marketShare: z.number().optional(),
-          annualRevenue: z.number().optional(),
-          customerCount: z.number().optional(),
-          targetAudience: z.string().optional(),
+            // Market Position
+            marketShare: z.number().optional(),
+            annualRevenue: z.number().optional(),
+            customerCount: z.number().optional(),
+            targetAudience: z.string().optional(),
 
-          // Product Information
-          productFeatures: z.array(z.string()),
-          pricingModel: z.enum([
-            "SUBSCRIPTION",
-            "FREEMIUM",
-            "ONE_TIME",
-            "USAGE_BASED",
-            "HYBRID",
-          ]),
-          pricingRange: z.string().optional(),
-          techStack: z.array(z.string()),
-          integrations: z.array(z.string()),
+            // Product Information
+            productFeatures: z.array(z.string()),
+            pricingModel: z.enum([
+              "SUBSCRIPTION",
+              "FREEMIUM",
+              "ONE_TIME",
+              "USAGE_BASED",
+              "HYBRID",
+            ]),
+            pricingRange: z.string().optional(),
+            techStack: z.array(z.string()),
+            integrations: z.array(z.string()),
 
-          // SaaS-Specific Metrics
-          productLedGrowth: z.boolean().optional(),
-          freemiumConversion: z.number().optional(), // Percentage
-          customerRetention: z.number().optional(), // Percentage
-          networkEffects: z.enum(["NONE", "WEAK", "MODERATE", "STRONG"]),
-          switchingCosts: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            // SaaS-Specific Metrics
+            productLedGrowth: z.boolean().optional(),
+            freemiumConversion: z.number().optional(), // Percentage
+            customerRetention: z.number().optional(), // Percentage
+            networkEffects: z.enum(["NONE", "WEAK", "MODERATE", "STRONG"]),
+            switchingCosts: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-          // Competitive Analysis
-          strengths: z.array(z.string()),
-          weaknesses: z.array(z.string()),
-          opportunities: z.array(z.string()),
-          threats: z.array(z.string()),
-          competitiveAdvantage: z.string().optional(),
-          differentiationFactors: z.array(z.string()),
+            // Competitive Analysis
+            strengths: z.array(z.string()),
+            weaknesses: z.array(z.string()),
+            opportunities: z.array(z.string()),
+            threats: z.array(z.string()),
+            competitiveAdvantage: z.string().optional(),
+            differentiationFactors: z.array(z.string()),
 
-          // Threat Assessment
-          threatLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-          competitiveMoves: z.array(z.string()),
+            // Threat Assessment
+            threatLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+            competitiveMoves: z.array(z.string()),
 
-          // Data Quality
-          dataConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-          dataSources: z.array(z.string()),
+            // Data Quality
+            dataConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            dataSources: z.array(z.string()),
 
-          // Customer Research Data
-          customerResearch: z
-            .object({
-              averageRating: z.number().optional(),
-              totalReviews: z.number().optional(),
-              feedbackSummary: z
-                .object({
-                  positive: z.number().optional(),
-                  negative: z.number().optional(),
-                  neutral: z.number().optional(),
-                })
-                .optional(),
-              topMissingFeatures: z.array(z.string()).optional(),
-              keyStrengths: z.array(z.string()).optional(),
-              keyWeaknesses: z.array(z.string()).optional(),
-              opportunities: z.array(z.string()).optional(),
-              threats: z.array(z.string()).optional(),
-              researchQuality: z
-                .object({
-                  confidence: z.number().optional(),
-                  coverage: z.number().optional(),
-                })
-                .optional(),
-            })
-            .optional(),
-        })
-      ),
+            // Customer Research Data
+            customerResearch: z
+              .object({
+                averageRating: z.number().optional(),
+                totalReviews: z.number().optional(),
+                feedbackSummary: z
+                  .object({
+                    positive: z.number().optional(),
+                    negative: z.number().optional(),
+                    neutral: z.number().optional(),
+                  })
+                  .optional(),
+                topMissingFeatures: z.array(z.string()).optional(),
+                keyStrengths: z.array(z.string()).optional(),
+                keyWeaknesses: z.array(z.string()).optional(),
+                opportunities: z.array(z.string()).optional(),
+                threats: z.array(z.string()).optional(),
+                researchQuality: z
+                  .object({
+                    confidence: z.number().optional(),
+                    coverage: z.number().optional(),
+                  })
+                  .optional(),
+              })
+              .optional(),
+          })
+        ),
 
-      // Market Dynamics
-      emergingThreats: z.array(z.string()),
-      marketDisruptions: z.array(z.string()),
-      competitiveTrends: z.array(z.string()),
+        // Market Dynamics
+        emergingThreats: z.array(z.string()),
+        marketDisruptions: z.array(z.string()),
+        competitiveTrends: z.array(z.string()),
 
-      // Strategic Insights
-      differentiationOpportunities: z.array(z.string()),
-      competitiveAdvantage: z.string().optional(),
-      strategicRecommendations: z.array(z.string()),
+        // Strategic Insights
+        differentiationOpportunities: z.array(z.string()),
+        competitiveAdvantage: z.string().optional(),
+        strategicRecommendations: z.array(z.string()),
 
-      dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      dataGaps: z.array(z.string()),
-    }),
-    prompt: `${COMPETITOR_DISCOVERY_PROMPT}
+        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        dataGaps: z.array(z.string()),
+      }),
+      prompt: `${COMPETITOR_DISCOVERY_PROMPT}
 
 RESEARCH FINDINGS:
 ${competitorResearch}
@@ -479,8 +482,32 @@ ${competitorResearch}
 ORIGINAL IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
 
+IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+
 Generate ONLY competitor analysis with detailed profiles, competitive positioning, and strategic insights. Focus on SaaS-specific competitive factors and actionable intelligence for validation of this specific idea.`,
-  });
+    });
+    
+    competitorData = generatedData;
+  } catch (error) {
+    console.error("❌ Competitor Discovery Agent failed:", error);
+    
+    // Return fallback competitor data
+    competitorData = {
+      competitiveIntensity: "MEDIUM" as const,
+      marketConcentration: undefined,
+      entryBarriers: ["Limited competitive data available"],
+      switchingCosts: undefined,
+      competitors: [],
+      emergingThreats: ["Limited competitive analysis data"],
+      marketDisruptions: ["Insufficient market disruption data"],
+      competitiveTrends: ["Limited trend analysis data"],
+      differentiationOpportunities: ["Conduct comprehensive competitive analysis"],
+      competitiveAdvantage: "Competitive analysis needed",
+      strategicRecommendations: ["Complete competitive research", "Analyze market positioning"],
+      dataQuality: "LOW" as const,
+      dataGaps: ["Competitor profiles", "Market positioning data", "Competitive intelligence"],
+    };
+  }
 
   console.log("✅ Competitor Discovery Agent: Completed competitor analysis");
 

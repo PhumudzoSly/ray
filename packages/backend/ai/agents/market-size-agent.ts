@@ -222,50 +222,57 @@ export const generateMarketSizeData = async (
 
   // STEP 5: GENERATE STRUCTURED MARKET SIZE DATA
   console.log("🔍 Market Size Agent: Generating structured data...");
-  const { object: marketSizeData } = await generateObject({
-    model: google("gemini-2.0-flash"),
-    schema: z.object({
-      totalAddressableMarket: z.number().optional(),
-      tamSource: z.string().optional(),
-      tamYear: z.number().optional(),
-      tamConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-      serviceableAddressableMarket: z.number().optional(),
-      samSource: z.string().optional(),
-      samYear: z.number().optional(),
-      samConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+  try {
+    const { object: marketSizeData } = await generateObject({
+      model: google("gemini-2.0-flash"),
+      schema: z.object({
+        totalAddressableMarket: z.number().optional(),
+        tamSource: z.string().optional(),
+        tamYear: z.number().optional(),
+        tamConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-      serviceableObtainableMarket: z.number().optional(),
-      somSource: z.string().optional(),
-      somYear: z.number().optional(),
-      somConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        serviceableAddressableMarket: z.number().optional(),
+        samSource: z.string().optional(),
+        samYear: z.number().optional(),
+        samConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-      marketGrowthRate: z.number().optional(),
-      growthRateSource: z.string().optional(),
-      growthRatePeriod: z.string().optional(),
-      growthRateConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        serviceableObtainableMarket: z.number().optional(),
+        somSource: z.string().optional(),
+        somYear: z.number().optional(),
+        somConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-      marketMaturity: z.enum(["EMERGING", "GROWING", "MATURE", "DECLINING"]),
-      maturityIndicators: z.array(z.string()),
+        marketGrowthRate: z.number().optional(),
+        growthRateSource: z.string().optional(),
+        growthRatePeriod: z.string().optional(),
+        growthRateConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-      growthDrivers: z.array(z.string()),
-      growthBarriers: z.array(z.string()),
+        marketMaturity: z.enum(["EMERGING", "GROWING", "MATURE", "DECLINING"]),
+        maturityIndicators: z.array(z.string()),
 
-      // SaaS-specific metrics
-      saasAdoptionRate: z.number().optional(),
-      subscriptionModelPrevalence: z.enum([
-        "LOW",
-        "MEDIUM",
-        "HIGH",
-        "VERY_HIGH",
-      ]),
-      productLedGrowthPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        growthDrivers: z.array(z.string()),
+        growthBarriers: z.array(z.string()),
 
-      dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      dataGaps: z.array(z.string()),
-      recommendations: z.array(z.string()),
-    }),
-    prompt: `${MARKET_SIZE_PROMPT}
+        // SaaS-specific metrics
+        saasAdoptionRate: z.number().optional(),
+        subscriptionModelPrevalence: z.enum([
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "VERY_HIGH",
+        ]),
+        productLedGrowthPotential: z.enum([
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "VERY_HIGH",
+        ]),
+
+        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        dataGaps: z.array(z.string()),
+        recommendations: z.array(z.string()),
+      }),
+      prompt: `${MARKET_SIZE_PROMPT}
 
 RESEARCH FINDINGS:
 ${marketSizeResearch}
@@ -276,8 +283,63 @@ ${JSON.stringify(idea, null, 2)}
 PREVIOUS RESEARCH CONTEXT:
 ${JSON.stringify(previousResearch, null, 2)}
 
+IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+
 Generate ONLY market size metrics with clear sources, confidence levels, and SaaS-specific considerations. Focus on actionable insights that support comprehensive SaaS validation for this specific idea.`,
-  });
+    });
+
+    return {
+      marketSizeData,
+      researchText: marketSizeResearch,
+      agentType: "market-size",
+      timestamp: new Date(),
+      originalIdeaId: idea.id,
+    };
+  } catch (error) {
+    console.error("❌ Market Size Agent failed:", error);
+
+    // Return fallback market size data
+    const fallbackMarketSizeData = {
+      totalAddressableMarket: undefined,
+      tamSource: "Fallback - AI generation failed",
+      tamYear: new Date().getFullYear(),
+      tamConfidence: "LOW" as const,
+      serviceableAddressableMarket: undefined,
+      samSource: "Fallback - AI generation failed",
+      samYear: new Date().getFullYear(),
+      samConfidence: "LOW" as const,
+      serviceableObtainableMarket: undefined,
+      somSource: "Fallback - AI generation failed",
+      somYear: new Date().getFullYear(),
+      somConfidence: "LOW" as const,
+      marketGrowthRate: undefined,
+      growthRateSource: "Fallback - AI generation failed",
+      growthRatePeriod: "Unknown",
+      growthRateConfidence: "LOW" as const,
+      marketMaturity: "EMERGING" as const,
+      maturityIndicators: ["Limited market data available"],
+      growthDrivers: ["SaaS adoption trends", "Digital transformation"],
+      growthBarriers: ["Limited market research data"],
+      saasAdoptionRate: undefined,
+      subscriptionModelPrevalence: "MEDIUM" as const,
+      productLedGrowthPotential: "MEDIUM" as const,
+      dataQuality: "LOW" as const,
+      dataGaps: ["Market size data", "Growth rate data", "Adoption rate data"],
+      recommendations: [
+        "Conduct comprehensive market research",
+        "Gather authoritative market data",
+      ],
+    };
+
+    return {
+      marketSizeData: fallbackMarketSizeData,
+      researchText: marketSizeResearch,
+      agentType: "market-size",
+      timestamp: new Date(),
+      originalIdeaId: idea.id,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 
   console.log("✅ Market Size Agent: Completed market size analysis");
 
@@ -285,12 +347,4 @@ Generate ONLY market size metrics with clear sources, confidence levels, and Saa
   if (shouldDestroyCrawler && crawlerService) {
     crawlerService.destroy();
   }
-
-  return {
-    marketSizeData,
-    researchText: marketSizeResearch,
-    agentType: "market-size",
-    timestamp: new Date(),
-    originalIdeaId: idea.id,
-  };
 };

@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@workspace/ui/button";
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@workspace/ui/card";
-import { Textarea } from "@workspace/ui/textarea";
-import { Badge } from "@workspace/ui/badge";
+} from "@workspace/ui/components/card";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Badge } from "@workspace/ui/components/badge";
 import { AlertCircle, CheckCircle, HelpCircle, Loader2 } from "lucide-react";
-import { Alert, AlertDescription } from "@workspace/ui/alert";
+import { Alert, AlertDescription } from "@workspace/ui/components/alert";
 import { toast } from "sonner";
 
 interface ValidationQuestion {

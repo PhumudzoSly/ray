@@ -4,8 +4,10 @@ import {
   prisma,
   IdeaOptionalDefaults,
   IdeaStatusType,
+  suggestQuestions,
 } from "@workspace/backend";
 import { getSession } from "../account/user";
+import { inngestClient } from "@/lib/inngest";
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
   const { org } = await getSession();
@@ -235,19 +237,64 @@ export const checkValidationQuestions = async ({
     throw new Error("Idea not found");
   }
 
-  // Import the suggestQuestions function from the backend
-  const { suggestQuestions } = await import("@workspace/backend/ai/validators");
-
   try {
     const questionsResult = await suggestQuestions(ideaId);
-    return {
-      success: true,
-      questionsRequired: questionsResult.questionsRequired,
-      requiredQuestions: questionsResult.requiredQuestions || [],
-    };
+
+    // Ensure the result has the expected structure
+    if (typeof questionsResult === "object" && questionsResult !== null) {
+      const result = questionsResult as any;
+      return {
+        success: true,
+        questionsRequired: result.questionsRequired || false,
+        requiredQuestions: result.requiredQuestions || [],
+      };
+    } else {
+      throw new Error("Invalid response format from AI");
+    }
   } catch (error) {
     console.error("Error checking validation questions:", error);
-    // If there's an error, assume no questions are needed and proceed
+
+    // Provide more specific error handling
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (
+      errorMessage.includes("No object generated") ||
+      errorMessage.includes("Type validation failed") ||
+      errorMessage.includes("Invalid response format")
+    ) {
+      console.error(
+        "AI validation failed - falling back to simple heuristic check"
+      );
+
+      // Fallback to a simple validation check
+      const idea = await prisma.idea.findFirst({
+        where: { id: ideaId, organizationId: org },
+      });
+
+      // Simple heuristic: if description is short or missing key elements, ask for more info
+      const needsMoreInfo =
+        !idea?.description ||
+        idea.description.length < 100 ||
+        !idea?.problemSolved ||
+        !idea?.solutionOffered;
+
+      return {
+        success: true,
+        questionsRequired: needsMoreInfo,
+        requiredQuestions: needsMoreInfo
+          ? [
+              {
+                question:
+                  "Can you provide more details about your idea, including the problem it solves and your proposed solution?",
+                importance: "important" as const,
+                context:
+                  "A detailed description helps with validation accuracy",
+              },
+            ]
+          : [],
+      };
+    }
+
+    // For other errors, assume no questions are needed and proceed
     return {
       success: true,
       questionsRequired: false,
@@ -321,14 +368,25 @@ export const triggerValidation = async ({ ideaId }: { ideaId: string }) => {
   });
 
   // Trigger Inngest background job
-  const { inngestClient } = await import("@/lib/inngest");
-  await inngestClient.send({
-    name: "idea/validate",
-    data: {
-      ideaId,
-      // additionalContext will be passed from the client if available
-    },
-  });
+  try {
+    await inngestClient.send({
+      name: "idea/validate",
+      data: {
+        ideaId,
+        // additionalContext will be passed from the client if available
+      },
+    });
+  } catch (error) {
+    console.error("Failed to trigger Inngest validation:", error);
+    // Reset the status back to INVALIDATED if Inngest fails
+    await prisma.idea.update({
+      where: { id: ideaId },
+      data: {
+        status: "INVALIDATED",
+      },
+    });
+    throw new Error("Failed to start validation. Please try again.");
+  }
 
   return { success: true, message: "Validation started" };
 };
@@ -361,14 +419,25 @@ export const triggerValidationWithContext = async ({
   });
 
   // Trigger Inngest background job with additional context
-  const { inngestClient } = await import("@/lib/inngest");
-  await inngestClient.send({
-    name: "idea/validate",
-    data: {
-      ideaId,
-      additionalContext: additionalContext || {},
-    },
-  });
+  try {
+    await inngestClient.send({
+      name: "idea/validate",
+      data: {
+        ideaId,
+        additionalContext: additionalContext || {},
+      },
+    });
+  } catch (error) {
+    console.error("Failed to trigger Inngest validation with context:", error);
+    // Reset the status back to INVALIDATED if Inngest fails
+    await prisma.idea.update({
+      where: { id: ideaId },
+      data: {
+        status: "INVALIDATED",
+      },
+    });
+    throw new Error("Failed to start validation. Please try again.");
+  }
 
   return {
     success: true,

@@ -3,7 +3,6 @@
 // ============================================================================
 
 import axios from "axios";
-import { UnifiedCrawlerService } from "../crawler";
 
 // ============================================================================
 // SEARCH API CONFIGURATION
@@ -464,7 +463,6 @@ export class UnifiedSearchAPIService {
   private serpapi: SerpAPISearchAPI;
   private serper: SerperSearchAPI;
   private serpstack: SerpstackSearchAPI;
-  private crawler: UnifiedCrawlerService;
 
   constructor(
     config: Partial<SearchAPIConfig> = {},
@@ -482,7 +480,6 @@ export class UnifiedSearchAPIService {
     this.serpapi = new SerpAPISearchAPI(apiKeys?.serpapi);
     this.serper = new SerperSearchAPI(apiKeys?.serper);
     this.serpstack = new SerpstackSearchAPI(apiKeys?.serpstack);
-    this.crawler = new UnifiedCrawlerService();
   }
 
   // ============================================================================
@@ -625,21 +622,11 @@ export class UnifiedSearchAPIService {
   private async enrichResultsWithContent(
     results: SearchResult[]
   ): Promise<void> {
-    console.log("📄 Enriching results with content...");
-
-    for (const result of results) {
-      try {
-        const crawlResult = await this.crawler.crawl(result.url);
-        if (crawlResult.success && crawlResult.parsedContent?.type === "html") {
-          const content = crawlResult.parsedContent.data.text || "";
-          result.snippet =
-            content.substring(0, 300) + (content.length > 300 ? "..." : "");
-          result.confidence += 0.1; // Boost confidence for content-enriched results
-        }
-      } catch (error) {
-        console.warn(`Failed to enrich result ${result.url}:`, error);
-      }
-    }
+    console.log(
+      "📄 Content enrichment disabled to avoid circular dependencies"
+    );
+    // Content enrichment has been disabled to avoid circular dependencies
+    // between UnifiedSearchAPIService and UnifiedCrawlerService
   }
 
   // ============================================================================
@@ -685,7 +672,7 @@ export class UnifiedSearchAPIService {
   }
 
   destroy(): void {
-    this.crawler.destroy();
+    // Cleanup method - no crawler to destroy
   }
 }
 

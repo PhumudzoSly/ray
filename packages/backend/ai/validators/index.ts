@@ -1,9 +1,7 @@
 import { generateObject } from "ai";
 import { prisma } from "../../prisma/prisma";
 import { google } from "@ai-sdk/google";
-import z from "zod";
-import { SAAS_VALIDATION_PROMPT } from "../../prompts";
-// Import new modular agents
+import { z } from "zod";
 import {
   runModularResearch,
   ResearchResults,
@@ -36,77 +34,50 @@ export const suggestQuestions = async (id: string) => {
 
   if (!idea) throw new Error("Idea does not exist");
 
-  const { object: validationPrep } = await generateObject({
-    model: google("gemini-2.0-flash"),
-    schema: z.object({
-      questionsRequired: z.boolean({
-        description:
-          "Do you have any questions you want to ask before proceeding with the validation process, based on what you know about this SaaS idea",
+  try {
+    const { object: validationPrep } = await generateObject({
+      model: google("gemini-2.0-flash"),
+      schema: z.object({
+        questionsRequired: z
+          .boolean()
+          .describe("Whether the idea needs more information"),
+        requiredQuestions: z.array(
+          z.object({
+            question: z.string().describe("The question to ask the user"),
+            importance: z
+              .enum(["low", "medium", "important"])
+              .describe("The importance of the question"),
+            context: z.string().describe("The context of the question"),
+          })
+        ),
       }),
-      requiredQuestions: z.array(
-        z.object({
-          question: z.string({ description: "The question to ask the user" }),
-          importance: z.enum(["low", "medium", "important"]),
-          context: z.string({
-            description: "Brief explanation of why this information is needed",
-          }),
-        })
-      ),
-    }),
-    prompt: `As an expert SaaS validator, analyze the following SaaS idea and determine if additional information is needed before proceeding with validation.
+      prompt: `You are an expert SaaS validator. Analyze this SaaS idea and determine if additional information is needed before validation.
 
-    IDEA DETAILS:
-    ${JSON.parse(JSON.stringify(idea))}
+IDEA: ${idea.name}
+DESCRIPTION: ${idea.description || "No description provided"}
+INDUSTRY: ${idea.industry || "Not specified"}
+PROBLEM SOLVED: ${idea.problemSolved || "Not specified"}
+SOLUTION: ${idea.solutionOffered || "Not specified"}
 
-    VALIDATION FRAMEWORK:
-    ${SAAS_VALIDATION_PROMPT}
+Check if the idea has clear information about:
+- Target market and customer profile
+- Revenue model and pricing
+- Technical approach
+- Competitive differentiation
+- Go-to-market strategy
 
-    ANALYSIS REQUIREMENTS:
-    1. Thoroughly evaluate if the idea provides clear information about:
-       - Core value proposition and unique selling points
-       - Target market and ideal customer profile
-       - Key problems being solved
-       - Revenue model and pricing strategy
-       - Technical feasibility and implementation approach
-       - Competitive landscape and differentiation
-       - Go-to-market strategy
-       - Scalability potential
+If critical information is missing, return questionsRequired: true with specific questions.
+If the idea is well-defined, return questionsRequired: false with empty requiredQuestions array.
 
-    2. Identify any critical gaps in information that could impact validation accuracy
-    
-    3. Consider industry-specific factors and regulatory requirements
+IMPORTANT: Return a valid JSON object, not a string. The response should be structured data, not text.
+`,
+    });
 
-    4. Assess whether the idea demonstrates:
-       - Market viability
-       - Technical feasibility
-       - Business model sustainability
-       - Competitive advantage
-       - Growth potential
-
-    RESPONSE FORMAT:
-    {
-        questionsRequired: true/false,
-        requiredQuestions: [
-            {
-                question: "Specific, focused question addressing information gap",
-                importance: "low/medium/important",
-                context: "Brief explanation of why this information is needed"
-            }
-        ]
-    }
-
-    GUIDELINES:
-    - Only request information that is truly missing and critical for validation
-    - Prioritize questions based on their impact on validation accuracy
-    - Frame questions to elicit specific, actionable responses
-    - Avoid asking about information already provided
-    - Consider both immediate validation needs and long-term success factors
-
-    Return questionsRequired: false only if the idea is comprehensively detailed and ready for full validation.
-    `,
-  });
-
-  return validationPrep;
+    return validationPrep;
+  } catch (error) {
+    console.error("Error in suggestQuestions:", error);
+    throw new Error("Idea not found");
+  }
 };
 
 // ============================================================================

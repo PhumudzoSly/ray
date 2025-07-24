@@ -79,15 +79,18 @@ export const validateIdea = inngestClient.createFunction(
 
     // Step 3: Update idea with validation results
     const updatedIdea = await step.run("update-idea", async () => {
-      const updateData: any = {
-        aiValidationStatus: validationResults.validationStatus,
-        aiValidationCompletedAt: new Date(),
-        aiValidationResults: validationResults,
-      };
+      const updateData: any = {};
 
       // Only update score if validation was successful
       if (validationResults.overallScore > 0) {
         updateData.aiOverallValidation = validationResults.overallScore;
+      }
+
+      // Update status based on validation results
+      if (validationResults.validationStatus === "VALIDATED") {
+        updateData.status = "VALIDATED";
+      } else if (validationResults.validationStatus === "FAILED") {
+        updateData.status = "INVALIDATED";
       }
 
       return await prisma.idea.update({

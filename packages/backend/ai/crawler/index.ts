@@ -26,12 +26,9 @@ export type {
 // Cache management
 export { CacheManager, CacheUtils } from "./cache-manager";
 
-// Web search service (now uses search APIs)
-export {
-  WebSearchService,
-  type SearchResult,
-  type SearchQuery,
-} from "./web-search-service";
+// Search service (no circular dependencies)
+export { SearchService } from "./search-service";
+export type { SearchResult, SearchQuery } from "./search-service";
 
 // URL discovery service
 export { URLDiscoveryService, type DiscoveryStrategy } from "./url-discovery";
@@ -46,27 +43,22 @@ export type { SiteMap, PageData, DataType } from "./site-crawler";
 
 import { WebCrawler } from "./web-crawler";
 import { CacheManager } from "./cache-manager";
-import { WebSearchService } from "./web-search-service";
 import { SaasDataExtractor } from "./data-extractors";
 import { URLDiscoveryService } from "./url-discovery";
 import { SiteCrawler } from "./site-crawler";
+import { SearchService } from "./search-service";
 
 export class UnifiedCrawlerService {
   private crawler: WebCrawler;
   private cache: CacheManager;
-  private searchService: WebSearchService;
+  private searchService: SearchService;
   private discoveryService: URLDiscoveryService;
   private siteCrawler: SiteCrawler;
 
   constructor() {
     this.crawler = new WebCrawler();
     this.cache = new CacheManager();
-    this.searchService = new WebSearchService({
-      // Use search APIs for reliable results
-      searchEngines: ["duckduckgo", "searx"],
-      includeContent: true,
-      maxResults: 15,
-    });
+    this.searchService = new SearchService();
     this.discoveryService = new URLDiscoveryService();
     this.siteCrawler = new SiteCrawler();
   }
@@ -84,11 +76,11 @@ export class UnifiedCrawlerService {
   }
 
   // ============================================================================
-  // SEARCH METHODS (Now using reliable search APIs)
+  // SEARCH METHODS (Using SearchService to avoid circular dependencies)
   // ============================================================================
 
   async search(query: string, options?: any) {
-    return this.searchService.search({ query, options });
+    return this.searchService.search(query, options);
   }
 
   async searchCompetitors(companyName: string, industry: string) {
