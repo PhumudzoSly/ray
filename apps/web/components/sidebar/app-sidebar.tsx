@@ -83,11 +83,6 @@ const data: NavData = {
       url: "/roadmap",
       icon: TbRoad,
     },
-    {
-      name: "Milestones",
-      url: "/milestones",
-      icon: TbProgressCheck,
-    },
   ],
   grow: [
     {
@@ -144,12 +139,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter className="bg-gray-50 dark:bg-inherit">
         <div className="flex flex-col gap-4 p-3">
-          <Link
+          {/* <Link
             href="/settings/teams"
             className="flex text-xs items-center gap-2"
           >
             <Users className="text-muted-foreground" size={15} /> Teams
-          </Link>
+          </Link> */}
           <Link
             href="/settings/integrations"
             className="flex text-xs items-center gap-2"

@@ -25,6 +25,7 @@ import {
   IssueLabel,
   IssueStatus,
 } from "@workspace/backend/prisma/generated/client/client";
+import { DateSelector } from "@/components/ui/selectors";
 
 interface IssueItem {
   id: string;
@@ -53,6 +54,7 @@ interface IssuesGroupedListProps {
   groups: IssueGroup[];
   onItemClick?: (item: IssueItem) => void;
   className?: string;
+  hideAddButton?: boolean;
 }
 
 const statusConfig = {
@@ -98,10 +100,12 @@ function IssueItemComponent({
   item,
   onItemClick,
   className,
+  hideAddButton = false,
 }: {
   item: IssueItem;
   onItemClick?: (item: IssueItem) => void;
   className?: string;
+  hideAddButton?: boolean;
 }) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -246,10 +250,22 @@ function IssueItemComponent({
     }
   };
 
+  const handleDateChange = async (date: Date | null) => {
+    try {
+      await updateIssueMutation.mutateAsync({
+        issueId: item.id,
+        updates: { dueDate: date ? date.toISOString() : null },
+      });
+    } catch (error) {
+      // Error handling is done in the mutation's onError callback
+      console.error("Date update failed:", error);
+    }
+  };
+
   return (
     <div
       className={cn(
-        "group flex justify-between w-full items-center gap-3 py-2 px-3 hover:bg-accent/50 cursor-pointer transition-colors duration-150",
+        "group flex justify-between overflow-x-auto w-full items-center gap-3 py-2 px-3 hover:bg-accent/50 cursor-pointer transition-colors duration-150",
         isUpdating === item.id && "opacity-50 pointer-events-none",
         className
       )}
@@ -284,6 +300,10 @@ function IssueItemComponent({
 
       <div className="flex items-center gap-2" onClick={handleInteractiveClick}>
         <Badge variant="neutral">{item.project?.name}</Badge>
+        <DateSelector
+          onChange={(date) => handleDateChange(date)}
+          value={item.dueDate ? new Date(item.dueDate) : null}
+        />
         <IssueLabelField issueId={item.id} value={item?.label as IssueLabel} />
         <AssigneeSelector
           onChange={handleAssigneeChange}
@@ -299,10 +319,12 @@ function IssueGroupComponent({
   group,
   onItemClick,
   className,
+  hideAddButton = false,
 }: {
   group: IssueGroup;
   onItemClick?: (item: IssueItem) => void;
   className?: string;
+  hideAddButton?: boolean;
 }) {
   const statusInfo = statusConfig[group.id as keyof typeof statusConfig] || {
     icon: Circle,
@@ -313,7 +335,7 @@ function IssueGroupComponent({
   const StatusIcon = statusInfo.icon;
 
   return (
-    <div className={cn("border-t", className)}>
+    <div className={cn("border-t overflow-x-auto", className)}>
       {/* Linear-style group header */}
       <div
         className={cn(
@@ -331,7 +353,9 @@ function IssueGroupComponent({
               {group.count}
             </Badge>
           </div>
-          <NewIssue size="sm" defaultStatus={group.id as IssueStatus} />
+          {!hideAddButton && (
+            <NewIssue size="sm" defaultStatus={group.id as IssueStatus} />
+          )}
         </div>
       </div>
 
@@ -343,6 +367,7 @@ function IssueGroupComponent({
               key={item.id}
               item={item}
               onItemClick={onItemClick}
+              hideAddButton={hideAddButton}
             />
           ))}
         </div>
@@ -355,14 +380,16 @@ export function IssuesGroupedList({
   groups,
   onItemClick,
   className,
+  hideAddButton = false,
 }: IssuesGroupedListProps) {
   return (
-    <div className={cn(className)}>
+    <div className={cn(className, "overflow-x-auto")}>
       {groups.map((group) => (
         <IssueGroupComponent
           key={group.id}
           group={group}
           onItemClick={onItemClick}
+          hideAddButton={hideAddButton}
         />
       ))}
     </div>

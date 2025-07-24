@@ -366,7 +366,7 @@ function WaitlistTableSkeleton() {
   return (
     <div className="space-y-2">
       {/* Title and Description Section */}
-      <div className="space-y-2 p-4">
+      <div className="p-4">
         <h1 className="text-3xl font-bold tracking-tight">Waitlists</h1>
         <p className="text-muted-foreground">
           Manage your product waitlists, track signups, and engage with your

@@ -78,6 +78,25 @@ export const getAllIssues = async () => {
   }
 };
 
+export const getUpcomingDeadlines = async (projectId: string) => {
+  const { org } = await getSession();
+
+  const issues = await prisma.issue.findMany({
+    where: {
+      projectId,
+      organizationId: org,
+      dueDate: {
+        gt: new Date(),
+        lt: new Date(new Date().setDate(new Date().getDate() + 7)),
+      },
+    },
+    orderBy: { dueDate: "asc" },
+    include: { project: true, assignedTo: true },
+  });
+
+  return { success: true, data: issues };
+};
+
 /**
  * Update an issue (scoped to org)
  */

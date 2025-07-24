@@ -23,7 +23,6 @@ export const ProjectInfo = ({
   platform: ProjectPlatform;
   token: string;
 }) => {
-
   const queryClient = useQueryClient();
   // Optimistic update mutation for project
   const updateProjectMutation = useMutation({
@@ -33,7 +32,10 @@ export const ProjectInfo = ({
     onMutate: async ({ id, updates }) => {
       await queryClient.cancelQueries({ queryKey: ["project", id] });
       const previousProject = queryClient.getQueryData(["project", id]);
-      queryClient.setQueryData(["project", id], (old: any) => ({ ...old, ...updates }));
+      queryClient.setQueryData(["project", id], (old: any) => ({
+        ...old,
+        ...updates,
+      }));
       return { previousProject };
     },
     onError: (err, variables, context) => {
@@ -65,7 +67,10 @@ export const ProjectInfo = ({
               value={title}
               onSave={async (value) => {
                 try {
-                  updateProjectMutation.mutate({ id, updates: { name: value } });
+                  updateProjectMutation.mutate({
+                    id,
+                    updates: { name: value },
+                  });
                 } catch (error) {
                   toast.error("Failed to update project");
                 }
@@ -77,9 +82,6 @@ export const ProjectInfo = ({
           <Button variant={"dark"} asChild>
             <Link href={`/project/${id}/board`}>Project Board</Link>
           </Button>
-          <Button variant={"fancy"} asChild>
-            <Link href={`/project/${id}/flow`}>Project Flow</Link>
-          </Button>
         </div>
       </div>
 
@@ -87,7 +89,10 @@ export const ProjectInfo = ({
         value={description}
         onSave={async (value) => {
           try {
-            updateProjectMutation.mutate({ id, updates: { description: value } });
+            updateProjectMutation.mutate({
+              id,
+              updates: { description: value },
+            });
           } catch (error) {
             toast.error("Failed to update project");
           }

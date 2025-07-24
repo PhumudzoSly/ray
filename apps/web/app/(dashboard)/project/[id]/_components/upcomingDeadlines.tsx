@@ -1,22 +1,16 @@
 "use client";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { IssuesFilters } from "./issue-filters";
-import { Button } from "@workspace/ui/components/button";
-import { LayoutGrid, List } from "lucide-react";
 import React from "react";
-import { IssuesKanban } from "@/components/project/issues/issue-kanbab";
+import { useQuery } from "@tanstack/react-query";
+import * as issueActions from "@/actions/issue";
 import {
   IssuesGroupedList,
   IssueGroup,
   IssueItem,
-} from "./issues-grouped-list";
-import { useQuery } from "@tanstack/react-query";
-import * as issueActions from "@/actions/issue";
+} from "@/components/project/issues/issues-grouped-list";
 
 // Use any type for now to avoid type conflicts
 type CustomIssue = any;
-
-type ViewMode = "list" | "kanban";
 
 // Status colors and labels
 const statusConfig = {
@@ -28,18 +22,16 @@ const statusConfig = {
   CANCELLED: { color: "text-muted-foreground", label: "Cancelled" },
 };
 
-const AllIssues = () => {
+const UpcomingDealines = ({ projectId }: { projectId: string }) => {
   const { data: issues } = useQuery({
-    queryKey: ["issues"],
+    queryKey: ["upcoming-deadlines", projectId],
     queryFn: async () => {
-      const res = await issueActions.getAllIssues();
+      const res = await issueActions.getUpcomingDeadlines(projectId);
       return res?.data || [];
     },
   });
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [viewMode, setViewMode] = React.useState<ViewMode>("list");
 
   // Client-side filtering logic
   const filteredIssues = React.useMemo(() => {
@@ -191,132 +183,23 @@ const AllIssues = () => {
     router.push(`/issues/${item.id}`);
   };
 
-  // Show filtered results message if filters are applied
-  const hasActiveFilters = searchParams.toString().length > 0;
-  const filteredCount = filteredIssues.length;
-  const totalCount = issues?.length;
-
-  if (!issues?.length) {
-    return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center">
-        <div className="max-w-md space-y-2">
-          <h2 className="text-xl font-semibold">No issues found</h2>
-          <p className="text-muted-foreground">
-            Get started by creating your first issue. Issues help you track
-            tasks, bugs, and feature requests.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show no results message when filters are applied but no issues match
-  if (hasActiveFilters && filteredIssues.length === 0) {
-    return (
-      <div className="h-full flex flex-col">
-        <div className="flex items-center justify-between gap-4 p-2 bg-background z-50 border-b sticky top-[50px]">
-          <IssuesFilters />
-          <div className="flex items-center gap-2">
-            <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === "kanban" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setViewMode("kanban")}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Filter results indicator */}
-        <div className="px-4 py-2 bg-muted/50 border-b">
-          <p className="text-sm text-muted-foreground">
-            Showing 0 of {totalCount} issues
-            {searchParams.get("search") && (
-              <span> matching "{searchParams.get("search")}"</span>
-            )}
-          </p>
-        </div>
-
-        <div className="flex min-h-[400px] flex-col items-center justify-center gap-4 rounded-lg border border-dashed p-8 text-center">
-          <div className="max-w-md space-y-2">
-            <h2 className="text-xl font-semibold">
-              No issues match your filters
-            </h2>
-            <p className="text-muted-foreground">
-              Try adjusting your search criteria or clearing some filters to see
-              more results.
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                router.push(pathname);
-              }}
-            >
-              Clear all filters
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  if (!issues?.length) return null;
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between gap-4 p-2 bg-background z-50 border-b sticky top-[50px]">
-        <IssuesFilters />
-        <div className="flex items-center gap-2">
-          <Button
-            variant={viewMode === "list" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("list")}
-          >
-            <List className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === "kanban" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("kanban")}
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </Button>
-        </div>
+    <div className="h-full flex flex-col gap-2">
+      <div className="border border-border p-2">
+        <h2 className="text-lg font-semibold">Upcoming deadlines</h2>
+        <p className="text-sm text-muted-foreground">
+          {issues?.length} issues due in the next 7 days
+        </p>
       </div>
-
-      {/* Filter results indicator */}
-      {hasActiveFilters && (
-        <div className="px-4 py-2 bg-muted/50 border-b">
-          <p className="text-sm text-muted-foreground">
-            Showing {filteredCount} of {totalCount} issues
-            {searchParams.get("search") && (
-              <span> matching "{searchParams.get("search")}"</span>
-            )}
-          </p>
-        </div>
-      )}
-
-      {viewMode === "kanban" ? (
-        <div>
-          <IssuesKanban issues={filteredIssues} showProject={true} />
-        </div>
-      ) : (
-        <div className="flex-1 overflow-auto">
-          <div className="w-full">
-            <IssuesGroupedList
-              groups={groupedIssues}
-              onItemClick={handleIssueClick}
-            />
-          </div>
-        </div>
-      )}
+      <IssuesGroupedList
+        hideAddButton={true}
+        groups={groupedIssues}
+        onItemClick={handleIssueClick}
+      />
     </div>
   );
 };
 
-export default AllIssues;
+export default UpcomingDealines;
