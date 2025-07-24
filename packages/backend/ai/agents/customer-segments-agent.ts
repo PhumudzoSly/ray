@@ -2,9 +2,104 @@ import { generateText, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 import { SAAS_VALIDATION_PROMPT } from "../../prompts";
+import { allTools } from "../tools";
 
 // ============================================================================
-// CUSTOMER SEGMENTS ANALYSIS PROMPT
+// CUSTOMER SEGMENTS RESEARCH PROMPT (FOR GENERATETEXT WITH TOOLS)
+// ============================================================================
+
+const CUSTOMER_SEGMENTS_RESEARCH_PROMPT = `You are an expert customer segmentation analyst with 15+ years of experience in SaaS customer research and market segmentation. Your task is to conduct comprehensive research to identify and analyze customer segments for a specific SaaS idea.
+
+## RESEARCH OBJECTIVES
+1. **Identify Target Customer Segments**: Find the most promising customer segments for this SaaS idea
+2. **Analyze Customer Pain Points**: Understand what problems these customers face
+3. **Research Customer Behavior**: Learn how these customers make decisions and use technology
+4. **Validate Market Demand**: Confirm there's real demand for this solution
+5. **Analyze Competitive Landscape**: Understand how competitors serve these segments
+
+## RESEARCH STRATEGY
+
+### STEP 1: INITIAL MARKET RESEARCH
+- Search for the target market and industry trends
+- Research similar products and their customer bases
+- Look for market reports and industry analysis
+- Find customer testimonials and reviews
+
+### STEP 2: CUSTOMER SEGMENT RESEARCH
+- Search for customer profiles and personas in this space
+- Research customer pain points and challenges
+- Look for customer behavior patterns and preferences
+- Find information about customer budgets and decision-making
+
+### STEP 3: COMPETITIVE ANALYSIS
+- Research competitors and their customer segments
+- Analyze how competitors position themselves
+- Look for gaps in competitor offerings
+- Research customer satisfaction with existing solutions
+
+### STEP 4: VALIDATION RESEARCH
+- Search for market validation data
+- Look for customer acquisition costs and conversion rates
+- Research customer lifetime value in this market
+- Find information about churn rates and retention
+
+## TOOL USAGE GUIDELINES
+
+### SEARCH TOOLS
+- Use \`search\` for broad market research and initial exploration
+- Use \`searchDetailed\` for comprehensive analysis of specific topics
+- Focus on recent information (last 2-3 years) for accuracy
+
+### SCRAPING TOOLS
+- Use \`scrapeUrl\` to extract detailed content from relevant websites
+- Focus on competitor websites, customer review sites, and industry reports
+- Extract customer testimonials, case studies, and pricing information
+
+### RESEARCH TOOLS
+- Use \`research\` for comprehensive topic analysis
+- Use \`competitorResearch\` to analyze specific competitors
+- Use \`trendResearch\` to understand market trends and customer behavior
+
+### ANALYSIS TOOLS
+- Use \`sentimentAnalysis\` to understand customer satisfaction
+- Use \`multiQueryResearch\` to compare different customer segments
+
+## RESEARCH FOCUS AREAS
+
+### Customer Demographics
+- Age ranges, locations, company sizes, industries
+- Technology adoption patterns and preferences
+- Budget ranges and spending behaviors
+
+### Customer Pain Points
+- Primary challenges and problems they face
+- Current solutions and their limitations
+- Unmet needs and opportunities
+
+### Customer Behavior
+- How they make purchasing decisions
+- What influences their choices
+- Their technology stack and integration needs
+
+### Market Dynamics
+- Customer acquisition channels and costs
+- Conversion rates and customer lifecycle
+- Retention strategies and churn factors
+
+## OUTPUT REQUIREMENTS
+Provide comprehensive research findings including:
+- Detailed customer segment profiles
+- Pain points and challenges for each segment
+- Decision-making factors and preferences
+- Market size estimates and accessibility
+- Competitive landscape analysis
+- Customer acquisition and retention insights
+- Specific data points and sources for validation
+
+Focus on actionable insights that can inform customer segmentation strategy.`;
+
+// ============================================================================
+// CUSTOMER SEGMENTS ANALYSIS PROMPT (FOR GENERATEOBJECT)
 // ============================================================================
 
 const CUSTOMER_SEGMENTS_PROMPT = `You are an expert customer segmentation analyst with 15+ years of experience in SaaS customer research and market segmentation. Your ONLY task is to identify and analyze customer segments for a specific SaaS idea using the comprehensive SaaS validation framework.
@@ -99,7 +194,46 @@ export const generateCustomerSegmentsData = async (
     currentFocus: "customer-segmentation",
   };
 
-  // STEP 1: GENERATE STRUCTURED CUSTOMER SEGMENTS DATA
+  // STEP 1: CONDUCT RESEARCH USING GENERATETEXT WITH TOOLS
+  console.log("🔍 Customer Segments Agent: Conducting research with tools...");
+
+  let researchData = "";
+
+  try {
+    const { text: researchResults } = await generateText({
+      model: google("gemini-2.0-flash", {
+        useSearchGrounding: true,
+      }),
+      tools: allTools,
+      maxSteps: 100,
+      toolChoice: "required",
+      prompt: `${CUSTOMER_SEGMENTS_RESEARCH_PROMPT}
+
+IDEA CONTEXT:
+${JSON.stringify(idea, null, 2)}
+
+RESEARCH CONTEXT:
+${JSON.stringify(researchContext, null, 2)}
+
+CONDUCT COMPREHENSIVE RESEARCH:
+1. Start with broad market research to understand the target market
+2. Research customer segments and their characteristics
+3. Analyze customer pain points and decision factors
+4. Research competitive landscape and customer satisfaction
+5. Gather data on customer acquisition, retention, and lifetime value
+6. Validate market demand and segment accessibility
+
+Use the available tools to gather comprehensive data about customer segments for this SaaS idea. Focus on actionable insights that can inform segmentation strategy.`,
+    });
+
+    researchData = researchResults;
+    console.log("✅ Customer Segments Agent: Research phase completed");
+  } catch (error) {
+    console.error("❌ Customer Segments Agent research phase failed:", error);
+    researchData = "Research phase failed - proceeding with limited data";
+  }
+
+  // STEP 2: GENERATE STRUCTURED CUSTOMER SEGMENTS DATA
   console.log("🔍 Customer Segments Agent: Generating structured data...");
 
   try {
@@ -201,9 +335,14 @@ ${JSON.stringify(idea, null, 2)}
 RESEARCH CONTEXT:
 ${JSON.stringify(researchContext, null, 2)}
 
+RESEARCH DATA:
+${researchData}
+
 IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
 
-Generate ONLY customer segmentation analysis with detailed profiles, segment validation, and prioritization. Focus on SaaS-specific customer insights and actionable intelligence for validation of this specific idea.`,
+Generate ONLY customer segmentation analysis with detailed profiles, segment validation, and prioritization. Focus on SaaS-specific customer insights and actionable intelligence for validation of this specific idea.
+
+Use the research data provided to inform your analysis and ensure all insights are grounded in real market data.`,
     });
 
     console.log(
@@ -212,8 +351,7 @@ Generate ONLY customer segmentation analysis with detailed profiles, segment val
 
     return {
       segmentsData,
-      researchText:
-        "AI-based customer segmentation analysis completed using industry knowledge and SaaS customer dynamics",
+      researchText: researchData,
       agentType: "customer-segments",
       timestamp: new Date(),
       originalIdeaId: idea.id,
@@ -252,6 +390,7 @@ Generate ONLY customer segmentation analysis with detailed profiles, segment val
     return {
       segmentsData: fallbackData,
       researchText:
+        researchData ||
         "Customer segmentation analysis failed - fallback data provided",
       agentType: "customer-segments",
       timestamp: new Date(),

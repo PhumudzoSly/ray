@@ -2,82 +2,87 @@ import { generateText, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 import { SAAS_VALIDATION_PROMPT } from "../../prompts";
+import { allTools } from "../tools";
 
 // ============================================================================
-// COMPETITOR DISCOVERY PROMPT
+// COMPETITOR DISCOVERY RESEARCH PROMPT (FOR TOOL USAGE)
 // ============================================================================
 
-const COMPETITOR_DISCOVERY_PROMPT = `You are an expert competitive intelligence analyst with 15+ years of experience in SaaS competitor discovery and analysis. Your ONLY task is to identify and analyze competitors for a specific SaaS category using the comprehensive SaaS validation framework.
+const COMPETITOR_DISCOVERY_RESEARCH_PROMPT = `You are an expert competitive intelligence analyst with 15+ years of experience in SaaS competitor discovery and analysis. Your task is to conduct comprehensive research to identify and analyze competitors for a specific SaaS category.
 
-## SAAS COMPETITIVE INTELLIGENCE EXPERTISE
+## RESEARCH MISSION
+You MUST use the available research tools to gather comprehensive competitive intelligence before providing any analysis. Your goal is to collect real data about competitors, market dynamics, and competitive positioning.
 
-### UNDERSTANDING THE SAAS COMPETITIVE LANDSCAPE
-You understand the unique dynamics of SaaS competition, including:
-- The SaaS flywheel and network effects that create competitive moats
-- Product-led growth vs. sales-led approaches and their competitive implications
-- The importance of switching costs and data moats in SaaS competition
-- How AI integration is reshaping competitive advantages
-- The role of ecosystem partnerships and integrations in competitive positioning
+## REQUIRED RESEARCH STEPS (USE TOOLS FOR EACH STEP):
 
-### COMPETITOR DISCOVERY METHODOLOGY
+### 1. INITIAL COMPETITOR SEARCH
+- Use the search tool to find direct competitors for the SaaS idea
+- Search for companies solving the same problem in the same market
+- Look for both established players and emerging startups
 
-#### 1. COMPETITOR IDENTIFICATION
-- **Direct competitors**: Same problem, same solution approach, same target market
-- **Indirect competitors**: Same problem, different solution approach
-- **Substitute solutions**: Alternative approaches that solve the same customer need
-- **Potential new entrants**: Companies that could easily pivot into this space
-- **Adjacent market players**: Companies in related markets with expansion potential
-- **Platform competitors**: Large platforms that could build this functionality
+### 2. COMPETITOR WEBSITE ANALYSIS
+- Use scrapeUrl to visit and analyze competitor websites
+- Extract product information, features, pricing, and positioning
+- Understand their target audience and value proposition
 
-#### 2. COMPETITOR PROFILING
-- **Company background**: Founding story, leadership, company culture
-- **Product features**: Core capabilities, unique features, technology stack
-- **Target audience**: Customer segments, market positioning, value proposition
-- **Pricing models**: Subscription tiers, freemium strategies, enterprise pricing
-- **Revenue streams**: Primary revenue, expansion revenue, partnership revenue
-- **Technology stack**: Architecture, integrations, scalability approach
-- **Team structure**: Size, expertise, development velocity
-- **Funding history**: Investment rounds, valuation, financial health
-- **Geographic presence**: Markets served, international expansion plans
+### 3. COMPREHENSIVE COMPETITOR RESEARCH
+- Use competitorResearch tool for detailed competitor analysis
+- Research funding, growth, market position, and customer sentiment
+- Analyze their go-to-market strategy and competitive advantages
 
-#### 3. COMPETITIVE POSITIONING ANALYSIS
-- **Value proposition**: Core benefits and differentiation
-- **Market share**: Relative position in the market
-- **Competitive advantages**: Network effects, data moats, switching costs
-- **SWOT analysis**: Strengths, weaknesses, opportunities, threats
-- **Customer satisfaction**: Reviews, NPS scores, retention rates
-- **Integration ecosystem**: Partnerships, APIs, third-party integrations
-- **Go-to-market strategy**: Sales approach, marketing channels, customer acquisition
+### 4. MARKET TREND ANALYSIS
+- Use trendResearch to understand industry trends and competitive dynamics
+- Research emerging threats and market disruptions
+- Analyze competitive moves and strategic shifts
 
-#### 4. COMPETITIVE MOVES TRACKING
-- **Recent product launches**: New features, platform updates, integrations
-- **Pricing changes**: Price increases, new tiers, freemium adjustments
-- **Strategic partnerships**: Integrations, channel partnerships, acquisitions
-- **Market expansion**: New geographies, customer segments, product categories
-- **Technology investments**: AI integration, platform improvements, security enhancements
-- **Team growth**: Hiring patterns, expertise acquisition, organizational changes
+### 5. CUSTOMER SENTIMENT ANALYSIS
+- Use sentimentAnalysis to understand customer perception of competitors
+- Research reviews, feedback, and market sentiment
+- Identify strengths and weaknesses from customer perspective
 
-### SAAS-SPECIFIC COMPETITIVE FACTORS
+### 6. MULTI-QUERY RESEARCH
+- Use multiQueryResearch to investigate specific competitive aspects
+- Research pricing strategies, feature comparisons, and market positioning
+- Analyze competitive differentiation and unique value propositions
 
-#### Network Effects and Platform Dynamics
-- **Direct network effects**: Value increases with user base size
-- **Indirect network effects**: Complementary products enhance value
-- **Data network effects**: More data improves product for all users
-- **Ecosystem effects**: Third-party integrations and developers
+## RESEARCH TOOLS AVAILABLE:
+- search: Basic web search for competitor information
+- searchDetailed: Comprehensive search with content scraping
+- scrapeUrl: Visit and analyze competitor websites
+- scrapeMultipleUrls: Analyze multiple competitor sites efficiently
+- research: Comprehensive research combining search and scraping
+- competitorResearch: Specialized competitor research
+- trendResearch: Research industry trends and competitive dynamics
+- sentimentAnalysis: Analyze customer sentiment about competitors
+- multiQueryResearch: Research across multiple related queries
 
-#### Switching Costs and Lock-in
-- **Data migration costs**: Time and effort to move data
-- **Integration costs**: Rebuilding workflows and connections
-- **Training costs**: Learning new systems and processes
-- **Contractual lock-in**: Long-term contracts and penalties
+## RESEARCH INSTRUCTIONS:
+1. Start with broad competitor searches to identify key players
+2. Visit competitor websites to understand their products and positioning
+3. Conduct detailed competitor research for each major player
+4. Research market trends and competitive dynamics
+5. Analyze customer sentiment and reviews
+6. Use multiple research queries to gather comprehensive intelligence
 
-#### Product-Led Growth vs. Sales-Led
-- **Self-service onboarding**: Ability to try without sales intervention
-- **Viral mechanics**: Built-in sharing and collaboration features
-- **Freemium conversion**: Free-to-paid conversion rates
-- **Expansion revenue**: Upsell and cross-sell opportunities
+## OUTPUT REQUIREMENTS:
+After conducting comprehensive research using the tools, provide a detailed research summary that includes:
+- List of identified competitors with basic information
+- Key findings about competitor products, pricing, and positioning
+- Market trends and competitive dynamics discovered
+- Customer sentiment and perception insights
+- Competitive threats and opportunities identified
+- Data quality assessment and any gaps in research
 
-## ANALYSIS REQUIREMENTS
+IMPORTANT: You MUST use the research tools extensively before providing any analysis. Do not provide analysis without first gathering real competitive intelligence through the tools.`;
+
+// ============================================================================
+// COMPETITOR DISCOVERY ANALYSIS PROMPT (FOR STRUCTURED OUTPUT)
+// ============================================================================
+
+const COMPETITOR_DISCOVERY_ANALYSIS_PROMPT = `You are an expert competitive intelligence analyst. Based on the comprehensive research data provided, generate a structured competitor analysis following the exact schema requirements.
+
+## ANALYSIS REQUIREMENTS:
+- Use the research data to populate the competitor analysis schema
 - Focus on SaaS-specific competitive factors and dynamics
 - Consider product-led growth vs. sales-led competitive implications
 - Analyze network effects and platform economics
@@ -85,8 +90,10 @@ You understand the unique dynamics of SaaS competition, including:
 - Assess AI integration and competitive advantages
 - Consider ecosystem partnerships and integration strategies
 
-## OUTPUT FORMAT
-Provide ONLY competitor analysis with detailed profiles, competitive positioning, and strategic insights. Do not include market size analysis, customer research, or other topics. Focus on competitive intelligence that supports comprehensive SaaS validation.`;
+## RESEARCH DATA CONTEXT:
+The following research data was gathered using comprehensive web research tools and should be used to populate the structured analysis:
+
+`;
 
 export const generateCompetitorData = async (
   idea: any,
@@ -103,10 +110,52 @@ export const generateCompetitorData = async (
     currentFocus: "competitor-analysis",
   };
 
-  // STEP 1: GENERATE STRUCTURED COMPETITOR DATA
+  // STEP 1: CONDUCT RESEARCH USING generateText WITH TOOLS
+  let researchData;
+
+  try {
+    console.log("🔍 Step 1: Conducting comprehensive research with tools...");
+
+    const { text: researchText } = await generateText({
+      model: google("gemini-2.0-flash", {
+        useSearchGrounding: true,
+      }),
+      tools: allTools,
+      maxSteps: 100,
+      toolChoice: "required",
+      prompt: `${COMPETITOR_DISCOVERY_RESEARCH_PROMPT}
+
+IDEA CONTEXT:
+${JSON.stringify(idea, null, 2)}
+
+RESEARCH CONTEXT:
+${JSON.stringify(researchContext, null, 2)}
+
+RESEARCH INSTRUCTIONS:
+1. Start by searching for direct competitors using the search tools
+2. Research competitor websites to understand their products and positioning
+3. Analyze market trends and competitive dynamics
+4. Investigate customer sentiment about competitors
+5. Research funding and growth information for key competitors
+6. Use the research tools to gather comprehensive competitive intelligence
+
+IMPORTANT: Use the available research tools extensively to gather real competitive intelligence before providing any analysis. Do not provide analysis without first conducting thorough research using the tools.`,
+    });
+
+    researchData = researchText;
+    console.log("✅ Step 1: Research completed successfully");
+  } catch (error) {
+    console.error("❌ Step 1: Research failed:", error);
+    researchData =
+      "Research failed due to technical issues. Limited competitive data available.";
+  }
+
+  // STEP 2: GENERATE STRUCTURED COMPETITOR DATA USING generateObject
   let competitorData;
 
   try {
+    console.log("🔍 Step 2: Generating structured competitor analysis...");
+
     const { object: generatedData } = await generateObject({
       model: google("gemini-2.0-flash"),
       schema: z.object({
@@ -186,7 +235,10 @@ export const generateCompetitorData = async (
         dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
         dataGaps: z.array(z.string()),
       }),
-      prompt: `${COMPETITOR_DISCOVERY_PROMPT}
+      prompt: `${COMPETITOR_DISCOVERY_ANALYSIS_PROMPT}
+
+RESEARCH DATA:
+${researchData}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
@@ -194,14 +246,25 @@ ${JSON.stringify(idea, null, 2)}
 RESEARCH CONTEXT:
 ${JSON.stringify(researchContext, null, 2)}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+ANALYSIS INSTRUCTIONS:
+Based on the comprehensive research data above, generate a structured competitor analysis that follows the exact schema requirements. Use the research findings to populate all fields with accurate, data-driven insights.
 
-Generate ONLY competitor analysis with detailed profiles, competitive positioning, and strategic insights. Focus on SaaS-specific competitive factors and actionable intelligence for validation of this specific idea.`,
+IMPORTANT: 
+- Use the research data to inform your analysis
+- Focus on SaaS-specific competitive factors and dynamics
+- Consider product-led growth vs. sales-led competitive implications
+- Analyze network effects and platform economics
+- Evaluate switching costs and customer lock-in strategies
+- Assess AI integration and competitive advantages
+- Consider ecosystem partnerships and integration strategies
+
+Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.`,
     });
 
     competitorData = generatedData;
+    console.log("✅ Step 2: Structured analysis completed successfully");
   } catch (error) {
-    console.error("❌ Competitor Discovery Agent failed:", error);
+    console.error("❌ Step 2: Structured analysis failed:", error);
 
     // Return fallback competitor data
     competitorData = {
@@ -235,7 +298,7 @@ Generate ONLY competitor analysis with detailed profiles, competitive positionin
   return {
     competitorData,
     researchText:
-      "AI-based competitor analysis completed using industry knowledge and SaaS competitive dynamics",
+      "AI-based competitor analysis completed using comprehensive research tools and SaaS competitive dynamics",
     agentType: "competitor-discovery",
     timestamp: new Date(),
     originalIdeaId: idea.id,

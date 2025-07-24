@@ -2,12 +2,85 @@ import { generateText, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 import { SAAS_VALIDATION_PROMPT } from "../../prompts";
+import { allTools } from "../tools";
 
 // ============================================================================
-// VALIDATION SCORECARD PROMPT
+// VALIDATION SCORECARD RESEARCH PROMPT (FOR TOOLS)
 // ============================================================================
 
-const VALIDATION_SCORECARD_PROMPT = `You are an expert SaaS validation analyst with 15+ years of experience in startup validation and business strategy. Your ONLY task is to create a comprehensive validation scorecard for a specific SaaS idea using the comprehensive SaaS validation framework.
+const VALIDATION_SCORECARD_RESEARCH_PROMPT = `You are an expert SaaS validation analyst with 15+ years of experience in startup validation and business strategy. Your task is to conduct comprehensive research to validate a specific SaaS idea using available research tools.
+
+## RESEARCH OBJECTIVES
+
+### PRIMARY RESEARCH AREAS
+1. **Market Validation Research**
+   - Search for market size data, growth trends, and industry reports
+   - Research customer pain points and demand validation
+   - Analyze market maturity and adoption patterns
+   - Investigate market barriers and entry challenges
+
+2. **Competitive Landscape Research**
+   - Identify direct and indirect competitors
+   - Research competitor positioning, features, and pricing
+   - Analyze competitive advantages and differentiation opportunities
+   - Investigate competitive threats and market dynamics
+
+3. **Technical Feasibility Research**
+   - Research technology trends and implementation approaches
+   - Investigate technical requirements and complexity
+   - Analyze technical risks and challenges
+   - Research technical advantages and innovation opportunities
+
+4. **Financial Viability Research**
+   - Research pricing models and revenue strategies
+   - Analyze cost structures and operational requirements
+   - Investigate funding requirements and unit economics
+   - Research financial projections and growth potential
+
+5. **Risk Assessment Research**
+   - Research market risks and uncertainties
+   - Analyze competitive risks and threats
+   - Investigate technical risks and implementation challenges
+   - Research financial risks and viability concerns
+
+### RESEARCH METHODOLOGY
+- Use search tools to find relevant market data and industry reports
+- Scrape competitor websites to understand their positioning and features
+- Research technology trends and implementation approaches
+- Analyze financial data and pricing strategies
+- Investigate risk factors and mitigation strategies
+
+### TOOL USAGE GUIDELINES
+- Use search tools to find comprehensive market and competitive data
+- Scrape relevant websites for detailed competitor analysis
+- Research technology trends and implementation approaches
+- Analyze financial viability and pricing strategies
+- Investigate risk factors and market dynamics
+
+## RESEARCH REQUIREMENTS
+- Focus on SaaS-specific validation factors and metrics
+- Consider product-led growth vs. sales-led validation
+- Analyze unit economics and customer lifetime value
+- Evaluate technical feasibility and scalability
+- Assess competitive positioning and market entry
+- Consider risk factors and mitigation strategies
+
+## OUTPUT FORMAT
+Provide comprehensive research findings with:
+- Market validation insights and data
+- Competitive landscape analysis
+- Technical feasibility assessment
+- Financial viability analysis
+- Risk assessment and mitigation strategies
+- Strategic recommendations based on research
+
+Use the available tools to gather comprehensive data for SaaS validation analysis.`;
+
+// ============================================================================
+// VALIDATION SCORECARD PROMPT (FOR STRUCTURED OUTPUT)
+// ============================================================================
+
+const VALIDATION_SCORECARD_PROMPT = `You are an expert SaaS validation analyst with 15+ years of experience in startup validation and business strategy. Your ONLY task is to create a comprehensive validation scorecard for a specific SaaS idea using the comprehensive SaaS validation framework and research data provided.
 
 ## SAAS VALIDATION EXPERTISE
 
@@ -111,7 +184,57 @@ export const generateValidationScorecard = async (
     currentFocus: "validation-scorecard",
   };
 
-  // STEP 1: GENERATE STRUCTURED VALIDATION SCORECARD DATA
+  // STEP 1: CONDUCT COMPREHENSIVE RESEARCH USING TOOLS
+  console.log(
+    "🔍 Validation Scorecard Agent: Conducting research with tools..."
+  );
+
+  let researchData = "";
+
+  try {
+    const { text: researchResults } = await generateText({
+      model: google("gemini-2.0-flash", {
+        useSearchGrounding: true,
+      }),
+      tools: allTools,
+      maxSteps: 100,
+      toolChoice: "required",
+      prompt: `${VALIDATION_SCORECARD_RESEARCH_PROMPT}
+
+IDEA CONTEXT:
+${JSON.stringify(idea, null, 2)}
+
+RESEARCH CONTEXT:
+${JSON.stringify(researchContext, null, 2)}
+
+EXISTING RESEARCH DATA:
+- Market Size Data: ${JSON.stringify(marketSizeData, null, 2)}
+- Competitor Data: ${JSON.stringify(competitorData, null, 2)}
+- Customer Segments Data: ${JSON.stringify(segmentsData, null, 2)}
+- Technology Data: ${JSON.stringify(technologyData, null, 2)}
+
+RESEARCH INSTRUCTIONS:
+1. Use search tools to find additional market data, competitor information, and industry trends
+2. Scrape competitor websites to understand their positioning, features, and pricing
+3. Research technology trends and implementation approaches for this SaaS idea
+4. Analyze financial viability, pricing strategies, and unit economics
+5. Investigate risk factors and market dynamics
+6. Synthesize all research findings into comprehensive validation insights
+
+Use the available tools to gather comprehensive data for SaaS validation analysis. Focus on finding concrete data points, competitor insights, market trends, and risk factors that will inform the validation scorecard.`,
+    });
+
+    researchData = researchResults;
+    console.log("✅ Validation Scorecard Agent: Completed research phase");
+  } catch (error) {
+    console.error(
+      "❌ Validation Scorecard Agent research phase failed:",
+      error
+    );
+    researchData = "Research phase failed - proceeding with existing data only";
+  }
+
+  // STEP 2: GENERATE STRUCTURED VALIDATION SCORECARD DATA
   console.log("🔍 Validation Scorecard Agent: Generating structured data...");
 
   try {
@@ -208,20 +331,22 @@ export const generateValidationScorecard = async (
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
 
-RESEARCH DATA:
+EXISTING RESEARCH DATA:
 ${JSON.stringify(researchContext, null, 2)}
+
+COMPREHENSIVE RESEARCH FINDINGS:
+${researchData}
 
 IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
 
-Generate ONLY validation scorecard analysis with comprehensive scoring, risk assessment, and strategic recommendations. Focus on SaaS-specific validation insights and actionable intelligence for this specific idea.`,
+Generate ONLY validation scorecard analysis with comprehensive scoring, risk assessment, and strategic recommendations. Focus on SaaS-specific validation insights and actionable intelligence for this specific idea. Use the research findings to inform your analysis and scoring.`,
     });
 
     console.log("✅ Validation Scorecard Agent: Completed validation analysis");
 
     return {
       scorecardData,
-      researchText:
-        "AI-based validation scorecard analysis completed using comprehensive research data and SaaS validation framework",
+      researchText: researchData,
       agentType: "validation-scorecard",
       timestamp: new Date(),
       originalIdeaId: idea.id,
@@ -346,6 +471,7 @@ Generate ONLY validation scorecard analysis with comprehensive scoring, risk ass
     return {
       scorecardData: fallbackData,
       researchText:
+        researchData ||
         "Validation scorecard analysis failed - fallback data provided",
       agentType: "validation-scorecard",
       timestamp: new Date(),

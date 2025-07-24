@@ -2,12 +2,121 @@ import { generateText, generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 import { SAAS_VALIDATION_PROMPT } from "../../prompts";
+import { allTools } from "../tools";
 
 // ============================================================================
 // MARKET SIZE ANALYSIS PROMPT
 // ============================================================================
 
-const MARKET_SIZE_PROMPT = `You are an expert market analyst with 15+ years of experience in SaaS market sizing and analysis. Your ONLY task is to analyze the market size and growth potential for a specific SaaS idea using the comprehensive SaaS validation framework.
+const MARKET_SIZE_RESEARCH_PROMPT = `You are an expert market analyst with 15+ years of experience in SaaS market sizing and analysis. Your task is to conduct comprehensive research to analyze the market size and growth potential for a specific SaaS idea.
+
+## RESEARCH OBJECTIVES
+
+### PRIMARY RESEARCH GOALS
+1. **Market Size Estimation**: Determine TAM (Total Addressable Market), SAM (Serviceable Addressable Market), and SOM (Serviceable Obtainable Market)
+2. **Growth Analysis**: Identify market growth rates, trends, and drivers
+3. **Market Maturity Assessment**: Evaluate if the market is emerging, growing, mature, or declining
+4. **SaaS-Specific Dynamics**: Analyze subscription models, freemium conversion, churn rates, and product-led growth
+5. **Technology Adoption**: Assess cloud adoption, AI integration, mobile usage, and API ecosystems
+6. **Geographic Analysis**: Identify primary markets and international expansion potential
+7. **Competitive Landscape**: Understand market positioning and competitive advantages
+
+### RESEARCH STRATEGY
+
+#### STEP 1: INITIAL MARKET RESEARCH
+- Search for market size data, industry reports, and market research
+- Look for TAM/SAM/SOM calculations in similar markets
+- Find growth projections and CAGR data
+- Identify market maturity indicators
+
+#### STEP 2: COMPETITIVE ANALYSIS
+- Research direct and indirect competitors
+- Analyze their market share, pricing, and positioning
+- Identify competitive advantages and market gaps
+- Understand the competitive landscape structure
+
+#### STEP 3: TECHNOLOGY TRENDS
+- Research technology adoption rates (cloud, AI, mobile)
+- Analyze API ecosystem maturity
+- Identify integration opportunities and requirements
+- Assess technical barriers and opportunities
+
+#### STEP 4: CUSTOMER SEGMENT RESEARCH
+- Identify target customer segments
+- Research customer behavior and preferences
+- Analyze subscription adoption patterns
+- Understand freemium conversion rates
+
+#### STEP 5: REGULATORY AND COMPLIANCE
+- Research industry-specific regulations
+- Identify compliance requirements
+- Analyze data privacy and security requirements
+- Understand international expansion barriers
+
+### TOOL USAGE GUIDELINES
+
+#### Search Tools
+- Use \`search\` for basic market research and finding industry reports
+- Use \`searchDetailed\` for comprehensive analysis of top results
+- Focus on finding market size data, growth projections, and industry trends
+
+#### Research Tools
+- Use \`research\` for comprehensive topic investigation
+- Use \`competitorResearch\` to analyze competitive landscape
+- Use \`trendResearch\` to identify market trends and developments
+- Use \`multiQueryResearch\` for analyzing multiple related aspects
+
+#### Analysis Tools
+- Use \`sentimentAnalysis\` to understand market sentiment and public opinion
+- Use \`multiQueryResearch\` to synthesize findings across multiple queries
+
+#### Scraping Tools
+- Use \`scrapeUrl\` to extract detailed content from market research reports
+- Use \`scrapeMultipleUrls\` to gather data from multiple sources efficiently
+
+### RESEARCH QUERIES TO EXECUTE
+
+Based on the SaaS idea, research these specific areas:
+
+1. **Market Size Queries**:
+   - "[Industry/vertical] market size 2024"
+   - "[Industry/vertical] TAM SAM SOM analysis"
+   - "[Industry/vertical] market growth projections"
+   - "[Industry/vertical] market research reports"
+
+2. **Competitive Analysis**:
+   - "[Competitor names] market share"
+   - "[Industry/vertical] competitive landscape"
+   - "[Industry/vertical] market leaders"
+
+3. **Technology Trends**:
+   - "[Industry/vertical] AI adoption rates"
+   - "[Industry/vertical] cloud migration trends"
+   - "[Industry/vertical] API ecosystem"
+
+4. **Customer Behavior**:
+   - "[Industry/vertical] subscription adoption"
+   - "[Industry/vertical] freemium conversion rates"
+   - "[Industry/vertical] customer churn rates"
+
+5. **Geographic Analysis**:
+   - "[Industry/vertical] market by region"
+   - "[Industry/vertical] international expansion"
+
+### OUTPUT REQUIREMENTS
+
+After conducting comprehensive research, provide:
+
+1. **Research Summary**: Concise overview of findings
+2. **Key Data Points**: Specific numbers, percentages, and metrics found
+3. **Market Insights**: Qualitative analysis and trends
+4. **Data Sources**: URLs and references for verification
+5. **Confidence Levels**: Assessment of data quality and reliability
+6. **Research Gaps**: Areas where data is missing or uncertain
+
+Focus on gathering actionable, quantitative data that can be used for market sizing calculations and strategic decision-making.`;
+
+const MARKET_SIZE_ANALYSIS_PROMPT = `You are an expert market analyst with 15+ years of experience in SaaS market sizing and analysis. Your ONLY task is to analyze the market size and growth potential for a specific SaaS idea using the comprehensive research data provided.
 
 ## SAAS MARKET SIZING EXPERTISE
 
@@ -98,10 +207,43 @@ export const generateMarketSizeData = async (
     currentFocus: "market-size-analysis",
   };
 
-  // STEP 1: GENERATE STRUCTURED MARKET SIZE DATA
-  console.log("🔍 Market Size Agent: Generating structured data...");
+  // STEP 1: CONDUCT COMPREHENSIVE RESEARCH USING TOOLS
+  console.log("🔍 Market Size Agent: Conducting research with tools...");
 
   try {
+    const researchResult = await generateText({
+      model: google("gemini-2.0-flash", {
+        useSearchGrounding: true,
+      }),
+      tools: allTools,
+      maxSteps: 100,
+      toolChoice: "required",
+      prompt: `${MARKET_SIZE_RESEARCH_PROMPT}
+
+IDEA CONTEXT:
+${JSON.stringify(idea, null, 2)}
+
+RESEARCH CONTEXT:
+${JSON.stringify(researchContext, null, 2)}
+
+CONDUCT COMPREHENSIVE RESEARCH:
+1. Start with market size research for the specific industry/vertical
+2. Analyze competitive landscape and market positioning
+3. Research technology adoption trends and SaaS dynamics
+4. Investigate customer behavior and subscription patterns
+5. Assess geographic market opportunities
+6. Identify regulatory and compliance factors
+
+Use the available tools systematically to gather comprehensive market data. Focus on finding quantitative data, market reports, and industry insights that can inform market sizing calculations.
+
+Provide a detailed research summary with specific data points, sources, and confidence levels.`,
+    });
+
+    console.log(
+      "✅ Market Size Agent: Research completed, generating structured data..."
+    );
+
+    // STEP 2: GENERATE STRUCTURED MARKET SIZE DATA USING RESEARCH RESULTS
     const { object: marketSizeData } = await generateObject({
       model: google("gemini-2.0-flash"),
       schema: z.object({
@@ -175,7 +317,7 @@ export const generateMarketSizeData = async (
         dataGaps: z.array(z.string()),
         confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
       }),
-      prompt: `${MARKET_SIZE_PROMPT}
+      prompt: `${MARKET_SIZE_ANALYSIS_PROMPT}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
@@ -183,17 +325,21 @@ ${JSON.stringify(idea, null, 2)}
 RESEARCH CONTEXT:
 ${JSON.stringify(researchContext, null, 2)}
 
+COMPREHENSIVE RESEARCH DATA:
+${researchResult.text}
+
 IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
 
-Generate ONLY market size analysis with TAM/SAM/SOM calculations, growth projections, and market maturity assessment. Focus on SaaS-specific market dynamics and actionable intelligence for validation of this specific idea.`,
+Generate ONLY market size analysis with TAM/SAM/SOM calculations, growth projections, and market maturity assessment. Focus on SaaS-specific market dynamics and actionable intelligence for validation of this specific idea.
+
+Use the research data provided to populate the structured fields with the most accurate and relevant information available.`,
     });
 
     console.log("✅ Market Size Agent: Completed market size analysis");
 
     return {
       marketSizeData,
-      researchText:
-        "AI-based market size analysis completed using industry knowledge and SaaS market dynamics",
+      researchText: researchResult.text,
       agentType: "market-size",
       timestamp: new Date(),
       originalIdeaId: idea.id,
