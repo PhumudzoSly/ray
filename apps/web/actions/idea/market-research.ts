@@ -87,3 +87,19 @@ export const getFinancialProjection = async (ideaId: string) => {
 
   return projection;
 };
+
+export const getMarketSignals = async (ideaId: string) => {
+  const { org } = await getSession();
+
+  const marketSignals = await prisma.marketSignal.findMany({
+    where: {
+      marketResearch: {
+        ideaId,
+        organizationId: org,
+      },
+    },
+    orderBy: { signalStrength: "desc" },
+  });
+
+  return marketSignals;
+};

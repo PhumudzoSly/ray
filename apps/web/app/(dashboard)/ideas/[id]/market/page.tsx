@@ -1,10 +1,15 @@
-"use client";
-
 import React from "react";
-import { MarketAnalysis } from "@/components/idea/validation/market-analysis";
-import { KeyFindingsTab } from "@/components/idea/validation/key-findings-tab";
-import { NextStepsTab } from "@/components/idea/validation/next-steps-tab";
-import { getSingleIdea, getValidationDetails } from "@/actions/idea";
+import { MarketTrends } from "@/components/idea/market/market-trends";
+import { TargetAudience } from "@/components/idea/market/target-audience";
+import { MarketSignals } from "@/components/idea/market/market-signals";
+import { MarketOverviewCard } from "@/components/idea/validation/market-overview-card";
+import { getSingleIdea } from "@/actions/idea";
+import {
+  getMarketResearch,
+  getTargetAudiences,
+  getMarketTrends,
+  getMarketSignals,
+} from "@/actions/idea/market-research";
 import {
   Card,
   CardContent,
@@ -12,46 +17,42 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { Skeleton } from "@workspace/ui/components/skeleton";
-import { TrendingUp, Target, ArrowRight } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { TrendingUp, Activity, Users } from "lucide-react";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
-const MarketPage = ({ params }: { params: { id: string } }) => {
+const MarketPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const queryClient = new QueryClient();
 
-  const { data: idea, isPending: ideaPending } = useQuery({
-    queryKey: ["idea", id],
-    queryFn: () => getSingleIdea(id),
-  });
+  // Prefetch all market research data
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["idea", id],
+      queryFn: () => getSingleIdea(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["market-research", id],
+      queryFn: () => getMarketResearch(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["target-audiences", id],
+      queryFn: () => getTargetAudiences(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["market-trends", id],
+      queryFn: () => getMarketTrends(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["market-signals", id],
+      queryFn: () => getMarketSignals(id),
+    }),
+  ]);
 
-  const { data: validationDetails, isPending: validationPending } = useQuery({
-    queryKey: ["validationDetails", id],
-    queryFn: () => getValidationDetails({ ideaId: id }),
-  });
-
-  if (ideaPending || validationPending) {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-1 gap-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-4 w-48" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/6" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  const idea = await getSingleIdea(id);
 
   if (!idea) {
     return (
@@ -65,81 +66,76 @@ const MarketPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  const hasValidation = validationDetails?.validation;
-
   return (
-    <div className="space-y-6 p-6">
-      {/* Market Analysis Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-green-500" />
-            Market Analysis
-          </CardTitle>
-          <CardDescription>
-            Market size, opportunity, and growth potential
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {hasValidation ? (
-            <MarketAnalysis data={validationDetails.marketSize} />
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Validate your idea first to see market analysis</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Key Findings */}
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div className="space-y-6 p-6">
+        {/* Market Overview */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-purple-500" />
-              Key Findings
+              <TrendingUp className="h-5 w-5 text-blue-600" />
+              Market Overview
             </CardTitle>
             <CardDescription>
-              Important insights and discoveries
+              Market size, opportunity, and growth potential
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {hasValidation ? (
-              <KeyFindingsTab findings={validationDetails.keyFindings || []} />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see key findings</p>
-              </div>
-            )}
+            <MarketOverviewCard ideaId={id} />
           </CardContent>
         </Card>
 
-        {/* Next Steps */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Market Trends */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-green-600" />
+                Market Trends
+              </CardTitle>
+              <CardDescription>
+                Key trends affecting your market
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MarketTrends ideaId={id} />
+            </CardContent>
+          </Card>
+
+          {/* Target Audience */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-purple-600" />
+                Target Audience
+              </CardTitle>
+              <CardDescription>
+                Customer segments and demographics
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <TargetAudience ideaId={id} />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Market Signals */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ArrowRight className="h-5 w-5 text-blue-500" />
-              Next Steps
+              <Activity className="h-5 w-5 text-orange-600" />
+              Market Signals
             </CardTitle>
             <CardDescription>
-              Recommended actions and priorities
+              Key market events and their impact
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {hasValidation ? (
-              <NextStepsTab steps={validationDetails.nextSteps || []} />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <ArrowRight className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see next steps</p>
-              </div>
-            )}
+            <MarketSignals ideaId={id} />
           </CardContent>
         </Card>
       </div>
-    </div>
+    </HydrationBoundary>
   );
 };
 

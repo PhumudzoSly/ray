@@ -11,6 +11,8 @@ import {
 } from "@workspace/ui/components/sheet";
 import { Button } from "@workspace/ui/components/button";
 import { Edit, Lightbulb } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateIdea } from "@/actions/idea";
 import IdeaForm from "./idea-form";
 
 const UpdateIdea = ({
@@ -27,23 +29,65 @@ const UpdateIdea = ({
   children?: React.ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const handleSubmit = async (values: any) => {
-    try {
-      setLoading(true);
-      // TODO: Implement actual update logic
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+  // Update idea mutation with optimistic updates
+  const updateIdeaMutation = useMutation({
+    mutationFn: async (values: any) => {
+      return await updateIdea({
+        id,
+        ...values,
+      });
+    },
+    onMutate: async (newData) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["idea", id] });
 
+      // Snapshot the previous value
+      const previousIdea = queryClient.getQueryData(["idea", id]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["idea", id], (old: any) => {
+        if (!old) return old;
+        return { ...old, ...newData };
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousIdea };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousIdea) {
+        queryClient.setQueryData(["idea", id], context.previousIdea);
+      }
+      toast.error("Failed to update idea");
+    },
+    onSuccess: (data, variables) => {
       toast.success("Idea updated successfully");
+      
+      // Update the cache with the server response
+      queryClient.setQueryData(["idea", id], data);
+      
+      // Invalidate related queries to ensure consistency
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["idea", id] });
+      
       if (onSuccess) onSuccess();
       setOpen(false);
       if (onOpenChange) onOpenChange(false);
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({ queryKey: ["idea", id] });
+    },
+  });
+
+  const handleSubmit = async (values: any) => {
+    try {
+      await updateIdeaMutation.mutateAsync(values);
     } catch (error) {
-      toast.error("Error while updating idea");
+      // Error is already handled in the mutation
       throw error; // Re-throw to let the form component handle the loading state
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -84,7 +128,7 @@ const UpdateIdea = ({
               defaultValues={idea}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
-              loading={loading}
+              loading={updateIdeaMutation.isPending}
               variant="sheet"
             />
           </div>

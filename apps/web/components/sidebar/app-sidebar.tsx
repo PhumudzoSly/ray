@@ -120,7 +120,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="h-9 w-9 bg-white object-contain aspect-square transition-transform duration-200"
                   alt=""
                 />
-                <Badge>Beta</Badge>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

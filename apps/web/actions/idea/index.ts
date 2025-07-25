@@ -62,8 +62,13 @@ export const updateIdea = async (data: IdeaOptionalDefaults) => {
       description: data.description,
       industry: data.industry,
       internal: data.internal,
+      openSource: data.openSource,
+      problemSolved: data.problemSolved,
+      solutionOffered: data.solutionOffered,
     },
   });
+
+  return idea;
 };
 
 export const deleteIdea = async (id: string) => {
