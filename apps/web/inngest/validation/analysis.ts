@@ -184,7 +184,6 @@ Structure your analysis as follows:
 Remember: Your goal is to provide brutally honest, data-driven analysis that helps founders make informed decisions about their SaaS ideas. Be thorough, be critical, and be actionable.`,
   model: gemini({
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     allTools.search,

@@ -38,7 +38,6 @@ export const ideaValidator = createNetwork({
     "This network is used to validate SaaS ideas. It includes comprehensive data validation, market research, competitor analysis, and idea analysis capabilities.",
   defaultModel: gemini({
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   maxIter: 400,
 });

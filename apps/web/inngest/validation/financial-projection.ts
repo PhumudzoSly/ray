@@ -266,7 +266,6 @@ const financialProjectionAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveFinancialProjectionTool,

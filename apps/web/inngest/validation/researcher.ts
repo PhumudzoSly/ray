@@ -9,7 +9,6 @@ const ideaResearcher = createAgent({
   system: SAAS_VALIDATION_PROMPT,
   model: gemini({
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     allTools.search,
