@@ -16,7 +16,7 @@ const searchTools = {
     name: "search",
     description:
       "Search the web for information and return relevant links and snippets",
-    // @ts-ignore
+
     parameters: z.object({
       query: z.string().describe("The search query to look up"),
       limit: z
@@ -75,7 +75,7 @@ const searchTools = {
     name: "search-detailed",
     description:
       "Perform a comprehensive search and return detailed information about the top results",
-    // @ts-ignore
+
     parameters: z.object({
       query: z.string().describe("The search query to look up"),
       maxResults: z
@@ -147,7 +147,7 @@ const scrapingTools = {
   scrapeUrl: createTool({
     name: "scrape-url",
     description: "Visit a URL and extract its content, metadata, and links",
-    // @ts-ignore
+
     parameters: z.object({
       url: z.string().describe("The URL to visit and scrape"),
       extractImages: z
@@ -214,7 +214,7 @@ const scrapingTools = {
   scrapeMultipleUrls: createTool({
     name: "scrape-multiple-urls",
     description: "Visit multiple URLs and extract their content",
-    // @ts-ignore
+
     parameters: z.object({
       urls: z.array(z.string().url()).describe("Array of URLs to scrape"),
     }),
@@ -268,7 +268,6 @@ const researchTools = {
     name: "research",
     description:
       "Perform comprehensive research by searching and then scraping top results",
-    // @ts-ignore
     parameters: z.object({
       query: z.string().describe("The research query to investigate"),
       scrapeTopResults: z
@@ -337,7 +336,7 @@ const researchTools = {
   competitorResearch: createTool({
     name: "competitor-research",
     description: "Research competitors for a specific company or product",
-    // @ts-ignore
+
     parameters: z.object({
       company: z
         .string()
@@ -396,7 +395,7 @@ const researchTools = {
     name: "trend-research",
     description:
       "Research trends and developments in a specific topic or industry",
-    // @ts-ignore
+
     parameters: z.object({
       topic: z
         .string()
@@ -463,7 +462,7 @@ const analysisTools = {
     name: "sentiment-analysis",
     description:
       "Analyze sentiment and public opinion about a topic, company, or product",
-    // @ts-ignore
+
     parameters: z.object({
       topic: z
         .string()
@@ -522,7 +521,7 @@ const analysisTools = {
     name: "multi-query-research",
     description:
       "Perform research across multiple related queries and synthesize results",
-    // @ts-ignore
+
     parameters: z.object({
       queries: z
         .array(z.string())
