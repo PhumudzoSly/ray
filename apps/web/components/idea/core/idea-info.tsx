@@ -25,6 +25,7 @@ import {
   updateIndustry,
   updateInternal,
   updateOpenSource,
+  deleteIdea,
 } from "@/actions/idea";
 import { useRouter } from "next/navigation";
 
@@ -114,14 +115,33 @@ const IdeaInfo = ({ id }: { id: string }) => {
   };
 
   const confirm = useConfirm();
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      return await deleteIdea(id);
+    },
+    onSuccess: () => {
+      toast.success("Idea deleted successfully");
+      // Invalidate ideas list and redirect
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      router.push("/ideas");
+    },
+    onError: (error) => {
+      console.error("Error deleting idea:", error);
+      toast.error("Failed to delete idea. Please try again.");
+    },
+  });
+
   const handleDelete = async () => {
     const isConfirmed = await confirm({
       title: "Delete idea?",
       description:
         "This action will permanently remove your idea and everything related to it.",
     });
+
     if (isConfirmed) {
-      router.push("/ideas");
+      deleteMutation.mutate();
     }
   };
 
@@ -157,8 +177,9 @@ const IdeaInfo = ({ id }: { id: string }) => {
                 className="w-full"
                 size="sm"
                 onClick={handleDelete}
+                disabled={deleteMutation.isPending}
               >
-                Delete
+                {deleteMutation.isPending ? "Deleting..." : "Delete"}
               </Button>
             </div>
           </div>

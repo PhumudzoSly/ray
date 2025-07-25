@@ -13,10 +13,13 @@ import {
   Edit,
   Share,
   Archive,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { getSingleIdea } from "@/actions/idea";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getSingleIdea, deleteIdea } from "@/actions/idea";
+import { useConfirm } from "@workspace/ui/components/confirm-dialog";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,12 +37,42 @@ export const IdeaDetailsHeader: React.FC<IdeaDetailsHeaderProps> = ({
   ideaId,
 }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const { data: idea, isPending } = useQuery({
     queryKey: ["idea", ideaId],
     queryFn: () => getSingleIdea(ideaId),
     enabled: !!ideaId,
   });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      return await deleteIdea(ideaId);
+    },
+    onSuccess: () => {
+      toast.success("Idea deleted successfully");
+      // Invalidate ideas list and redirect
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      router.push("/ideas");
+    },
+    onError: (error) => {
+      console.error("Error deleting idea:", error);
+      toast.error("Failed to delete idea. Please try again.");
+    },
+  });
+
+  const handleDeleteIdea = async () => {
+    const isConfirmed = await confirm({
+      title: "Delete idea?",
+      description: `This action will permanently remove "${idea?.name}" and everything related to it.`,
+    });
+
+    if (isConfirmed) {
+      deleteMutation.mutate();
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -184,9 +217,13 @@ export const IdeaDetailsHeader: React.FC<IdeaDetailsHeaderProps> = ({
                   Share idea
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-red-600">
-                  <Archive className="h-4 w-4 mr-2" />
-                  Archive idea
+                <DropdownMenuItem
+                  className="text-destructive"
+                  onClick={handleDeleteIdea}
+                  disabled={deleteMutation.isPending}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  {deleteMutation.isPending ? "Deleting..." : "Delete idea"}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

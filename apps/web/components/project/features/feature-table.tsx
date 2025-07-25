@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as featureActions from "@/actions/project/features";
@@ -22,6 +21,7 @@ import { phases } from "@/utils/constants/features/phases";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { useRouter } from "next/navigation";
+import { FaMagic } from "react-icons/fa";
 
 interface FeatureTableProps {
   projectId: string;
@@ -36,11 +36,6 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     assignee: "all",
   });
   const [viewMode, setViewMode] = useState<"grid" | "grouped">("grouped");
-  const [selectedFeatureId, setSelectedFeatureId] = useState<string | null>(
-    null
-  );
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
 
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature (phase change)
@@ -136,13 +131,15 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
       if (res.success) return res.data;
       throw new Error("Failed to fetch features");
     },
+    // refetch every 2 minutes
+    refetchInterval: 120000,
   });
 
   // Get unique assignees for filter dropdown
   const assignees = useMemo(() => {
     if (!features) return [];
     const uniqueAssignees = new Map();
-    features.forEach((feature: any) => {
+    features?.forEach((feature: any) => {
       if (feature.assignedTo && !uniqueAssignees.has(feature.assignedTo.id)) {
         uniqueAssignees.set(feature.assignedTo.id, {
           id: feature.assignedTo.id,
@@ -342,7 +339,22 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
             </Button>
           </div>
         </div>
-        <NewFeature projectId={projectId} />
+        <div className="flex items-center gap-2">
+          <Button
+            variant="fancy"
+            onClick={() => {
+              toast.promise(featureActions.generateFeatures(projectId), {
+                loading: "Generating features...",
+                success: "Features generated successfully",
+                error: "Failed to generate features",
+              });
+            }}
+          >
+            <FaMagic className="h-4 w-4" />
+            Generate
+          </Button>
+          <NewFeature projectId={projectId} />
+        </div>
       </div>
 
       {/* Content */}

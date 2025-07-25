@@ -39,13 +39,18 @@ import { TbProgress } from "react-icons/tb";
 import NoData from "@/components/shared/no-data";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getAllIdeas } from "@/actions/idea";
+import { getAllIdeas, deleteIdea } from "@/actions/idea";
 import { Idea } from "@workspace/backend";
 import { useSession } from "@/context/session-context";
+import { useConfirm } from "@workspace/ui/components/confirm-dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function IdeasTable() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+  const confirm = useConfirm();
 
   const page = Number(searchParams.get("page") || "1");
   const perPage = Number(searchParams.get("per_page") || "10");
@@ -66,6 +71,33 @@ export function IdeasTable() {
       return await getAllIdeas();
     },
   });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async (ideaId: string) => {
+      return await deleteIdea(ideaId);
+    },
+    onSuccess: () => {
+      toast.success("Idea deleted successfully");
+      // Invalidate ideas list to refresh the table
+      queryClient.invalidateQueries({ queryKey: ["ideas", org] });
+    },
+    onError: (error) => {
+      console.error("Error deleting idea:", error);
+      toast.error("Failed to delete idea. Please try again.");
+    },
+  });
+
+  const handleDeleteIdea = async (ideaId: string, ideaName: string) => {
+    const isConfirmed = await confirm({
+      title: "Delete idea?",
+      description: `This action will permanently remove "${ideaName}" and everything related to it.`,
+    });
+
+    if (isConfirmed) {
+      deleteMutation.mutate(ideaId);
+    }
+  };
 
   // Filter ideas based on search params
   const filteredIdeas =
@@ -338,7 +370,15 @@ export function IdeasTable() {
                       >
                         <Eye />
                       </Link>
-                      <Button variant={"destructive"} size="icon">
+                      <Button
+                        variant={"destructive"}
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteIdea(idea.id, idea.name);
+                        }}
+                        disabled={deleteMutation.isPending}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

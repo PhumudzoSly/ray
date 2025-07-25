@@ -1,17 +1,26 @@
-"use client";
 import { FeatureTable } from "@/components/project/features/feature-table";
-import { Id } from "@workspace/backend";
-import { useParams } from "next/navigation";
+import getQueryClient from "@/lib/query/getQueryClient";
+import * as featureActions from "@/actions/project/features";
 import React from "react";
+import { dehydrate } from "@tanstack/react-query";
+import Hydrate from "@/lib/query/hydrate.client";
 
-const Features = () => {
-  const params = useParams();
-  const id = params.id as string;
+const Features = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+  const query = getQueryClient();
+
+  await query.prefetchQuery({
+    queryKey: ["features", id],
+    queryFn: () =>
+      featureActions.getFeaturesByProject(id).then((res) => res.data),
+  });
+
+  const dehydratedState = dehydrate(query);
 
   return (
-    <div className="container">
-      <FeatureTable projectId={id as Id<"projects">} />
-    </div>
+    <Hydrate state={dehydratedState}>
+      <FeatureTable projectId={id} />
+    </Hydrate>
   );
 };
 
