@@ -4,18 +4,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { Badge } from "@workspace/ui/components/badge";
 import {
   AlertCircle,
   CheckCircle,
@@ -34,7 +26,6 @@ import {
 import { cn } from "@/lib/utils";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { useSession } from "@/context/session-context";
-import { ValidationPanel } from "@/components/ideas/validation/validation-panel";
 import { useQuery } from "@tanstack/react-query";
 import {
   getSingleIdea,
@@ -164,8 +155,6 @@ const Validate = ({ id }: { id: string }) => {
 
   return (
     <div className="w-full space-y-6">
-      <ValidationPanel ideaId={id} idea={idea} />
-
       {businessSections.map((section) => (
         <div key={section.id}>
           <Card className="border">

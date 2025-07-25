@@ -4,15 +4,12 @@ import {
   prisma,
   IdeaOptionalDefaults,
   IdeaStatusType,
-  suggestQuestions,
 } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { inngestClient } from "@/lib/inngest";
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
-import { ideaValidator } from "@/inngest/validation/agent";
-import { createState } from "@inngest/agent-kit";
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
   const { org } = await getSession();
@@ -225,44 +222,7 @@ export const changeStatus = async ({
   });
 };
 
-export const checkIdeaClarity = async ({ ideaId }: { ideaId: string }) => {
-  const { org } = await getSession();
-
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, organizationId: org },
-  });
-
-  const { object } = await generateObject({
-    model: google("gemini-2.0-flash"),
-    schema: z.object({
-      isClear: z.boolean(),
-      questions: z
-        .array(z.string())
-        .nullable()
-        .describe(
-          "Questions to ask the user to clarify the idea, only generated if the idea is not clear"
-        ),
-    }),
-    prompt: `
-    You are an expert in SaaS idea validation.
-    You will be given an idea and you will need to determine if it is clear and concise.
-    The idea is: ${idea?.description}
-    The problem solved is: ${idea?.problemSolved}
-    The solution offered is: ${idea?.solutionOffered}
-    The industry is: ${idea?.industry}
-    The internal is: ${idea?.internal}
-    The open source is: ${idea?.openSource}
-    The status is: ${idea?.status}
-    The organization id is: ${org}
-    `,
-  });
-
-  console.log("OBJECT", object);
-
-  return object;
-};
-
-export const startValidation = async ({
+export const checkIdeaClarity = async ({
   ideaId,
   additionalContext,
 }: {
@@ -271,44 +231,26 @@ export const startValidation = async ({
 }) => {
   const { org } = await getSession();
 
-  // Remove any existing market research for this idea/org
-  await prisma.marketResearch.deleteMany({
-    where: { ideaId, organizationId: org },
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId, organizationId: org },
   });
 
-  // Create new market research entry
-  const research = await prisma.marketResearch.create({
-    data: {
-      ideaId,
-      confidenceLevel: "LOW",
-      marketMaturity: "MATURE",
-      organizationId: org,
-    },
-    include: {
-      idea: true,
-    },
-  });
-
-  // Prepare state for the validation network
-  const state = createState({
-    ideaId,
-    researchId: research.id,
-    idea: research.idea,
-  });
+  if (!idea) {
+    throw new Error("Idea not found");
+  }
 
   // Build the prompt with additional context if provided
   let prompt = `
-    You are a SaaS idea validation expert.
-    Your task is to critically assess the clarity and conciseness of the following SaaS idea.
-    Please review the provided details and identify any ambiguities, missing information, or areas that could be improved for better understanding.
-
-    Respond with:
-    - A brief summary of the idea in your own words.
-    - An assessment of whether the idea is clear and concise.
-    - Specific suggestions for improving clarity or completeness, if needed.
-
-    SaaS Idea Details:
-    ${JSON.stringify(research.idea, null, 2)}
+    You are an expert in SaaS idea validation.
+    You will be given an idea and you will need to determine if it is clear and concise.
+    
+    The idea is: ${idea?.description}
+    The problem solved is: ${idea?.problemSolved}
+    The solution offered is: ${idea?.solutionOffered}
+    The industry is: ${idea?.industry}
+    The internal is: ${idea?.internal}
+    The open source is: ${idea?.openSource}
+    The status is: ${idea?.status}
   `;
 
   // Add additional context if provided
@@ -325,183 +267,26 @@ export const startValidation = async ({
     }
   }
 
-  // Run the validation network
-  await ideaValidator.run(prompt, { state });
+  const { object } = await generateObject({
+    model: google("gemini-2.0-flash"),
+    schema: z.object({
+      isClear: z.boolean(),
+      questions: z
+        .array(z.string())
+        .nullable()
+        .describe(
+          "Questions to ask the user to clarify the idea, only generated if the idea is not clear"
+        ),
+    }),
+    prompt,
+  });
+
+  console.log("OBJECT", object);
+
+  return object;
 };
 
-// Check if additional questions are needed before validation
-export const checkValidationQuestions = async ({
-  ideaId,
-}: {
-  ideaId: string;
-}) => {
-  const { org } = await getSession();
-
-  // Verify the idea exists and belongs to the organization
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, organizationId: org },
-  });
-
-  if (!idea) {
-    throw new Error("Idea not found");
-  }
-
-  try {
-    const questionsResult = await suggestQuestions(ideaId);
-
-    // Ensure the result has the expected structure
-    if (typeof questionsResult === "object" && questionsResult !== null) {
-      const result = questionsResult as any;
-      return {
-        success: true,
-        questionsRequired: result.questionsRequired || false,
-        requiredQuestions: result.requiredQuestions || [],
-      };
-    } else {
-      throw new Error("Invalid response format from AI");
-    }
-  } catch (error) {
-    console.error("Error checking validation questions:", error);
-
-    // Provide more specific error handling
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    if (
-      errorMessage.includes("No object generated") ||
-      errorMessage.includes("Type validation failed") ||
-      errorMessage.includes("Invalid response format")
-    ) {
-      console.error(
-        "AI validation failed - falling back to simple heuristic check"
-      );
-
-      // Fallback to a simple validation check
-      const idea = await prisma.idea.findFirst({
-        where: { id: ideaId, organizationId: org },
-      });
-
-      // Simple heuristic: if description is short or missing key elements, ask for more info
-      const needsMoreInfo =
-        !idea?.description ||
-        idea.description.length < 100 ||
-        !idea?.problemSolved ||
-        !idea?.solutionOffered;
-
-      return {
-        success: true,
-        questionsRequired: needsMoreInfo,
-        requiredQuestions: needsMoreInfo
-          ? [
-              {
-                question:
-                  "Can you provide more details about your idea, including the problem it solves and your proposed solution?",
-                importance: "important" as const,
-                context:
-                  "A detailed description helps with validation accuracy",
-              },
-            ]
-          : [],
-      };
-    }
-
-    // For other errors, assume no questions are needed and proceed
-    return {
-      success: true,
-      questionsRequired: false,
-      requiredQuestions: [],
-    };
-  }
-};
-
-// Submit answers to validation questions
-export const submitValidationAnswers = async ({
-  ideaId,
-  answers,
-}: {
-  ideaId: string;
-  answers: Array<{ question: string; answer: string }>;
-}) => {
-  const { org } = await getSession();
-
-  // Verify the idea exists and belongs to the organization
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, organizationId: org },
-  });
-
-  if (!idea) {
-    throw new Error("Idea not found");
-  }
-
-  // Update the idea with the additional information from answers
-  // This is a simplified approach - in a real implementation, you might want to
-  // parse the answers and update specific fields based on the questions
-  const additionalInfo = answers
-    .map((a) => `${a.question}: ${a.answer}`)
-    .join("\n");
-
-  await prisma.idea.update({
-    where: { id: ideaId },
-    data: {
-      // You might want to add a field to store additional validation info
-      // For now, we'll update the description with the additional info
-      description: idea.description
-        ? `${idea.description}\n\nAdditional Validation Info:\n${additionalInfo}`
-        : `Additional Validation Info:\n${additionalInfo}`,
-    },
-  });
-
-  return {
-    success: true,
-    message: "Answers submitted successfully",
-  };
-};
-
-// Trigger AI validation for an idea using Inngest background processing
-export const triggerValidation = async ({ ideaId }: { ideaId: string }) => {
-  const { org } = await getSession();
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, organizationId: org },
-  });
-  if (!idea) throw new Error("Idea not found");
-
-  // Check if validation is already in progress
-  if (idea.status === "IN_PROGRESS") {
-    throw new Error("Validation already in progress");
-  }
-
-  // Update idea status to in progress
-  await prisma.idea.update({
-    where: { id: ideaId },
-    data: {
-      status: "IN_PROGRESS",
-    },
-  });
-
-  // Trigger Inngest background job
-  try {
-    await inngestClient.send({
-      name: "idea/validate",
-      data: {
-        ideaId,
-        // additionalContext will be passed from the client if available
-      },
-    });
-  } catch (error) {
-    console.error("Failed to trigger Inngest validation:", error);
-    // Reset the status back to INVALIDATED if Inngest fails
-    await prisma.idea.update({
-      where: { id: ideaId },
-      data: {
-        status: "INVALIDATED",
-      },
-    });
-    throw new Error("Failed to start validation. Please try again.");
-  }
-
-  return { success: true, message: "Validation started" };
-};
-
-// Enhanced trigger validation with additional context
-export const triggerValidationWithContext = async ({
+export const startValidation = async ({
   ideaId,
   additionalContext,
 }: {
@@ -534,10 +319,11 @@ export const triggerValidationWithContext = async ({
       data: {
         ideaId,
         additionalContext: additionalContext || {},
+        org,
       },
     });
   } catch (error) {
-    console.error("Failed to trigger Inngest validation with context:", error);
+    console.error("Failed to trigger Inngest validation:", error);
     // Reset the status back to INVALIDATED if Inngest fails
     await prisma.idea.update({
       where: { id: ideaId },
@@ -548,11 +334,10 @@ export const triggerValidationWithContext = async ({
     throw new Error("Failed to start validation. Please try again.");
   }
 
-  return {
-    success: true,
-    message: "Validation started with additional context",
-  };
+  return { success: true, message: "Validation started" };
 };
+
+// Trigger AI validation for an idea using Inngest background processing
 
 // Get detailed validation results for an idea
 export const getValidationDetails = async ({ ideaId }: { ideaId: string }) => {

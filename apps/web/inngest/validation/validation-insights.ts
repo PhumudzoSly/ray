@@ -5,11 +5,37 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const ValidationInsightInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  insightType: z.enum([
+    "MARKET_OPPORTUNITY",
+    "COMPETITIVE_THREAT",
+    "CUSTOMER_INSIGHT",
+    "TECHNICAL_CHALLENGE",
+    "FINANCIAL_RISK",
+    "REGULATORY_IMPACT",
+    "TIMING_OPPORTUNITY",
+  ]),
+  title: z.string(),
+  description: z.string(),
+  confidence: z.number().optional(),
+  dataSources: z.array(z.string()).optional(),
+  analysisMethod: z.string().optional(),
+  impactLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  affectedAreas: z.array(z.string()).optional(),
+  recommendations: z.array(z.string()).optional(),
+  isVerified: z.boolean().optional(),
+  verificationMethod: z.string().optional(),
+  verifiedBy: z.string().optional(),
+  verifiedAt: z.string().optional(),
+});
+
 const saveValidationInsightTool = createTool({
   name: "save-validation-insight",
   description:
     "Save validation insight data to the database with comprehensive analysis",
-  parameters: ValidationInsightOptionalDefaultsSchema,
+  parameters: ValidationInsightInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const validationInsight = await prisma.validationInsight.create({
@@ -136,6 +162,7 @@ const validationInsightsAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [saveValidationInsightTool, getValidationInsightsTool],
 });

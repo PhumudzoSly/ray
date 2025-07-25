@@ -6,11 +6,42 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schemas for Gemini API compatibility (excluding problematic fields)
+const ValidationScorecardInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  marketScore: z.number().optional(),
+  competitiveScore: z.number().optional(),
+  technicalScore: z.number().optional(),
+  financialScore: z.number().optional(),
+  riskScore: z.number().optional(),
+  weightedScore: z.number().optional(),
+  primaryRecommendation: z.string().optional(),
+  secondaryRecommendations: z.array(z.string()).optional(),
+  riskMitigationStrategies: z.array(z.string()).optional(),
+  validationStatus: z.enum([
+    "IN_PROGRESS",
+    "VALIDATED",
+    "NEEDS_IMPROVEMENT",
+    "FAILED",
+    "REQUIRES_REVIEW",
+  ]),
+  nextReviewDate: z.string().optional(), // Using string for Gemini compatibility
+});
+
+const ValidationScoreBreakdownInputSchema = z.object({
+  validationScorecardId: z.string().optional(),
+  category: z.string(),
+  score: z.number(),
+  weight: z.number(),
+  weightedScore: z.number(),
+  reasoning: z.string().optional(),
+});
+
 const saveValidationScorecardTool = createTool({
   name: "save-validation-scorecard",
   description:
     "Save validation scorecard data to the database with comprehensive analysis. If a scorecard already exists, it will be updated.",
-  parameters: ValidationScorecardOptionalDefaultsSchema,
+  parameters: ValidationScorecardInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
 
@@ -29,36 +60,39 @@ const saveValidationScorecardTool = createTool({
 const saveScoreBreakdownTool = createTool({
   name: "save-score-breakdown",
   description: "Save validation score breakdown data to the database",
-  parameters: ValidationScoreBreakdownOptionalDefaultsSchema,
+  parameters: ValidationScoreBreakdownInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
-    
+
     // Get the validation scorecard ID from network state or database
     let validationScorecardId = network.state.data.validationScorecard?.id;
-    
+
     if (!validationScorecardId) {
       // If not in network state, get it from database
       const existingScorecard = await prisma.validationScorecard.findUnique({
         where: { marketResearchId: researchId },
       });
-      
+
       if (!existingScorecard) {
-        throw new Error("Validation scorecard not found. Please create a validation scorecard first.");
+        throw new Error(
+          "Validation scorecard not found. Please create a validation scorecard first."
+        );
       }
-      
+
       validationScorecardId = existingScorecard.id;
     }
-    
-    const validationScoreBreakdown = await prisma.validationScoreBreakdown.create({
-      data: { ...data, validationScorecardId },
-    });
-    
+
+    const validationScoreBreakdown =
+      await prisma.validationScoreBreakdown.create({
+        data: { ...data, validationScorecardId },
+      });
+
     // Initialize score breakdown array if it doesn't exist
     if (!network.state.data.scoreBreakdown) {
       network.state.data.scoreBreakdown = [];
     }
     network.state.data.scoreBreakdown.push(validationScoreBreakdown);
-    
+
     return validationScoreBreakdown;
   },
 });
@@ -222,6 +256,7 @@ const validationScorecardAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveValidationScorecardTool,

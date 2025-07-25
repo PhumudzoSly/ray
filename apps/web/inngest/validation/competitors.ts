@@ -8,11 +8,117 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schemas for Gemini API compatibility (excluding problematic fields)
+const CompetitorInputSchema = z.object({
+  competitiveLandscapeId: z.string().optional(),
+  name: z.string(),
+  website: z.string().optional(),
+  description: z.string().optional(),
+  logoUrl: z.string().optional(),
+  marketShare: z.number().optional(),
+  annualRevenue: z.number().optional(),
+  fundingRaised: z.number().optional(),
+  employeeCount: z.number().int().optional(),
+  foundedYear: z.number().int().optional(),
+  headquarters: z.string().optional(),
+  productFeatures: z.array(z.string()).optional(),
+  pricingModel: z.enum([
+    "SUBSCRIPTION",
+    "FREEMIUM",
+    "ONE_TIME",
+    "USAGE_BASED",
+    "HYBRID",
+  ]),
+  targetAudience: z.string().optional(),
+  techStack: z.array(z.string()).optional(),
+  integrations: z.array(z.string()).optional(),
+  strengths: z.array(z.string()).optional(),
+  weaknesses: z.array(z.string()).optional(),
+  opportunities: z.array(z.string()).optional(),
+  threats: z.array(z.string()).optional(),
+  competitiveAdvantage: z.string().optional(),
+  differentiationFactors: z.array(z.string()).optional(),
+  threatLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  competitivePosition: z.enum([
+    "MARKET_LEADER",
+    "STRONG_CHALLENGER",
+    "WEAK_CHALLENGER",
+    "NICHE_PLAYER",
+    "NEW_ENTRANT",
+  ]),
+  userGrowthRate: z.number().optional(),
+  churnRate: z.number().optional(),
+  customerSatisfaction: z.number().optional(),
+  marketCap: z.number().optional(),
+  isActive: z.boolean().optional(),
+});
+
+const CompetitorPricingInputSchema = z.object({
+  planName: z.string(),
+  price: z.number(),
+  billingCycle: z.enum(["MONTHLY", "QUARTERLY", "ANNUALLY", "ONE_TIME"]),
+  features: z.array(z.string()),
+  limitations: z.string().optional(),
+  userLimit: z.number().int().optional(),
+  valuePerDollar: z.number().optional(),
+  competitivePosition: z.string().optional(),
+  previousPrice: z.number().optional(),
+  priceChangeDate: z.string().optional(),
+  priceChangeReason: z.string().optional(),
+});
+
+const CompetitiveMoveInputSchema = z.object({
+  competitiveLandscapeId: z.string().optional(),
+  competitorId: z.string().optional(),
+  moveType: z.enum([
+    "PRODUCT_LAUNCH",
+    "FEATURE_UPDATE",
+    "PRICING_CHANGE",
+    "PARTNERSHIP",
+    "ACQUISITION",
+    "MARKETING_CAMPAIGN",
+    "EXPANSION",
+    "PIVOT",
+  ]),
+  title: z.string(),
+  description: z.string(),
+  impactLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  targetAudience: z.string().optional(),
+  affectedFeatures: z.array(z.string()).optional(),
+  announcedDate: z.string().optional(),
+  launchDate: z.string().optional(),
+  completionDate: z.string().optional(),
+  marketReaction: z
+    .enum(["POSITIVE", "NEUTRAL", "NEGATIVE", "MIXED"])
+    .optional(),
+  userFeedback: z.string().optional(),
+  pressCoverage: z.array(z.string()).optional(),
+  opportunities: z.array(z.string()).optional(),
+  threats: z.array(z.string()).optional(),
+  responseRequired: z.boolean().optional(),
+  responseStrategy: z.string().optional(),
+});
+
+const FeatureComparisonInputSchema = z.object({
+  featureName: z.string(),
+  featureCategory: z.string(),
+  isAvailable: z.boolean(),
+  quality: z
+    .enum(["EXCELLENT", "GOOD", "AVERAGE", "POOR", "UNKNOWN"])
+    .optional(),
+  implementationNotes: z.string().optional(),
+  userRating: z.number().optional(),
+  marketShare: z.number().optional(),
+  adoptionRate: z.number().optional(),
+  competitiveAdvantage: z.string().optional(),
+  differentiationPoints: z.array(z.string()).optional(),
+});
+
 const saveDataTool = createTool({
   name: "save-competitor",
   description:
     "Save the competitor data to the database with comprehensive market analysis",
-  parameters: CompetitorOptionalDefaultsSchema,
+  parameters: CompetitorInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId, competitiveLandscapeId } = network.state.data;
 
@@ -39,9 +145,22 @@ const saveDataTool = createTool({
 const savePricingTool = createTool({
   name: "save-pricing",
   description: "Save the competitor pricing data to the database",
-  parameters: CompetitorPricingOptionalDefaultsSchema,
+  parameters: CompetitorPricingInputSchema,
   handler: async (data, { network, agent, step }) => {
-    await prisma.competitorPricing.create({ data });
+    // Get the competitor ID from network state
+    const { competitors } = network.state.data;
+    if (!competitors || competitors.length === 0) {
+      throw new Error(
+        "No competitors found. Please create a competitor first."
+      );
+    }
+
+    // Use the most recently created competitor
+    const competitorId = competitors[competitors.length - 1].id;
+
+    await prisma.competitorPricing.create({
+      data: { ...data, competitorId },
+    });
   },
 });
 
@@ -49,7 +168,7 @@ const saveCompetitiveMoveTool = createTool({
   name: "save-competitive-move",
   description:
     "Save competitive moves and strategic actions taken by competitors",
-  parameters: CompetitiveMoveOptionalDefaultsSchema,
+  parameters: CompetitiveMoveInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { competitiveLandscapeId } = network.state.data;
 
@@ -68,9 +187,22 @@ const saveCompetitiveMoveTool = createTool({
 const saveFeatureComparisonTool = createTool({
   name: "save-feature-comparison",
   description: "Save detailed feature comparisons between competitors",
-  parameters: FeatureComparisonOptionalDefaultsSchema,
+  parameters: FeatureComparisonInputSchema,
   handler: async (data, { network, agent, step }) => {
-    await prisma.featureComparison.create({ data });
+    // Get the competitor ID from network state
+    const { competitors } = network.state.data;
+    if (!competitors || competitors.length === 0) {
+      throw new Error(
+        "No competitors found. Please create a competitor first."
+      );
+    }
+
+    // Use the most recently created competitor
+    const competitorId = competitors[competitors.length - 1].id;
+
+    await prisma.featureComparison.create({
+      data: { ...data, competitorId },
+    });
   },
 });
 
@@ -229,6 +361,7 @@ const competitorsAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveDataTool,

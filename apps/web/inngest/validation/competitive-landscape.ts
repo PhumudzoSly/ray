@@ -5,11 +5,28 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const CompetitiveLandscapeInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  competitiveIntensity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+  marketPositioning: z.string().optional(),
+  differentiationOpportunities: z.array(z.string()).optional(),
+  competitiveAdvantage: z.string().optional(),
+  totalMarketShare: z.number().optional(),
+  topCompetitors: z.number().int().optional(),
+  marketConcentration: z.number().optional(),
+  entryBarriers: z.array(z.string()).optional(),
+  exitBarriers: z.array(z.string()).optional(),
+  switchingCosts: z.number().optional(),
+  emergingThreats: z.array(z.string()).optional(),
+  marketDisruptions: z.array(z.string()).optional(),
+});
+
 const saveCompetitiveLandscapeTool = createTool({
   name: "save-competitive-landscape",
   description:
     "Save competitive landscape data to the database with comprehensive analysis. If a landscape already exists, it will be updated.",
-  parameters: CompetitiveLandscapeOptionalDefaultsSchema,
+  parameters: CompetitiveLandscapeInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
 
@@ -131,6 +148,7 @@ const competitiveLandscapeAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveCompetitiveLandscapeTool,

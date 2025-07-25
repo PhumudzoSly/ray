@@ -1,11 +1,32 @@
 import { createAgent, createTool, gemini } from "@inngest/agent-kit";
 import { CustomerNeedOptionalDefaultsSchema, prisma } from "@workspace/backend";
+import z from "zod";
+
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const CustomerNeedInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  needType: z.enum([
+    "FUNCTIONAL",
+    "EMOTIONAL",
+    "SOCIAL",
+    "FINANCIAL",
+    "TECHNICAL",
+  ]),
+  description: z.string(),
+  priority: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]),
+  frequency: z.string().optional(),
+  businessImpact: z.string().optional(),
+  userImpact: z.string().optional(),
+  costImpact: z.number().optional(),
+  existingSolutions: z.array(z.string()).optional(),
+  gapsInSolutions: z.array(z.string()).optional(),
+});
 
 const saveCustomerNeedTool = createTool({
   name: "save-customer-need",
   description:
     "Save customer need data to the database with comprehensive analysis",
-  parameters: CustomerNeedOptionalDefaultsSchema,
+  parameters: CustomerNeedInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const customerNeed = await prisma.customerNeed.create({
@@ -111,6 +132,7 @@ const customerNeedsAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [saveCustomerNeedTool, getCustomerNeedsTool],
 });

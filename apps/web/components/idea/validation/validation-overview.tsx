@@ -54,19 +54,25 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 
   // Mutation to check validation questions
   const checkQuestionsMutation = useMutation({
-    mutationFn: async () =>
-      ideaActions.checkValidationQuestions({ ideaId: idea.id }),
+    mutationFn: async (additionalContext?: any) =>
+      ideaActions.checkIdeaClarity({ ideaId: idea.id, additionalContext }),
     onSuccess: (result) => {
-      if (result && result.success) {
-        if (result.questionsRequired && result.requiredQuestions.length > 0) {
-          setValidationQuestions(result.requiredQuestions);
-          setShowQuestions(true);
-        } else {
-          // No questions needed, proceed directly to validation
-          startValidationMutation.mutate(undefined);
-        }
+      if (
+        result &&
+        result.isClear === false &&
+        result.questions &&
+        result.questions.length > 0
+      ) {
+        // Convert the questions array to the expected format
+        const formattedQuestions = result.questions.map((question: string) => ({
+          question,
+          importance: "important" as const,
+          context: "Clarification needed for validation accuracy",
+        }));
+        setValidationQuestions(formattedQuestions);
+        setShowQuestions(true);
       } else {
-        // Fallback to direct validation
+        // No questions needed, proceed directly to validation
         startValidationMutation.mutate(undefined);
       }
     },
@@ -76,22 +82,6 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
       startValidationMutation.mutate(undefined);
     },
     onSettled: () => setIsCheckingQuestions(false),
-  });
-
-  // Mutation to submit validation answers
-  const submitAnswersMutation = useMutation({
-    mutationFn: async (answers: Array<{ question: string; answer: string }>) =>
-      ideaActions.submitValidationAnswers({ ideaId: idea.id, answers }),
-    onSuccess: () => {
-      setShowQuestions(false);
-      // After submitting answers, proceed with validation
-      startValidationMutation.mutate(undefined);
-    },
-    onError: (error) => {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to submit answers"
-      );
-    },
   });
 
   const validationScore =
@@ -126,18 +116,32 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
   const handleValidate = async () => {
     if (!idea) return;
     setIsCheckingQuestions(true);
-    checkQuestionsMutation.mutate();
+    // Pass any existing additional context if available
+    const additionalContext = validationDetails?.additionalContext || {};
+    checkQuestionsMutation.mutate(additionalContext);
   };
 
   const handleSkipQuestions = () => {
     setShowQuestions(false);
-    startValidationMutation.mutate(undefined);
+    // Pass any existing additional context if available
+    const additionalContext = validationDetails?.additionalContext || {};
+    startValidationMutation.mutate(additionalContext);
   };
 
   const handleSubmitAnswers = async (
     answers: Array<{ question: string; answer: string }>
   ) => {
-    await submitAnswersMutation.mutateAsync(answers);
+    // Create additional context with the answers
+    const additionalContext = {
+      preValidationAnswers: answers,
+      source: "user_questions",
+    };
+
+    // Close the questions dialog
+    setShowQuestions(false);
+
+    // Start validation with the additional context
+    startValidationMutation.mutate(additionalContext);
   };
 
   // Validation metrics
@@ -172,9 +176,6 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="mb-6">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-            <Brain className="h-8 w-8 text-muted-foreground" />
-          </div>
           <h3 className="text-lg font-medium mb-2">AI Validation</h3>
           <p className="text-sm text-muted-foreground max-w-md">
             Get comprehensive analysis of your idea across market fit,

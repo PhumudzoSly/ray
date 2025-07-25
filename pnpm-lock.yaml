@@ -296,6 +296,9 @@ importers:
       '@inngest/agent-kit':
         specifier: ^0.9.0
         version: 0.9.0(inngest@3.40.1(express@5.1.0)(next@15.4.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3))
+      '@inngest/realtime':
+        specifier: ^0.3.1
+        version: 0.3.1(express@5.1.0)(next@15.4.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@liveblocks/client':
         specifier: 3.1.2
         version: 3.1.2(@types/json-schema@7.0.15)
@@ -1532,6 +1535,11 @@ packages:
 
   '@inngest/ai@0.1.5':
     resolution: {integrity: sha512-Nj+Ee/O3EYmPIw+2eGryRh+b2TcqaZyL52RaO1/Cz707R/HrJVVDx8uRQo93gSeN4lMlaOluNrdleyM5M5wcQA==}
+
+  '@inngest/realtime@0.3.1':
+    resolution: {integrity: sha512-srH3fx8KLbH40PZ6k620YJKq7lguQEv6/UQ8UZWjbVK/2dkNaq4wSMRbQ5lf4cQUrFWioofOTnOWnIILNo7Pig==}
+    peerDependencies:
+      react: '>=18.0.0'
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -9773,6 +9781,27 @@ snapshots:
     dependencies:
       '@types/node': 22.16.5
       typescript: 5.8.3
+
+  '@inngest/realtime@0.3.1(express@5.1.0)(next@15.4.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)(typescript@5.8.3)':
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      debug: 4.4.1
+      inngest: 3.40.1(express@5.1.0)(next@15.4.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(typescript@5.8.3)
+      react: 19.1.0
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@sveltejs/kit'
+      - '@vercel/node'
+      - aws-lambda
+      - encoding
+      - express
+      - fastify
+      - h3
+      - hono
+      - koa
+      - next
+      - supports-color
+      - typescript
 
   '@isaacs/cliui@8.0.2':
     dependencies:

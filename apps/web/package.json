@@ -27,6 +27,7 @@
 		"@hello-pangea/dnd": "^18.0.1",
 		"@hookform/resolvers": "^5.1.1",
 		"@inngest/agent-kit": "^0.9.0",
+		"@inngest/realtime": "^0.3.1",
 		"@liveblocks/client": "3.1.2",
 		"@liveblocks/core": "3.1.2",
 		"@liveblocks/node": "3.1.2",

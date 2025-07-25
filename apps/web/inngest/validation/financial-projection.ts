@@ -6,11 +6,52 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schemas for Gemini API compatibility (excluding problematic fields)
+const FinancialProjectionInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  projectedRevenue: z.number().optional(),
+  revenueGrowthRate: z.number().optional(),
+  breakEvenPoint: z.number().int().optional(),
+  developmentCosts: z.number().optional(),
+  marketingCosts: z.number().optional(),
+  operationalCosts: z.number().optional(),
+  customerAcquisitionCost: z.number().optional(),
+  averageRevenuePerUser: z.number().optional(),
+  customerLifetimeValue: z.number().optional(),
+  paybackPeriod: z.number().int().optional(),
+  fundingNeeded: z.number().optional(),
+  riskFactors: z.array(z.string()).optional(),
+  mitigationStrategies: z.array(z.string()).optional(),
+  optimisticScenario: z.number().optional(),
+  realisticScenario: z.number().optional(),
+  pessimisticScenario: z.number().optional(),
+});
+
+const FundingRoundInputSchema = z.object({
+  financialProjectionId: z.string().optional(),
+  roundName: z.string(),
+  amount: z.number(),
+  equity: z.number().optional(),
+  valuation: z.number().optional(),
+  timeline: z.number().int().optional(),
+  investorType: z.enum([
+    "ANGEL",
+    "VENTURE_CAPITAL",
+    "PRIVATE_EQUITY",
+    "CORPORATE",
+    "CROWDFUNDING",
+  ]),
+  investorName: z.string().optional(),
+  developmentAllocation: z.number().optional(),
+  marketingAllocation: z.number().optional(),
+  operationsAllocation: z.number().optional(),
+});
+
 const saveFinancialProjectionTool = createTool({
   name: "save-financial-projection",
   description:
     "Save financial projection data to the database with comprehensive analysis. If a projection already exists, it will be updated.",
-  parameters: FinancialProjectionOptionalDefaultsSchema,
+  parameters: FinancialProjectionInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
 
@@ -29,36 +70,38 @@ const saveFinancialProjectionTool = createTool({
 const saveFundingRoundTool = createTool({
   name: "save-funding-round",
   description: "Save funding round data to the database",
-  parameters: FundingRoundOptionalDefaultsSchema,
+  parameters: FundingRoundInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
-    
+
     // Get the financial projection ID from network state or database
     let financialProjectionId = network.state.data.financialProjection?.id;
-    
+
     if (!financialProjectionId) {
       // If not in network state, get it from database
       const existingProjection = await prisma.financialProjection.findUnique({
         where: { marketResearchId: researchId },
       });
-      
+
       if (!existingProjection) {
-        throw new Error("Financial projection not found. Please create a financial projection first.");
+        throw new Error(
+          "Financial projection not found. Please create a financial projection first."
+        );
       }
-      
+
       financialProjectionId = existingProjection.id;
     }
-    
+
     const fundingRound = await prisma.fundingRound.create({
       data: { ...data, financialProjectionId },
     });
-    
+
     // Initialize funding rounds array if it doesn't exist
     if (!network.state.data.fundingRounds) {
       network.state.data.fundingRounds = [];
     }
     network.state.data.fundingRounds.push(fundingRound);
-    
+
     return fundingRound;
   },
 });
@@ -223,6 +266,7 @@ const financialProjectionAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveFinancialProjectionTool,

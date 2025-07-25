@@ -20,8 +20,6 @@ import { regulatoryComplianceAgent } from "./regulatory-compliance";
 
 export const ideaValidator = createNetwork({
   agents: [
-    ideaAnalysisAgent,
-    ideaResearcher,
     competitorsAgent,
     dataValidatorAgent,
     targetAudienceAgent,
@@ -40,14 +38,7 @@ export const ideaValidator = createNetwork({
     "This network is used to validate SaaS ideas. It includes comprehensive data validation, market research, competitor analysis, and idea analysis capabilities.",
   defaultModel: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
-  router: ({ callCount }) => {
-    // Check if we've solved the problem
-    if (callCount === 0) {
-      return ideaAnalysisAgent;
-    }
-
-    return getDefaultRoutingAgent();
-  },
   maxIter: 400,
 });

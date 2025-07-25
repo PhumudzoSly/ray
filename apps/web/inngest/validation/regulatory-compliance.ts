@@ -5,11 +5,28 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const RegulatoryComplianceInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  applicableRegulations: z.array(z.string()).optional(),
+  complianceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  riskLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  industryStandards: z.array(z.string()).optional(),
+  certificationRequirements: z.array(z.string()).optional(),
+  targetMarkets: z.array(z.string()).optional(),
+  localRegulations: z.array(z.string()).optional(),
+  complianceCosts: z.number().optional(),
+  timelineToCompliance: z.number().int().optional(),
+  requiredResources: z.array(z.string()).optional(),
+  complianceRisks: z.array(z.string()).optional(),
+  mitigationStrategies: z.array(z.string()).optional(),
+});
+
 const saveRegulatoryComplianceTool = createTool({
   name: "save-regulatory-compliance",
   description:
     "Save regulatory compliance data to the database with comprehensive analysis. If compliance data already exists, it will be updated.",
-  parameters: RegulatoryComplianceOptionalDefaultsSchema,
+  parameters: RegulatoryComplianceInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
 
@@ -186,6 +203,7 @@ const regulatoryComplianceAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveRegulatoryComplianceTool,

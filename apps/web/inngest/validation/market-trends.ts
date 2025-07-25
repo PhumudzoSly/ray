@@ -2,11 +2,28 @@ import { createAgent, createTool, gemini } from "@inngest/agent-kit";
 import { MarketTrendOptionalDefaultsSchema, prisma } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const MarketTrendInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  trendName: z.string(),
+  description: z.string(),
+  impact: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
+  growthRate: z.number().optional(),
+  marketSize: z.number().optional(),
+  adoptionRate: z.number().optional(),
+  keyDrivers: z.array(z.string()).optional(),
+  challenges: z.array(z.string()).optional(),
+  opportunities: z.array(z.string()).optional(),
+  dataSource: z.string().optional(),
+  confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+  lastUpdated: z.string().optional(),
+});
+
 const saveMarketTrendTool = createTool({
   name: "save-market-trend",
   description:
     "Save market trend data to the database with comprehensive analysis",
-  parameters: MarketTrendOptionalDefaultsSchema,
+  parameters: MarketTrendInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const marketTrend = await prisma.marketTrend.create({
@@ -103,6 +120,7 @@ const marketTrendsAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [saveMarketTrendTool, getMarketTrendsTool],
 });

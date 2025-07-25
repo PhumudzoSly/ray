@@ -143,7 +143,7 @@ const scrapingTools = {
   scrapeUrl: tool({
     description: "Visit a URL and extract its content, metadata, and links",
     parameters: z.object({
-      url: z.string().url().describe("The URL to visit and scrape"),
+      url: z.string().describe("The URL to visit and scrape"),
       extractImages: z
         .boolean()
         .optional()
@@ -208,7 +208,7 @@ const scrapingTools = {
   scrapeMultipleUrls: tool({
     description: "Visit multiple URLs and extract their content",
     parameters: z.object({
-      urls: z.array(z.string().url()).describe("Array of URLs to scrape"),
+      urls: z.array(z.string()).describe("Array of URLs to scrape"),
     }),
     execute: async ({ urls }) => {
       try {

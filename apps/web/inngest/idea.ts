@@ -1,109 +1,74 @@
 import { inngestClient } from "@/lib/inngest";
+import { createState } from "@inngest/agent-kit";
 import { prisma } from "@workspace/backend/prisma/prisma";
+import { ideaValidator } from "./validation/agent";
 
 export const validateIdea = inngestClient.createFunction(
   { name: "Validate Idea", id: "validate-idea" },
   { event: "idea/validate" },
   async ({ event, step }: { event: any; step: any }) => {
-    const { ideaId, additionalContext } = event.data;
+    const { ideaId, additionalContext, org } = event.data;
 
-    // Step 1: Fetch idea data
-    const idea = await step.run("fetch-idea", async () => {
-      const ideaData = await prisma.idea.findUnique({
-        where: { id: ideaId },
-        include: { organization: true },
-      });
-      if (!ideaData) throw new Error("Idea not found");
-      return ideaData;
+    // Remove any existing market research for this idea/org
+    await prisma.marketResearch.deleteMany({
+      where: { ideaId, organizationId: org },
     });
 
-    // Step 2: Run AI validation analysis with sequential data flow
-    const validationResults = await step.run("run-ai-validation", async () => {
-      try {
-        const { runModularResearch } = await import(
-          "@workspace/backend/ai/agents/research-orchestrator"
-        );
-
-        // Pass additional context from pre-validation questions if available
-        const researchResult = await runModularResearch(
-          ideaId,
-          additionalContext
-        );
-
-        // Extract scorecard data for validation score
-        const scorecardAgent = researchResult.researchResults.agents.find(
-          (a: any) => a.type === "validation-scorecard"
-        );
-
-        const overallScore = scorecardAgent?.data?.overallScore || 0;
-        const validationStatus =
-          scorecardAgent?.data?.validationStatus || "NEEDS_VALIDATION";
-
-        return {
-          overallScore,
-          validationStatus,
-          recommendation:
-            scorecardAgent?.data?.strategicRecommendations?.primary?.[0] ||
-            "Validation completed successfully.",
-          marketSize: "Market analysis completed with sequential data flow",
-          competitorAnalysis:
-            "Competitive landscape analyzed with enhanced context",
-          customerFit:
-            "Customer segments identified with SaaS-specific insights",
-          feasibility:
-            "Technical assessment completed with comprehensive analysis",
-          financials:
-            "Financial projections generated with unit economics focus",
-          userStories: scorecardAgent?.data?.saasMetrics || {},
-          researchResults: researchResult.researchResults,
-          totalApiCalls: researchResult.totalApiCalls,
-        };
-      } catch (error) {
-        console.error("AI validation failed:", error);
-        return {
-          overallScore: 0,
-          validationStatus: "FAILED",
-          recommendation:
-            "Validation failed due to technical issues. Please try again.",
-          marketSize: "Market analysis failed",
-          competitorAnalysis: "Competitive analysis failed",
-          customerFit: "Customer analysis failed",
-          feasibility: "Technical analysis failed",
-          financials: "Financial analysis failed",
-          userStories: [],
-          researchResults: null,
-          totalApiCalls: 0,
-        };
-      }
+    // Create new market research entry
+    const research = await prisma.marketResearch.create({
+      data: {
+        ideaId,
+        confidenceLevel: "LOW",
+        marketMaturity: "MATURE",
+        organizationId: org,
+      },
+      include: {
+        idea: true,
+      },
     });
 
-    // Step 3: Update idea with validation results
-    const updatedIdea = await step.run("update-idea", async () => {
-      const updateData: any = {};
-
-      // Only update score if validation was successful
-      if (validationResults.overallScore > 0) {
-        updateData.aiOverallValidation = validationResults.overallScore;
-      }
-
-      // Update status based on validation results
-      if (validationResults.validationStatus === "VALIDATED") {
-        updateData.status = "VALIDATED";
-      } else if (validationResults.validationStatus === "FAILED") {
-        updateData.status = "INVALIDATED";
-      }
-
-      return await prisma.idea.update({
-        where: { id: ideaId },
-        data: updateData,
-      });
+    // Prepare state for the validation network
+    const state = createState({
+      ideaId,
+      researchId: research.id,
+      idea: research.idea,
     });
+
+    // Build the prompt with additional context if provided
+    let prompt = `
+    You are a SaaS idea validation expert.
+    Your task is to critically assess the clarity and conciseness of the following SaaS idea.
+    Please review the provided details and identify any ambiguities, missing information, or areas that could be improved for better understanding.
+
+    Respond with:
+    - A brief summary of the idea in your own words.
+    - An assessment of whether the idea is clear and concise.
+    - Specific suggestions for improving clarity or completeness, if needed.
+
+    SaaS Idea Details:
+    ${JSON.stringify(research.idea, null, 2)}
+  `;
+
+    // Add additional context if provided
+    if (additionalContext) {
+      if (additionalContext.preValidationAnswers) {
+        prompt += `\n\nAdditional Information from User:\n`;
+        additionalContext.preValidationAnswers.forEach((qa: any) => {
+          prompt += `Question: ${qa.question}\nAnswer: ${qa.answer}\n\n`;
+        });
+      }
+
+      if (additionalContext.source) {
+        prompt += `\nContext Source: ${additionalContext.source}\n`;
+      }
+    }
+
+    // Run the validation network
+    await ideaValidator.run(prompt, { state });
 
     return {
       success: true,
       ideaId,
-      validationResults,
-      updatedIdea,
     };
   }
 );

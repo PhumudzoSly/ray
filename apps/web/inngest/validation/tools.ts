@@ -216,7 +216,7 @@ const scrapingTools = {
     description: "Visit multiple URLs and extract their content",
 
     parameters: z.object({
-      urls: z.array(z.string().url()).describe("Array of URLs to scrape"),
+      urls: z.array(z.string()).describe("Array of URLs to scrape"),
     }),
     handler: async ({ urls }) => {
       try {

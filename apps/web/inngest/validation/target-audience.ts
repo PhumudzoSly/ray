@@ -5,11 +5,38 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const TargetAudienceInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  segmentName: z.string(),
+  ageRange: z.string().optional(),
+  location: z.string().optional(),
+  companySize: z
+    .enum([
+      "SOLO",
+      "SMALL_1_10",
+      "MEDIUM_11_50",
+      "LARGE_51_200",
+      "ENTERPRISE_200_PLUS",
+    ])
+    .optional(),
+  industry: z.string().optional(),
+  painPoints: z.array(z.string()).optional(),
+  decisionFactors: z.array(z.string()).optional(),
+  budgetRange: z.string().optional(),
+  techSavviness: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]),
+  estimatedSize: z.number().int().optional(),
+  averageSpend: z.number().optional(),
+  segmentValue: z.number().optional(),
+  isPrimary: z.boolean().optional(),
+  priority: z.number().int().optional(),
+});
+
 const saveTargetAudienceTool = createTool({
   name: "save-target-audience",
   description:
     "Save target audience data to the database with comprehensive analysis",
-  parameters: TargetAudienceOptionalDefaultsSchema,
+  parameters: TargetAudienceInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const targetAudience = await prisma.targetAudience.create({
@@ -98,6 +125,7 @@ const targetAudienceAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [saveTargetAudienceTool, getTargetAudiencesTool],
 });

@@ -2,11 +2,37 @@ import { createAgent, createTool, gemini } from "@inngest/agent-kit";
 import { MarketSignalOptionalDefaultsSchema, prisma } from "@workspace/backend";
 import z from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const MarketSignalInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  signalType: z.enum([
+    "FUNDING_ANNOUNCEMENT",
+    "PRODUCT_LAUNCH",
+    "PARTNERSHIP",
+    "ACQUISITION",
+    "REGULATORY_CHANGE",
+    "TECHNOLOGY_BREAKTHROUGH",
+    "MARKET_TREND",
+    "COMPETITIVE_MOVE",
+  ]),
+  title: z.string(),
+  description: z.string(),
+  source: z.string().optional(),
+  strength: z.enum(["WEAK", "MODERATE", "STRONG", "CRITICAL"]),
+  confidence: z.number().optional(),
+  trend: z.enum(["INCREASING", "DECREASING", "STABLE", "VOLATILE"]).optional(),
+  marketImpact: z.string().optional(),
+  competitiveImpact: z.string().optional(),
+  timing: z.string().optional(),
+  isMonitored: z.boolean().optional(),
+  lastChecked: z.string().optional(),
+});
+
 const saveMarketSignalTool = createTool({
   name: "save-market-signal",
   description:
     "Save market signal data to the database with comprehensive analysis",
-  parameters: MarketSignalOptionalDefaultsSchema,
+  parameters: MarketSignalInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const marketSignal = await prisma.marketSignal.create({
@@ -141,6 +167,7 @@ const marketSignalsAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [saveMarketSignalTool, getMarketSignalsTool],
 });

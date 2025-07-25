@@ -5,11 +5,30 @@ import {
 } from "@workspace/backend";
 import { z } from "zod";
 
+// Custom schema for Gemini API compatibility (excluding problematic fields)
+const TechnologyAssessmentInputSchema = z.object({
+  marketResearchId: z.string().optional(),
+  technicalComplexity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+  developmentTimeline: z.number().int().optional(),
+  teamRequirements: z.array(z.string()).optional(),
+  recommendedStack: z.array(z.string()).optional(),
+  alternativeStacks: z.array(z.string()).optional(),
+  integrationRequirements: z.array(z.string()).optional(),
+  technicalRisks: z.array(z.string()).optional(),
+  scalabilityChallenges: z.array(z.string()).optional(),
+  securityConsiderations: z.array(z.string()).optional(),
+  developmentCosts: z.number().optional(),
+  infrastructureCosts: z.number().optional(),
+  maintenanceCosts: z.number().optional(),
+  technicalAdvantages: z.array(z.string()).optional(),
+  innovationPotential: z.string().optional(),
+});
+
 const saveTechnologyAssessmentTool = createTool({
   name: "save-technology-assessment",
   description:
     "Save technology assessment data to the database with comprehensive analysis. If an assessment already exists, it will be updated.",
-  parameters: TechnologyAssessmentOptionalDefaultsSchema,
+  parameters: TechnologyAssessmentInputSchema,
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
 
@@ -186,6 +205,7 @@ const technologyAssessmentAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     saveTechnologyAssessmentTool,

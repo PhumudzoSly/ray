@@ -271,11 +271,10 @@ const triggerAnalysisAgentTool = createTool({
     reason: z.string(),
   }),
   handler: async (data, { network, agent, step }) => {
-    // This would trigger the ideaAnalysisAgent
-    // For now, we'll return a message indicating the action needed
+    const { ideaId } = network.state.data;
     return {
       action: "TRIGGER_ANALYSIS_AGENT",
-      ideaId: data.ideaId,
+      ideaId: ideaId,
       reason: data.reason,
       message:
         "Analysis agent should be triggered to run comprehensive SaaS idea analysis",
@@ -291,10 +290,10 @@ const triggerResearcherAgentTool = createTool({
     missingComponents: z.array(z.string()),
   }),
   handler: async (data, { network, agent, step }) => {
-    // This would trigger the ideaResearcher
+    const { ideaId } = network.state.data;
     return {
       action: "TRIGGER_RESEARCHER_AGENT",
-      ideaId: data.ideaId,
+      ideaId: ideaId,
       missingComponents: data.missingComponents,
       message:
         "Researcher agent should be triggered to gather missing data components",
@@ -305,16 +304,12 @@ const triggerResearcherAgentTool = createTool({
 const triggerCompetitorAgentTool = createTool({
   name: "trigger-competitor-agent",
   description: "Trigger the competitor analysis agent to analyze competitors",
-  parameters: z.object({
-    ideaId: z.string(),
-    competitiveLandscapeId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
-    // This would trigger the competitorsAgent
+    const { ideaId, competitiveLandscapeId } = network.state.data;
     return {
       action: "TRIGGER_COMPETITOR_AGENT",
-      ideaId: data.ideaId,
-      competitiveLandscapeId: data.competitiveLandscapeId,
+      ideaId: ideaId,
+      competitiveLandscapeId: competitiveLandscapeId,
       message:
         "Competitor agent should be triggered to analyze competitive landscape",
     };
@@ -324,15 +319,12 @@ const triggerCompetitorAgentTool = createTool({
 const triggerTargetAudienceAgentTool = createTool({
   name: "trigger-target-audience-agent",
   description: "Trigger the target audience analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_TARGET_AUDIENCE_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Target audience agent should be triggered to analyze customer segments",
     };
@@ -342,15 +334,12 @@ const triggerTargetAudienceAgentTool = createTool({
 const triggerMarketTrendsAgentTool = createTool({
   name: "trigger-market-trends-agent",
   description: "Trigger the market trends analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_MARKET_TRENDS_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Market trends agent should be triggered to analyze market trends",
     };
@@ -360,15 +349,12 @@ const triggerMarketTrendsAgentTool = createTool({
 const triggerCustomerNeedsAgentTool = createTool({
   name: "trigger-customer-needs-agent",
   description: "Trigger the customer needs analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_CUSTOMER_NEEDS_AGENT",
       ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      marketResearchId: data.researchId,
       message:
         "Customer needs agent should be triggered to analyze customer needs",
     };
@@ -378,15 +364,12 @@ const triggerCustomerNeedsAgentTool = createTool({
 const triggerCompetitiveLandscapeAgentTool = createTool({
   name: "trigger-competitive-landscape-agent",
   description: "Trigger the competitive landscape analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_COMPETITIVE_LANDSCAPE_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Competitive landscape agent should be triggered to analyze market positioning",
     };
@@ -396,15 +379,12 @@ const triggerCompetitiveLandscapeAgentTool = createTool({
 const triggerValidationInsightsAgentTool = createTool({
   name: "trigger-validation-insights-agent",
   description: "Trigger the validation insights analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_VALIDATION_INSIGHTS_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Validation insights agent should be triggered to generate insights",
     };
@@ -414,15 +394,12 @@ const triggerValidationInsightsAgentTool = createTool({
 const triggerMarketSignalsAgentTool = createTool({
   name: "trigger-market-signals-agent",
   description: "Trigger the market signals analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_MARKET_SIGNALS_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Market signals agent should be triggered to detect market signals",
     };
@@ -432,15 +409,12 @@ const triggerMarketSignalsAgentTool = createTool({
 const triggerValidationScorecardAgentTool = createTool({
   name: "trigger-validation-scorecard-agent",
   description: "Trigger the validation scorecard analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_VALIDATION_SCORECARD_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: data.researchId,
       message:
         "Validation scorecard agent should be triggered to create scorecards",
     };
@@ -450,15 +424,12 @@ const triggerValidationScorecardAgentTool = createTool({
 const triggerFinancialProjectionAgentTool = createTool({
   name: "trigger-financial-projection-agent",
   description: "Trigger the financial projection analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_FINANCIAL_PROJECTION_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Financial projection agent should be triggered to create projections",
     };
@@ -468,15 +439,12 @@ const triggerFinancialProjectionAgentTool = createTool({
 const triggerTechnologyAssessmentAgentTool = createTool({
   name: "trigger-technology-assessment-agent",
   description: "Trigger the technology assessment analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_TECHNOLOGY_ASSESSMENT_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Technology assessment agent should be triggered to assess technical feasibility",
     };
@@ -486,15 +454,12 @@ const triggerTechnologyAssessmentAgentTool = createTool({
 const triggerRegulatoryComplianceAgentTool = createTool({
   name: "trigger-regulatory-compliance-agent",
   description: "Trigger the regulatory compliance analysis agent",
-  parameters: z.object({
-    ideaId: z.string(),
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
+    const { ideaId, researchId } = network.state.data;
     return {
       action: "TRIGGER_REGULATORY_COMPLIANCE_AGENT",
-      ideaId: data.ideaId,
-      marketResearchId: data.marketResearchId,
+      ideaId: ideaId,
+      marketResearchId: researchId,
       message:
         "Regulatory compliance agent should be triggered to assess compliance requirements",
     };
@@ -615,6 +580,7 @@ const dataValidatorAgent = createAgent({
 `,
   model: gemini({
     model: "gemini-2.0-flash",
+    apiKey: "AIzaSyAqW8nOjqhZc-fH9PhyYHVwQGCLajm14hg",
   }),
   tools: [
     checkDataCompletenessTool,
