@@ -1,9 +1,18 @@
-"use client";
-
 import React from "react";
-import { FinancialAnalysis } from "@/components/idea/validation/financial-analysis";
-import { FeasibilityAnalysis } from "@/components/idea/validation/feasibility-analysis";
-import { getSingleIdea, getValidationDetails } from "@/actions/idea";
+import { FinancialProjections } from "@/components/idea/finance/financial-projections";
+import { UnitEconomics } from "@/components/idea/finance/unit-economics";
+import { FundingRequirements } from "@/components/idea/finance/funding-requirements";
+import { RiskAnalysis } from "@/components/idea/finance/risk-analysis";
+import { getSingleIdea } from "@/actions/idea";
+import {
+  getFinancialProjection,
+  getFundingRounds,
+} from "@/actions/idea/financial-analysis";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -12,111 +21,104 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { DollarSign, CheckCircle2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { DollarSign, TrendingUp, Users, AlertTriangle } from "lucide-react";
 
-const FinancePage = ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+interface FinancePageProps {
+  params: Promise<{ id: string }>;
+}
 
-  const { data: idea, isPending: ideaPending } = useQuery({
-    queryKey: ["idea", id],
-    queryFn: () => getSingleIdea(id),
-  });
+export default async function FinancePage({ params }: FinancePageProps) {
+  const { id } = await params;
 
-  const { data: validationDetails, isPending: validationPending } = useQuery({
-    queryKey: ["validationDetails", id],
-    queryFn: () => getValidationDetails({ ideaId: id }),
-  });
+  const queryClient = new QueryClient();
 
-  if (ideaPending || validationPending) {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-4 w-48" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/6" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!idea) {
-    return (
-      <div className="p-6">
-        <Card>
-          <CardContent className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Idea not found</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const hasValidation = validationDetails?.validation;
+  // Prefetch data on the server
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["idea", id],
+      queryFn: () => getSingleIdea(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["financial-projection", id],
+      queryFn: () => getFinancialProjection(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["funding-rounds", id],
+      queryFn: () => getFundingRounds(id),
+    }),
+  ]);
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Financial Analysis */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-green-500" />
-              Financial Analysis
-            </CardTitle>
-            <CardDescription>
-              Revenue projections, costs, and financial viability
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {hasValidation ? (
-              <FinancialAnalysis data={validationDetails.financials} />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see financial analysis</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div className="space-y-6 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Financial Projections */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-green-600" />
+                Financial Projections
+              </CardTitle>
+              <CardDescription>
+                Revenue projections, costs, and break-even analysis
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FinancialProjections ideaId={id} />
+            </CardContent>
+          </Card>
 
-        {/* Feasibility Analysis */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-blue-500" />
-              Feasibility Analysis
-            </CardTitle>
-            <CardDescription>
-              Technical feasibility and implementation challenges
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {hasValidation ? (
-              <FeasibilityAnalysis data={validationDetails.feasibility} />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <CheckCircle2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see feasibility analysis</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          {/* Unit Economics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-blue-600" />
+                Unit Economics
+              </CardTitle>
+              <CardDescription>
+                Customer lifetime value, acquisition costs, and payback periods
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <UnitEconomics ideaId={id} />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Funding Requirements */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <DollarSign className="h-5 w-5 text-purple-600" />
+                Funding Requirements
+              </CardTitle>
+              <CardDescription>
+                Funding needs, rounds timeline, and investor information
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FundingRequirements ideaId={id} />
+            </CardContent>
+          </Card>
+
+          {/* Risk Analysis */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-orange-600" />
+                Risk Analysis
+              </CardTitle>
+              <CardDescription>
+                Risk factors, mitigation strategies, and scenario analysis
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RiskAnalysis ideaId={id} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
+    </HydrationBoundary>
   );
-};
-
-export default FinancePage;
+}
