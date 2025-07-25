@@ -5,7 +5,7 @@ import { getSession } from "../account/user";
 import { MilestoneStatusType } from "@workspace/backend";
 
 // Types for milestone operations
-export interface CreateMilestoneData {
+interface CreateMilestoneData {
   name: string;
   description?: string;
   projectId: string;
@@ -15,7 +15,7 @@ export interface CreateMilestoneData {
   status?: MilestoneStatusType;
 }
 
-export interface UpdateMilestoneData {
+interface UpdateMilestoneData {
   name?: string;
   description?: string;
   startDate?: number | null;
@@ -24,7 +24,7 @@ export interface UpdateMilestoneData {
   status?: MilestoneStatusType;
 }
 
-export interface MilestoneWithProgress {
+interface MilestoneWithProgress {
   id: string;
   name: string;
   description: string | null;

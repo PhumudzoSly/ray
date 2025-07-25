@@ -16,10 +16,47 @@ import { Badge } from "@workspace/ui/components/badge";
 import {
   getGitHubRepositories,
   updateGitHubRepositories,
-  GitHubRepository,
 } from "@/actions/integration/github";
 import { toast } from "sonner";
 import { useMutation, useQuery } from "@tanstack/react-query";
+
+export interface GitHubRepository {
+  id: number;
+  name: string;
+  full_name: string;
+  private: boolean;
+  description: string | null;
+  html_url: string;
+  clone_url: string;
+  default_branch: string;
+  language: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  open_issues_count: number;
+  updated_at: string;
+}
+
+export interface GitHubIssue {
+  id: number;
+  number: number;
+  title: string;
+  body: string | null;
+  state: "open" | "closed";
+  locked: boolean;
+  assignees: Array<{
+    login: string;
+    id: number;
+    avatar_url: string;
+  }>;
+  labels: Array<{
+    name: string;
+    color: string;
+  }>;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  html_url: string;
+}
 
 interface GitHubRepositoryModalProps {
   open: boolean;

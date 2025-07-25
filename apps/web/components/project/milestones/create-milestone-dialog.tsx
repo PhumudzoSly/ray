@@ -17,11 +17,54 @@ import { toast } from "sonner";
 import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createMilestone,
-  CreateMilestoneData,
-} from "@/actions/project/milestone";
+import { createMilestone } from "@/actions/project/milestone";
 import { getOrgMembers } from "@/actions/account/user";
+import { MilestoneStatusType } from "@workspace/backend";
+
+// Types for milestone operations
+export interface CreateMilestoneData {
+  name: string;
+  description?: string;
+  projectId: string;
+  startDate?: number;
+  endDate?: number;
+  ownerId?: string;
+  status?: MilestoneStatusType;
+}
+
+export interface UpdateMilestoneData {
+  name?: string;
+  description?: string;
+  startDate?: number | null;
+  endDate?: number | null;
+  ownerId?: string | null;
+  status?: MilestoneStatusType;
+}
+
+export interface MilestoneWithProgress {
+  id: string;
+  name: string;
+  description: string | null;
+  status: MilestoneStatusType;
+  startDate: Date | null;
+  endDate: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  projectId: string;
+  organizationId: string;
+  ownerId: string | null;
+  owner: { id: string; name: string; image: string | null } | null;
+  progress: number;
+  completedIssueCount: number;
+  issueCount: number;
+  completedFeatureCount: number;
+  featureCount: number;
+  overdueItems: number;
+  dependsOn: { id: string; name: string }[];
+  blocking: { id: string; name: string }[];
+  issues: any[];
+  features: any[];
+}
 
 interface CreateMilestoneDialogProps {
   projectId: string;

@@ -131,6 +131,7 @@ model Organization {
   assetViews          AssetView[]
   assetDownloads      AssetDownload[]
   referrals           Referral[]
+  ApiKey              ApiKey[]
 
   @@unique([slug])
   @@map("organization")
@@ -392,6 +393,7 @@ model Asset {
 model ApiKey {
   id             String          @id @default(uuid())
   organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name           String
   keyHash        String
   keyPreview     String

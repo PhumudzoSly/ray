@@ -2,7 +2,7 @@
 import { getSession } from "@/actions/account/user";
 import { prisma } from "@workspace/backend";
 
-export interface FileUploadResult {
+interface FileUploadResult {
   url: string;
   name: string;
   size: number;

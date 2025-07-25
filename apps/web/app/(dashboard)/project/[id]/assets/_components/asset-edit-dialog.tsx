@@ -53,7 +53,7 @@ export function AssetEditDialog({
 }: AssetEditDialogProps) {
   const { token } = useSession();
   const queryClient = useQueryClient();
-  
+
   // Form state
   const [assetName, setAssetName] = useState("");
   const [assetDescription, setAssetDescription] = useState("");
@@ -97,31 +97,31 @@ export function AssetEditDialog({
     },
     onMutate: async (variables) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ 
-        queryKey: ["projectAssets", asset?.projectId] 
+      await queryClient.cancelQueries({
+        queryKey: ["projectAssets", asset?.projectId],
       });
 
       // Snapshot the previous value
       const previousAssets = queryClient.getQueryData([
-        "projectAssets", 
-        asset?.projectId
+        "projectAssets",
+        asset?.projectId,
       ]);
 
       // Optimistically update to the new value
       queryClient.setQueryData(
-        ["projectAssets", asset?.projectId], 
+        ["projectAssets", asset?.projectId],
         (old: any) => {
           if (!old) return old;
           return old.map((a: any) =>
-            a.id === variables.assetId 
-              ? { 
-                  ...a, 
+            a.id === variables.assetId
+              ? {
+                  ...a,
                   name: variables.name,
                   description: variables.description,
                   category: variables.category,
                   tags: variables.tags || [],
                   updatedAt: new Date(),
-                } 
+                }
               : a
           );
         }
@@ -134,7 +134,7 @@ export function AssetEditDialog({
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousAssets) {
         queryClient.setQueryData(
-          ["projectAssets", asset?.projectId], 
+          ["projectAssets", asset?.projectId],
           context.previousAssets
         );
       }
@@ -142,24 +142,24 @@ export function AssetEditDialog({
     },
     onSuccess: (data, variables) => {
       toast.success("Asset updated successfully");
-      
+
       // Invalidate and refetch assets to get the real data from server
-      queryClient.invalidateQueries({ 
-        queryKey: ["projectAssets", asset?.projectId] 
+      queryClient.invalidateQueries({
+        queryKey: ["projectAssets", asset?.projectId],
       });
-      
+
       // Call success callback if provided
       if (onSuccess) {
         onSuccess();
       }
-      
+
       // Close dialog
       onClose();
     },
     onSettled: () => {
       // Always refetch after error or success to ensure we have the latest data
-      queryClient.invalidateQueries({ 
-        queryKey: ["projectAssets", asset?.projectId] 
+      queryClient.invalidateQueries({
+        queryKey: ["projectAssets", asset?.projectId],
       });
     },
   });
@@ -315,17 +315,14 @@ export function AssetEditDialog({
         </div>
 
         <DialogFooter>
-          <Button 
-            variant="outline" 
-            onClick={onClose} 
+          <Button
+            variant="outline"
+            onClick={onClose}
             disabled={updateAssetMutation.isPending}
           >
             Cancel
           </Button>
-          <Button 
-            onClick={handleUpdate} 
-            disabled={!canUpdate}
-          >
+          <Button onClick={handleUpdate} disabled={!canUpdate}>
             {updateAssetMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />

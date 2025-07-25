@@ -1,6 +1,6 @@
 "use server";
 import { prisma } from "@workspace/backend";
-import { verifyApiKey } from "@/lib/api-key-utils";
+import { hashApiKey, verifyApiKey } from "@/lib/api-key-utils";
 import { headers } from "next/headers";
 
 /**
@@ -9,7 +9,6 @@ import { headers } from "next/headers";
 export async function authenticateApiKey(apiKey: string) {
   try {
     // Hash the provided API key
-    const { hashApiKey } = await import("@/lib/api-key-utils");
     const providedHash = hashApiKey(apiKey);
 
     // Find the API key by its hash
@@ -71,9 +70,7 @@ export async function authenticateApiKey(apiKey: string) {
 /**
  * Extract API key from Authorization header
  */
-export function extractApiKeyFromHeader(
-  authHeader: string | null
-): string | null {
+function extractApiKeyFromHeader(authHeader: string | null): string | null {
   if (!authHeader) return null;
 
   // Handle "Bearer <token>" format

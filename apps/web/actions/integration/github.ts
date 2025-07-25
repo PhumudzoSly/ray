@@ -4,7 +4,7 @@ import { prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { redirect } from "next/navigation";
 
-export interface GitHubRepository {
+interface GitHubRepository {
   id: number;
   name: string;
   full_name: string;
@@ -20,7 +20,7 @@ export interface GitHubRepository {
   updated_at: string;
 }
 
-export interface GitHubIssue {
+interface GitHubIssue {
   id: number;
   number: number;
   title: string;

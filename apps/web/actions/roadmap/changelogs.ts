@@ -249,7 +249,7 @@ export const getAvailableItemsForChangelog = async (roadmapId: string) => {
       prisma.issue.findMany({
         where: {
           projectId: roadmap.projectId,
-          status: { in: ["DONE", "COMPLETED"] },
+          status: { in: ["DONE"] },
           achieved: true,
         },
         select: {
@@ -259,7 +259,6 @@ export const getAvailableItemsForChangelog = async (roadmapId: string) => {
           status: true,
           label: true,
         },
-        orderBy: { updatedAt: "desc" },
       }),
       prisma.feature.findMany({
         where: {
@@ -272,7 +271,7 @@ export const getAvailableItemsForChangelog = async (roadmapId: string) => {
           description: true,
           phase: true,
         },
-        orderBy: { updatedAt: "desc" },
+        orderBy: { createdAt: "desc" },
       }),
     ]);
 

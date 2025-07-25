@@ -56,9 +56,10 @@ export const convertFeatureRequestToIssue = async (data: {
       status: "BACKLOG",
       sourceType: "feature_request",
       sourceFeedbackId: featureRequest.id,
+      organizationId: org,
     });
 
-    if (!issueResult.success) {
+    if (!issueResult.success || !issueResult.data) {
       return issueResult;
     }
 
@@ -143,7 +144,7 @@ export const convertFeatureRequestToRoadmapItem = async (data: {
       targetDate: aiSuggestedData.targetDate,
     });
 
-    if (!roadmapItemResult.success) {
+    if (!roadmapItemResult.success || !roadmapItemResult.data) {
       return roadmapItemResult;
     }
 
@@ -222,9 +223,10 @@ export const convertFeatureRequestToFeature = async (data: {
       description: aiSuggestedData.description,
       projectId: data.projectId,
       priority: aiSuggestedData.priority,
-      phase: aiSuggestedData.phase,
+      phase: aiSuggestedData.phase as any,
       businessValue: aiSuggestedData.businessValue,
       estimatedEffort: aiSuggestedData.estimatedEffort,
+      organizationId: org,
     });
 
     if (!featureResult.success) {

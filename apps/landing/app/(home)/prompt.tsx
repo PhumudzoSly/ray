@@ -1,12 +1,5 @@
-import {
-  Gemini,
-  Replit,
-  GooglePaLM,
-  MagicUI,
-  VSCodium,
-  MediaWiki,
-} from "@/components/logos";
 import { Button } from "@workspace/ui/components/button";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function IntegrationsSection() {
@@ -30,7 +23,12 @@ export default function IntegrationsSection() {
 
             <div className="mt-auto grid grid-cols-[auto_1fr] gap-3">
               <div className="bg-background flex aspect-square items-center justify-center border">
-                <MediaWiki className="size-9" />
+                <Image
+                  src="/images/integrations/mediawiki.svg"
+                  alt="MediaWiki"
+                  width={36}
+                  height={36}
+                />
               </div>
               <blockquote>
                 <p>
@@ -46,40 +44,7 @@ export default function IntegrationsSection() {
           </div>
 
           <div className="-mx-6 px-6 [mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,#000_70%,transparent_100%)] sm:mx-auto sm:max-w-md md:-mx-6 md:ml-auto md:mr-0">
-            <div className="bg-background dark:bg-muted/50 rounded-2xl border p-3 shadow-lg md:pb-12">
-              <div className="grid grid-cols-2 gap-2">
-                <Integration
-                  icon={<Gemini />}
-                  name="Gemini"
-                  description="The AI model that powers Google's search engine."
-                />
-                <Integration
-                  icon={<Replit />}
-                  name="Replit"
-                  description="The AI model that powers Google's search engine."
-                />
-                <Integration
-                  icon={<GooglePaLM />}
-                  name="GooglePaLM"
-                  description="The AI model that powers Google's search engine."
-                />
-                <Integration
-                  icon={<MagicUI />}
-                  name="MagicUI"
-                  description="The AI model that powers Google's search engine."
-                />
-                <Integration
-                  icon={<VSCodium />}
-                  name="VSCodium"
-                  description="The AI model that powers Google's search engine."
-                />
-                <Integration
-                  icon={<MediaWiki />}
-                  name="MediaWiki"
-                  description="The AI model that powers Google's search engine."
-                />
-              </div>
-            </div>
+            <div className="bg-background dark:bg-muted/50 rounded-2xl border p-3 shadow-lg md:pb-12"></div>
           </div>
         </div>
       </div>
