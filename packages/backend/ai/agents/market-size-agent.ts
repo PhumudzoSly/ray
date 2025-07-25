@@ -211,12 +211,10 @@ export const generateMarketSizeData = async (
   console.log("🔍 Market Size Agent: Conducting research with tools...");
 
   try {
-    const researchResult = await generateText({
-      model: google("gemini-2.0-flash", {
-        useSearchGrounding: true,
-      }),
+    const { text } = await generateText({
+      model: google("gemini-2.0-flash"),
       tools: allTools,
-      maxSteps: 100,
+      maxRetries: 3,
       toolChoice: "required",
       prompt: `${MARKET_SIZE_RESEARCH_PROMPT}
 
@@ -240,84 +238,110 @@ Provide a detailed research summary with specific data points, sources, and conf
     });
 
     console.log(
-      "✅ Market Size Agent: Research completed, generating structured data..."
+      "✅ Market Size Agent: Research completed, generating structured data...",
+      text
     );
 
     // STEP 2: GENERATE STRUCTURED MARKET SIZE DATA USING RESEARCH RESULTS
-    const { object: marketSizeData } = await generateObject({
-      model: google("gemini-2.0-flash"),
-      schema: z.object({
-        totalAddressableMarket: z.number().optional(),
-        tamSource: z.string().optional(),
-        tamYear: z.number().optional(),
-        tamConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+    let marketSizeData;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-        serviceableAddressableMarket: z.number().optional(),
-        samSource: z.string().optional(),
-        samYear: z.number().optional(),
-        samConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+    while (retryCount < maxRetries) {
+      try {
+        console.log(
+          `🔄 Market Size Agent: Attempt ${retryCount + 1} of ${maxRetries} to generate structured data...`
+        );
 
-        serviceableObtainableMarket: z.number().optional(),
-        somSource: z.string().optional(),
-        somYear: z.number().optional(),
-        somConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        const result = await generateObject({
+          model: google("gemini-2.0-flash"),
+          schema: z.object({
+            totalAddressableMarket: z.number().optional(),
+            tamSource: z.string().optional(),
+            tamYear: z.number().optional(),
+            tamConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-        marketGrowthRate: z.number().optional(),
-        growthRateSource: z.string().optional(),
-        growthRatePeriod: z.string().optional(),
-        growthRateConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            serviceableAddressableMarket: z.number().optional(),
+            samSource: z.string().optional(),
+            samYear: z.number().optional(),
+            samConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-        marketMaturity: z.enum(["EMERGING", "GROWING", "MATURE", "DECLINING"]),
-        maturityIndicators: z.array(z.string()),
-        maturityConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            serviceableObtainableMarket: z.number().optional(),
+            somSource: z.string().optional(),
+            somYear: z.number().optional(),
+            somConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-        // Market Dynamics
-        growthDrivers: z.array(z.string()),
-        growthBarriers: z.array(z.string()),
-        marketTrends: z.array(z.string()),
-        regulatoryFactors: z.array(z.string()),
+            marketGrowthRate: z.number().optional(),
+            growthRateSource: z.string().optional(),
+            growthRatePeriod: z.string().optional(),
+            growthRateConfidence: z.enum([
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "VERY_HIGH",
+            ]),
 
-        // SaaS-Specific Metrics
-        subscriptionAdoption: z.number().optional(), // Percentage
-        freemiumConversion: z.number().optional(), // Percentage
-        averageRevenuePerUser: z.number().optional(),
-        customerLifetimeValue: z.number().optional(),
-        churnRate: z.number().optional(), // Percentage
+            marketMaturity: z.enum([
+              "EMERGING",
+              "GROWING",
+              "MATURE",
+              "DECLINING",
+            ]),
+            maturityIndicators: z.array(z.string()),
+            maturityConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-        // Technology Factors
-        cloudAdoption: z.number().optional(), // Percentage
-        aiIntegration: z.number().optional(), // Percentage
-        mobileAdoption: z.number().optional(), // Percentage
-        apiEcosystem: z.enum(["NONE", "WEAK", "MODERATE", "STRONG"]),
+            // Market Dynamics
+            growthDrivers: z.array(z.string()),
+            growthBarriers: z.array(z.string()),
+            marketTrends: z.array(z.string()),
+            regulatoryFactors: z.array(z.string()),
 
-        // Geographic Analysis
-        primaryMarkets: z.array(z.string()),
-        internationalPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        localizationRequirements: z.array(z.string()),
+            // SaaS-Specific Metrics
+            subscriptionAdoption: z.number().optional(), // Percentage
+            freemiumConversion: z.number().optional(), // Percentage
+            averageRevenuePerUser: z.number().optional(),
+            customerLifetimeValue: z.number().optional(),
+            churnRate: z.number().optional(), // Percentage
 
-        // Market Opportunities
-        underservedSegments: z.array(z.string()),
-        emergingUseCases: z.array(z.string()),
-        integrationOpportunities: z.array(z.string()),
-        partnershipPotential: z.array(z.string()),
+            // Technology Factors
+            cloudAdoption: z.number().optional(), // Percentage
+            aiIntegration: z.number().optional(), // Percentage
+            mobileAdoption: z.number().optional(), // Percentage
+            apiEcosystem: z.enum(["NONE", "WEAK", "MODERATE", "STRONG"]),
 
-        // Risk Assessment
-        marketRisks: z.array(z.string()),
-        competitiveThreats: z.array(z.string()),
-        technologyRisks: z.array(z.string()),
-        regulatoryRisks: z.array(z.string()),
+            // Geographic Analysis
+            primaryMarkets: z.array(z.string()),
+            internationalPotential: z.enum([
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "VERY_HIGH",
+            ]),
+            localizationRequirements: z.array(z.string()),
 
-        // Strategic Insights
-        marketEntryStrategy: z.string().optional(),
-        growthStrategy: z.array(z.string()),
-        competitiveAdvantage: z.string().optional(),
-        marketPositioning: z.string().optional(),
+            // Market Opportunities
+            underservedSegments: z.array(z.string()),
+            emergingUseCases: z.array(z.string()),
+            integrationOpportunities: z.array(z.string()),
+            partnershipPotential: z.array(z.string()),
 
-        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        dataGaps: z.array(z.string()),
-        confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      }),
-      prompt: `${MARKET_SIZE_ANALYSIS_PROMPT}
+            // Risk Assessment
+            marketRisks: z.array(z.string()),
+            competitiveThreats: z.array(z.string()),
+            technologyRisks: z.array(z.string()),
+            regulatoryRisks: z.array(z.string()),
+
+            // Strategic Insights
+            marketEntryStrategy: z.string().optional(),
+            growthStrategy: z.array(z.string()),
+            competitiveAdvantage: z.string().optional(),
+            marketPositioning: z.string().optional(),
+
+            dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            dataGaps: z.array(z.string()),
+            confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          }),
+          prompt: `${MARKET_SIZE_ANALYSIS_PROMPT}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
@@ -326,20 +350,174 @@ RESEARCH CONTEXT:
 ${JSON.stringify(researchContext, null, 2)}
 
 COMPREHENSIVE RESEARCH DATA:
-${researchResult.text}
+${text}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+RESPONSE FORMAT REQUIREMENTS:
+You must respond with a JSON object that has these EXACT field names (case-sensitive):
+- totalAddressableMarket: number (optional) - total market size in billions USD
+- tamSource: string (optional) - source of TAM data
+- tamYear: number (optional) - year of TAM data
+- tamConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- serviceableAddressableMarket: number (optional) - serviceable market size in billions USD
+- samSource: string (optional) - source of SAM data
+- samYear: number (optional) - year of SAM data
+- samConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- serviceableObtainableMarket: number (optional) - obtainable market size in billions USD
+- somSource: string (optional) - source of SOM data
+- somYear: number (optional) - year of SOM data
+- somConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- marketGrowthRate: number (optional) - CAGR percentage
+- growthRateSource: string (optional) - source of growth rate data
+- growthRatePeriod: string (optional) - time period for growth rate
+- growthRateConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- marketMaturity: "EMERGING" | "GROWING" | "MATURE" | "DECLINING"
+- maturityIndicators: array of strings - indicators of market maturity
+- maturityConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- growthDrivers: array of strings - key drivers of market growth
+- growthBarriers: array of strings - barriers to market growth
+- marketTrends: array of strings - current market trends
+- regulatoryFactors: array of strings - regulatory factors affecting the market
+- subscriptionAdoption: number (optional) - percentage of market using subscription models
+- freemiumConversion: number (optional) - freemium to paid conversion rate
+- averageRevenuePerUser: number (optional) - average revenue per user
+- customerLifetimeValue: number (optional) - customer lifetime value
+- churnRate: number (optional) - customer churn rate percentage
+- cloudAdoption: number (optional) - cloud adoption rate in the market
+- aiIntegration: number (optional) - AI integration rate in the market
+- mobileAdoption: number (optional) - mobile adoption rate
+- apiEcosystem: "NONE" | "WEAK" | "MODERATE" | "STRONG"
+- primaryMarkets: array of strings - primary geographic markets
+- internationalPotential: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- localizationRequirements: array of strings - localization requirements
+- underservedSegments: array of strings - underserved market segments
+- emergingUseCases: array of strings - emerging use cases
+- integrationOpportunities: array of strings - integration opportunities
+- partnershipPotential: array of strings - partnership opportunities
+- marketRisks: array of strings - market risks
+- competitiveThreats: array of strings - competitive threats
+- technologyRisks: array of strings - technology risks
+- regulatoryRisks: array of strings
+- marketEntryStrategy: string (optional)
+- growthStrategy: array of strings
+- competitiveAdvantage: string (optional)
+- marketPositioning: string (optional)
+- dataQuality: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- dataGaps: array of strings
+- confidenceLevel: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
 
-Generate ONLY market size analysis with TAM/SAM/SOM calculations, growth projections, and market maturity assessment. Focus on SaaS-specific market dynamics and actionable intelligence for validation of this specific idea.
+DO NOT use nested objects with different field names. Use ONLY the exact field names listed above.
 
-Use the research data provided to populate the structured fields with the most accurate and relevant information available.`,
-    });
+Generate market size analysis with SaaS-specific market dynamics and actionable intelligence based on the research data provided.`,
+        });
+
+        let rawResult = result.object;
+
+        // Handle case where AI returns a JSON string instead of object
+        if (typeof rawResult === "string") {
+          console.log("⚠️ Market Size Agent: Received string, parsing JSON...");
+          try {
+            rawResult = JSON.parse(rawResult);
+          } catch (parseError) {
+            console.error("❌ Failed to parse JSON string:", parseError);
+            throw new Error(
+              "Generated data is a string that cannot be parsed as JSON"
+            );
+          }
+        }
+
+        const marketSizeData = rawResult;
+
+        // Validate that we got a proper object
+        if (
+          marketSizeData &&
+          typeof marketSizeData === "object" &&
+          !Array.isArray(marketSizeData)
+        ) {
+          console.log(
+            "✅ Market Size Agent: Successfully generated structured data"
+          );
+          break;
+        } else {
+          throw new Error("Generated data is not a valid object");
+        }
+      } catch (error) {
+        retryCount++;
+        console.error(
+          `❌ Market Size Agent: Attempt ${retryCount} failed:`,
+          error
+        );
+
+        if (retryCount >= maxRetries) {
+          console.error(
+            "❌ Market Size Agent: All retry attempts failed, using fallback data"
+          );
+          // Provide fallback data structure
+          marketSizeData = {
+            totalAddressableMarket: undefined,
+            tamSource: "Fallback - Research failed",
+            tamYear: new Date().getFullYear(),
+            tamConfidence: "LOW" as const,
+            serviceableAddressableMarket: undefined,
+            samSource: "Fallback - Research failed",
+            samYear: new Date().getFullYear(),
+            samConfidence: "LOW" as const,
+            serviceableObtainableMarket: undefined,
+            somSource: "Fallback - Research failed",
+            somYear: new Date().getFullYear(),
+            somConfidence: "LOW" as const,
+            marketGrowthRate: undefined,
+            growthRateSource: "Fallback - Research failed",
+            growthRatePeriod: "Annual",
+            growthRateConfidence: "LOW" as const,
+            marketMaturity: "EMERGING" as const,
+            maturityIndicators: ["Research failed - using default"],
+            maturityConfidence: "LOW" as const,
+            growthDrivers: ["Research failed - using default"],
+            growthBarriers: ["Research failed - using default"],
+            marketTrends: ["Research failed - using default"],
+            regulatoryFactors: ["Research failed - using default"],
+            subscriptionAdoption: undefined,
+            freemiumConversion: undefined,
+            averageRevenuePerUser: undefined,
+            customerLifetimeValue: undefined,
+            churnRate: undefined,
+            cloudAdoption: undefined,
+            aiIntegration: undefined,
+            mobileAdoption: undefined,
+            apiEcosystem: "NONE" as const,
+            primaryMarkets: ["Research failed - using default"],
+            internationalPotential: "LOW" as const,
+            localizationRequirements: ["Research failed - using default"],
+            underservedSegments: ["Research failed - using default"],
+            emergingUseCases: ["Research failed - using default"],
+            integrationOpportunities: ["Research failed - using default"],
+            partnershipPotential: ["Research failed - using default"],
+            marketRisks: ["Research failed - using default"],
+            competitiveThreats: ["Research failed - using default"],
+            technologyRisks: ["Research failed - using default"],
+            regulatoryRisks: ["Research failed - using default"],
+            marketEntryStrategy: "Research failed - using default strategy",
+            growthStrategy: ["Research failed - using default"],
+            competitiveAdvantage: "Research failed - using default",
+            marketPositioning: "Research failed - using default",
+            dataQuality: "LOW" as const,
+            dataGaps: ["Research failed - all data missing"],
+            confidenceLevel: "LOW" as const,
+          };
+        } else {
+          // Wait before retrying
+          await new Promise((resolve) =>
+            setTimeout(resolve, 2000 * retryCount)
+          );
+        }
+      }
+    }
 
     console.log("✅ Market Size Agent: Completed market size analysis");
 
     return {
       marketSizeData,
-      researchText: researchResult.text,
+      researchText: text,
       agentType: "market-size",
       timestamp: new Date(),
       originalIdeaId: idea.id,

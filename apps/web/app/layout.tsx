@@ -6,15 +6,12 @@ import type { Metadata } from "next";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@/context/theme-provider";
 import { ConfirmDialogProvider } from "@workspace/ui/components/confirm-dialog";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import ReactQueryProvider from "@/lib/query/provider";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query/getQueryClient";
 
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
 export const metadata: Metadata = {
   title: "Ray AI - Build SaaS that users want and love.",
   description: "Design structured app flows with AI-generated PRDs",
@@ -29,14 +26,14 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${fontSans.variable} antialiased `}>
+      <body className={`${GeistSans.className} antialiased `}>
         <ReactQueryProvider>
           <HydrationBoundary state={dehydrate(client)}>
             <ThemeProvider
               storageKey="rayai-theme"
               attribute="class"
               nonce="b1282rp=1ed2h3od12ndu2boqjdh1ibuo2i3hn"
-              defaultTheme="dark"
+              defaultTheme="light"
             >
               <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
               <Toaster richColors />

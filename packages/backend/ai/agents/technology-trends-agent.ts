@@ -48,19 +48,18 @@ const TECHNOLOGY_TRENDS_RESEARCH_PROMPT = `You are an expert technology analyst 
 ### TOOL USAGE STRATEGY
 
 #### SEARCH TOOLS
-- Use `search` for broad technology research queries
-- Use `searchDetailed` for comprehensive analysis of specific topics
-- Use `research` for in-depth investigation of technology trends
+- Use "search" for broad technology research queries
+- Use "searchDetailed" for comprehensive analysis of specific topics
+- Use "research" for in-depth investigation of technology trends
 
 #### SCRAPING TOOLS
-- Use `scrapeUrl` to extract detailed information from technical blogs, documentation, and case studies
-- Use `scrapeMultipleUrls` to gather information from multiple sources efficiently
-
+- Use "scrapeUrl" to extract detailed information from technical blogs, documentation, and case studies
+- Use "scrapeMultipleUrls" to gather information from multiple sources efficiently  
 #### RESEARCH TOOLS
-- Use `competitorResearch` to analyze competitors' technology approaches
-- Use `trendResearch` to understand current and emerging technology trends
-- Use `sentimentAnalysis` to gauge community sentiment about specific technologies
-- Use `multiQueryResearch` to investigate multiple related technology aspects
+- Use "competitorResearch" to analyze competitors' technology approaches
+- Use "trendResearch" to understand current and emerging technology trends
+- Use "sentimentAnalysis" to gauge community sentiment about specific technologies
+- Use "multiQueryResearch" to investigate multiple related technology aspects
 
 ### RESEARCH QUERIES TO EXECUTE
 
@@ -164,14 +163,14 @@ export const generateTechnologyTrendsData = async (
 
   try {
     // STEP 1: CONDUCT RESEARCH USING generateText WITH TOOLS
-    console.log("🔍 Technology Trends Agent: Conducting research with tools...");
+    console.log(
+      "🔍 Technology Trends Agent: Conducting research with tools..."
+    );
 
     const { text: researchResults } = await generateText({
-     model: google("gemini-2.0-flash", {
-        useSearchGrounding: true,
-      }),
+      model: google("gemini-2.0-flash"),
       tools: allTools,
-      maxSteps: 100,
+      maxRetries: 3,
       toolChoice: "required",
       prompt: `${TECHNOLOGY_TRENDS_RESEARCH_PROMPT}
 
@@ -196,60 +195,70 @@ Use the available tools to gather comprehensive, up-to-date information. Focus o
     // STEP 2: GENERATE STRUCTURED DATA USING generateObject
     console.log("🔍 Technology Trends Agent: Generating structured data...");
 
-    const { object: technologyData } = await generateObject({
-      model: google("gemini-2.0-flash"),
-      schema: z.object({
-        technicalComplexity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        developmentTimeline: z.string().optional(),
-        teamRequirements: z.array(z.string()),
-        recommendedStack: z.array(z.string()),
-        alternativeStacks: z.array(z.array(z.string())),
+    let technologyData;
+    let retryCount = 0;
+    const maxRetries = 3;
 
-        // Technology Trends
-        emergingTechnologies: z.array(z.string()),
-        platformTrends: z.array(z.string()),
-        integrationTrends: z.array(z.string()),
-        securityTrends: z.array(z.string()),
-        performanceTrends: z.array(z.string()),
+    while (retryCount < maxRetries) {
+      try {
+        console.log(
+          `🔍 Technology Trends Agent: Generating structured data (Attempt ${retryCount + 1}/${maxRetries})...`
+        );
 
-        // Technical Requirements
-        integrationRequirements: z.array(z.string()),
-        apiRequirements: z.array(z.string()),
-        securityRequirements: z.array(z.string()),
-        complianceRequirements: z.array(z.string()),
-        scalabilityRequirements: z.array(z.string()),
+        const result = await generateObject({
+          model: google("gemini-2.0-flash"),
+          schema: z.object({
+            technicalComplexity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            developmentTimeline: z.string().optional(),
+            teamRequirements: z.array(z.string()),
+            recommendedStack: z.array(z.string()),
+            alternativeStacks: z.array(z.string()),
 
-        // Cost Analysis
-        developmentCosts: z.number().optional(),
-        infrastructureCosts: z.number().optional(),
-        maintenanceCosts: z.number().optional(),
-        thirdPartyCosts: z.array(z.string()),
-        operationalCosts: z.array(z.string()),
+            // Technology Trends
+            emergingTechnologies: z.array(z.string()),
+            platformTrends: z.array(z.string()),
+            integrationTrends: z.array(z.string()),
+            securityTrends: z.array(z.string()),
+            performanceTrends: z.array(z.string()),
 
-        // Technical Risks
-        technicalRisks: z.array(z.string()),
-        scalabilityChallenges: z.array(z.string()),
-        securityConsiderations: z.array(z.string()),
-        integrationChallenges: z.array(z.string()),
-        performanceChallenges: z.array(z.string()),
+            // Technical Requirements
+            integrationRequirements: z.array(z.string()),
+            apiRequirements: z.array(z.string()),
+            securityRequirements: z.array(z.string()),
+            complianceRequirements: z.array(z.string()),
+            scalabilityRequirements: z.array(z.string()),
 
-        // Competitive Advantages
-        technicalAdvantages: z.array(z.string()),
-        innovationPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        differentiationFactors: z.array(z.string()),
-        moatBuilding: z.array(z.string()),
+            // Cost Analysis
+            developmentCosts: z.number().optional(),
+            infrastructureCosts: z.number().optional(),
+            maintenanceCosts: z.number().optional(),
+            thirdPartyCosts: z.array(z.string()),
+            operationalCosts: z.array(z.string()),
 
-        // Strategic Recommendations
-        technologyStrategy: z.array(z.string()),
-        developmentApproach: z.array(z.string()),
-        riskMitigation: z.array(z.string()),
-        optimizationOpportunities: z.array(z.string()),
+            // Technical Risks
+            technicalRisks: z.array(z.string()),
+            scalabilityChallenges: z.array(z.string()),
+            securityConsiderations: z.array(z.string()),
+            integrationChallenges: z.array(z.string()),
+            performanceChallenges: z.array(z.string()),
 
-        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        dataGaps: z.array(z.string()),
-        confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      }),
-      prompt: `${TECHNOLOGY_TRENDS_ANALYSIS_PROMPT}
+            // Competitive Advantages
+            technicalAdvantages: z.array(z.string()),
+            innovationPotential: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            differentiationFactors: z.array(z.string()),
+            moatBuilding: z.array(z.string()),
+
+            // Strategic Recommendations
+            technologyStrategy: z.array(z.string()),
+            developmentApproach: z.array(z.string()),
+            riskMitigation: z.array(z.string()),
+            optimizationOpportunities: z.array(z.string()),
+
+            dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+            dataGaps: z.array(z.string()),
+            confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          }),
+          prompt: `${TECHNOLOGY_TRENDS_ANALYSIS_PROMPT}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
@@ -260,12 +269,242 @@ ${JSON.stringify(researchContext, null, 2)}
 RESEARCH RESULTS:
 ${researchResults}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+RESPONSE FORMAT REQUIREMENTS:
+You must respond with a JSON object that has these EXACT field names (case-sensitive):
+- technicalComplexity: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- developmentTimeline: string (optional)
+- teamRequirements: array of strings
+- recommendedStack: array of strings
+- alternativeStacks: array of arrays of strings
+- emergingTechnologies: array of strings
+- platformTrends: array of strings
+- integrationTrends: array of strings
+- securityTrends: array of strings
+- performanceTrends: array of strings
+- integrationRequirements: array of strings
+- apiRequirements: array of strings
+- securityRequirements: array of strings
+- complianceRequirements: array of strings
+- scalabilityRequirements: array of strings
+- developmentCosts: number (optional)
+- infrastructureCosts: number (optional)
+- maintenanceCosts: number (optional)
+- thirdPartyCosts: array of strings
+- operationalCosts: array of strings
+- technicalRisks: array of strings
+- scalabilityChallenges: array of strings
+- securityConsiderations: array of strings
+- integrationChallenges: array of strings
+- performanceChallenges: array of strings
+- technicalAdvantages: array of strings
+- innovationPotential: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- differentiationFactors: array of strings
+- moatBuilding: array of strings
+- technologyStrategy: array of strings
+- developmentApproach: array of strings
+- riskMitigation: array of strings
+- optimizationOpportunities: array of strings
+- dataQuality: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- dataGaps: array of strings
+- confidenceLevel: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
 
-Generate ONLY technology trends analysis with technical feasibility assessment, cost analysis, and strategic recommendations. Focus on SaaS-specific technical insights and actionable intelligence for validation of this specific idea. Use the research data provided to inform all assessments.`,
-    });
+DO NOT use nested objects or different field names. Use ONLY the exact field names listed above.
 
-    console.log("✅ Technology Trends Agent: Completed technology analysis");
+Generate technology trends analysis with technical feasibility assessment, cost analysis, and strategic recommendations. Focus on SaaS-specific technical insights and actionable intelligence for validation of this specific idea.`,
+        });
+
+        let rawResult = result.object;
+
+        // Handle case where AI returns a JSON string instead of object
+        if (typeof rawResult === "string") {
+          console.log(
+            "⚠️ Technology Trends Agent: Received string, parsing JSON..."
+          );
+          try {
+            rawResult = JSON.parse(rawResult);
+          } catch (parseError) {
+            console.error("❌ Failed to parse JSON string:", parseError);
+            throw new Error(
+              "Generated data is a string that cannot be parsed as JSON"
+            );
+          }
+        }
+
+        technologyData = rawResult;
+
+        // Validate that we got a proper object
+        if (
+          technologyData &&
+          typeof technologyData === "object" &&
+          !Array.isArray(technologyData)
+        ) {
+          console.log(
+            "✅ Technology Trends Agent: Completed technology analysis"
+          );
+          break;
+        } else {
+          throw new Error("Generated data is not a valid object");
+        }
+      } catch (error) {
+        retryCount++;
+        console.error(
+          `❌ Technology Trends Agent failed (Attempt ${retryCount}):`,
+          error
+        );
+
+        if (retryCount >= maxRetries) {
+          console.error(
+            "❌ Technology Trends Agent: All retry attempts failed, using fallback data"
+          );
+          // Return fallback technology trends data
+          technologyData = {
+            technicalComplexity: "MEDIUM" as const,
+            developmentTimeline: "6-12 months for MVP",
+            teamRequirements: [
+              "Full-stack developers",
+              "DevOps engineer",
+              "Security specialist",
+            ],
+            recommendedStack: ["React", "Node.js", "PostgreSQL", "AWS"],
+            alternativeStacks: [
+              ["Vue.js", "Python", "MongoDB", "Google Cloud"],
+            ],
+            emergingTechnologies: [
+              "AI/ML integration",
+              "Real-time collaboration",
+              "API-first design",
+            ],
+            platformTrends: [
+              "Cloud-native architecture",
+              "Serverless computing",
+              "Microservices",
+            ],
+            integrationTrends: [
+              "API ecosystems",
+              "Webhook automation",
+              "Real-time sync",
+            ],
+            securityTrends: [
+              "Zero-trust security",
+              "Data encryption",
+              "Compliance automation",
+            ],
+            performanceTrends: [
+              "Edge computing",
+              "CDN optimization",
+              "Caching strategies",
+            ],
+            integrationRequirements: [
+              "Third-party APIs",
+              "Authentication services",
+              "Payment processing",
+            ],
+            apiRequirements: [
+              "RESTful APIs",
+              "WebSocket support",
+              "Rate limiting",
+            ],
+            securityRequirements: [
+              "Data encryption",
+              "Access control",
+              "Audit logging",
+            ],
+            complianceRequirements: [
+              "GDPR compliance",
+              "Data privacy",
+              "Security standards",
+            ],
+            scalabilityRequirements: [
+              "Auto-scaling",
+              "Load balancing",
+              "Database optimization",
+            ],
+            developmentCosts: undefined,
+            infrastructureCosts: undefined,
+            maintenanceCosts: undefined,
+            thirdPartyCosts: [
+              "API services",
+              "Cloud hosting",
+              "Security tools",
+            ],
+            operationalCosts: ["Monitoring", "Support", "Backup services"],
+            technicalRisks: [
+              "Technical complexity",
+              "Integration challenges",
+              "Security vulnerabilities",
+            ],
+            scalabilityChallenges: [
+              "Database performance",
+              "API rate limits",
+              "Cost optimization",
+            ],
+            securityConsiderations: [
+              "Data protection",
+              "Access control",
+              "Compliance requirements",
+            ],
+            integrationChallenges: [
+              "API dependencies",
+              "Data synchronization",
+              "Error handling",
+            ],
+            performanceChallenges: [
+              "Response times",
+              "Concurrent users",
+              "Data processing",
+            ],
+            technicalAdvantages: [
+              "Modern architecture",
+              "Scalable design",
+              "Security focus",
+            ],
+            innovationPotential: "MEDIUM" as const,
+            differentiationFactors: [
+              "AI integration",
+              "Real-time features",
+              "API ecosystem",
+            ],
+            moatBuilding: [
+              "Network effects",
+              "Data moats",
+              "Integration lock-in",
+            ],
+            technologyStrategy: [
+              "Cloud-first approach",
+              "API-first design",
+              "Security by design",
+            ],
+            developmentApproach: [
+              "Agile methodology",
+              "Continuous deployment",
+              "Test-driven development",
+            ],
+            riskMitigation: [
+              "Technical debt management",
+              "Security audits",
+              "Performance monitoring",
+            ],
+            optimizationOpportunities: [
+              "Caching strategies",
+              "Database optimization",
+              "CDN implementation",
+            ],
+            dataQuality: "LOW" as const,
+            dataGaps: [
+              "Technical specifications",
+              "Cost estimates",
+              "Timeline details",
+            ],
+            confidenceLevel: "LOW" as const,
+          };
+        } else {
+          // Wait before retrying
+          await new Promise((resolve) =>
+            setTimeout(resolve, 2000 * retryCount)
+          );
+        }
+      }
+    }
 
     return {
       technologyData,
@@ -276,142 +515,6 @@ Generate ONLY technology trends analysis with technical feasibility assessment, 
     };
   } catch (error) {
     console.error("❌ Technology Trends Agent failed:", error);
-
-    // Return fallback technology trends data
-    const fallbackData = {
-      technicalComplexity: "MEDIUM" as const,
-      developmentTimeline: "6-12 months",
-      teamRequirements: [
-        "Full-stack developers",
-        "DevOps engineer",
-        "Security specialist",
-      ],
-      recommendedStack: ["React", "Node.js", "PostgreSQL", "AWS"],
-      alternativeStacks: [["Vue.js", "Python", "MongoDB", "Google Cloud"]],
-      emergingTechnologies: [
-        "AI/ML integration",
-        "Real-time collaboration",
-        "API-first design",
-      ],
-      platformTrends: [
-        "Cloud-native architecture",
-        "Serverless computing",
-        "Microservices",
-      ],
-      integrationTrends: [
-        "API ecosystems",
-        "Webhook automation",
-        "Real-time sync",
-      ],
-      securityTrends: [
-        "Zero-trust security",
-        "Data encryption",
-        "Compliance automation",
-      ],
-      performanceTrends: [
-        "Edge computing",
-        "CDN optimization",
-        "Caching strategies",
-      ],
-      integrationRequirements: [
-        "Third-party APIs",
-        "Authentication services",
-        "Payment processing",
-      ],
-      apiRequirements: ["RESTful APIs", "WebSocket support", "Rate limiting"],
-      securityRequirements: [
-        "Data encryption",
-        "Access control",
-        "Audit logging",
-      ],
-      complianceRequirements: [
-        "GDPR compliance",
-        "Data privacy",
-        "Security standards",
-      ],
-      scalabilityRequirements: [
-        "Auto-scaling",
-        "Load balancing",
-        "Database optimization",
-      ],
-      developmentCosts: undefined,
-      infrastructureCosts: undefined,
-      maintenanceCosts: undefined,
-      thirdPartyCosts: ["API services", "Cloud hosting", "Security tools"],
-      operationalCosts: ["Monitoring", "Support", "Backup services"],
-      technicalRisks: [
-        "Technical complexity",
-        "Integration challenges",
-        "Security vulnerabilities",
-      ],
-      scalabilityChallenges: [
-        "Database performance",
-        "API rate limits",
-        "Cost optimization",
-      ],
-      securityConsiderations: [
-        "Data protection",
-        "Access control",
-        "Compliance requirements",
-      ],
-      integrationChallenges: [
-        "API dependencies",
-        "Data synchronization",
-        "Error handling",
-      ],
-      performanceChallenges: [
-        "Response times",
-        "Concurrent users",
-        "Data processing",
-      ],
-      technicalAdvantages: [
-        "Modern architecture",
-        "Scalable design",
-        "Security focus",
-      ],
-      innovationPotential: "MEDIUM" as const,
-      differentiationFactors: [
-        "AI integration",
-        "Real-time features",
-        "API ecosystem",
-      ],
-      moatBuilding: ["Network effects", "Data moats", "Integration lock-in"],
-      technologyStrategy: [
-        "Cloud-first approach",
-        "API-first design",
-        "Security by design",
-      ],
-      developmentApproach: [
-        "Agile methodology",
-        "Continuous deployment",
-        "Test-driven development",
-      ],
-      riskMitigation: [
-        "Technical debt management",
-        "Security audits",
-        "Performance monitoring",
-      ],
-      optimizationOpportunities: [
-        "Caching strategies",
-        "Database optimization",
-        "CDN implementation",
-      ],
-      dataQuality: "LOW" as const,
-      dataGaps: [
-        "Technical specifications",
-        "Cost estimates",
-        "Timeline details",
-      ],
-      confidenceLevel: "LOW" as const,
-    };
-
-    return {
-      technologyData: fallbackData,
-      researchText:
-        "Technology trends analysis failed - fallback data provided",
-      agentType: "technology-trends",
-      timestamp: new Date(),
-      originalIdeaId: idea.id,
-    };
+    throw error;
   }
 };

@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const result = streamText({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.0-flash"),
       messages: messages.map((m: any) => ({
         role: m.role === "user" ? "user" : "assistant",
         content: m.content,

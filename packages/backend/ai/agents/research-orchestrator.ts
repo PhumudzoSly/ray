@@ -6,6 +6,16 @@ import { generateTechnologyTrendsData } from "./technology-trends-agent";
 import { generateValidationScorecard } from "./validation-scorecard-agent";
 
 // ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const getRandomDelay = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+// ============================================================================
 // RESEARCH RESULTS INTERFACE
 // ============================================================================
 
@@ -44,7 +54,16 @@ export const runModularResearch = async (
       where: { ideaId },
     });
 
-    if (existingResearch) {
+    // If research exists but idea doesn't have aiOverallValidation, delete the research and run again
+    if (existingResearch && !idea.aiOverallValidation) {
+      console.log(
+        "🗑️ Deleting existing research for idea without aiOverallValidation"
+      );
+      await prisma.marketResearch.delete({
+        where: { ideaId },
+      });
+      console.log("✅ Existing research deleted, proceeding with new research");
+    } else if (existingResearch) {
       throw new Error("Research already exists for this idea");
     }
 
@@ -83,6 +102,13 @@ export const runModularResearch = async (
       });
     }
 
+    // Wait 90-120 seconds before next agent
+    const delayMs = getRandomDelay(90000, 120000);
+    console.log(
+      `⏳ Waiting ${Math.round(delayMs / 1000)} seconds before next agent...`
+    );
+    await delay(delayMs);
+
     // STEP 2: COMPETITOR DISCOVERY (1 API call)
     console.log("🏆 Step 2/5: Competitor Discovery Agent");
     try {
@@ -108,6 +134,13 @@ export const runModularResearch = async (
         error: error instanceof Error ? error.message : String(error),
       });
     }
+
+    // Wait 90-120 seconds before next agent
+    const delayMs2 = getRandomDelay(90000, 120000);
+    console.log(
+      `⏳ Waiting ${Math.round(delayMs2 / 1000)} seconds before next agent...`
+    );
+    await delay(delayMs2);
 
     // STEP 3: CUSTOMER SEGMENTS ANALYSIS (1 API call)
     console.log("👥 Step 3/5: Customer Segments Agent");
@@ -135,6 +168,13 @@ export const runModularResearch = async (
       });
     }
 
+    // Wait 90-120 seconds before next agent
+    const delayMs3 = getRandomDelay(90000, 120000);
+    console.log(
+      `⏳ Waiting ${Math.round(delayMs3 / 1000)} seconds before next agent...`
+    );
+    await delay(delayMs3);
+
     // STEP 4: TECHNOLOGY TRENDS ANALYSIS (1 API call)
     console.log("🔧 Step 4/5: Technology Trends Agent");
     try {
@@ -146,9 +186,9 @@ export const runModularResearch = async (
       researchResults.agents.push({
         type: "technology-trends",
         status: "completed",
-        data: technologyResult.technologyData,
-        researchText: technologyResult.researchText,
-        timestamp: technologyResult.timestamp,
+        data: technologyResult?.technologyData || {},
+        researchText: technologyResult?.researchText || "",
+        timestamp: technologyResult?.timestamp || new Date(),
       });
       researchResults.totalApiCalls += 1;
       console.log("✅ Technology Trends Agent completed");
@@ -160,6 +200,13 @@ export const runModularResearch = async (
         error: error instanceof Error ? error.message : String(error),
       });
     }
+
+    // Wait 90-120 seconds before next agent
+    const delayMs4 = getRandomDelay(90000, 120000);
+    console.log(
+      `⏳ Waiting ${Math.round(delayMs4 / 1000)} seconds before next agent...`
+    );
+    await delay(delayMs4);
 
     // STEP 5: VALIDATION SCORECARD (1 API call)
     console.log("📈 Step 5/5: Validation Scorecard Agent");
@@ -279,6 +326,9 @@ const saveModularResearchToDatabase = async (
   const marketSizeAgent = researchResults.agents.find(
     (a: any) => a.type === "market-size"
   );
+  const technologyAgent = researchResults.agents.find(
+    (a: any) => a.type === "technology-trends"
+  );
   const marketResearch = await prisma.marketResearch.create({
     data: {
       ideaId,
@@ -292,8 +342,11 @@ const saveModularResearchToDatabase = async (
       serviceableObtainableMarket:
         marketSizeAgent?.data?.serviceableObtainableMarket,
       keyTrends: marketSizeAgent?.data?.growthDrivers || [],
-      emergingTechnologies: marketSizeAgent?.data?.emergingTechnologies || [],
-      regulatoryFactors: [],
+      emergingTechnologies:
+        technologyAgent?.data?.emergingTechnologies ||
+        marketSizeAgent?.data?.emergingTechnologies ||
+        [],
+      regulatoryFactors: marketSizeAgent?.data?.regulatoryFactors || [],
       validationScore: 0, // Will be updated by scorecard
       confidenceLevel: "MEDIUM",
     },
@@ -304,7 +357,7 @@ const saveModularResearchToDatabase = async (
     (a: any) => a.type === "competitor-discovery"
   );
   if (competitorAgent?.status === "completed") {
-    await prisma.competitiveLandscape.create({
+    const competitiveLandscape = await prisma.competitiveLandscape.create({
       data: {
         marketResearchId: marketResearch.id,
         competitiveIntensity: competitorAgent.data.competitiveIntensity,
@@ -318,6 +371,47 @@ const saveModularResearchToDatabase = async (
         competitiveAdvantage: competitorAgent.data.competitiveAdvantage,
       },
     });
+
+    // Save individual competitors
+    if (
+      competitorAgent.data.competitors &&
+      Array.isArray(competitorAgent.data.competitors)
+    ) {
+      for (const competitor of competitorAgent.data.competitors) {
+        await prisma.competitor.create({
+          data: {
+            competitiveLandscapeId: competitiveLandscape.id,
+            name: competitor.name,
+            website: competitor.website,
+            description: competitor.description,
+            logoUrl: competitor.logoUrl,
+            foundedYear: competitor.foundedYear,
+            headquarters: competitor.headquarters,
+            employeeCount: competitor.employeeCount,
+            fundingRaised: competitor.fundingRaised,
+            marketShare: competitor.marketShare,
+            annualRevenue: competitor.annualRevenue,
+            targetAudience: competitor.targetAudience,
+            productFeatures: competitor.productFeatures || [],
+            pricingModel: competitor.pricingModel,
+            techStack: competitor.techStack || [],
+            integrations: competitor.integrations || [],
+            strengths: competitor.strengths || [],
+            weaknesses: competitor.weaknesses || [],
+            opportunities: competitor.opportunities || [],
+            threats: competitor.threats || [],
+            competitiveAdvantage: competitor.competitiveAdvantage,
+            differentiationFactors: competitor.differentiationFactors || [],
+            threatLevel: competitor.threatLevel,
+            competitivePosition: competitor.competitivePosition,
+            userGrowthRate: competitor.userGrowthRate,
+            churnRate: competitor.churnRate,
+            customerSatisfaction: competitor.customerSatisfaction,
+            marketCap: competitor.marketCap,
+          },
+        });
+      }
+    }
   }
 
   // Save customer segments data
@@ -349,29 +443,52 @@ const saveModularResearchToDatabase = async (
   }
 
   // Save technology data
-  const technologyAgent = researchResults.agents.find(
+  const technologyAgentData = researchResults.agents.find(
     (a: any) => a.type === "technology-trends"
   );
-  if (technologyAgent?.status === "completed") {
+  if (technologyAgentData?.status === "completed") {
+    // Validate and transform technology data to ensure correct types
+    const techData = technologyAgentData.data;
+
+    // Convert developmentTimeline to integer if it's a string
+    let developmentTimeline: number | undefined = undefined;
+    if (
+      techData.developmentTimeline !== undefined &&
+      techData.developmentTimeline !== null
+    ) {
+      if (typeof techData.developmentTimeline === "string") {
+        // Try to extract number from string like "6-12 months" -> 9 (average)
+        const match = techData.developmentTimeline.match(/(\d+)/g);
+        if (match && match.length >= 1) {
+          const numbers = match.map((n: any) => parseInt(n));
+          developmentTimeline = Math.round(
+            numbers.reduce((a: any, b: any) => a + b, 0) / numbers.length
+          );
+        } else {
+          developmentTimeline = 6; // Default fallback
+        }
+      } else if (typeof techData.developmentTimeline === "number") {
+        developmentTimeline = Math.round(techData.developmentTimeline);
+      }
+    }
+
     await prisma.technologyAssessment.create({
       data: {
         marketResearchId: marketResearch.id,
-        technicalComplexity: technologyAgent.data.technicalComplexity,
-        developmentTimeline: technologyAgent.data.developmentTimeline,
-        teamRequirements: technologyAgent.data.teamRequirements || [],
-        recommendedStack: technologyAgent.data.recommendedStack || [],
-        alternativeStacks: technologyAgent.data.alternativeStacks || [],
-        integrationRequirements:
-          technologyAgent.data.integrationRequirements || [],
-        technicalRisks: technologyAgent.data.technicalRisks || [],
-        scalabilityChallenges: technologyAgent.data.scalabilityChallenges || [],
-        securityConsiderations:
-          technologyAgent.data.securityConsiderations || [],
-        developmentCosts: technologyAgent.data.developmentCosts,
-        infrastructureCosts: technologyAgent.data.infrastructureCosts,
-        maintenanceCosts: technologyAgent.data.maintenanceCosts,
-        technicalAdvantages: technologyAgent.data.technicalAdvantages || [],
-        innovationPotential: technologyAgent.data.innovationPotential,
+        technicalComplexity: techData.technicalComplexity,
+        developmentTimeline: developmentTimeline,
+        teamRequirements: techData.teamRequirements || [],
+        recommendedStack: techData.recommendedStack || [],
+        alternativeStacks: techData.alternativeStacks || [],
+        integrationRequirements: techData.integrationRequirements || [],
+        technicalRisks: techData.technicalRisks || [],
+        scalabilityChallenges: techData.scalabilityChallenges || [],
+        securityConsiderations: techData.securityConsiderations || [],
+        developmentCosts: techData.developmentCosts,
+        infrastructureCosts: techData.infrastructureCosts,
+        maintenanceCosts: techData.maintenanceCosts,
+        technicalAdvantages: techData.technicalAdvantages || [],
+        innovationPotential: techData.innovationPotential,
       },
     });
   }
@@ -381,27 +498,71 @@ const saveModularResearchToDatabase = async (
     (a: any) => a.type === "validation-scorecard"
   );
   if (scorecardAgent?.status === "completed") {
+    // Validate and transform scorecard data to ensure correct types
+    const scorecardData = scorecardAgent.data;
+
+    // Convert nextReviewDate to proper DateTime if it's a string
+    let nextReviewDate: Date | undefined = undefined;
+    if (
+      scorecardData.nextReviewDate !== undefined &&
+      scorecardData.nextReviewDate !== null
+    ) {
+      if (typeof scorecardData.nextReviewDate === "string") {
+        // Try to parse date string or create relative date
+        if (
+          scorecardData.nextReviewDate.includes("days") ||
+          scorecardData.nextReviewDate.includes("months")
+        ) {
+          // Handle relative dates like "30 days" or "3 months"
+          const match =
+            scorecardData.nextReviewDate.match(/(\d+)\s*(day|month)/i);
+          if (match) {
+            const amount = parseInt(match[1]);
+            const unit = match[2].toLowerCase();
+            const now = new Date();
+            if (unit === "day") {
+              nextReviewDate = new Date(
+                now.getTime() + amount * 24 * 60 * 60 * 1000
+              );
+            } else if (unit === "month") {
+              nextReviewDate = new Date(
+                now.getFullYear(),
+                now.getMonth() + amount,
+                now.getDate()
+              );
+            }
+          }
+        } else {
+          // Try to parse as ISO date string
+          const parsed = new Date(scorecardData.nextReviewDate);
+          if (!isNaN(parsed.getTime())) {
+            nextReviewDate = parsed;
+          }
+        }
+      } else if (scorecardData.nextReviewDate instanceof Date) {
+        nextReviewDate = scorecardData.nextReviewDate;
+      }
+    }
+
     await prisma.validationScorecard.create({
       data: {
         marketResearchId: marketResearch.id,
-        marketScore:
-          scorecardAgent.data.dimensionScores?.marketOpportunity?.score,
+        marketScore: scorecardData.dimensionScores?.marketOpportunity?.score,
         competitiveScore:
-          scorecardAgent.data.dimensionScores?.competitivePositioning?.score,
+          scorecardData.dimensionScores?.competitivePositioning?.score,
         technicalScore:
-          scorecardAgent.data.dimensionScores?.technicalFeasibility?.score,
+          scorecardData.dimensionScores?.technicalFeasibility?.score,
         financialScore:
-          scorecardAgent.data.dimensionScores?.financialViability?.score,
-        riskScore: scorecardAgent.data.dimensionScores?.riskAssessment?.score,
-        weightedScore: scorecardAgent.data.overallScore,
-        primaryRecommendation:
-          scorecardAgent.data.strategicRecommendations?.primary,
+          scorecardData.dimensionScores?.financialViability?.score,
+        riskScore: scorecardData.dimensionScores?.riskAssessment?.score,
+        weightedScore: scorecardData.overallScore,
+        primaryRecommendation: scorecardData.strategicRecommendations?.primary,
         secondaryRecommendations:
-          scorecardAgent.data.strategicRecommendations?.secondary || [],
+          scorecardData.strategicRecommendations?.secondary || [],
         riskMitigationStrategies:
-          scorecardAgent.data.riskAnalysis?.mitigationStrategies || [],
-        validationStatus: scorecardAgent.data.validationStatus,
-        nextReviewDate: scorecardAgent.data.nextReviewDate,
+          scorecardData.riskAnalysis?.mitigationStrategies || [],
+        validationStatus: scorecardData.validationStatus,
+        nextReviewDate: nextReviewDate,
       },
     });
 
@@ -409,7 +570,7 @@ const saveModularResearchToDatabase = async (
     await prisma.marketResearch.update({
       where: { id: marketResearch.id },
       data: {
-        validationScore: scorecardAgent.data.overallScore,
+        validationScore: scorecardData.overallScore,
       },
     });
   }

@@ -37,8 +37,9 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
   const [showQuestions, setShowQuestions] = useState(false);
   const [validationQuestions, setValidationQuestions] = useState<any[]>([]);
   const [isCheckingQuestions, setIsCheckingQuestions] = useState(false);
-  const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ ideaId: idea.id }),
+  const startValidationMutation = useMutation({
+    mutationFn: async (additionalContext?: any) =>
+      ideaActions.startValidation({ ideaId: idea.id, additionalContext }),
     onSuccess: () => {
       toast.success("Validation started in background!");
       window.location.reload();
@@ -62,17 +63,17 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
           setShowQuestions(true);
         } else {
           // No questions needed, proceed directly to validation
-          triggerValidationMutation.mutate();
+          startValidationMutation.mutate(undefined);
         }
       } else {
         // Fallback to direct validation
-        triggerValidationMutation.mutate();
+        startValidationMutation.mutate(undefined);
       }
     },
     onError: (error) => {
       console.error("Error checking questions:", error);
       // Fallback to direct validation
-      triggerValidationMutation.mutate();
+      startValidationMutation.mutate(undefined);
     },
     onSettled: () => setIsCheckingQuestions(false),
   });
@@ -84,7 +85,7 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
     onSuccess: () => {
       setShowQuestions(false);
       // After submitting answers, proceed with validation
-      triggerValidationMutation.mutate();
+      startValidationMutation.mutate(undefined);
     },
     onError: (error) => {
       toast.error(
@@ -130,7 +131,7 @@ export const ValidationOverview: React.FC<ValidationOverviewProps> = ({
 
   const handleSkipQuestions = () => {
     setShowQuestions(false);
-    triggerValidationMutation.mutate();
+    startValidationMutation.mutate(undefined);
   };
 
   const handleSubmitAnswers = async (

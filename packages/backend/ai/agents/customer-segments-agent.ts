@@ -201,11 +201,9 @@ export const generateCustomerSegmentsData = async (
 
   try {
     const { text: researchResults } = await generateText({
-      model: google("gemini-2.0-flash", {
-        useSearchGrounding: true,
-      }),
+      model: google("gemini-2.0-flash"),
       tools: allTools,
-      maxSteps: 100,
+      maxRetries: 3,
       toolChoice: "required",
       prompt: `${CUSTOMER_SEGMENTS_RESEARCH_PROMPT}
 
@@ -236,98 +234,120 @@ Use the available tools to gather comprehensive data about customer segments for
   // STEP 2: GENERATE STRUCTURED CUSTOMER SEGMENTS DATA
   console.log("🔍 Customer Segments Agent: Generating structured data...");
 
-  try {
-    const { object: segmentsData } = await generateObject({
-      model: google("gemini-2.0-flash"),
-      schema: z.object({
-        segments: z.array(
-          z.object({
-            segmentName: z.string(),
-            segmentType: z.enum(["PRIMARY", "SECONDARY", "TERTIARY"]),
-            priority: z.number().min(1).max(10),
+  let segmentsData;
+  let retryCount = 0;
+  const maxRetries = 3;
 
-            // Demographics
-            ageRange: z.string().optional(),
-            location: z.string().optional(),
-            companySize: z.string().optional(),
-            industry: z.string().optional(),
+  while (retryCount < maxRetries) {
+    try {
+      console.log(
+        `🔍 Customer Segments Agent: Generating structured data (Attempt ${retryCount + 1}/${maxRetries})...`
+      );
 
-            // Behavioral Characteristics
-            primaryPainPoints: z.array(z.string()),
-            decisionFactors: z.array(z.string()),
-            budgetRange: z.string().optional(),
-            techSavviness: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+      const result = await generateObject({
+        model: google("gemini-2.0-flash"),
+        schema: z.object({
+          segments: z.array(
+            z.object({
+              segmentName: z.string(),
+              segmentType: z.enum(["PRIMARY", "SECONDARY", "TERTIARY"]),
+              priority: z.number().min(1).max(10),
 
-            // Market Metrics
-            estimatedSize: z.number().optional(),
-            averageSpend: z.number().optional(),
-            segmentValue: z.number().optional(),
+              // Demographics
+              ageRange: z.string().optional(),
+              location: z.string().optional(),
+              companySize: z
+                .enum([
+                  "SOLO",
+                  "SMALL_1_10",
+                  "MEDIUM_11_50",
+                  "LARGE_51_200",
+                  "ENTERPRISE_200_PLUS",
+                ])
+                .optional(),
+              industry: z.string().optional(),
 
-            // SaaS-Specific Metrics
-            freemiumConversion: z.number().optional(), // Percentage
-            customerLifetimeValue: z.number().optional(),
-            churnRate: z.number().optional(), // Percentage
-            expansionRevenue: z.number().optional(), // Percentage
+              // Behavioral Characteristics
+              primaryPainPoints: z.array(z.string()),
+              decisionFactors: z.array(z.string()),
+              budgetRange: z.string().optional(),
+              techSavviness: z.enum([
+                "BEGINNER",
+                "INTERMEDIATE",
+                "ADVANCED",
+                "EXPERT",
+              ]),
 
-            // Customer Journey
-            acquisitionChannels: z.array(z.string()),
-            onboardingTime: z.string().optional(),
-            timeToValue: z.string().optional(),
-            successMetrics: z.array(z.string()),
+              // Market Metrics
+              estimatedSize: z.number().optional(),
+              averageSpend: z.number().optional(),
+              segmentValue: z.number().optional(),
 
-            // Competitive Position
-            currentSolutions: z.array(z.string()),
-            switchingCosts: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            satisfactionLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              // SaaS-Specific Metrics
+              freemiumConversion: z.number().optional(), // Percentage
+              customerLifetimeValue: z.number().optional(),
+              churnRate: z.number().optional(), // Percentage
+              expansionRevenue: z.number().optional(), // Percentage
 
-            // Strategic Insights
-            opportunities: z.array(z.string()),
-            challenges: z.array(z.string()),
-            recommendations: z.array(z.string()),
+              // Customer Journey
+              acquisitionChannels: z.array(z.string()),
+              onboardingTime: z.string().optional(),
+              timeToValue: z.string().optional(),
+              successMetrics: z.array(z.string()),
 
-            // Data Quality
-            dataConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            dataSources: z.array(z.string()),
-          })
-        ),
+              // Competitive Position
+              currentSolutions: z.array(z.string()),
+              switchingCosts: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              satisfactionLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
 
-        // Segment Analysis
-        totalAddressableCustomers: z.number().optional(),
-        primarySegmentSize: z.number().optional(),
-        secondarySegmentSize: z.number().optional(),
+              // Strategic Insights
+              opportunities: z.array(z.string()),
+              challenges: z.array(z.string()),
+              recommendations: z.array(z.string()),
 
-        // Customer Insights
-        commonPainPoints: z.array(z.string()),
-        keyDecisionFactors: z.array(z.string()),
-        budgetPreferences: z.array(z.string()),
-        technologyPreferences: z.array(z.string()),
+              // Data Quality
+              dataConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              dataSources: z.array(z.string()),
+            })
+          ),
 
-        // SaaS Customer Dynamics
-        freemiumAdoption: z.number().optional(), // Percentage
-        averageCustomerLifetimeValue: z.number().optional(),
-        averageChurnRate: z.number().optional(), // Percentage
-        expansionRevenuePotential: z.number().optional(), // Percentage
+          // Segment Analysis
+          totalAddressableCustomers: z.number().optional(),
+          primarySegmentSize: z.number().optional(),
+          secondarySegmentSize: z.number().optional(),
 
-        // Customer Acquisition
-        preferredChannels: z.array(z.string()),
-        acquisitionCosts: z.array(z.string()),
-        conversionRates: z.array(z.string()),
+          // Customer Insights
+          commonPainPoints: z.array(z.string()),
+          keyDecisionFactors: z.array(z.string()),
+          budgetPreferences: z.array(z.string()),
+          technologyPreferences: z.array(z.string()),
 
-        // Customer Success
-        onboardingChallenges: z.array(z.string()),
-        successFactors: z.array(z.string()),
-        retentionStrategies: z.array(z.string()),
+          // SaaS Customer Dynamics
+          freemiumAdoption: z.number().optional(), // Percentage
+          averageCustomerLifetimeValue: z.number().optional(),
+          averageChurnRate: z.number().optional(), // Percentage
+          expansionRevenuePotential: z.number().optional(), // Percentage
 
-        // Strategic Recommendations
-        segmentPriorities: z.array(z.string()),
-        goToMarketStrategy: z.array(z.string()),
-        customerSuccessStrategy: z.array(z.string()),
+          // Customer Acquisition
+          preferredChannels: z.array(z.string()),
+          acquisitionCosts: z.array(z.string()),
+          conversionRates: z.array(z.string()),
 
-        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        dataGaps: z.array(z.string()),
-        confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-      }),
-      prompt: `${CUSTOMER_SEGMENTS_PROMPT}
+          // Customer Success
+          onboardingChallenges: z.array(z.string()),
+          successFactors: z.array(z.string()),
+          retentionStrategies: z.array(z.string()),
+
+          // Strategic Recommendations
+          segmentPriorities: z.array(z.string()),
+          goToMarketStrategy: z.array(z.string()),
+          customerSuccessStrategy: z.array(z.string()),
+
+          dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          dataGaps: z.array(z.string()),
+          confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+        }),
+        prompt: `${CUSTOMER_SEGMENTS_PROMPT}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
@@ -338,63 +358,120 @@ ${JSON.stringify(researchContext, null, 2)}
 RESEARCH DATA:
 ${researchData}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+RESPONSE FORMAT REQUIREMENTS:
+You must respond with a JSON object that has these EXACT field names (case-sensitive):
+- segments: array of segment objects
+- totalAddressableCustomers: number (optional)
+- primarySegmentSize: number (optional)
+- secondarySegmentSize: number (optional)
+- commonPainPoints: array of strings
+- keyDecisionFactors: array of strings
+- budgetPreferences: array of strings
+- technologyPreferences: array of strings
+- freemiumAdoption: number (optional)
+- averageCustomerLifetimeValue: number (optional)
+- averageChurnRate: number (optional)
+- expansionRevenuePotential: number (optional)
+- preferredChannels: array of strings
+- acquisitionCosts: array of strings
+- conversionRates: array of strings
+- onboardingChallenges: array of strings
+- successFactors: array of strings
+- retentionStrategies: array of strings
+- segmentPriorities: array of strings
+- goToMarketStrategy: array of strings
+- customerSuccessStrategy: array of strings
+- dataQuality: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- dataGaps: array of strings
+- confidenceLevel: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
 
-Generate ONLY customer segmentation analysis with detailed profiles, segment validation, and prioritization. Focus on SaaS-specific customer insights and actionable intelligence for validation of this specific idea.
+DO NOT use nested objects with different field names. Use ONLY the exact field names listed above.
 
-Use the research data provided to inform your analysis and ensure all insights are grounded in real market data.`,
-    });
+Generate customer segmentation analysis with SaaS-specific customer insights and actionable intelligence based on the research data provided.`,
+      });
 
-    console.log(
-      "✅ Customer Segments Agent: Completed customer segmentation analysis"
-    );
+      let rawResult = result.object;
 
-    return {
-      segmentsData,
-      researchText: researchData,
-      agentType: "customer-segments",
-      timestamp: new Date(),
-      originalIdeaId: idea.id,
-    };
-  } catch (error) {
-    console.error("❌ Customer Segments Agent failed:", error);
+      // Handle case where AI returns a JSON string instead of object
+      if (typeof rawResult === "string") {
+        console.log(
+          "⚠️ Customer Segments Agent: Received string, parsing JSON..."
+        );
+        try {
+          rawResult = JSON.parse(rawResult);
+        } catch (parseError) {
+          console.error("❌ Failed to parse JSON string:", parseError);
+          throw new Error(
+            "Generated data is a string that cannot be parsed as JSON"
+          );
+        }
+      }
 
-    // Return fallback customer segments data
-    const fallbackData = {
-      segments: [],
-      totalAddressableCustomers: undefined,
-      primarySegmentSize: undefined,
-      secondarySegmentSize: undefined,
-      commonPainPoints: ["Customer research needed"],
-      keyDecisionFactors: ["Decision factor analysis required"],
-      budgetPreferences: ["Budget analysis needed"],
-      technologyPreferences: ["Technology preference analysis required"],
-      freemiumAdoption: undefined,
-      averageCustomerLifetimeValue: undefined,
-      averageChurnRate: undefined,
-      expansionRevenuePotential: undefined,
-      preferredChannels: ["Channel analysis needed"],
-      acquisitionCosts: ["Cost analysis required"],
-      conversionRates: ["Conversion analysis needed"],
-      onboardingChallenges: ["Onboarding analysis required"],
-      successFactors: ["Success factor analysis needed"],
-      retentionStrategies: ["Retention strategy analysis required"],
-      segmentPriorities: ["Conduct comprehensive customer research"],
-      goToMarketStrategy: ["Develop customer acquisition strategy"],
-      customerSuccessStrategy: ["Design customer success program"],
-      dataQuality: "LOW" as const,
-      dataGaps: ["Customer profiles", "Segment data", "Customer insights"],
-      confidenceLevel: "LOW" as const,
-    };
+      segmentsData = rawResult;
 
-    return {
-      segmentsData: fallbackData,
-      researchText:
-        researchData ||
-        "Customer segmentation analysis failed - fallback data provided",
-      agentType: "customer-segments",
-      timestamp: new Date(),
-      originalIdeaId: idea.id,
-    };
+      // Validate that we got a proper object
+      if (
+        segmentsData &&
+        typeof segmentsData === "object" &&
+        !Array.isArray(segmentsData)
+      ) {
+        console.log(
+          "✅ Customer Segments Agent: Completed customer segmentation analysis"
+        );
+        break;
+      } else {
+        throw new Error("Generated data is not a valid object");
+      }
+    } catch (error) {
+      retryCount++;
+      console.error(
+        `❌ Customer Segments Agent failed (Attempt ${retryCount}):`,
+        error
+      );
+
+      if (retryCount >= maxRetries) {
+        console.error(
+          "❌ Customer Segments Agent: All retry attempts failed, using fallback data"
+        );
+        // Return fallback customer segments data
+        segmentsData = {
+          segments: [],
+          totalAddressableCustomers: undefined,
+          primarySegmentSize: undefined,
+          secondarySegmentSize: undefined,
+          commonPainPoints: ["Customer research needed"],
+          keyDecisionFactors: ["Decision factor analysis required"],
+          budgetPreferences: ["Budget analysis needed"],
+          technologyPreferences: ["Technology preference analysis required"],
+          freemiumAdoption: undefined,
+          averageCustomerLifetimeValue: undefined,
+          averageChurnRate: undefined,
+          expansionRevenuePotential: undefined,
+          preferredChannels: ["Channel analysis needed"],
+          acquisitionCosts: ["Cost analysis required"],
+          conversionRates: ["Conversion analysis needed"],
+          onboardingChallenges: ["Onboarding analysis required"],
+          successFactors: ["Success factor analysis needed"],
+          retentionStrategies: ["Retention strategy analysis required"],
+          segmentPriorities: ["Conduct comprehensive customer research"],
+          goToMarketStrategy: ["Develop customer acquisition strategy"],
+          customerSuccessStrategy: ["Design customer success program"],
+          dataQuality: "LOW" as const,
+          dataGaps: ["Customer profiles", "Segment data", "Customer insights"],
+          confidenceLevel: "LOW" as const,
+        };
+      } else {
+        // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, 2000 * retryCount));
+      }
+    }
   }
+
+  return {
+    segmentsData,
+    researchText: researchData,
+    agentType: "customer-segments",
+    timestamp: new Date(),
+    originalIdeaId: idea.id,
+  };
 };

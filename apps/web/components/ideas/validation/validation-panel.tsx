@@ -73,17 +73,17 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
           setShowQuestions(true);
         } else {
           // No questions needed, proceed directly to validation
-          triggerValidationMutation.mutate();
+          startValidationMutation.mutate();
         }
       } else {
         // Fallback to direct validation
-        triggerValidationMutation.mutate();
+        startValidationMutation.mutate();
       }
     },
     onError: (error) => {
       console.error("Error checking questions:", error);
       // Fallback to direct validation
-      triggerValidationMutation.mutate();
+      startValidationMutation.mutate();
     },
     onSettled: () => setIsCheckingQuestions(false),
   });
@@ -103,7 +103,7 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
       };
 
       // After submitting answers, proceed with validation using enhanced function
-      await triggerValidationWithContextMutation.mutateAsync({
+      await startValidationWithContextMutation.mutateAsync({
         ideaId,
         additionalContext,
       });
@@ -115,15 +115,14 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   });
 
   // Enhanced mutation to trigger validation with additional context
-  const triggerValidationWithContextMutation = useMutation({
+  const startValidationWithContextMutation = useMutation({
     mutationFn: async ({
       ideaId,
       additionalContext,
     }: {
       ideaId: string;
       additionalContext?: any;
-    }) =>
-      ideaActions.triggerValidationWithContext({ ideaId, additionalContext }),
+    }) => ideaActions.startValidation({ ideaId, additionalContext }),
     onSuccess: () => {
       setIsValidating(true);
       toast.success("Validation started with enhanced context!");
@@ -136,8 +135,9 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
   });
 
   // Original mutation for backward compatibility
-  const triggerValidationMutation = useMutation({
-    mutationFn: async () => ideaActions.triggerValidation({ ideaId }),
+  const startValidationMutation = useMutation({
+    mutationFn: async (additionalContext?: any) =>
+      ideaActions.startValidation({ ideaId, additionalContext }),
     onSuccess: () => {
       setIsValidating(true);
       toast.success("Validation started!");
@@ -162,7 +162,7 @@ export const ValidationPanel: React.FC<ValidationPanelProps> = ({
 
   const handleSkipQuestions = () => {
     setShowQuestions(false);
-    triggerValidationMutation.mutate();
+    startValidationMutation.mutate();
   };
 
   const handleSubmitAnswers = async (

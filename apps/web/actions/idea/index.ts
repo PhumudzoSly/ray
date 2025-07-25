@@ -8,6 +8,11 @@ import {
 } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { inngestClient } from "@/lib/inngest";
+import { generateObject } from "ai";
+import { google } from "@ai-sdk/google";
+import z from "zod";
+import { ideaValidator } from "@/inngest/validation/agent";
+import { createState } from "@inngest/agent-kit";
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
   const { org } = await getSession();
@@ -218,6 +223,110 @@ export const changeStatus = async ({
     where: { id },
     data: { status },
   });
+};
+
+export const checkIdeaClarity = async ({ ideaId }: { ideaId: string }) => {
+  const { org } = await getSession();
+
+  const idea = await prisma.idea.findFirst({
+    where: { id: ideaId, organizationId: org },
+  });
+
+  const { object } = await generateObject({
+    model: google("gemini-2.0-flash"),
+    schema: z.object({
+      isClear: z.boolean(),
+      questions: z
+        .array(z.string())
+        .nullable()
+        .describe(
+          "Questions to ask the user to clarify the idea, only generated if the idea is not clear"
+        ),
+    }),
+    prompt: `
+    You are an expert in SaaS idea validation.
+    You will be given an idea and you will need to determine if it is clear and concise.
+    The idea is: ${idea?.description}
+    The problem solved is: ${idea?.problemSolved}
+    The solution offered is: ${idea?.solutionOffered}
+    The industry is: ${idea?.industry}
+    The internal is: ${idea?.internal}
+    The open source is: ${idea?.openSource}
+    The status is: ${idea?.status}
+    The organization id is: ${org}
+    `,
+  });
+
+  console.log("OBJECT", object);
+
+  return object;
+};
+
+export const startValidation = async ({
+  ideaId,
+  additionalContext,
+}: {
+  ideaId: string;
+  additionalContext?: any;
+}) => {
+  const { org } = await getSession();
+
+  // Remove any existing market research for this idea/org
+  await prisma.marketResearch.deleteMany({
+    where: { ideaId, organizationId: org },
+  });
+
+  // Create new market research entry
+  const research = await prisma.marketResearch.create({
+    data: {
+      ideaId,
+      confidenceLevel: "LOW",
+      marketMaturity: "MATURE",
+      organizationId: org,
+    },
+    include: {
+      idea: true,
+    },
+  });
+
+  // Prepare state for the validation network
+  const state = createState({
+    ideaId,
+    researchId: research.id,
+    idea: research.idea,
+  });
+
+  // Build the prompt with additional context if provided
+  let prompt = `
+    You are a SaaS idea validation expert.
+    Your task is to critically assess the clarity and conciseness of the following SaaS idea.
+    Please review the provided details and identify any ambiguities, missing information, or areas that could be improved for better understanding.
+
+    Respond with:
+    - A brief summary of the idea in your own words.
+    - An assessment of whether the idea is clear and concise.
+    - Specific suggestions for improving clarity or completeness, if needed.
+
+    SaaS Idea Details:
+    ${JSON.stringify(research.idea, null, 2)}
+  `;
+
+  // Add additional context if provided
+  if (additionalContext) {
+    if (additionalContext.preValidationAnswers) {
+      prompt += `\n\nAdditional Information from User:\n`;
+      additionalContext.preValidationAnswers.forEach((qa: any) => {
+        prompt += `Question: ${qa.question}\nAnswer: ${qa.answer}\n\n`;
+      });
+    }
+
+    if (additionalContext.source) {
+      prompt += `\nContext Source: ${additionalContext.source}\n`;
+    }
+  }
+
+  // Run the validation network
+  await ideaValidator.run(prompt, { state });
 };
 
 // Check if additional questions are needed before validation

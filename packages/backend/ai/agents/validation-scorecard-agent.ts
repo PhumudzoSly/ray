@@ -193,11 +193,9 @@ export const generateValidationScorecard = async (
 
   try {
     const { text: researchResults } = await generateText({
-      model: google("gemini-2.0-flash", {
-        useSearchGrounding: true,
-      }),
+      model: google("gemini-2.0-flash"),
       tools: allTools,
-      maxSteps: 100,
+      maxRetries: 3,
       toolChoice: "required",
       prompt: `${VALIDATION_SCORECARD_RESEARCH_PROMPT}
 
@@ -237,245 +235,318 @@ Use the available tools to gather comprehensive data for SaaS validation analysi
   // STEP 2: GENERATE STRUCTURED VALIDATION SCORECARD DATA
   console.log("🔍 Validation Scorecard Agent: Generating structured data...");
 
-  try {
-    const { object: scorecardData } = await generateObject({
-      model: google("gemini-2.0-flash"),
-      schema: z.object({
-        overallScore: z.number().min(0).max(100),
-        validationStatus: z.enum([
-          "VALIDATED",
-          "NEEDS_VALIDATION",
-          "NOT_VALIDATED",
-        ]),
+  let scorecardData;
+  let retryCount = 0;
+  const maxRetries = 3;
 
-        // Dimension Scores
-        dimensionScores: z.object({
-          marketOpportunity: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            factors: z.array(z.string()),
-            risks: z.array(z.string()),
+  while (retryCount < maxRetries) {
+    try {
+      console.log(
+        `🔍 Validation Scorecard Agent: Generating structured data (Attempt ${retryCount + 1}/${maxRetries})...`
+      );
+
+      const result = await generateObject({
+        model: google("gemini-2.0-flash"),
+        schema: z.object({
+          overallScore: z.number().min(0).max(100),
+          validationStatus: z.enum([
+            "IN_PROGRESS",
+            "VALIDATED",
+            "NEEDS_IMPROVEMENT",
+            "FAILED",
+            "REQUIRES_REVIEW",
+          ]),
+
+          // Dimension Scores
+          dimensionScores: z.object({
+            marketOpportunity: z.object({
+              score: z.number().min(0).max(100),
+              confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              factors: z.array(z.string()),
+              risks: z.array(z.string()),
+            }),
+            competitivePositioning: z.object({
+              score: z.number().min(0).max(100),
+              confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              factors: z.array(z.string()),
+              risks: z.array(z.string()),
+            }),
+            technicalFeasibility: z.object({
+              score: z.number().min(0).max(100),
+              confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              factors: z.array(z.string()),
+              risks: z.array(z.string()),
+            }),
+            financialViability: z.object({
+              score: z.number().min(0).max(100),
+              confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              factors: z.array(z.string()),
+              risks: z.array(z.string()),
+            }),
+            riskAssessment: z.object({
+              score: z.number().min(0).max(100),
+              confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+              factors: z.array(z.string()),
+              risks: z.array(z.string()),
+            }),
           }),
-          competitivePositioning: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            factors: z.array(z.string()),
-            risks: z.array(z.string()),
+
+          // Strategic Recommendations
+          strategicRecommendations: z.object({
+            primary: z.string(),
+            secondary: z.array(z.string()),
+            immediate: z.array(z.string()),
+            longTerm: z.array(z.string()),
           }),
-          technicalFeasibility: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            factors: z.array(z.string()),
-            risks: z.array(z.string()),
+
+          // Risk Analysis
+          riskAnalysis: z.object({
+            highRisks: z.array(z.string()),
+            mediumRisks: z.array(z.string()),
+            lowRisks: z.array(z.string()),
+            mitigationStrategies: z.array(z.string()),
+            riskScore: z.number().min(0).max(100),
           }),
-          financialViability: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            factors: z.array(z.string()),
-            risks: z.array(z.string()),
+
+          // Validation Metrics
+          validationMetrics: z.object({
+            productMarketFit: z.number().min(0).max(100),
+            marketSize: z.number().min(0).max(100),
+            competitiveAdvantage: z.number().min(0).max(100),
+            technicalFeasibility: z.number().min(0).max(100),
+            financialViability: z.number().min(0).max(100),
+            executionRisk: z.number().min(0).max(100),
           }),
-          riskAssessment: z.object({
-            score: z.number().min(0).max(100),
-            confidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-            factors: z.array(z.string()),
-            risks: z.array(z.string()),
+
+          // Next Steps
+          nextSteps: z.object({
+            immediate: z.array(z.string()),
+            shortTerm: z.array(z.string()),
+            mediumTerm: z.array(z.string()),
+            longTerm: z.array(z.string()),
           }),
+
+          // Timeline
+          nextReviewDate: z.string().optional(),
+          validationTimeline: z.string().optional(),
+
+          // Confidence and Quality
+          overallConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
+          recommendations: z.array(z.string()),
         }),
-
-        // Strategic Recommendations
-        strategicRecommendations: z.object({
-          primary: z.string(),
-          secondary: z.array(z.string()),
-          immediate: z.array(z.string()),
-          longTerm: z.array(z.string()),
-        }),
-
-        // Risk Analysis
-        riskAnalysis: z.object({
-          highRisks: z.array(z.string()),
-          mediumRisks: z.array(z.string()),
-          lowRisks: z.array(z.string()),
-          mitigationStrategies: z.array(z.string()),
-          riskScore: z.number().min(0).max(100),
-        }),
-
-        // Validation Metrics
-        validationMetrics: z.object({
-          productMarketFit: z.number().min(0).max(100),
-          marketSize: z.number().min(0).max(100),
-          competitiveAdvantage: z.number().min(0).max(100),
-          technicalFeasibility: z.number().min(0).max(100),
-          financialViability: z.number().min(0).max(100),
-          executionRisk: z.number().min(0).max(100),
-        }),
-
-        // Next Steps
-        nextSteps: z.object({
-          immediate: z.array(z.string()),
-          shortTerm: z.array(z.string()),
-          mediumTerm: z.array(z.string()),
-          longTerm: z.array(z.string()),
-        }),
-
-        // Timeline
-        nextReviewDate: z.string().optional(),
-        validationTimeline: z.string().optional(),
-
-        // Confidence and Quality
-        overallConfidence: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        dataQuality: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-        recommendations: z.array(z.string()),
-      }),
-      prompt: `${VALIDATION_SCORECARD_PROMPT}
+        prompt: `${VALIDATION_SCORECARD_PROMPT}
 
 IDEA CONTEXT:
 ${JSON.stringify(idea, null, 2)}
 
-EXISTING RESEARCH DATA:
-${JSON.stringify(researchContext, null, 2)}
+MARKET SIZE DATA:
+${JSON.stringify(marketSizeData, null, 2)}
 
-COMPREHENSIVE RESEARCH FINDINGS:
+COMPETITOR DATA:
+${JSON.stringify(competitorData, null, 2)}
+
+CUSTOMER SEGMENTS DATA:
+${JSON.stringify(segmentsData, null, 2)}
+
+TECHNOLOGY DATA:
+${JSON.stringify(technologyData, null, 2)}
+
+RESEARCH DATA:
 ${researchData}
 
-IMPORTANT: Return a valid JSON object with the exact structure specified in the schema. Do not return a string representation of JSON.
+RESPONSE FORMAT REQUIREMENTS:
+You must respond with a JSON object that matches the exact schema structure. The response must include:
+- overallScore: number (0-100)
+- validationStatus: "VALIDATED" | "NEEDS_VALIDATION" | "NOT_VALIDATED"
+- dimensionScores: object with nested scores for each dimension
+- strategicRecommendations: object with primary, secondary, immediate, longTerm arrays
+- riskAnalysis: object with risk arrays and riskScore
+- validationMetrics: object with metric scores
+- nextSteps: object with step arrays by timeframe
+- nextReviewDate: string (optional)
+- validationTimeline: string (optional)
+- overallConfidence: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- dataQuality: "LOW" | "MEDIUM" | "HIGH" | "VERY_HIGH"
+- recommendations: array of strings
 
-Generate ONLY validation scorecard analysis with comprehensive scoring, risk assessment, and strategic recommendations. Focus on SaaS-specific validation insights and actionable intelligence for this specific idea. Use the research findings to inform your analysis and scoring.`,
-    });
+DO NOT return a string representation of JSON. Return the actual JSON object structure.
 
-    console.log("✅ Validation Scorecard Agent: Completed validation analysis");
+Generate validation scorecard analysis with comprehensive scoring, strategic recommendations, and actionable insights for SaaS validation.`,
+      });
 
-    return {
-      scorecardData,
-      researchText: researchData,
-      agentType: "validation-scorecard",
-      timestamp: new Date(),
-      originalIdeaId: idea.id,
-    };
-  } catch (error) {
-    console.error("❌ Validation Scorecard Agent failed:", error);
+      let rawResult = result.object;
 
-    // Return fallback validation scorecard data
-    const fallbackData = {
-      overallScore: 50,
-      validationStatus: "NEEDS_VALIDATION" as const,
-      dimensionScores: {
-        marketOpportunity: {
-          score: 50,
-          confidence: "LOW" as const,
-          factors: ["Market analysis needed"],
-          risks: ["Market size unknown"],
-        },
-        competitivePositioning: {
-          score: 50,
-          confidence: "LOW" as const,
-          factors: ["Competitive analysis needed"],
-          risks: ["Competitive landscape unknown"],
-        },
-        technicalFeasibility: {
-          score: 50,
-          confidence: "LOW" as const,
-          factors: ["Technical analysis needed"],
-          risks: ["Technical complexity unknown"],
-        },
-        financialViability: {
-          score: 50,
-          confidence: "LOW" as const,
-          factors: ["Financial analysis needed"],
-          risks: ["Financial projections unknown"],
-        },
-        riskAssessment: {
-          score: 50,
-          confidence: "LOW" as const,
-          factors: ["Risk analysis needed"],
-          risks: ["Risk factors unknown"],
-        },
-      },
-      strategicRecommendations: {
-        primary: "Conduct comprehensive validation research",
-        secondary: [
-          "Complete market analysis",
-          "Analyze competitive landscape",
-          "Assess technical feasibility",
-        ],
-        immediate: [
-          "Gather market data",
-          "Research competitors",
-          "Evaluate technical requirements",
-        ],
-        longTerm: [
-          "Build MVP",
-          "Validate with customers",
-          "Iterate based on feedback",
-        ],
-      },
-      riskAnalysis: {
-        highRisks: [
-          "Insufficient market data",
-          "Unknown competitive landscape",
-          "Unclear technical requirements",
-        ],
-        mediumRisks: [
-          "Limited customer insights",
-          "Uncertain financial projections",
-          "Unclear go-to-market strategy",
-        ],
-        lowRisks: [
-          "Basic validation framework",
-          "General market trends",
-          "Standard technical approaches",
-        ],
-        mitigationStrategies: [
-          "Conduct comprehensive research",
-          "Validate with customers",
-          "Build MVP",
-        ],
-        riskScore: 70,
-      },
-      validationMetrics: {
-        productMarketFit: 50,
-        marketSize: 50,
-        competitiveAdvantage: 50,
-        technicalFeasibility: 50,
-        financialViability: 50,
-        executionRisk: 70,
-      },
-      nextSteps: {
-        immediate: [
-          "Complete market research",
-          "Analyze competitors",
-          "Assess technical requirements",
-        ],
-        shortTerm: [
-          "Build MVP",
-          "Validate with customers",
-          "Refine value proposition",
-        ],
-        mediumTerm: ["Launch beta", "Gather feedback", "Iterate product"],
-        longTerm: [
-          "Scale operations",
-          "Expand market",
-          "Build competitive moats",
-        ],
-      },
-      nextReviewDate: "3 months",
-      validationTimeline: "6-12 months",
-      overallConfidence: "LOW" as const,
-      dataQuality: "LOW" as const,
-      recommendations: [
-        "Complete comprehensive validation research",
-        "Build MVP for customer validation",
-        "Conduct competitive analysis",
-      ],
-    };
+      // Handle case where AI returns a JSON string instead of object
+      if (typeof rawResult === "string") {
+        console.log(
+          "⚠️ Validation Scorecard Agent: Received string, parsing JSON..."
+        );
+        try {
+          rawResult = JSON.parse(rawResult);
+        } catch (parseError) {
+          console.error("❌ Failed to parse JSON string:", parseError);
+          throw new Error(
+            "Generated data is a string that cannot be parsed as JSON"
+          );
+        }
+      }
 
-    return {
-      scorecardData: fallbackData,
-      researchText:
-        researchData ||
-        "Validation scorecard analysis failed - fallback data provided",
-      agentType: "validation-scorecard",
-      timestamp: new Date(),
-      originalIdeaId: idea.id,
-    };
+      scorecardData = rawResult;
+
+      // Validate that we got a proper object
+      if (
+        scorecardData &&
+        typeof scorecardData === "object" &&
+        !Array.isArray(scorecardData)
+      ) {
+        console.log(
+          "✅ Validation Scorecard Agent: Completed validation analysis"
+        );
+        break;
+      } else {
+        throw new Error("Generated data is not a valid object");
+      }
+    } catch (error) {
+      retryCount++;
+      console.error(
+        `❌ Validation Scorecard Agent failed (Attempt ${retryCount}):`,
+        error
+      );
+
+      if (retryCount >= maxRetries) {
+        console.error(
+          "❌ Validation Scorecard Agent: All retry attempts failed, using fallback data"
+        );
+        // Return fallback validation scorecard data
+        scorecardData = {
+          overallScore: 50,
+          validationStatus: "NEEDS_VALIDATION" as const,
+          dimensionScores: {
+            marketOpportunity: {
+              score: 50,
+              confidence: "LOW" as const,
+              factors: ["Limited market data available"],
+              risks: ["Market size uncertainty"],
+            },
+            competitivePositioning: {
+              score: 50,
+              confidence: "LOW" as const,
+              factors: ["Competitive analysis needed"],
+              risks: ["Competitive landscape unclear"],
+            },
+            technicalFeasibility: {
+              score: 50,
+              confidence: "LOW" as const,
+              factors: ["Technical assessment required"],
+              risks: ["Technical complexity unknown"],
+            },
+            financialViability: {
+              score: 50,
+              confidence: "LOW" as const,
+              factors: ["Financial analysis needed"],
+              risks: ["Revenue model uncertainty"],
+            },
+            riskAssessment: {
+              score: 50,
+              confidence: "LOW" as const,
+              factors: ["Risk assessment required"],
+              risks: ["Risk factors unclear"],
+            },
+          },
+          strategicRecommendations: {
+            primary: "Complete comprehensive validation analysis",
+            secondary: [
+              "Conduct market research",
+              "Analyze competition",
+              "Assess technical feasibility",
+            ],
+            immediate: [
+              "Gather more market data",
+              "Research competitors",
+              "Evaluate technical requirements",
+            ],
+            longTerm: [
+              "Develop go-to-market strategy",
+              "Build competitive moat",
+              "Establish partnerships",
+            ],
+          },
+          riskAnalysis: {
+            highRisks: [
+              "Insufficient market validation",
+              "Competitive threats unknown",
+              "Technical challenges unclear",
+            ],
+            mediumRisks: [
+              "Customer acquisition costs",
+              "Market timing",
+              "Resource requirements",
+            ],
+            lowRisks: [
+              "Brand recognition",
+              "Team scaling",
+              "Operational efficiency",
+            ],
+            mitigationStrategies: [
+              "Conduct thorough market research",
+              "Analyze competitive landscape",
+              "Assess technical requirements",
+            ],
+            riskScore: 70,
+          },
+          validationMetrics: {
+            productMarketFit: 50,
+            marketSize: 50,
+            competitiveAdvantage: 50,
+            technicalFeasibility: 50,
+            financialViability: 50,
+            executionRisk: 50,
+          },
+          nextSteps: {
+            immediate: [
+              "Complete market research",
+              "Analyze competitors",
+              "Assess technical feasibility",
+            ],
+            shortTerm: [
+              "Validate customer segments",
+              "Test value proposition",
+              "Evaluate pricing strategy",
+            ],
+            mediumTerm: [
+              "Develop MVP",
+              "Conduct user testing",
+              "Refine product-market fit",
+            ],
+            longTerm: [
+              "Scale operations",
+              "Expand market reach",
+              "Build competitive moat",
+            ],
+          },
+          nextReviewDate: "30 days from now",
+          validationTimeline: "3-6 months",
+          overallConfidence: "LOW" as const,
+          dataQuality: "LOW" as const,
+          recommendations: [
+            "Complete comprehensive validation analysis",
+            "Gather more market data",
+            "Research competitive landscape",
+          ],
+        };
+      } else {
+        // Wait before retrying
+        await new Promise((resolve) => setTimeout(resolve, 2000 * retryCount));
+      }
+    }
   }
+
+  return {
+    scorecardData,
+    researchText: researchData,
+    agentType: "validation-scorecard",
+    timestamp: new Date(),
+    originalIdeaId: idea.id,
+  };
 };

@@ -14,14 +14,16 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@ai-sdk/google": "^1.2.22",
+		"@ai-sdk/google": "2.0.0-beta.14",
+		"@ai-sdk/openai": "2.0.0-beta.11",
+		"@ai-sdk/react": "2.0.0-beta.27",
 		"@prisma/client": "^6.12.0",
-		"ai": "^4.3.19",
+		"ai": "5.0.0-beta.27",
 		"axios": "^1.11.0",
 		"cheerio": "^1.1.2",
 		"jsdom": "^26.1.0",
 		"resend": "^4.7.0",
-		"zod": "^4.0.5",
+		"zod": "^3.24.4",
 		"zod-prisma-types": "^3.2.4"
 	},
 	"devDependencies": {
