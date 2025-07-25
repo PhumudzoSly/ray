@@ -1,7 +1,11 @@
 import React, { Suspense } from "react";
 import { getSingleIdea, getValidationDetails } from "@/actions/idea";
-import { Card, CardContent } from "@workspace/ui/components/card";
-import { Skeleton } from "@workspace/ui/components/skeleton";
+import {
+  getMarketResearch,
+  getValidationScorecard,
+  getTargetAudiences,
+  getMarketTrends,
+} from "@/actions/idea/market-research";
 import { IdeaDetailsSkeleton } from "@/components/idea/core/idea-details-skeleton";
 import { IdeaDetailsContent } from "@/components/idea/core/idea-details-content";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
@@ -25,13 +29,28 @@ const IdeaPage = async ({ params }: IdeaPageProps) => {
       queryKey: ["validationDetails", id],
       queryFn: () => getValidationDetails({ ideaId: id }),
     }),
+    queryClient.prefetchQuery({
+      queryKey: ["market-research", id],
+      queryFn: () => getMarketResearch(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["validation-scorecard", id],
+      queryFn: () => getValidationScorecard(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["target-audiences", id],
+      queryFn: () => getTargetAudiences(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["market-trends", id],
+      queryFn: () => getMarketTrends(id),
+    }),
   ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col h-full">
         <Suspense fallback={<IdeaDetailsSkeleton />}>
-          {/* <IdeaDetailsHeader ideaId={id} /> */}
           <IdeaDetailsContent ideaId={id} />
         </Suspense>
       </div>

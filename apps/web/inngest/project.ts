@@ -46,14 +46,6 @@ export const generateFeature = inngestClient.createFunction(
               .number()
               .optional()
               .describe("How many hours will this feature take to build?"),
-            startDate: z
-              .date()
-              .optional()
-              .describe("When will this feature start?"),
-            endDate: z
-              .date()
-              .optional()
-              .describe("When will this feature end?"),
             priority: ImportanceSchema,
           })
         ),

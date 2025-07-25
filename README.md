@@ -23,7 +23,7 @@ packages/
 - **Biome**: Linting and formatting (replaces ESLint/Prettier)
 - **Husky**: Pre-commit hooks for code quality
 - **TypeScript**: Strict typing everywhere
-- **Convex**: Backend as a service
+- **Postgres and Prisma**: Backend as a service
 
 ## Getting Started
 
@@ -40,7 +40,6 @@ pnpm format            # Format all code with Biome
 pnpm --filter web dev      # Start web app (http://localhost:3000)
 pnpm --filter docs dev     # Start docs app (http://localhost:3001)
 pnpm --filter landing dev  # Start landing app (http://localhost:3002)
-pnpm --filter backend dev  # Start Convex backend
 ```
 
 ## Contributing

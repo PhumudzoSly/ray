@@ -11,6 +11,8 @@
     "test": "turbo run test",
     "dedupe": "pnpm dedupe",
     "outdated": "pnpm outdated",
+    "update": "pnpm update --recursive",
+    "update-interactive": "pnpm update --recursive --interactive",
     "depcheck": "madge --circular --extensions ts,tsx,js,jsx ./apps ./packages",
     "health": "pnpm lint && pnpm typecheck && pnpm test && pnpm depcheck && pnpm dedupe && pnpm outdated"
   },

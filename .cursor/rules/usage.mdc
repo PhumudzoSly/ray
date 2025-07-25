@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+Use shadcn design system, no custom borders, gradients, roundness, etc.. just pure shadcn component, following the Linear/Notion quality for components.
+
+All data fetching on page level happens on the server, prefetching with tanstack query and then we sync on the client components with useQuery.

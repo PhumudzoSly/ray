@@ -158,8 +158,35 @@ const IdeaInfo = ({ id }: { id: string }) => {
               className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
               disabled={updateFieldMutation.isPending}
             />
-            <div className="text-muted-foreground text-sm">
-              Added {moment(idea?.createdAt).fromNow()}
+            <div className="flex flex-wrap gap-6 py-2 text-sm text-muted-foreground">
+              <div className="text-muted-foreground text-sm">
+                Added {moment(idea?.createdAt).fromNow()}
+              </div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+                    <Building2 className="h-4 w-4 text-indigo-500" />
+                    {idea?.industry}
+                  </TooltipTrigger>
+                  <TooltipContent>Industry classification</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+                    <Shield className="h-4 w-4 text-blue-500" />
+                    {idea?.internal ? "Internal idea" : "Client/external idea"}
+                  </TooltipTrigger>
+                  <TooltipContent>Idea ownership type</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+                    <ShieldCheck className="h-4 w-4 text-purple-500" />
+                    {idea?.openSource ? "Open source" : "Closed source"}
+                  </TooltipTrigger>
+                  <TooltipContent>Source code accessibility</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -184,34 +211,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex flex-wrap gap-6 py-6 text-sm text-muted-foreground">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-              <Building2 className="h-4 w-4 text-indigo-500" />
-              {idea?.industry}
-            </TooltipTrigger>
-            <TooltipContent>Industry classification</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-              <Shield className="h-4 w-4 text-blue-500" />
-              {idea?.internal ? "Internal idea" : "Client/external idea"}
-            </TooltipTrigger>
-            <TooltipContent>Idea ownership type</TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-              <ShieldCheck className="h-4 w-4 text-purple-500" />
-              {idea?.openSource ? "Open source" : "Closed source"}
-            </TooltipTrigger>
-            <TooltipContent>Source code accessibility</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
     </div>
   );

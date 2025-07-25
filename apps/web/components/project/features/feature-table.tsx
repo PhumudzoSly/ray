@@ -359,7 +359,9 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
 
       {/* Content */}
       {filteredFeatures.length === 0 ? (
-        <NoData />
+        <div className="mt-6">
+          <NoData message="No features found" />
+        </div>
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredFeatures.map((feature: any, index: number) => (
