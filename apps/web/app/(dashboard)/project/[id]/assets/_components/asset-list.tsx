@@ -81,7 +81,7 @@ export function AssetList({ assets, onDelete, onUpdate }: AssetListProps) {
   // Mutations
   const incrementViewMutation = useMutation({
     mutationFn: ({ assetId }: { assetId: string }) =>
-      assetActions.incrementViewCount({ assetId }),
+      assetActions.incrementViewCount({ assetId, ipAddress: "0.0.0.0" }),
     onError: (error) => {
       console.error("Failed to increment view count:", error);
     },

@@ -55,6 +55,9 @@ export const getAllPublicRoadmaps = async () => {
             id: true,
             name: true,
             status: true,
+            description: true,
+            platform: true,
+            createdAt: true,
           },
         },
         _count: {
@@ -92,17 +95,25 @@ export const getAllPublicRoadmaps = async () => {
         0
       );
 
+      const enrichedItems = roadmap.items.map((item) => ({
+        ...item,
+        voteCount: item._count.votes,
+        feedbackCount: item._count.feedback,
+      }));
+
       return {
         ...roadmap,
-        // Remove the items array to keep response clean
-        items: undefined,
+        items: enrichedItems,
         stats: {
           totalItems: roadmap._count.items,
           totalChangelogs: roadmap._count.changelogs,
           totalFeatureRequests: roadmap._count.featureRequests,
           totalVotes,
           totalFeedback,
+          lastUpdated: roadmap.updatedAt,
         },
+        changelogs: [],
+        featureRequests: [],
       };
     });
 

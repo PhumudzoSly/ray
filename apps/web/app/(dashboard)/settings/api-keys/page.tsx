@@ -55,12 +55,12 @@ import {
   deleteApiKey,
   deactivateApiKey,
 } from "@/actions/account/user";
-import { Id } from "@workspace/backend";
+import { ApiPermissionType } from "@workspace/backend";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
 interface ApiKey {
-  id: Id<"apiKeys">;
+  id: string;
   name: string;
   keyPreview: string;
   permissions: string[];
@@ -71,7 +71,11 @@ interface ApiKey {
   expiresAt?: number;
 }
 
-const AVAILABLE_PERMISSIONS = [
+const AVAILABLE_PERMISSIONS: {
+  id: ApiPermissionType;
+  label: string;
+  description: string;
+}[] = [
   { id: "READ", label: "Read", description: "View data and resources" },
   { id: "WRITE", label: "Write", description: "Create and update resources" },
   { id: "DELETE", label: "Delete", description: "Delete resources" },
@@ -84,9 +88,9 @@ export default function ApiKeysPage() {
   const [loading, setLoading] = useState(true);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([
-    "READ",
-  ]);
+  const [selectedPermissions, setSelectedPermissions] = useState<
+    ApiPermissionType[]
+  >(["READ"]);
   const [createdKey, setCreatedKey] = useState<string | null>(null);
   const [showCreatedKey, setShowCreatedKey] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -139,7 +143,7 @@ export default function ApiKeysPage() {
     }
   };
 
-  const handleDeleteKey = async (keyId: Id<"apiKeys">) => {
+  const handleDeleteKey = async (keyId: string) => {
     try {
       const result = await deleteApiKey(keyId);
       if (result.success) {
@@ -153,7 +157,7 @@ export default function ApiKeysPage() {
     }
   };
 
-  const handleDeactivateKey = async (keyId: Id<"apiKeys">) => {
+  const handleDeactivateKey = async (keyId: string) => {
     try {
       const result = await deactivateApiKey(keyId);
       if (result.success) {

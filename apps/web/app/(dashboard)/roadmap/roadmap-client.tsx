@@ -28,7 +28,6 @@ import {
   GitBranch,
   Clock,
   TrendingUp,
-  Users,
   Globe,
   Settings,
   Trash2,
@@ -42,42 +41,25 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@/context/session-context";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { toast } from "sonner";
-import { formatDistanceToNow, format } from "date-fns";
 import { safeFormatDistanceToNow, safeFormatDate } from "@/utils/date-utils";
-
 import NewRoadmap from "./components/new-roadmap";
 import { NoData } from "@/components/shared";
-import { EnrichedPublicRoadmap } from "@/types/roadmap";
-import {
-  ROADMAP_STATUS_CONFIG,
-  ROADMAP_CATEGORY_CONFIG,
-  getStatusIcon,
-  getCategoryIcon,
-  formatRelativeTime,
-  formatDate,
-} from "@/utils/constants/roadmaps";
 
 export default function RoadmapClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
   const { org } = useSession();
   const queryClient = useQueryClient();
   const confirm = useConfirm();
-
   const page = Number(searchParams.get("page") || "1");
   const perPage = Number(searchParams.get("per_page") || "10");
   const sort = searchParams.get("sort") || "name";
   const order = (searchParams.get("order") as "asc" | "desc") || "asc";
-  const search = searchParams.get("search") || "";
 
-  const {
-    data: roadmaps,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: roadmaps, isLoading } = useQuery({
     queryKey: ["roadmaps", org],
     queryFn: () => getAllPublicRoadmaps(),
-    select: (res) => (res?.success ? res.data : []) as EnrichedPublicRoadmap[],
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
@@ -111,7 +93,7 @@ export default function RoadmapClient() {
 
   // Filter roadmaps based on search params
   const filteredRoadmaps =
-    roadmaps?.filter((roadmap) => {
+    roadmaps?.data?.filter((roadmap) => {
       if (search) {
         const searchLower = search.toLowerCase();
         const matchesSearch =
@@ -189,7 +171,7 @@ export default function RoadmapClient() {
     return <RoadmapTableSkeleton />;
   }
 
-  if (!roadmaps || roadmaps.length === 0) {
+  if (!roadmaps?.success || !roadmaps.data) {
     return (
       <div className="space-y-6 p-6">
         <NoData

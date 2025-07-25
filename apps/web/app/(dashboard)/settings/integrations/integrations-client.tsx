@@ -143,6 +143,7 @@ export function IntegrationsClient({
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryKey: ["integrations"],
     queryFn: async () => {
@@ -151,6 +152,8 @@ export function IntegrationsClient({
       throw new Error("Failed to load integrations");
     },
   });
+
+  console.log(error);
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {

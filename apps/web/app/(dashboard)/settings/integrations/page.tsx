@@ -6,8 +6,9 @@ import { Suspense } from "react";
 export default async function IntegrationsPage({
   searchParams,
 }: {
-  searchParams: { success?: string; error?: string };
+  searchParams: Promise<{ success?: string; error?: string }>;
 }) {
+  const { success, error } = await searchParams;
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
@@ -21,10 +22,7 @@ export default async function IntegrationsPage({
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <IntegrationsClient
-        successMessage={searchParams.success}
-        errorMessage={searchParams.error}
-      />
+      <IntegrationsClient successMessage={success} errorMessage={error} />
     </Suspense>
   );
 }

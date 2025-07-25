@@ -45,7 +45,6 @@ export function useStorageStore({
 
   const [storeWithStatus, setStoreWithStatus] = useState<TLStoreWithStatus>({
     status: "loading",
-    
   });
 
   useEffect(() => {
@@ -105,14 +104,17 @@ export function useStorageStore({
       function syncStoreWithPresence({ changes }: TLStoreEventInfo) {
         room.batch(() => {
           Object.values(changes.added).forEach((record) => {
+            // @ts-ignore
             room.updatePresence({ [record.id]: record });
           });
 
           Object.values(changes.updated).forEach(([_, record]) => {
+            // @ts-ignore
             room.updatePresence({ [record.id]: record });
           });
 
           Object.values(changes.removed).forEach((record) => {
+            // @ts-ignore
             room.updatePresence({ [record.id]: null });
           });
         });
@@ -135,6 +137,7 @@ export function useStorageStore({
       // Update tldraw when Storage changes
       unsubs.push(
         room.subscribe(
+          // @ts-ignore
           liveRecords,
           (storageChanges) => {
             const toRemove: TLRecord["id"][] = [];
@@ -206,6 +209,7 @@ export function useStorageStore({
 
       // Update presence with tldraw values
       room.updatePresence({
+        // @ts-ignore
         presence: presenceDerivation.get() ?? null,
       });
 
@@ -214,6 +218,7 @@ export function useStorageStore({
         react("when presence changes", () => {
           const presence = presenceDerivation.get() ?? null;
           requestAnimationFrame(() => {
+            // @ts-ignore
             room.updatePresence({ presence });
           });
         })

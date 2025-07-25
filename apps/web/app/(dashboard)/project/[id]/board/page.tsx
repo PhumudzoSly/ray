@@ -1,18 +1,13 @@
-"use client";
-import { useParams } from "next/navigation";
+import { use } from "react";
 import React from "react";
-// import { Room } from "./_components/Room";
 import { StorageTldraw } from "./_components/storageDraw";
 import { Comments } from "@/components/liveblocks/comments";
 import { Inbox } from "lucide-react";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import { Room } from "@/components/liveblocks/room";
 
-const BoardPage = () => {
-  //
-
-  const params = useParams();
-  const id = params.id as string;
+const BoardPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
 
   return (
     <ExpandedLayoutContainer

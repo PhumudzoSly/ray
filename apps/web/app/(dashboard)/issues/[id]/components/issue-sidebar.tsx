@@ -110,7 +110,10 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
       userId: string;
     }) => {
       if (!issue?.status) return;
-      return issueActions.updateIssue(issueId, { ...issue, assignedToId: userId });
+      return issueActions.updateIssue(issueId, {
+        ...issue,
+        assignedToId: userId,
+      });
     },
     onMutate: async ({ issueId, userId }) => {
       // Cancel any outgoing refetches

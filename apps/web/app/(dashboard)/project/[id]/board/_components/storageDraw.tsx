@@ -3,7 +3,6 @@
 import "tldraw/tldraw.css";
 import { Tldraw, DefaultStylePanel } from "tldraw";
 import { useStorageStore } from "./useStorageStore";
-import { Badge } from "./Badge";
 import { useSession } from "@/context/session-context";
 import { useTheme } from "next-themes";
 

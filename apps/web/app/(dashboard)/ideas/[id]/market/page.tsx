@@ -24,8 +24,8 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 
-const MarketPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const MarketPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   const queryClient = new QueryClient();
 
   // Prefetch all market research data

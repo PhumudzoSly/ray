@@ -14,31 +14,30 @@ import { RegulatoryCompliance } from "@/components/idea/insights/regulatory-comp
 import { DetailedScorecard } from "@/components/idea/insights/detailed-scorecard";
 
 interface InsightsPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function InsightsPage({ params }: InsightsPageProps) {
+  const { id } = await params;
   const queryClient = new QueryClient();
 
   // Prefetch all insights data
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: ["validation-insights", params.id],
-      queryFn: () => getValidationInsights(params.id),
+      queryKey: ["validation-insights", id],
+      queryFn: () => getValidationInsights(id),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["technology-assessment", params.id],
-      queryFn: () => getTechnologyAssessment(params.id),
+      queryKey: ["technology-assessment", id],
+      queryFn: () => getTechnologyAssessment(id),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["regulatory-compliance", params.id],
-      queryFn: () => getRegulatoryCompliance(params.id),
+      queryKey: ["regulatory-compliance", id],
+      queryFn: () => getRegulatoryCompliance(id),
     }),
     queryClient.prefetchQuery({
-      queryKey: ["detailed-scorecard", params.id],
-      queryFn: () => getDetailedScorecard(params.id),
+      queryKey: ["detailed-scorecard", id],
+      queryFn: () => getDetailedScorecard(id),
     }),
   ]);
 
@@ -61,7 +60,7 @@ export default async function InsightsPage({ params }: InsightsPageProps) {
                 <div className="h-64 bg-muted animate-pulse rounded-lg" />
               }
             >
-              <ValidationInsights ideaId={params.id} />
+              <ValidationInsights ideaId={id} />
             </Suspense>
 
             <Suspense
@@ -69,7 +68,7 @@ export default async function InsightsPage({ params }: InsightsPageProps) {
                 <div className="h-96 bg-muted animate-pulse rounded-lg" />
               }
             >
-              <TechnologyAssessment ideaId={params.id} />
+              <TechnologyAssessment ideaId={id} />
             </Suspense>
           </div>
 
@@ -80,7 +79,7 @@ export default async function InsightsPage({ params }: InsightsPageProps) {
                 <div className="h-64 bg-muted animate-pulse rounded-lg" />
               }
             >
-              <RegulatoryCompliance ideaId={params.id} />
+              <RegulatoryCompliance ideaId={id} />
             </Suspense>
 
             <Suspense
@@ -88,7 +87,7 @@ export default async function InsightsPage({ params }: InsightsPageProps) {
                 <div className="h-96 bg-muted animate-pulse rounded-lg" />
               }
             >
-              <DetailedScorecard ideaId={params.id} />
+              <DetailedScorecard ideaId={id} />
             </Suspense>
           </div>
         </div>
