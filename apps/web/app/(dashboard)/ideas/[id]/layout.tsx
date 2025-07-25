@@ -26,10 +26,6 @@ const IdeaLayout = async ({
       href: `/ideas/${id}`,
     },
     {
-      title: "Ideation",
-      href: `/ideas/${id}/ideation`,
-    },
-    {
       title: "Market",
       href: `/ideas/${id}/market`,
     },

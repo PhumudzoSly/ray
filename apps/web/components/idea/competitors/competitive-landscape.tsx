@@ -125,7 +125,7 @@ export function CompetitiveLandscape({ ideaId }: CompetitiveLandscapeProps) {
 
   const competitors = landscape.competitors || [];
   const totalMarketShare = competitors.reduce(
-    (sum, comp) => sum + (comp.marketShare || 0),
+    (sum: number, comp: any) => sum + (comp.marketShare || 0),
     0
   );
 
@@ -157,12 +157,14 @@ export function CompetitiveLandscape({ ideaId }: CompetitiveLandscapeProps) {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            {landscape.competitiveIntensity === "low" &&
+            {landscape.competitiveIntensity === "LOW" &&
               "Low competition provides opportunities for market entry"}
-            {landscape.competitiveIntensity === "medium" &&
+            {landscape.competitiveIntensity === "MEDIUM" &&
               "Moderate competition requires clear differentiation"}
-            {landscape.competitiveIntensity === "high" &&
+            {landscape.competitiveIntensity === "HIGH" &&
               "High competition demands strong competitive advantages"}
+            {landscape.competitiveIntensity === "VERY_HIGH" &&
+              "Very high competition - extremely challenging market entry"}
           </p>
         </div>
 
@@ -174,7 +176,9 @@ export function CompetitiveLandscape({ ideaId }: CompetitiveLandscapeProps) {
               Market Positioning
             </h4>
             <Badge
-              className={getMarketPositionColor(landscape.marketPositioning)}
+              className={getMarketPositionColor(
+                landscape.marketPositioning || ""
+              )}
             >
               {landscape.marketPositioning || "Undefined"}
             </Badge>
@@ -235,17 +239,24 @@ export function CompetitiveLandscape({ ideaId }: CompetitiveLandscapeProps) {
         )}
 
         {/* Differentiation Opportunities */}
-        {landscape.differentiationOpportunities && (
-          <div className="space-y-3">
-            <h4 className="text-sm font-medium flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Differentiation Opportunities
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              {landscape.differentiationOpportunities}
-            </p>
-          </div>
-        )}
+        {landscape.differentiationOpportunities &&
+          landscape.differentiationOpportunities.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium flex items-center gap-2">
+                <Lightbulb className="h-4 w-4" />
+                Differentiation Opportunities
+              </h4>
+              <div className="space-y-2">
+                {landscape.differentiationOpportunities.map(
+                  (opportunity: string, index: number) => (
+                    <div key={index} className="text-sm text-muted-foreground">
+                      • {opportunity}
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          )}
 
         {/* Competitor Summary */}
         {competitors.length > 0 && (
@@ -267,7 +278,8 @@ export function CompetitiveLandscape({ ideaId }: CompetitiveLandscapeProps) {
                   $
                   {(
                     competitors.reduce(
-                      (sum, comp) => sum + (comp.funding || 0),
+                      (sum: number, comp: any) =>
+                        sum + (comp.fundingRaised || 0),
                       0
                     ) /
                     competitors.length /

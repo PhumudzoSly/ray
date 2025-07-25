@@ -6,6 +6,12 @@ import {
   getTargetAudiences,
   getMarketTrends,
 } from "@/actions/idea/market-research";
+import {
+  getValidationInsights,
+  getTechnologyAssessment,
+  getRegulatoryCompliance,
+  getDetailedScorecard,
+} from "@/actions/idea/insights";
 import { IdeaDetailsSkeleton } from "@/components/idea/core/idea-details-skeleton";
 import { IdeaDetailsContent } from "@/components/idea/core/idea-details-content";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
@@ -44,6 +50,22 @@ const IdeaPage = async ({ params }: IdeaPageProps) => {
     queryClient.prefetchQuery({
       queryKey: ["market-trends", id],
       queryFn: () => getMarketTrends(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["validation-insights", id],
+      queryFn: () => getValidationInsights(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["technology-assessment", id],
+      queryFn: () => getTechnologyAssessment(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["regulatory-compliance", id],
+      queryFn: () => getRegulatoryCompliance(id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["detailed-scorecard", id],
+      queryFn: () => getDetailedScorecard(id),
     }),
   ]);
 

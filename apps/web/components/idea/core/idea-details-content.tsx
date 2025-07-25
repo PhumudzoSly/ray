@@ -19,6 +19,7 @@ import { ProblemSolutionDisplay } from "@/components/idea/validation/problem-sol
 import { ValidationScorecardSummary } from "@/components/idea/validation/validation-scorecard-summary";
 import { QuickMetricsDashboard } from "@/components/idea/validation/quick-metrics-dashboard";
 import { MarketOverviewCard } from "@/components/idea/validation/market-overview-card";
+import { InsightsOverviewCard } from "@/components/idea/insights/insights-overview-card";
 import { useQuery } from "@tanstack/react-query";
 import { getSingleIdea, getValidationDetails } from "@/actions/idea";
 import type { Idea } from "@workspace/backend";
@@ -118,6 +119,12 @@ export const IdeaDetailsContent: React.FC<IdeaDetailsContentProps> = ({
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Market Overview</h2>
               <MarketOverviewCard ideaId={ideaId} />
+            </div>
+
+            {/* Insights Overview */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Insights Overview</h2>
+              <InsightsOverviewCard ideaId={ideaId} />
             </div>
           </>
         ) : (

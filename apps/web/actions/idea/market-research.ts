@@ -98,7 +98,7 @@ export const getMarketSignals = async (ideaId: string) => {
         organizationId: org,
       },
     },
-    orderBy: { signalStrength: "desc" },
+    orderBy: { strength: "desc" },
   });
 
   return marketSignals;

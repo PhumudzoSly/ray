@@ -1,85 +1,95 @@
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { getCompetitiveMoves } from "@/actions/idea/competitive-analysis"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card"
-import { Badge } from "@workspace/ui/components/badge"
-import { 
-  TrendingUp, 
+import { useQuery } from "@tanstack/react-query";
+import { getCompetitiveMoves } from "@/actions/idea/competitive-analysis";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Badge } from "@workspace/ui/components/badge";
+import {
+  TrendingUp,
   Calendar,
   Target,
   Zap,
   AlertTriangle,
   ArrowUpRight,
   ArrowDownRight,
-  Minus
-} from "lucide-react"
+  Minus,
+} from "lucide-react";
 
 interface CompetitiveMovesProps {
-  ideaId: string
+  ideaId: string;
 }
 
 function getMoveTypeIcon(moveType: string) {
   switch (moveType?.toLowerCase()) {
     case "product_launch":
-      return <Zap className="h-4 w-4" />
+      return <Zap className="h-4 w-4" />;
     case "pricing_change":
-      return <TrendingUp className="h-4 w-4" />
+      return <TrendingUp className="h-4 w-4" />;
     case "partnership":
-      return <ArrowUpRight className="h-4 w-4" />
+      return <ArrowUpRight className="h-4 w-4" />;
     case "acquisition":
-      return <ArrowDownRight className="h-4 w-4" />
+      return <ArrowDownRight className="h-4 w-4" />;
     case "feature_update":
-      return <Target className="h-4 w-4" />
+      return <Target className="h-4 w-4" />;
     default:
-      return <Minus className="h-4 w-4" />
+      return <Minus className="h-4 w-4" />;
   }
 }
 
 function getMoveTypeColor(moveType: string) {
   switch (moveType?.toLowerCase()) {
     case "product_launch":
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
     case "pricing_change":
-      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+      return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
     case "partnership":
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+      return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
     case "acquisition":
-      return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+      return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
     case "feature_update":
-      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300"
+      return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300";
     default:
-      return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+      return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
   }
 }
 
 function getImpactColor(impact: string) {
   switch (impact?.toLowerCase()) {
     case "high":
-      return "text-red-600"
+      return "text-red-600";
     case "medium":
-      return "text-yellow-600"
+      return "text-yellow-600";
     case "low":
-      return "text-green-600"
+      return "text-green-600";
     default:
-      return "text-gray-600"
+      return "text-gray-600";
   }
 }
 
 function formatDate(dateString: string) {
-  const date = new Date(dateString)
+  const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
-    day: "numeric"
-  })
+    day: "numeric",
+  });
 }
 
 export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
-  const { data: moves, isLoading, error } = useQuery({
+  const {
+    data: moves,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["competitive-moves", ideaId],
     queryFn: () => getCompetitiveMoves(ideaId),
-  })
+  });
 
   if (isLoading) {
     return (
@@ -105,7 +115,7 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (error) {
@@ -123,7 +133,7 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           </p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (!moves || moves.length === 0) {
@@ -144,27 +154,32 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           </p>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   // Sort moves by date (most recent first)
-  const sortedMoves = [...moves].sort((a, b) => 
-    new Date(b.date || "").getTime() - new Date(a.date || "").getTime()
-  )
+  const sortedMoves = [...moves].sort(
+    (a, b) =>
+      new Date(b.announcedDate || b.createdAt || "").getTime() -
+      new Date(a.announcedDate || a.createdAt || "").getTime()
+  );
 
   // Group moves by month for timeline view
-  const movesByMonth = sortedMoves.reduce((groups, move) => {
-    const date = new Date(move.date || "")
-    const monthKey = `${date.getFullYear()}-${date.getMonth()}`
-    
-    if (!groups[monthKey]) {
-      groups[monthKey] = []
-    }
-    groups[monthKey].push(move)
-    return groups
-  }, {} as Record<string, typeof moves>)
+  const movesByMonth = sortedMoves.reduce(
+    (groups: Record<string, typeof moves>, move: any) => {
+      const date = new Date(move.announcedDate || move.createdAt || "");
+      const monthKey = `${date.getFullYear()}-${date.getMonth()}`;
 
-  const sortedMonths = Object.keys(movesByMonth).sort().reverse()
+      if (!groups[monthKey]) {
+        groups[monthKey] = [];
+      }
+      groups[monthKey].push(move);
+      return groups;
+    },
+    {} as Record<string, typeof moves>
+  );
+
+  const sortedMonths = Object.keys(movesByMonth).sort().reverse();
 
   return (
     <Card>
@@ -186,19 +201,21 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold">
-              {moves.filter(m => m.impact === "high").length}
+              {moves.filter((m: any) => m.impactLevel === "HIGH").length}
             </div>
             <div className="text-sm text-muted-foreground">High Impact</div>
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold">
-              {new Set(moves.map(m => m.competitorId)).size}
+              {new Set(moves.map((m: any) => m.competitorId)).size}
             </div>
-            <div className="text-sm text-muted-foreground">Active Competitors</div>
+            <div className="text-sm text-muted-foreground">
+              Active Competitors
+            </div>
           </div>
           <div className="space-y-2">
             <div className="text-2xl font-bold">
-              {new Set(moves.map(m => m.moveType)).size}
+              {new Set(moves.map((m: any) => m.moveType)).size}
             </div>
             <div className="text-sm text-muted-foreground">Move Types</div>
           </div>
@@ -209,37 +226,49 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           <h3 className="text-lg font-semibold">Timeline</h3>
           <div className="space-y-8">
             {sortedMonths.map((monthKey) => {
-              const [year, month] = monthKey.split("-")
-              const monthName = new Date(parseInt(year), parseInt(month)).toLocaleDateString("en-US", {
+              const [year, month] = monthKey.split("-");
+              const monthName = new Date(
+                parseInt(year || "0"),
+                parseInt(month || "0")
+              ).toLocaleDateString("en-US", {
                 year: "numeric",
-                month: "long"
-              })
-              const monthMoves = movesByMonth[monthKey]
+                month: "long",
+              });
+              const monthMoves = movesByMonth[monthKey] || [];
 
               return (
                 <div key={monthKey} className="space-y-4">
-                  <h4 className="text-md font-medium text-muted-foreground">{monthName}</h4>
+                  <h4 className="text-md font-medium text-muted-foreground">
+                    {monthName}
+                  </h4>
                   <div className="space-y-4">
-                    {monthMoves.map((move) => (
-                      <div key={move.id} className="border-l-2 border-muted pl-4 space-y-3">
+                    {monthMoves.map((move: any) => (
+                      <div
+                        key={move.id}
+                        className="border-l-2 border-muted pl-4 space-y-3"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
                               {getMoveTypeIcon(move.moveType)}
-                              <Badge className={getMoveTypeColor(move.moveType)}>
+                              <Badge
+                                className={getMoveTypeColor(move.moveType)}
+                              >
                                 {move.moveType?.replace("_", " ").toUpperCase()}
                               </Badge>
                             </div>
                             <div className="text-sm text-muted-foreground flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
-                              {formatDate(move.date || "")}
+                              {formatDate(
+                                move.announcedDate || move.createdAt || ""
+                              )}
                             </div>
                           </div>
-                          <Badge 
-                            variant="outline" 
-                            className={getImpactColor(move.impact)}
+                          <Badge
+                            variant="outline"
+                            className={getImpactColor(move.impactLevel)}
                           >
-                            {move.impact?.toUpperCase()} Impact
+                            {move.impactLevel?.toUpperCase()} Impact
                           </Badge>
                         </div>
 
@@ -253,7 +282,9 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
                         </div>
 
                         {/* Impact Analysis */}
-                        {(move.marketImpact || move.competitiveImpact || move.strategicImplications) && (
+                        {(move.marketImpact ||
+                          move.competitiveImpact ||
+                          move.strategicImplications) && (
                           <div className="space-y-2">
                             <h6 className="text-sm font-medium flex items-center gap-2">
                               <AlertTriangle className="h-4 w-4" />
@@ -262,19 +293,25 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                               {move.marketImpact && (
                                 <div className="space-y-1">
-                                  <div className="font-medium text-muted-foreground">Market Impact</div>
+                                  <div className="font-medium text-muted-foreground">
+                                    Market Impact
+                                  </div>
                                   <div>{move.marketImpact}</div>
                                 </div>
                               )}
                               {move.competitiveImpact && (
                                 <div className="space-y-1">
-                                  <div className="font-medium text-muted-foreground">Competitive Impact</div>
+                                  <div className="font-medium text-muted-foreground">
+                                    Competitive Impact
+                                  </div>
                                   <div>{move.competitiveImpact}</div>
                                 </div>
                               )}
                               {move.strategicImplications && (
                                 <div className="space-y-1">
-                                  <div className="font-medium text-muted-foreground">Strategic Implications</div>
+                                  <div className="font-medium text-muted-foreground">
+                                    Strategic Implications
+                                  </div>
                                   <div>{move.strategicImplications}</div>
                                 </div>
                               )}
@@ -285,7 +322,9 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
                         {/* Response Requirements */}
                         {move.responseRequirements && (
                           <div className="space-y-2">
-                            <h6 className="text-sm font-medium">Response Requirements</h6>
+                            <h6 className="text-sm font-medium">
+                              Response Requirements
+                            </h6>
                             <p className="text-sm text-muted-foreground">
                               {move.responseRequirements}
                             </p>
@@ -308,7 +347,7 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
                     ))}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -318,12 +357,15 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
           <h3 className="text-lg font-semibold">Move Type Analysis</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(
-              moves.reduce((acc, move) => {
-                const type = move.moveType || "unknown"
-                acc[type] = (acc[type] || 0) + 1
-                return acc
-              }, {} as Record<string, number>)
-            ).map(([type, count]) => (
+              moves.reduce(
+                (acc: Record<string, number>, move: any) => {
+                  const type = move.moveType || "unknown";
+                  acc[type] = (acc[type] || 0) + 1;
+                  return acc;
+                },
+                {} as Record<string, number>
+              )
+            ).map(([type, count]: [string, number]) => (
               <div key={type} className="border rounded-lg p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   {getMoveTypeIcon(type)}
@@ -344,27 +386,36 @@ export function CompetitiveMoves({ ideaId }: CompetitiveMovesProps) {
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Impact Distribution</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["high", "medium", "low"].map((impact) => {
-              const count = moves.filter(m => m.impact === impact).length
+            {["HIGH", "MEDIUM", "LOW"].map((impact) => {
+              const count = moves.filter(
+                (m: any) => m.impactLevel === impact
+              ).length;
               return (
                 <div key={impact} className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${
-                      impact === "high" ? "bg-red-500" :
-                      impact === "medium" ? "bg-yellow-500" : "bg-green-500"
-                    }`} />
-                    <span className="font-medium capitalize">{impact} Impact</span>
+                    <div
+                      className={`w-3 h-3 rounded-full ${
+                        impact === "HIGH"
+                          ? "bg-red-500"
+                          : impact === "MEDIUM"
+                            ? "bg-yellow-500"
+                            : "bg-green-500"
+                      }`}
+                    />
+                    <span className="font-medium capitalize">
+                      {impact.toLowerCase()} Impact
+                    </span>
                   </div>
                   <div className="text-2xl font-bold">{count}</div>
                   <div className="text-sm text-muted-foreground">
                     {((count / moves.length) * 100).toFixed(1)}% of total moves
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
       </CardContent>
     </Card>
-  )
-} 
+  );
+}

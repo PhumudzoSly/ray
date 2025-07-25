@@ -146,7 +146,7 @@ export function CompetitorProfiles({ ideaId }: CompetitorProfilesProps) {
                 )}
               </div>
               <Badge variant="outline">
-                {competitor.marketPosition || "Unknown"}
+                {competitor.competitivePosition || "Unknown"}
               </Badge>
             </div>
 
@@ -171,64 +171,66 @@ export function CompetitorProfiles({ ideaId }: CompetitorProfilesProps) {
                 </div>
               )}
 
-              {competitor.revenue !== null && (
+              {competitor.annualRevenue !== null && (
                 <div className="space-y-1">
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <DollarSign className="h-3 w-3" />
                     Revenue
                   </div>
                   <div className="font-medium">
-                    ${(competitor.revenue / 1000000).toFixed(1)}M
+                    ${(competitor.annualRevenue / 1000000).toFixed(1)}M
                   </div>
                 </div>
               )}
 
-              {competitor.funding !== null && (
+              {competitor.fundingRaised !== null && (
                 <div className="space-y-1">
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <TrendingUp className="h-3 w-3" />
                     Funding
                   </div>
                   <div className="font-medium">
-                    ${(competitor.funding / 1000000).toFixed(1)}M
+                    ${(competitor.fundingRaised / 1000000).toFixed(1)}M
                   </div>
                 </div>
               )}
 
-              {competitor.employees !== null && (
+              {competitor.employeeCount !== null && (
                 <div className="space-y-1">
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
                     <Users className="h-3 w-3" />
                     Employees
                   </div>
                   <div className="font-medium">
-                    {competitor.employees.toLocaleString()}
+                    {competitor.employeeCount.toLocaleString()}
                   </div>
                 </div>
               )}
             </div>
 
             {/* Performance Metrics */}
-            {(competitor.growthRate !== null ||
+            {(competitor.userGrowthRate !== null ||
               competitor.churnRate !== null ||
-              competitor.satisfactionScore !== null) && (
+              competitor.customerSatisfaction !== null) && (
               <div className="space-y-3">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                   <Zap className="h-4 w-4" />
                   Performance Metrics
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {competitor.growthRate !== null && (
+                  {competitor.userGrowthRate !== null && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Growth Rate</span>
-                        <span className={getGrowthColor(competitor.growthRate)}>
-                          {competitor.growthRate > 0 ? "+" : ""}
-                          {competitor.growthRate.toFixed(1)}%
+                        <span
+                          className={getGrowthColor(competitor.userGrowthRate)}
+                        >
+                          {competitor.userGrowthRate > 0 ? "+" : ""}
+                          {competitor.userGrowthRate.toFixed(1)}%
                         </span>
                       </div>
                       <Progress
-                        value={Math.abs(competitor.growthRate)}
+                        value={Math.abs(competitor.userGrowthRate)}
                         className="h-2"
                       />
                     </div>
@@ -252,20 +254,20 @@ export function CompetitorProfiles({ ideaId }: CompetitorProfilesProps) {
                     </div>
                   )}
 
-                  {competitor.satisfactionScore !== null && (
+                  {competitor.customerSatisfaction !== null && (
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Satisfaction</span>
                         <span
                           className={getPerformanceColor(
-                            competitor.satisfactionScore
+                            competitor.customerSatisfaction
                           )}
                         >
-                          {competitor.satisfactionScore.toFixed(1)}/100
+                          {competitor.customerSatisfaction.toFixed(1)}/100
                         </span>
                       </div>
                       <Progress
-                        value={competitor.satisfactionScore}
+                        value={competitor.customerSatisfaction}
                         className="h-2"
                       />
                     </div>
@@ -275,61 +277,99 @@ export function CompetitorProfiles({ ideaId }: CompetitorProfilesProps) {
             )}
 
             {/* SWOT Analysis */}
-            {(competitor.strengths ||
-              competitor.weaknesses ||
-              competitor.opportunities ||
-              competitor.threats) && (
+            {(competitor.strengths?.length > 0 ||
+              competitor.weaknesses?.length > 0 ||
+              competitor.opportunities?.length > 0 ||
+              competitor.threats?.length > 0) && (
               <div className="space-y-3">
                 <h4 className="text-sm font-medium flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   SWOT Analysis
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {competitor.strengths && (
+                  {competitor.strengths && competitor.strengths.length > 0 && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-1 text-xs font-medium text-green-600">
                         <Plus className="h-3 w-3" />
                         Strengths
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {competitor.strengths}
-                      </p>
-                    </div>
-                  )}
-
-                  {competitor.weaknesses && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1 text-xs font-medium text-red-600">
-                        <Minus className="h-3 w-3" />
-                        Weaknesses
+                      <div className="space-y-1">
+                        {competitor.strengths.map(
+                          (strength: string, index: number) => (
+                            <p
+                              key={index}
+                              className="text-xs text-muted-foreground"
+                            >
+                              • {strength}
+                            </p>
+                          )
+                        )}
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {competitor.weaknesses}
-                      </p>
                     </div>
                   )}
 
-                  {competitor.opportunities && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1 text-xs font-medium text-blue-600">
-                        <Plus className="h-3 w-3" />
-                        Opportunities
+                  {competitor.weaknesses &&
+                    competitor.weaknesses.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1 text-xs font-medium text-red-600">
+                          <Minus className="h-3 w-3" />
+                          Weaknesses
+                        </div>
+                        <div className="space-y-1">
+                          {competitor.weaknesses.map(
+                            (weakness: string, index: number) => (
+                              <p
+                                key={index}
+                                className="text-xs text-muted-foreground"
+                              >
+                                • {weakness}
+                              </p>
+                            )
+                          )}
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {competitor.opportunities}
-                      </p>
-                    </div>
-                  )}
+                    )}
 
-                  {competitor.threats && (
+                  {competitor.opportunities &&
+                    competitor.opportunities.length > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-1 text-xs font-medium text-blue-600">
+                          <Plus className="h-3 w-3" />
+                          Opportunities
+                        </div>
+                        <div className="space-y-1">
+                          {competitor.opportunities.map(
+                            (opportunity: string, index: number) => (
+                              <p
+                                key={index}
+                                className="text-xs text-muted-foreground"
+                              >
+                                • {opportunity}
+                              </p>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                  {competitor.threats && competitor.threats.length > 0 && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-1 text-xs font-medium text-orange-600">
                         <AlertTriangle className="h-3 w-3" />
                         Threats
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {competitor.threats}
-                      </p>
+                      <div className="space-y-1">
+                        {competitor.threats.map(
+                          (threat: string, index: number) => (
+                            <p
+                              key={index}
+                              className="text-xs text-muted-foreground"
+                            >
+                              • {threat}
+                            </p>
+                          )
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -337,13 +377,13 @@ export function CompetitorProfiles({ ideaId }: CompetitorProfilesProps) {
             )}
 
             {/* Tech Stack */}
-            {competitor.techStack && (
+            {competitor.techStack && competitor.techStack.length > 0 && (
               <div className="space-y-2">
                 <h4 className="text-sm font-medium">Tech Stack</h4>
                 <div className="flex flex-wrap gap-1">
-                  {competitor.techStack.split(",").map((tech, index) => (
+                  {competitor.techStack.map((tech: string, index: number) => (
                     <Badge key={index} variant="secondary" className="text-xs">
-                      {tech.trim()}
+                      {tech}
                     </Badge>
                   ))}
                 </div>

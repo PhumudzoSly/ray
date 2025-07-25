@@ -1,124 +1,98 @@
-"use client";
-
-import React from "react";
-import { CustomerFitAnalysis } from "@/components/idea/validation/customer-fit-analysis";
-import { AdopterProfilesTab } from "@/components/idea/validation/adopter-profiles-tab";
-import { getSingleIdea, getValidationDetails } from "@/actions/idea";
+import { Suspense } from "react";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { Skeleton } from "@workspace/ui/components/skeleton";
-import { Heart, Users2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import { getValidationInsights } from "@/actions/idea/insights";
+import { getTechnologyAssessment } from "@/actions/idea/insights";
+import { getRegulatoryCompliance } from "@/actions/idea/insights";
+import { getDetailedScorecard } from "@/actions/idea/insights";
+import { ValidationInsights } from "@/components/idea/insights/validation-insights";
+import { TechnologyAssessment } from "@/components/idea/insights/technology-assessment";
+import { RegulatoryCompliance } from "@/components/idea/insights/regulatory-compliance";
+import { DetailedScorecard } from "@/components/idea/insights/detailed-scorecard";
 
-const InsightsPage = ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+interface InsightsPageProps {
+  params: {
+    id: string;
+  };
+}
 
-  const { data: idea, isPending: ideaPending } = useQuery({
-    queryKey: ["idea", id],
-    queryFn: () => getSingleIdea(id),
-  });
+export default async function InsightsPage({ params }: InsightsPageProps) {
+  const queryClient = new QueryClient();
 
-  const { data: validationDetails, isPending: validationPending } = useQuery({
-    queryKey: ["validationDetails", id],
-    queryFn: () => getValidationDetails({ ideaId: id }),
-  });
-
-  if (ideaPending || validationPending) {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-4 w-48" />
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-4/6" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!idea) {
-    return (
-      <div className="p-6">
-        <Card>
-          <CardContent className="flex items-center justify-center h-64">
-            <p className="text-muted-foreground">Idea not found</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  const hasValidation = validationDetails && validationDetails.validation;
+  // Prefetch all insights data
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ["validation-insights", params.id],
+      queryFn: () => getValidationInsights(params.id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["technology-assessment", params.id],
+      queryFn: () => getTechnologyAssessment(params.id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["regulatory-compliance", params.id],
+      queryFn: () => getRegulatoryCompliance(params.id),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["detailed-scorecard", params.id],
+      queryFn: () => getDetailedScorecard(params.id),
+    }),
+  ]);
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Customer Fit Analysis */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-pink-500" />
-              Customer Fit Analysis
-            </CardTitle>
-            <CardDescription>
-              How well your idea fits customer needs and problems
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {hasValidation ? (
-              <CustomerFitAnalysis data={validationDetails.customerFit} />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Heart className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see customer fit analysis</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Adopter Profiles */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users2 className="h-5 w-5 text-teal-500" />
-              Adopter Profiles
-            </CardTitle>
-            <CardDescription>
-              Target user segments and early adopter characteristics
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {hasValidation ? (
-              <AdopterProfilesTab
-                profiles={validationDetails.adopterProfiles || []}
-              />
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                <Users2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Validate your idea first to see adopter profiles</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Insights</h1>
+        <p className="text-muted-foreground">
+          AI-generated insights, technology assessment, and regulatory
+          compliance analysis
+        </p>
       </div>
+
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left Column */}
+          <div className="space-y-6">
+            <Suspense
+              fallback={
+                <div className="h-64 bg-muted animate-pulse rounded-lg" />
+              }
+            >
+              <ValidationInsights ideaId={params.id} />
+            </Suspense>
+
+            <Suspense
+              fallback={
+                <div className="h-96 bg-muted animate-pulse rounded-lg" />
+              }
+            >
+              <TechnologyAssessment ideaId={params.id} />
+            </Suspense>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            <Suspense
+              fallback={
+                <div className="h-64 bg-muted animate-pulse rounded-lg" />
+              }
+            >
+              <RegulatoryCompliance ideaId={params.id} />
+            </Suspense>
+
+            <Suspense
+              fallback={
+                <div className="h-96 bg-muted animate-pulse rounded-lg" />
+              }
+            >
+              <DetailedScorecard ideaId={params.id} />
+            </Suspense>
+          </div>
+        </div>
+      </HydrationBoundary>
     </div>
   );
-};
-
-export default InsightsPage;
+}

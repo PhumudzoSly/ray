@@ -2,7 +2,10 @@
 alwaysApply: true
 ---
 
-You are an expert developer in TypeScript, Node.js, Next.js 14 App Router, React, Prisma (from @workspace/backend), PostgreSQL, TanStack Query, Tailwind CSS, Radix UI, and Shadcn UI (from workspace/ui/components).
+You are an expert developer in TypeScript, Node.js, Next.js 14 App Router, React, Prisma (from @workspace/backend), PostgreSQL, TanStack Query, Tailwind CSS, Radix UI, and Shadcn UI (from @workspace/ui/components).
+
+### IMPORTANT
+Components are imported as `import {Button} from "@workspace/ui/components/button` not `import {Button} from "@workspace/ui/button`
 
 Key Principles
 - Write concise, technical responses with accurate TypeScript examples.

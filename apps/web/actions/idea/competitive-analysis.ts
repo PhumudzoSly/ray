@@ -10,11 +10,12 @@ export async function getCompetitiveLandscape(ideaId: string) {
           include: {
             competitors: {
               include: {
-                pricing: true,
-                moves: true,
+                pricingPlans: true,
+                competitiveMoves: true,
                 featureComparisons: true,
               },
             },
+            competitiveMoves: true,
           },
         },
       },
@@ -36,8 +37,8 @@ export async function getCompetitors(ideaId: string) {
           include: {
             competitors: {
               include: {
-                pricing: true,
-                moves: true,
+                pricingPlans: true,
+                competitiveMoves: true,
                 featureComparisons: true,
               },
             },
@@ -58,11 +59,11 @@ export async function getCompetitorPricing(competitorId: string) {
     const competitor = await prisma.competitor.findUnique({
       where: { id: competitorId },
       include: {
-        pricing: true,
+        pricingPlans: true,
       },
     });
 
-    return competitor?.pricing || [];
+    return competitor?.pricingPlans || [];
   } catch (error) {
     console.error("Error fetching competitor pricing:", error);
     throw new Error("Failed to fetch competitor pricing");
@@ -78,20 +79,24 @@ export async function getCompetitiveMoves(ideaId: string) {
           include: {
             competitors: {
               include: {
-                moves: true,
+                competitiveMoves: true,
               },
             },
+            competitiveMoves: true,
           },
         },
       },
     });
 
-    const allMoves =
+    const competitorMoves =
       marketResearch?.competitiveLandscape?.competitors?.flatMap(
-        (competitor) => competitor.moves || []
+        (competitor) => competitor.competitiveMoves || []
       ) || [];
 
-    return allMoves;
+    const landscapeMoves =
+      marketResearch?.competitiveLandscape?.competitiveMoves || [];
+
+    return [...competitorMoves, ...landscapeMoves];
   } catch (error) {
     console.error("Error fetching competitive moves:", error);
     throw new Error("Failed to fetch competitive moves");
