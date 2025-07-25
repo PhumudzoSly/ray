@@ -11,6 +11,9 @@ importers:
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
+      require-in-the-middle:
+        specifier: ^7.5.2
+        version: 7.5.2
     devDependencies:
       '@workspace/typescript-config':
         specifier: workspace:*

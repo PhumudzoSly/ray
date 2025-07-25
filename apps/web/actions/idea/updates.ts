@@ -1,3 +1,4 @@
+"use server";
 import { getSession } from "@/actions/account/user";
 import { prisma } from "@workspace/backend";
 

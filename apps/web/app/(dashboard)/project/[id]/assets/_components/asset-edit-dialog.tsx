@@ -52,7 +52,9 @@ export function AssetEditDialog({
   open,
 }: AssetEditDialogProps) {
   const { token } = useSession();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const queryClient = useQueryClient();
+  
+  // Form state
   const [assetName, setAssetName] = useState("");
   const [assetDescription, setAssetDescription] = useState("");
   const [assetCategory, setAssetCategory] = useState<string>("");
@@ -70,29 +72,95 @@ export function AssetEditDialog({
     }
   }, [open, asset]);
 
-  // Mutations
-  const queryClient = useQueryClient();
+  // TanStack Query mutation for updating asset
   const updateAssetMutation = useMutation({
-    mutationFn: async (updates) => assetActions.updateAsset(updates),
-    onMutate: async (updates) => {
-      await queryClient.cancelQueries({ queryKey: ["assets"] });
-      const previousAssets = queryClient.getQueryData(["assets"]);
-      queryClient.setQueryData(["assets"], (old: any) => {
-        if (!old) return old;
-        return old.map((a: any) =>
-          a.id === updates.assetId ? { ...a, ...updates } : a
-        );
+    mutationFn: async ({
+      assetId,
+      name,
+      description,
+      category,
+      tags,
+    }: {
+      assetId: string;
+      name: string;
+      description?: string;
+      category?: string;
+      tags?: string[];
+    }) => {
+      return await assetActions.updateAsset({
+        assetId,
+        name,
+        description,
+        category,
+        tags,
       });
+    },
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ 
+        queryKey: ["projectAssets", asset?.projectId] 
+      });
+
+      // Snapshot the previous value
+      const previousAssets = queryClient.getQueryData([
+        "projectAssets", 
+        asset?.projectId
+      ]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(
+        ["projectAssets", asset?.projectId], 
+        (old: any) => {
+          if (!old) return old;
+          return old.map((a: any) =>
+            a.id === variables.assetId 
+              ? { 
+                  ...a, 
+                  name: variables.name,
+                  description: variables.description,
+                  category: variables.category,
+                  tags: variables.tags || [],
+                  updatedAt: new Date(),
+                } 
+              : a
+          );
+        }
+      );
+
+      // Return a context object with the snapshotted value
       return { previousAssets };
     },
     onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousAssets) {
-        queryClient.setQueryData(["assets"], context.previousAssets);
+        queryClient.setQueryData(
+          ["projectAssets", asset?.projectId], 
+          context.previousAssets
+        );
       }
       toast.error("Failed to update asset");
     },
+    onSuccess: (data, variables) => {
+      toast.success("Asset updated successfully");
+      
+      // Invalidate and refetch assets to get the real data from server
+      queryClient.invalidateQueries({ 
+        queryKey: ["projectAssets", asset?.projectId] 
+      });
+      
+      // Call success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+      
+      // Close dialog
+      onClose();
+    },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["assets"] });
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({ 
+        queryKey: ["projectAssets", asset?.projectId] 
+      });
     },
   });
 
@@ -108,28 +176,23 @@ export function AssetEditDialog({
   };
 
   const handleUpdate = async () => {
-    if (!assetName.trim() || !token) return;
-    setIsUpdating(true);
+    if (!assetName.trim() || !token || !asset) return;
+
     try {
       await updateAssetMutation.mutateAsync({
-        token: token,
         assetId: asset.id,
         name: assetName.trim(),
         description: assetDescription.trim() || undefined,
         category: assetCategory || undefined,
         tags: assetTags.length > 0 ? assetTags : undefined,
       });
-      toast.success("Asset updated successfully");
-      onClose();
     } catch (error) {
+      // Error handling is done in the mutation's onError callback
       console.error("Failed to update asset:", error);
-      toast.error("Failed to update asset");
-    } finally {
-      setIsUpdating(false);
     }
   };
 
-  const canUpdate = assetName.trim() && !isUpdating;
+  const canUpdate = assetName.trim() && !updateAssetMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -239,11 +302,11 @@ export function AssetEditDialog({
                   </span>
                 </div>
               )}
-              {asset?.uploadedAt && (
+              {asset?.createdAt && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Uploaded:</span>
+                  <span className="text-muted-foreground">Created:</span>
                   <span className="font-medium">
-                    {new Date(asset.uploadedAt).toLocaleDateString()}
+                    {new Date(asset.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               )}
@@ -252,11 +315,18 @@ export function AssetEditDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isUpdating}>
+          <Button 
+            variant="outline" 
+            onClick={onClose} 
+            disabled={updateAssetMutation.isPending}
+          >
             Cancel
           </Button>
-          <Button onClick={handleUpdate} disabled={!canUpdate}>
-            {isUpdating ? (
+          <Button 
+            onClick={handleUpdate} 
+            disabled={!canUpdate}
+          >
+            {updateAssetMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Updating...

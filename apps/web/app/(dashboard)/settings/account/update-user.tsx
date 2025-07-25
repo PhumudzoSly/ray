@@ -10,7 +10,7 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { updateUser, useBetterAuthSession } from "@/lib/authClient";
+import { updateUser, useSession } from "@/lib/authClient";
 import { Edit2, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ async function convertImageToBase64(file: File): Promise<string> {
 }
 
 export default function EditUserDialog() {
-  const { data } = useBetterAuthSession.get();
+  const { data } = useSession.get();
   const [name, setName] = useState<string>();
   const router = useRouter();
   const [image, setImage] = useState<File | null>(null);

@@ -19,7 +19,6 @@ import {
   MoreHorizontal,
   Eye,
   Download,
-  ExternalLink,
   Edit,
   Trash2,
   File,
@@ -28,10 +27,6 @@ import {
   Code,
   Link,
   Palette,
-  Calendar,
-  User,
-  Tag,
-  Clock,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";

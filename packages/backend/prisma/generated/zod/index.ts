@@ -88,7 +88,7 @@ export const IssueLinkScalarFieldEnumSchema = z.enum(['id','organizationId','iss
 
 export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','type','projectId','organizationId','storageId','fileName','fileSize','mimeType','url','linkType','tags','category','thumbnailUrl','isPublic','uploadedById','createdAt','updatedAt']);
 
-export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','createdBy','createdAt','lastUsed','isActive','expiresAt']);
+export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','permissions','createdBy','createdAt','lastUsed','isActive','expiresAt']);
 
 export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','description','entityType','entityId','organizationId','userId','oldValue','newValue','createdAt','updatedAt']);
 
@@ -345,6 +345,10 @@ export type BillingCycleType = `${z.infer<typeof BillingCycleSchema>}`
 export const FeatureQualitySchema = z.enum(['EXCELLENT','GOOD','AVERAGE','POOR','UNKNOWN']);
 
 export type FeatureQualityType = `${z.infer<typeof FeatureQualitySchema>}`
+
+export const ApiPermissionSchema = z.enum(['READ','WRITE','DELETE','ADMIN']);
+
+export type ApiPermissionType = `${z.infer<typeof ApiPermissionSchema>}`
 
 export const ChangelogEntryTypeSchema = z.enum(['FEATURE','FIX','IMPROVEMENT','BREAKING','SECURITY','DEPRECATION','DOCUMENTATION','PERFORMANCE']);
 
@@ -815,6 +819,7 @@ export type AssetOptionalDefaults = z.infer<typeof AssetOptionalDefaultsSchema>
 /////////////////////////////////////////
 
 export const ApiKeySchema = z.object({
+  permissions: ApiPermissionSchema.array(),
   id: z.string().uuid(),
   organizationId: z.string(),
   name: z.string(),
@@ -833,6 +838,7 @@ export type ApiKey = z.infer<typeof ApiKeySchema>
 //------------------------------------------------------
 
 export const ApiKeyOptionalDefaultsSchema = ApiKeySchema.merge(z.object({
+  permissions: ApiPermissionSchema.array().optional(),
   id: z.string().uuid().optional(),
 }))
 

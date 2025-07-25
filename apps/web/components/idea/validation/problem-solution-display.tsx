@@ -83,11 +83,13 @@ export const ProblemSolutionDisplay: React.FC<ProblemSolutionDisplayProps> = ({
         <InlineEditTextArea
           value={idea.problemSolved || ""}
           placeholder="Describe the problem your idea solves..."
-          onSave={(value) => {
-            updateProblemMutation.mutate({ ideaId, problemSolved: value });
+          onSave={async (value) => {
+            await updateProblemMutation.mutateAsync({
+              ideaId,
+              problemSolved: value,
+            });
           }}
           className="min-h-[80px] resize-none"
-          maxLength={500}
         />
         {!idea.problemSolved && (
           <p className="text-xs text-muted-foreground">
@@ -105,11 +107,13 @@ export const ProblemSolutionDisplay: React.FC<ProblemSolutionDisplayProps> = ({
         <InlineEditTextArea
           value={idea.solutionOffered || ""}
           placeholder="Describe how your idea solves the problem..."
-          onSave={(value) => {
-            updateSolutionMutation.mutate({ ideaId, solutionOffered: value });
+          onSave={async (value) => {
+            await updateSolutionMutation.mutateAsync({
+              ideaId,
+              solutionOffered: value,
+            });
           }}
           className="min-h-[80px] resize-none"
-          maxLength={500}
         />
         {!idea.solutionOffered && (
           <p className="text-xs text-muted-foreground">

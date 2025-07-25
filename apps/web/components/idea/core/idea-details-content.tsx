@@ -1,19 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@workspace/ui/components/tabs";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import React from "react";
+import { Card, CardContent, CardHeader } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { ProblemSolutionDisplay } from "@/components/idea/validation/problem-solution-display";
 import { ValidationScorecardSummary } from "@/components/idea/validation/validation-scorecard-summary";
@@ -22,7 +10,6 @@ import { MarketOverviewCard } from "@/components/idea/validation/market-overview
 import { InsightsOverviewCard } from "@/components/idea/insights/insights-overview-card";
 import { useQuery } from "@tanstack/react-query";
 import { getSingleIdea, getValidationDetails } from "@/actions/idea";
-import type { Idea } from "@workspace/backend";
 
 interface IdeaDetailsContentProps {
   ideaId: string;

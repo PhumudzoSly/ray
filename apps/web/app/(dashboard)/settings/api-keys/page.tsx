@@ -72,10 +72,10 @@ interface ApiKey {
 }
 
 const AVAILABLE_PERMISSIONS = [
-  { id: "read", label: "Read", description: "View data and resources" },
-  { id: "write", label: "Write", description: "Create and update resources" },
-  { id: "delete", label: "Delete", description: "Delete resources" },
-  { id: "admin", label: "Admin", description: "Full administrative access" },
+  { id: "READ", label: "Read", description: "View data and resources" },
+  { id: "WRITE", label: "Write", description: "Create and update resources" },
+  { id: "DELETE", label: "Delete", description: "Delete resources" },
+  { id: "ADMIN", label: "Admin", description: "Full administrative access" },
 ];
 
 export default function ApiKeysPage() {
@@ -85,7 +85,7 @@ export default function ApiKeysPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([
-    "read",
+    "READ",
   ]);
   const [createdKey, setCreatedKey] = useState<string | null>(null);
   const [showCreatedKey, setShowCreatedKey] = useState(false);
@@ -126,7 +126,7 @@ export default function ApiKeysPage() {
       if (result.success) {
         setCreatedKey(result?.apiKey || "");
         setNewKeyName("");
-        setSelectedPermissions(["read"]);
+        setSelectedPermissions(["READ"]);
         await loadApiKeys();
         toast.success("API key created successfully");
       } else {
@@ -174,11 +174,11 @@ export default function ApiKeysPage() {
 
   const getPermissionBadgeVariant = (permission: string) => {
     switch (permission) {
-      case "admin":
+      case "ADMIN":
         return "destructive";
-      case "write":
+      case "WRITE":
         return "default";
-      case "delete":
+      case "DELETE":
         return "secondary";
       default:
         return "outline";
@@ -190,7 +190,7 @@ export default function ApiKeysPage() {
     setCreatedKey(null);
     setShowCreatedKey(false);
     setNewKeyName("");
-    setSelectedPermissions(["read"]);
+    setSelectedPermissions(["READ"]);
   };
 
   return (

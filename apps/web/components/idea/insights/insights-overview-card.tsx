@@ -71,16 +71,22 @@ export function InsightsOverviewCard({ ideaId }: InsightsOverviewCardProps) {
   // Calculate technology readiness score
   const getTechReadinessScore = () => {
     if (!techAssessment) return 0;
-    const complexity = techAssessment.technicalComplexity || 0;
-    // Invert complexity (lower complexity = higher readiness)
-    return Math.max(0, 100 - complexity * 10);
+    const complexity = techAssessment.technicalComplexity || "MEDIUM";
+    // Convert complexity enum to numeric score
+    const complexityScores = {
+      LOW: 80,
+      MEDIUM: 60,
+      HIGH: 40,
+      VERY_HIGH: 20,
+    };
+    return complexityScores[complexity] || 60;
   };
 
   // Get top 3 critical insights
   const getTopInsights = () => {
     return insights
       .filter((insight) => insight.impactLevel === "HIGH")
-      .sort((a, b) => (b.confidenceLevel || 0) - (a.confidenceLevel || 0))
+      .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
       .slice(0, 3);
   };
 
@@ -110,7 +116,7 @@ export function InsightsOverviewCard({ ideaId }: InsightsOverviewCardProps) {
                   <div className="flex-1">
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span>Overall Score</span>
-                      <span>{scorecard.weightedScore}/100</span>
+                      <span>{scorecard.weightedScore || 0}/100</span>
                     </div>
                     <Progress
                       value={scorecard.weightedScore || 0}
@@ -152,7 +158,7 @@ export function InsightsOverviewCard({ ideaId }: InsightsOverviewCardProps) {
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Timeline</p>
                     <p className="text-sm font-medium">
-                      {techAssessment.developmentTimeline} months
+                      {techAssessment.developmentTimeline || 0} months
                     </p>
                   </div>
                 </div>
@@ -181,9 +187,9 @@ export function InsightsOverviewCard({ ideaId }: InsightsOverviewCardProps) {
                     {compliance.complianceLevel}
                   </Badge>
                   <Badge variant="outline">{compliance.riskLevel} Risk</Badge>
-                  {compliance.implementationCosts && (
+                  {compliance.complianceCosts && (
                     <span className="text-sm text-muted-foreground">
-                      ${compliance.implementationCosts.toLocaleString()}
+                      ${compliance.complianceCosts.toLocaleString()}
                     </span>
                   )}
                 </div>
@@ -210,10 +216,10 @@ export function InsightsOverviewCard({ ideaId }: InsightsOverviewCardProps) {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">
-                        {insight.name}
+                        {insight.title}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {insight.confidenceLevel}% confidence
+                        {insight.confidence || 0}% confidence
                       </p>
                     </div>
                   </div>

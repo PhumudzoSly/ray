@@ -22,7 +22,7 @@ import {
   revokeSession,
   sendVerificationEmail,
   signOut,
-  useBetterAuthSession,
+  useSession,
 } from "@/lib/authClient";
 import { Laptop, Loader2, LogOut, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -48,7 +48,7 @@ export default function UserCard(props: {
   //
 
   const router = useRouter();
-  const { data } = useBetterAuthSession.get();
+  const { data } = useSession.get();
   const session = data || props.session;
   const [isTerminating, setIsTerminating] = useState<string>();
   const [isSignOut, setIsSignOut] = useState<boolean>(false);

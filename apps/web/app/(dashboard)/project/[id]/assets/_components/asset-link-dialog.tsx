@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as assetActions from "@/actions/project/assets";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
@@ -31,7 +31,6 @@ import {
   Github,
   ExternalLink,
   Loader2,
-  CheckCircle,
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -92,7 +91,9 @@ export function AssetLinkDialog({
   open,
 }: AssetLinkDialogProps) {
   const { token } = useSession();
-  const [isCreating, setIsCreating] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Form state
   const [linkUrl, setLinkUrl] = useState("");
   const [linkType, setLinkType] = useState<string>("");
   const [assetName, setAssetName] = useState("");
@@ -100,6 +101,116 @@ export function AssetLinkDialog({
   const [assetCategory, setAssetCategory] = useState<string>("");
   const [assetTags, setAssetTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+
+  // TanStack Query mutation for creating link asset
+  const createLinkAssetMutation = useMutation({
+    mutationFn: async ({
+      projectId,
+      name,
+      description,
+      url,
+      linkType,
+      category,
+      tags,
+    }: {
+      projectId: string;
+      name: string;
+      description?: string;
+      url: string;
+      linkType: string;
+      category?: string;
+      tags?: string[];
+    }) => {
+      return await assetActions.createLinkAsset({
+        projectId,
+        name,
+        description,
+        url,
+        linkType,
+        category,
+        tags,
+      });
+    },
+    onMutate: async (variables) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({
+        queryKey: ["projectAssets", projectId],
+      });
+
+      // Snapshot the previous value
+      const previousAssets = queryClient.getQueryData([
+        "projectAssets",
+        projectId,
+      ]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["projectAssets", projectId], (old: any) => {
+        if (!old) return old;
+
+        // Create a mock asset for optimistic update
+        const optimisticAsset = {
+          id: `temp-${Date.now()}`,
+          name: variables.name,
+          description: variables.description,
+          type: "link" as const,
+          projectId: variables.projectId,
+          organizationId: "", // Will be filled by server
+          storageId: null,
+          fileName: null,
+          fileSize: null,
+          mimeType: null,
+          url: variables.url,
+          linkType: variables.linkType,
+          tags: variables.tags || [],
+          category: variables.category as any,
+          thumbnailUrl: null,
+          isPublic: null,
+          uploadedById: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          viewCount: null,
+          downloadCount: null,
+        };
+
+        return [optimisticAsset, ...old];
+      });
+
+      // Return a context object with the snapshotted value
+      return { previousAssets };
+    },
+    onError: (err, variables, context) => {
+      // If the mutation fails, use the context returned from onMutate to roll back
+      if (context?.previousAssets) {
+        queryClient.setQueryData(
+          ["projectAssets", projectId],
+          context.previousAssets
+        );
+      }
+      toast.error("Failed to create link asset");
+    },
+    onSuccess: (data, variables) => {
+      toast.success("Link asset created successfully");
+
+      // Invalidate and refetch assets to get the real data from server
+      queryClient.invalidateQueries({
+        queryKey: ["projectAssets", projectId],
+      });
+
+      // Call success callback if provided
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Close dialog
+      onClose();
+    },
+    onSettled: () => {
+      // Always refetch after error or success to ensure we have the latest data
+      queryClient.invalidateQueries({
+        queryKey: ["projectAssets", projectId],
+      });
+    },
+  });
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -113,10 +224,6 @@ export function AssetLinkDialog({
       setTagInput("");
     }
   }, [open]);
-
-  // Mutations
-  // Replace with TanStack Query and server actions as needed
-  // ... implement link asset creation using assetActions ...
 
   const detectLinkType = (url: string): string => {
     const linkType = LINK_TYPES.find((type) => type.pattern.test(url));
@@ -172,9 +279,8 @@ export function AssetLinkDialog({
       return;
     }
 
-    setIsCreating(true);
     try {
-      await assetActions.createLinkAsset({
+      await createLinkAssetMutation.mutateAsync({
         projectId: projectId,
         name: assetName,
         description: assetDescription,
@@ -183,19 +289,17 @@ export function AssetLinkDialog({
         category: assetCategory || "other",
         tags: assetTags.length > 0 ? assetTags : undefined,
       });
-
-      toast.success("Link asset created successfully");
-      onClose();
     } catch (error) {
+      // Error handling is done in the mutation's onError callback
       console.error("Failed to create link asset:", error);
-      toast.error("Failed to create link asset");
-    } finally {
-      setIsCreating(false);
     }
   };
 
   const canCreate =
-    linkUrl && assetName.trim() && validateUrl(linkUrl) && !isCreating;
+    linkUrl &&
+    assetName.trim() &&
+    validateUrl(linkUrl) &&
+    !createLinkAssetMutation.isPending;
 
   const getLinkTypeIcon = (type: string) => {
     const linkType = LINK_TYPES.find((lt) => lt.value === type);
@@ -331,11 +435,15 @@ export function AssetLinkDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={isCreating}>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={createLinkAssetMutation.isPending}
+          >
             Cancel
           </Button>
           <Button onClick={handleCreate} disabled={!canCreate}>
-            {isCreating ? (
+            {createLinkAssetMutation.isPending ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Creating...

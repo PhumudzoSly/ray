@@ -6,16 +6,16 @@ import { getValidationScorecard } from "@/actions/idea/market-research";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Badge } from "@workspace/ui/components/badge";
 import { Progress } from "@workspace/ui/components/progress";
-import { 
-  AlertCircle, 
-  CheckCircle, 
-  TrendingUp, 
-  Users, 
-  Zap, 
-  DollarSign, 
+import {
+  AlertCircle,
+  CheckCircle,
+  TrendingUp,
+  Users,
+  Zap,
+  DollarSign,
   Shield,
   Target,
-  Calendar
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,9 +23,9 @@ interface ValidationScorecardSummaryProps {
   ideaId: string;
 }
 
-export const ValidationScorecardSummary: React.FC<ValidationScorecardSummaryProps> = ({
-  ideaId,
-}) => {
+export const ValidationScorecardSummary: React.FC<
+  ValidationScorecardSummaryProps
+> = ({ ideaId }) => {
   const { data: scorecard, isPending } = useQuery({
     queryKey: ["validation-scorecard", ideaId],
     queryFn: () => getValidationScorecard(ideaId),
@@ -127,16 +127,24 @@ export const ValidationScorecardSummary: React.FC<ValidationScorecardSummaryProp
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">Validation Scorecard</h3>
-          <Badge variant="outline" className={getStatusColor(scorecard.validationStatus)}>
+          <Badge
+            variant="outline"
+            className={getStatusColor(scorecard.validationStatus)}
+          >
             {scorecard.validationStatus.replace("_", " ")}
           </Badge>
         </div>
-        
+
         {scorecard.weightedScore && (
           <div className="flex items-center gap-4">
             {getScoreIcon(scorecard.weightedScore)}
             <div className="flex items-center gap-2">
-              <span className={cn("text-2xl font-bold", getScoreColor(scorecard.weightedScore))}>
+              <span
+                className={cn(
+                  "text-2xl font-bold",
+                  getScoreColor(scorecard.weightedScore)
+                )}
+              >
                 {Math.round(scorecard.weightedScore)}
               </span>
               <span className="text-muted-foreground">/100</span>
@@ -155,7 +163,12 @@ export const ValidationScorecardSummary: React.FC<ValidationScorecardSummaryProp
             </div>
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <span className={cn("text-lg font-semibold", getScoreColor(metric.score))}>
+                <span
+                  className={cn(
+                    "text-lg font-semibold",
+                    getScoreColor(metric.score)
+                  )}
+                >
                   {Math.round(metric.score)}
                 </span>
                 <span className="text-xs text-muted-foreground">/100</span>
@@ -182,9 +195,12 @@ export const ValidationScorecardSummary: React.FC<ValidationScorecardSummaryProp
       {scorecard.nextReviewDate && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
-          <span>Next review: {new Date(scorecard.nextReviewDate).toLocaleDateString()}</span>
+          <span>
+            Next review:{" "}
+            {new Date(scorecard.nextReviewDate).toLocaleDateString()}
+          </span>
         </div>
       )}
     </div>
   );
-}; 
+};

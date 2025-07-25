@@ -30,12 +30,7 @@ const complexityColors = {
   LOW: "bg-green-100 text-green-800 border-green-200",
   MEDIUM: "bg-yellow-100 text-yellow-800 border-yellow-200",
   HIGH: "bg-red-100 text-red-800 border-red-200",
-};
-
-const integrationComplexityColors = {
-  SIMPLE: "bg-green-100 text-green-800 border-green-200",
-  MODERATE: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  COMPLEX: "bg-red-100 text-red-800 border-red-200",
+  VERY_HIGH: "bg-red-100 text-red-800 border-red-200",
 };
 
 export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
@@ -109,15 +104,22 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
     );
   }
 
-  const getComplexityLevel = (score: number) => {
-    if (score <= 3) return "LOW";
-    if (score <= 7) return "MEDIUM";
-    return "HIGH";
+  const getComplexityScore = (complexity: string) => {
+    switch (complexity) {
+      case "LOW":
+        return 2;
+      case "MEDIUM":
+        return 5;
+      case "HIGH":
+        return 8;
+      case "VERY_HIGH":
+        return 10;
+      default:
+        return 5;
+    }
   };
 
-  const complexityLevel = getComplexityLevel(
-    assessment.technicalComplexity || 0
-  );
+  const complexityScore = getComplexityScore(assessment.technicalComplexity);
 
   return (
     <Card>
@@ -139,22 +141,19 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
               <div className="flex-1">
                 <div className="flex items-center justify-between text-sm mb-1">
                   <span>Complexity Score</span>
-                  <span>{assessment.technicalComplexity}/10</span>
+                  <span>{complexityScore}/10</span>
                 </div>
-                <Progress
-                  value={(assessment.technicalComplexity || 0) * 10}
-                  className="h-2"
-                />
+                <Progress value={complexityScore * 10} className="h-2" />
               </div>
               <Badge
                 variant="outline"
                 className={
                   complexityColors[
-                    complexityLevel as keyof typeof complexityColors
+                    assessment.technicalComplexity as keyof typeof complexityColors
                   ]
                 }
               >
-                {complexityLevel}
+                {assessment.technicalComplexity}
               </Badge>
             </div>
           </div>
@@ -178,13 +177,23 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">
-                  Team Size Required
+                  Team Requirements
                 </p>
                 <p className="text-lg font-medium">
-                  {assessment.teamSize} developers
+                  {assessment.teamRequirements?.length || 0} roles
                 </p>
               </div>
             </div>
+            {assessment.teamRequirements &&
+              assessment.teamRequirements.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {assessment.teamRequirements.map((requirement, index) => (
+                    <Badge key={index} variant="secondary">
+                      {requirement}
+                    </Badge>
+                  ))}
+                </div>
+              )}
           </div>
 
           <Separator />
@@ -195,10 +204,10 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
               <Code className="h-4 w-4" />
               <h4 className="font-medium">Recommended Tech Stack</h4>
             </div>
-            {assessment.recommendedTechStack &&
-            assessment.recommendedTechStack.length > 0 ? (
+            {assessment.recommendedStack &&
+            assessment.recommendedStack.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {assessment.recommendedTechStack.map((tech, index) => (
+                {assessment.recommendedStack.map((tech, index) => (
                   <Badge key={index} variant="secondary">
                     {tech}
                   </Badge>
@@ -211,14 +220,14 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
             )}
           </div>
 
-          {assessment.alternativeTechStacks &&
-            assessment.alternativeTechStacks.length > 0 && (
+          {assessment.alternativeStacks &&
+            assessment.alternativeStacks.length > 0 && (
               <>
                 <Separator />
                 <div className="space-y-3">
                   <h4 className="font-medium">Alternative Tech Stacks</h4>
                   <div className="space-y-2">
-                    {assessment.alternativeTechStacks.map((stack, index) => (
+                    {assessment.alternativeStacks.map((stack, index) => (
                       <div key={index} className="flex flex-wrap gap-2">
                         {stack.split(",").map((tech, techIndex) => (
                           <Badge key={techIndex} variant="outline">
@@ -234,25 +243,28 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
 
           <Separator />
 
-          {/* Integration Complexity */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
-              <h4 className="font-medium">Integration Complexity</h4>
-            </div>
-            <Badge
-              variant="outline"
-              className={
-                integrationComplexityColors[
-                  assessment.integrationComplexity as keyof typeof integrationComplexityColors
-                ]
-              }
-            >
-              {assessment.integrationComplexity}
-            </Badge>
-          </div>
-
-          <Separator />
+          {/* Integration Requirements */}
+          {assessment.integrationRequirements &&
+            assessment.integrationRequirements.length > 0 && (
+              <>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    <h4 className="font-medium">Integration Requirements</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {assessment.integrationRequirements.map(
+                      (requirement, index) => (
+                        <Badge key={index} variant="outline">
+                          {requirement}
+                        </Badge>
+                      )
+                    )}
+                  </div>
+                </div>
+                <Separator />
+              </>
+            )}
 
           {/* Technical Risks */}
           {assessment.technicalRisks &&
@@ -271,31 +283,6 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
                       >
                         <span className="text-red-500 mt-1">•</span>
                         {risk}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <Separator />
-              </>
-            )}
-
-          {/* Mitigation Strategies */}
-          {assessment.mitigationStrategies &&
-            assessment.mitigationStrategies.length > 0 && (
-              <>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4" />
-                    <h4 className="font-medium">Mitigation Strategies</h4>
-                  </div>
-                  <ul className="space-y-2">
-                    {assessment.mitigationStrategies.map((strategy, index) => (
-                      <li
-                        key={index}
-                        className="text-sm text-muted-foreground flex items-start gap-2"
-                      >
-                        <span className="text-green-500 mt-1">•</span>
-                        {strategy}
                       </li>
                     ))}
                   </ul>
@@ -376,6 +363,50 @@ export function TechnologyAssessment({ ideaId }: TechnologyAssessmentProps) {
                 <Separator />
               </>
             )}
+
+          {/* Cost Analysis */}
+          {(assessment.developmentCosts ||
+            assessment.infrastructureCosts ||
+            assessment.maintenanceCosts) && (
+            <>
+              <div className="space-y-3">
+                <h4 className="font-medium">Cost Analysis</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {assessment.developmentCosts && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Development Costs
+                      </p>
+                      <p className="text-lg font-medium">
+                        ${assessment.developmentCosts.toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+                  {assessment.infrastructureCosts && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Infrastructure Costs
+                      </p>
+                      <p className="text-lg font-medium">
+                        ${assessment.infrastructureCosts.toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+                  {assessment.maintenanceCosts && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        Maintenance Costs
+                      </p>
+                      <p className="text-lg font-medium">
+                        ${assessment.maintenanceCosts.toLocaleString()}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <Separator />
+            </>
+          )}
 
           {/* Innovation Potential */}
           {assessment.innovationPotential && (

@@ -31,6 +31,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "jsdom": "^26.1.0"
+    "jsdom": "^26.1.0",
+    "require-in-the-middle": "^7.5.2"
   }
 }

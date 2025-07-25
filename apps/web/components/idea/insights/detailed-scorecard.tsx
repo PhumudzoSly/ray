@@ -252,51 +252,47 @@ export function DetailedScorecard({ ideaId }: DetailedScorecardProps) {
           <Separator />
 
           {/* Detailed Breakdown */}
-          {scorecard.scoreBreakdowns &&
-            scorecard.scoreBreakdowns.length > 0 && (
-              <>
+          {scorecard.scoreBreakdown && scorecard.scoreBreakdown.length > 0 && (
+            <>
+              <div className="space-y-4">
+                <h4 className="font-medium">Detailed Scoring Breakdown</h4>
                 <div className="space-y-4">
-                  <h4 className="font-medium">Detailed Scoring Breakdown</h4>
-                  <div className="space-y-4">
-                    {scorecard.scoreBreakdowns.map((breakdown) => (
-                      <div
-                        key={breakdown.id}
-                        className="space-y-3 p-4 border rounded-lg"
-                      >
-                        <div className="flex items-center justify-between">
-                          <h5 className="font-medium">{breakdown.category}</h5>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">
-                              {breakdown.score}/100
-                            </span>
-                            <Badge
-                              variant="outline"
-                              className={
-                                categoryColors[
-                                  breakdown.category as keyof typeof categoryColors
-                                ]
-                              }
-                            >
-                              {breakdown.weight}% weight
-                            </Badge>
-                          </div>
+                  {scorecard.scoreBreakdown.map((breakdown) => (
+                    <div
+                      key={breakdown.id}
+                      className="space-y-3 p-4 border rounded-lg"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h5 className="font-medium">{breakdown.category}</h5>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">
+                            {breakdown.score}/100
+                          </span>
+                          <Badge
+                            variant="outline"
+                            className={
+                              categoryColors[
+                                breakdown.category as keyof typeof categoryColors
+                              ]
+                            }
+                          >
+                            {breakdown.weight}% weight
+                          </Badge>
                         </div>
-                        <Progress
-                          value={breakdown.score || 0}
-                          className="h-2"
-                        />
-                        {breakdown.reasoning && (
-                          <p className="text-sm text-muted-foreground">
-                            {breakdown.reasoning}
-                          </p>
-                        )}
                       </div>
-                    ))}
-                  </div>
+                      <Progress value={breakdown.score || 0} className="h-2" />
+                      {breakdown.reasoning && (
+                        <p className="text-sm text-muted-foreground">
+                          {breakdown.reasoning}
+                        </p>
+                      )}
+                    </div>
+                  ))}
                 </div>
-                <Separator />
-              </>
-            )}
+              </div>
+              <Separator />
+            </>
+          )}
 
           {/* Recommendations */}
           <div className="space-y-3">
@@ -354,9 +350,11 @@ export function DetailedScorecard({ ideaId }: DetailedScorecardProps) {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Review Criteria</p>
+                <p className="text-sm text-muted-foreground">
+                  Validation Status
+                </p>
                 <p className="text-sm font-medium">
-                  {scorecard.reviewCriteria || "Standard validation criteria"}
+                  {scorecard.validationStatus}
                 </p>
               </div>
             </div>

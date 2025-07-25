@@ -28,7 +28,7 @@ import {
 import {
   organization,
   useActiveOrganization,
-  useBetterAuthSession,
+  useSession,
 } from "@/lib/authClient";
 import { Session } from "@/lib/auth-types";
 import {
@@ -94,7 +94,7 @@ export function OrganizationCard(props: { session: Session | null }) {
     fetchOrganization();
   }, []);
 
-  const { data } = useBetterAuthSession.get();
+  const { data } = useSession.get();
   const session = data || props.session;
 
   const currentMember = activeOrg?.members.find(

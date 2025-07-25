@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import * as fileActions from "@/actions/files";
 import * as assetActions from "@/actions/project/assets";
 import { useSession } from "@/context/session-context";
 import { Button } from "@workspace/ui/components/button";
@@ -47,6 +46,14 @@ interface AssetUploadDialogProps {
   open: boolean;
 }
 
+interface UploadedFileData {
+  key: string;
+  name: string;
+  size: number;
+  type: string;
+  url: string;
+}
+
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ALLOWED_TYPES = {
   image: [
@@ -90,11 +97,11 @@ const ASSET_TYPES = [
 
 const ASSET_CATEGORIES = [
   { value: "branding", label: "Branding" },
-  { value: "ui-design", label: "UI Design" },
+  { value: "ui_design", label: "UI Design" },
   { value: "mockups", label: "Mockups" },
   { value: "documentation", label: "Documentation" },
   { value: "inspiration", label: "Inspiration" },
-  { value: "code-snippets", label: "Code Snippets" },
+  { value: "code_snippets", label: "Code Snippets" },
   { value: "presentations", label: "Presentations" },
   { value: "tutorials", label: "Tutorials" },
   { value: "other", label: "Other" },
@@ -116,11 +123,15 @@ export function AssetUploadDialog({
   const [assetDescription, setAssetDescription] = useState("");
   const [assetTags, setAssetTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+  const [uploadedFile, setUploadedFile] = useState<UploadedFileData | null>(
+    null
+  );
 
   // Reset form when dialog closes
   React.useEffect(() => {
     if (!open) {
       setSelectedFile(null);
+      setUploadedFile(null);
       setAssetType("");
       setAssetCategory("");
       setAssetName("");
@@ -133,14 +144,9 @@ export function AssetUploadDialog({
 
   // Mutations
   const queryClient = useQueryClient();
-  const generateUploadUrlMutation = useMutation({
-    mutationFn: async (args) => fileActions.generateUploadUrl(args),
-  });
-  const saveFileMutation = useMutation({
-    mutationFn: async (args) => fileActions.saveFile(args),
-  });
   const createFileAssetMutation = useMutation({
-    mutationFn: async (args) => assetActions.createFileAsset(args),
+    mutationFn: (args: Parameters<typeof assetActions.createFileAsset>[0]) =>
+      assetActions.createFileAsset(args),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["assets"] });
     },
@@ -296,19 +302,56 @@ export function AssetUploadDialog({
     setAssetTags(assetTags.filter((tag) => tag !== tagToRemove));
   };
 
-  // Remove old upload logic and use UploadThing
   const handleUploadComplete = async (files: any[]) => {
     if (!files || files.length === 0) return;
     const file = files[0];
+
+    // Store the uploaded file data
+    const uploadedFileData: UploadedFileData = {
+      key: file.key,
+      name: file.name,
+      size: file.size,
+      type: file.type || "application/octet-stream",
+      url: file.url,
+    };
+
+    setUploadedFile(uploadedFileData);
+
+    // Create a mock File object for type detection
+    const mockFile = {
+      name: file.name,
+      type: file.type || "application/octet-stream",
+      size: file.size,
+    } as File;
+
+    // Set the selected file for metadata editing
+    setSelectedFile(mockFile);
+
+    // Auto-detect file type if not set
+    if (!assetType) {
+      const detectedType = getFileType(mockFile);
+      setAssetType(detectedType);
+    }
+
+    // Set asset name if not set
+    if (!assetName) {
+      setAssetName(file.name);
+    }
+  };
+
+  const handleSaveAsset = async () => {
+    if (!uploadedFile || !assetName.trim()) return;
+
     try {
+      setIsUploading(true);
       await createFileAssetMutation.mutateAsync({
         projectId,
-        name: assetName || file.name,
+        name: assetName,
         description: assetDescription,
-        url: file.url, // UploadThing file URL
-        fileName: file.name,
-        fileSize: file.size,
-        mimeType: file.type,
+        url: uploadedFile.url,
+        fileName: uploadedFile.name,
+        fileSize: uploadedFile.size,
+        mimeType: uploadedFile.type,
         type: assetType as any,
         category: assetCategory || "other",
         tags: assetTags.length > 0 ? assetTags : undefined,
@@ -319,10 +362,12 @@ export function AssetUploadDialog({
     } catch (error) {
       console.error("Upload failed:", error);
       toast.error("Failed to upload asset");
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const canUpload = selectedFile && assetName.trim() && !isUploading;
+  const canUpload = uploadedFile && assetName.trim() && !isUploading;
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -342,12 +387,14 @@ export function AssetUploadDialog({
             <UploadDropzone
               endpoint="fileUpload"
               onClientUploadComplete={handleUploadComplete}
-              onUploadError={(error) => toast.error(error.message)}
+              onUploadError={(error) => {
+                toast.error(error.message);
+              }}
             />
           </div>
 
           {/* Asset Metadata */}
-          {selectedFile && (
+          {uploadedFile && (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -456,16 +503,16 @@ export function AssetUploadDialog({
           <Button variant="outline" onClick={onClose} disabled={isUploading}>
             Cancel
           </Button>
-          <Button onClick={handleUpload} disabled={!canUpload}>
+          <Button onClick={handleSaveAsset} disabled={!canUpload}>
             {isUploading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Uploading...
+                Saving...
               </>
             ) : (
               <>
-                <Upload className="w-4 h-4 mr-2" />
-                Upload Asset
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Save Asset
               </>
             )}
           </Button>

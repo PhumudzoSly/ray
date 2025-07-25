@@ -1,3 +1,4 @@
+"use server";
 import { prisma } from "@workspace/backend";
 import { revalidatePath } from "next/cache";
 

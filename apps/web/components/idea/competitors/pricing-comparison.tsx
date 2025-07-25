@@ -111,7 +111,7 @@ export function PricingComparison({ ideaId }: PricingComparisonProps) {
 
   // Collect all pricing plans from all competitors
   const allPricingPlans = competitors.flatMap((competitor) =>
-    (competitor.pricingPlans || []).map((plan: any) => ({
+    (competitor.pricingPlans || []).map((plan) => ({
       ...plan,
       competitorName: competitor.name,
       competitorId: competitor.id,
@@ -122,7 +122,7 @@ export function PricingComparison({ ideaId }: PricingComparisonProps) {
   const allFeatures = new Set<string>();
   allPricingPlans.forEach((plan) => {
     if (plan.features) {
-      plan.features.split(",").forEach((feature: string) => {
+      plan.features.forEach((feature: string) => {
         allFeatures.add(feature.trim());
       });
     }
@@ -169,16 +169,14 @@ export function PricingComparison({ ideaId }: PricingComparisonProps) {
           <h3 className="text-lg font-semibold">Pricing Plans Overview</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {allPricingPlans.map((plan) => {
-              const features = plan.features
-                ? plan.features.split(",").map((f: string) => f.trim())
-                : [];
+              const features = plan.features || [];
               const valueRating = getValueRating(plan.price || 0, features);
 
               return (
                 <div key={plan.id} className="border rounded-lg p-4 space-y-3">
                   <div className="space-y-1">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium">{plan.name}</h4>
+                      <h4 className="font-medium">{plan.planName}</h4>
                       <Badge variant="outline">{plan.competitorName}</Badge>
                     </div>
                     <div className="flex items-baseline gap-1">
@@ -253,7 +251,7 @@ export function PricingComparison({ ideaId }: PricingComparisonProps) {
                     <th className="text-left p-2 font-medium">Feature</th>
                     {allPricingPlans.map((plan) => (
                       <th key={plan.id} className="text-center p-2 font-medium">
-                        {plan.name}
+                        {plan.planName}
                         <div className="text-xs text-muted-foreground">
                           {plan.competitorName}
                         </div>
@@ -266,11 +264,7 @@ export function PricingComparison({ ideaId }: PricingComparisonProps) {
                     <tr key={feature} className="border-b">
                       <td className="p-2 font-medium">{feature}</td>
                       {allPricingPlans.map((plan) => {
-                        const features = plan.features
-                          ? plan.features
-                              .split(",")
-                              .map((f: string) => f.trim())
-                          : [];
+                        const features = plan.features || [];
                         const hasFeature = features.includes(feature);
 
                         return (

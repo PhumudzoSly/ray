@@ -31,13 +31,19 @@ const insightTypeIcons = {
   CUSTOMER_INSIGHT: Users,
   TECHNICAL_CHALLENGE: Zap,
   FINANCIAL_RISK: AlertCircle,
-  REGULATORY_CONCERN: AlertCircle,
+  REGULATORY_IMPACT: AlertCircle,
+  TIMING_OPPORTUNITY: TrendingUp,
 };
 
 const impactLevelColors = {
   HIGH: "bg-red-100 text-red-800 border-red-200",
   MEDIUM: "bg-yellow-100 text-yellow-800 border-yellow-200",
   LOW: "bg-green-100 text-green-800 border-green-200",
+  CRITICAL: "bg-red-100 text-red-800 border-red-200",
+};
+
+const getVerificationStatus = (isVerified: boolean) => {
+  return isVerified ? "VERIFIED" : "PENDING";
 };
 
 const verificationStatusColors = {
@@ -138,9 +144,12 @@ export function ValidationInsights({ ideaId }: ValidationInsightsProps) {
               insightTypeIcons[
                 insight.insightType as keyof typeof insightTypeIcons
               ] || AlertCircle;
+            const verificationStatus = getVerificationStatus(
+              insight.isVerified
+            );
             const VerificationIcon =
               verificationStatusIcons[
-                insight.verificationStatus as keyof typeof verificationStatusIcons
+                verificationStatus as keyof typeof verificationStatusIcons
               ] || Clock;
 
             return (
@@ -151,7 +160,7 @@ export function ValidationInsights({ ideaId }: ValidationInsightsProps) {
                       <IconComponent className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="font-medium">{insight.name}</h4>
+                      <h4 className="font-medium">{insight.title}</h4>
                       <p className="text-sm text-muted-foreground">
                         {insight.description}
                       </p>
@@ -172,12 +181,12 @@ export function ValidationInsights({ ideaId }: ValidationInsightsProps) {
                       variant="outline"
                       className={
                         verificationStatusColors[
-                          insight.verificationStatus as keyof typeof verificationStatusColors
+                          verificationStatus as keyof typeof verificationStatusColors
                         ]
                       }
                     >
                       <VerificationIcon className="h-3 w-3 mr-1" />
-                      {insight.verificationStatus}
+                      {verificationStatus}
                     </Badge>
                   </div>
                 </div>
@@ -186,33 +195,69 @@ export function ValidationInsights({ ideaId }: ValidationInsightsProps) {
                   <div>
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span>Confidence Level</span>
-                      <span>{insight.confidenceLevel}%</span>
+                      <span>{insight.confidence || 0}%</span>
                     </div>
-                    <Progress
-                      value={insight.confidenceLevel || 0}
-                      className="h-2"
-                    />
+                    <Progress value={insight.confidence || 0} className="h-2" />
                   </div>
 
-                  {insight.recommendations && (
+                  {insight.recommendations &&
+                    insight.recommendations.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium mb-2">
+                          Recommendations
+                        </h5>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          {insight.recommendations.map(
+                            (recommendation, index) => (
+                              <li
+                                key={index}
+                                className="flex items-start gap-2"
+                              >
+                                <span className="text-xs mt-1">•</span>
+                                <span>{recommendation}</span>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                  {insight.dataSources && insight.dataSources.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-medium mb-2">
-                        Recommendations
-                      </h5>
-                      <p className="text-sm text-muted-foreground">
-                        {insight.recommendations}
-                      </p>
+                      <h5 className="text-sm font-medium mb-2">Data Sources</h5>
+                      <div className="flex flex-wrap gap-1">
+                        {insight.dataSources.map((source, index) => (
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {source}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  {insight.dataSource && (
-                    <div>
-                      <h5 className="text-sm font-medium mb-2">Data Source</h5>
-                      <p className="text-sm text-muted-foreground">
-                        {insight.dataSource}
-                      </p>
-                    </div>
-                  )}
+                  {insight.affectedAreas &&
+                    insight.affectedAreas.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium mb-2">
+                          Affected Areas
+                        </h5>
+                        <div className="flex flex-wrap gap-1">
+                          {insight.affectedAreas.map((area, index) => (
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              {area}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                 </div>
 
                 <Separator />

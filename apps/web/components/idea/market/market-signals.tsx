@@ -75,13 +75,13 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
 
   const getSignalStrengthColor = (strength: string) => {
     switch (strength) {
-      case "STRONG":
+      case "CRITICAL":
         return "bg-red-100 text-red-800 border-red-200";
-      case "MODERATE":
+      case "STRONG":
         return "bg-orange-100 text-orange-800 border-orange-200";
-      case "WEAK":
+      case "MODERATE":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "MINIMAL":
+      case "WEAK":
         return "bg-green-100 text-green-800 border-green-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
@@ -101,17 +101,25 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
     return <Activity className="h-4 w-4 text-gray-600" />;
   };
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case "HIGH":
-        return "text-red-600";
-      case "MEDIUM":
-        return "text-orange-600";
-      case "LOW":
-        return "text-green-600";
-      default:
-        return "text-gray-600";
-    }
+  const getImpactColor = (impact: string | null) => {
+    if (!impact) return "text-gray-600";
+    
+    const impactLower = impact.toLowerCase();
+    if (impactLower.includes("high") || impactLower.includes("critical"))
+      return "text-red-600";
+    if (impactLower.includes("medium") || impactLower.includes("moderate"))
+      return "text-orange-600";
+    if (impactLower.includes("low") || impactLower.includes("minimal"))
+      return "text-green-600";
+    return "text-gray-600";
+  };
+
+  const getConfidenceLevel = (confidence: number | null) => {
+    if (!confidence) return "Unknown";
+    if (confidence >= 0.8) return "High";
+    if (confidence >= 0.6) return "Medium";
+    if (confidence >= 0.4) return "Low";
+    return "Very Low";
   };
 
   return (
@@ -130,7 +138,7 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                   <div className="flex items-center gap-2">
                     {getSignalTypeIcon(signal.signalType)}
                     <CardTitle className="text-base">
-                      {signal.signalType.replace("_", " ")}
+                      {signal.title}
                     </CardTitle>
                   </div>
                   <p className="text-sm text-muted-foreground">
@@ -141,10 +149,10 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                   variant="outline"
                   className={cn(
                     "text-xs",
-                    getSignalStrengthColor(signal.signalStrength)
+                    getSignalStrengthColor(signal.strength)
                   )}
                 >
-                  {signal.signalStrength}
+                  {signal.strength}
                 </Badge>
               </div>
             </CardHeader>
@@ -158,7 +166,7 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                       <span>Strength</span>
                     </div>
                     <div className="font-medium capitalize">
-                      {signal.signalStrength.toLowerCase()}
+                      {signal.strength.toLowerCase()}
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -167,7 +175,7 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                       <span>Confidence</span>
                     </div>
                     <div className="font-medium capitalize">
-                      {signal.confidenceLevel.toLowerCase()}
+                      {getConfidenceLevel(signal.confidence)}
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -181,7 +189,7 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                         getImpactColor(signal.marketImpact)
                       )}
                     >
-                      {signal.marketImpact.toLowerCase()}
+                      {signal.marketImpact?.toLowerCase() || "N/A"}
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -190,7 +198,7 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                       <span>Timing</span>
                     </div>
                     <div className="font-medium capitalize">
-                      {signal.timingConsideration?.toLowerCase() || "N/A"}
+                      {signal.timing?.toLowerCase() || "N/A"}
                     </div>
                   </div>
                 </div>
@@ -204,11 +212,11 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                   </h4>
 
                   {/* Market Impact */}
-                  {signal.marketImpactAnalysis && (
+                  {signal.marketImpact && (
                     <div className="space-y-2">
                       <div className="text-sm font-medium">Market Impact</div>
                       <p className="text-sm text-muted-foreground">
-                        {signal.marketImpactAnalysis}
+                        {signal.marketImpact}
                       </p>
                     </div>
                   )}
@@ -225,29 +233,29 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                     </div>
                   )}
 
-                  {/* Strategic Implications */}
-                  {signal.strategicImplications && (
+                  {/* Timing */}
+                  {signal.timing && (
                     <div className="space-y-2">
                       <div className="text-sm font-medium">
-                        Strategic Implications
+                        Timing Considerations
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {signal.strategicImplications}
+                        {signal.timing}
                       </p>
                     </div>
                   )}
                 </div>
 
-                {/* Response Requirements */}
-                {signal.responseRequirements && (
+                {/* Source Information */}
+                {signal.source && (
                   <>
                     <Separator />
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium text-muted-foreground">
-                        Response Requirements
+                        Source
                       </h4>
                       <p className="text-sm text-muted-foreground">
-                        {signal.responseRequirements}
+                        {signal.source}
                       </p>
                     </div>
                   </>
@@ -259,11 +267,11 @@ export const MarketSignals: React.FC<MarketSignalsProps> = ({ ideaId }) => {
                     <div
                       className={cn(
                         "w-2 h-2 rounded-full",
-                        signal.isActive ? "bg-green-500" : "bg-gray-400"
+                        signal.isMonitored ? "bg-green-500" : "bg-gray-400"
                       )}
                     />
                     <span>
-                      {signal.isActive
+                      {signal.isMonitored
                         ? "Actively Monitoring"
                         : "Not Monitoring"}
                     </span>

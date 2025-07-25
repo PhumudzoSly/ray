@@ -330,6 +330,7 @@ exports.Prisma.ApiKeyScalarFieldEnum = {
   name: 'name',
   keyHash: 'keyHash',
   keyPreview: 'keyPreview',
+  permissions: 'permissions',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   lastUsed: 'lastUsed',
@@ -1042,6 +1043,13 @@ exports.AssetCategory = exports.$Enums.AssetCategory = {
   presentations: 'presentations',
   tutorials: 'tutorials',
   other: 'other'
+};
+
+exports.ApiPermission = exports.$Enums.ApiPermission = {
+  READ: 'READ',
+  WRITE: 'WRITE',
+  DELETE: 'DELETE',
+  ADMIN: 'ADMIN'
 };
 
 exports.ActivityType = exports.$Enums.ActivityType = {

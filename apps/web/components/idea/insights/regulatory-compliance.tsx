@@ -27,22 +27,24 @@ interface RegulatoryComplianceProps {
 }
 
 const complianceLevelColors = {
-  COMPLIANT: "bg-green-100 text-green-800 border-green-200",
-  PARTIAL: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  NON_COMPLIANT: "bg-red-100 text-red-800 border-red-200",
+  LOW: "bg-green-100 text-green-800 border-green-200",
+  MEDIUM: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  HIGH: "bg-orange-100 text-orange-800 border-orange-200",
+  CRITICAL: "bg-red-100 text-red-800 border-red-200",
 };
 
 const riskLevelColors = {
   LOW: "bg-green-100 text-green-800 border-green-200",
   MEDIUM: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  HIGH: "bg-red-100 text-red-800 border-red-200",
+  HIGH: "bg-orange-100 text-orange-800 border-orange-200",
   CRITICAL: "bg-red-100 text-red-800 border-red-200",
 };
 
 const complianceLevelIcons = {
-  COMPLIANT: CheckCircle,
-  PARTIAL: Clock,
-  NON_COMPLIANT: XCircle,
+  LOW: CheckCircle,
+  MEDIUM: Clock,
+  HIGH: AlertTriangle,
+  CRITICAL: XCircle,
 };
 
 export function RegulatoryCompliance({ ideaId }: RegulatoryComplianceProps) {
@@ -165,7 +167,7 @@ export function RegulatoryCompliance({ ideaId }: RegulatoryComplianceProps) {
 
           <Separator />
 
-          {/* Implementation Costs */}
+          {/* Implementation Requirements */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
@@ -174,19 +176,19 @@ export function RegulatoryCompliance({ ideaId }: RegulatoryComplianceProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground">
-                  Implementation Cost
+                  Compliance Costs
                 </p>
                 <p className="text-lg font-medium">
-                  {compliance.implementationCosts
-                    ? `$${compliance.implementationCosts.toLocaleString()}`
+                  {compliance.complianceCosts
+                    ? `$${compliance.complianceCosts.toLocaleString()}`
                     : "Not specified"}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Timeline</p>
                 <p className="text-lg font-medium">
-                  {compliance.implementationTimeline
-                    ? `${compliance.implementationTimeline} months`
+                  {compliance.timelineToCompliance
+                    ? `${compliance.timelineToCompliance} months`
                     : "Not specified"}
                 </p>
               </div>
