@@ -119,6 +119,7 @@ export function AssetCard({
       try {
         await assetActions.incrementViewCount({
           assetId: asset.id,
+          ipAddress: "0.0.0.0",
         });
       } catch (error) {
         console.error("Failed to increment view count:", error);
@@ -338,18 +339,8 @@ export function AssetCard({
               </div>
 
               <div className="flex items-center gap-2">
-                {asset.viewCount !== undefined && (
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3" />
-                    {asset.viewCount}
-                  </span>
-                )}
-                {asset.downloadCount !== undefined && asset.type !== "link" && (
-                  <span className="flex items-center gap-1">
-                    <Download className="w-3 h-3" />
-                    {asset.downloadCount}
-                  </span>
-                )}
+                
+                
               </div>
             </div>
 

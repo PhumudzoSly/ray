@@ -108,7 +108,10 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
     }: {
       issueId: string;
       userId: string;
-    }) => issueActions.updateIssue(issueId, { assignedToId: userId }),
+    }) => {
+      if (!issue?.status) return;
+      return issueActions.updateIssue(issueId, { ...issue, assignedToId: userId });
+    },
     onMutate: async ({ issueId, userId }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issue", issueId] });

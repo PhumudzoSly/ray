@@ -84,7 +84,7 @@ export default function FeatureLinks({ featureId }: FeatureLinksProps) {
     if (!result) return;
 
     try {
-      const deleteResult = await deleteLink({ id, featureId });
+      const deleteResult = await deleteLink({ id });
 
       toast.promise(Promise.resolve(), {
         loading: "Removing link...",

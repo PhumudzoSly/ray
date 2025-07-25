@@ -229,7 +229,7 @@ export const convertFeatureRequestToFeature = async (data: {
       organizationId: org,
     });
 
-    if (!featureResult.success) {
+    if (!featureResult.success || !featureResult.data) {
       return featureResult;
     }
 
