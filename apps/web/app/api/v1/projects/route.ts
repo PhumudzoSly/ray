@@ -12,15 +12,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: authResult.error }, { status: 401 });
     }
 
-    const { apiKey, organization } = authResult;
-
     // Check if the API key has the required permission
-    if (!hasPermission(apiKey.permissions, "READ")) {
+    if (!authResult.apiKey || !hasPermission(authResult.apiKey.permissions, "READ")) {
       return NextResponse.json(
         { error: "Insufficient permissions" },
         { status: 403 }
       );
     }
+
+    const { apiKey, organization } = authResult;
 
     // Fetch projects for the organization
     const projects = await prisma.project.findMany({
@@ -66,15 +66,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: authResult.error }, { status: 401 });
     }
 
-    const { apiKey, organization } = authResult;
-
     // Check if the API key has the required permission
-    if (!hasPermission(apiKey.permissions, "WRITE")) {
+    if (!authResult.apiKey || !hasPermission(authResult.apiKey.permissions, "WRITE")) {
       return NextResponse.json(
         { error: "Insufficient permissions" },
         { status: 403 }
       );
     }
+
+    const { apiKey, organization } = authResult;
 
     const body = await request.json();
     const { name, description } = body;
@@ -94,6 +94,7 @@ export async function POST(request: NextRequest) {
         organizationId: organization.id,
         createdById: apiKey.createdBy,
         status: "planning",
+        platform: "web",
       },
       select: {
         id: true,

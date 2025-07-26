@@ -294,6 +294,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                             try {
                               await organization.removeMember({
                                 memberIdOrEmail: member.id,
+                                organizationId: activeOrg.id,
                               });
                               const data = await getCurrentOrg();
                               setActiveOrg(data);
