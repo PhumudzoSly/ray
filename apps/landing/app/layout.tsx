@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import Navbar from "@/components/main/navbar";
 import Footer from "@/components/main/footer";
+import CTA from "@/components/main/cta";
 import { Toaster } from "sonner";
 
 export default function RootLayout({
@@ -19,6 +20,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
+          <CTA />
           <Toaster richColors />
           <Footer
             data={[
