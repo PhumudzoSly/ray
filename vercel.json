@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm db:generate && pnpm build",
+  "buildCommand": "pnpm build",
   "installCommand": "pnpm install",
   "framework": "nextjs",
   "functions": {
