@@ -33,5 +33,12 @@
 	"devDependencies": {
 		"@types/jsdom": "^21.1.7",
 		"prisma": "^6.12.0"
+	},
+	"prisma": {
+		"schema": "./prisma/schema.prisma",
+		"output": {
+			"client": "./prisma/generated/client",
+			"zod": "./prisma/generated/zod"
+		}
 	}
 }
