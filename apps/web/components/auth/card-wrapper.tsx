@@ -1,5 +1,10 @@
 import React, { FC, ReactNode } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@workspace/ui/components/card";
 import AuthHeader from "./auth-header";
 import SocialAuth from "./social";
 import BackButton from "./back-button";
@@ -26,11 +31,12 @@ const CardWrapper: FC<CardWrapperProps> = ({
       </CardHeader>
 
       <CardContent className="pt-0">{children}</CardContent>
-      {showSocial && (
+      {/* TODO: Add social auth */}
+      {/* {showSocial && (
         <CardFooter>
           <SocialAuth />
         </CardFooter>
-      )}
+      )} */}
       <CardFooter className="border-none border-t-0 pt-0">
         <BackButton label={backButtonLabel} href={backButtonHref} />
       </CardFooter>
