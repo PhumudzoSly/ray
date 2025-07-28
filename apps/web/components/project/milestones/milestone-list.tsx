@@ -29,10 +29,10 @@ import { formatDate } from "@/lib/format";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { CreateMilestoneData } from "@/types/milestone";
 import {
   getProjectMilestones,
   updateMilestone,
-  CreateMilestoneData,
 } from "@/actions/project/milestone";
 import { MilestoneStatus } from "@workspace/backend/prisma/generated/client/client";
 

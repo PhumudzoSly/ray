@@ -47,7 +47,7 @@ export function IssueStatusField({
         } else {
           // Fallback to direct API call if no onChange provided
           try {
-            await issueActions.updateIssue(issueId, { status: newValue });
+            await issueActions.updateIssue(issueId, { status: newValue } as any);
           } catch (error: any) {
             if (error.message?.includes("Cannot mark issue as DONE")) {
               throw new Error(error.message);

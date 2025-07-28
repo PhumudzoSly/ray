@@ -66,12 +66,12 @@ export default function WaitlistAnalytics({
       </div>
 
       {/* Conversion Funnel */}
-      <ConversionFunnel analytics={analytics} />
+      <ConversionFunnel waitlistId={waitlistId} />
 
       {/* Traffic Sources & Status Distribution */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <TrafficSources analytics={analytics} />
-        <StatusDistribution analytics={analytics} />
+        <TrafficSources waitlistId={waitlistId} />
+        <StatusDistribution waitlistId={waitlistId} />
       </div>
     </div>
   );

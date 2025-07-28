@@ -128,9 +128,7 @@ export default function WaitlistOverview({
     ) {
       // If it's a Map-like object, convert to array
       return Array.from(
-        rawEntries.map
-          ? rawEntries.map((entry: WaitlistEntry, index: number) => entry)
-          : []
+        rawEntries.map ? rawEntries.map((entry, index: number) => entry) : []
       );
     }
 
@@ -245,12 +243,12 @@ export default function WaitlistOverview({
         "UTM Medium",
         "UTM Campaign",
       ],
-      ...entries.map((entry: WaitlistEntry) => [
+      ...entries.map((entry) => [
         entry.email,
         entry.name || "",
         entry.status,
         entry.position.toString(),
-        entry.referralCount.toString(),
+        entry._count.referrals.toString(),
         entry.joinedAt || "",
         entry.utmSource || "",
         entry.utmMedium || "",
@@ -350,7 +348,7 @@ export default function WaitlistOverview({
                 }
                 onCheckedChange={(checked) => {
                   if (checked) {
-                    setSelectedEntries(entries.map((e: WaitlistEntry) => e.id));
+                    setSelectedEntries(entries.map((e) => e.id));
                   } else {
                     setSelectedEntries([]);
                   }
@@ -368,7 +366,7 @@ export default function WaitlistOverview({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {entries.map((entry: WaitlistEntry) => (
+          {entries.map((entry) => (
             <TableRow key={entry.id}>
               <TableCell>
                 <Checkbox
@@ -391,7 +389,7 @@ export default function WaitlistOverview({
               <TableCell>
                 <div className="flex items-center gap-1">
                   <Share2 className="h-3 w-3" />
-                  {entry.referralCount}
+                  {entry._count.referrals}
                 </div>
               </TableCell>
               <TableCell>

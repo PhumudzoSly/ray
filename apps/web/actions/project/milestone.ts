@@ -5,49 +5,7 @@ import { getSession } from "../account/user";
 import { MilestoneStatusType } from "@workspace/backend";
 
 // Types for milestone operations
-interface CreateMilestoneData {
-  name: string;
-  description?: string;
-  projectId: string;
-  startDate?: number;
-  endDate?: number;
-  ownerId?: string;
-  status?: MilestoneStatusType;
-}
-
-interface UpdateMilestoneData {
-  name?: string;
-  description?: string;
-  startDate?: number | null;
-  endDate?: number | null;
-  ownerId?: string | null;
-  status?: MilestoneStatusType;
-}
-
-interface MilestoneWithProgress {
-  id: string;
-  name: string;
-  description: string | null;
-  status: MilestoneStatusType;
-  startDate: Date | null;
-  endDate: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-  projectId: string;
-  organizationId: string;
-  ownerId: string | null;
-  owner: { id: string; name: string; image: string | null } | null;
-  progress: number;
-  completedIssueCount: number;
-  issueCount: number;
-  completedFeatureCount: number;
-  featureCount: number;
-  overdueItems: number;
-  dependsOn: { id: string; name: string }[];
-  blocking: { id: string; name: string }[];
-  issues: any[];
-  features: any[];
-}
+import { CreateMilestoneData, UpdateMilestoneData, MilestoneWithProgress } from "@/types/milestone";
 
 // Helper function to calculate milestone progress
 const calculateMilestoneProgress = (issues: any[], features: any[]) => {

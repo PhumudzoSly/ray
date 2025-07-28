@@ -34,17 +34,25 @@ export function IssueCard({
   const queryClient = useQueryClient();
   // Optimistic update mutation for assignee
   const updateAssigneeMutation = useMutation({
-    mutationFn: async ({ issueId, assignedTo }: { issueId: string; assignedTo: string }) => {
-      return await issueActions.updateIssue(issueId, { assignedToId: assignedTo });
+    mutationFn: async ({
+      issueId,
+      assignedTo,
+    }: {
+      issueId: string;
+      assignedTo: string;
+    }) => {
+      return await issueActions.updateIssue(issueId, {
+        assignedToId: assignedTo,
+      } as any);
     },
     onMutate: async ({ issueId, assignedTo }) => {
       await queryClient.cancelQueries({ queryKey: ["issues"] });
-      const previousIssues = queryClient.getQueryData<CustomIssue[]>(["issues"]);
+      const previousIssues = queryClient.getQueryData<CustomIssue[]>([
+        "issues",
+      ]);
       queryClient.setQueryData<CustomIssue[]>(["issues"], (old) => {
         if (!old) return old;
-        return old.map((i) =>
-          i.id === issueId ? { ...i, assignedTo } : i
-        );
+        return old.map((i) => (i.id === issueId ? { ...i, assignedTo } : i));
       });
       return { previousIssues };
     },
@@ -102,11 +110,7 @@ export function IssueCard({
           />
         </TableCell>
         <TableCell onClick={handleInteractiveClick}>
-          <IssueLabelField
-            value={issue.label}
-            align="end"
-            issueId={issue.id}
-          />
+          <IssueLabelField value={issue.label} align="end" issueId={issue.id} />
         </TableCell>
         <TableCell onClick={handleInteractiveClick}>
           <AssigneeSelector

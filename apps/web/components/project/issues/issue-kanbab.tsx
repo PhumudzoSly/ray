@@ -13,6 +13,7 @@ import * as issueActions from "@/actions/issue";
 import { useSession } from "@/context/session-context";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface IssuesKanbanProps {
   issues: CustomIssue[];
@@ -33,8 +34,12 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       status,
     }: {
       issueId: string;
-      status: string;
-    }) => issueActions.updateIssue(issueId, { status }),
+      status: IssueStatus;
+    }) => {
+      const issue = displayIssues.find((i) => i.id === issueId);
+      if (!issue) throw new Error("Issue not found");
+      return issueActions.updateIssue(issueId, { ...issue, status });
+    },
     onMutate: async ({ issueId, status }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issues"] });

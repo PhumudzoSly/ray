@@ -21,7 +21,7 @@ import { Check, ChevronsUpDown, Diamond, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MilestoneStatusBadge } from "@/components/project/milestones/milestone-status-badge";
 import { getProjectMilestones } from "@/actions/project/milestone";
-import { MilestoneStatus } from "@/utils/constants/milestones/status";
+import { MilestoneStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface MilestoneSelectorProps {
   projectId: string;

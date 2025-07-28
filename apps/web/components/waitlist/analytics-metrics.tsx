@@ -13,7 +13,7 @@ import {
   Zap,
   ArrowUpRight,
 } from "lucide-react";
-import { WaitlistAnalyticsData } from "@/hooks/use-waitlist-analytics";
+import { useWaitlistAnalytics } from "@/hooks/use-waitlist-analytics";
 
 interface MetricCardProps {
   icon: React.ComponentType<{ className?: string }>;
@@ -77,11 +77,11 @@ export function MetricCard({
   );
 }
 
-interface ConversionFunnelProps {
-  analytics: WaitlistAnalyticsData;
-}
+export function ConversionFunnel({ waitlistId }: { waitlistId: string }) {
+  const { data: analytics, isLoading } = useWaitlistAnalytics(waitlistId);
 
-export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
+  if (isLoading || !analytics) return null;
+
   const metrics = [
     {
       title: "Verification Rate",
@@ -167,10 +167,14 @@ export function ConversionFunnel({ analytics }: ConversionFunnelProps) {
 }
 
 interface TrafficSourcesProps {
-  analytics: WaitlistAnalyticsData;
+  waitlistId: string;
 }
 
-export function TrafficSources({ analytics }: TrafficSourcesProps) {
+export function TrafficSources({ waitlistId }: TrafficSourcesProps) {
+  const { data: analytics, isLoading } = useWaitlistAnalytics(waitlistId);
+
+  if (isLoading || !analytics) return null;
+
   const sortedSources = Object.entries(analytics.utmSources)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 8);
@@ -232,10 +236,14 @@ export function TrafficSources({ analytics }: TrafficSourcesProps) {
 }
 
 interface StatusDistributionProps {
-  analytics: WaitlistAnalyticsData;
+  waitlistId: string;
 }
 
-export function StatusDistribution({ analytics }: StatusDistributionProps) {
+export function StatusDistribution({ waitlistId }: StatusDistributionProps) {
+  const { data: analytics, isLoading } = useWaitlistAnalytics(waitlistId);
+
+  if (isLoading || !analytics) return null;
+
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "pending":
@@ -354,10 +362,14 @@ export function StatusDistribution({ analytics }: StatusDistributionProps) {
 }
 
 interface ReferralPerformanceProps {
-  analytics: WaitlistAnalyticsData;
+  waitlistId: string;
 }
 
-export function ReferralPerformance({ analytics }: ReferralPerformanceProps) {
+export function ReferralPerformance({ waitlistId }: ReferralPerformanceProps) {
+  const { data: analytics, isLoading } = useWaitlistAnalytics(waitlistId);
+
+  if (isLoading || !analytics) return null;
+
   const metrics = [
     {
       title: "Total Referrals",
@@ -428,10 +440,14 @@ export function ReferralPerformance({ analytics }: ReferralPerformanceProps) {
 }
 
 interface GrowthInsightsProps {
-  analytics: WaitlistAnalyticsData;
+  waitlistId: string;
 }
 
-export function GrowthInsights({ analytics }: GrowthInsightsProps) {
+export function GrowthInsights({ waitlistId }: GrowthInsightsProps) {
+  const { data: analytics, isLoading } = useWaitlistAnalytics(waitlistId);
+
+  if (isLoading || !analytics) return null;
+
   const insights = [
     {
       title: "Total Sign-ups",

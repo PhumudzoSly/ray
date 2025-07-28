@@ -63,7 +63,7 @@ export function AssigneeSelector({
     queryFn: async () => {
       if (!token) return [];
       const raw = await getOrgMembers();
-      return (raw ?? []).map((m) => ({
+      return (raw ?? []).map((m: any) => ({
         id: m.userId,
         name: m.user.name,
         email: m.user.email,
@@ -108,7 +108,9 @@ export function AssigneeSelector({
         >
           {value ? (
             (() => {
-              const selectedUser = orgMembers.find((user) => user.id === value);
+              const selectedUser = orgMembers.find(
+                (user: any) => user.id === value
+              );
               if (selectedUser) {
                 return (
                   <TooltipProvider>
@@ -158,7 +160,7 @@ export function AssigneeSelector({
           {iconOnly ? null : (
             <div>
               {value
-                ? orgMembers.find((user) => user.id === value)?.name
+                ? orgMembers.find((user: any) => user.id === value)?.name
                 : "No lead assigned"}
             </div>
           )}
@@ -173,7 +175,7 @@ export function AssigneeSelector({
           <CommandList>
             <CommandEmpty>No users found.</CommandEmpty>
             <CommandGroup>
-              {orgMembers.map((user) => {
+              {orgMembers.map((user: any) => {
                 return (
                   <CommandItem
                     key={user.id}

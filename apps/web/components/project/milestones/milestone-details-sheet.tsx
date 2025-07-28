@@ -48,11 +48,11 @@ import { CommandSelect } from "@workspace/ui/components/command-select";
 import { IssueStatusField } from "@/components/ui/issue-fields/issue-status-field";
 import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { MilestoneWithProgress } from "@/types/milestone";
 import {
   getMilestone,
   updateMilestone,
   deleteMilestone,
-  MilestoneWithProgress,
 } from "@/actions/project/milestone";
 import {
   Tooltip,

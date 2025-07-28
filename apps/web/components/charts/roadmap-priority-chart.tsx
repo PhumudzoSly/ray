@@ -78,7 +78,7 @@ export function RoadmapPriorityChart({
   }, [priorityBreakdown]);
 
   const [activePriority, setActivePriority] = React.useState(
-    chartData.length > 0 ? chartData[0].priority : ""
+    chartData.length > 0 ? chartData[0]?.priority : ""
   );
 
   const activeIndex = React.useMemo(
@@ -181,7 +181,6 @@ export function RoadmapPriorityChart({
               nameKey="priority"
               innerRadius={60}
               strokeWidth={5}
-              activeIndex={activeIndex}
               activeShape={({
                 outerRadius = 0,
                 ...props

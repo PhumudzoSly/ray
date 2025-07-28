@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Plus, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -63,7 +63,7 @@ export function NewFeature({
     mutationFn: async (featureData: any) => {
       return await featureActions.createFeature(featureData);
     },
-    onSuccess: (data) => {
+    onSuccess: (response) => {
       // Invalidate general features queries
       queryClient.invalidateQueries({ queryKey: ["features"] });
 
@@ -77,63 +77,72 @@ export function NewFeature({
         });
       }
 
-      // If the created feature has a parent, also invalidate the parent's parent hierarchy
-      if (data?.success?.data?.parentFeatureId) {
-        queryClient.invalidateQueries({
-          queryKey: ["featureHierarchy", data.success.data.parentFeatureId],
-        });
-      }
-
-      // Invalidate project-specific features queries
-      if (initialProjectId) {
-        queryClient.invalidateQueries({
-          queryKey: ["features", initialProjectId],
-        });
-      }
-
-      // If the created feature has a project, invalidate that project's features
-      if (data?.success?.data?.projectId) {
-        queryClient.invalidateQueries({
-          queryKey: ["features", data.success.data.projectId],
-        });
-      }
-
-      // Invalidate root features for the project (if this is a root feature)
+      // Type guard to ensure we have the correct response structure
       if (
-        data?.success?.data?.projectId &&
-        !data?.success?.data?.parentFeatureId
+        response &&
+        typeof response === "object" &&
+        "success" in response &&
+        response.success &&
+        "data" in response &&
+        response.data
       ) {
-        queryClient.invalidateQueries({
-          queryKey: ["rootFeatures", data.success.data.projectId],
-        });
-      }
+        const featureData = response.data as any;
 
-      // Invalidate activity feed for the project
-      if (data?.success?.data?.projectId) {
-        queryClient.invalidateQueries({
-          queryKey: ["activityFeed", data.success.data.projectId],
-        });
-      }
+        // If the created feature has a parent, also invalidate the parent's parent hierarchy
+        if (featureData.parentFeatureId) {
+          queryClient.invalidateQueries({
+            queryKey: ["featureHierarchy", featureData.parentFeatureId],
+          });
+        }
 
-      // Invalidate any feature dependency graphs
-      if (data?.success?.data?.projectId) {
-        queryClient.invalidateQueries({
-          queryKey: ["featureDependencyGraph", data.success.data.projectId],
-        });
-      }
+        // Invalidate project-specific features queries
+        if (initialProjectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["features", initialProjectId],
+          });
+        }
 
-      // Invalidate feature validation queries for the parent feature (if any)
-      if (initialParentFeatureId) {
-        queryClient.invalidateQueries({
-          queryKey: ["featureValidation", initialParentFeatureId],
-        });
-      }
+        // If the created feature has a project, invalidate that project's features
+        if (featureData.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["features", featureData.projectId],
+          });
+        }
 
-      // Invalidate feature validation queries for the created feature
-      if (data?.success?.data?.id) {
-        queryClient.invalidateQueries({
-          queryKey: ["featureValidation", data.success.data.id],
-        });
+        // Invalidate root features for the project (if this is a root feature)
+        if (featureData.projectId && !featureData.parentFeatureId) {
+          queryClient.invalidateQueries({
+            queryKey: ["rootFeatures", featureData.projectId],
+          });
+        }
+
+        // Invalidate activity feed for the project
+        if (featureData.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["activityFeed", featureData.projectId],
+          });
+        }
+
+        // Invalidate any feature dependency graphs
+        if (featureData.projectId) {
+          queryClient.invalidateQueries({
+            queryKey: ["featureDependencyGraph", featureData.projectId],
+          });
+        }
+
+        // Invalidate feature validation queries for the parent feature (if any)
+        if (initialParentFeatureId) {
+          queryClient.invalidateQueries({
+            queryKey: ["featureValidation", initialParentFeatureId],
+          });
+        }
+
+        // Invalidate feature validation queries for the created feature
+        if (featureData.id) {
+          queryClient.invalidateQueries({
+            queryKey: ["featureValidation", featureData.id],
+          });
+        }
       }
     },
     onError: () => {
@@ -157,13 +166,28 @@ export function NewFeature({
     description: "",
     priority: "MEDIUM",
     phase: "DISCOVERY",
-    projectId: initialProjectId || currentFeature?.projectId || "",
+    projectId: initialProjectId || "",
     parentFeatureId: initialParentFeatureId || null,
     startDate: null,
     endDate: null,
     estimatedEffort: null,
     businessValue: null,
   });
+
+  // Update form when currentFeature data is available
+  useEffect(() => {
+    if (
+      currentFeature?.success &&
+      currentFeature.data &&
+      currentFeature.data.projectId &&
+      !initialProjectId
+    ) {
+      setForm((prev) => ({
+        ...prev,
+        projectId: currentFeature?.data?.projectId || "",
+      }));
+    }
+  }, [currentFeature, initialProjectId]);
 
   // Date validation logic
   const dateValidation = useMemo((): DateValidationError | null => {

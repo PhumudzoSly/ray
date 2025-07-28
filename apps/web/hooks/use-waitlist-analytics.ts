@@ -46,12 +46,12 @@ export interface WaitlistAnalyticsData {
 export function useWaitlistAnalytics(waitlistId: string) {
   return useQuery({
     queryKey: queryKeys.waitlistAnalytics(waitlistId),
-    queryFn: async (): Promise<WaitlistAnalyticsData> => {
+    queryFn: async () => {
       const result = await getWaitlistAnalytics(waitlistId);
       if (!result.success) {
         throw new Error("Failed to fetch analytics");
       }
-      return result.data as WaitlistAnalyticsData;
+      return result.data;
     },
   });
 }
@@ -84,8 +84,14 @@ export function useFilteredWaitlistEntries(
   offset?: number
 ) {
   return useQuery({
-    queryKey: queryKeys.filteredWaitlistEntries(waitlistId, search, status, limit, offset),
-    queryFn: async (): Promise<FilteredWaitlistEntriesData> => {
+    queryKey: queryKeys.filteredWaitlistEntries(
+      waitlistId,
+      search,
+      status,
+      limit,
+      offset
+    ),
+    queryFn: async () => {
       const result = await getFilteredWaitlistEntries({
         waitlistId,
         search,
@@ -96,7 +102,7 @@ export function useFilteredWaitlistEntries(
       if (!result.success) {
         throw new Error("Failed to fetch filtered entries");
       }
-      return result.data as FilteredWaitlistEntriesData;
+      return result.data;
     },
     enabled: !!waitlistId,
   });

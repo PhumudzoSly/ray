@@ -31,12 +31,12 @@ export function LiveBlockProvider({ children }: { children: ReactNode }) {
         let orgMembers = await getOrgMembers();
         if (text) {
           // Filter any way you'd like, e.g. checking if the name matches
-          orgMembers = orgMembers?.filter(({ user }) =>
+          orgMembers = orgMembers?.filter(({ user }: any) =>
             user.name.includes(text)
           );
         }
         // Return the filtered `userIds`
-        return orgMembers?.map((user) => user.userId) || [];
+        return orgMembers?.map((user: any) => user.userId) || [];
       }}
     >
       {children}

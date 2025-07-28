@@ -31,7 +31,7 @@ const SwitchOrg = ({
   const [loading, setLoading] = useState(false);
 
   const [selectedOrg, setSelectedOrg] = useState((orgs && orgs[0]?.id) || "");
-  const currentOrg = orgs?.find((org) => org.id === selectedOrg);
+  const currentOrg = orgs?.find((org: any) => org.id === selectedOrg);
 
   const handleSwitchOrg = async () => {
     if (!selectedOrg) return;
@@ -86,7 +86,7 @@ const SwitchOrg = ({
                     <SelectValue placeholder="Select organisation" />
                   </SelectTrigger>
                   <SelectContent>
-                    {orgs?.map((org) => (
+                    {orgs?.map((org: any) => (
                       <SelectItem key={org.id} value={org.id}>
                         {org.name}
                       </SelectItem>

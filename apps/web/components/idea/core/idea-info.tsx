@@ -2,8 +2,7 @@
 import moment from "moment";
 import { toast } from "sonner";
 import IdeaStatus from "./status";
-import { Menu } from "lucide-react";
-import { BarChart2, Building2, Shield, ShieldCheck } from "lucide-react";
+import { Building2, Shield, ShieldCheck } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -14,9 +13,7 @@ import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { Button } from "@workspace/ui/components/button";
 import UpdateIdea from "./edit-idea";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { useSession } from "@/context/session-context";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
-import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getSingleIdea,

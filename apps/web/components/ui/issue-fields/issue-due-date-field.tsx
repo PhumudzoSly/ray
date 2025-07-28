@@ -61,7 +61,10 @@ export function IssueDueDateField({
           await onChange(newValue);
         } else {
           // Fallback to direct API call if no onChange provided
+          const issue = await issueActions.getIssue(issueId);
+          if (!issue.success || !issue.data) throw new Error("Issue not found");
           await issueActions.updateIssue(issueId, {
+            ...issue.data,
             dueDate: newValue || undefined,
           });
         }

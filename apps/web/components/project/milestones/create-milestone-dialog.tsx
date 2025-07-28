@@ -18,7 +18,6 @@ import { DateRangeSelector } from "@/components/ui/selectors/date-range-selector
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createMilestone } from "@/actions/project/milestone";
-import { getOrgMembers } from "@/actions/account/user";
 import { MilestoneStatusType } from "@workspace/backend";
 
 // Types for milestone operations

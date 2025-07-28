@@ -23,7 +23,7 @@
 		"cheerio": "^1.1.2",
 		"jsdom": "^26.1.0",
 		"resend": "^4.7.0",
-		"zod": "^3.24.4",
+		"zod": "^3.25.76",
 		"zod-prisma-types": "^3.2.4"
 	},
 	"devDependencies": {
