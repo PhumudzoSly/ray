@@ -5,24 +5,12 @@ import {
 } from "@workspace/backend";
 import { z } from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const TechnologyAssessmentInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  technicalComplexity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-  developmentTimeline: z.number().int().optional(),
-  teamRequirements: z.array(z.string()).optional(),
-  recommendedStack: z.array(z.string()).optional(),
-  alternativeStacks: z.array(z.string()).optional(),
-  integrationRequirements: z.array(z.string()).optional(),
-  technicalRisks: z.array(z.string()).optional(),
-  scalabilityChallenges: z.array(z.string()).optional(),
-  securityConsiderations: z.array(z.string()).optional(),
-  developmentCosts: z.number().optional(),
-  infrastructureCosts: z.number().optional(),
-  maintenanceCosts: z.number().optional(),
-  technicalAdvantages: z.array(z.string()).optional(),
-  innovationPotential: z.string().optional(),
-});
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const TechnologyAssessmentInputSchema =
+  TechnologyAssessmentOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
 const saveTechnologyAssessmentTool = createTool({
   name: "save-technology-assessment",
@@ -60,7 +48,6 @@ const checkTechnologyAssessmentExistsTool = createTool({
   name: "check-technology-assessment-exists",
   description:
     "Check if a technology assessment already exists for the current market research",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const existingAssessment = await prisma.technologyAssessment.findUnique({

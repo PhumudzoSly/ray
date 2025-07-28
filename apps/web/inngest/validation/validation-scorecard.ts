@@ -6,36 +6,18 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schemas for Gemini API compatibility (excluding problematic fields)
-const ValidationScorecardInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  marketScore: z.number().optional(),
-  competitiveScore: z.number().optional(),
-  technicalScore: z.number().optional(),
-  financialScore: z.number().optional(),
-  riskScore: z.number().optional(),
-  weightedScore: z.number().optional(),
-  primaryRecommendation: z.string().optional(),
-  secondaryRecommendations: z.array(z.string()).optional(),
-  riskMitigationStrategies: z.array(z.string()).optional(),
-  validationStatus: z.enum([
-    "IN_PROGRESS",
-    "VALIDATED",
-    "NEEDS_IMPROVEMENT",
-    "FAILED",
-    "REQUIRES_REVIEW",
-  ]),
-  nextReviewDate: z.string().optional(), // Using string for Gemini compatibility
-});
+// Modified schemas for Gemini API compatibility (excluding UUID and date fields)
+const ValidationScorecardInputSchema =
+  ValidationScorecardOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
-const ValidationScoreBreakdownInputSchema = z.object({
-  validationScorecardId: z.string().optional(),
-  category: z.string(),
-  score: z.number(),
-  weight: z.number(),
-  weightedScore: z.number(),
-  reasoning: z.string().optional(),
-});
+const ValidationScoreBreakdownInputSchema =
+  ValidationScoreBreakdownOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
 const saveValidationScorecardTool = createTool({
   name: "save-validation-scorecard",
@@ -100,9 +82,6 @@ const saveScoreBreakdownTool = createTool({
 const getValidationScorecardTool = createTool({
   name: "get-validation-scorecard",
   description: "Get validation scorecard for a specific market research",
-  parameters: z.object({
-    marketResearchId: z.string(),
-  }),
   handler: async (data, { network, agent, step }) => {
     const validationScorecard = await prisma.validationScorecard.findUnique({
       where: { marketResearchId: data.marketResearchId },
@@ -118,7 +97,6 @@ const checkValidationScorecardExistsTool = createTool({
   name: "check-validation-scorecard-exists",
   description:
     "Check if a validation scorecard already exists for the current market research",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const existingScorecard = await prisma.validationScorecard.findUnique({

@@ -25,7 +25,6 @@ Consider:
 - Neutral: Expresses neither positive nor negative sentiment, or is factual/descriptive
 
 Return only the sentiment value, nothing else.`,
-      maxTokens: 10,
     });
 
     const sentiment = result.text.trim().toLowerCase();

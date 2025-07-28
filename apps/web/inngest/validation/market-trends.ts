@@ -2,21 +2,10 @@ import { createAgent, createTool, gemini } from "@inngest/agent-kit";
 import { MarketTrendOptionalDefaultsSchema, prisma } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const MarketTrendInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  trendName: z.string(),
-  description: z.string(),
-  impact: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  growthRate: z.number().optional(),
-  marketSize: z.number().optional(),
-  adoptionRate: z.number().optional(),
-  keyDrivers: z.array(z.string()).optional(),
-  challenges: z.array(z.string()).optional(),
-  opportunities: z.array(z.string()).optional(),
-  dataSource: z.string().optional(),
-  confidenceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-  lastUpdated: z.string().optional(),
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const MarketTrendInputSchema = MarketTrendOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
 const saveMarketTrendTool = createTool({

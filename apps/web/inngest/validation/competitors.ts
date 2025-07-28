@@ -8,111 +8,29 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schemas for Gemini API compatibility (excluding problematic fields)
-const CompetitorInputSchema = z.object({
-  competitiveLandscapeId: z.string().optional(),
-  name: z.string(),
-  website: z.string().optional(),
-  description: z.string().optional(),
-  logoUrl: z.string().optional(),
-  marketShare: z.number().optional(),
-  annualRevenue: z.number().optional(),
-  fundingRaised: z.number().optional(),
-  employeeCount: z.number().int().optional(),
-  foundedYear: z.number().int().optional(),
-  headquarters: z.string().optional(),
-  productFeatures: z.array(z.string()).optional(),
-  pricingModel: z.enum([
-    "SUBSCRIPTION",
-    "FREEMIUM",
-    "ONE_TIME",
-    "USAGE_BASED",
-    "HYBRID",
-  ]),
-  targetAudience: z.string().optional(),
-  techStack: z.array(z.string()).optional(),
-  integrations: z.array(z.string()).optional(),
-  strengths: z.array(z.string()).optional(),
-  weaknesses: z.array(z.string()).optional(),
-  opportunities: z.array(z.string()).optional(),
-  threats: z.array(z.string()).optional(),
-  competitiveAdvantage: z.string().optional(),
-  differentiationFactors: z.array(z.string()).optional(),
-  threatLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  competitivePosition: z.enum([
-    "MARKET_LEADER",
-    "STRONG_CHALLENGER",
-    "WEAK_CHALLENGER",
-    "NICHE_PLAYER",
-    "NEW_ENTRANT",
-  ]),
-  userGrowthRate: z.number().optional(),
-  churnRate: z.number().optional(),
-  customerSatisfaction: z.number().optional(),
-  marketCap: z.number().optional(),
-  isActive: z.boolean().optional(),
+// Modified schemas for Gemini API compatibility (excluding UUID and date fields)
+const CompetitorInputSchema = CompetitorOptionalDefaultsSchema.omit({
+  id: true,
+  lastUpdated: true,
+  createdAt: true,
 });
 
-const CompetitorPricingInputSchema = z.object({
-  planName: z.string(),
-  price: z.number(),
-  billingCycle: z.enum(["MONTHLY", "QUARTERLY", "ANNUALLY", "ONE_TIME"]),
-  features: z.array(z.string()),
-  limitations: z.string().optional(),
-  userLimit: z.number().int().optional(),
-  valuePerDollar: z.number().optional(),
-  competitivePosition: z.string().optional(),
-  previousPrice: z.number().optional(),
-  priceChangeDate: z.string().optional(),
-  priceChangeReason: z.string().optional(),
+const CompetitorPricingInputSchema =
+  CompetitorPricingOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
+
+const CompetitiveMoveInputSchema = CompetitiveMoveOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
-const CompetitiveMoveInputSchema = z.object({
-  competitiveLandscapeId: z.string().optional(),
-  competitorId: z.string().optional(),
-  moveType: z.enum([
-    "PRODUCT_LAUNCH",
-    "FEATURE_UPDATE",
-    "PRICING_CHANGE",
-    "PARTNERSHIP",
-    "ACQUISITION",
-    "MARKETING_CAMPAIGN",
-    "EXPANSION",
-    "PIVOT",
-  ]),
-  title: z.string(),
-  description: z.string(),
-  impactLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  targetAudience: z.string().optional(),
-  affectedFeatures: z.array(z.string()).optional(),
-  announcedDate: z.string().optional(),
-  launchDate: z.string().optional(),
-  completionDate: z.string().optional(),
-  marketReaction: z
-    .enum(["POSITIVE", "NEUTRAL", "NEGATIVE", "MIXED"])
-    .optional(),
-  userFeedback: z.string().optional(),
-  pressCoverage: z.array(z.string()).optional(),
-  opportunities: z.array(z.string()).optional(),
-  threats: z.array(z.string()).optional(),
-  responseRequired: z.boolean().optional(),
-  responseStrategy: z.string().optional(),
-});
-
-const FeatureComparisonInputSchema = z.object({
-  featureName: z.string(),
-  featureCategory: z.string(),
-  isAvailable: z.boolean(),
-  quality: z
-    .enum(["EXCELLENT", "GOOD", "AVERAGE", "POOR", "UNKNOWN"])
-    .optional(),
-  implementationNotes: z.string().optional(),
-  userRating: z.number().optional(),
-  marketShare: z.number().optional(),
-  adoptionRate: z.number().optional(),
-  competitiveAdvantage: z.string().optional(),
-  differentiationPoints: z.array(z.string()).optional(),
-});
+const FeatureComparisonInputSchema =
+  FeatureComparisonOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
 const saveDataTool = createTool({
   name: "save-competitor",
@@ -209,6 +127,7 @@ const saveFeatureComparisonTool = createTool({
 const getCompetitorTool = createTool({
   name: "get-competitor",
   description: "Get the competitor data from the database",
+  // @ts-ignore
   parameters: z.object({
     id: z.string().describe("The id of the competitor to get"),
   }),
@@ -228,6 +147,7 @@ const getCompetitorTool = createTool({
 const getCompetitorsByLandscapeTool = createTool({
   name: "get-competitors-by-landscape",
   description: "Get all competitors for a specific competitive landscape",
+  // @ts-ignore
   parameters: z.object({
     competitiveLandscapeId: z.string(),
   }),
@@ -248,7 +168,6 @@ const getCompetitiveLandscapeIdTool = createTool({
   name: "get-competitive-landscape-id",
   description:
     "Get the competitive landscape ID from the current network state",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { competitiveLandscapeId } = network.state.data;
 
@@ -266,7 +185,6 @@ const getCurrentCompetitiveLandscapeTool = createTool({
   name: "get-current-competitive-landscape",
   description:
     "Get the current competitive landscape data from the network state or database",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { competitiveLandscape, competitiveLandscapeId, researchId } =
       network.state.data;

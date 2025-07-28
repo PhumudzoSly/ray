@@ -2,24 +2,10 @@ import { createAgent, createTool, gemini } from "@inngest/agent-kit";
 import { CustomerNeedOptionalDefaultsSchema, prisma } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const CustomerNeedInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  needType: z.enum([
-    "FUNCTIONAL",
-    "EMOTIONAL",
-    "SOCIAL",
-    "FINANCIAL",
-    "TECHNICAL",
-  ]),
-  description: z.string(),
-  priority: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]),
-  frequency: z.string().optional(),
-  businessImpact: z.string().optional(),
-  userImpact: z.string().optional(),
-  costImpact: z.number().optional(),
-  existingSolutions: z.array(z.string()).optional(),
-  gapsInSolutions: z.array(z.string()).optional(),
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const CustomerNeedInputSchema = CustomerNeedOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
 const saveCustomerNeedTool = createTool({

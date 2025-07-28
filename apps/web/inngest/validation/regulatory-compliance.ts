@@ -5,22 +5,12 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const RegulatoryComplianceInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  applicableRegulations: z.array(z.string()).optional(),
-  complianceLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  riskLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  industryStandards: z.array(z.string()).optional(),
-  certificationRequirements: z.array(z.string()).optional(),
-  targetMarkets: z.array(z.string()).optional(),
-  localRegulations: z.array(z.string()).optional(),
-  complianceCosts: z.number().optional(),
-  timelineToCompliance: z.number().int().optional(),
-  requiredResources: z.array(z.string()).optional(),
-  complianceRisks: z.array(z.string()).optional(),
-  mitigationStrategies: z.array(z.string()).optional(),
-});
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const RegulatoryComplianceInputSchema =
+  RegulatoryComplianceOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
 const saveRegulatoryComplianceTool = createTool({
   name: "save-regulatory-compliance",
@@ -58,7 +48,6 @@ const checkRegulatoryComplianceExistsTool = createTool({
   name: "check-regulatory-compliance-exists",
   description:
     "Check if regulatory compliance data already exists for the current market research",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const existingCompliance = await prisma.regulatoryCompliance.findUnique({

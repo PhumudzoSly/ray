@@ -5,30 +5,10 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const ValidationInsightInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  insightType: z.enum([
-    "MARKET_OPPORTUNITY",
-    "COMPETITIVE_THREAT",
-    "CUSTOMER_INSIGHT",
-    "TECHNICAL_CHALLENGE",
-    "FINANCIAL_RISK",
-    "REGULATORY_IMPACT",
-    "TIMING_OPPORTUNITY",
-  ]),
-  title: z.string(),
-  description: z.string(),
-  confidence: z.number().optional(),
-  dataSources: z.array(z.string()).optional(),
-  analysisMethod: z.string().optional(),
-  impactLevel: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]),
-  affectedAreas: z.array(z.string()).optional(),
-  recommendations: z.array(z.string()).optional(),
-  isVerified: z.boolean().optional(),
-  verificationMethod: z.string().optional(),
-  verifiedBy: z.string().optional(),
-  verifiedAt: z.string().optional(),
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const ValidationInsightInputSchema = ValidationInsightOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
 const saveValidationInsightTool = createTool({

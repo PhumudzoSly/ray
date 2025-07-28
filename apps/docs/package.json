@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbo -p 3001",
-    "start": "next start",
+    "start": "next start -p 3001",
     "postinstall": "fumadocs-mdx",
     "lint": "biome check .",
     "format": "biome format . --write",
@@ -13,10 +13,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "fumadocs-core": "15.6.5",
-    "fumadocs-mdx": "11.7.0",
-    "fumadocs-ui": "15.6.5",
-    "next": "15.4.3",
+    "fumadocs-core": "15.6.6",
+    "fumadocs-mdx": "11.7.1",
+    "fumadocs-ui": "15.6.6",
+    "next": "15.4.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

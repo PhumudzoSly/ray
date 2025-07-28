@@ -5,22 +5,12 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const CompetitiveLandscapeInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  competitiveIntensity: z.enum(["LOW", "MEDIUM", "HIGH", "VERY_HIGH"]),
-  marketPositioning: z.string().optional(),
-  differentiationOpportunities: z.array(z.string()).optional(),
-  competitiveAdvantage: z.string().optional(),
-  totalMarketShare: z.number().optional(),
-  topCompetitors: z.number().int().optional(),
-  marketConcentration: z.number().optional(),
-  entryBarriers: z.array(z.string()).optional(),
-  exitBarriers: z.array(z.string()).optional(),
-  switchingCosts: z.number().optional(),
-  emergingThreats: z.array(z.string()).optional(),
-  marketDisruptions: z.array(z.string()).optional(),
-});
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const CompetitiveLandscapeInputSchema =
+  CompetitiveLandscapeOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
 const saveCompetitiveLandscapeTool = createTool({
   name: "save-competitive-landscape",
@@ -63,7 +53,6 @@ const checkCompetitiveLandscapeExistsTool = createTool({
   name: "check-competitive-landscape-exists",
   description:
     "Check if a competitive landscape already exists for the current market research",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const existingLandscape = await prisma.competitiveLandscape.findUnique({

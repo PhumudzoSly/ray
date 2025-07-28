@@ -266,6 +266,7 @@ const checkDataCompletenessTool = createTool({
 const triggerAnalysisAgentTool = createTool({
   name: "trigger-analysis-agent",
   description: "Trigger the idea analysis agent to run comprehensive analysis",
+  // @ts-ignore
   parameters: z.object({
     ideaId: z.string(),
     reason: z.string(),
@@ -285,6 +286,7 @@ const triggerAnalysisAgentTool = createTool({
 const triggerResearcherAgentTool = createTool({
   name: "trigger-researcher-agent",
   description: "Trigger the data researcher agent to gather missing data",
+  // @ts-ignore
   parameters: z.object({
     ideaId: z.string(),
     missingComponents: z.array(z.string()),

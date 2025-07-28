@@ -1,7 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { OrganizationCard } from "./organization-card";
-import { getCurrentOrg } from "@/actions/account/user";
 import { auth } from "@/lib/auth";
 import PageHeader from "@/components/shared/page-header";
 

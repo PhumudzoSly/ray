@@ -8,7 +8,6 @@ import { IssueLabelField } from "@/components/ui/issue-fields/issue-label-field"
 import { IssueDueDateField } from "@/components/ui/issue-fields/issue-due-date-field";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
 import { useRouter } from "next/navigation";
-import { CustomIssue } from "@/types/project";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
@@ -19,7 +18,7 @@ export function IssueCard({
   showProject = false,
   index,
 }: {
-  issue: CustomIssue;
+  issue: any;
   showProject?: boolean;
   index: number;
 }) {
@@ -47,10 +46,10 @@ export function IssueCard({
     },
     onMutate: async ({ issueId, assignedTo }) => {
       await queryClient.cancelQueries({ queryKey: ["issues"] });
-      const previousIssues = queryClient.getQueryData<CustomIssue[]>([
+      const previousIssues = queryClient.getQueryData<any[]>([
         "issues",
       ]);
-      queryClient.setQueryData<CustomIssue[]>(["issues"], (old) => {
+      queryClient.setQueryData<any[]>(["issues"], (old) => {
         if (!old) return old;
         return old.map((i) => (i.id === issueId ? { ...i, assignedTo } : i));
       });

@@ -5,31 +5,10 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schema for Gemini API compatibility (excluding problematic fields)
-const TargetAudienceInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  segmentName: z.string(),
-  ageRange: z.string().optional(),
-  location: z.string().optional(),
-  companySize: z
-    .enum([
-      "SOLO",
-      "SMALL_1_10",
-      "MEDIUM_11_50",
-      "LARGE_51_200",
-      "ENTERPRISE_200_PLUS",
-    ])
-    .optional(),
-  industry: z.string().optional(),
-  painPoints: z.array(z.string()).optional(),
-  decisionFactors: z.array(z.string()).optional(),
-  budgetRange: z.string().optional(),
-  techSavviness: z.enum(["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"]),
-  estimatedSize: z.number().int().optional(),
-  averageSpend: z.number().optional(),
-  segmentValue: z.number().optional(),
-  isPrimary: z.boolean().optional(),
-  priority: z.number().int().optional(),
+// Modified schema for Gemini API compatibility (excluding UUID and date fields)
+const TargetAudienceInputSchema = TargetAudienceOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
 const saveTargetAudienceTool = createTool({

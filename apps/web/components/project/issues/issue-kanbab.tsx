@@ -7,16 +7,13 @@ import { cn } from "@/lib/utils";
 import { IssueKanbanCard } from "./issue-kanbab-card";
 import { status as issueStatuses } from "@/utils/constants/issues/status";
 import { toast } from "sonner";
-import { CustomIssue } from "@/types/project";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
-import { useSession } from "@/context/session-context";
 import { useRouter } from "next/navigation";
-import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { IssueStatus } from "@workspace/backend/prisma/generated/client/client";
 
 interface IssuesKanbanProps {
-  issues: CustomIssue[];
+  issues: any[];
   showProject?: boolean;
 }
 
@@ -25,7 +22,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
   const queryClient = useQueryClient();
 
   // Local state for optimistic updates
-  const [optimisticIssues, setOptimisticIssues] = useState<CustomIssue[]>([]);
+  const [optimisticIssues, setOptimisticIssues] = useState<any[]>([]);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
   const updateStatusMutation = useMutation({
@@ -107,7 +104,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       );
       return acc;
     },
-    {} as Record<string, CustomIssue[]>
+    {} as Record<string, any[]>
   );
 
   // Update status counts
@@ -149,7 +146,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
     issues,
   }: {
     status: any;
-    issues: CustomIssue[];
+    issues: any[];
   }) => (
     <div className="flex-1 min-w-[350px]">
       <div className="bg-card p-3 rounded-lg mb-3 border">

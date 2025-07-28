@@ -35,7 +35,17 @@ export const generateFeature = inngestClient.createFunction(
             description: z
               .string()
               .describe("A detailed description of the feature"),
-            phase: FeaturePhaseSchema,
+            phase: z.enum([
+              "DISCOVERY",
+              "PLANNING",
+              "DEVELOPMENT",
+              "TESTING",
+              "DEPLOYMENT",
+              "COMPLETED",
+              "RELEASE",
+              "LIVE",
+              "DEPRECATED",
+            ]),
             businessValue: z
               .number()
               .optional()
@@ -46,7 +56,7 @@ export const generateFeature = inngestClient.createFunction(
               .number()
               .optional()
               .describe("How many hours will this feature take to build?"),
-            priority: ImportanceSchema,
+            priority: z.enum(["CRITICAL", "HIGH", "MEDIUM", "LOW"]),
           })
         ),
       }),
@@ -79,6 +89,9 @@ export const generateFeature = inngestClient.createFunction(
             : "No existing features found."
         }
 
+          #### IMPORTANT ####
+        When suggesting a feature, consider the fact that this is a project type of ${project.platform === "both" ? "both web and mobile" : project.platform}
+        
         ## Feature Generation Guidelines
 
         ### 1. **Avoid Duplication**
@@ -96,6 +109,9 @@ export const generateFeature = inngestClient.createFunction(
         - **LIVE**: Production monitoring, maintenance
         - **COMPLETED**: Feature fully delivered and stable
         - **DEPRECATED**: Features being phased out
+
+          #### IMPORTANT ####
+        When suggesting a feature, consider the fact that this is a project type of ${project.platform === "both" ? "both web and mobile" : project.platform}
 
         ### 3. **Priority Assignment**
         - **CRITICAL**: Core functionality, security, legal compliance, revenue-critical
@@ -115,6 +131,9 @@ export const generateFeature = inngestClient.createFunction(
         - Account for team capacity and realistic development cycles
         - End dates should be after start dates with reasonable duration
 
+          #### IMPORTANT ####
+        When suggesting a feature, consider the fact that this is a project type of ${project.platform === "both" ? "both web and mobile" : project.platform}
+
         ### 6. **Business Value**
         - Assign values based on potential impact on user satisfaction, revenue, or efficiency
         - Consider the project's current validation stage
@@ -129,6 +148,9 @@ export const generateFeature = inngestClient.createFunction(
         4. **Follow** a logical development progression
         5. **Consider** realistic timelines and effort estimates
 
+          #### IMPORTANT ####
+        When suggesting a feature, consider the fact that this is a project type of ${project.platform === "both" ? "both web and mobile" : project.platform}
+
         ## Output Format
         Each feature should include:
         - **Name**: Clear, concise feature name
@@ -141,6 +163,9 @@ export const generateFeature = inngestClient.createFunction(
         - **End Date**: Realistic completion timeline
 
         Focus on creating features that will genuinely advance the project toward its goals while maintaining realistic scope and timelines.
+
+        #### IMPORTANT ####
+        When suggesting a feature, consider the fact that this is a project type of ${project.platform === "both" ? "both web and mobile" : project.platform}
             `,
     });
 
@@ -151,6 +176,8 @@ export const generateFeature = inngestClient.createFunction(
         ...feature,
         projectId: projectId,
         organizationId: project.organizationId!,
+        phase: feature.phase,
+        priority: feature.priority,
       })),
     });
   }

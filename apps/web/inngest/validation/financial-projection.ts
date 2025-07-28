@@ -6,45 +6,16 @@ import {
 } from "@workspace/backend";
 import z from "zod";
 
-// Custom schemas for Gemini API compatibility (excluding problematic fields)
-const FinancialProjectionInputSchema = z.object({
-  marketResearchId: z.string().optional(),
-  projectedRevenue: z.number().optional(),
-  revenueGrowthRate: z.number().optional(),
-  breakEvenPoint: z.number().int().optional(),
-  developmentCosts: z.number().optional(),
-  marketingCosts: z.number().optional(),
-  operationalCosts: z.number().optional(),
-  customerAcquisitionCost: z.number().optional(),
-  averageRevenuePerUser: z.number().optional(),
-  customerLifetimeValue: z.number().optional(),
-  paybackPeriod: z.number().int().optional(),
-  fundingNeeded: z.number().optional(),
-  riskFactors: z.array(z.string()).optional(),
-  mitigationStrategies: z.array(z.string()).optional(),
-  optimisticScenario: z.number().optional(),
-  realisticScenario: z.number().optional(),
-  pessimisticScenario: z.number().optional(),
-});
+// Modified schemas for Gemini API compatibility (excluding UUID and date fields)
+const FinancialProjectionInputSchema =
+  FinancialProjectionOptionalDefaultsSchema.omit({
+    id: true,
+    createdAt: true,
+  });
 
-const FundingRoundInputSchema = z.object({
-  financialProjectionId: z.string().optional(),
-  roundName: z.string(),
-  amount: z.number(),
-  equity: z.number().optional(),
-  valuation: z.number().optional(),
-  timeline: z.number().int().optional(),
-  investorType: z.enum([
-    "ANGEL",
-    "VENTURE_CAPITAL",
-    "PRIVATE_EQUITY",
-    "CORPORATE",
-    "CROWDFUNDING",
-  ]),
-  investorName: z.string().optional(),
-  developmentAllocation: z.number().optional(),
-  marketingAllocation: z.number().optional(),
-  operationsAllocation: z.number().optional(),
+const FundingRoundInputSchema = FundingRoundOptionalDefaultsSchema.omit({
+  id: true,
+  createdAt: true,
 });
 
 const saveFinancialProjectionTool = createTool({
@@ -125,7 +96,6 @@ const checkFinancialProjectionExistsTool = createTool({
   name: "check-financial-projection-exists",
   description:
     "Check if a financial projection already exists for the current market research",
-  parameters: z.object({}),
   handler: async (data, { network, agent, step }) => {
     const { ideaId, researchId } = network.state.data;
     const existingProjection = await prisma.financialProjection.findUnique({

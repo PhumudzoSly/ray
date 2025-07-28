@@ -13,7 +13,6 @@ export const polarClient = new Polar({
   server: "sandbox",
 });
 
-// @ts-nocheck
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -69,10 +68,8 @@ export const auth = betterAuth({
       ],
     }),
     organization({
-      sendInvitationEmail: async ({ email }) => {},
-      organizationDeletion: {
-        disabled: true,
-      },
+      allowUserToCreateOrganization: true,
+      membershipLimit: 50,
     }),
     passkey(),
     twoFactor({
