@@ -1,801 +1,208 @@
-"use client";
-import { cn } from "@workspace/ui/lib/utils";
-import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  ArrowUp10,
-  Grid2X2,
-  Layers,
-  Lightbulb,
-  ListStart,
-  Zap,
-} from "lucide-react";
-import { Badge } from "@workspace/ui/components/badge";
-import Link from "next/link";
-
-interface BentoGridItemProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  mockup: React.ReactNode;
-  className?: string;
-  size?: "small" | "medium" | "large";
-}
-
-const BentoGridItem = ({
-  title,
-  description,
-  icon,
-  mockup,
-  className,
-  size = "small",
-}: BentoGridItemProps) => {
-  const variants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring" as const,
-        damping: 20,
-        stiffness: 100,
-      },
-    },
-  };
-
-  return (
-    <motion.div
-      variants={variants}
-      className={cn(
-        "group relative flex h-full cursor-pointer flex-col justify-between overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:shadow-md",
-        className
-      )}
-    >
-      <div className="flex h-full flex-col">
-        {/* Header */}
-        <div className="p-6 pb-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-muted text-foreground">
-              {icon}
-            </div>
-            <Badge variant="secondary" className="text-xs">
-              Feature
-            </Badge>
-          </div>
-          <h3 className="text-lg font-medium text-foreground mb-2">{title}</h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {description}
-          </p>
-        </div>
-
-        {/* SVG Mockup */}
-        <div className="flex-1 p-6 pt-0">
-          <div className="w-full h-full bg-muted/20 rounded-md p-4 border border-border/50">
-            {mockup}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="p-6 pt-0">
-          <Link
-            href="/features"
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span className="mr-2">Learn more</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-const features = [
-  {
-    title: "Idea Validation",
-    description:
-      "Validate your SaaS ideas with AI-powered market research and competitor analysis before building.",
-    icon: <Lightbulb className="w-4 h-4" />,
-    size: "large" as const,
-    mockup: (
-      <svg viewBox="0 0 300 180" className="w-full h-full">
-        {/* Clean validation interface */}
-        <rect
-          width="300"
-          height="180"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="300" height="40" fill="#fafafa" />
-        <text x="16" y="25" fontSize="12" fontWeight="500" fill="#111827">
-          Idea Validation
-        </text>
-
-        {/* Search input */}
-        <rect
-          x="16"
-          y="55"
-          width="268"
-          height="32"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="24" y="73" fontSize="11" fill="#6b7280">
-          AI-powered task management for teams
-        </text>
-
-        {/* Results */}
-        <rect
-          x="16"
-          y="105"
-          width="130"
-          height="50"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="24" y="120" fontSize="10" fill="#6b7280">
-          Market Demand
-        </text>
-        <text x="24" y="138" fontSize="16" fontWeight="600" fill="#111827">
-          High
-        </text>
-        <text x="24" y="148" fontSize="9" fill="#6b7280">
-          Score: 8.7/10
-        </text>
-
-        <rect
-          x="154"
-          y="105"
-          width="130"
-          height="50"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="162" y="120" fontSize="10" fill="#6b7280">
-          Competition
-        </text>
-        <text x="162" y="138" fontSize="16" fontWeight="600" fill="#111827">
-          Medium
-        </text>
-        <text x="162" y="148" fontSize="9" fill="#6b7280">
-          17 competitors
-        </text>
-      </svg>
-    ),
-  },
-  {
-    title: "Project Management",
-    description:
-      "Organize tasks, track progress, and collaborate with your team in a clean, intuitive interface.",
-    icon: <Layers className="w-4 h-4" />,
-    size: "small" as const,
-    mockup: (
-      <svg viewBox="0 0 260 160" className="w-full h-full">
-        {/* Clean kanban board */}
-        <rect
-          width="260"
-          height="160"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="260" height="32" fill="#fafafa" />
-        <text x="12" y="20" fontSize="11" fontWeight="500" fill="#111827">
-          Project Board
-        </text>
-
-        {/* Columns */}
-        <rect
-          x="12"
-          y="45"
-          width="75"
-          height="100"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="18" y="60" fontSize="9" fontWeight="500" fill="#111827">
-          To Do
-        </text>
-
-        <rect
-          x="92"
-          y="45"
-          width="75"
-          height="100"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="98" y="60" fontSize="9" fontWeight="500" fill="#111827">
-          In Progress
-        </text>
-
-        <rect
-          x="172"
-          y="45"
-          width="75"
-          height="100"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="178" y="60" fontSize="9" fontWeight="500" fill="#111827">
-          Done
-        </text>
-
-        {/* Task cards */}
-        <rect
-          x="18"
-          y="70"
-          width="63"
-          height="20"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="22" y="82" fontSize="8" fill="#111827">
-          User Auth
-        </text>
-
-        <rect
-          x="98"
-          y="70"
-          width="63"
-          height="20"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="102" y="82" fontSize="8" fill="#111827">
-          Dashboard
-        </text>
-
-        <rect
-          x="178"
-          y="70"
-          width="63"
-          height="20"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="182" y="82" fontSize="8" fill="#111827">
-          Setup
-        </text>
-      </svg>
-    ),
-  },
-  {
-    title: "Visual App Flows",
-    description:
-      "Design and visualize your application architecture with AI-powered flow generation.",
-    icon: <Grid2X2 className="w-4 h-4" />,
-    size: "medium" as const,
-    mockup: (
-      <svg viewBox="0 0 280 140" className="w-full h-full">
-        {/* Clean flow diagram */}
-        <rect
-          width="280"
-          height="140"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="280" height="28" fill="#fafafa" />
-        <text x="12" y="18" fontSize="10" fontWeight="500" fill="#111827">
-          Flow Builder
-        </text>
-
-        {/* Flow nodes */}
-        <rect
-          x="20"
-          y="45"
-          width="60"
-          height="24"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="35" y="59" fontSize="8" fill="#111827">
-          Login
-        </text>
-
-        <rect
-          x="110"
-          y="45"
-          width="60"
-          height="24"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="120" y="59" fontSize="8" fill="#111827">
-          Dashboard
-        </text>
-
-        <rect
-          x="200"
-          y="45"
-          width="60"
-          height="24"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="215" y="59" fontSize="8" fill="#111827">
-          Tasks
-        </text>
-
-        {/* Connecting lines */}
-        <path
-          d="M80 57 L110 57"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-          markerEnd="url(#arrow)"
-        />
-        <path
-          d="M170 57 L200 57"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-          markerEnd="url(#arrow)"
-        />
-
-        {/* Decision node */}
-        <rect
-          x="105"
-          y="85"
-          width="70"
-          height="20"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="125" y="97" fontSize="8" fill="#6b7280">
-          Authentication
-        </text>
-
-        <path d="M140 69 L140 85" stroke="#e5e7eb" strokeWidth="1" />
-
-        <defs>
-          <marker
-            id="arrow"
-            markerWidth="6"
-            markerHeight="4"
-            refX="5"
-            refY="2"
-            orient="auto"
-          >
-            <polygon points="0 0, 6 2, 0 4" fill="#e5e7eb" />
-          </marker>
-        </defs>
-      </svg>
-    ),
-  },
-  {
-    title: "Public Roadmap",
-    description:
-      "Share your product roadmap publicly and collect feedback from your community.",
-    icon: <ListStart className="w-4 h-4" />,
-    size: "medium" as const,
-    mockup: (
-      <svg viewBox="0 0 280 140" className="w-full h-full">
-        {/* Clean roadmap */}
-        <rect
-          width="280"
-          height="140"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="280" height="28" fill="#fafafa" />
-        <text x="12" y="18" fontSize="10" fontWeight="500" fill="#111827">
-          Product Roadmap
-        </text>
-
-        {/* Timeline */}
-        <rect x="20" y="45" width="2" height="80" fill="#e5e7eb" />
-
-        {/* Milestones */}
-        <circle cx="21" cy="60" r="3" fill="#111827" />
-        <rect
-          x="35"
-          y="52"
-          width="200"
-          height="16"
-          rx="2"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="40" y="62" fontSize="9" fill="#111827">
-          Q1 - Core Features
-        </text>
-
-        <circle cx="21" cy="85" r="3" fill="#6b7280" />
-        <rect
-          x="35"
-          y="77"
-          width="200"
-          height="16"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="40" y="87" fontSize="9" fill="#111827">
-          Q2 - AI Integration
-        </text>
-
-        <circle cx="21" cy="110" r="3" fill="#d1d5db" />
-        <rect
-          x="35"
-          y="102"
-          width="200"
-          height="16"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="40" y="112" fontSize="9" fill="#6b7280">
-          Q3 - Mobile App
-        </text>
-      </svg>
-    ),
-  },
-  {
-    title: "Launch Readiness",
-    description:
-      "Track your project's health and readiness across code quality, documentation, and testing.",
-    icon: <Zap className="w-4 h-4" />,
-    size: "small" as const,
-    mockup: (
-      <svg viewBox="0 0 260 160" className="w-full h-full">
-        {/* Clean readiness dashboard */}
-        <rect
-          width="260"
-          height="160"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="260" height="28" fill="#fafafa" />
-        <text x="12" y="18" fontSize="10" fontWeight="500" fill="#111827">
-          Launch Status
-        </text>
-
-        {/* Score circle */}
-        <circle
-          cx="130"
-          cy="80"
-          r="20"
-          fill="none"
-          stroke="#e5e7eb"
-          strokeWidth="3"
-        />
-        <circle
-          cx="130"
-          cy="80"
-          r="20"
-          fill="none"
-          stroke="#111827"
-          strokeWidth="3"
-          strokeDasharray="94"
-          strokeDashoffset="20"
-          transform="rotate(-90 130 80)"
-        />
-        <text
-          x="130"
-          y="80"
-          fontSize="14"
-          fontWeight="600"
-          fill="#111827"
-          textAnchor="middle"
-        >
-          78%
-        </text>
-        <text x="130" y="92" fontSize="8" fill="#6b7280" textAnchor="middle">
-          Ready
-        </text>
-
-        {/* Category scores */}
-        <rect
-          x="20"
-          y="115"
-          width="65"
-          height="30"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="25" y="127" fontSize="8" fill="#6b7280">
-          Code
-        </text>
-        <text x="25" y="138" fontSize="11" fontWeight="600" fill="#111827">
-          92%
-        </text>
-
-        <rect
-          x="97"
-          y="115"
-          width="65"
-          height="30"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="102" y="127" fontSize="8" fill="#6b7280">
-          Docs
-        </text>
-        <text x="102" y="138" fontSize="11" fontWeight="600" fill="#111827">
-          67%
-        </text>
-
-        <rect
-          x="175"
-          y="115"
-          width="65"
-          height="30"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="180" y="127" fontSize="8" fill="#6b7280">
-          Tests
-        </text>
-        <text x="180" y="138" fontSize="11" fontWeight="600" fill="#111827">
-          85%
-        </text>
-      </svg>
-    ),
-  },
-  {
-    title: "Growth Analytics",
-    description:
-      "Get AI-powered insights on user behavior, growth metrics, and optimization opportunities.",
-    icon: <ArrowUp10 className="w-4 h-4" />,
-    size: "large" as const,
-    mockup: (
-      <svg viewBox="0 0 300 180" className="w-full h-full">
-        {/* Clean analytics dashboard */}
-        <rect
-          width="300"
-          height="180"
-          rx="4"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-
-        {/* Header */}
-        <rect width="300" height="32" fill="#fafafa" />
-        <text x="16" y="21" fontSize="11" fontWeight="500" fill="#111827">
-          Growth Analytics
-        </text>
-
-        {/* Metrics */}
-        <rect
-          x="16"
-          y="50"
-          width="65"
-          height="40"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="22" y="62" fontSize="8" fill="#6b7280">
-          Users
-        </text>
-        <text x="22" y="78" fontSize="14" fontWeight="600" fill="#111827">
-          2,847
-        </text>
-        <text x="22" y="86" fontSize="7" fill="#6b7280">
-          +23%
-        </text>
-
-        <rect
-          x="89"
-          y="50"
-          width="65"
-          height="40"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="95" y="62" fontSize="8" fill="#6b7280">
-          Revenue
-        </text>
-        <text x="95" y="78" fontSize="14" fontWeight="600" fill="#111827">
-          $12.4k
-        </text>
-        <text x="95" y="86" fontSize="7" fill="#6b7280">
-          +45%
-        </text>
-
-        <rect
-          x="162"
-          y="50"
-          width="65"
-          height="40"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="168" y="62" fontSize="8" fill="#6b7280">
-          Retention
-        </text>
-        <text x="168" y="78" fontSize="14" fontWeight="600" fill="#111827">
-          87%
-        </text>
-        <text x="168" y="86" fontSize="7" fill="#6b7280">
-          +12%
-        </text>
-
-        <rect
-          x="235"
-          y="50"
-          width="49"
-          height="40"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="241" y="62" fontSize="8" fill="#6b7280">
-          Churn
-        </text>
-        <text x="241" y="78" fontSize="14" fontWeight="600" fill="#111827">
-          2.1%
-        </text>
-        <text x="241" y="86" fontSize="7" fill="#6b7280">
-          -8%
-        </text>
-
-        {/* AI insights */}
-        <rect
-          x="16"
-          y="110"
-          width="268"
-          height="55"
-          rx="3"
-          fill="#fafafa"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="22" y="125" fontSize="10" fontWeight="500" fill="#111827">
-          AI Insights
-        </text>
-
-        <rect
-          x="22"
-          y="135"
-          width="256"
-          height="12"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="26" y="143" fontSize="8" fill="#111827">
-          Optimize onboarding flow for 15% better retention
-        </text>
-
-        <rect
-          x="22"
-          y="150"
-          width="256"
-          height="12"
-          rx="2"
-          fill="#ffffff"
-          stroke="#e5e7eb"
-          strokeWidth="1"
-        />
-        <text x="26" y="158" fontSize="8" fill="#6b7280">
-          Add feature tooltips to increase engagement by 8%
-        </text>
-      </svg>
-    ),
-  },
-];
+import { Card, CardContent } from "@workspace/ui/components/card";
+import { Shield, Users } from "lucide-react";
+import Image from "next/image";
 
 export default function Features() {
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
   return (
-    <section className="py-20 bg-background" id="features">
-      <div className="max-w-7xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center space-y-4 mb-16"
-        >
-          <Badge variant="outline" className="mb-4">
-            Features
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Everything you need to build faster
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Simple, powerful tools that help you validate ideas, manage
-            projects, and launch successful products.
+    <section className="py-24 md:py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        {/* Header */}
+        <div className="mb-16 max-w-3xl">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl mb-6">
+            Your next SaaS... <br />
+            <span className="text-muted-foreground">
+              Does not have to fail.
+            </span>
+          </h1>
+          <p className="text-muted-foreground leading-relaxed">
+            Stop second-guessing your next big move. Get real feedback,
+            actionable insights, and the clarity you need to launch products
+            that people actually want.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          {features.map((feature, i) => (
-            <BentoGridItem
-              key={i}
-              title={feature.title}
-              description={feature.description}
-              icon={feature.icon}
-              mockup={feature.mockup}
-              size={feature.size}
-              className={cn(
-                feature.size === "large"
-                  ? "lg:col-span-4"
-                  : feature.size === "medium"
-                    ? "lg:col-span-3"
-                    : "lg:col-span-2",
-                "min-h-[350px]"
-              )}
-            />
-          ))}
-        </motion.div>
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+          {/* SaaS Idea Validation - Large Card */}
+          <Card className="lg:col-span-2 p-8 border-2 hover:border-primary/20 transition-colors">
+            <CardContent className="p-0 flex flex-col items-center text-center space-y-6">
+              <div className="relative">
+                <svg
+                  className="text-muted-foreground/30 w-56 h-24"
+                  viewBox="0 0 254 104"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M112.891 97.7022C140.366 97.0802 171.004 94.6715 201.087 87.5116C210.43 85.2881 219.615 82.6412 228.284 78.2473C232.198 76.3179 235.905 73.9942 239.348 71.3124C241.85 69.2557 243.954 66.7571 245.555 63.9408C249.34 57.3235 248.281 50.5341 242.498 45.6109C239.033 42.7237 235.228 40.2703 231.169 38.3054C219.443 32.7209 207.141 28.4382 194.482 25.534C184.013 23.1927 173.358 21.7755 162.64 21.2989C161.376 21.3512 160.113 21.181 158.908 20.796C158.034 20.399 156.857 19.1682 156.962 18.4535C157.115 17.8927 157.381 17.3689 157.743 16.9139C158.104 16.4588 158.555 16.0821 159.067 15.8066C160.14 15.4683 161.274 15.3733 162.389 15.5286C179.805 15.3566 196.626 18.8373 212.998 24.462C220.978 27.2494 228.798 30.4747 236.423 34.1232C240.476 36.1159 244.202 38.7131 247.474 41.8258C254.342 48.2578 255.745 56.9397 251.841 65.4892C249.793 69.8582 246.736 73.6777 242.921 76.6327C236.224 82.0192 228.522 85.4602 220.502 88.2924C205.017 93.7847 188.964 96.9081 172.738 99.2109C153.442 101.949 133.993 103.478 114.506 103.79C91.1468 104.161 67.9334 102.97 45.1169 97.5831C36.0094 95.5616 27.2626 92.1655 19.1771 87.5116C13.839 84.5746 9.1557 80.5802 5.41318 75.7725C-0.54238 67.7259 -1.13794 59.1763 3.25594 50.2827C5.82447 45.3918 9.29572 41.0315 13.4863 37.4319C24.2989 27.5721 37.0438 20.9681 50.5431 15.7272C68.1451 8.8849 86.4883 5.1395 105.175 2.83669C129.045 0.0992292 153.151 0.134761 177.013 2.94256C197.672 5.23215 218.04 9.01724 237.588 16.3889C240.089 17.3418 242.498 18.5197 244.933 19.6446C246.627 20.4387 247.725 21.6695 246.997 23.615C246.455 25.1105 244.814 25.5605 242.63 24.5811C230.322 18.9961 217.233 16.1904 204.117 13.4376C188.761 10.3438 173.2 8.36665 157.558 7.52174C129.914 5.70776 102.154 8.06792 75.2124 14.5228C60.6177 17.8788 46.5758 23.2977 33.5102 30.6161C26.6595 34.3329 20.4123 39.0673 14.9818 44.658C12.9433 46.8071 11.1336 49.1622 9.58207 51.6855C4.87056 59.5336 5.61172 67.2494 11.9246 73.7608C15.2064 77.0494 18.8775 79.925 22.8564 82.3236C31.6176 87.7101 41.3848 90.5291 51.3902 92.5804C70.6068 96.5773 90.0219 97.7419 112.891 97.7022Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-5xl font-bold text-foreground">
+                    100%
+                  </span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h2 className="text-2xl font-semibold text-foreground">
+                  SaaS Idea Validation
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Validate your ideas before building
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Product Market Fit */}
+          <Card className="md:col-span-1 lg:col-span-2 p-6 hover:border-primary/20 transition-colors">
+            <CardContent className="p-0 flex flex-col items-center text-center space-y-6">
+              <div className="flex-shrink-0">
+                <Image
+                  src="/svg/happy-man.svg"
+                  height={80}
+                  width={80}
+                  alt="Product market fit illustration"
+                />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-xl font-semibold text-foreground">
+                  Product market fit.
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Find product market fit before you build, save hours of
+                  development and deliver a product that users love.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Product Management */}
+          <Card className="md:col-span-1 lg:col-span-2 p-6 hover:border-primary/20 transition-colors">
+            <CardContent className="p-0 space-y-6">
+              <div className="w-full flex items-center justify-center ">
+                <Image
+                  height={70}
+                  width={70}
+                  src="/svg/chart-grow.svg"
+                  alt="Product management"
+                />
+              </div>
+              <div className="space-y-3 text-center">
+                <h3 className="text-xl font-semibold text-foreground">
+                  Product management
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Manage your entire SaaS from one place. Manage features,
+                  launches, and feedback.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Feedback Matters */}
+          <Card className="lg:col-span-3 p-6 hover:border-primary/20 transition-colors">
+            <CardContent className="p-0 grid md:grid-cols-2 gap-6 h-full">
+              <div className="flex flex-col justify-between space-y-6">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background">
+                  <Shield
+                    className="h-5 w-5 text-muted-foreground"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-foreground">
+                    Feedback matters
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Collect feedback from your waitlist or app users, turn it
+                    into issues, reviews or product features.
+                  </p>
+                </div>
+              </div>
+              <div className="relative bg-muted/30 rounded-lg border p-6 overflow-hidden">
+                <div className="absolute left-3 top-3 flex gap-1.5">
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground/30"></div>
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground/30"></div>
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground/30"></div>
+                </div>
+                <div className="mt-6 flex justify-center">
+                  <Image
+                    height={120}
+                    width={160}
+                    alt="Feedback illustration"
+                    src="/svg/feedback.svg"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Enhanced Waitlist */}
+          <Card className="lg:col-span-3 p-6 hover:border-primary/20 transition-colors">
+            <CardContent className="p-0 grid md:grid-cols-2 gap-6 h-full">
+              <div className="flex flex-col justify-between space-y-6">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-border bg-background">
+                  <Users
+                    className="h-6 w-6 text-muted-foreground"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-foreground">
+                    Enhanced Waitlist
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Collect waitlist users for product launches and new features
+                    and sync with Resend.
+                  </p>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="absolute inset-0 w-px bg-border mx-auto"></div>
+                <div className="relative flex flex-col justify-center space-y-6 py-6">
+                  <div className="flex items-center justify-end gap-3 pr-4">
+                    <span className="rounded-md border bg-background px-3 py-1.5 text-xs font-medium shadow-sm">
+                      Riley
+                    </span>
+                    <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-background shadow-sm">
+                      <img
+                        className="h-full w-full object-cover"
+                        src="https://randomuser.me/api/portraits/men/15.jpg"
+                        alt="Riley"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 pl-4">
+                    <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-background shadow-sm">
+                      <img
+                        className="h-full w-full object-cover"
+                        src="https://randomuser.me/api/portraits/women/21.jpg"
+                        alt="Avery"
+                      />
+                    </div>
+                    <span className="rounded-md border bg-background px-3 py-1.5 text-xs font-medium shadow-sm">
+                      Avery
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-end gap-3 pr-4">
+                    <span className="rounded-md border bg-background px-3 py-1.5 text-xs font-medium shadow-sm">
+                      Jordan
+                    </span>
+                    <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-background shadow-sm">
+                      <img
+                        className="h-full w-full object-cover"
+                        src="https://randomuser.me/api/portraits/men/28.jpg"
+                        alt="Jordan"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </section>
   );

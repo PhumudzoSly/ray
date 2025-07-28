@@ -61,8 +61,9 @@ export default function StatsSection() {
                 <CheckCircle className="w-6 h-6 text-emerald-500 mt-1 flex-shrink-0 transition-transform group-hover:scale-110" />
                 <p className="text-zinc-400 text-lg">
                   Ray AI solves majority of problems founders face during SaaS
-                  validation and development, giving you real data and feedback
-                  in real time to build and launch a scalable business.
+                  validation and development, giving you real data, tools,
+                  resources and user feedback to plan, build and launch a
+                  scalable business.
                 </p>
               </div>
 
@@ -74,7 +75,7 @@ export default function StatsSection() {
                       Growth
                     </h3>
                   </div>
-                  <div className="stat-number text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-violet-300 opacity-0 transform translate-y-4 transition-all duration-1000">
+                  <div className="stat-number text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-500 to-violet-300 opacity-0 transform translate-y-4 transition-all duration-1000">
                     +30M
                   </div>
                   <p className="text-lg mt-2 font-medium text-zinc-500">
@@ -89,11 +90,11 @@ export default function StatsSection() {
                       Efficiency
                     </h3>
                   </div>
-                  <div className="stat-number text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-300 opacity-0 transform translate-y-4 transition-all duration-1000">
+                  <div className="stat-number text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-300 opacity-0 transform translate-y-4 transition-all duration-1000">
                     +500h
                   </div>
                   <p className="text-lg mt-2 font-medium text-zinc-500">
-                    Saved on validation
+                    Saved on development
                   </p>
                 </div>
               </div>
@@ -112,14 +113,15 @@ export default function StatsSection() {
                   <p className="text-zinc-600 text-lg italic leading-relaxed">
                     "I have been building SaaS that keeps on failing over and
                     over again, until I realized I was building something that
-                    no one wants, and kept getting stuck on building million
-                    features instead of focusing on the real problem."
+                    no one wants. I built RayAI as a personal tool to help me
+                    launch something that actually solves a real problem, and
+                    today I'm launching it to help other founders."
                   </p>
 
                   <div className="mt-8 flex items-center">
                     <div className="ml-4">
                       <cite className="text-zinc-900 font-medium block not-italic">
-                        Phumudzo, Founder
+                        Phumudzo, RayAI Founder
                       </cite>
                       <Button
                         className="mt-2 rounded-full bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"

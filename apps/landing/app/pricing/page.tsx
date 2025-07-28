@@ -1,91 +1,138 @@
 import { Badge } from "@workspace/ui/components/badge";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
-import { Check, ArrowRight, X, Star, Zap, Users } from "lucide-react";
+import {
+  Check,
+  ArrowRight,
+  X,
+  Star,
+  Zap,
+  Users,
+  DollarSign,
+} from "lucide-react";
 import Link from "next/link";
 
 const plans = [
   {
     name: "Starter",
-    price: "$19",
+    price: "$29",
     period: "/month",
-    description: "Perfect for small teams and vide coders",
-    icon: <Zap className="w-6 h-6" />,
+    description: "Perfect for solo founders and small teams",
+    icon: <Zap className="w-5 h-5" />,
     features: [
-      "Up to 2 team members",
-      "3 SaaS Ideas",
-      "15 Projects",
-      "Full idea validation",
-      "Unlimited AI issue tracking",
-      "Up to 5 waitlists",
-      "Up to 5 public roadmaps",
-      "Feature requests & management",
-      "Basic visual app flow",
-      "AI prompts builder",
-      "Unlimited User feedback",
-      "Launch AI",
+      "2 team members",
+      "2 SaaS ideas with AI validation",
+      "10 projects",
+      "Project management",
+      "Unlimited roadmaps",
+      "Unlimited waitlists",
+      "Unlimited user feedback",
+      "Unlimited issue tracking",
+      "Complete SaaS management",
     ],
-    notAvailable: ["Premium support", "AI Agent", "Inbox (Coming soon)"],
+    notAvailable: [
+      "Advanced AI validation",
+      "API access",
+      "Custom integrations",
+      "Priority support",
+      "AI Agent (Coming soon)",
+      "Inbox (Coming soon)",
+    ],
     cta: "Get Started",
     href: "https://app.rayai.dev/auth/sign-in",
     popular: false,
-    gradient: "from-blue-500 to-cyan-500",
+    savings: "$150+",
   },
   {
     name: "Pro",
-    price: "$59",
+    price: "$99",
     period: "/month",
-    description: "For serious builders and growing teams",
-    icon: <Star className="w-6 h-6" />,
+    description: "For growing teams and serious builders",
+    icon: <Star className="w-5 h-5" />,
     features: [
       "Up to 10 team members",
-      "5 SaaS Ideas",
-      "Everything in Starter",
+      "10 SaaS ideas with AI validation",
       "Unlimited projects",
-      "Advanced idea validation",
-      "Full project management & tracking",
-      "Full visual app flows",
-      "Up to 10 waitlists",
-      "Up to 10 public roadmaps",
-      "AI user feedback analysis",
-      "Premium support",
-      "Limited AI Agent",
-      "Early access to new features",
+      "Advanced project management",
+      "Unlimited public roadmaps",
+      "Unlimited waitlists",
+      "Unlimited user feedback",
+      "Unlimited issue tracking",
+      "AI Agent (Coming soon)",
       "Inbox (Coming soon)",
+      "Priority support",
+      "Complete API access",
+      "Custom integrations",
+      "Advanced AI validation features",
     ],
-    notAvailable: [],
     cta: "Get Started",
     href: "https://app.rayai.dev/auth/sign-in",
     popular: true,
-    gradient: "from-purple-500 to-pink-500",
+    savings: "$300+",
   },
   {
     name: "Team",
     price: "$299",
     period: "/month",
-    description: "For growing teams and organizations",
-    icon: <Users className="w-6 h-6" />,
+    description: "For established teams and organizations",
+    icon: <Users className="w-5 h-5" />,
     features: [
-      "Unlimited team members",
-      "Unlimited SaaS Ideas",
-      "Everything in Pro",
-      "Advanced permissions",
-      "Complete issue tracking",
-      "Unlimited waitlist",
+      "Up to 100 team members",
+      "Unlimited SaaS ideas",
+      "Advanced permissions & roles",
       "Unlimited public roadmaps",
-      "Full AI Agent",
-      "Advanced analytics & reporting",
-      "Dedicated support",
+      "Unlimited waitlists",
+      "Unlimited user feedback",
+      "Unlimited issue tracking",
+      "AI Agent (Coming soon)",
+      "Inbox (Coming soon)",
+      "Priority support",
+      "Complete API access",
+      "Custom integrations",
+      "Advanced AI validation features",
     ],
     notAvailable: [],
     cta: "Start Building",
     href: "https://app.rayai.dev/auth/sign-in",
     popular: false,
-    gradient: "from-orange-500 to-red-500",
+    savings: "$1000+",
+  },
+];
+
+const comparisonData = [
+  {
+    tool: "Linear Pro",
+    price: "$15/user/month",
+    features: "Project management + Issue tracking",
+  },
+  {
+    tool: "Productboard",
+    price: "$20/user/month",
+    features: "Roadmaps",
+  },
+  {
+    tool: "LaunchList",
+    price: "$29/month",
+    features: "Waitlists",
+  },
+  {
+    tool: "UserVoice",
+    price: "$15/user/month",
+    features: "User feedback",
+  },
+  {
+    tool: "Custom AI Validation",
+    price: "$200-500/month",
+    features: "Market research & analysis",
   },
 ];
 
 const faqs = [
+  {
+    question: "How much would this cost if I bought each tool separately?",
+    answer:
+      "Building this stack with separate tools would cost $200-400/month for a small team. Our all-in-one platform saves you 50-75% while providing better integration and our unique AI validation features.",
+  },
   {
     question: "Can I change plans at any time?",
     answer:
@@ -94,107 +141,150 @@ const faqs = [
   {
     question: "Is there a free trial?",
     answer:
-      "No, we don't offer a free trial, but feel free to  self-host the app and use the free version of Ray AI.",
+      "No, we don't offer a free trial, but we are considering it in the future.",
   },
   {
     question: "Can I cancel anytime?",
     answer:
       "Absolutely. You can cancel your subscription at any time from your account settings. Your access will continue until the end of your current billing period.",
   },
+  {
+    question: "What's included in AI validation?",
+    answer:
+      "Our AI validation includes market research, competitive analysis, financial projections, target audience identification, technology assessment, and risk analysis to help validate your SaaS ideas.",
+  },
 ];
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="relative border-b border-border/50 bg-gradient-to-r from-background to-muted/10">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
-        <div className="relative max-w-6xl mx-auto px-4 py-20 text-center">
-          <Badge variant="info">Pricing</Badge>
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-            Simple, transparent pricing
+      <div className="border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+          <h1 className="text-4xl font-semibold text-foreground mb-4">
+            Pricing that scales with you.
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Choose the plan that's right for you.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            All-in-one SaaS management platform. Save 50-75% vs. buying separate
+            tools.
           </p>
         </div>
       </div>
 
+      {/* Value Comparison */}
+      <div className="border-b border-border bg-muted/30">
+        <div className="max-w-4xl mx-auto px-6 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-semibold text-foreground mb-4">
+              Why choose Ray over separate tools?
+            </h2>
+            <p className="text-muted-foreground">
+              Compare the cost of building this stack with individual tools
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {comparisonData.map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-4 border border-border rounded-lg bg-background"
+              >
+                <div>
+                  <h3 className="font-medium text-foreground">{item.tool}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {item.features}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-foreground">{item.price}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center p-6 border border-border rounded-lg bg-background">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <DollarSign className="w-5 h-5 text-muted-foreground" />
+              <span className="text-lg font-medium text-foreground">
+                Total for 5 users: $200-400/month
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              vs. Ray Pro at $99/month - Save 50-75%
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Pricing Cards */}
-      <div className="max-w-7xl mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
+      <div className="max-w-6xl mx-auto px-6 py-24">
+        <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <Card
               key={plan.name}
-              className={`group relative p-8 lg:p-10 ${
+              className={`relative p-8 ${
                 plan.popular
-                  ? "border-primary/50 scale-105 shadow-xl bg-gradient-to-br from-primary/5 to-primary/10 ring-1 ring-primary/20"
-                  : "border-border/50 hover:border-primary/30 bg-card/20 backdrop-blur-sm"
+                  ? "border-2 border-foreground bg-gray-100"
+                  : "border border-border bg-background"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-lg">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="px-3 py-1 text-xs font-medium bg-background text-foreground">
                     Most Popular
                   </Badge>
                 </div>
               )}
 
-              <div className="text-center mb-10">
-                <div
-                  className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r ${plan.gradient} text-white mb-6 group-hover:scale-110 transition-transform duration-300`}
-                >
+              <div className="mb-8">
+                <div className="flex items-center gap-3 mb-4">
                   {plan.icon}
+                  <h3 className="text-xl font-semibold">{plan.name}</h3>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-3">
-                  {plan.name}
-                </h3>
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-foreground">
-                    {plan.price}
-                  </span>
-                  <span className="text-lg text-muted-foreground ml-1">
+                  <span className="text-3xl font-semibold">{plan.price}</span>
+                  <span className="text-muted-foreground ml-1">
                     {plan.period}
                   </span>
                 </div>
-                <p className="text-muted-foreground text-base leading-relaxed">
+                <p className="text-sm text-muted-foreground">
                   {plan.description}
                 </p>
+                {plan.savings && (
+                  <div className="mt-3 p-2 bg-muted rounded-md">
+                    <p className="text-xs text-muted-foreground">
+                      Save {plan.savings} vs. separate tools
+                    </p>
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-4 mb-10">
+              <div className="space-y-3 mb-8">
                 {plan.features.map((feature, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 group/feature"
-                  >
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-500/10 flex items-center justify-center mt-0.5">
-                      <Check className="w-3 h-3 text-green-800" />
-                    </div>
-                    <span className="text-sm text-muted-foreground group-hover/feature:text-foreground transition-colors">
-                      {feature}
-                    </span>
+                  <div key={index} className="flex items-start gap-3">
+                    <Check className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{feature}</span>
                   </div>
                 ))}
-                {plan.notAvailable.map((feature, index) => (
+                {plan?.notAvailable?.map((feature, index) => (
                   <div
                     key={index}
-                    className="flex items-start gap-3 opacity-60"
+                    className="flex items-start gap-3 opacity-50"
                   >
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center mt-0.5">
-                      <X className="w-3 h-3 text-muted-foreground" />
-                    </div>
-                    <span className="text-sm text-muted-foreground line-through">
-                      {feature}
-                    </span>
+                    <X className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm line-through">{feature}</span>
                   </div>
                 ))}
               </div>
 
-              <Button asChild variant={plan.popular ? "default" : "outline"}>
+              <Button
+                asChild
+                variant={plan.popular ? "default" : "outline"}
+                className="w-full"
+              >
                 <Link href={plan.href}>
                   {plan.cta}
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
             </Card>
@@ -203,28 +293,26 @@ export default function PricingPage() {
       </div>
 
       {/* FAQ Section */}
-      <div className="border-t border-border/50 bg-gradient-to-r from-muted/10 to-background">
-        <div className="max-w-4xl mx-auto px-4 py-20">
+      <div className="border-t border-border">
+        <div className="max-w-3xl mx-auto px-6 py-24">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-6">
+            <h2 className="text-2xl font-semibold text-foreground mb-4">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground">
               Everything you need to know about our pricing and plans.
             </p>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-12">
             {faqs.map((faq, index) => (
-              <div key={index} className="group">
-                <div className="border-b border-border/50 pb-8 hover:border-border transition-colors">
-                  <h3 className="text-xl font-semibold text-foreground mb-4 group-hover:text-primary transition-colors">
-                    {faq.question}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed text-base">
-                    {faq.answer}
-                  </p>
-                </div>
+              <div key={index} className="border-b border-border pb-4">
+                <h3 className="text-lg font-medium text-foreground mb-3">
+                  {faq.question}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {faq.answer}
+                </p>
               </div>
             ))}
           </div>

@@ -1,19 +1,10 @@
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import Navbar from "@/components/main/navbar";
 import Footer from "@/components/main/footer";
 import { Toaster } from "sonner";
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
 
 export default function RootLayout({
   children,
@@ -23,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
+        className={`${GeistSans.className} ${GeistMono.variable} font-sans antialiased `}
       >
         <Providers>
           <Navbar />
@@ -36,39 +27,6 @@ export default function RootLayout({
                 links: [
                   { label: "Home", link: "/" },
                   { label: "Features", link: "/features" },
-                  {
-                    label: "Idea Validation",
-                    link: "/features/idea-validation",
-                  },
-                  {
-                    label: "Visual Flow Builder",
-                    link: "/features/visual-flow-builder",
-                  },
-                  {
-                    label: "Project Management",
-                    link: "/features/project-management",
-                  },
-                  { label: "AI Assistant", link: "/features/ai-assistant" },
-                  {
-                    label: "Launch Orchestration",
-                    link: "/features/launch-orchestration",
-                  },
-                  {
-                    label: "Public Roadmaps",
-                    link: "/features/public-roadmaps",
-                  },
-                  {
-                    label: "Analytics & Insights",
-                    link: "/features/analytics-insights",
-                  },
-                  {
-                    label: "Tech Stack Integration",
-                    link: "/features/tech-stack-integration",
-                  },
-                  {
-                    label: "Issue Tracking",
-                    link: "/features/issue-tracking",
-                  },
                   { label: "Pricing", link: "/pricing" },
                 ],
               },

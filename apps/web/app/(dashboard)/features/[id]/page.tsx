@@ -44,7 +44,9 @@ const SingleFeaturePage = async ({
   const feature = featureResult.success ? featureResult.data : null;
 
   if (!feature) {
-    return redirect("/dashboard");
+    return redirect(
+      process.env.NODE_ENV === "production" ? "/stay-tuned" : "/dashboard"
+    );
   }
 
   const dehydratedState = dehydrate(queryClient);

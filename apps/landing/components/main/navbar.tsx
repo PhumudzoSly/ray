@@ -1,205 +1,184 @@
 "use client";
+import { BookOpenIcon, InfoIcon, LifeBuoyIcon, Menu } from "lucide-react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@workspace/ui/components/navigation-menu";
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@workspace/ui/components/sheet";
-import { Menu } from "lucide-react";
+import { cn } from "@workspace/ui/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import * as React from "react";
 
-const mainLinks = [
+// Navigation links array to be used in both desktop and mobile menus
+const navigationLinks = [
+  { href: "/", label: "Home" },
   {
     label: "Features",
-    link: "/features",
+    href: "/features",
   },
   {
     label: "Pricing",
-    link: "/pricing",
-  },
-  {
-    label: "Help",
-    link: "/help",
+    href: "/pricing",
   },
   {
     label: "Docs",
-    link: "https://docs.rayai.dev",
+    href: "https://docs.rayai.dev",
+  },
+  {
+    label: "Help",
+    href: "/help",
   },
 ];
 
-const featureLinks = [
-  { label: "Idea Validation", link: "/features/idea-validation" },
-  { label: "Visual Flow Builder", link: "/features/visual-flow-builder" },
-  { label: "Project Management", link: "/features/project-management" },
-  { label: "AI Assistant", link: "/features/ai-assistant" },
-  { label: "Launch Orchestration", link: "/features/launch-orchestration" },
-  { label: "Public Roadmaps", link: "/features/public-roadmaps" },
-  { label: "Analytics & Insights", link: "/features/analytics-insights" },
-  { label: "Tech Stack Integration", link: "/features/tech-stack-integration" },
-  { label: "Issue Tracking", link: "/features/issue-tracking" },
-];
-
 export default function Navbar() {
+  const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-  const [isScrolled, setIsScrolled] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 10);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (pathname.startsWith("/rm/") || pathname.startsWith("/wl/")) return null;
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(href);
+  };
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-all ${
-        isScrolled
-          ? "bg-background border-border"
-          : "bg-background/80 backdrop-blur-xl border-transparent"
-      }`}
+      className={cn(
+        "sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-all duration-300",
+        isScrolled && ""
+      )}
     >
-      <div className="max-w-7xl mx-auto flex h-16 items-center px-4">
-        <div className="flex items-center space-x-4 lg:space-x-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <img src="/icon.png" alt="Ray AI Logo" className="h-8 w-auto" />
-            <Badge variant="info">Beta</Badge>
-          </Link>
-          <nav className="hidden md:flex items-center space-x-4 lg:space-x-6">
-            <div className="relative group">
-              <Link
-                href="/features"
-                className={`text-sm font-semibold transition-colors hover:text-primary ${
-                  pathname === "/features"
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
-                Features
-              </Link>
-              <div className="absolute left-0 mt-2 w-56 bg-background border border-border rounded-lg shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
-                <div className="py-2">
-                  {featureLinks.map((item) => (
-                    <Link
-                      key={item.link}
-                      href={item.link}
-                      className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
-            {mainLinks
-              .filter((item) => item.label !== "Features")
-              .map((item) => (
-                <Link
-                  key={item.link}
-                  href={item.link}
-                  className={`text-sm font-semibold transition-colors hover:text-primary ${
-                    pathname === item.link
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
-          </nav>
-        </div>
-        <div className="ml-auto flex items-center space-x-4">
-          <Button
-            asChild
-            className="hidden md:flex font-semibold"
-            variant={"outline"}
+      <div
+        className={cn(
+          "flex items-center max-w-7xl mx-auto justify-between gap-4 px-4 md:px-6 transition-all duration-300 h-16",
+          isScrolled
+            ? "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+            : ""
+        )}
+      >
+        {/* Left side - Logo */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/"
+            className="text-primary hover:text-primary/90 flex items-center gap-2"
           >
-            <Link href="https://app.rayai.dev/auth/sign-in">Sign In</Link>
-          </Button>
-          <Button asChild className="hidden md:flex font-semibold">
-            <Link href="https://app.rayai.dev/auth/sign-up">Get Started</Link>
-          </Button>
+            <Image
+              src="/icon.png"
+              alt="Logo"
+              width={isScrolled ? 32 : 32}
+              height={isScrolled ? 32 : 32}
+              className="transition-all duration-300"
+            />
+          </Link>
+        </div>
+
+        {/* Center - Navigation menu (hidden on mobile) */}
+        <div className="hidden md:flex items-center justify-center flex-1">
+          <NavigationMenu>
+            <NavigationMenuList className="gap-2">
+              {navigationLinks.map((link, index) => (
+                <NavigationMenuItem key={index}>
+                  <Link
+                    href={link.href || ""}
+                    className={cn(
+                      "text-sm px-3 py-2 font-medium transition-colors",
+                      isActive(link.href)
+                        ? "text-primary font-semibold border-b-2 border-primary"
+                        : "text-muted-foreground hover:text-primary"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
+
+        {/* Right side - Buttons and mobile menu */}
+        <div className="flex items-center gap-2">
+          {/* Desktop buttons (hidden on mobile) */}
+          <div className="hidden md:flex items-center gap-2">
+            <Button asChild variant="secondary" className="text-sm">
+              <Link href="https://rayai.dev/auth/sign-in">Sign In</Link>
+            </Button>
+            <Button asChild className="text-sm">
+              <Link href="https://rayai.dev/auth/sign-up">Get Started</Link>
+            </Button>
+          </div>
+
+          {/* Mobile menu trigger */}
           <Sheet>
             <SheetTrigger asChild>
               <Button
+                className="group size-8 md:hidden"
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
-                aria-label="Open Menu"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] p-0">
-              <div className="flex flex-col gap-4 p-6">
-                <Link
-                  href="/"
-                  className="flex items-center space-x-2"
-                  onClick={() => document.body.click()}
-                >
-                  <img
-                    src="/icon.png"
-                    alt="Ray AI Logo"
-                    className="h-8 w-auto"
-                  />
-                  <span className="text-lg font-bold">Ray AI</span>
-                </Link>
-                <div className="flex flex-col space-y-3">
-                  <Link
-                    href="/features"
-                    className={`text-sm transition-colors hover:text-primary ${
-                      pathname === "/features"
-                        ? "text-primary"
-                        : "text-muted-foreground"
-                    }`}
-                  >
-                    Features
-                  </Link>
-                  <div className="pl-4 flex flex-col space-y-1">
-                    {featureLinks.map((item) => (
-                      <Link
-                        key={item.link}
-                        href={item.link}
-                        className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {item.label}
-                      </Link>
+            <SheetContent side="right" className="w-[300px] pb-10 sm:w-[400px]">
+              <SheetHeader>
+                <SheetTitle className="text-left">Menu</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col h-full">
+                {/* Navigation Links */}
+                <nav className="flex-1 py-6">
+                  <ul className="space-y-1">
+                    {navigationLinks.map((link, index) => (
+                      <li key={index}>
+                        <Link
+                          href={link.href || ""}
+                          className={cn(
+                            "block px-2 py-1.5 text-sm rounded-md transition-colors",
+                            isActive(link.href)
+                              ? "bg-accent text-accent-foreground font-semibold"
+                              : "hover:bg-accent hover:text-accent-foreground"
+                          )}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
                     ))}
-                  </div>
-                  {mainLinks
-                    .filter((item) => item.label !== "Features")
-                    .map((item) => (
-                      <Link
-                        key={item.link}
-                        href={item.link}
-                        className={`text-sm transition-colors hover:text-primary ${
-                          pathname === item.link
-                            ? "text-primary"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                </div>
-                <div className="flex flex-col gap-2 pt-4">
+                  </ul>
+                </nav>
+
+                {/* Mobile buttons */}
+                <div className="border-t pt-4 space-y-2">
                   <Button
                     asChild
-                    className="w-full font-semibold"
-                    variant={"outline"}
+                    variant="ghost"
+                    className="w-full justify-start"
                   >
-                    <Link href="https://app.rayai.dev/auth/sign-in">
-                      Sign In
-                    </Link>
+                    <Link href="https://rayai.dev/auth/sign-in">Sign In</Link>
                   </Button>
-                  <Button asChild className="w-full font-semibold">
-                    <Link href="https://app.rayai.dev/auth/sign-up">
+                  <Button asChild className="w-full">
+                    <Link href="https://rayai.dev/auth/sign-up">
                       Get Started
                     </Link>
                   </Button>
