@@ -56,7 +56,7 @@ const SignUpForm = () => {
     <CardWrapper
       backButtonHref={`/auth/sign-in?redirectUrl=${redirectURL}`}
       backButtonLabel="Already have an account?"
-      headerLabel="Welcome to WorkWize"
+      headerLabel="Welcome to RayAI"
       showSocial
     >
       <Form {...form}>

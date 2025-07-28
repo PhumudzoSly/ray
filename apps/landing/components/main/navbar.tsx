@@ -126,10 +126,10 @@ export default function Navbar() {
           {/* Desktop buttons (hidden on mobile) */}
           <div className="hidden md:flex items-center gap-2">
             <Button asChild variant="secondary" className="text-sm">
-              <Link href="https://rayai.dev/auth/sign-in">Sign In</Link>
+              <Link href="https://app.rayai.dev/auth/sign-in">Sign In</Link>
             </Button>
             <Button asChild className="text-sm">
-              <Link href="https://rayai.dev/auth/sign-up">Get Started</Link>
+              <Link href="https://app.rayai.dev/auth/sign-up">Get Started</Link>
             </Button>
           </div>
 

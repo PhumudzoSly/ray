@@ -38,6 +38,7 @@
 		"@next/swc-wasm-nodejs": "15.4.4",
 		"@polar-sh/better-auth": "1.0.8",
 		"@polar-sh/sdk": "0.34.8",
+		"@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@tanstack/query-core": "^5.83.0",
 		"@tanstack/react-query": "^5.83.0",
