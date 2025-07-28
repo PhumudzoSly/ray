@@ -1,0 +1,16 @@
+{
+  "buildCommand": "pnpm db:push && pnpm build",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "functions": {
+    "apps/web/app/api/**/*.ts": {
+      "maxDuration": 60
+    },
+    "apps/landing/app/api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "DATABASE_URL": "@database_url"
+  }
+} 

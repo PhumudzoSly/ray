@@ -26,6 +26,19 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "prisma:generate": {
+      "cache": false,
+      "outputs": ["packages/backend/prisma/generated/**"]
+    },
+    "prisma:migrate": {
+      "cache": false
+    },
+    "prisma:migrate:deploy": {
+      "cache": false
+    },
+    "prisma:db:push": {
+      "cache": false
     }
   }
 }
