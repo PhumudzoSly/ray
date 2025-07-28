@@ -102,12 +102,12 @@ const plans = [
 const comparisonData = [
   {
     tool: "Linear Pro",
-    price: "$15/user/month",
+    price: "$14/user/month",
     features: "Project management + Issue tracking",
   },
   {
     tool: "Productboard",
-    price: "$20/user/month",
+    price: "$19/maker/month",
     features: "Roadmaps",
   },
   {
@@ -117,7 +117,7 @@ const comparisonData = [
   },
   {
     tool: "UserVoice",
-    price: "$15/user/month",
+    price: "$899/month",
     features: "User feedback",
   },
   {
@@ -172,46 +172,99 @@ export default function PricingPage() {
       </div>
 
       {/* Value Comparison */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="max-w-4xl mx-auto px-6 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-semibold text-foreground mb-4">
-              Why choose Ray over separate tools?
+      <div className="border-b border-border">
+        <div className="max-w-4xl mx-auto px-6 py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-semibold text-foreground mb-4">
+              Stop paying for 5 different tools
             </h2>
-            <p className="text-muted-foreground">
-              Compare the cost of building this stack with individual tools
+            <p className="text-lg text-muted-foreground">
+              Get everything you need in one platform
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {comparisonData.map((item, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-4 border border-border rounded-lg bg-background"
-              >
-                <div>
-                  <h3 className="font-medium text-foreground">{item.tool}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {item.features}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left side - Separate tools */}
+            <div>
+              <h3 className="text-xl font-medium text-foreground mb-6">
+                Buying separately
+              </h3>
+              <div className="space-y-4">
+                {comparisonData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-3 border-b border-border last:border-0"
+                  >
+                    <div>
+                      <span className="font-medium text-foreground">
+                        {item.tool}
+                      </span>
+                      <p className="text-sm text-muted-foreground">
+                        {item.features}
+                      </p>
+                    </div>
+                    <span className="font-semibold text-foreground">
+                      {item.price}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 pt-4 border-t-2 border-foreground">
+                <div className="flex justify-between items-center">
+                  <span className="text-lg font-semibold text-foreground">
+                    Total monthly cost
+                  </span>
+                  <span className="text-2xl font-bold text-foreground">
+                    $1,000+
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1">
+                  For a 5-person team
+                </p>
+              </div>
+            </div>
+
+            {/* Right side - Ray */}
+            <div className="relative">
+              <div className="absolute -inset-4 bg-foreground/5 rounded-lg"></div>
+              <div className="relative bg-background border-2 border-foreground rounded-lg p-8">
+                <h3 className="text-xl font-medium text-foreground mb-6">
+                  RayAI Bundle
+                </h3>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    <span className="text-sm">
+                      All features above + AI validation
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    <span className="text-sm">Seamless integrations</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4" />
+                    <span className="text-sm">Single dashboard</span>
+                  </div>
+                </div>
+                <div className="border-t-2 border-foreground pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-semibold text-foreground">
+                      Total monthly cost
+                    </span>
+                    <span className="text-2xl font-bold text-foreground">
+                      from $29
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    For up to 100 team members
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="font-semibold text-foreground">{item.price}</p>
+                <div className="mt-4 p-3 bg-foreground text-background rounded text-center">
+                  <span className="font-semibold">Save $100-300/month</span>
                 </div>
               </div>
-            ))}
-          </div>
-
-          <div className="text-center p-6 border border-border rounded-lg bg-background">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <DollarSign className="w-5 h-5 text-muted-foreground" />
-              <span className="text-lg font-medium text-foreground">
-                Total for 5 users: $200-400/month
-              </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              vs. Ray Pro at $99/month - Save 50-75%
-            </p>
           </div>
         </div>
       </div>

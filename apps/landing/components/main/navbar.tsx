@@ -22,6 +22,7 @@ import {
 import { cn } from "@workspace/ui/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { Badge } from "@workspace/ui/components/badge";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -93,6 +94,7 @@ export default function Navbar() {
               height={isScrolled ? 32 : 32}
               className="transition-all duration-300"
             />
+            <Badge>Beta</Badge>
           </Link>
         </div>
 
