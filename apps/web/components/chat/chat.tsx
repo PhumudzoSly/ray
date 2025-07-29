@@ -5,6 +5,11 @@ import { ChatMessage } from "./chat-message";
 import { ChatHeader } from "./chat-header";
 import { Message, TextMessage } from "@inngest/agent-kit";
 import { ArrowUp, Loader2 } from "lucide-react";
+import { Button } from "@workspace/ui/components/button";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Card, CardContent } from "@workspace/ui/components/card";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { cn } from "@workspace/ui/lib/utils";
 
 // Helper function to generate a random ID
 const generateThreadId = () => {
@@ -192,75 +197,70 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-zinc-900">
-      <ChatHeader
-        onNewChat={() => {
-          cleanupCurrentStream();
-          setMessages([]);
-          setAgentResults([]);
-        }}
-        onShareChat={() => {}}
-        onViewConversations={() => {}}
-        onViewProfile={() => {}}
-      />
-
-      <div
-        ref={containerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-6 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[20%]"
-      >
-        {messages.length === 0 ? (
-          <div className="flex items-center justify-start h-full ml-4 xl:justify-center xl:ml-0">
-            <div className="text-left xl:text-center">
-              <h2 className="text-2xl font-semibold mb-1 dark:text-white">
-                Chat 💬
-              </h2>
-              <p className="text-xl text-gray-500 dark:text-zinc-400 mb-4">
-                How can I help you today?
-              </p>
-            </div>
-          </div>
-        ) : (
-          messages.map((message, i) => (
-            <ChatMessage key={i} message={message} />
-          ))
-        )}
-      </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="p-4 border-t dark:border-zinc-800"
-      >
-        <div className="flex items-end space-x-2">
-          <div className="flex-grow relative bg-zinc-100 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700">
-            <textarea
-              ref={inputRef}
-              className="w-full px-3 py-2 bg-transparent border-none focus:ring-0 focus:outline-none text-zinc-900 dark:text-white placeholder-zinc-500 dark:placeholder-zinc-400 resize-none min-h-[24px] max-h-[200px]"
-              placeholder="Type a message..."
-              value={userInput}
-              onChange={(e) => {
-                setUserInput(e.target.value);
-                resizeTextarea();
-              }}
-              onKeyDown={handleKeyDown}
-              rows={1}
-              disabled={isLoading}
-            />
-          </div>
-
-          {/* Submit button */}
-          <button
-            type="submit"
-            className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
-            disabled={!userInput.trim() || isLoading}
+    <Card className="flex flex-col h-[calc(100vh-58px)] p-0 border-0 shadow-none">
+      <CardContent className="flex flex-col h-full p-0">
+        {/* Messages Area */}
+        <ScrollArea className="flex-1 py-1.5">
+          <div
+            ref={containerRef}
+            className="space-y-6 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-[5%]"
           >
-            {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+            {messages.length === 0 ? (
+              <div className="flex items-center justify-start h-full ml-4 xl:justify-center xl:ml-0">
+                <div className="text-left xl:text-center">
+                  <h2 className="text-2xl font-semibold mb-1">Chat 💬</h2>
+                  <p className="text-xl text-muted-foreground mb-4">
+                    How can I help you today?
+                  </p>
+                </div>
+              </div>
             ) : (
-              <ArrowUp className="h-5 w-5" />
+              messages.map((message, i) => (
+                <ChatMessage key={i} message={message} />
+              ))
             )}
-          </button>
+          </div>
+        </ScrollArea>
+
+        {/* Input Area */}
+        <div className="border-t px-4 pt-4 pb-2">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex items-end gap-2">
+              <div className="flex-1">
+                <Textarea
+                  ref={inputRef}
+                  placeholder="Type a message..."
+                  value={userInput}
+                  onChange={(e) => {
+                    setUserInput(e.target.value);
+                    resizeTextarea();
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className={cn(
+                    "min-h-[44px] max-h-[200px] resize-none",
+                    "focus-visible:ring-1 focus-visible:ring-ring"
+                  )}
+                  rows={1}
+                  disabled={isLoading}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!userInput.trim() || isLoading}
+                className="h-[44px] w-[44px] shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <ArrowUp className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
