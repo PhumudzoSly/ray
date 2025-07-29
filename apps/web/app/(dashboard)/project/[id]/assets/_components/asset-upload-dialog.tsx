@@ -37,7 +37,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { UploadDropzone, useUploadThing } from "@/lib/uploadthing";
 
 interface AssetUploadDialogProps {
   projectId: string;
@@ -126,6 +126,90 @@ export function AssetUploadDialog({
   const [uploadedFile, setUploadedFile] = useState<UploadedFileData | null>(
     null
   );
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [isUploadingFile, setIsUploadingFile] = useState<boolean>(false);
+
+  // UploadThing hook for better control
+  const { startUpload, isUploading: isUploadThingUploading } = useUploadThing(
+    "fileUpload",
+    {
+      onClientUploadComplete: (files) => {
+        console.log("Upload complete:", files);
+        if (!files || files.length === 0) return;
+        const file = files[0];
+        if (!file || !file.url) return;
+
+        // Store the uploaded file data
+        const uploadedFileData: UploadedFileData = {
+          key: file.key || "",
+          name: file.name || "Unknown file",
+          size: file.size || 0,
+          type: file.type || "application/octet-stream",
+          url: file.url,
+        };
+
+        setUploadedFile(uploadedFileData);
+        setUploadProgress(100);
+        setIsUploadingFile(false);
+
+        // Create a mock File object for type detection
+        const mockFile = {
+          name: file.name || "Unknown file",
+          type: file.type || "application/octet-stream",
+          size: file.size || 0,
+        } as File;
+
+        // Set the selected file for metadata editing
+        setSelectedFile(mockFile);
+
+        // Auto-detect file type if not set
+        if (!assetType) {
+          const detectedType = getFileType(mockFile);
+          setAssetType(detectedType);
+        }
+
+        // Set asset name if not set
+        if (!assetName) {
+          setAssetName(file.name || "Unknown file");
+        }
+
+        toast.success("File uploaded successfully!");
+      },
+      onUploadError: (error) => {
+        console.error("Upload error:", error);
+        toast.error(error.message);
+        setIsUploadingFile(false);
+        setUploadProgress(0);
+      },
+      onUploadProgress: (progress) => {
+        console.log("Upload progress:", progress);
+        setUploadProgress(progress);
+      },
+    }
+  );
+
+  // Custom file upload handler
+  const handleFileUpload = async (file: File) => {
+    const validation = validateFile(file);
+    if (!validation.valid) {
+      toast.error(validation.error || "Invalid file");
+      return;
+    }
+
+    try {
+      setIsUploadingFile(true);
+      setUploadProgress(0);
+      toast.info("Upload started...");
+
+      const uploadedFiles = await startUpload([file]);
+      console.log("Uploaded files:", uploadedFiles);
+    } catch (error) {
+      console.error("Upload failed:", error);
+      toast.error("Failed to upload file");
+      setIsUploadingFile(false);
+      setUploadProgress(0);
+    }
+  };
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -139,6 +223,8 @@ export function AssetUploadDialog({
       setAssetTags([]);
       setTagInput("");
       setDragActive(false);
+      setUploadProgress(0);
+      setIsUploadingFile(false);
     }
   }, [open]);
 
@@ -302,43 +388,6 @@ export function AssetUploadDialog({
     setAssetTags(assetTags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleUploadComplete = async (files: any[]) => {
-    if (!files || files.length === 0) return;
-    const file = files[0];
-
-    // Store the uploaded file data
-    const uploadedFileData: UploadedFileData = {
-      key: file.key,
-      name: file.name,
-      size: file.size,
-      type: file.type || "application/octet-stream",
-      url: file.url,
-    };
-
-    setUploadedFile(uploadedFileData);
-
-    // Create a mock File object for type detection
-    const mockFile = {
-      name: file.name,
-      type: file.type || "application/octet-stream",
-      size: file.size,
-    } as File;
-
-    // Set the selected file for metadata editing
-    setSelectedFile(mockFile);
-
-    // Auto-detect file type if not set
-    if (!assetType) {
-      const detectedType = getFileType(mockFile);
-      setAssetType(detectedType);
-    }
-
-    // Set asset name if not set
-    if (!assetName) {
-      setAssetName(file.name);
-    }
-  };
-
   const handleSaveAsset = async () => {
     if (!uploadedFile || !assetName.trim()) return;
 
@@ -384,14 +433,63 @@ export function AssetUploadDialog({
           {/* File Upload Area */}
           <div className="space-y-4">
             <Label>File</Label>
-            <UploadDropzone
-              endpoint="fileUpload"
-              onClientUploadComplete={handleUploadComplete}
-              onUploadError={(error) => {
-                toast.error(error.message);
-              }}
-            />
+
+            {/* Custom File Upload Area */}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+              <input
+                type="file"
+                id="file-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleFileUpload(file);
+                  }
+                }}
+                accept="image/*,video/*,audio/*,application/pdf,text/*,.doc,.docx,.txt,.js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.xml,.yaml,.yml,.md,.py,.java,.cpp,.c,.php,.rb,.go,.rs,.swift,.kt,.psd,.ai,.indd,.sketch,.fig,.xd,.afdesign"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <div className="space-y-2">
+                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium text-blue-600 hover:text-blue-500">
+                      Click to upload
+                    </span>{" "}
+                    or drag and drop
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Images, documents, videos, and code files up to 32MB
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            {/* Upload Progress Indicator */}
+            {isUploadingFile && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span>Uploading file...</span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Upload Success Indicator */}
+          {uploadedFile && !isUploadingFile && (
+            <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <span className="text-sm text-green-800">
+                File uploaded successfully: {uploadedFile.name}
+              </span>
+            </div>
+          )}
 
           {/* Asset Metadata */}
           {uploadedFile && (

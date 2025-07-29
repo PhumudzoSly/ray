@@ -39,6 +39,7 @@
 		"@polar-sh/better-auth": "1.0.8",
 		"@polar-sh/sdk": "0.34.8",
 		"@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
+		"@radix-ui/react-dialog": "^1.1.14",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@tanstack/query-core": "^5.83.0",
 		"@tanstack/react-query": "^5.83.0",
@@ -60,6 +61,7 @@
 		"date-fns": "^4.1.0",
 		"eslint": "9.32.0",
 		"eslint-config-next": "15.4.4",
+		"exa-js": "^1.8.24",
 		"framer-motion": "^12.23.11",
 		"geist": "^1.4.2",
 		"inngest": "^3.40.1",
@@ -81,6 +83,7 @@
 		"react-textarea-autosize": "^8.5.9",
 		"reactflow": "^11.11.4",
 		"recharts": "^3.1.0",
+		"rehype-highlight": "^7.0.2",
 		"rehype-raw": "^7.0.0",
 		"rehype-sanitize": "^6.0.0",
 		"remark-breaks": "^4.0.0",
@@ -97,7 +100,7 @@
 		"ua-parser-js": "^2.0.4",
 		"uploadthing": "^7.7.3",
 		"uuid": "^11.1.0",
-		"zod": "^4.0.10"
+		"zod": "3.25.76"
 	},
 	"devDependencies": {
 		"@types/node": "^20",

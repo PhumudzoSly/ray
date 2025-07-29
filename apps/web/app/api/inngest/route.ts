@@ -1,9 +1,9 @@
 import { inngestClient } from "@/lib/inngest";
 import { serve } from "inngest/next";
-import { validateIdea } from "@/inngest/idea";
-import { generateFeature } from "@/inngest/project";
+import { simpleAgentFunction } from "@/inngest/agent";
+import { deepResearchAgent } from "@/inngest/deep-research";
 
 export const { GET, POST, PUT } = serve({
   client: inngestClient,
-  functions: [validateIdea, generateFeature],
+  functions: [simpleAgentFunction, deepResearchAgent],
 });
