@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format . --write",
-    "test": "vitest run"
+    "test": "vitest run",
+    "postinstall": "pnpm --filter @workspace/backend prisma:generate"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",

@@ -1,7 +1,7 @@
 "use server";
 import { prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
-import { IntegrationTypeType } from "@workspace/backend";
+import { Zod } from "@workspace/backend";
 
 export type IntegrationUsageData = {
   integrationId: string;
@@ -218,8 +218,8 @@ export const deleteIntegrationUsage = async (
  */
 function getIntegrationTypeForPurpose(
   purpose: string
-): IntegrationTypeType | undefined {
-  const purposeToTypeMap: Record<string, IntegrationTypeType> = {
+): Zod.IntegrationTypeType | undefined {
+  const purposeToTypeMap: Record<string, Zod.IntegrationTypeType> = {
     email_sync: "RESEND",
     code_sync: "GITHUB",
     analytics: "RESEND", // Using RESEND as placeholder until POSTHOG is added

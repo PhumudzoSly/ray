@@ -8,7 +8,8 @@ const nextConfig = {
       config.plugins = [...config.plugins, new PrismaPlugin()]
     }
     return config
-  },  
+  },
+  serverExternalPackages: ['@workspace/backend']
 }
 
 

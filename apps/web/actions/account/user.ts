@@ -1,5 +1,5 @@
 "use server";
-import { ApiPermissionType, prisma } from "@workspace/backend";
+import { prisma, Zod } from "@workspace/backend";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
@@ -133,8 +133,6 @@ export async function updateOrganizationName(
   name: string
 ) {
   try {
-    const prisma = (await import("@workspace/backend")).prisma;
-
     await prisma.organization.update({
       where: { id: organizationId },
       data: { name },
@@ -187,7 +185,7 @@ export async function createApiKey({
   permissions,
 }: {
   name: string;
-  permissions: ApiPermissionType[];
+  permissions: Zod.ApiPermissionType[];
 }) {
   const { userId, org } = await getSession();
 

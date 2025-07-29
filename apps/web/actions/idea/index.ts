@@ -1,17 +1,13 @@
 "use server";
 
-import {
-  prisma,
-  IdeaOptionalDefaults,
-  IdeaStatusType,
-} from "@workspace/backend";
+import { prisma, Zod } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { inngestClient } from "@/lib/inngest";
 import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import z from "zod";
 
-export const createIdea = async (data: IdeaOptionalDefaults) => {
+export const createIdea = async (data: Zod.IdeaOptionalDefaults) => {
   const { org } = await getSession();
 
   const idea = await prisma.idea.create({
@@ -49,7 +45,7 @@ export const getSingleIdea = async (id: string) => {
   return idea;
 };
 
-export const updateIdea = async (data: IdeaOptionalDefaults) => {
+export const updateIdea = async (data: Zod.IdeaOptionalDefaults) => {
   await getSession();
 
   const idea = await prisma.idea.update({
@@ -218,7 +214,7 @@ export const changeStatus = async ({
   status,
 }: {
   id: string;
-  status: IdeaStatusType;
+  status: Zod.IdeaStatusType;
 }) => {
   await getSession();
   return prisma.idea.update({
