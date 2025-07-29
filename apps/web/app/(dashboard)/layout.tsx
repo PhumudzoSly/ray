@@ -14,7 +14,14 @@ export default async function DashboardLayout({
 }) {
   const headersList = await headers();
   const session = await auth.api.getSession({ headers: headersList });
+
   if (!session) redirect("/auth/sign-in");
+
+  // In production, redirect authenticated users to stay-tuned page
+  if (process.env.NODE_ENV === "production") {
+    redirect("/stay-tuned");
+  }
+
   const sessionData = await getSession();
 
   return (

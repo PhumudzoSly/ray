@@ -28,12 +28,37 @@ const isProduction = process.env.NODE_ENV === "production";
 if (isProduction && !request.nextUrl.pathname.startsWith("/stay-tuned")) {
   return Response.redirect(new URL("/stay-tuned", request.url));
 }
+
+// Added debugging logs for troubleshooting
+console.log("🔍 Middleware Debug:");
+console.log("  - Pathname:", request.nextUrl.pathname);
+console.log("  - NODE_ENV:", process.env.NODE_ENV);
+console.log("  - Is Production:", isProduction);
+console.log("  - Has Session:", !!session);
 ```
 
 **What it does**:
 - Checks if the app is running in production
 - Redirects authenticated users to `/stay-tuned` unless they're already on that page
 - Maintains normal auth route protection
+- Provides detailed logging for debugging
+
+**Updated Matcher**:
+```typescript
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
+```
 
 ### 2. Main Page (`apps/web/app/page.tsx`)
 **Purpose**: Root page redirect logic
@@ -53,7 +78,23 @@ return redirect("/dashboard");
 - Redirects authenticated users to `/stay-tuned` in production
 - Redirects to `/dashboard` in development
 
-### 3. Configuration (`apps/web/utils/config.ts`)
+### 3. Dashboard Layout (`apps/web/app/(dashboard)/layout.tsx`)
+**Purpose**: Dashboard route group protection
+
+**Changes Made**:
+```typescript
+// In production, redirect authenticated users to stay-tuned page
+if (process.env.NODE_ENV === "production") {
+  redirect("/stay-tuned");
+}
+```
+
+**What it does**:
+- Provides an additional layer of protection for all dashboard routes
+- Ensures that even if middleware is bypassed, dashboard access is still blocked in production
+- Works as a fallback protection mechanism
+
+### 4. Configuration (`apps/web/utils/config.ts`)
 **Purpose**: Route configuration and redirect defaults
 
 **Changes Made**:
@@ -72,7 +113,7 @@ export const DEFAULT_LOGIN_REDIRECT = process.env.NODE_ENV === "production" ? "/
 - Adds `/stay-tuned` to the list of allowed routes
 - Updates default redirect behavior based on environment
 
-### 4. Auth Configuration (`apps/web/lib/auth.ts`)
+### 5. Auth Configuration (`apps/web/lib/auth.ts`)
 **Purpose**: Authentication flow configuration
 
 **Changes Made**:
@@ -86,7 +127,7 @@ checkout({
 **What it does**:
 - Updates checkout success URL to redirect to `/stay-tuned` in production
 
-### 5. Feature Page (`apps/web/app/(dashboard)/features/[id]/page.tsx`)
+### 6. Feature Page (`apps/web/app/(dashboard)/features/[id]/page.tsx`)
 **Purpose**: Feature-specific redirect logic
 
 **Changes Made**:
@@ -99,7 +140,7 @@ if (!feature) {
 **What it does**:
 - Redirects to `/stay-tuned` in production when a feature doesn't exist
 
-### 6. Stay Tuned Page (`apps/web/app/stay-tuned/page.tsx`)
+### 7. Stay Tuned Page (`apps/web/app/stay-tuned/page.tsx`)
 **Purpose**: New page for production users
 
 **Features**:
@@ -107,6 +148,34 @@ if (!feature) {
 - Encourages users to think about their next SaaS idea
 - Provides "Go Back" and "Sign Out" functionality
 - Matches Linear/Noton aesthetic
+
+### 8. Test Page (`apps/web/app/test-middleware/page.tsx`)
+**Purpose**: Debugging and testing middleware functionality
+
+**Features**:
+- Displays current NODE_ENV value
+- Shows production status
+- Displays request headers for debugging
+- Helps verify middleware execution
+
+## Multi-Layer Protection System
+
+The production redirection system now implements **three layers of protection**:
+
+1. **Middleware Layer** (`middleware.ts`)
+   - First line of defense
+   - Catches requests before they reach the app
+   - Redirects to `/stay-tuned` in production
+
+2. **Main Page Layer** (`page.tsx`)
+   - Second line of defense
+   - Handles root route redirects
+   - Ensures proper routing based on environment
+
+3. **Dashboard Layout Layer** (`(dashboard)/layout.tsx`)
+   - Third line of defense
+   - Fallback protection for dashboard routes
+   - Ensures dashboard access is blocked even if middleware is bypassed
 
 ## How to Revert When Launching
 
@@ -127,6 +196,10 @@ const isProduction = process.env.NODE_ENV === "production";
 if (isProduction && !request.nextUrl.pathname.startsWith("/stay-tuned")) {
   return Response.redirect(new URL("/stay-tuned", request.url));
 }
+
+// Also remove debug logging:
+console.log("🔍 Middleware Debug:");
+// ... all console.log statements
 ```
 
 #### Step 2: Restore Main Page Redirect
@@ -144,7 +217,16 @@ export default async function Page() {
 }
 ```
 
-#### Step 3: Update Configuration
+#### Step 3: Remove Production Check from Dashboard Layout
+```typescript
+// In apps/web/app/(dashboard)/layout.tsx, remove this block:
+// In production, redirect authenticated users to stay-tuned page
+if (process.env.NODE_ENV === "production") {
+  redirect("/stay-tuned");
+}
+```
+
+#### Step 4: Update Configuration
 ```typescript
 // In apps/web/utils/config.ts:
 export const authRoutes = [
@@ -166,7 +248,7 @@ export const authRoutes = [
 export const DEFAULT_LOGIN_REDIRECT = "/switch-org";
 ```
 
-#### Step 4: Restore Auth Configuration
+#### Step 5: Restore Auth Configuration
 ```typescript
 // In apps/web/lib/auth.ts:
 checkout({
@@ -175,7 +257,7 @@ checkout({
 }),
 ```
 
-#### Step 5: Restore Feature Page
+#### Step 6: Restore Feature Page
 ```typescript
 // In apps/web/app/(dashboard)/features/[id]/page.tsx:
 if (!feature) {
@@ -183,9 +265,10 @@ if (!feature) {
 }
 ```
 
-#### Step 6: Remove Stay Tuned Page (Optional)
+#### Step 7: Remove Test and Stay Tuned Pages (Optional)
 ```bash
 rm -rf apps/web/app/stay-tuned/
+rm -rf apps/web/app/test-middleware/
 ```
 
 ### Option 3: Feature Flag Approach
@@ -215,6 +298,13 @@ NODE_ENV=development npm run dev
 npm run dev
 ```
 
+### Test Middleware Functionality
+Visit `/test-middleware` to see:
+- Current NODE_ENV value
+- Production status
+- Request headers
+- Middleware execution status
+
 ## Monitoring and Debugging
 
 ### Check Current Environment
@@ -224,12 +314,33 @@ console.log("Is Production:", process.env.NODE_ENV === "production");
 ```
 
 ### Debug Middleware
-Add logging to `apps/web/middleware.ts`:
+The middleware now includes comprehensive logging:
 ```typescript
-console.log("Request path:", request.nextUrl.pathname);
-console.log("Is production:", isProduction);
-console.log("Has session:", !!session);
+console.log("🔍 Middleware Debug:");
+console.log("  - Pathname:", request.nextUrl.pathname);
+console.log("  - NODE_ENV:", process.env.NODE_ENV);
+console.log("  - Is Production:", isProduction);
+console.log("  - Has Session:", !!session);
+console.log("  - Is Auth API Route:", isAuthApiRoute);
+console.log("  - Is Auth Route:", isAuthRoute);
 ```
+
+### Common Issues and Solutions
+
+1. **Dashboard still accessible in production**
+   - Check if NODE_ENV is set to "production"
+   - Verify middleware is being executed (check logs)
+   - Ensure dashboard layout has production check
+
+2. **Infinite redirect loops**
+   - Check that `/stay-tuned` is in authRoutes
+   - Verify middleware matcher is correct
+   - Ensure stay-tuned page exists
+
+3. **Middleware not executing**
+   - Check middleware matcher configuration
+   - Verify file is in correct location (`apps/web/middleware.ts`)
+   - Check for syntax errors in middleware
 
 ## Security Considerations
 
@@ -238,6 +349,7 @@ console.log("Has session:", !!session);
 - Authentication still works normally
 - Users can still sign up and sign in
 - The restriction is purely for user experience
+- Multiple layers of protection ensure robust blocking
 
 ## Rollback Checklist
 
@@ -248,7 +360,9 @@ When you're ready to launch:
 - [ ] Test authentication flow
 - [ ] Verify all redirects work correctly
 - [ ] Remove or update the stay-tuned page
+- [ ] Remove test middleware page
 - [ ] Update any hardcoded references to stay-tuned
+- [ ] Remove debug logging from middleware
 
 ## Notes
 
@@ -256,9 +370,11 @@ When you're ready to launch:
 - Users can still sign out and access auth pages
 - The system is designed to be easily reversible
 - All changes are environment-aware and won't affect development
+- Multiple protection layers ensure robust blocking
+- Debug logging helps troubleshoot issues in production
 
 ---
 
 **Last Updated**: [Current Date]
-**Version**: 1.0
-**Status**: Active in Production 
+**Version**: 2.0
+**Status**: Active in Production with Multi-Layer Protection 
