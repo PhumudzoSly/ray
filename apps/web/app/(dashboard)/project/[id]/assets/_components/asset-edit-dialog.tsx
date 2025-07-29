@@ -35,11 +35,11 @@ interface AssetEditDialogProps {
 
 const ASSET_CATEGORIES = [
   { value: "branding", label: "Branding" },
-  { value: "ui-design", label: "UI Design" },
+  { value: "ui_design", label: "UI Design" },
   { value: "mockups", label: "Mockups" },
   { value: "documentation", label: "Documentation" },
   { value: "inspiration", label: "Inspiration" },
-  { value: "code-snippets", label: "Code Snippets" },
+  { value: "code_snippets", label: "Code Snippets" },
   { value: "presentations", label: "Presentations" },
   { value: "tutorials", label: "Tutorials" },
   { value: "other", label: "Other" },

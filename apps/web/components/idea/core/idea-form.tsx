@@ -190,7 +190,7 @@ const IdeaForm = ({
     <div className={variant === "full" ? "min-h-screen bg-background" : ""}>
       {/* Header - Only show in full variant */}
       {variant === "full" && (
-        <div className="container max-w-2xl mx-auto px-6 py-8">
+        <div className="container max-w-2xl mx-auto px-6">
           <div className="flex items-center gap-3 mb-8">
             <Lightbulb className="h-6 w-6 text-primary" />
             <div>
@@ -210,7 +210,7 @@ const IdeaForm = ({
       <div
         className={
           variant === "full"
-            ? "container max-w-2xl mx-auto px-6 py-8"
+            ? "container max-w-2xl mx-auto px-6 py-6"
             : "px-6 py-6"
         }
       >

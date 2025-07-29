@@ -8,12 +8,43 @@ import "@blocknote/mantine/style.css";
 import { BlockNoteView } from "@blocknote/mantine";
 import { useTheme } from "next-themes";
 import { useThreads } from "@liveblocks/react/suspense";
+import { useUploadThing } from "@/lib/uploadthing";
+import { toast } from "sonner";
 
 function Editor() {
-  //
-  const editor = useCreateBlockNoteWithLiveblocks({});
   const { theme } = useTheme();
   const { threads } = useThreads();
+
+  const { startUpload } = useUploadThing("fileUpload", {
+    onClientUploadComplete: (files) => {
+      console.log("Upload complete:", files);
+    },
+    onUploadError: (error) => {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload file");
+    },
+  });
+
+  // File upload handler for BlockNote
+  const handleFileUpload = async (file: File, blockId?: string) => {
+    try {
+      const uploadedFiles = await startUpload([file]);
+
+      if (uploadedFiles && uploadedFiles.length > 0) {
+        return uploadedFiles[0]?.ufsUrl || "";
+      }
+      return "";
+    } catch (error) {
+      console.error("File upload failed:", error);
+      toast.error("Failed to upload file");
+      return "";
+    }
+  };
+
+  const editor = useCreateBlockNoteWithLiveblocks({
+    uploadFile: handleFileUpload,
+  });
+
   return (
     <div>
       <BlockNoteView

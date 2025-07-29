@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Card, CardContent } from "@workspace/ui/components/card";
@@ -84,8 +84,16 @@ export const AssetsClient = ({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
 
+  // React Query for assets data
+  const { data: assets = initialAssets, isLoading } = useQuery({
+    queryKey: ["projectAssets", projectId],
+    queryFn: () => assetActions.getProjectAssets({ projectId }),
+    initialData: initialAssets,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
   // Filter assets based on current state
-  const filteredAssets = initialAssets.filter((asset) => {
+  const filteredAssets = assets.filter((asset) => {
     // Type filter
     if (selectedType !== "all" && asset.type !== selectedType) {
       return false;
@@ -129,7 +137,7 @@ export const AssetsClient = ({
   };
 
   const handleUpdate = (assetId: string) => {
-    const asset = initialAssets.find((a) => a.id === assetId);
+    const asset = assets.find((a) => a.id === assetId);
     if (asset) {
       setSelectedAsset(asset);
       setIsEditDialogOpen(true);
@@ -337,6 +345,22 @@ export const AssetsClient = ({
           open={isEditDialogOpen}
         />
       )}
+
+      {/* Upload Dialog */}
+      <AssetUploadDialog
+        projectId={projectId}
+        onClose={() => setIsUploadDialogOpen(false)}
+        onSuccess={handleAssetCreated}
+        open={isUploadDialogOpen}
+      />
+
+      {/* Link Dialog */}
+      <AssetLinkDialog
+        projectId={projectId}
+        onClose={() => setIsLinkDialogOpen(false)}
+        onSuccess={handleAssetCreated}
+        open={isLinkDialogOpen}
+      />
     </div>
   );
 };

@@ -148,7 +148,7 @@ export function AssetUploadDialog({
     mutationFn: (args: Parameters<typeof assetActions.createFileAsset>[0]) =>
       assetActions.createFileAsset(args),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["assets"] });
+      queryClient.invalidateQueries({ queryKey: ["projectAssets", projectId] });
     },
   });
 

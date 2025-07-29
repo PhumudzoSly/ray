@@ -41,7 +41,7 @@ const NewIdeaForm = () => {
       mode="create"
       onSubmit={handleSubmit}
       loading={loading}
-      variant="sheet"
+      variant="full"
     />
   );
 };
