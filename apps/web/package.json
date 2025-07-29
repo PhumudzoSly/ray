@@ -10,8 +10,7 @@
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check .",
 		"format": "biome format . --write",
-		"test": "vitest run",
-		"postinstall": "pnpm --filter @workspace/backend prisma:generate"
+		"test": "vitest run"
 	},
 	"dependencies": {
 		"@ai-sdk/google": "2.0.0-beta.15",
@@ -39,6 +38,7 @@
 		"@next/swc-wasm-nodejs": "15.4.4",
 		"@polar-sh/better-auth": "1.0.8",
 		"@polar-sh/sdk": "0.34.8",
+		"@prisma/client": "^6.12.0",
 		"@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@tanstack/query-core": "^5.83.0",
@@ -106,6 +106,7 @@
 		"@types/react-dom": "^19",
 		"@types/uuid": "^10.0.0",
 		"@workspace/typescript-config": "workspace:*",
+		"prisma": "^6.12.0",
 		"typescript": "^5.8.3"
 	}
 }

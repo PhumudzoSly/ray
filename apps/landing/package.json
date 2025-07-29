@@ -10,14 +10,14 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format . --write",
-    "test": "vitest run",
-    "postinstall": "pnpm --filter @workspace/backend prisma:generate"
+    "test": "vitest run"
   },
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
     "@ai-sdk/openai": "^1.3.23",
     "@hookform/resolvers": "^5.2.0",
     "@next/swc-wasm-nodejs": "15.4.4",
+    "@prisma/client": "^6.12.0",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "^5.83.0",
@@ -75,6 +75,7 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "@workspace/typescript-config": "workspace:*",
+    "prisma": "^6.12.0",
     "typescript": "^5.8.3"
   }
 }
