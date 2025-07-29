@@ -9,8 +9,8 @@ import { polar, portal, webhooks, checkout } from "@polar-sh/better-auth";
 import { prisma } from "@workspace/backend";
 
 export const polarClient = new Polar({
-  accessToken: process.env.POLAR_ACCESS_TOKEN,
-  server: "sandbox",
+  accessToken: process.env.POLAR_TOKEN,
+  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
 });
 
 export const auth = betterAuth({
