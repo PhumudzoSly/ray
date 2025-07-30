@@ -32,23 +32,29 @@ const plans = [
     period: "/month",
     description: "Perfect for solo founders and small teams",
     icon: <Zap className="w-6 h-6 text-blue-500" />,
-    features: [
-      "2 team members",
-      "3 projects",
-      "3 AI validations/month",
-      "10K API calls/month",
-      "Project management",
-      "Unlimited roadmaps",
-      "Unlimited waitlists",
-      "Unlimited user feedback",
-      "Unlimited issue tracking",
-      "Complete SaaS management",
-    ],
+    features: {
+      core: [
+        "Project management",
+        "Unlimited roadmaps",
+        "Unlimited waitlists",
+        "Unlimited issue tracking",
+        "Basic SaaS management",
+      ],
+      limits: [
+        "2 team members",
+        "3 projects",
+        "3 AI validations/month",
+        "10K API calls/month",
+      ],
+      support: ["Email support"],
+    },
     notAvailable: [
+      "User feedback system",
+      "Analytics dashboard",
+      "AI Agent",
+      "Inbox",
       "Custom integrations",
       "Priority support",
-      "AI Agent (Coming soon)",
-      "Inbox (Coming soon)",
     ],
     cta: "Get Started",
     href: "https://app.rayai.dev/auth/sign-in",
@@ -62,23 +68,28 @@ const plans = [
     period: "/month",
     description: "For growing teams and serious builders",
     icon: <Star className="w-6 h-6 text-amber-500" />,
-    features: [
-      "Up to 10 team members",
-      "25 projects",
-      "8 AI validations/month",
-      "100K API calls/month",
-      "Project management",
-      "Unlimited public roadmaps",
-      "Unlimited waitlists",
-      "Unlimited user feedback",
-      "Unlimited issue tracking",
-      "Priority support",
-      "Complete API access",
-      "Custom integrations",
-      "AI validation features",
-      "AI Agent (Coming soon)",
-      "Inbox (Coming soon)",
-    ],
+    features: {
+      core: [
+        "Project management",
+        "Unlimited public roadmaps",
+        "Unlimited waitlists",
+        "Unlimited issue tracking",
+        "Complete SaaS management",
+      ],
+      limits: [
+        "Up to 10 team members",
+        "25 projects",
+        "8 AI validations/month",
+        "100K API calls/month",
+      ],
+      advanced: [
+        "User feedback system",
+        "Analytics dashboard",
+        "Inbox",
+        "Custom integrations",
+      ],
+      support: ["Priority support"],
+    },
     cta: "Get Started",
     href: "https://app.rayai.dev/auth/sign-in",
     popular: true,
@@ -91,24 +102,29 @@ const plans = [
     period: "/month",
     description: "For established teams and organizations",
     icon: <Users className="w-6 h-6 text-emerald-500" />,
-    features: [
-      "Up to 50 team members",
-      "100 projects",
-      "15 AI validations/month",
-      "1M API calls/month",
-      "Project management",
-      "Unlimited public roadmaps",
-      "Unlimited waitlists",
-      "Unlimited user feedback",
-      "Unlimited issue tracking",
-      "Permissions & roles",
-      "Priority support",
-      "Complete API access",
-      "Custom integrations",
-      "AI validation features",
-      "AI Agent (Coming soon)",
-      "Inbox (Coming soon)",
-    ],
+    features: {
+      core: [
+        "Project management",
+        "Unlimited public roadmaps",
+        "Unlimited waitlists",
+        "Unlimited issue tracking",
+        "Complete SaaS management",
+      ],
+      limits: [
+        "Up to 50 team members",
+        "100 projects",
+        "15 AI validations/month",
+        "1M API calls/month",
+      ],
+      advanced: [
+        "User feedback system",
+        "Analytics dashboard",
+        "AI Agent",
+        "Inbox",
+        "Custom integrations",
+      ],
+      support: ["Priority support"],
+    },
     notAvailable: [],
     cta: "Start Building",
     href: "https://app.rayai.dev/auth/sign-in",
@@ -397,16 +413,78 @@ export default function PricingPage() {
                 )}
               </div>
 
-              <div className="space-y-3 mb-6">
-                <div className="text-sm font-medium text-foreground mb-2">
-                  What's included:
-                </div>
-                {plan.features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-2">
-                    <Check className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" />
-                    <span className="text-sm text-foreground">{feature}</span>
+              <div className="space-y-4 mb-6">
+                {/* Core Features */}
+                <div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                    Core Features
                   </div>
-                ))}
+                  <div className="space-y-2">
+                    {plan.features.core.map((feature, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <Check className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" />
+                        <span className="text-sm text-foreground">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Limits */}
+                <div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                    Limits
+                  </div>
+                  <div className="space-y-2">
+                    {plan.features.limits.map((feature, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <Check className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" />
+                        <span className="text-sm text-foreground">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Advanced Features (Pro & Team only) */}
+                {plan.features.advanced && (
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                      Advanced Features
+                    </div>
+                    <div className="space-y-2">
+                      {plan.features.advanced.map((feature, index) => (
+                        <div key={index} className="flex items-start gap-2">
+                          <Check className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" />
+                          <span className="text-sm text-foreground">
+                            {feature}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Support */}
+                <div>
+                  <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                    Support
+                  </div>
+                  <div className="space-y-2">
+                    {plan.features.support.map((feature, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <Check className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" />
+                        <span className="text-sm text-foreground">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Not Available Features */}
                 {plan?.notAvailable?.map((feature, index) => (
                   <div
                     key={index}

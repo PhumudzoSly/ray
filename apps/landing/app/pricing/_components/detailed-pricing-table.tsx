@@ -13,21 +13,18 @@ import { Zap, Star, Users, Brain, Code, Info } from "lucide-react";
 const plans = [
   {
     name: "Starter",
-    icon: <Zap className="w-5 h-5 text-blue-500" />,
+    icon: <Zap className="w-4 h-4 text-blue-500" />,
     color: "text-blue-500",
-    bgColor: "bg-blue-50",
   },
   {
     name: "Pro",
-    icon: <Star className="w-5 h-5 text-amber-500" />,
+    icon: <Star className="w-4 h-4 text-amber-500" />,
     color: "text-amber-500",
-    bgColor: "bg-amber-50",
   },
   {
     name: "Team",
-    icon: <Users className="w-5 h-5 text-emerald-500" />,
+    icon: <Users className="w-4 h-4 text-emerald-500" />,
     color: "text-emerald-500",
-    bgColor: "bg-emerald-50",
   },
 ];
 
@@ -106,18 +103,18 @@ export function DetailedPricingTable() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-foreground mb-6 tracking-tight">
-          Detailed Usage & Limits
+        <h2 className="text-3xl font-bold text-foreground mb-4 tracking-tight">
+          Usage Limits & Pricing
         </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto">
           Transparent pricing for AI validation and API usage
         </p>
       </div>
 
       <Card className="overflow-hidden">
-        <div className="p-6 border-b border-border">
+        <div className="px-6 pb-6 border-b border-border">
           <div className="flex items-center gap-2 mb-2">
-            <Info className="w-5 h-5 text-muted-foreground" />
+            <Info className="w-4 h-4 text-muted-foreground" />
             <h3 className="text-lg font-semibold text-foreground">
               Usage Limits & Overage Pricing
             </h3>
@@ -131,14 +128,14 @@ export function DetailedPricingTable() {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="border-b border-border">
-                <TableHead className="w-1/3 font-semibold text-foreground">
+              <TableRow>
+                <TableHead className="w-1/3 font-medium text-foreground">
                   Feature
                 </TableHead>
                 {plans.map((plan) => (
                   <TableHead
                     key={plan.name}
-                    className="text-center font-semibold text-foreground"
+                    className="text-center font-medium text-foreground"
                   >
                     <div className="flex items-center justify-center gap-2">
                       {plan.icon}
@@ -150,14 +147,14 @@ export function DetailedPricingTable() {
             </TableHeader>
             <TableBody>
               {pricingData.map((item, index) => (
-                <TableRow key={index} className="border-b border-border/50">
+                <TableRow key={index}>
                   <TableCell className="py-6">
                     <div className="flex items-start gap-3">
                       <div className="mt-1 p-1.5 bg-muted rounded-md">
                         {item.icon}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-foreground mb-1">
+                        <h4 className="font-medium text-foreground mb-1">
                           {item.feature}
                         </h4>
                         <p className="text-sm text-muted-foreground">
@@ -169,43 +166,37 @@ export function DetailedPricingTable() {
 
                   {/* Starter */}
                   <TableCell className="text-center py-6">
-                    <div className="space-y-2">
-                      <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm font-medium text-blue-900">
-                          {item.starter.included}
-                        </p>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">
+                        {item.starter.included}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
                         {item.starter.overage}
-                      </div>
+                      </p>
                     </div>
                   </TableCell>
 
                   {/* Pro */}
                   <TableCell className="text-center py-6">
-                    <div className="space-y-2">
-                      <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                        <p className="text-sm font-medium text-amber-900">
-                          {item.pro.included}
-                        </p>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">
+                        {item.pro.included}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
                         {item.pro.overage}
-                      </div>
+                      </p>
                     </div>
                   </TableCell>
 
                   {/* Team */}
                   <TableCell className="text-center py-6">
-                    <div className="space-y-2">
-                      <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                        <p className="text-sm font-medium text-emerald-900">
-                          {item.team.included}
-                        </p>
-                      </div>
-                      <div className="text-xs text-muted-foreground">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">
+                        {item.team.included}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
                         {item.team.overage}
-                      </div>
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -217,7 +208,7 @@ export function DetailedPricingTable() {
         <div className="p-6 bg-muted/30 border-t border-border">
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
-              <h4 className="font-semibold text-foreground mb-2">
+              <h4 className="font-medium text-foreground mb-2">
                 Usage Tracking
               </h4>
               <p className="text-sm text-muted-foreground">
@@ -225,7 +216,7 @@ export function DetailedPricingTable() {
               </p>
             </div>
             <div className="text-center">
-              <h4 className="font-semibold text-foreground mb-2">
+              <h4 className="font-medium text-foreground mb-2">
                 Overage Alerts
               </h4>
               <p className="text-sm text-muted-foreground">
@@ -233,7 +224,7 @@ export function DetailedPricingTable() {
               </p>
             </div>
             <div className="text-center">
-              <h4 className="font-semibold text-foreground mb-2">
+              <h4 className="font-medium text-foreground mb-2">
                 Flexible Billing
               </h4>
               <p className="text-sm text-muted-foreground">

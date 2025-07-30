@@ -20,7 +20,7 @@ const plans = [
   {
     name: "Starter",
     price: 29,
-    icon: <Zap className="w-5 h-5 text-blue-500" />,
+    icon: <Zap className="w-4 h-4 text-blue-500" />,
     color: "text-blue-500",
     aiValidation: { included: 3, overage: 5 },
     apiCalls: { included: 10000, overage: 0.0005 },
@@ -28,7 +28,7 @@ const plans = [
   {
     name: "Pro",
     price: 79,
-    icon: <Star className="w-5 h-5 text-amber-500" />,
+    icon: <Star className="w-4 h-4 text-amber-500" />,
     color: "text-amber-500",
     aiValidation: { included: 8, overage: 3 },
     apiCalls: { included: 100000, overage: 0.0003 },
@@ -36,7 +36,7 @@ const plans = [
   {
     name: "Team",
     price: 299,
-    icon: <Users className="w-5 h-5 text-emerald-500" />,
+    icon: <Users className="w-4 h-4 text-emerald-500" />,
     color: "text-emerald-500",
     aiValidation: { included: 15, overage: 2 },
     apiCalls: { included: 1000000, overage: 0.0001 },
@@ -44,8 +44,8 @@ const plans = [
 ];
 
 export function UsageCalculator() {
-  const [aiValidations, setAiValidations] = useState(5);
-  const [apiCalls, setApiCalls] = useState(50000);
+  const [aiValidations, setAiValidations] = useState(3);
+  const [apiCalls, setApiCalls] = useState(10000);
 
   const calculateCost = (plan: (typeof plans)[0]) => {
     // Calculate AI validation overage
@@ -72,10 +72,10 @@ export function UsageCalculator() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-16">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-foreground mb-6 tracking-tight">
+        <h2 className="text-3xl font-bold text-foreground mb-4 tracking-tight">
           Usage Calculator
         </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-muted-foreground max-w-2xl mx-auto">
           Estimate your monthly costs based on your expected usage
         </p>
       </div>
@@ -84,10 +84,8 @@ export function UsageCalculator() {
         {/* Calculator Input */}
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-6">
-            <Calculator className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-semibold text-foreground">
-              Your Usage
-            </h3>
+            <Calculator className="w-4 h-4 text-primary" />
+            <h3 className="text-lg font-medium text-foreground">Your Usage</h3>
           </div>
 
           <div className="space-y-6">
@@ -139,7 +137,7 @@ export function UsageCalculator() {
             return (
               <Card
                 key={plan.name}
-                className={`p-6 transition-all duration-300 ${
+                className={`p-6 ${
                   costs.hasOverage
                     ? "border-primary/20 bg-primary/5"
                     : "border-border"
@@ -148,9 +146,7 @@ export function UsageCalculator() {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2">
                     {plan.icon}
-                    <h3 className="font-semibold text-foreground">
-                      {plan.name}
-                    </h3>
+                    <h3 className="font-medium text-foreground">{plan.name}</h3>
                   </div>
                   {costs.hasOverage && (
                     <Badge variant="secondary" className="text-xs">
@@ -194,7 +190,7 @@ export function UsageCalculator() {
 
                   <div className="border-t border-border pt-3">
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-foreground">
+                      <span className="font-medium text-foreground">
                         Total monthly
                       </span>
                       <span className="text-xl font-bold text-foreground">

@@ -192,6 +192,8 @@ export async function checkAPICallLimit() {
  * @returns Object containing all limit information
  */
 export async function getAllLimits() {
+  //
+
   const subscription = await getSubscription();
 
   if (!subscription) {
