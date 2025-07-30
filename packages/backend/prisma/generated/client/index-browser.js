@@ -574,6 +574,75 @@ exports.Prisma.MilestoneDependencyScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CodeRepositoryScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  repositoryUrl: 'repositoryUrl',
+  repositoryName: 'repositoryName',
+  accessToken: 'accessToken',
+  webhookId: 'webhookId',
+  isActive: 'isActive',
+  lastAnalyzed: 'lastAnalyzed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CodeAnalysisScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  commitSha: 'commitSha',
+  branch: 'branch',
+  linesOfCode: 'linesOfCode',
+  cyclomaticComplexity: 'cyclomaticComplexity',
+  technicalDebtMinutes: 'technicalDebtMinutes',
+  maintainabilityIndex: 'maintainabilityIndex',
+  testCoverage: 'testCoverage',
+  securityScore: 'securityScore',
+  analyzedAt: 'analyzedAt'
+};
+
+exports.Prisma.CodeQualityIssueScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  analysisId: 'analysisId',
+  issueId: 'issueId',
+  type: 'type',
+  severity: 'severity',
+  file: 'file',
+  line: 'line',
+  column: 'column',
+  message: 'message',
+  rule: 'rule',
+  effort: 'effort',
+  aiSuggestion: 'aiSuggestion',
+  status: 'status',
+  createdAt: 'createdAt',
+  resolvedAt: 'resolvedAt'
+};
+
+exports.Prisma.AICodeReviewScalarFieldEnum = {
+  id: 'id',
+  repositoryId: 'repositoryId',
+  pullRequestId: 'pullRequestId',
+  commitSha: 'commitSha',
+  overallScore: 'overallScore',
+  reviewType: 'reviewType',
+  suggestions: 'suggestions',
+  positiveAspects: 'positiveAspects',
+  riskLevel: 'riskLevel',
+  reviewedAt: 'reviewedAt'
+};
+
+exports.Prisma.DeveloperProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  skillLevel: 'skillLevel',
+  preferredLanguages: 'preferredLanguages',
+  codingPatterns: 'codingPatterns',
+  improvementAreas: 'improvementAreas',
+  lastUpdated: 'lastUpdated'
+};
+
 exports.Prisma.MarketResearchScalarFieldEnum = {
   id: 'id',
   ideaId: 'ideaId',
@@ -1135,6 +1204,30 @@ exports.MilestoneStatus = exports.$Enums.MilestoneStatus = {
   DELAYED: 'DELAYED'
 };
 
+exports.CodeIssueType = exports.$Enums.CodeIssueType = {
+  BUG: 'BUG',
+  VULNERABILITY: 'VULNERABILITY',
+  CODE_SMELL: 'CODE_SMELL',
+  SECURITY_HOTSPOT: 'SECURITY_HOTSPOT',
+  PERFORMANCE: 'PERFORMANCE',
+  MAINTAINABILITY: 'MAINTAINABILITY'
+};
+
+exports.CodeIssueSeverity = exports.$Enums.CodeIssueSeverity = {
+  CRITICAL: 'CRITICAL',
+  MAJOR: 'MAJOR',
+  MINOR: 'MINOR',
+  INFO: 'INFO'
+};
+
+exports.CodeIssueStatus = exports.$Enums.CodeIssueStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  WONT_FIX: 'WONT_FIX',
+  FALSE_POSITIVE: 'FALSE_POSITIVE'
+};
+
 exports.MarketMaturity = exports.$Enums.MarketMaturity = {
   EMERGING: 'EMERGING',
   GROWING: 'GROWING',
@@ -1356,6 +1449,11 @@ exports.Prisma.ModelName = {
   FeatureLink: 'FeatureLink',
   Milestone: 'Milestone',
   MilestoneDependency: 'MilestoneDependency',
+  CodeRepository: 'CodeRepository',
+  CodeAnalysis: 'CodeAnalysis',
+  CodeQualityIssue: 'CodeQualityIssue',
+  AICodeReview: 'AICodeReview',
+  DeveloperProfile: 'DeveloperProfile',
   MarketResearch: 'MarketResearch',
   TargetAudience: 'TargetAudience',
   MarketTrend: 'MarketTrend',

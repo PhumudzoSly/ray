@@ -2,15 +2,19 @@
 import { prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
 
-export type IntegrationConfig = {
-  apiKey: string;
-  listId?: string;
-  audienceId?: string;
-  // GitHub-specific fields
-  repositories?: string[];
-  webhookUrl?: string;
-  [key: string]: any;
-};
+import { GitHubIntegrationConfig } from "@/types/github-integration";
+
+export type IntegrationConfig =
+  | {
+      apiKey?: string;
+      listId?: string;
+      audienceId?: string;
+      // GitHub-specific fields
+      repositories?: string[];
+      webhookUrl?: string;
+      [key: string]: any;
+    }
+  | GitHubIntegrationConfig;
 
 /**
  * Create a new integration

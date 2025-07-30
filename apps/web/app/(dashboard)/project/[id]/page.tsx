@@ -1,6 +1,11 @@
 import { getProjectInsights } from "@/actions/project";
 import { Badge } from "@workspace/ui/components/badge";
 import { MilestoneMetrics } from "@/components/project/milestone-metrics";
+import { CodeHealthOverview } from "@/components/project/code-health-overview";
+import { TechnicalDebtDashboard } from "@/components/project/technical-debt-dashboard";
+import { RealTimeCodeAnalysis } from "@/components/project/real-time-code-analysis";
+import { QualityGates } from "@/components/project/quality-gates";
+import { ProjectImpactReports } from "@/components/analytics/project-impact-reports";
 import {
   TrendingUp,
   AlertTriangle,
@@ -29,6 +34,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   if (!insights) {
     return <div>Project not found</div>;
   }
+
+  // For now, we'll use empty array for repository IDs
+  // In a real implementation, you'd fetch this from the database
+  const repositoryIds: string[] = [];
 
   const getHealthStatusColor = (status: string) => {
     switch (status) {
@@ -177,6 +186,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         {/* Additional Analytics Components */}
         <div className="grid grid-cols-1 gap-6 mt-4">
+          <CodeHealthOverview projectId={id} />
+          <QualityGates projectId={id} />
+          <RealTimeCodeAnalysis projectId={id} repositoryIds={repositoryIds} />
+          <TechnicalDebtDashboard projectId={id} />
           <MilestoneMetrics projectId={id} />
         </div>
 

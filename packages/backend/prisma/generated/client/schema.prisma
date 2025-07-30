@@ -29,24 +29,25 @@ model User {
 
   twoFactorEnabled Boolean?
 
-  sessions       Session[]
-  accounts       Account[]
-  members        Member[]
-  invitations    Invitation[]
-  passkeys       Passkey[]
-  twofactors     TwoFactor[]
-  subscription   Subscription?
-  project        Project[]       @relation("CreatedProjects")
-  idea           Idea[]          @relation("IdeaOwner")
-  issue          Issue[]         @relation("AssignedIssues")
-  asset          Asset[]         @relation("UploadedAssets")
-  waitlist       Waitlist[]      @relation("CreatedWaitlists")
-  integration    Integration[]   @relation("CreatedIntegrations")
-  activityFeed   ActivityFeed[]
-  feature        Feature[]
-  milestone      Milestone[]     @relation("MilestoneOwner")
-  assetViews     AssetView[]
-  assetDownloads AssetDownload[]
+  sessions         Session[]
+  accounts         Account[]
+  members          Member[]
+  invitations      Invitation[]
+  passkeys         Passkey[]
+  twofactors       TwoFactor[]
+  subscription     Subscription?
+  project          Project[]         @relation("CreatedProjects")
+  idea             Idea[]            @relation("IdeaOwner")
+  issue            Issue[]           @relation("AssignedIssues")
+  asset            Asset[]           @relation("UploadedAssets")
+  waitlist         Waitlist[]        @relation("CreatedWaitlists")
+  integration      Integration[]     @relation("CreatedIntegrations")
+  activityFeed     ActivityFeed[]
+  feature          Feature[]
+  milestone        Milestone[]       @relation("MilestoneOwner")
+  assetViews       AssetView[]
+  assetDownloads   AssetDownload[]
+  developerProfile DeveloperProfile?
 
   @@unique([email])
   @@map("user")
@@ -215,32 +216,33 @@ model Subscription {
 }
 
 model Project {
-  id             String          @id @default(uuid())
-  name           String
-  description    String?
-  platform       ProjectPlatform
-  ai             String?
-  orm            String?
-  database       String?
-  auth           String?
-  framework      String?
-  infrastructure String?
-  dueDate        DateTime?
-  status         ProjectStatus?
-  idea           Idea?           @relation(fields: [ideaId], references: [id], onDelete: Cascade)
-  ideaId         String?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String?
-  issues         Issue[]
-  createdBy      User?           @relation("CreatedProjects", fields: [createdById], references: [id], onDelete: SetNull)
-  createdById    String?
-  assets         Asset[]
-  publicRoadmaps PublicRoadmap[]
-  waitlists      Waitlist[]
-  features       Feature[]
-  milestones     Milestone[]
+  id               String           @id @default(uuid())
+  name             String
+  description      String?
+  platform         ProjectPlatform
+  ai               String?
+  orm              String?
+  database         String?
+  auth             String?
+  framework        String?
+  infrastructure   String?
+  dueDate          DateTime?
+  status           ProjectStatus?
+  idea             Idea?            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  ideaId           String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  organization     Organization?    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId   String?
+  issues           Issue[]
+  createdBy        User?            @relation("CreatedProjects", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById      String?
+  assets           Asset[]
+  publicRoadmaps   PublicRoadmap[]
+  waitlists        Waitlist[]
+  features         Feature[]
+  milestones       Milestone[]
+  codeRepositories CodeRepository[]
 
   @@index([ideaId])
   @@index([organizationId])
@@ -310,6 +312,9 @@ model Issue {
 
   // Changelog entries
   changelogEntries ChangelogEntry[]
+
+  // Code quality issues
+  codeQualityIssues CodeQualityIssue[]
 
   @@index([organizationId, achieved])
   @@index([projectId, organizationId, achieved])
@@ -1004,6 +1009,133 @@ enum IntegrationType {
   MAILCHIMP
   CONVERTKIT
   GITHUB
+}
+
+// ============================================================================
+// CODE ANALYSIS MODELS
+// ============================================================================
+
+model CodeRepository {
+  id             String    @id @default(uuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  repositoryUrl  String
+  repositoryName String
+  accessToken    String // Encrypted
+  webhookId      String?
+  isActive       Boolean   @default(true)
+  lastAnalyzed   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  analyses CodeAnalysis[]
+  issues   CodeQualityIssue[]
+  reviews  AICodeReview[]
+
+  @@index([projectId])
+  @@map("code_repository")
+}
+
+model CodeAnalysis {
+  id                   String         @id @default(uuid())
+  repositoryId         String
+  repository           CodeRepository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  commitSha            String
+  branch               String
+  linesOfCode          Int
+  cyclomaticComplexity Float
+  technicalDebtMinutes Int
+  maintainabilityIndex Float
+  testCoverage         Float?
+  securityScore        Float
+  analyzedAt           DateTime       @default(now())
+
+  issues CodeQualityIssue[]
+
+  @@index([repositoryId, analyzedAt])
+  @@map("code_analysis")
+}
+
+model CodeQualityIssue {
+  id           String         @id @default(uuid())
+  repositoryId String
+  repository   CodeRepository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  analysisId   String?
+  analysis     CodeAnalysis?  @relation(fields: [analysisId], references: [id], onDelete: SetNull)
+  issueId      String? // Link to existing Issue model
+  issue        Issue?         @relation(fields: [issueId], references: [id], onDelete: SetNull)
+
+  type         CodeIssueType
+  severity     CodeIssueSeverity
+  file         String
+  line         Int
+  column       Int?
+  message      String
+  rule         String
+  effort       Int // minutes to fix
+  aiSuggestion String?
+  status       CodeIssueStatus   @default(OPEN)
+
+  createdAt  DateTime  @default(now())
+  resolvedAt DateTime?
+
+  @@index([repositoryId, status])
+  @@index([type, severity])
+  @@map("code_quality_issue")
+}
+
+model AICodeReview {
+  id              String         @id @default(uuid())
+  repositoryId    String
+  repository      CodeRepository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  pullRequestId   String?
+  commitSha       String
+  overallScore    Float
+  reviewType      String
+  suggestions     Json // Array of ReviewSuggestion
+  positiveAspects String[]
+  riskLevel       String
+  reviewedAt      DateTime       @default(now())
+
+  @@index([repositoryId, reviewedAt])
+  @@map("ai_code_review")
+}
+
+model DeveloperProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillLevel         String // 'junior', 'mid', 'senior'
+  preferredLanguages String[]
+  codingPatterns     Json // Analyzed patterns
+  improvementAreas   String[]
+  lastUpdated        DateTime @updatedAt
+
+  @@map("developer_profile")
+}
+
+enum CodeIssueType {
+  BUG
+  VULNERABILITY
+  CODE_SMELL
+  SECURITY_HOTSPOT
+  PERFORMANCE
+  MAINTAINABILITY
+}
+
+enum CodeIssueSeverity {
+  CRITICAL
+  MAJOR
+  MINOR
+  INFO
+}
+
+enum CodeIssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  WONT_FIX
+  FALSE_POSITIVE
 }
 
 // ============================================================================

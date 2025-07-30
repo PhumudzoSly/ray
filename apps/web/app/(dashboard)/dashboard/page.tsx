@@ -19,6 +19,7 @@ import {
 import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { ActivityChart } from "./activity-chart";
 import { IssuesSummary } from "./issues-summary";
+import { CodeQualityAnalytics } from "@/components/analytics/code-quality-analytics";
 
 const DashboardPage = async () => {
   const session = await getSession();
@@ -72,6 +73,53 @@ const DashboardPage = async () => {
         />
       </div>
 
+      {/* Code Quality Overview */}
+      {stats.codeQuality.totalRepositories > 0 && (
+        <>
+          <div className="px-4">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-1">
+                Code Quality Overview
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Code health metrics across all connected repositories
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 pb-4">
+            <Stat
+              icon={GitBranch}
+              message="repositories connected"
+              title="Code Repositories"
+              value={stats.codeQuality.activeRepositories}
+              iconColor="text-purple-500"
+            />
+            <Stat
+              icon={CheckSquare}
+              message="avg maintainability"
+              title="Code Quality"
+              value={stats.codeQuality.avgMaintainability}
+              iconColor="text-blue-500"
+            />
+            <Stat
+              icon={AlertTriangle}
+              message="critical issues"
+              title="Security Issues"
+              value={stats.codeQuality.criticalIssues}
+              iconColor="text-red-500"
+            />
+            <Stat
+              icon={Target}
+              message="hours technical debt"
+              title="Technical Debt"
+              value={stats.codeQuality.technicalDebtHours}
+              iconColor="text-orange-500"
+            />
+          </div>
+        </>
+      )}
+
       {/* Advanced Organization-Wide Stats */}
       <div className="px-4 pb-4">
         <div className="mb-4">
@@ -124,6 +172,17 @@ const DashboardPage = async () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Code Quality Analytics */}
+      <div className="px-4 pb-4">
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold mb-1">Code Quality Overview</h3>
+          <p className="text-sm text-muted-foreground">
+            Code health metrics and trends across all your projects
+          </p>
+        </div>
+        <CodeQualityAnalytics organizationId={session.org} />
       </div>
     </>
   );

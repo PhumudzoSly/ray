@@ -25,6 +25,15 @@ export const getStats = async () => {
     totalMilestones,
     completedMilestones,
     totalWaitlistEntries,
+    // Code quality metrics
+    totalCodeRepositories,
+    activeCodeRepositories,
+    totalCodeAnalyses,
+    avgMaintainabilityScore,
+    avgSecurityScore,
+    totalCodeIssues,
+    criticalCodeIssues,
+    totalTechnicalDebtMinutes,
   ] = await Promise.all([
     prisma.asset.aggregate({
       _sum: { fileSize: true },
@@ -100,6 +109,41 @@ export const getStats = async () => {
         status: "DONE",
       },
     }),
+    // Code quality metrics queries
+    prisma.codeRepository.count({
+      where: { project: { organizationId: org } },
+    }),
+    prisma.codeRepository.count({
+      where: { project: { organizationId: org }, isActive: true },
+    }),
+    prisma.codeAnalysis.count({
+      where: { repository: { project: { organizationId: org } } },
+    }),
+    prisma.codeAnalysis.aggregate({
+      _avg: { maintainabilityIndex: true },
+      where: { repository: { project: { organizationId: org } } },
+    }),
+    prisma.codeAnalysis.aggregate({
+      _avg: { securityScore: true },
+      where: { repository: { project: { organizationId: org } } },
+    }),
+    prisma.codeQualityIssue.count({
+      where: {
+        repository: { project: { organizationId: org } },
+        status: "OPEN",
+      },
+    }),
+    prisma.codeQualityIssue.count({
+      where: {
+        repository: { project: { organizationId: org } },
+        status: "OPEN",
+        severity: "CRITICAL",
+      },
+    }),
+    prisma.codeAnalysis.aggregate({
+      _sum: { technicalDebtMinutes: true },
+      where: { repository: { project: { organizationId: org } } },
+    }),
   ]);
 
   const totalStorageMB = totalStorageBytes._sum.fileSize
@@ -115,6 +159,14 @@ export const getStats = async () => {
     totalFeatures > 0 ? (completedFeatures / totalFeatures) * 100 : 0;
   const milestoneCompletionRate =
     totalMilestones > 0 ? (completedMilestones / totalMilestones) * 100 : 0;
+
+  // Calculate code quality metrics
+  const avgMaintainability =
+    avgMaintainabilityScore._avg.maintainabilityIndex || 0;
+  const avgSecurity = avgSecurityScore._avg.securityScore || 0;
+  const totalTechDebtHours = totalTechnicalDebtMinutes._sum.technicalDebtMinutes
+    ? Math.round(totalTechnicalDebtMinutes._sum.technicalDebtMinutes / 60)
+    : 0;
 
   return {
     // Original stats
@@ -161,6 +213,18 @@ export const getStats = async () => {
       waitlistEntries: {
         total: totalWaitlistEntries,
       },
+    },
+
+    // Code quality metrics
+    codeQuality: {
+      totalRepositories: totalCodeRepositories,
+      activeRepositories: activeCodeRepositories,
+      totalAnalyses: totalCodeAnalyses,
+      avgMaintainability: Math.round(avgMaintainability),
+      avgSecurity: Math.round(avgSecurity),
+      totalIssues: totalCodeIssues,
+      criticalIssues: criticalCodeIssues,
+      technicalDebtHours: totalTechDebtHours,
     },
   };
 };

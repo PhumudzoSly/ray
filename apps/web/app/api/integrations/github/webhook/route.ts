@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@workspace/backend";
 import crypto from "crypto";
+import { inngestClient } from "@/lib/inngest";
+import {
+  GitHubIssueEventSchema,
+  GitHubPullRequestEventSchema,
+  GitHubPushEventSchema,
+} from "@/types/github-integration";
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,90 +52,161 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleIssuesEvent(payload: any) {
-  const { action, issue, repository } = payload;
+  try {
+    const validatedPayload = GitHubIssueEventSchema.parse(payload);
+    const { action, issue, repository } = validatedPayload;
 
-  // Find GitHub integration for this repository
-  const integration = await prisma.integration.findFirst({
-    where: {
-      type: "GITHUB",
-      config: {
-        path: ["repositories"],
-        array_contains: [repository.full_name],
+    // Find connected repositories for this GitHub repository
+    const codeRepositories = await prisma.codeRepository.findMany({
+      where: {
+        repositoryName: repository.full_name,
+        isActive: true,
       },
-    },
-  });
+      include: {
+        project: {
+          include: {
+            organization: true,
+          },
+        },
+      },
+    });
 
-  if (!integration) {
+    if (codeRepositories.length === 0) {
+      console.log(
+        `No connected repositories found for: ${repository.full_name}`
+      );
+      return;
+    }
+
+    // Trigger issue sync for each connected repository
+    for (const codeRepo of codeRepositories) {
+      await inngestClient.send({
+        name: "github/issue.sync",
+        data: {
+          repositoryId: codeRepo.id,
+          projectId: codeRepo.projectId,
+          organizationId: codeRepo.project.organizationId,
+          action,
+          issue,
+          repository,
+        },
+      });
+    }
+
     console.log(
-      `No GitHub integration found for repository: ${repository.full_name}`
+      `Issue ${action}: ${issue.title} in ${repository.full_name} - triggered sync for ${codeRepositories.length} repositories`
     );
-    return;
+  } catch (error) {
+    console.error("Error handling GitHub issue event:", error);
   }
-
-  // Here you would sync the issue to your database
-  // This is where you'd implement the actual issue sync logic
-  console.log(`Issue ${action}: ${issue.title} in ${repository.full_name}`);
-
-  // Example: Create or update issue in your database
-  // await syncIssueToDatabase(integration, issue, repository);
 }
 
 async function handlePullRequestEvent(payload: any) {
-  const { action, pull_request, repository } = payload;
+  try {
+    const validatedPayload = GitHubPullRequestEventSchema.parse(payload);
+    const { action, pull_request, repository } = validatedPayload;
 
-  // Find GitHub integration for this repository
-  const integration = await prisma.integration.findFirst({
-    where: {
-      type: "GITHUB",
-      config: {
-        path: ["repositories"],
-        array_contains: [repository.full_name],
+    // Find connected repositories for this GitHub repository
+    const codeRepositories = await prisma.codeRepository.findMany({
+      where: {
+        repositoryName: repository.full_name,
+        isActive: true,
       },
-    },
-  });
+      include: {
+        project: {
+          include: {
+            organization: true,
+          },
+        },
+      },
+    });
 
-  if (!integration) {
+    if (codeRepositories.length === 0) {
+      console.log(
+        `No connected repositories found for: ${repository.full_name}`
+      );
+      return;
+    }
+
+    // Trigger AI code review for pull requests
+    if (action === "opened" || action === "synchronize") {
+      for (const codeRepo of codeRepositories) {
+        await inngestClient.send({
+          name: "github/pull-request.review",
+          data: {
+            repositoryId: codeRepo.id,
+            projectId: codeRepo.projectId,
+            organizationId: codeRepo.project.organizationId,
+            pullRequest: pull_request,
+            repository,
+            action,
+          },
+        });
+      }
+    }
+
     console.log(
-      `No GitHub integration found for repository: ${repository.full_name}`
+      `Pull Request ${action}: ${pull_request.title} in ${repository.full_name} - triggered review for ${codeRepositories.length} repositories`
     );
-    return;
+  } catch (error) {
+    console.error("Error handling GitHub pull request event:", error);
   }
-
-  // Here you would sync the pull request to your database
-  console.log(
-    `Pull Request ${action}: ${pull_request.title} in ${repository.full_name}`
-  );
-
-  // Example: Create or update pull request in your database
-  // await syncPullRequestToDatabase(integration, pull_request, repository);
 }
 
 async function handlePushEvent(payload: any) {
-  const { ref, commits, repository } = payload;
+  try {
+    const validatedPayload = GitHubPushEventSchema.parse(payload);
+    const { ref, commits, repository, before, after } = validatedPayload;
 
-  // Find GitHub integration for this repository
-  const integration = await prisma.integration.findFirst({
-    where: {
-      type: "GITHUB",
-      config: {
-        path: ["repositories"],
-        array_contains: [repository.full_name],
+    // Only process pushes to main/master branches
+    if (!ref.includes("main") && !ref.includes("master")) {
+      console.log(`Ignoring push to non-main branch: ${ref}`);
+      return;
+    }
+
+    // Find connected repositories for this GitHub repository
+    const codeRepositories = await prisma.codeRepository.findMany({
+      where: {
+        repositoryName: repository.full_name,
+        isActive: true,
       },
-    },
-  });
+      include: {
+        project: {
+          include: {
+            organization: true,
+          },
+        },
+      },
+    });
 
-  if (!integration) {
+    if (codeRepositories.length === 0) {
+      console.log(
+        `No connected repositories found for: ${repository.full_name}`
+      );
+      return;
+    }
+
+    // Trigger code analysis for each connected repository
+    for (const codeRepo of codeRepositories) {
+      await inngestClient.send({
+        name: "github/code.analyze",
+        data: {
+          repositoryId: codeRepo.id,
+          projectId: codeRepo.projectId,
+          organizationId: codeRepo.project.organizationId,
+          commitSha: after,
+          previousCommitSha: before,
+          branch: ref.replace("refs/heads/", ""),
+          commits,
+          repository,
+        },
+      });
+    }
+
     console.log(
-      `No GitHub integration found for repository: ${repository.full_name}`
+      `Push to ${ref}: ${commits.length} commits in ${repository.full_name} - triggered analysis for ${codeRepositories.length} repositories`
     );
-    return;
+  } catch (error) {
+    console.error("Error handling GitHub push event:", error);
   }
-
-  // Here you would analyze the code changes
-  console.log(
-    `Push to ${ref}: ${commits.length} commits in ${repository.full_name}`
-  );
-
-  // Example: Analyze code changes for progress, bugs, etc.
-  // await analyzeCodeChanges(integration, commits, repository);
 }

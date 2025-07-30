@@ -20,6 +20,7 @@ import { ProjectStatusSelector } from "@/components/ui/selectors/project-status-
 import { ActivityFeed } from "@/components/shared";
 import { ORM_PLATFORMS } from "@/utils/constants/sources/orms";
 import { AI_PLATFORMS } from "@/utils/constants/sources/ai";
+import { RepositorySection } from "@/components/project/repository-section";
 
 interface ProjectSidebarProps {
   projectId: string;
@@ -274,6 +275,10 @@ export function ProjectSidebar({ projectId }: ProjectSidebarProps) {
           />
         </div>
       </div>
+
+      {/* Code Repositories Section */}
+      <RepositorySection projectId={project.id} />
+
       {/* <ActivityFeed
         entityId={project?.id}
         entityType="PROJECT"

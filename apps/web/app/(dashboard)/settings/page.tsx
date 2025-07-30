@@ -1,5 +1,6 @@
 import { getSession } from "@/actions/account/user";
 import PageHeader from "@/components/shared/page-header";
+import { DeveloperInsights } from "@/components/developer/developer-insights";
 
 export default async function SettingsPage() {
   const { userId } = await getSession();
@@ -18,6 +19,7 @@ export default async function SettingsPage() {
       <div className="flex flex-col gap-4">
         {/* <MailSubscribe />
         <NotificationSettings userId={userId} /> */}
+        <DeveloperInsights userId={userId} />
       </div>
     </div>
   );
