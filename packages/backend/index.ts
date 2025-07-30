@@ -1,4 +1,4 @@
 // export * from "./prisma/generated/client";
 export * from "./prisma/generated/zod";
-export * from "./src/services";
+export * as PROMPT from "./prompts/validation-sections";
 export { prisma } from "./prisma/prisma";

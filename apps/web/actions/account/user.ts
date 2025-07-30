@@ -50,6 +50,7 @@ export async function getSession() {
         params: {
           id: sessionData.session.activeOrganizationId,
         },
+
         headers: headersList,
       });
     })(),

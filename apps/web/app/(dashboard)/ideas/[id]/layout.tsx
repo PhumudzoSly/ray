@@ -7,6 +7,7 @@ import IdeaInfo from "@/components/idea/core/idea-info";
 import { IdeaTabs } from "@/components/idea/core/tabs";
 import Header from "@/components/shared/header";
 import getQueryClient from "@/lib/query/getQueryClient";
+import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 
 const IdeaLayout = async ({
   params,
@@ -22,24 +23,12 @@ const IdeaLayout = async ({
 
   const tabsMenu = [
     {
-      title: "Validate",
+      title: "Validation",
       href: `/ideas/${id}`,
-    },
-    {
-      title: "Market",
-      href: `/ideas/${id}/market`,
-    },
-    {
-      title: "Financial Analysis",
-      href: `/ideas/${id}/finance`,
     },
     {
       title: "Competitors",
       href: `/ideas/${id}/competitors`,
-    },
-    {
-      title: "Insights",
-      href: `/ideas/${id}/insights`,
     },
   ];
 
@@ -73,11 +62,13 @@ const IdeaLayout = async ({
       >
         {null}
       </Header>
-      <div className="container">
-        <IdeaInfo id={id} />
-        <IdeaTabs tabs={tabsMenu} ideaId={id} />
-        {children}
-      </div>
+      <ExpandedLayoutContainer sidebar={<></>}>
+        <div className="container">
+          <IdeaInfo id={id} />
+          <IdeaTabs tabs={tabsMenu} ideaId={id} />
+          {children}
+        </div>
+      </ExpandedLayoutContainer>
     </div>
   );
 };

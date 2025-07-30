@@ -578,118 +578,36 @@ exports.Prisma.MarketResearchScalarFieldEnum = {
   id: 'id',
   ideaId: 'ideaId',
   organizationId: 'organizationId',
-  marketSize: 'marketSize',
-  marketGrowthRate: 'marketGrowthRate',
-  marketMaturity: 'marketMaturity',
-  totalAddressableMarket: 'totalAddressableMarket',
-  serviceableAddressableMarket: 'serviceableAddressableMarket',
-  serviceableObtainableMarket: 'serviceableObtainableMarket',
-  keyTrends: 'keyTrends',
-  emergingTechnologies: 'emergingTechnologies',
-  regulatoryFactors: 'regulatoryFactors',
   validationScore: 'validationScore',
   confidenceLevel: 'confidenceLevel',
+  completed: 'completed',
   lastUpdated: 'lastUpdated',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  type: 'type'
 };
 
-exports.Prisma.TargetAudienceScalarFieldEnum = {
+exports.Prisma.ResearchResultsScalarFieldEnum = {
   id: 'id',
-  marketResearchId: 'marketResearchId',
-  segmentName: 'segmentName',
-  ageRange: 'ageRange',
-  location: 'location',
-  companySize: 'companySize',
-  industry: 'industry',
-  painPoints: 'painPoints',
-  decisionFactors: 'decisionFactors',
-  budgetRange: 'budgetRange',
-  techSavviness: 'techSavviness',
-  estimatedSize: 'estimatedSize',
-  averageSpend: 'averageSpend',
-  segmentValue: 'segmentValue',
-  isPrimary: 'isPrimary',
-  priority: 'priority',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.MarketTrendScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  trendName: 'trendName',
-  description: 'description',
-  impact: 'impact',
-  growthRate: 'growthRate',
-  marketSize: 'marketSize',
-  adoptionRate: 'adoptionRate',
-  keyDrivers: 'keyDrivers',
-  challenges: 'challenges',
-  opportunities: 'opportunities',
-  dataSource: 'dataSource',
-  confidenceLevel: 'confidenceLevel',
-  lastUpdated: 'lastUpdated',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.CustomerNeedScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  needType: 'needType',
-  description: 'description',
-  priority: 'priority',
-  frequency: 'frequency',
-  businessImpact: 'businessImpact',
-  userImpact: 'userImpact',
-  costImpact: 'costImpact',
-  existingSolutions: 'existingSolutions',
-  gapsInSolutions: 'gapsInSolutions',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.CompetitiveLandscapeScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  competitiveIntensity: 'competitiveIntensity',
-  marketPositioning: 'marketPositioning',
-  differentiationOpportunities: 'differentiationOpportunities',
-  competitiveAdvantage: 'competitiveAdvantage',
-  totalMarketShare: 'totalMarketShare',
-  topCompetitors: 'topCompetitors',
-  marketConcentration: 'marketConcentration',
-  entryBarriers: 'entryBarriers',
-  exitBarriers: 'exitBarriers',
-  switchingCosts: 'switchingCosts',
-  emergingThreats: 'emergingThreats',
-  marketDisruptions: 'marketDisruptions',
+  content: 'content',
+  researchId: 'researchId',
+  organizationId: 'organizationId',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.CompetitorScalarFieldEnum = {
   id: 'id',
-  competitiveLandscapeId: 'competitiveLandscapeId',
+  ideaId: 'ideaId',
   name: 'name',
   website: 'website',
   description: 'description',
   logoUrl: 'logoUrl',
   marketShare: 'marketShare',
   annualRevenue: 'annualRevenue',
-  fundingRaised: 'fundingRaised',
   employeeCount: 'employeeCount',
   foundedYear: 'foundedYear',
   headquarters: 'headquarters',
-  productFeatures: 'productFeatures',
-  pricingModel: 'pricingModel',
   targetAudience: 'targetAudience',
-  techStack: 'techStack',
-  integrations: 'integrations',
-  strengths: 'strengths',
-  weaknesses: 'weaknesses',
-  opportunities: 'opportunities',
-  threats: 'threats',
-  competitiveAdvantage: 'competitiveAdvantage',
-  differentiationFactors: 'differentiationFactors',
   threatLevel: 'threatLevel',
-  competitivePosition: 'competitivePosition',
   userGrowthRate: 'userGrowthRate',
   churnRate: 'churnRate',
   customerSatisfaction: 'customerSatisfaction',
@@ -699,26 +617,8 @@ exports.Prisma.CompetitorScalarFieldEnum = {
   isActive: 'isActive'
 };
 
-exports.Prisma.CompetitorPricingScalarFieldEnum = {
-  id: 'id',
-  competitorId: 'competitorId',
-  planName: 'planName',
-  price: 'price',
-  billingCycle: 'billingCycle',
-  features: 'features',
-  limitations: 'limitations',
-  userLimit: 'userLimit',
-  valuePerDollar: 'valuePerDollar',
-  competitivePosition: 'competitivePosition',
-  previousPrice: 'previousPrice',
-  priceChangeDate: 'priceChangeDate',
-  priceChangeReason: 'priceChangeReason',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.CompetitiveMoveScalarFieldEnum = {
   id: 'id',
-  competitiveLandscapeId: 'competitiveLandscapeId',
   competitorId: 'competitorId',
   moveType: 'moveType',
   title: 'title',
@@ -729,171 +629,12 @@ exports.Prisma.CompetitiveMoveScalarFieldEnum = {
   announcedDate: 'announcedDate',
   launchDate: 'launchDate',
   completionDate: 'completionDate',
-  marketReaction: 'marketReaction',
   userFeedback: 'userFeedback',
   pressCoverage: 'pressCoverage',
   opportunities: 'opportunities',
   threats: 'threats',
   responseRequired: 'responseRequired',
   responseStrategy: 'responseStrategy',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.FeatureComparisonScalarFieldEnum = {
-  id: 'id',
-  competitorId: 'competitorId',
-  featureName: 'featureName',
-  featureCategory: 'featureCategory',
-  isAvailable: 'isAvailable',
-  quality: 'quality',
-  implementationNotes: 'implementationNotes',
-  userRating: 'userRating',
-  marketShare: 'marketShare',
-  adoptionRate: 'adoptionRate',
-  competitiveAdvantage: 'competitiveAdvantage',
-  differentiationPoints: 'differentiationPoints',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ValidationInsightScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  insightType: 'insightType',
-  title: 'title',
-  description: 'description',
-  confidence: 'confidence',
-  dataSources: 'dataSources',
-  analysisMethod: 'analysisMethod',
-  impactLevel: 'impactLevel',
-  affectedAreas: 'affectedAreas',
-  recommendations: 'recommendations',
-  isVerified: 'isVerified',
-  verificationMethod: 'verificationMethod',
-  verifiedBy: 'verifiedBy',
-  verifiedAt: 'verifiedAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.MarketSignalScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  signalType: 'signalType',
-  title: 'title',
-  description: 'description',
-  source: 'source',
-  strength: 'strength',
-  confidence: 'confidence',
-  trend: 'trend',
-  marketImpact: 'marketImpact',
-  competitiveImpact: 'competitiveImpact',
-  timing: 'timing',
-  isMonitored: 'isMonitored',
-  lastChecked: 'lastChecked',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ValidationScorecardScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  marketScore: 'marketScore',
-  competitiveScore: 'competitiveScore',
-  technicalScore: 'technicalScore',
-  financialScore: 'financialScore',
-  riskScore: 'riskScore',
-  weightedScore: 'weightedScore',
-  primaryRecommendation: 'primaryRecommendation',
-  secondaryRecommendations: 'secondaryRecommendations',
-  riskMitigationStrategies: 'riskMitigationStrategies',
-  validationStatus: 'validationStatus',
-  nextReviewDate: 'nextReviewDate',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ValidationScoreBreakdownScalarFieldEnum = {
-  id: 'id',
-  validationScorecardId: 'validationScorecardId',
-  category: 'category',
-  score: 'score',
-  weight: 'weight',
-  weightedScore: 'weightedScore',
-  reasoning: 'reasoning',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.TechnologyAssessmentScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  technicalComplexity: 'technicalComplexity',
-  developmentTimeline: 'developmentTimeline',
-  teamRequirements: 'teamRequirements',
-  recommendedStack: 'recommendedStack',
-  alternativeStacks: 'alternativeStacks',
-  integrationRequirements: 'integrationRequirements',
-  technicalRisks: 'technicalRisks',
-  scalabilityChallenges: 'scalabilityChallenges',
-  securityConsiderations: 'securityConsiderations',
-  developmentCosts: 'developmentCosts',
-  infrastructureCosts: 'infrastructureCosts',
-  maintenanceCosts: 'maintenanceCosts',
-  technicalAdvantages: 'technicalAdvantages',
-  innovationPotential: 'innovationPotential',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.FinancialProjectionScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  projectedRevenue: 'projectedRevenue',
-  revenueGrowthRate: 'revenueGrowthRate',
-  breakEvenPoint: 'breakEvenPoint',
-  developmentCosts: 'developmentCosts',
-  marketingCosts: 'marketingCosts',
-  operationalCosts: 'operationalCosts',
-  customerAcquisitionCost: 'customerAcquisitionCost',
-  averageRevenuePerUser: 'averageRevenuePerUser',
-  customerLifetimeValue: 'customerLifetimeValue',
-  paybackPeriod: 'paybackPeriod',
-  fundingNeeded: 'fundingNeeded',
-  riskFactors: 'riskFactors',
-  mitigationStrategies: 'mitigationStrategies',
-  optimisticScenario: 'optimisticScenario',
-  realisticScenario: 'realisticScenario',
-  pessimisticScenario: 'pessimisticScenario',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.FundingRoundScalarFieldEnum = {
-  id: 'id',
-  financialProjectionId: 'financialProjectionId',
-  roundName: 'roundName',
-  amount: 'amount',
-  equity: 'equity',
-  valuation: 'valuation',
-  timeline: 'timeline',
-  investorType: 'investorType',
-  investorName: 'investorName',
-  developmentAllocation: 'developmentAllocation',
-  marketingAllocation: 'marketingAllocation',
-  operationsAllocation: 'operationsAllocation',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.RegulatoryComplianceScalarFieldEnum = {
-  id: 'id',
-  marketResearchId: 'marketResearchId',
-  applicableRegulations: 'applicableRegulations',
-  complianceLevel: 'complianceLevel',
-  riskLevel: 'riskLevel',
-  industryStandards: 'industryStandards',
-  certificationRequirements: 'certificationRequirements',
-  targetMarkets: 'targetMarkets',
-  localRegulations: 'localRegulations',
-  complianceCosts: 'complianceCosts',
-  timelineToCompliance: 'timelineToCompliance',
-  requiredResources: 'requiredResources',
-  complianceRisks: 'complianceRisks',
-  mitigationStrategies: 'mitigationStrategies',
   createdAt: 'createdAt'
 };
 
@@ -1135,190 +876,18 @@ exports.MilestoneStatus = exports.$Enums.MilestoneStatus = {
   DELAYED: 'DELAYED'
 };
 
-exports.MarketMaturity = exports.$Enums.MarketMaturity = {
-  EMERGING: 'EMERGING',
-  GROWING: 'GROWING',
-  MATURE: 'MATURE',
-  DECLINING: 'DECLINING'
-};
-
-exports.ConfidenceLevel = exports.$Enums.ConfidenceLevel = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  VERY_HIGH: 'VERY_HIGH'
-};
-
-exports.CompanySize = exports.$Enums.CompanySize = {
-  SOLO: 'SOLO',
-  SMALL_1_10: 'SMALL_1_10',
-  MEDIUM_11_50: 'MEDIUM_11_50',
-  LARGE_51_200: 'LARGE_51_200',
-  ENTERPRISE_200_PLUS: 'ENTERPRISE_200_PLUS'
-};
-
-exports.TechSavviness = exports.$Enums.TechSavviness = {
-  BEGINNER: 'BEGINNER',
-  INTERMEDIATE: 'INTERMEDIATE',
-  ADVANCED: 'ADVANCED',
-  EXPERT: 'EXPERT'
-};
-
-exports.TrendImpact = exports.$Enums.TrendImpact = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  CRITICAL: 'CRITICAL'
-};
-
-exports.CustomerNeedType = exports.$Enums.CustomerNeedType = {
-  FUNCTIONAL: 'FUNCTIONAL',
-  EMOTIONAL: 'EMOTIONAL',
-  SOCIAL: 'SOCIAL',
-  FINANCIAL: 'FINANCIAL',
-  TECHNICAL: 'TECHNICAL'
-};
-
-exports.CompetitiveIntensity = exports.$Enums.CompetitiveIntensity = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  VERY_HIGH: 'VERY_HIGH'
-};
-
-exports.PricingModel = exports.$Enums.PricingModel = {
-  SUBSCRIPTION: 'SUBSCRIPTION',
-  FREEMIUM: 'FREEMIUM',
-  ONE_TIME: 'ONE_TIME',
-  USAGE_BASED: 'USAGE_BASED',
-  HYBRID: 'HYBRID'
-};
-
-exports.ThreatLevel = exports.$Enums.ThreatLevel = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  CRITICAL: 'CRITICAL'
-};
-
-exports.CompetitivePosition = exports.$Enums.CompetitivePosition = {
-  MARKET_LEADER: 'MARKET_LEADER',
-  STRONG_CHALLENGER: 'STRONG_CHALLENGER',
-  WEAK_CHALLENGER: 'WEAK_CHALLENGER',
-  NICHE_PLAYER: 'NICHE_PLAYER',
-  NEW_ENTRANT: 'NEW_ENTRANT'
-};
-
-exports.BillingCycle = exports.$Enums.BillingCycle = {
-  MONTHLY: 'MONTHLY',
-  QUARTERLY: 'QUARTERLY',
-  ANNUALLY: 'ANNUALLY',
-  ONE_TIME: 'ONE_TIME'
-};
-
-exports.CompetitiveMoveType = exports.$Enums.CompetitiveMoveType = {
-  PRODUCT_LAUNCH: 'PRODUCT_LAUNCH',
-  FEATURE_UPDATE: 'FEATURE_UPDATE',
-  PRICING_CHANGE: 'PRICING_CHANGE',
-  PARTNERSHIP: 'PARTNERSHIP',
-  ACQUISITION: 'ACQUISITION',
-  MARKETING_CAMPAIGN: 'MARKETING_CAMPAIGN',
-  EXPANSION: 'EXPANSION',
-  PIVOT: 'PIVOT'
-};
-
-exports.Impact = exports.$Enums.Impact = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  CRITICAL: 'CRITICAL'
-};
-
-exports.MarketReaction = exports.$Enums.MarketReaction = {
-  POSITIVE: 'POSITIVE',
-  NEUTRAL: 'NEUTRAL',
-  NEGATIVE: 'NEGATIVE',
-  MIXED: 'MIXED'
-};
-
-exports.FeatureQuality = exports.$Enums.FeatureQuality = {
-  EXCELLENT: 'EXCELLENT',
-  GOOD: 'GOOD',
-  AVERAGE: 'AVERAGE',
-  POOR: 'POOR',
-  UNKNOWN: 'UNKNOWN'
-};
-
-exports.InsightType = exports.$Enums.InsightType = {
+exports.ResearchType = exports.$Enums.ResearchType = {
+  COMPLETE: 'COMPLETE',
+  BUSINESS_MODEL: 'BUSINESS_MODEL',
+  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
+  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
+  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
+  GO_TO_MARKET: 'GO_TO_MARKET',
+  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
   MARKET_OPPORTUNITY: 'MARKET_OPPORTUNITY',
-  COMPETITIVE_THREAT: 'COMPETITIVE_THREAT',
-  CUSTOMER_INSIGHT: 'CUSTOMER_INSIGHT',
-  TECHNICAL_CHALLENGE: 'TECHNICAL_CHALLENGE',
-  FINANCIAL_RISK: 'FINANCIAL_RISK',
-  REGULATORY_IMPACT: 'REGULATORY_IMPACT',
-  TIMING_OPPORTUNITY: 'TIMING_OPPORTUNITY'
-};
-
-exports.MarketSignalType = exports.$Enums.MarketSignalType = {
-  FUNDING_ANNOUNCEMENT: 'FUNDING_ANNOUNCEMENT',
-  PRODUCT_LAUNCH: 'PRODUCT_LAUNCH',
-  PARTNERSHIP: 'PARTNERSHIP',
-  ACQUISITION: 'ACQUISITION',
-  REGULATORY_CHANGE: 'REGULATORY_CHANGE',
-  TECHNOLOGY_BREAKTHROUGH: 'TECHNOLOGY_BREAKTHROUGH',
-  MARKET_TREND: 'MARKET_TREND',
-  COMPETITIVE_MOVE: 'COMPETITIVE_MOVE'
-};
-
-exports.SignalStrength = exports.$Enums.SignalStrength = {
-  WEAK: 'WEAK',
-  MODERATE: 'MODERATE',
-  STRONG: 'STRONG',
-  CRITICAL: 'CRITICAL'
-};
-
-exports.TrendDirection = exports.$Enums.TrendDirection = {
-  INCREASING: 'INCREASING',
-  DECREASING: 'DECREASING',
-  STABLE: 'STABLE',
-  VOLATILE: 'VOLATILE'
-};
-
-exports.ValidationStatus = exports.$Enums.ValidationStatus = {
-  IN_PROGRESS: 'IN_PROGRESS',
-  VALIDATED: 'VALIDATED',
-  NEEDS_IMPROVEMENT: 'NEEDS_IMPROVEMENT',
-  FAILED: 'FAILED',
-  REQUIRES_REVIEW: 'REQUIRES_REVIEW'
-};
-
-exports.TechnicalComplexity = exports.$Enums.TechnicalComplexity = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  VERY_HIGH: 'VERY_HIGH'
-};
-
-exports.InvestorType = exports.$Enums.InvestorType = {
-  ANGEL: 'ANGEL',
-  VENTURE_CAPITAL: 'VENTURE_CAPITAL',
-  PRIVATE_EQUITY: 'PRIVATE_EQUITY',
-  CORPORATE: 'CORPORATE',
-  CROWDFUNDING: 'CROWDFUNDING'
-};
-
-exports.ComplianceLevel = exports.$Enums.ComplianceLevel = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  CRITICAL: 'CRITICAL'
-};
-
-exports.RiskLevel = exports.$Enums.RiskLevel = {
-  LOW: 'LOW',
-  MEDIUM: 'MEDIUM',
-  HIGH: 'HIGH',
-  CRITICAL: 'CRITICAL'
+  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT',
+  RISK_ANALYSIS: 'RISK_ANALYSIS',
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
 };
 
 exports.Prisma.ModelName = {
@@ -1357,22 +926,9 @@ exports.Prisma.ModelName = {
   Milestone: 'Milestone',
   MilestoneDependency: 'MilestoneDependency',
   MarketResearch: 'MarketResearch',
-  TargetAudience: 'TargetAudience',
-  MarketTrend: 'MarketTrend',
-  CustomerNeed: 'CustomerNeed',
-  CompetitiveLandscape: 'CompetitiveLandscape',
+  ResearchResults: 'ResearchResults',
   Competitor: 'Competitor',
-  CompetitorPricing: 'CompetitorPricing',
   CompetitiveMove: 'CompetitiveMove',
-  FeatureComparison: 'FeatureComparison',
-  ValidationInsight: 'ValidationInsight',
-  MarketSignal: 'MarketSignal',
-  ValidationScorecard: 'ValidationScorecard',
-  ValidationScoreBreakdown: 'ValidationScoreBreakdown',
-  TechnologyAssessment: 'TechnologyAssessment',
-  FinancialProjection: 'FinancialProjection',
-  FundingRound: 'FundingRound',
-  RegulatoryCompliance: 'RegulatoryCompliance',
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
   Referral: 'Referral'

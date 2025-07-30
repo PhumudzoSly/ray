@@ -124,39 +124,13 @@ export const MilestoneScalarFieldEnumSchema = z.enum(['id','name','description',
 
 export const MilestoneDependencyScalarFieldEnumSchema = z.enum(['id','organizationId','milestoneId','dependencyId','createdAt']);
 
-export const MarketResearchScalarFieldEnumSchema = z.enum(['id','ideaId','organizationId','marketSize','marketGrowthRate','marketMaturity','totalAddressableMarket','serviceableAddressableMarket','serviceableObtainableMarket','keyTrends','emergingTechnologies','regulatoryFactors','validationScore','confidenceLevel','lastUpdated','createdAt']);
+export const MarketResearchScalarFieldEnumSchema = z.enum(['id','ideaId','organizationId','validationScore','confidenceLevel','completed','lastUpdated','createdAt','type']);
 
-export const TargetAudienceScalarFieldEnumSchema = z.enum(['id','marketResearchId','segmentName','ageRange','location','companySize','industry','painPoints','decisionFactors','budgetRange','techSavviness','estimatedSize','averageSpend','segmentValue','isPrimary','priority','createdAt']);
+export const ResearchResultsScalarFieldEnumSchema = z.enum(['id','content','researchId','organizationId','createdAt']);
 
-export const MarketTrendScalarFieldEnumSchema = z.enum(['id','marketResearchId','trendName','description','impact','growthRate','marketSize','adoptionRate','keyDrivers','challenges','opportunities','dataSource','confidenceLevel','lastUpdated','createdAt']);
+export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','website','description','logoUrl','marketShare','annualRevenue','employeeCount','foundedYear','headquarters','targetAudience','threatLevel','userGrowthRate','churnRate','customerSatisfaction','marketCap','lastUpdated','createdAt','isActive']);
 
-export const CustomerNeedScalarFieldEnumSchema = z.enum(['id','marketResearchId','needType','description','priority','frequency','businessImpact','userImpact','costImpact','existingSolutions','gapsInSolutions','createdAt']);
-
-export const CompetitiveLandscapeScalarFieldEnumSchema = z.enum(['id','marketResearchId','competitiveIntensity','marketPositioning','differentiationOpportunities','competitiveAdvantage','totalMarketShare','topCompetitors','marketConcentration','entryBarriers','exitBarriers','switchingCosts','emergingThreats','marketDisruptions','createdAt']);
-
-export const CompetitorScalarFieldEnumSchema = z.enum(['id','competitiveLandscapeId','name','website','description','logoUrl','marketShare','annualRevenue','fundingRaised','employeeCount','foundedYear','headquarters','productFeatures','pricingModel','targetAudience','techStack','integrations','strengths','weaknesses','opportunities','threats','competitiveAdvantage','differentiationFactors','threatLevel','competitivePosition','userGrowthRate','churnRate','customerSatisfaction','marketCap','lastUpdated','createdAt','isActive']);
-
-export const CompetitorPricingScalarFieldEnumSchema = z.enum(['id','competitorId','planName','price','billingCycle','features','limitations','userLimit','valuePerDollar','competitivePosition','previousPrice','priceChangeDate','priceChangeReason','createdAt']);
-
-export const CompetitiveMoveScalarFieldEnumSchema = z.enum(['id','competitiveLandscapeId','competitorId','moveType','title','description','impactLevel','targetAudience','affectedFeatures','announcedDate','launchDate','completionDate','marketReaction','userFeedback','pressCoverage','opportunities','threats','responseRequired','responseStrategy','createdAt']);
-
-export const FeatureComparisonScalarFieldEnumSchema = z.enum(['id','competitorId','featureName','featureCategory','isAvailable','quality','implementationNotes','userRating','marketShare','adoptionRate','competitiveAdvantage','differentiationPoints','createdAt']);
-
-export const ValidationInsightScalarFieldEnumSchema = z.enum(['id','marketResearchId','insightType','title','description','confidence','dataSources','analysisMethod','impactLevel','affectedAreas','recommendations','isVerified','verificationMethod','verifiedBy','verifiedAt','createdAt']);
-
-export const MarketSignalScalarFieldEnumSchema = z.enum(['id','marketResearchId','signalType','title','description','source','strength','confidence','trend','marketImpact','competitiveImpact','timing','isMonitored','lastChecked','createdAt']);
-
-export const ValidationScorecardScalarFieldEnumSchema = z.enum(['id','marketResearchId','marketScore','competitiveScore','technicalScore','financialScore','riskScore','weightedScore','primaryRecommendation','secondaryRecommendations','riskMitigationStrategies','validationStatus','nextReviewDate','createdAt','updatedAt']);
-
-export const ValidationScoreBreakdownScalarFieldEnumSchema = z.enum(['id','validationScorecardId','category','score','weight','weightedScore','reasoning','createdAt']);
-
-export const TechnologyAssessmentScalarFieldEnumSchema = z.enum(['id','marketResearchId','technicalComplexity','developmentTimeline','teamRequirements','recommendedStack','alternativeStacks','integrationRequirements','technicalRisks','scalabilityChallenges','securityConsiderations','developmentCosts','infrastructureCosts','maintenanceCosts','technicalAdvantages','innovationPotential','createdAt']);
-
-export const FinancialProjectionScalarFieldEnumSchema = z.enum(['id','marketResearchId','projectedRevenue','revenueGrowthRate','breakEvenPoint','developmentCosts','marketingCosts','operationalCosts','customerAcquisitionCost','averageRevenuePerUser','customerLifetimeValue','paybackPeriod','fundingNeeded','riskFactors','mitigationStrategies','optimisticScenario','realisticScenario','pessimisticScenario','createdAt']);
-
-export const FundingRoundScalarFieldEnumSchema = z.enum(['id','financialProjectionId','roundName','amount','equity','valuation','timeline','investorType','investorName','developmentAllocation','marketingAllocation','operationsAllocation','createdAt']);
-
-export const RegulatoryComplianceScalarFieldEnumSchema = z.enum(['id','marketResearchId','applicableRegulations','complianceLevel','riskLevel','industryStandards','certificationRequirements','targetMarkets','localRegulations','complianceCosts','timelineToCompliance','requiredResources','complianceRisks','mitigationStrategies','createdAt']);
+export const CompetitiveMoveScalarFieldEnumSchema = z.enum(['id','competitorId','moveType','title','description','impactLevel','targetAudience','affectedFeatures','announcedDate','launchDate','completionDate','userFeedback','pressCoverage','opportunities','threats','responseRequired','responseStrategy','createdAt']);
 
 export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','viewedAt']);
 
@@ -218,14 +192,6 @@ export const AssetCategorySchema = z.enum(['branding','ui_design','mockups','doc
 
 export type AssetCategoryType = `${z.infer<typeof AssetCategorySchema>}`
 
-export const PrdStatusSchema = z.enum(['draft','approved','archived']);
-
-export type PrdStatusType = `${z.infer<typeof PrdStatusSchema>}`
-
-export const AnalysisReportTypeSchema = z.enum(['flow_analysis','missing_flows','recommendations']);
-
-export type AnalysisReportTypeType = `${z.infer<typeof AnalysisReportTypeSchema>}`
-
 export const RoadmapFeedbackSentimentSchema = z.enum(['positive','neutral','negative']);
 
 export type RoadmapFeedbackSentimentType = `${z.infer<typeof RoadmapFeedbackSentimentSchema>}`
@@ -250,101 +216,9 @@ export const IntegrationTypeSchema = z.enum(['RESEND','LOOPS','SENDGRID','MAILCH
 
 export type IntegrationTypeType = `${z.infer<typeof IntegrationTypeSchema>}`
 
-export const MarketMaturitySchema = z.enum(['EMERGING','GROWING','MATURE','DECLINING']);
+export const ResearchTypeSchema = z.enum(['COMPLETE','BUSINESS_MODEL','COMPETITIVE_ANALYSIS','CUSTOMER_VALIDATION','FINANCIAL_PROJECTIONS','GO_TO_MARKET','INVESTMENT_RECOMMENDATION','MARKET_OPPORTUNITY','PRODUCT_MARKET_FIT','RISK_ANALYSIS','TECHNICAL_FEASIBILITY']);
 
-export type MarketMaturityType = `${z.infer<typeof MarketMaturitySchema>}`
-
-export const ConfidenceLevelSchema = z.enum(['LOW','MEDIUM','HIGH','VERY_HIGH']);
-
-export type ConfidenceLevelType = `${z.infer<typeof ConfidenceLevelSchema>}`
-
-export const CompanySizeSchema = z.enum(['SOLO','SMALL_1_10','MEDIUM_11_50','LARGE_51_200','ENTERPRISE_200_PLUS']);
-
-export type CompanySizeType = `${z.infer<typeof CompanySizeSchema>}`
-
-export const TechSavvinessSchema = z.enum(['BEGINNER','INTERMEDIATE','ADVANCED','EXPERT']);
-
-export type TechSavvinessType = `${z.infer<typeof TechSavvinessSchema>}`
-
-export const TrendImpactSchema = z.enum(['LOW','MEDIUM','HIGH','CRITICAL']);
-
-export type TrendImpactType = `${z.infer<typeof TrendImpactSchema>}`
-
-export const CustomerNeedTypeSchema = z.enum(['FUNCTIONAL','EMOTIONAL','SOCIAL','FINANCIAL','TECHNICAL']);
-
-export type CustomerNeedTypeType = `${z.infer<typeof CustomerNeedTypeSchema>}`
-
-export const CompetitiveIntensitySchema = z.enum(['LOW','MEDIUM','HIGH','VERY_HIGH']);
-
-export type CompetitiveIntensityType = `${z.infer<typeof CompetitiveIntensitySchema>}`
-
-export const PricingModelSchema = z.enum(['SUBSCRIPTION','FREEMIUM','ONE_TIME','USAGE_BASED','HYBRID']);
-
-export type PricingModelType = `${z.infer<typeof PricingModelSchema>}`
-
-export const ThreatLevelSchema = z.enum(['LOW','MEDIUM','HIGH','CRITICAL']);
-
-export type ThreatLevelType = `${z.infer<typeof ThreatLevelSchema>}`
-
-export const CompetitivePositionSchema = z.enum(['MARKET_LEADER','STRONG_CHALLENGER','WEAK_CHALLENGER','NICHE_PLAYER','NEW_ENTRANT']);
-
-export type CompetitivePositionType = `${z.infer<typeof CompetitivePositionSchema>}`
-
-export const CompetitiveMoveTypeSchema = z.enum(['PRODUCT_LAUNCH','FEATURE_UPDATE','PRICING_CHANGE','PARTNERSHIP','ACQUISITION','MARKETING_CAMPAIGN','EXPANSION','PIVOT']);
-
-export type CompetitiveMoveTypeType = `${z.infer<typeof CompetitiveMoveTypeSchema>}`
-
-export const MarketReactionSchema = z.enum(['POSITIVE','NEUTRAL','NEGATIVE','MIXED']);
-
-export type MarketReactionType = `${z.infer<typeof MarketReactionSchema>}`
-
-export const ImpactSchema = z.enum(['LOW','MEDIUM','HIGH','CRITICAL']);
-
-export type ImpactType = `${z.infer<typeof ImpactSchema>}`
-
-export const InsightTypeSchema = z.enum(['MARKET_OPPORTUNITY','COMPETITIVE_THREAT','CUSTOMER_INSIGHT','TECHNICAL_CHALLENGE','FINANCIAL_RISK','REGULATORY_IMPACT','TIMING_OPPORTUNITY']);
-
-export type InsightTypeType = `${z.infer<typeof InsightTypeSchema>}`
-
-export const MarketSignalTypeSchema = z.enum(['FUNDING_ANNOUNCEMENT','PRODUCT_LAUNCH','PARTNERSHIP','ACQUISITION','REGULATORY_CHANGE','TECHNOLOGY_BREAKTHROUGH','MARKET_TREND','COMPETITIVE_MOVE']);
-
-export type MarketSignalTypeType = `${z.infer<typeof MarketSignalTypeSchema>}`
-
-export const SignalStrengthSchema = z.enum(['WEAK','MODERATE','STRONG','CRITICAL']);
-
-export type SignalStrengthType = `${z.infer<typeof SignalStrengthSchema>}`
-
-export const TrendDirectionSchema = z.enum(['INCREASING','DECREASING','STABLE','VOLATILE']);
-
-export type TrendDirectionType = `${z.infer<typeof TrendDirectionSchema>}`
-
-export const ValidationStatusSchema = z.enum(['IN_PROGRESS','VALIDATED','NEEDS_IMPROVEMENT','FAILED','REQUIRES_REVIEW']);
-
-export type ValidationStatusType = `${z.infer<typeof ValidationStatusSchema>}`
-
-export const TechnicalComplexitySchema = z.enum(['LOW','MEDIUM','HIGH','VERY_HIGH']);
-
-export type TechnicalComplexityType = `${z.infer<typeof TechnicalComplexitySchema>}`
-
-export const ComplianceLevelSchema = z.enum(['LOW','MEDIUM','HIGH','CRITICAL']);
-
-export type ComplianceLevelType = `${z.infer<typeof ComplianceLevelSchema>}`
-
-export const RiskLevelSchema = z.enum(['LOW','MEDIUM','HIGH','CRITICAL']);
-
-export type RiskLevelType = `${z.infer<typeof RiskLevelSchema>}`
-
-export const InvestorTypeSchema = z.enum(['ANGEL','VENTURE_CAPITAL','PRIVATE_EQUITY','CORPORATE','CROWDFUNDING']);
-
-export type InvestorTypeType = `${z.infer<typeof InvestorTypeSchema>}`
-
-export const BillingCycleSchema = z.enum(['MONTHLY','QUARTERLY','ANNUALLY','ONE_TIME']);
-
-export type BillingCycleType = `${z.infer<typeof BillingCycleSchema>}`
-
-export const FeatureQualitySchema = z.enum(['EXCELLENT','GOOD','AVERAGE','POOR','UNKNOWN']);
-
-export type FeatureQualityType = `${z.infer<typeof FeatureQualitySchema>}`
+export type ResearchTypeType = `${z.infer<typeof ResearchTypeSchema>}`
 
 export const ApiPermissionSchema = z.enum(['READ','WRITE','DELETE','ADMIN']);
 
@@ -1373,20 +1247,13 @@ export type MilestoneDependencyOptionalDefaults = z.infer<typeof MilestoneDepend
 /////////////////////////////////////////
 
 export const MarketResearchSchema = z.object({
-  marketMaturity: MarketMaturitySchema,
-  confidenceLevel: ConfidenceLevelSchema,
+  confidenceLevel: ImportanceSchema,
+  type: ResearchTypeSchema,
   id: z.string().uuid(),
   ideaId: z.string(),
   organizationId: z.string(),
-  marketSize: z.number().nullish(),
-  marketGrowthRate: z.number().nullish(),
-  totalAddressableMarket: z.number().nullish(),
-  serviceableAddressableMarket: z.number().nullish(),
-  serviceableObtainableMarket: z.number().nullish(),
-  keyTrends: z.string().array(),
-  emergingTechnologies: z.string().array(),
-  regulatoryFactors: z.string().array(),
   validationScore: z.number().nullish(),
+  completed: z.boolean(),
   lastUpdated: z.coerce.date(),
   createdAt: z.coerce.date(),
 })
@@ -1397,7 +1264,9 @@ export type MarketResearch = z.infer<typeof MarketResearchSchema>
 //------------------------------------------------------
 
 export const MarketResearchOptionalDefaultsSchema = MarketResearchSchema.merge(z.object({
+  type: ResearchTypeSchema.optional(),
   id: z.string().uuid().optional(),
+  completed: z.boolean().optional(),
   lastUpdated: z.coerce.date().optional(),
   createdAt: z.coerce.date().optional(),
 }))
@@ -1405,173 +1274,47 @@ export const MarketResearchOptionalDefaultsSchema = MarketResearchSchema.merge(z
 export type MarketResearchOptionalDefaults = z.infer<typeof MarketResearchOptionalDefaultsSchema>
 
 /////////////////////////////////////////
-// TARGET AUDIENCE SCHEMA
+// RESEARCH RESULTS SCHEMA
 /////////////////////////////////////////
 
-export const TargetAudienceSchema = z.object({
-  companySize: CompanySizeSchema.nullish(),
-  techSavviness: TechSavvinessSchema,
+export const ResearchResultsSchema = z.object({
   id: z.string().uuid(),
-  marketResearchId: z.string(),
-  segmentName: z.string(),
-  ageRange: z.string().nullish(),
-  location: z.string().nullish(),
-  industry: z.string().nullish(),
-  painPoints: z.string().array(),
-  decisionFactors: z.string().array(),
-  budgetRange: z.string().nullish(),
-  estimatedSize: z.number().int().nullish(),
-  averageSpend: z.number().nullish(),
-  segmentValue: z.number().nullish(),
-  isPrimary: z.boolean(),
-  priority: z.number().int(),
+  content: z.string(),
+  researchId: z.string(),
+  organizationId: z.string(),
   createdAt: z.coerce.date(),
 })
 
-export type TargetAudience = z.infer<typeof TargetAudienceSchema>
+export type ResearchResults = z.infer<typeof ResearchResultsSchema>
 
-// TARGET AUDIENCE OPTIONAL DEFAULTS SCHEMA
+// RESEARCH RESULTS OPTIONAL DEFAULTS SCHEMA
 //------------------------------------------------------
 
-export const TargetAudienceOptionalDefaultsSchema = TargetAudienceSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  isPrimary: z.boolean().optional(),
-  priority: z.number().int().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type TargetAudienceOptionalDefaults = z.infer<typeof TargetAudienceOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// MARKET TREND SCHEMA
-/////////////////////////////////////////
-
-export const MarketTrendSchema = z.object({
-  impact: TrendImpactSchema,
-  confidenceLevel: ConfidenceLevelSchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  trendName: z.string(),
-  description: z.string(),
-  growthRate: z.number().nullish(),
-  marketSize: z.number().nullish(),
-  adoptionRate: z.number().nullish(),
-  keyDrivers: z.string().array(),
-  challenges: z.string().array(),
-  opportunities: z.string().array(),
-  dataSource: z.string().nullish(),
-  lastUpdated: z.coerce.date(),
-  createdAt: z.coerce.date(),
-})
-
-export type MarketTrend = z.infer<typeof MarketTrendSchema>
-
-// MARKET TREND OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const MarketTrendOptionalDefaultsSchema = MarketTrendSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  lastUpdated: z.coerce.date().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type MarketTrendOptionalDefaults = z.infer<typeof MarketTrendOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// CUSTOMER NEED SCHEMA
-/////////////////////////////////////////
-
-export const CustomerNeedSchema = z.object({
-  needType: CustomerNeedTypeSchema,
-  priority: ImportanceSchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  description: z.string(),
-  frequency: z.string().nullish(),
-  businessImpact: z.string().nullish(),
-  userImpact: z.string().nullish(),
-  costImpact: z.number().nullish(),
-  existingSolutions: z.string().array(),
-  gapsInSolutions: z.string().array(),
-  createdAt: z.coerce.date(),
-})
-
-export type CustomerNeed = z.infer<typeof CustomerNeedSchema>
-
-// CUSTOMER NEED OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const CustomerNeedOptionalDefaultsSchema = CustomerNeedSchema.merge(z.object({
+export const ResearchResultsOptionalDefaultsSchema = ResearchResultsSchema.merge(z.object({
   id: z.string().uuid().optional(),
   createdAt: z.coerce.date().optional(),
 }))
 
-export type CustomerNeedOptionalDefaults = z.infer<typeof CustomerNeedOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// COMPETITIVE LANDSCAPE SCHEMA
-/////////////////////////////////////////
-
-export const CompetitiveLandscapeSchema = z.object({
-  competitiveIntensity: CompetitiveIntensitySchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  marketPositioning: z.string().nullish(),
-  differentiationOpportunities: z.string().array(),
-  competitiveAdvantage: z.string().nullish(),
-  totalMarketShare: z.number().nullish(),
-  topCompetitors: z.number().int().nullish(),
-  marketConcentration: z.number().nullish(),
-  entryBarriers: z.string().array(),
-  exitBarriers: z.string().array(),
-  switchingCosts: z.number().nullish(),
-  emergingThreats: z.string().array(),
-  marketDisruptions: z.string().array(),
-  createdAt: z.coerce.date(),
-})
-
-export type CompetitiveLandscape = z.infer<typeof CompetitiveLandscapeSchema>
-
-// COMPETITIVE LANDSCAPE OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const CompetitiveLandscapeOptionalDefaultsSchema = CompetitiveLandscapeSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type CompetitiveLandscapeOptionalDefaults = z.infer<typeof CompetitiveLandscapeOptionalDefaultsSchema>
+export type ResearchResultsOptionalDefaults = z.infer<typeof ResearchResultsOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // COMPETITOR SCHEMA
 /////////////////////////////////////////
 
 export const CompetitorSchema = z.object({
-  pricingModel: PricingModelSchema,
-  threatLevel: ThreatLevelSchema,
-  competitivePosition: CompetitivePositionSchema,
+  threatLevel: ImportanceSchema,
   id: z.string().uuid(),
-  competitiveLandscapeId: z.string(),
+  ideaId: z.string(),
   name: z.string(),
   website: z.string().nullish(),
   description: z.string().nullish(),
   logoUrl: z.string().nullish(),
   marketShare: z.number().nullish(),
   annualRevenue: z.number().nullish(),
-  fundingRaised: z.number().nullish(),
-  employeeCount: z.number().int().nullish(),
+  employeeCount: z.string().nullish(),
   foundedYear: z.number().int().nullish(),
   headquarters: z.string().nullish(),
-  productFeatures: z.string().array(),
   targetAudience: z.string().nullish(),
-  techStack: z.string().array(),
-  integrations: z.string().array(),
-  strengths: z.string().array(),
-  weaknesses: z.string().array(),
-  opportunities: z.string().array(),
-  threats: z.string().array(),
-  competitiveAdvantage: z.string().nullish(),
-  differentiationFactors: z.string().array(),
   userGrowthRate: z.number().nullish(),
   churnRate: z.number().nullish(),
   customerSatisfaction: z.number().nullish(),
@@ -1596,49 +1339,14 @@ export const CompetitorOptionalDefaultsSchema = CompetitorSchema.merge(z.object(
 export type CompetitorOptionalDefaults = z.infer<typeof CompetitorOptionalDefaultsSchema>
 
 /////////////////////////////////////////
-// COMPETITOR PRICING SCHEMA
-/////////////////////////////////////////
-
-export const CompetitorPricingSchema = z.object({
-  billingCycle: BillingCycleSchema,
-  id: z.string().uuid(),
-  competitorId: z.string(),
-  planName: z.string(),
-  price: z.number(),
-  features: z.string().array(),
-  limitations: z.string().nullish(),
-  userLimit: z.number().int().nullish(),
-  valuePerDollar: z.number().nullish(),
-  competitivePosition: z.string().nullish(),
-  previousPrice: z.number().nullish(),
-  priceChangeDate: z.coerce.date().nullish(),
-  priceChangeReason: z.string().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type CompetitorPricing = z.infer<typeof CompetitorPricingSchema>
-
-// COMPETITOR PRICING OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const CompetitorPricingOptionalDefaultsSchema = CompetitorPricingSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type CompetitorPricingOptionalDefaults = z.infer<typeof CompetitorPricingOptionalDefaultsSchema>
-
-/////////////////////////////////////////
 // COMPETITIVE MOVE SCHEMA
 /////////////////////////////////////////
 
 export const CompetitiveMoveSchema = z.object({
-  moveType: CompetitiveMoveTypeSchema,
-  impactLevel: ImpactSchema,
-  marketReaction: MarketReactionSchema.nullish(),
+  impactLevel: ImportanceSchema,
   id: z.string().uuid(),
-  competitiveLandscapeId: z.string(),
   competitorId: z.string().nullish(),
+  moveType: z.string(),
   title: z.string(),
   description: z.string(),
   targetAudience: z.string().nullish(),
@@ -1667,312 +1375,6 @@ export const CompetitiveMoveOptionalDefaultsSchema = CompetitiveMoveSchema.merge
 }))
 
 export type CompetitiveMoveOptionalDefaults = z.infer<typeof CompetitiveMoveOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// FEATURE COMPARISON SCHEMA
-/////////////////////////////////////////
-
-export const FeatureComparisonSchema = z.object({
-  quality: FeatureQualitySchema.nullish(),
-  id: z.string().uuid(),
-  competitorId: z.string(),
-  featureName: z.string(),
-  featureCategory: z.string(),
-  isAvailable: z.boolean(),
-  implementationNotes: z.string().nullish(),
-  userRating: z.number().nullish(),
-  marketShare: z.number().nullish(),
-  adoptionRate: z.number().nullish(),
-  competitiveAdvantage: z.string().nullish(),
-  differentiationPoints: z.string().array(),
-  createdAt: z.coerce.date(),
-})
-
-export type FeatureComparison = z.infer<typeof FeatureComparisonSchema>
-
-// FEATURE COMPARISON OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const FeatureComparisonOptionalDefaultsSchema = FeatureComparisonSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type FeatureComparisonOptionalDefaults = z.infer<typeof FeatureComparisonOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// VALIDATION INSIGHT SCHEMA
-/////////////////////////////////////////
-
-export const ValidationInsightSchema = z.object({
-  insightType: InsightTypeSchema,
-  impactLevel: ImpactSchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  title: z.string(),
-  description: z.string(),
-  confidence: z.number().nullish(),
-  dataSources: z.string().array(),
-  analysisMethod: z.string().nullish(),
-  affectedAreas: z.string().array(),
-  recommendations: z.string().array(),
-  isVerified: z.boolean(),
-  verificationMethod: z.string().nullish(),
-  verifiedBy: z.string().nullish(),
-  verifiedAt: z.coerce.date().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type ValidationInsight = z.infer<typeof ValidationInsightSchema>
-
-// VALIDATION INSIGHT OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ValidationInsightOptionalDefaultsSchema = ValidationInsightSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  isVerified: z.boolean().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type ValidationInsightOptionalDefaults = z.infer<typeof ValidationInsightOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// MARKET SIGNAL SCHEMA
-/////////////////////////////////////////
-
-export const MarketSignalSchema = z.object({
-  signalType: MarketSignalTypeSchema,
-  strength: SignalStrengthSchema,
-  trend: TrendDirectionSchema.nullish(),
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  title: z.string(),
-  description: z.string(),
-  source: z.string().nullish(),
-  confidence: z.number().nullish(),
-  marketImpact: z.string().nullish(),
-  competitiveImpact: z.string().nullish(),
-  timing: z.string().nullish(),
-  isMonitored: z.boolean(),
-  lastChecked: z.coerce.date(),
-  createdAt: z.coerce.date(),
-})
-
-export type MarketSignal = z.infer<typeof MarketSignalSchema>
-
-// MARKET SIGNAL OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const MarketSignalOptionalDefaultsSchema = MarketSignalSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  isMonitored: z.boolean().optional(),
-  lastChecked: z.coerce.date().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type MarketSignalOptionalDefaults = z.infer<typeof MarketSignalOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// VALIDATION SCORECARD SCHEMA
-/////////////////////////////////////////
-
-export const ValidationScorecardSchema = z.object({
-  validationStatus: ValidationStatusSchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  marketScore: z.number().nullish(),
-  competitiveScore: z.number().nullish(),
-  technicalScore: z.number().nullish(),
-  financialScore: z.number().nullish(),
-  riskScore: z.number().nullish(),
-  weightedScore: z.number().nullish(),
-  primaryRecommendation: z.string().nullish(),
-  secondaryRecommendations: z.string().array(),
-  riskMitigationStrategies: z.string().array(),
-  nextReviewDate: z.coerce.date().nullish(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type ValidationScorecard = z.infer<typeof ValidationScorecardSchema>
-
-// VALIDATION SCORECARD OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ValidationScorecardOptionalDefaultsSchema = ValidationScorecardSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type ValidationScorecardOptionalDefaults = z.infer<typeof ValidationScorecardOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// VALIDATION SCORE BREAKDOWN SCHEMA
-/////////////////////////////////////////
-
-export const ValidationScoreBreakdownSchema = z.object({
-  id: z.string().uuid(),
-  validationScorecardId: z.string(),
-  category: z.string(),
-  score: z.number(),
-  weight: z.number(),
-  weightedScore: z.number(),
-  reasoning: z.string().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type ValidationScoreBreakdown = z.infer<typeof ValidationScoreBreakdownSchema>
-
-// VALIDATION SCORE BREAKDOWN OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ValidationScoreBreakdownOptionalDefaultsSchema = ValidationScoreBreakdownSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type ValidationScoreBreakdownOptionalDefaults = z.infer<typeof ValidationScoreBreakdownOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// TECHNOLOGY ASSESSMENT SCHEMA
-/////////////////////////////////////////
-
-export const TechnologyAssessmentSchema = z.object({
-  technicalComplexity: TechnicalComplexitySchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  developmentTimeline: z.number().int().nullish(),
-  teamRequirements: z.string().array(),
-  recommendedStack: z.string().array(),
-  alternativeStacks: z.string().array(),
-  integrationRequirements: z.string().array(),
-  technicalRisks: z.string().array(),
-  scalabilityChallenges: z.string().array(),
-  securityConsiderations: z.string().array(),
-  developmentCosts: z.number().nullish(),
-  infrastructureCosts: z.number().nullish(),
-  maintenanceCosts: z.number().nullish(),
-  technicalAdvantages: z.string().array(),
-  innovationPotential: z.string().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type TechnologyAssessment = z.infer<typeof TechnologyAssessmentSchema>
-
-// TECHNOLOGY ASSESSMENT OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const TechnologyAssessmentOptionalDefaultsSchema = TechnologyAssessmentSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type TechnologyAssessmentOptionalDefaults = z.infer<typeof TechnologyAssessmentOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// FINANCIAL PROJECTION SCHEMA
-/////////////////////////////////////////
-
-export const FinancialProjectionSchema = z.object({
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  projectedRevenue: z.number().nullish(),
-  revenueGrowthRate: z.number().nullish(),
-  breakEvenPoint: z.number().int().nullish(),
-  developmentCosts: z.number().nullish(),
-  marketingCosts: z.number().nullish(),
-  operationalCosts: z.number().nullish(),
-  customerAcquisitionCost: z.number().nullish(),
-  averageRevenuePerUser: z.number().nullish(),
-  customerLifetimeValue: z.number().nullish(),
-  paybackPeriod: z.number().int().nullish(),
-  fundingNeeded: z.number().nullish(),
-  riskFactors: z.string().array(),
-  mitigationStrategies: z.string().array(),
-  optimisticScenario: z.number().nullish(),
-  realisticScenario: z.number().nullish(),
-  pessimisticScenario: z.number().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type FinancialProjection = z.infer<typeof FinancialProjectionSchema>
-
-// FINANCIAL PROJECTION OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const FinancialProjectionOptionalDefaultsSchema = FinancialProjectionSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type FinancialProjectionOptionalDefaults = z.infer<typeof FinancialProjectionOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// FUNDING ROUND SCHEMA
-/////////////////////////////////////////
-
-export const FundingRoundSchema = z.object({
-  investorType: InvestorTypeSchema,
-  id: z.string().uuid(),
-  financialProjectionId: z.string(),
-  roundName: z.string(),
-  amount: z.number(),
-  equity: z.number().nullish(),
-  valuation: z.number().nullish(),
-  timeline: z.number().int().nullish(),
-  investorName: z.string().nullish(),
-  developmentAllocation: z.number().nullish(),
-  marketingAllocation: z.number().nullish(),
-  operationsAllocation: z.number().nullish(),
-  createdAt: z.coerce.date(),
-})
-
-export type FundingRound = z.infer<typeof FundingRoundSchema>
-
-// FUNDING ROUND OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const FundingRoundOptionalDefaultsSchema = FundingRoundSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type FundingRoundOptionalDefaults = z.infer<typeof FundingRoundOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// REGULATORY COMPLIANCE SCHEMA
-/////////////////////////////////////////
-
-export const RegulatoryComplianceSchema = z.object({
-  complianceLevel: ComplianceLevelSchema,
-  riskLevel: RiskLevelSchema,
-  id: z.string().uuid(),
-  marketResearchId: z.string(),
-  applicableRegulations: z.string().array(),
-  industryStandards: z.string().array(),
-  certificationRequirements: z.string().array(),
-  targetMarkets: z.string().array(),
-  localRegulations: z.string().array(),
-  complianceCosts: z.number().nullish(),
-  timelineToCompliance: z.number().int().nullish(),
-  requiredResources: z.string().array(),
-  complianceRisks: z.string().array(),
-  mitigationStrategies: z.string().array(),
-  createdAt: z.coerce.date(),
-})
-
-export type RegulatoryCompliance = z.infer<typeof RegulatoryComplianceSchema>
-
-// REGULATORY COMPLIANCE OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const RegulatoryComplianceOptionalDefaultsSchema = RegulatoryComplianceSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type RegulatoryComplianceOptionalDefaults = z.infer<typeof RegulatoryComplianceOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // ASSET VIEW SCHEMA
