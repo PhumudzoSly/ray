@@ -45,6 +45,7 @@ export const auth = betterAuth({
               const org = await prisma.organization.findUnique({
                 where: { id: data.metadata.org as string },
               });
+
               if (!org) throw new Error("Error, something happened");
               await prisma.subscription.upsert({
                 create: {

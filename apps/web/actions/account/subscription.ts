@@ -255,7 +255,7 @@ export async function generateCustomerURL() {
     return null;
   }
 
-  const { activeOrganizationId: org } = sessionData.session;
+  const { activeOrganizationId: org, userId: customerId } = sessionData.session;
 
   if (!org) return null;
 
@@ -266,7 +266,7 @@ export async function generateCustomerURL() {
     },
   });
 
-  if (!subscription) return null;
+  if (!subscription || subscription.userId !== customerId) return null;
 
   // Fetch the full subscription details from Polar
   const polarSubscription = await polarClient.subscriptions.get({
@@ -340,4 +340,31 @@ export async function invalidateFeatureAccessCache(
   } catch (error) {
     console.warn("Failed to invalidate feature access cache:", error);
   }
+}
+
+// Server action: subscribeToProduct
+export async function subscribeToProduct({
+  products,
+  email,
+  org,
+  successUrl,
+}: {
+  products: string[];
+  email: string;
+  org: string;
+  successUrl: string;
+}) {
+  let result;
+  try {
+    result = await polarClient.checkouts.create({
+      products,
+      customerEmail: email,
+      metadata: { org },
+      successUrl,
+    });
+  } catch (error) {
+    console.error("Failed to create checkout session:", error);
+    throw new Error("Failed to create checkout session.");
+  }
+  redirect(result.url);
 }
