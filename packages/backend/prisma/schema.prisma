@@ -72,17 +72,16 @@ model Session {
 }
 
 model Account {
-  id           String    @id
-  accountId    String
-  providerId   String
-  userId       String?
-  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  accessToken  String?
-  refreshToken String?
-  idToken      String?
-  expiresAt    DateTime?
-  password     String?
-
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String?
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  expiresAt             DateTime?
+  password              String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -133,6 +132,7 @@ model Organization {
   assetDownloads      AssetDownload[]
   referrals           Referral[]
   ApiKey              ApiKey[]
+  apiCalls            ApiCall[]
 
   @@unique([slug])
   @@map("organization")
@@ -404,11 +404,33 @@ model ApiKey {
   lastUsed       DateTime?
   isActive       Boolean
   expiresAt      DateTime?
+  apiCalls       ApiCall[]
 
   @@index([organizationId])
   @@index([organizationId, isActive])
   @@index([createdBy])
   @@index([keyHash])
+}
+
+model ApiCall {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  apiKeyId       String?
+  apiKey         ApiKey?      @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint       String
+  method         String
+  statusCode     Int
+  responseTime   Int? // in milliseconds
+  userAgent      String?
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([organizationId, createdAt])
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([method])
 }
 
 model ActivityFeed {

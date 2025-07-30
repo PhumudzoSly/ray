@@ -13,11 +13,6 @@ export default function RoadmapError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error("Roadmap page error:", error);
-  }, [error]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -32,7 +27,8 @@ export default function RoadmapError({
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Something went wrong</h1>
               <p className="text-muted-foreground">
-                We encountered an error while loading this roadmap. This is usually temporary.
+                We encountered an error while loading this roadmap. This is
+                usually temporary.
               </p>
             </div>
 
@@ -62,7 +58,8 @@ export default function RoadmapError({
             {/* Help Text */}
             <div className="text-sm text-muted-foreground">
               <p>
-                If this problem persists, please contact support or try refreshing the page.
+                If this problem persists, please contact support or try
+                refreshing the page.
               </p>
             </div>
           </div>

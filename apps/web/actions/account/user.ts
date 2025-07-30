@@ -160,10 +160,6 @@ export async function deleteAccount() {
   }
 }
 
-export async function subscribeToUpdates(active: boolean) {
-  const { userId, email, name } = await getSession();
-}
-
 export async function reportBug({
   data,
 }: {
