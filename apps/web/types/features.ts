@@ -1,8 +1,9 @@
 export enum GeneralFeature {
-  LiveChat = "livechat",
-  AiTools = "ai_tools",
-  Projects = "projects",
-  TimeLog = "time_log",
+  Agent = "agent",
+  Inbox = "inbox",
+  Feedback = "feedback",
+  Analytics = "analytics",
+  Integration = "integration",
 }
 
 export type Feature = GeneralFeature;
