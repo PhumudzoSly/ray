@@ -27,7 +27,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: 79,
+    price: 99,
     icon: <Star className="w-4 h-4 text-amber-500" />,
     color: "text-amber-500",
     aiValidation: { included: 8, overage: 3 },
