@@ -1015,8 +1015,8 @@ model MarketResearch {
   lastUpdated     DateTime   @updatedAt
   createdAt       DateTime   @default(now())
 
-  type            ResearchType      @default(COMPLETE)
-  ResearchResults ResearchResults[]
+  type            ResearchType     @default(COMPLETE)
+  ResearchResults ResearchResults?
 
   @@index([ideaId])
   @@index([organizationId])
@@ -1026,8 +1026,8 @@ model MarketResearch {
 model ResearchResults {
   id         String         @id @default(uuid())
   content    String
-  research   MarketResearch @relation(fields: [researchId], references: [id], onDelete: Cascade)
-  researchId String
+  research   MarketResearch @relation(fields: [researchId], references: [id])
+  researchId String         @unique
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)

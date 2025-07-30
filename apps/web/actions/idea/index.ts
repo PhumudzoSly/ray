@@ -6,6 +6,7 @@ import {
 } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { inngestClient } from "@/lib/inngest";
+import { ResearchType } from "@workspace/backend/prisma/generated/client/client";
 
 export const createIdea = async (data: IdeaOptionalDefaults) => {
   const { org } = await getSession();
@@ -130,27 +131,20 @@ export const changeStatus = async ({
 
 export const startValidation = async ({
   ideaId,
-  additionalContext,
+  type,
 }: {
   ideaId: string;
-  additionalContext?: any;
+  type: ResearchType;
 }) => {
   const { org } = await getSession();
-  const idea = await prisma.idea.findFirst({
-    where: { id: ideaId, organizationId: org },
-  });
-  if (!idea) throw new Error("Idea not found");
 
-  // Check if validation is already in progress
-  if (idea.status === "IN_PROGRESS") {
-    throw new Error("Validation already in progress");
-  }
-
-  // Update idea status to in progress
-  await prisma.idea.update({
-    where: { id: ideaId },
+  const research = await prisma.marketResearch.create({
     data: {
-      status: "IN_PROGRESS",
+      ideaId,
+      type,
+      organizationId: org,
+      confidenceLevel: "LOW",
+      validationScore: 0,
     },
   });
 
@@ -159,9 +153,9 @@ export const startValidation = async ({
     await inngestClient.send({
       name: "idea/validate",
       data: {
+        type,
         ideaId,
-        additionalContext: additionalContext || {},
-        org,
+        researchId: research.id,
       },
     });
   } catch (error) {
@@ -180,8 +174,6 @@ export const startValidation = async ({
 };
 
 export const getResearches = async ({ id }: { id: string }) => {
-  //
-
   const { org } = await getSession();
 
   const researches = await prisma.marketResearch.findMany({

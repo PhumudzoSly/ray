@@ -5862,37 +5862,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type MarketResearchCountOutputType
-   */
-
-  export type MarketResearchCountOutputType = {
-    ResearchResults: number
-  }
-
-  export type MarketResearchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    ResearchResults?: boolean | MarketResearchCountOutputTypeCountResearchResultsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * MarketResearchCountOutputType without action
-   */
-  export type MarketResearchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearchCountOutputType
-     */
-    select?: MarketResearchCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * MarketResearchCountOutputType without action
-   */
-  export type MarketResearchCountOutputTypeCountResearchResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ResearchResultsWhereInput
-  }
-
-
-  /**
    * Count Type CompetitorCountOutputType
    */
 
@@ -47686,7 +47655,6 @@ export namespace Prisma {
     idea?: boolean | IdeaDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     ResearchResults?: boolean | MarketResearch$ResearchResultsArgs<ExtArgs>
-    _count?: boolean | MarketResearchCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["marketResearch"]>
 
   export type MarketResearchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -47734,7 +47702,6 @@ export namespace Prisma {
     idea?: boolean | IdeaDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     ResearchResults?: boolean | MarketResearch$ResearchResultsArgs<ExtArgs>
-    _count?: boolean | MarketResearchCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MarketResearchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     idea?: boolean | IdeaDefaultArgs<ExtArgs>
@@ -47750,7 +47717,7 @@ export namespace Prisma {
     objects: {
       idea: Prisma.$IdeaPayload<ExtArgs>
       organization: Prisma.$OrganizationPayload<ExtArgs>
-      ResearchResults: Prisma.$ResearchResultsPayload<ExtArgs>[]
+      ResearchResults: Prisma.$ResearchResultsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -48158,7 +48125,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    ResearchResults<T extends MarketResearch$ResearchResultsArgs<ExtArgs> = {}>(args?: Subset<T, MarketResearch$ResearchResultsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ResearchResults<T extends MarketResearch$ResearchResultsArgs<ExtArgs> = {}>(args?: Subset<T, MarketResearch$ResearchResultsArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -48609,11 +48576,6 @@ export namespace Prisma {
      */
     include?: ResearchResultsInclude<ExtArgs> | null
     where?: ResearchResultsWhereInput
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    cursor?: ResearchResultsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
   }
 
   /**
@@ -59920,7 +59882,7 @@ export namespace Prisma {
     type?: EnumResearchTypeFilter<"MarketResearch"> | $Enums.ResearchType
     idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    ResearchResults?: ResearchResultsListRelationFilter
+    ResearchResults?: XOR<ResearchResultsNullableScalarRelationFilter, ResearchResultsWhereInput> | null
   }
 
   export type MarketResearchOrderByWithRelationInput = {
@@ -59935,7 +59897,7 @@ export namespace Prisma {
     type?: SortOrder
     idea?: IdeaOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
-    ResearchResults?: ResearchResultsOrderByRelationAggregateInput
+    ResearchResults?: ResearchResultsOrderByWithRelationInput
   }
 
   export type MarketResearchWhereUniqueInput = Prisma.AtLeast<{
@@ -59953,7 +59915,7 @@ export namespace Prisma {
     type?: EnumResearchTypeFilter<"MarketResearch"> | $Enums.ResearchType
     idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    ResearchResults?: ResearchResultsListRelationFilter
+    ResearchResults?: XOR<ResearchResultsNullableScalarRelationFilter, ResearchResultsWhereInput> | null
   }, "id" | "ideaId">
 
   export type MarketResearchOrderByWithAggregationInput = {
@@ -60013,16 +59975,16 @@ export namespace Prisma {
 
   export type ResearchResultsWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    researchId?: string
     AND?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
     OR?: ResearchResultsWhereInput[]
     NOT?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
     content?: StringFilter<"ResearchResults"> | string
-    researchId?: StringFilter<"ResearchResults"> | string
     organizationId?: StringFilter<"ResearchResults"> | string
     createdAt?: DateTimeFilter<"ResearchResults"> | Date | string
     research?: XOR<MarketResearchScalarRelationFilter, MarketResearchWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-  }, "id">
+  }, "id" | "researchId">
 
   export type ResearchResultsOrderByWithAggregationInput = {
     id?: SortOrder
@@ -63983,7 +63945,7 @@ export namespace Prisma {
     type?: $Enums.ResearchType
     idea: IdeaCreateNestedOneWithoutMarketResearchInput
     organization: OrganizationCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchUncheckedCreateInput = {
@@ -63996,7 +63958,7 @@ export namespace Prisma {
     lastUpdated?: Date | string
     createdAt?: Date | string
     type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchUpdateInput = {
@@ -64009,7 +63971,7 @@ export namespace Prisma {
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
     idea?: IdeaUpdateOneRequiredWithoutMarketResearchNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUpdateOneWithoutResearchNestedInput
   }
 
   export type MarketResearchUncheckedUpdateInput = {
@@ -64022,7 +63984,7 @@ export namespace Prisma {
     lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput
   }
 
   export type MarketResearchCreateManyInput = {
@@ -67144,6 +67106,11 @@ export namespace Prisma {
   export type IdeaScalarRelationFilter = {
     is?: IdeaWhereInput
     isNot?: IdeaWhereInput
+  }
+
+  export type ResearchResultsNullableScalarRelationFilter = {
+    is?: ResearchResultsWhereInput | null
+    isNot?: ResearchResultsWhereInput | null
   }
 
   export type MarketResearchCountOrderByAggregateInput = {
@@ -72067,18 +72034,16 @@ export namespace Prisma {
     connect?: OrganizationWhereUniqueInput
   }
 
-  export type ResearchResultsCreateNestedManyWithoutResearchInput = {
-    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput> | ResearchResultsCreateWithoutResearchInput[] | ResearchResultsUncheckedCreateWithoutResearchInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput | ResearchResultsCreateOrConnectWithoutResearchInput[]
-    createMany?: ResearchResultsCreateManyResearchInputEnvelope
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
+  export type ResearchResultsCreateNestedOneWithoutResearchInput = {
+    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
+    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput
+    connect?: ResearchResultsWhereUniqueInput
   }
 
-  export type ResearchResultsUncheckedCreateNestedManyWithoutResearchInput = {
-    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput> | ResearchResultsCreateWithoutResearchInput[] | ResearchResultsUncheckedCreateWithoutResearchInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput | ResearchResultsCreateOrConnectWithoutResearchInput[]
-    createMany?: ResearchResultsCreateManyResearchInputEnvelope
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
+  export type ResearchResultsUncheckedCreateNestedOneWithoutResearchInput = {
+    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
+    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput
+    connect?: ResearchResultsWhereUniqueInput
   }
 
   export type EnumResearchTypeFieldUpdateOperationsInput = {
@@ -72101,32 +72066,24 @@ export namespace Prisma {
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutMarketResearchInput, OrganizationUpdateWithoutMarketResearchInput>, OrganizationUncheckedUpdateWithoutMarketResearchInput>
   }
 
-  export type ResearchResultsUpdateManyWithoutResearchNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput> | ResearchResultsCreateWithoutResearchInput[] | ResearchResultsUncheckedCreateWithoutResearchInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput | ResearchResultsCreateOrConnectWithoutResearchInput[]
-    upsert?: ResearchResultsUpsertWithWhereUniqueWithoutResearchInput | ResearchResultsUpsertWithWhereUniqueWithoutResearchInput[]
-    createMany?: ResearchResultsCreateManyResearchInputEnvelope
-    set?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    disconnect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    delete?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    update?: ResearchResultsUpdateWithWhereUniqueWithoutResearchInput | ResearchResultsUpdateWithWhereUniqueWithoutResearchInput[]
-    updateMany?: ResearchResultsUpdateManyWithWhereWithoutResearchInput | ResearchResultsUpdateManyWithWhereWithoutResearchInput[]
-    deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
+  export type ResearchResultsUpdateOneWithoutResearchNestedInput = {
+    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
+    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput
+    upsert?: ResearchResultsUpsertWithoutResearchInput
+    disconnect?: ResearchResultsWhereInput | boolean
+    delete?: ResearchResultsWhereInput | boolean
+    connect?: ResearchResultsWhereUniqueInput
+    update?: XOR<XOR<ResearchResultsUpdateToOneWithWhereWithoutResearchInput, ResearchResultsUpdateWithoutResearchInput>, ResearchResultsUncheckedUpdateWithoutResearchInput>
   }
 
-  export type ResearchResultsUncheckedUpdateManyWithoutResearchNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput> | ResearchResultsCreateWithoutResearchInput[] | ResearchResultsUncheckedCreateWithoutResearchInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput | ResearchResultsCreateOrConnectWithoutResearchInput[]
-    upsert?: ResearchResultsUpsertWithWhereUniqueWithoutResearchInput | ResearchResultsUpsertWithWhereUniqueWithoutResearchInput[]
-    createMany?: ResearchResultsCreateManyResearchInputEnvelope
-    set?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    disconnect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    delete?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    update?: ResearchResultsUpdateWithWhereUniqueWithoutResearchInput | ResearchResultsUpdateWithWhereUniqueWithoutResearchInput[]
-    updateMany?: ResearchResultsUpdateManyWithWhereWithoutResearchInput | ResearchResultsUpdateManyWithWhereWithoutResearchInput[]
-    deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
+  export type ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput = {
+    create?: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
+    connectOrCreate?: ResearchResultsCreateOrConnectWithoutResearchInput
+    upsert?: ResearchResultsUpsertWithoutResearchInput
+    disconnect?: ResearchResultsWhereInput | boolean
+    delete?: ResearchResultsWhereInput | boolean
+    connect?: ResearchResultsWhereUniqueInput
+    update?: XOR<XOR<ResearchResultsUpdateToOneWithWhereWithoutResearchInput, ResearchResultsUpdateWithoutResearchInput>, ResearchResultsUncheckedUpdateWithoutResearchInput>
   }
 
   export type MarketResearchCreateNestedOneWithoutResearchResultsInput = {
@@ -75228,7 +75185,7 @@ export namespace Prisma {
     createdAt?: Date | string
     type?: $Enums.ResearchType
     idea: IdeaCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchUncheckedCreateWithoutOrganizationInput = {
@@ -75240,7 +75197,7 @@ export namespace Prisma {
     lastUpdated?: Date | string
     createdAt?: Date | string
     type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchCreateOrConnectWithoutOrganizationInput = {
@@ -77966,7 +77923,7 @@ export namespace Prisma {
     createdAt?: Date | string
     type?: $Enums.ResearchType
     organization: OrganizationCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchUncheckedCreateWithoutIdeaInput = {
@@ -77978,7 +77935,7 @@ export namespace Prisma {
     lastUpdated?: Date | string
     createdAt?: Date | string
     type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutResearchInput
+    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutResearchInput
   }
 
   export type MarketResearchCreateOrConnectWithoutIdeaInput = {
@@ -78220,7 +78177,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
     organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUpdateOneWithoutResearchNestedInput
   }
 
   export type MarketResearchUncheckedUpdateWithoutIdeaInput = {
@@ -78232,7 +78189,7 @@ export namespace Prisma {
     lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput
   }
 
   export type CompetitorUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -86364,11 +86321,6 @@ export namespace Prisma {
     create: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
   }
 
-  export type ResearchResultsCreateManyResearchInputEnvelope = {
-    data: ResearchResultsCreateManyResearchInput | ResearchResultsCreateManyResearchInput[]
-    skipDuplicates?: boolean
-  }
-
   export type IdeaUpsertWithoutMarketResearchInput = {
     update: XOR<IdeaUpdateWithoutMarketResearchInput, IdeaUncheckedUpdateWithoutMarketResearchInput>
     create: XOR<IdeaCreateWithoutMarketResearchInput, IdeaUncheckedCreateWithoutMarketResearchInput>
@@ -86491,20 +86443,29 @@ export namespace Prisma {
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
-  export type ResearchResultsUpsertWithWhereUniqueWithoutResearchInput = {
-    where: ResearchResultsWhereUniqueInput
+  export type ResearchResultsUpsertWithoutResearchInput = {
     update: XOR<ResearchResultsUpdateWithoutResearchInput, ResearchResultsUncheckedUpdateWithoutResearchInput>
     create: XOR<ResearchResultsCreateWithoutResearchInput, ResearchResultsUncheckedCreateWithoutResearchInput>
+    where?: ResearchResultsWhereInput
   }
 
-  export type ResearchResultsUpdateWithWhereUniqueWithoutResearchInput = {
-    where: ResearchResultsWhereUniqueInput
+  export type ResearchResultsUpdateToOneWithWhereWithoutResearchInput = {
+    where?: ResearchResultsWhereInput
     data: XOR<ResearchResultsUpdateWithoutResearchInput, ResearchResultsUncheckedUpdateWithoutResearchInput>
   }
 
-  export type ResearchResultsUpdateManyWithWhereWithoutResearchInput = {
-    where: ResearchResultsScalarWhereInput
-    data: XOR<ResearchResultsUpdateManyMutationInput, ResearchResultsUncheckedUpdateManyWithoutResearchInput>
+  export type ResearchResultsUpdateWithoutResearchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutResearchResultsNestedInput
+  }
+
+  export type ResearchResultsUncheckedUpdateWithoutResearchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MarketResearchCreateWithoutResearchResultsInput = {
@@ -90041,7 +90002,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
     idea?: IdeaUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUpdateOneWithoutResearchNestedInput
   }
 
   export type MarketResearchUncheckedUpdateWithoutOrganizationInput = {
@@ -90053,7 +90014,7 @@ export namespace Prisma {
     lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutResearchNestedInput
+    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput
   }
 
   export type MarketResearchUncheckedUpdateManyWithoutOrganizationInput = {
@@ -92550,34 +92511,6 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     milestoneId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ResearchResultsCreateManyResearchInput = {
-    id?: string
-    content: string
-    organizationId: string
-    createdAt?: Date | string
-  }
-
-  export type ResearchResultsUpdateWithoutResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    organization?: OrganizationUpdateOneRequiredWithoutResearchResultsNestedInput
-  }
-
-  export type ResearchResultsUncheckedUpdateWithoutResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ResearchResultsUncheckedUpdateManyWithoutResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    content?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

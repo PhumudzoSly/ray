@@ -65,10 +65,9 @@ const rater = async (input: string) => {
   return object;
 };
 
-// Create the Inngest function
 export const saasValidator = inngestClient.createFunction(
-  { id: "simple-agent-workflow" },
-  { event: "simple-agent/run" },
+  { id: "saas-validator" },
+  { event: "idea/validate" },
   async ({ step, event, publish }) => {
     const { type, ideaId, researchId } = event.data;
 
@@ -171,10 +170,15 @@ export const saasValidator = inngestClient.createFunction(
             return await competitiveAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -207,10 +211,15 @@ export const saasValidator = inngestClient.createFunction(
             return await customerAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -243,10 +252,15 @@ export const saasValidator = inngestClient.createFunction(
             return await businessModelAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -279,10 +293,15 @@ export const saasValidator = inngestClient.createFunction(
             return await financeAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -315,10 +334,15 @@ export const saasValidator = inngestClient.createFunction(
             return await goToMarketAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -351,10 +375,15 @@ export const saasValidator = inngestClient.createFunction(
             return await investmentAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -387,10 +416,15 @@ export const saasValidator = inngestClient.createFunction(
             return await marketFitAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -423,10 +457,15 @@ export const saasValidator = inngestClient.createFunction(
             return await riskAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
@@ -459,10 +498,15 @@ export const saasValidator = inngestClient.createFunction(
             return await techAnalyzer(ideaId);
           });
 
-          const [finalResults, rating] = await Promise.all([
-            finalizer(data),
-            step.run("rate-research", () => rater(data)),
-          ]);
+          const finalResults = await step.run("finalize", async () => {
+            return await finalizer(data);
+          });
+
+          await step.sleep("rate-break", "2 mins");
+
+          const rating = await step.run("rate-research", async () => {
+            return await rater(data);
+          });
 
           await step.sleep("rest", "3 mins");
 
