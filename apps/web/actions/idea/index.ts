@@ -182,3 +182,22 @@ export const getResearches = async ({ id }: { id: string }) => {
 
   return researches;
 };
+
+export const getResearchDetails = async ({
+  ideaId,
+  researchId,
+}: {
+  ideaId: string;
+  researchId: string;
+}) => {
+  const { org } = await getSession();
+
+  const research = await prisma.researchResults.findUnique({
+    where: { researchId },
+    include: {
+      research: true,
+    },
+  });
+
+  return research;
+};

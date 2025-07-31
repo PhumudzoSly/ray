@@ -251,13 +251,13 @@ model Project {
 }
 
 model Idea {
-  id                  String          @id @default(uuid())
+  id                  String           @id @default(uuid())
   name                String
   description         String
   industry            String
-  owner               User?           @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  owner               User?            @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId             String?
-  organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization        Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId      String
   internal            Boolean
   openSource          Boolean
@@ -266,9 +266,9 @@ model Idea {
   problemSolved       String?
   solutionOffered     String?
   projects            Project[]
-  marketResearch      MarketResearch?
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  marketResearch      MarketResearch[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
   Competitor          Competitor[]
 }
 
@@ -1004,7 +1004,7 @@ enum IntegrationType {
 
 model MarketResearch {
   id             String       @id @default(uuid())
-  ideaId         String       @unique
+  ideaId         String
   idea           Idea         @relation(fields: [ideaId], references: [id], onDelete: Cascade)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -1024,13 +1024,12 @@ model MarketResearch {
 }
 
 model ResearchResults {
-  id         String         @id @default(uuid())
-  content    String
-  research   MarketResearch @relation(fields: [researchId], references: [id])
-  researchId String         @unique
-
+  id             String         @id @default(uuid())
+  content        String
+  research       MarketResearch @relation(fields: [researchId], references: [id])
+  researchId     String         @unique
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }

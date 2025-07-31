@@ -71,468 +71,118 @@ export const saasValidator = inngestClient.createFunction(
   async ({ step, event, publish }) => {
     const { type, ideaId, researchId } = event.data;
 
-    const idea = await step.run("fetch-idea", async () => {
-      const foundIdea = await prisma.idea.findUnique({
+    console.log("🚀 Starting SaaS validation process");
+    console.log("📊 Event data:", { type, ideaId, researchId });
+
+    return await step.run("run-validation", async () => {
+      console.log("🔍 Step 1: Fetching idea from database");
+      const idea = await prisma.idea.findUnique({
         where: { id: ideaId },
       });
-      if (!foundIdea) throw new Error("Idea not found");
-      return foundIdea;
-    });
-
-    switch (type as ResearchTypeType) {
-      case "COMPLETE":
-        return await step.run("complete-validation", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await fullValidator(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "MARKET_OPPORTUNITY":
-        return await step.run("market-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await marketAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "COMPETITIVE_ANALYSIS":
-        return await step.run("competitive-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await competitiveAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "CUSTOMER_VALIDATION":
-        return await step.run("customer-validation", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await customerAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "BUSINESS_MODEL":
-        return await step.run("business-model-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await businessModelAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "FINANCIAL_PROJECTIONS":
-        return await step.run("financial-projections", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await financeAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "GO_TO_MARKET":
-        return await step.run("go-to-market-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await goToMarketAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "INVESTMENT_RECOMMENDATION":
-        return await step.run("investment-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await investmentAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "PRODUCT_MARKET_FIT":
-        return await step.run("market-fit-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await marketFitAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "RISK_ANALYSIS":
-        return await step.run("risk-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await riskAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      case "TECHNICAL_FEASIBILITY":
-        return await step.run("tech-analysis", async () => {
-          await step.sleep("validate", "10 mins");
-
-          const data = await step.run("validate", async () => {
-            return await techAnalyzer(ideaId);
-          });
-
-          const finalResults = await step.run("finalize", async () => {
-            return await finalizer(data);
-          });
-
-          await step.sleep("rate-break", "2 mins");
-
-          const rating = await step.run("rate-research", async () => {
-            return await rater(data);
-          });
-
-          await step.sleep("rest", "3 mins");
-
-          await Promise.all([
-            prisma.marketResearch.update({
-              where: { id: researchId },
-              data: {
-                completed: true,
-                confidenceLevel: rating.confidenceLevel,
-                validationScore: rating.score,
-              },
-            }),
-            prisma.researchResults.create({
-              data: {
-                researchId,
-                content: finalResults,
-                organizationId: idea.organizationId,
-              },
-            }),
-          ]);
-
-          return { success: true };
-        });
-
-      default:
+      if (!idea) {
+        console.error("❌ Idea not found:", ideaId);
+        throw new Error("Idea not found");
+      }
+      console.log("✅ Idea fetched successfully:", {
+        id: idea.id,
+        name: idea.name,
+      });
+
+      console.log("🎯 Step 2: Determining validation type:", type);
+      let validationData: string;
+      let analyzerName: string;
+
+      if (type === "COMPLETE") {
+        console.log("🔄 Running complete validation");
+        analyzerName = "fullValidator";
+        validationData = await fullValidator(ideaId);
+      } else if (type === "MARKET_OPPORTUNITY") {
+        console.log("🔄 Running market opportunity analysis");
+        analyzerName = "marketAnalyzer";
+        validationData = await marketAnalyzer(ideaId);
+      } else if (type === "COMPETITIVE_ANALYSIS") {
+        console.log("🔄 Running competitive analysis");
+        analyzerName = "competitiveAnalyzer";
+        validationData = await competitiveAnalyzer(ideaId);
+      } else if (type === "CUSTOMER_VALIDATION") {
+        console.log("🔄 Running customer validation");
+        analyzerName = "customerAnalyzer";
+        validationData = await customerAnalyzer(ideaId);
+      } else if (type === "BUSINESS_MODEL") {
+        console.log("🔄 Running business model analysis");
+        analyzerName = "businessModelAnalyzer";
+        validationData = await businessModelAnalyzer(ideaId);
+      } else if (type === "FINANCIAL_PROJECTIONS") {
+        console.log("🔄 Running financial projections");
+        analyzerName = "financeAnalyzer";
+        validationData = await financeAnalyzer(ideaId);
+      } else if (type === "GO_TO_MARKET") {
+        console.log("🔄 Running go-to-market analysis");
+        analyzerName = "goToMarketAnalyzer";
+        validationData = await goToMarketAnalyzer(ideaId);
+      } else if (type === "INVESTMENT_RECOMMENDATION") {
+        console.log("🔄 Running investment recommendation");
+        analyzerName = "investmentAnalyzer";
+        validationData = await investmentAnalyzer(ideaId);
+      } else if (type === "PRODUCT_MARKET_FIT") {
+        console.log("🔄 Running product market fit analysis");
+        analyzerName = "marketFitAnalyzer";
+        validationData = await marketFitAnalyzer(ideaId);
+      } else if (type === "RISK_ANALYSIS") {
+        console.log("🔄 Running risk analysis");
+        analyzerName = "riskAnalyzer";
+        validationData = await riskAnalyzer(ideaId);
+      } else if (type === "TECHNICAL_FEASIBILITY") {
+        console.log("🔄 Running technical feasibility analysis");
+        analyzerName = "techAnalyzer";
+        validationData = await techAnalyzer(ideaId);
+      } else {
+        console.error("❌ Unsupported research type:", type);
         throw new Error(`Unsupported research type: ${type}`);
-    }
+      }
+
+      console.log("✅ Validation data generated successfully");
+      console.log("📝 Validation data length:", validationData.length);
+      console.log("🔧 Analyzer used:", analyzerName);
+
+      console.log("🎨 Step 3: Finalizing results with AI formatting");
+      const finalResults = await finalizer(validationData);
+      console.log("✅ Results finalized successfully");
+      console.log("📄 Final results length:", finalResults.length);
+
+      console.log("⭐ Step 4: Rating the research quality");
+      const rating = await rater(validationData);
+      console.log("✅ Research rated successfully");
+      console.log("📊 Rating:", {
+        score: rating.score,
+        confidenceLevel: rating.confidenceLevel,
+      });
+
+      console.log("💾 Step 5: Saving results to database");
+      await Promise.all([
+        prisma.marketResearch.update({
+          where: { id: researchId },
+          data: {
+            completed: true,
+            confidenceLevel: rating.confidenceLevel,
+            validationScore: rating.score,
+          },
+        }),
+        prisma.researchResults.create({
+          data: {
+            researchId,
+            content: finalResults,
+            organizationId: idea.organizationId,
+          },
+        }),
+      ]);
+      console.log("✅ Database updated successfully");
+
+      const result = { success: true };
+      console.log("🎉 Validation process completed successfully");
+      console.log("📤 Returning result:", result);
+
+      return result;
+    });
   }
 );

@@ -19,9 +19,6 @@ import {
   getSingleIdea,
   updateName,
   updateDescription,
-  updateIndustry,
-  updateInternal,
-  updateOpenSource,
   deleteIdea,
 } from "@/actions/idea";
 import { useRouter } from "next/navigation";
@@ -51,12 +48,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
           return await updateName({ id, name: value as string });
         case "description":
           return await updateDescription({ id, description: value as string });
-        case "industry":
-          return await updateIndustry({ id, industry: value as string });
-        case "internal":
-          return await updateInternal({ id, internal: value as boolean });
-        case "openSource":
-          return await updateOpenSource({ id, openSource: value as boolean });
         default:
           throw new Error(`Unknown field: ${field}`);
       }

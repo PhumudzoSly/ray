@@ -254,3 +254,139 @@ em-emoji-picker {
     linear-gradient(to right, rgb(255 255 255 / 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(255 255 255 / 0.1) 1px, transparent 1px);
 }
+
+/* Syntax highlighting styles */
+.hljs {
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+/* Light theme syntax highlighting */
+:root {
+  --hljs-bg: hsl(0 0% 97%);
+  --hljs-color: hsl(0 0% 20%);
+  --hljs-keyword: hsl(220 100% 40%);
+  --hljs-string: hsl(120 100% 25%);
+  --hljs-comment: hsl(0 0% 45%);
+  --hljs-number: hsl(30 100% 40%);
+  --hljs-function: hsl(280 100% 40%);
+  --hljs-variable: hsl(0 0% 20%);
+  --hljs-operator: hsl(0 0% 20%);
+  --hljs-punctuation: hsl(0 0% 20%);
+  --hljs-property: hsl(200 100% 40%);
+  --hljs-selector: hsl(150 100% 30%);
+  --hljs-tag: hsl(220 100% 40%);
+  --hljs-attr: hsl(200 100% 40%);
+  --hljs-builtin: hsl(280 100% 40%);
+  --hljs-literal: hsl(30 100% 40%);
+  --hljs-title: hsl(220 100% 40%);
+  --hljs-section: hsl(220 100% 40%);
+  --hljs-addition: hsl(120 100% 25%);
+  --hljs-deletion: hsl(0 100% 40%);
+  --hljs-meta: hsl(0 0% 45%);
+  --hljs-subst: hsl(0 0% 20%);
+  --hljs-symbol: hsl(30 100% 40%);
+  --hljs-bullet: hsl(30 100% 40%);
+  --hljs-link: hsl(220 100% 40%);
+  --hljs-emphasis: italic;
+  --hljs-strong: bold;
+}
+
+/* Dark theme syntax highlighting */
+.dark {
+  --hljs-bg: hsl(0 0% 10%);
+  --hljs-color: hsl(0 0% 90%);
+  --hljs-keyword: hsl(220 100% 70%);
+  --hljs-string: hsl(120 100% 70%);
+  --hljs-comment: hsl(0 0% 60%);
+  --hljs-number: hsl(30 100% 70%);
+  --hljs-function: hsl(280 100% 70%);
+  --hljs-variable: hsl(0 0% 90%);
+  --hljs-operator: hsl(0 0% 90%);
+  --hljs-punctuation: hsl(0 0% 90%);
+  --hljs-property: hsl(200 100% 70%);
+  --hljs-selector: hsl(150 100% 70%);
+  --hljs-tag: hsl(220 100% 70%);
+  --hljs-attr: hsl(200 100% 70%);
+  --hljs-builtin: hsl(280 100% 70%);
+  --hljs-literal: hsl(30 100% 70%);
+  --hljs-title: hsl(220 100% 70%);
+  --hljs-section: hsl(220 100% 70%);
+  --hljs-addition: hsl(120 100% 70%);
+  --hljs-deletion: hsl(0 100% 70%);
+  --hljs-meta: hsl(0 0% 60%);
+  --hljs-subst: hsl(0 0% 90%);
+  --hljs-symbol: hsl(30 100% 70%);
+  --hljs-bullet: hsl(30 100% 70%);
+  --hljs-link: hsl(220 100% 70%);
+  --hljs-emphasis: italic;
+  --hljs-strong: bold;
+}
+
+/* Apply syntax highlighting colors */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: var(--hljs-keyword) !important;
+}
+
+.hljs-string,
+.hljs-title,
+.hljs-name,
+.hljs-type,
+.hljs-attribute,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: var(--hljs-string) !important;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: var(--hljs-comment) !important;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold !important;
+}
+
+.hljs-emphasis {
+  font-style: italic !important;
+}
+
+/* Code block styling */
+pre code {
+  background: var(--hljs-bg) !important;
+  color: var(--hljs-color) !important;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Inline code styling */
+:not(pre) > code {
+  background: var(--muted) !important;
+  color: var(--foreground) !important;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}

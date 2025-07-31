@@ -5328,11 +5328,13 @@ export namespace Prisma {
 
   export type IdeaCountOutputType = {
     projects: number
+    marketResearch: number
     Competitor: number
   }
 
   export type IdeaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | IdeaCountOutputTypeCountProjectsArgs
+    marketResearch?: boolean | IdeaCountOutputTypeCountMarketResearchArgs
     Competitor?: boolean | IdeaCountOutputTypeCountCompetitorArgs
   }
 
@@ -5352,6 +5354,13 @@ export namespace Prisma {
    */
   export type IdeaCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
+  }
+
+  /**
+   * IdeaCountOutputType without action
+   */
+  export type IdeaCountOutputTypeCountMarketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketResearchWhereInput
   }
 
   /**
@@ -19906,7 +19915,7 @@ export namespace Prisma {
       owner: Prisma.$UserPayload<ExtArgs> | null
       organization: Prisma.$OrganizationPayload<ExtArgs>
       projects: Prisma.$ProjectPayload<ExtArgs>[]
-      marketResearch: Prisma.$MarketResearchPayload<ExtArgs> | null
+      marketResearch: Prisma.$MarketResearchPayload<ExtArgs>[]
       Competitor: Prisma.$CompetitorPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -20321,7 +20330,7 @@ export namespace Prisma {
     owner<T extends Idea$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Idea$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     projects<T extends Idea$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Idea$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    marketResearch<T extends Idea$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, Idea$marketResearchArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    marketResearch<T extends Idea$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, Idea$marketResearchArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Competitor<T extends Idea$CompetitorArgs<ExtArgs> = {}>(args?: Subset<T, Idea$CompetitorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -20821,6 +20830,11 @@ export namespace Prisma {
      */
     include?: MarketResearchInclude<ExtArgs> | null
     where?: MarketResearchWhereInput
+    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
+    cursor?: MarketResearchWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
   }
 
   /**
@@ -57712,7 +57726,7 @@ export namespace Prisma {
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
-    marketResearch?: XOR<MarketResearchNullableScalarRelationFilter, MarketResearchWhereInput> | null
+    marketResearch?: MarketResearchListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }
 
@@ -57734,7 +57748,7 @@ export namespace Prisma {
     owner?: UserOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
     projects?: ProjectOrderByRelationAggregateInput
-    marketResearch?: MarketResearchOrderByWithRelationInput
+    marketResearch?: MarketResearchOrderByRelationAggregateInput
     Competitor?: CompetitorOrderByRelationAggregateInput
   }
 
@@ -57759,7 +57773,7 @@ export namespace Prisma {
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
-    marketResearch?: XOR<MarketResearchNullableScalarRelationFilter, MarketResearchWhereInput> | null
+    marketResearch?: MarketResearchListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }, "id">
 
@@ -59902,10 +59916,10 @@ export namespace Prisma {
 
   export type MarketResearchWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    ideaId?: string
     AND?: MarketResearchWhereInput | MarketResearchWhereInput[]
     OR?: MarketResearchWhereInput[]
     NOT?: MarketResearchWhereInput | MarketResearchWhereInput[]
+    ideaId?: StringFilter<"MarketResearch"> | string
     organizationId?: StringFilter<"MarketResearch"> | string
     validationScore?: FloatNullableFilter<"MarketResearch"> | number | null
     confidenceLevel?: EnumImportanceFilter<"MarketResearch"> | $Enums.Importance
@@ -59916,7 +59930,7 @@ export namespace Prisma {
     idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     ResearchResults?: XOR<ResearchResultsNullableScalarRelationFilter, ResearchResultsWhereInput> | null
-  }, "id" | "ideaId">
+  }, "id">
 
   export type MarketResearchOrderByWithAggregationInput = {
     id?: SortOrder
@@ -61595,7 +61609,7 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -61615,7 +61629,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -61635,7 +61649,7 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -61655,7 +61669,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -65545,11 +65559,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type MarketResearchNullableScalarRelationFilter = {
-    is?: MarketResearchWhereInput | null
-    isNot?: MarketResearchWhereInput | null
   }
 
   export type CompetitorListRelationFilter = {
@@ -69695,10 +69704,11 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type MarketResearchCreateNestedOneWithoutIdeaInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput
-    connect?: MarketResearchWhereUniqueInput
+  export type MarketResearchCreateNestedManyWithoutIdeaInput = {
+    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
+    createMany?: MarketResearchCreateManyIdeaInputEnvelope
+    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
   }
 
   export type CompetitorCreateNestedManyWithoutIdeaInput = {
@@ -69715,10 +69725,11 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type MarketResearchUncheckedCreateNestedOneWithoutIdeaInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput
-    connect?: MarketResearchWhereUniqueInput
+  export type MarketResearchUncheckedCreateNestedManyWithoutIdeaInput = {
+    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
+    createMany?: MarketResearchCreateManyIdeaInputEnvelope
+    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
   }
 
   export type CompetitorUncheckedCreateNestedManyWithoutIdeaInput = {
@@ -69772,14 +69783,18 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type MarketResearchUpdateOneWithoutIdeaNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput
-    upsert?: MarketResearchUpsertWithoutIdeaInput
-    disconnect?: MarketResearchWhereInput | boolean
-    delete?: MarketResearchWhereInput | boolean
-    connect?: MarketResearchWhereUniqueInput
-    update?: XOR<XOR<MarketResearchUpdateToOneWithWhereWithoutIdeaInput, MarketResearchUpdateWithoutIdeaInput>, MarketResearchUncheckedUpdateWithoutIdeaInput>
+  export type MarketResearchUpdateManyWithoutIdeaNestedInput = {
+    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
+    upsert?: MarketResearchUpsertWithWhereUniqueWithoutIdeaInput | MarketResearchUpsertWithWhereUniqueWithoutIdeaInput[]
+    createMany?: MarketResearchCreateManyIdeaInputEnvelope
+    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    update?: MarketResearchUpdateWithWhereUniqueWithoutIdeaInput | MarketResearchUpdateWithWhereUniqueWithoutIdeaInput[]
+    updateMany?: MarketResearchUpdateManyWithWhereWithoutIdeaInput | MarketResearchUpdateManyWithWhereWithoutIdeaInput[]
+    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
   }
 
   export type CompetitorUpdateManyWithoutIdeaNestedInput = {
@@ -69810,14 +69825,18 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput
-    upsert?: MarketResearchUpsertWithoutIdeaInput
-    disconnect?: MarketResearchWhereInput | boolean
-    delete?: MarketResearchWhereInput | boolean
-    connect?: MarketResearchWhereUniqueInput
-    update?: XOR<XOR<MarketResearchUpdateToOneWithWhereWithoutIdeaInput, MarketResearchUpdateWithoutIdeaInput>, MarketResearchUncheckedUpdateWithoutIdeaInput>
+  export type MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput = {
+    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
+    upsert?: MarketResearchUpsertWithWhereUniqueWithoutIdeaInput | MarketResearchUpsertWithWhereUniqueWithoutIdeaInput[]
+    createMany?: MarketResearchCreateManyIdeaInputEnvelope
+    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+    update?: MarketResearchUpdateWithWhereUniqueWithoutIdeaInput | MarketResearchUpdateWithWhereUniqueWithoutIdeaInput[]
+    updateMany?: MarketResearchUpdateManyWithWhereWithoutIdeaInput | MarketResearchUpdateManyWithWhereWithoutIdeaInput[]
+    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
   }
 
   export type CompetitorUncheckedUpdateManyWithoutIdeaNestedInput = {
@@ -73229,7 +73248,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -73248,7 +73267,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -74683,7 +74702,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -74702,7 +74721,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -76955,7 +76974,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -76974,7 +76993,7 @@ export namespace Prisma {
     solutionOffered?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    marketResearch?: MarketResearchUncheckedCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -77447,7 +77466,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -77466,7 +77485,7 @@ export namespace Prisma {
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    marketResearch?: MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -77943,6 +77962,11 @@ export namespace Prisma {
     create: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
   }
 
+  export type MarketResearchCreateManyIdeaInputEnvelope = {
+    data: MarketResearchCreateManyIdeaInput | MarketResearchCreateManyIdeaInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CompetitorCreateWithoutIdeaInput = {
     id?: string
     name: string
@@ -78157,39 +78181,20 @@ export namespace Prisma {
     data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutIdeaInput>
   }
 
-  export type MarketResearchUpsertWithoutIdeaInput = {
+  export type MarketResearchUpsertWithWhereUniqueWithoutIdeaInput = {
+    where: MarketResearchWhereUniqueInput
     update: XOR<MarketResearchUpdateWithoutIdeaInput, MarketResearchUncheckedUpdateWithoutIdeaInput>
     create: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-    where?: MarketResearchWhereInput
   }
 
-  export type MarketResearchUpdateToOneWithWhereWithoutIdeaInput = {
-    where?: MarketResearchWhereInput
+  export type MarketResearchUpdateWithWhereUniqueWithoutIdeaInput = {
+    where: MarketResearchWhereUniqueInput
     data: XOR<MarketResearchUpdateWithoutIdeaInput, MarketResearchUncheckedUpdateWithoutIdeaInput>
   }
 
-  export type MarketResearchUpdateWithoutIdeaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateOneWithoutResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateWithoutIdeaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput
+  export type MarketResearchUpdateManyWithWhereWithoutIdeaInput = {
+    where: MarketResearchScalarWhereInput
+    data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyWithoutIdeaInput>
   }
 
   export type CompetitorUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -86688,7 +86693,7 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
   }
 
   export type IdeaUncheckedCreateWithoutCompetitorInput = {
@@ -86707,7 +86712,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedOneWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
   }
 
   export type IdeaCreateOrConnectWithoutCompetitorInput = {
@@ -86792,7 +86797,7 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
   }
 
   export type IdeaUncheckedUpdateWithoutCompetitorInput = {
@@ -86811,7 +86816,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
   export type CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput = {
@@ -88553,7 +88558,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -88572,7 +88577,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -89467,7 +89472,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -89486,7 +89491,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateOneWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -90649,6 +90654,17 @@ export namespace Prisma {
     createdById?: string | null
   }
 
+  export type MarketResearchCreateManyIdeaInput = {
+    id?: string
+    organizationId: string
+    validationScore?: number | null
+    confidenceLevel: $Enums.Importance
+    completed?: boolean
+    lastUpdated?: Date | string
+    createdAt?: Date | string
+    type?: $Enums.ResearchType
+  }
+
   export type CompetitorCreateManyIdeaInput = {
     id?: string
     name: string
@@ -90738,6 +90754,41 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organizationId?: NullableStringFieldUpdateOperationsInput | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type MarketResearchUpdateWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
+    organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
+    ResearchResults?: ResearchResultsUpdateOneWithoutResearchNestedInput
+  }
+
+  export type MarketResearchUncheckedUpdateWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
+    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutResearchNestedInput
+  }
+
+  export type MarketResearchUncheckedUpdateManyWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    completed?: BoolFieldUpdateOperationsInput | boolean
+    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
   }
 
   export type CompetitorUpdateWithoutIdeaInput = {
