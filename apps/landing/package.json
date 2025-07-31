@@ -15,11 +15,11 @@
   "dependencies": {
     "@ai-sdk/google": "^1.2.22",
     "@ai-sdk/openai": "^1.3.23",
-    "@hookform/resolvers": "^5.2.0",
+    "@hookform/resolvers": "^5.2.1",
     "@next/swc-wasm-nodejs": "15.4.4",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.13.0",
     "@tailwindcss/postcss": "^4.1.11",
-    "@tanstack/react-query": "^5.83.0",
+    "@tanstack/react-query": "^5.84.0",
     "@tanstack/react-table": "^8.21.3",
     "@types/node": "24.1.0",
     "@types/react": "19.1.8",
@@ -35,13 +35,13 @@
     "dotted-map": "^2.2.3",
     "eslint": "9.32.0",
     "eslint-config-next": "15.4.4",
-    "framer-motion": "^12.23.11",
+    "framer-motion": "^12.23.12",
     "geist": "^1.4.2",
     "lucide-react": "^0.528.0",
     "moment": "^2.30.1",
     "next": "15.4.4",
     "next-themes": "^0.4.6",
-    "openai": "^5.10.2",
+    "openai": "^5.11.0",
     "postcss": "8.5.6",
     "react": "19.1.0",
     "react-colorful": "^5.6.1",
@@ -50,7 +50,7 @@
     "react-hook-form": "^7.61.1",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
-    "react-resizable-panels": "^3.0.3",
+    "react-resizable-panels": "^3.0.4",
     "react-textarea-autosize": "^8.5.9",
     "recharts": "^3.1.0",
     "rehype-raw": "^7.0.0",
@@ -61,12 +61,12 @@
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwind-scrollbar-hide": "^4.0.0",
-    "tailwind-variants": "^2.0.0",
+    "tailwind-variants": "^2.1.0",
     "tailwindcss": "4.1.11",
     "tailwindcss-animate": "^1.0.7",
     "ua-parser-js": "^2.0.4",
     "uuid": "^11.1.0",
-    "zod": "^3.25.28"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -74,6 +74,6 @@
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "@workspace/typescript-config": "workspace:*",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   }
 }

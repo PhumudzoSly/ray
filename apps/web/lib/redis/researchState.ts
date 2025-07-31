@@ -150,6 +150,7 @@ export class ResearchStateManager {
     const keys = this.getKeys(sessionId);
 
     try {
+      console.log(`Storing findings for session ${sessionId}, phase ${phaseId}:`, findings);
       await this.redis.hset(keys.findings(phaseId), {
         findings: JSON.stringify(findings),
         updatedAt: new Date().toISOString(),
@@ -168,7 +169,9 @@ export class ResearchStateManager {
 
     try {
       const data = await this.redis.hget(keys.findings(phaseId), "findings");
-      return data ? JSON.parse(data as string) : null;
+      const parsedData = data ? JSON.parse(data as string) : null;
+      console.log(`Retrieved findings for session ${sessionId}, phase ${phaseId}:`, parsedData);
+      return parsedData;
     } catch (error) {
       console.error("Failed to get phase findings from Redis:", error);
       return null;

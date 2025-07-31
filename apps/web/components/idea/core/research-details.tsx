@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getResearchDetails } from "@/actions/idea";
-import { ResearchTypeType, ImportanceType } from "@workspace/backend";
+import { getValidationResults } from "@/actions/idea/validate";
+import { ResearchPhaseTypeType } from "@workspace/backend";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
 import { Card } from "@workspace/ui/components/card";
 import { Callout } from "@workspace/ui/components/callout";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@workspace/ui/components/sheet";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@workspace/ui/components/dialog";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { Separator } from "@workspace/ui/components/separator";
 import {
@@ -45,7 +45,7 @@ interface ResearchDetailsProps {
   onClose: () => void;
 }
 
-const RESEARCH_TYPE_LABELS: Record<ResearchTypeType, string> = {
+const RESEARCH_TYPE_LABELS: Record<ResearchPhaseTypeType, string> = {
   COMPLETE: "Complete Analysis",
   BUSINESS_MODEL: "Business Model",
   COMPETITIVE_ANALYSIS: "Competitive Analysis",
@@ -53,24 +53,10 @@ const RESEARCH_TYPE_LABELS: Record<ResearchTypeType, string> = {
   FINANCIAL_PROJECTIONS: "Financial Projections",
   GO_TO_MARKET: "Go-to-Market",
   INVESTMENT_RECOMMENDATION: "Investment Recommendation",
-  MARKET_OPPORTUNITY: "Market Opportunity",
+  MARKET_SCAN: "Market Opportunity",
   PRODUCT_MARKET_FIT: "Product-Market Fit",
   RISK_ANALYSIS: "Risk Analysis",
   TECHNICAL_FEASIBILITY: "Technical Feasibility",
-};
-
-const CONFIDENCE_LEVEL_COLORS: Record<ImportanceType, string> = {
-  CRITICAL: "bg-red-100 text-red-800",
-  HIGH: "bg-orange-100 text-orange-800",
-  MEDIUM: "bg-yellow-100 text-yellow-800",
-  LOW: "bg-green-100 text-green-800",
-};
-
-const CONFIDENCE_LEVEL_LABELS: Record<ImportanceType, string> = {
-  CRITICAL: "Critical",
-  HIGH: "High",
-  MEDIUM: "Medium",
-  LOW: "Low",
 };
 
 // Enhanced Markdown Renderer Component
@@ -87,17 +73,8 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
     }
   };
 
-  const processContent = (text: string) => {
-    if (!text) return "";
-    let processed = text.replace(/\n/g, "\n\n");
-    processed = processed.replace(/^(\d+)\.\s+/gm, "$1\\. ");
-    processed = processed.replace(/(\d+\))\s+/gm, "$1 ");
-    processed = processed.replace(/(\d+\))\s+/gm, "\n   - ");
-    return processed;
-  };
-
   return (
-    <div className="w-full text-left space-y-4">
+    <div className="w-full prose prose-dark text-left space-y-4 overflow-x-auto">
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
         rehypePlugins={[rehypeSanitize, rehypeRaw, rehypeHighlight]}
@@ -128,7 +105,7 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
           ),
           p: ({ node, ...props }) => (
             <p
-              className="mb-4 leading-relaxed text-foreground/90 text-sm md:text-base"
+              className="mb-4 leading-relaxed text-foreground/90 text-sm md:text-base break-words"
               {...props}
             />
           ),
@@ -275,7 +252,7 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
           },
         }}
       >
-        {processContent(content)}
+        {content}
       </ReactMarkdown>
     </div>
   );
@@ -289,7 +266,7 @@ export function ResearchDetails({
 }: ResearchDetailsProps) {
   const { data: research, isLoading } = useQuery({
     queryKey: ["idea-research", ideaId, researchId],
-    queryFn: () => getResearchDetails({ ideaId, researchId: researchId! }),
+    queryFn: () => getValidationResults({ researchId: researchId! }),
     enabled: !!researchId, // Only run query when researchId is not null
   });
 
@@ -299,24 +276,19 @@ export function ResearchDetails({
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="max-w-[800px] p-0">
-        <SheetHeader className="px-6 py-4 border-b">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-full w-full h-full !p-0 flex flex-col">
+        <DialogHeader className="px-6 py-4 border-b">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <FileText className="h-5 w-5 text-blue-600" />
-              <SheetTitle className="text-xl">
-                {RESEARCH_TYPE_LABELS[research.research.type]}
-              </SheetTitle>
+              <DialogTitle className="text-xl">{research.name}</DialogTitle>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
           </div>
-        </SheetHeader>
+        </DialogHeader>
 
-        <ScrollArea className="h-[calc(100vh-80px)]">
-          <div className="p-6 space-y-6">
+        <ScrollArea className="h-full">
+          <div className="px-6 space-y-6">
             {/* Research Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="p-4">
@@ -326,10 +298,12 @@ export function ResearchDetails({
                   </div>
                   <Badge
                     variant={
-                      research.research.completed ? "default" : "secondary"
+                      research.status === "COMPLETED" ? "default" : "secondary"
                     }
                   >
-                    {research.research.completed ? "Completed" : "In Progress"}
+                    {research.status === "COMPLETED"
+                      ? "Completed"
+                      : "In Progress"}
                   </Badge>
                 </div>
               </Card>
@@ -339,13 +313,9 @@ export function ResearchDetails({
                   <div className="text-sm font-medium text-muted-foreground">
                     Confidence Level
                   </div>
-                  <Badge
-                    className={
-                      CONFIDENCE_LEVEL_COLORS[research.research.confidenceLevel]
-                    }
-                  >
-                    {CONFIDENCE_LEVEL_LABELS[research.research.confidenceLevel]}
-                  </Badge>
+                  <span className="font-semibold">
+                    {research.overallConfidence.toFixed(1)}%
+                  </span>
                 </div>
               </Card>
 
@@ -357,9 +327,7 @@ export function ResearchDetails({
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-green-600" />
                     <span className="font-semibold">
-                      {research.research.validationScore !== null
-                        ? `${research.research.validationScore.toFixed(1)}%`
-                        : "N/A"}
+                      {research.overallConfidence.toFixed(1)}%
                     </span>
                   </div>
                 </div>
@@ -372,12 +340,9 @@ export function ResearchDetails({
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Clock className="h-4 w-4 text-muted-foreground" />
-                    {formatDistanceToNow(
-                      new Date(research.research.lastUpdated),
-                      {
-                        addSuffix: true,
-                      }
-                    )}
+                    {formatDistanceToNow(new Date(research.updatedAt), {
+                      addSuffix: true,
+                    })}
                   </div>
                 </div>
               </Card>
@@ -392,9 +357,24 @@ export function ResearchDetails({
                 <h3 className="text-lg font-semibold">Research Results</h3>
               </div>
 
-              {research.content ? (
+              {research.findings && research.findings.length > 0 ? (
                 <Card className="p-6">
-                  <EnhancedMarkdownRenderer content={research.content} />
+                  <div className="space-y-4">
+                    {research.findings.map((finding, index) => (
+                      <div
+                        key={finding.id}
+                        className="border-l-4 border-blue-200 pl-4"
+                      >
+                        <div className="font-medium mb-2">
+                          Finding {index + 1}
+                        </div>
+                        <div className="text-sm text-gray-600 mb-2">
+                          Impact: {finding.impact}
+                        </div>
+                        <EnhancedMarkdownRenderer content={finding.findings} />
+                      </div>
+                    ))}
+                  </div>
                 </Card>
               ) : (
                 <Card className="p-12">
@@ -421,10 +401,7 @@ export function ResearchDetails({
                       Created:
                     </span>
                     <span className="ml-2">
-                      {format(
-                        new Date(research.research.createdAt),
-                        "PPP 'at' p"
-                      )}
+                      {format(new Date(research.createdAt), "PPP 'at' p")}
                     </span>
                   </div>
                   <div>
@@ -432,23 +409,21 @@ export function ResearchDetails({
                       Research ID:
                     </span>
                     <span className="ml-2 font-mono text-xs bg-muted px-2 py-1 rounded">
-                      {research.research.id}
+                      {research.id}
                     </span>
                   </div>
                   <div>
                     <span className="font-medium text-muted-foreground">
-                      Type:
+                      Depth:
                     </span>
-                    <span className="ml-2">
-                      {RESEARCH_TYPE_LABELS[research.research.type]}
-                    </span>
+                    <span className="ml-2">{research.depth}</span>
                   </div>
                 </div>
               </Card>
             </div>
           </div>
         </ScrollArea>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

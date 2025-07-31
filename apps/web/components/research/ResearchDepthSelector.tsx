@@ -9,20 +9,37 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
-import { ResearchValidationButton } from "./ResearchValidationButton";
 import type { ResearchDepth } from "@/types/research";
 import { RESEARCH_DEPTHS } from "@/lib/config/researchConfig";
 
 interface ResearchDepthSelectorProps {
   ideaId: string;
   disabled?: boolean;
+  selectedDepth?: ResearchDepth;
+  onDepthChange?: (depth: ResearchDepth) => void;
+  showButton?: boolean;
 }
 
 export function ResearchDepthSelector({
   ideaId,
   disabled = false,
+  selectedDepth: externalSelectedDepth,
+  onDepthChange,
+  showButton = true,
 }: ResearchDepthSelectorProps) {
-  const [selectedDepth, setSelectedDepth] = useState<ResearchDepth>("STANDARD");
+  const [internalSelectedDepth, setInternalSelectedDepth] =
+    useState<ResearchDepth>("STANDARD");
+
+  // Use external state if provided, otherwise use internal state
+  const selectedDepth = externalSelectedDepth ?? internalSelectedDepth;
+
+  const handleDepthChange = (depth: ResearchDepth) => {
+    if (onDepthChange) {
+      onDepthChange(depth);
+    } else {
+      setInternalSelectedDepth(depth);
+    }
+  };
 
   const depthOptions: Array<{
     depth: ResearchDepth;
@@ -69,12 +86,15 @@ export function ResearchDepthSelector({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Choose Research Depth</h3>
-        <p className="text-sm text-gray-600">
-          Select how comprehensive you want your SaaS validation research to be.
-        </p>
-      </div>
+      {showButton && (
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Choose Research Depth</h3>
+          <p className="text-sm text-gray-600">
+            Select how comprehensive you want your SaaS validation research to
+            be.
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {depthOptions.map((option) => (
@@ -85,7 +105,7 @@ export function ResearchDepthSelector({
                 ? "ring-2 ring-blue-500 border-blue-500"
                 : "hover:border-gray-300"
             }`}
-            onClick={() => setSelectedDepth(option.depth)}
+            onClick={() => !disabled && handleDepthChange(option.depth)}
           >
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -106,22 +126,19 @@ export function ResearchDepthSelector({
         ))}
       </div>
 
-      <div className="flex items-center justify-between pt-4 border-t">
-        <div className="text-sm text-gray-600">
-          <strong>Selected:</strong>{" "}
-          {depthOptions.find((o) => o.depth === selectedDepth)?.title}
-          <br />
-          <span className="text-xs">
-            This will conduct real web research using Exa for up-to-date market
-            data
-          </span>
+      {showButton && (
+        <div className="flex items-center justify-between pt-4 border-t">
+          <div className="text-sm text-gray-600">
+            <strong>Selected:</strong>{" "}
+            {depthOptions.find((o) => o.depth === selectedDepth)?.title}
+            <br />
+            <span className="text-xs">
+              This will conduct real web research using Exa for up-to-date
+              market data
+            </span>
+          </div>
         </div>
-        <ResearchValidationButton
-          ideaId={ideaId}
-          depth={selectedDepth}
-          disabled={disabled}
-        />
-      </div>
+      )}
     </div>
   );
 }

@@ -128,12 +128,10 @@ model Organization {
   milestoneDependency MilestoneDependency[]
   issueDependency     IssueDependency[]
   issueLink           IssueLink[]
-  marketResearch      MarketResearch[]
   assetViews          AssetView[]
   assetDownloads      AssetDownload[]
   referrals           Referral[]
   ApiKey              ApiKey[]
-  ResearchResults     ResearchResults[]
   researchSessions    ResearchSession[]
 
   @@unique([slug])
@@ -267,7 +265,6 @@ model Idea {
   problemSolved       String?
   solutionOffered     String?
   projects            Project[]
-  marketResearch      MarketResearch[]
   researchSessions    ResearchSession[]
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
@@ -998,139 +995,6 @@ enum IntegrationType {
   GITHUB
 }
 
-// ============================================================================
-// SAAS VALIDATION MODELS
-// ============================================================================
-
-// ===== CORE VALIDATION MODELS (AI-Generated) =====
-
-model MarketResearch {
-  id             String       @id @default(uuid())
-  ideaId         String
-  idea           Idea         @relation(fields: [ideaId], references: [id], onDelete: Cascade)
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-
-  validationScore Float? // 0-100
-  confidenceLevel Importance
-  completed       Boolean    @default(false)
-  lastUpdated     DateTime   @updatedAt
-  createdAt       DateTime   @default(now())
-
-  type            ResearchType     @default(COMPLETE)
-  ResearchResults ResearchResults?
-
-  @@index([ideaId])
-  @@index([organizationId])
-  @@map("market_research")
-}
-
-model ResearchResults {
-  id               String          @id @default(uuid())
-  organizationId   String
-  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  content          String
-  marketResearch   MarketResearch? @relation(fields: [marketResearchId], references: [id])
-  marketResearchId String          @unique
-
-  @@index([organizationId])
-  @@map("research_results")
-}
-
-model Competitor {
-  id String @id @default(uuid())
-
-  ideaId String
-  idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
-
-  // Basic Info (AI-generated)
-  name        String
-  website     String?
-  description String?
-  logoUrl     String?
-
-  // Market Position (AI-generated)
-  marketShare   Float? // Percentage
-  annualRevenue Float? // In millions USD
-  employeeCount String?
-  foundedYear   Int?
-  headquarters  String?
-
-  targetAudience String?
-
-  threatLevel Importance
-
-  // Performance Metrics (AI-generated)
-  userGrowthRate       Float?
-  churnRate            Float?
-  customerSatisfaction Float?
-  marketCap            Float? // If public company
-
-  // Tracking
-  lastUpdated DateTime @updatedAt
-  createdAt   DateTime @default(now())
-  isActive    Boolean  @default(true)
-
-  // Relations
-  competitiveMoves CompetitiveMove[]
-
-  @@index([ideaId])
-  @@index([name])
-  @@map("competitor")
-}
-
-model CompetitiveMove {
-  id String @id @default(uuid())
-
-  competitorId String?
-  competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
-
-  moveType    String
-  title       String
-  description String
-
-  // Impact Analysis (AI-generated)
-  impactLevel      Importance
-  targetAudience   String?
-  affectedFeatures String[]
-
-  // Timing
-  announcedDate  DateTime?
-  launchDate     DateTime?
-  completionDate DateTime?
-
-  userFeedback  String?
-  pressCoverage String[]
-
-  // Strategic Implications (AI-generated)
-  opportunities    String[]
-  threats          String[]
-  responseRequired Boolean  @default(false)
-  responseStrategy String?
-
-  createdAt DateTime @default(now())
-
-  @@index([competitorId])
-  @@index([moveType])
-  @@map("competitive_move")
-}
-
-enum ResearchType {
-  COMPLETE
-  BUSINESS_MODEL
-  COMPETITIVE_ANALYSIS
-  CUSTOMER_VALIDATION
-  FINANCIAL_PROJECTIONS
-  GO_TO_MARKET
-  INVESTMENT_RECOMMENDATION
-  MARKET_OPPORTUNITY
-  PRODUCT_MARKET_FIT
-  RISK_ANALYSIS
-  TECHNICAL_FEASIBILITY
-}
-
 enum ApiPermission {
   READ
   WRITE
@@ -1223,45 +1087,133 @@ enum ChangelogEntryType {
 // DEEP RESEARCH SAAS VALIDATION MODELS
 // ============================================================================
 
+model Competitor {
+  id String @id @default(uuid())
+
+  ideaId String
+  idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  // Basic Info (AI-generated)
+  name        String
+  website     String?
+  description String?
+  logoUrl     String?
+
+  // Market Position (AI-generated)
+  marketShare   Float? // Percentage
+  annualRevenue Float? // In millions USD
+  employeeCount String?
+  foundedYear   Int?
+  headquarters  String?
+
+  targetAudience String?
+
+  threatLevel Importance
+
+  // Performance Metrics (AI-generated)
+  userGrowthRate       Float?
+  churnRate            Float?
+  customerSatisfaction Float?
+  marketCap            Float? // If public company
+
+  // Tracking
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  // Relations
+  competitiveMoves CompetitiveMove[]
+
+  @@index([ideaId])
+  @@index([name])
+  @@map("competitor")
+}
+
+model CompetitiveMove {
+  id String @id @default(uuid())
+
+  competitorId String?
+  competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+
+  moveType    String
+  title       String
+  description String
+
+  // Impact Analysis (AI-generated)
+  impactLevel      Importance
+  targetAudience   String?
+  affectedFeatures String[]
+
+  // Timing
+  announcedDate  DateTime?
+  launchDate     DateTime?
+  completionDate DateTime?
+
+  userFeedback  String?
+  pressCoverage String[]
+
+  // Strategic Implications (AI-generated)
+  opportunities    String[]
+  threats          String[]
+  responseRequired Boolean  @default(false)
+  responseStrategy String?
+
+  createdAt DateTime @default(now())
+
+  @@index([competitorId])
+  @@index([moveType])
+  @@map("competitive_move")
+}
+
 model ResearchSession {
-  id                  String         @id @default(cuid())
+  id                  String                @id @default(cuid())
   ideaId              String
   organizationId      String
+  name                String?
+  finalContent        String?
+  prompt              String?
   depth               ResearchDepth
   status              ResearchStatus
-  currentPhaseIndex   Int            @default(0)
-  overallConfidence   Float          @default(0)
+  currentPhaseIndex   Int                   @default(0)
+  overallConfidence   Float                 @default(0)
   estimatedCompletion DateTime?
   actualCompletion    DateTime?
-  totalCost           Float          @default(0)
-  createdAt           DateTime       @default(now())
-  updatedAt           DateTime       @updatedAt
-
-  idea         Idea                  @relation(fields: [ideaId], references: [id])
-  organization Organization          @relation(fields: [organizationId], references: [id])
-  phases       ResearchPhaseResult[]
+  totalCost           Float                 @default(0)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  idea                Idea                  @relation(fields: [ideaId], references: [id])
+  organization        Organization          @relation(fields: [organizationId], references: [id])
+  phases              ResearchPhaseResult[]
+  findings            ResearchFindings[]
 
   @@map("research_sessions")
 }
 
 model ResearchPhaseResult {
-  id          String            @id @default(cuid())
-  sessionId   String
-  phaseName   ResearchPhaseType
-  status      PhaseStatus
-  findings    Json
-  confidence  Float             @default(0)
-  duration    Int               @default(0)
-  iterations  Int               @default(0)
-  startedAt   DateTime?
-  completedAt DateTime?
-  error       String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id         String            @id @default(cuid())
+  sessionId  String
+  phaseName  ResearchPhaseType
+  status     PhaseStatus
+  conclusion String?
+  confidence Float             @default(0)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  session    ResearchSession   @relation(fields: [sessionId], references: [id])
 
-  session ResearchSession @relation(fields: [sessionId], references: [id])
-
+  @@index([sessionId])
   @@map("research_phase_results")
+}
+
+model ResearchFindings {
+  id        String          @id @default(uuid())
+  sessionId String
+  session   ResearchSession @relation(fields: [sessionId], references: [id])
+  findings  String
+  impact    Importance
+  createdAt DateTime        @default(now())
+
+  @@index([sessionId])
+  @@map("research_findings")
 }
 
 enum ResearchDepth {
@@ -1281,13 +1233,16 @@ enum ResearchStatus {
 
 enum ResearchPhaseType {
   MARKET_SCAN
-  COMPETITIVE_OVERVIEW
-  COMPETITIVE_DEEP_DIVE
   CUSTOMER_VALIDATION
   BUSINESS_MODEL
   FINANCIAL_PROJECTIONS
   RISK_ANALYSIS
   TECHNICAL_FEASIBILITY
+  COMPLETE
+  COMPETITIVE_ANALYSIS
+  GO_TO_MARKET
+  INVESTMENT_RECOMMENDATION
+  PRODUCT_MARKET_FIT
 }
 
 enum PhaseStatus {

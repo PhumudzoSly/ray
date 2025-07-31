@@ -184,26 +184,6 @@ export type Milestone = $Result.DefaultSelection<Prisma.$MilestonePayload>
  */
 export type MilestoneDependency = $Result.DefaultSelection<Prisma.$MilestoneDependencyPayload>
 /**
- * Model MarketResearch
- * 
- */
-export type MarketResearch = $Result.DefaultSelection<Prisma.$MarketResearchPayload>
-/**
- * Model ResearchResults
- * 
- */
-export type ResearchResults = $Result.DefaultSelection<Prisma.$ResearchResultsPayload>
-/**
- * Model Competitor
- * 
- */
-export type Competitor = $Result.DefaultSelection<Prisma.$CompetitorPayload>
-/**
- * Model CompetitiveMove
- * 
- */
-export type CompetitiveMove = $Result.DefaultSelection<Prisma.$CompetitiveMovePayload>
-/**
  * Model AssetView
  * 
  */
@@ -219,6 +199,16 @@ export type AssetDownload = $Result.DefaultSelection<Prisma.$AssetDownloadPayloa
  */
 export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
 /**
+ * Model Competitor
+ * 
+ */
+export type Competitor = $Result.DefaultSelection<Prisma.$CompetitorPayload>
+/**
+ * Model CompetitiveMove
+ * 
+ */
+export type CompetitiveMove = $Result.DefaultSelection<Prisma.$CompetitiveMovePayload>
+/**
  * Model ResearchSession
  * 
  */
@@ -228,6 +218,11 @@ export type ResearchSession = $Result.DefaultSelection<Prisma.$ResearchSessionPa
  * 
  */
 export type ResearchPhaseResult = $Result.DefaultSelection<Prisma.$ResearchPhaseResultPayload>
+/**
+ * Model ResearchFindings
+ * 
+ */
+export type ResearchFindings = $Result.DefaultSelection<Prisma.$ResearchFindingsPayload>
 
 /**
  * Enums
@@ -445,23 +440,6 @@ export const IntegrationType: {
 export type IntegrationType = (typeof IntegrationType)[keyof typeof IntegrationType]
 
 
-export const ResearchType: {
-  COMPLETE: 'COMPLETE',
-  BUSINESS_MODEL: 'BUSINESS_MODEL',
-  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
-  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
-  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
-  GO_TO_MARKET: 'GO_TO_MARKET',
-  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
-  MARKET_OPPORTUNITY: 'MARKET_OPPORTUNITY',
-  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT',
-  RISK_ANALYSIS: 'RISK_ANALYSIS',
-  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
-};
-
-export type ResearchType = (typeof ResearchType)[keyof typeof ResearchType]
-
-
 export const ApiPermission: {
   READ: 'READ',
   WRITE: 'WRITE',
@@ -509,13 +487,16 @@ export type ResearchStatus = (typeof ResearchStatus)[keyof typeof ResearchStatus
 
 export const ResearchPhaseType: {
   MARKET_SCAN: 'MARKET_SCAN',
-  COMPETITIVE_OVERVIEW: 'COMPETITIVE_OVERVIEW',
-  COMPETITIVE_DEEP_DIVE: 'COMPETITIVE_DEEP_DIVE',
   CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
   BUSINESS_MODEL: 'BUSINESS_MODEL',
   FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
   RISK_ANALYSIS: 'RISK_ANALYSIS',
-  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY',
+  COMPLETE: 'COMPLETE',
+  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
+  GO_TO_MARKET: 'GO_TO_MARKET',
+  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
+  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT'
 };
 
 export type ResearchPhaseType = (typeof ResearchPhaseType)[keyof typeof ResearchPhaseType]
@@ -600,10 +581,6 @@ export const MilestoneStatus: typeof $Enums.MilestoneStatus
 export type IntegrationType = $Enums.IntegrationType
 
 export const IntegrationType: typeof $Enums.IntegrationType
-
-export type ResearchType = $Enums.ResearchType
-
-export const ResearchType: typeof $Enums.ResearchType
 
 export type ApiPermission = $Enums.ApiPermission
 
@@ -1095,46 +1072,6 @@ export class PrismaClient<
   get milestoneDependency(): Prisma.MilestoneDependencyDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.marketResearch`: Exposes CRUD operations for the **MarketResearch** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more MarketResearches
-    * const marketResearches = await prisma.marketResearch.findMany()
-    * ```
-    */
-  get marketResearch(): Prisma.MarketResearchDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.researchResults`: Exposes CRUD operations for the **ResearchResults** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more ResearchResults
-    * const researchResults = await prisma.researchResults.findMany()
-    * ```
-    */
-  get researchResults(): Prisma.ResearchResultsDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.competitor`: Exposes CRUD operations for the **Competitor** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Competitors
-    * const competitors = await prisma.competitor.findMany()
-    * ```
-    */
-  get competitor(): Prisma.CompetitorDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.competitiveMove`: Exposes CRUD operations for the **CompetitiveMove** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more CompetitiveMoves
-    * const competitiveMoves = await prisma.competitiveMove.findMany()
-    * ```
-    */
-  get competitiveMove(): Prisma.CompetitiveMoveDelegate<ExtArgs, ClientOptions>;
-
-  /**
    * `prisma.assetView`: Exposes CRUD operations for the **AssetView** model.
     * Example usage:
     * ```ts
@@ -1165,6 +1102,26 @@ export class PrismaClient<
   get referral(): Prisma.ReferralDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.competitor`: Exposes CRUD operations for the **Competitor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Competitors
+    * const competitors = await prisma.competitor.findMany()
+    * ```
+    */
+  get competitor(): Prisma.CompetitorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.competitiveMove`: Exposes CRUD operations for the **CompetitiveMove** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CompetitiveMoves
+    * const competitiveMoves = await prisma.competitiveMove.findMany()
+    * ```
+    */
+  get competitiveMove(): Prisma.CompetitiveMoveDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.researchSession`: Exposes CRUD operations for the **ResearchSession** model.
     * Example usage:
     * ```ts
@@ -1183,6 +1140,16 @@ export class PrismaClient<
     * ```
     */
   get researchPhaseResult(): Prisma.ResearchPhaseResultDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.researchFindings`: Exposes CRUD operations for the **ResearchFindings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ResearchFindings
+    * const researchFindings = await prisma.researchFindings.findMany()
+    * ```
+    */
+  get researchFindings(): Prisma.ResearchFindingsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1657,15 +1624,14 @@ export namespace Prisma {
     FeatureLink: 'FeatureLink',
     Milestone: 'Milestone',
     MilestoneDependency: 'MilestoneDependency',
-    MarketResearch: 'MarketResearch',
-    ResearchResults: 'ResearchResults',
-    Competitor: 'Competitor',
-    CompetitiveMove: 'CompetitiveMove',
     AssetView: 'AssetView',
     AssetDownload: 'AssetDownload',
     Referral: 'Referral',
+    Competitor: 'Competitor',
+    CompetitiveMove: 'CompetitiveMove',
     ResearchSession: 'ResearchSession',
-    ResearchPhaseResult: 'ResearchPhaseResult'
+    ResearchPhaseResult: 'ResearchPhaseResult',
+    ResearchFindings: 'ResearchFindings'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1684,7 +1650,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "changelogEntry" | "featureRequest" | "integration" | "integrationUsage" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency" | "marketResearch" | "researchResults" | "competitor" | "competitiveMove" | "assetView" | "assetDownload" | "referral" | "researchSession" | "researchPhaseResult"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "changelogEntry" | "featureRequest" | "integration" | "integrationUsage" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency" | "assetView" | "assetDownload" | "referral" | "competitor" | "competitiveMove" | "researchSession" | "researchPhaseResult" | "researchFindings"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4204,302 +4170,6 @@ export namespace Prisma {
           }
         }
       }
-      MarketResearch: {
-        payload: Prisma.$MarketResearchPayload<ExtArgs>
-        fields: Prisma.MarketResearchFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.MarketResearchFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.MarketResearchFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          findFirst: {
-            args: Prisma.MarketResearchFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.MarketResearchFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          findMany: {
-            args: Prisma.MarketResearchFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>[]
-          }
-          create: {
-            args: Prisma.MarketResearchCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          createMany: {
-            args: Prisma.MarketResearchCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.MarketResearchCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>[]
-          }
-          delete: {
-            args: Prisma.MarketResearchDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          update: {
-            args: Prisma.MarketResearchUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          deleteMany: {
-            args: Prisma.MarketResearchDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.MarketResearchUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.MarketResearchUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>[]
-          }
-          upsert: {
-            args: Prisma.MarketResearchUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$MarketResearchPayload>
-          }
-          aggregate: {
-            args: Prisma.MarketResearchAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateMarketResearch>
-          }
-          groupBy: {
-            args: Prisma.MarketResearchGroupByArgs<ExtArgs>
-            result: $Utils.Optional<MarketResearchGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.MarketResearchCountArgs<ExtArgs>
-            result: $Utils.Optional<MarketResearchCountAggregateOutputType> | number
-          }
-        }
-      }
-      ResearchResults: {
-        payload: Prisma.$ResearchResultsPayload<ExtArgs>
-        fields: Prisma.ResearchResultsFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.ResearchResultsFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.ResearchResultsFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          findFirst: {
-            args: Prisma.ResearchResultsFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.ResearchResultsFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          findMany: {
-            args: Prisma.ResearchResultsFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>[]
-          }
-          create: {
-            args: Prisma.ResearchResultsCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          createMany: {
-            args: Prisma.ResearchResultsCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.ResearchResultsCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>[]
-          }
-          delete: {
-            args: Prisma.ResearchResultsDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          update: {
-            args: Prisma.ResearchResultsUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          deleteMany: {
-            args: Prisma.ResearchResultsDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.ResearchResultsUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.ResearchResultsUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>[]
-          }
-          upsert: {
-            args: Prisma.ResearchResultsUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$ResearchResultsPayload>
-          }
-          aggregate: {
-            args: Prisma.ResearchResultsAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateResearchResults>
-          }
-          groupBy: {
-            args: Prisma.ResearchResultsGroupByArgs<ExtArgs>
-            result: $Utils.Optional<ResearchResultsGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.ResearchResultsCountArgs<ExtArgs>
-            result: $Utils.Optional<ResearchResultsCountAggregateOutputType> | number
-          }
-        }
-      }
-      Competitor: {
-        payload: Prisma.$CompetitorPayload<ExtArgs>
-        fields: Prisma.CompetitorFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CompetitorFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CompetitorFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          findFirst: {
-            args: Prisma.CompetitorFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CompetitorFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          findMany: {
-            args: Prisma.CompetitorFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
-          }
-          create: {
-            args: Prisma.CompetitorCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          createMany: {
-            args: Prisma.CompetitorCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CompetitorCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
-          }
-          delete: {
-            args: Prisma.CompetitorDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          update: {
-            args: Prisma.CompetitorUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          deleteMany: {
-            args: Prisma.CompetitorDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CompetitorUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CompetitorUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
-          }
-          upsert: {
-            args: Prisma.CompetitorUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
-          }
-          aggregate: {
-            args: Prisma.CompetitorAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCompetitor>
-          }
-          groupBy: {
-            args: Prisma.CompetitorGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CompetitorGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CompetitorCountArgs<ExtArgs>
-            result: $Utils.Optional<CompetitorCountAggregateOutputType> | number
-          }
-        }
-      }
-      CompetitiveMove: {
-        payload: Prisma.$CompetitiveMovePayload<ExtArgs>
-        fields: Prisma.CompetitiveMoveFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.CompetitiveMoveFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          findFirst: {
-            args: Prisma.CompetitiveMoveFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.CompetitiveMoveFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          findMany: {
-            args: Prisma.CompetitiveMoveFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
-          }
-          create: {
-            args: Prisma.CompetitiveMoveCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          createMany: {
-            args: Prisma.CompetitiveMoveCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.CompetitiveMoveCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
-          }
-          delete: {
-            args: Prisma.CompetitiveMoveDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          update: {
-            args: Prisma.CompetitiveMoveUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          deleteMany: {
-            args: Prisma.CompetitiveMoveDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.CompetitiveMoveUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
-          }
-          upsert: {
-            args: Prisma.CompetitiveMoveUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
-          }
-          aggregate: {
-            args: Prisma.CompetitiveMoveAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregateCompetitiveMove>
-          }
-          groupBy: {
-            args: Prisma.CompetitiveMoveGroupByArgs<ExtArgs>
-            result: $Utils.Optional<CompetitiveMoveGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.CompetitiveMoveCountArgs<ExtArgs>
-            result: $Utils.Optional<CompetitiveMoveCountAggregateOutputType> | number
-          }
-        }
-      }
       AssetView: {
         payload: Prisma.$AssetViewPayload<ExtArgs>
         fields: Prisma.AssetViewFieldRefs
@@ -4722,6 +4392,154 @@ export namespace Prisma {
           }
         }
       }
+      Competitor: {
+        payload: Prisma.$CompetitorPayload<ExtArgs>
+        fields: Prisma.CompetitorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CompetitorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CompetitorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          findFirst: {
+            args: Prisma.CompetitorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CompetitorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          findMany: {
+            args: Prisma.CompetitorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
+          }
+          create: {
+            args: Prisma.CompetitorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          createMany: {
+            args: Prisma.CompetitorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CompetitorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
+          }
+          delete: {
+            args: Prisma.CompetitorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          update: {
+            args: Prisma.CompetitorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          deleteMany: {
+            args: Prisma.CompetitorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CompetitorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CompetitorUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>[]
+          }
+          upsert: {
+            args: Prisma.CompetitorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitorPayload>
+          }
+          aggregate: {
+            args: Prisma.CompetitorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCompetitor>
+          }
+          groupBy: {
+            args: Prisma.CompetitorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CompetitorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CompetitorCountArgs<ExtArgs>
+            result: $Utils.Optional<CompetitorCountAggregateOutputType> | number
+          }
+        }
+      }
+      CompetitiveMove: {
+        payload: Prisma.$CompetitiveMovePayload<ExtArgs>
+        fields: Prisma.CompetitiveMoveFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CompetitiveMoveFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          findFirst: {
+            args: Prisma.CompetitiveMoveFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CompetitiveMoveFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          findMany: {
+            args: Prisma.CompetitiveMoveFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
+          }
+          create: {
+            args: Prisma.CompetitiveMoveCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          createMany: {
+            args: Prisma.CompetitiveMoveCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CompetitiveMoveCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
+          }
+          delete: {
+            args: Prisma.CompetitiveMoveDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          update: {
+            args: Prisma.CompetitiveMoveUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          deleteMany: {
+            args: Prisma.CompetitiveMoveDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CompetitiveMoveUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>[]
+          }
+          upsert: {
+            args: Prisma.CompetitiveMoveUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CompetitiveMovePayload>
+          }
+          aggregate: {
+            args: Prisma.CompetitiveMoveAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCompetitiveMove>
+          }
+          groupBy: {
+            args: Prisma.CompetitiveMoveGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CompetitiveMoveGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CompetitiveMoveCountArgs<ExtArgs>
+            result: $Utils.Optional<CompetitiveMoveCountAggregateOutputType> | number
+          }
+        }
+      }
       ResearchSession: {
         payload: Prisma.$ResearchSessionPayload<ExtArgs>
         fields: Prisma.ResearchSessionFieldRefs
@@ -4870,6 +4688,80 @@ export namespace Prisma {
           }
         }
       }
+      ResearchFindings: {
+        payload: Prisma.$ResearchFindingsPayload<ExtArgs>
+        fields: Prisma.ResearchFindingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ResearchFindingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ResearchFindingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          findFirst: {
+            args: Prisma.ResearchFindingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ResearchFindingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          findMany: {
+            args: Prisma.ResearchFindingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>[]
+          }
+          create: {
+            args: Prisma.ResearchFindingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          createMany: {
+            args: Prisma.ResearchFindingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ResearchFindingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>[]
+          }
+          delete: {
+            args: Prisma.ResearchFindingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          update: {
+            args: Prisma.ResearchFindingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.ResearchFindingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ResearchFindingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ResearchFindingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.ResearchFindingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchFindingsPayload>
+          }
+          aggregate: {
+            args: Prisma.ResearchFindingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateResearchFindings>
+          }
+          groupBy: {
+            args: Prisma.ResearchFindingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ResearchFindingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ResearchFindingsCountArgs<ExtArgs>
+            result: $Utils.Optional<ResearchFindingsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4988,15 +4880,14 @@ export namespace Prisma {
     featureLink?: FeatureLinkOmit
     milestone?: MilestoneOmit
     milestoneDependency?: MilestoneDependencyOmit
-    marketResearch?: MarketResearchOmit
-    researchResults?: ResearchResultsOmit
-    competitor?: CompetitorOmit
-    competitiveMove?: CompetitiveMoveOmit
     assetView?: AssetViewOmit
     assetDownload?: AssetDownloadOmit
     referral?: ReferralOmit
+    competitor?: CompetitorOmit
+    competitiveMove?: CompetitiveMoveOmit
     researchSession?: ResearchSessionOmit
     researchPhaseResult?: ResearchPhaseResultOmit
+    researchFindings?: ResearchFindingsOmit
   }
 
   /* Types for Logging */
@@ -5283,12 +5174,10 @@ export namespace Prisma {
     milestoneDependency: number
     issueDependency: number
     issueLink: number
-    marketResearch: number
     assetViews: number
     assetDownloads: number
     referrals: number
     ApiKey: number
-    ResearchResults: number
     researchSessions: number
   }
 
@@ -5310,12 +5199,10 @@ export namespace Prisma {
     milestoneDependency?: boolean | OrganizationCountOutputTypeCountMilestoneDependencyArgs
     issueDependency?: boolean | OrganizationCountOutputTypeCountIssueDependencyArgs
     issueLink?: boolean | OrganizationCountOutputTypeCountIssueLinkArgs
-    marketResearch?: boolean | OrganizationCountOutputTypeCountMarketResearchArgs
     assetViews?: boolean | OrganizationCountOutputTypeCountAssetViewsArgs
     assetDownloads?: boolean | OrganizationCountOutputTypeCountAssetDownloadsArgs
     referrals?: boolean | OrganizationCountOutputTypeCountReferralsArgs
     ApiKey?: boolean | OrganizationCountOutputTypeCountApiKeyArgs
-    ResearchResults?: boolean | OrganizationCountOutputTypeCountResearchResultsArgs
     researchSessions?: boolean | OrganizationCountOutputTypeCountResearchSessionsArgs
   }
 
@@ -5452,13 +5339,6 @@ export namespace Prisma {
   /**
    * OrganizationCountOutputType without action
    */
-  export type OrganizationCountOutputTypeCountMarketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MarketResearchWhereInput
-  }
-
-  /**
-   * OrganizationCountOutputType without action
-   */
   export type OrganizationCountOutputTypeCountAssetViewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AssetViewWhereInput
   }
@@ -5482,13 +5362,6 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountApiKeyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApiKeyWhereInput
-  }
-
-  /**
-   * OrganizationCountOutputType without action
-   */
-  export type OrganizationCountOutputTypeCountResearchResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ResearchResultsWhereInput
   }
 
   /**
@@ -5581,14 +5454,12 @@ export namespace Prisma {
 
   export type IdeaCountOutputType = {
     projects: number
-    marketResearch: number
     researchSessions: number
     Competitor: number
   }
 
   export type IdeaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | IdeaCountOutputTypeCountProjectsArgs
-    marketResearch?: boolean | IdeaCountOutputTypeCountMarketResearchArgs
     researchSessions?: boolean | IdeaCountOutputTypeCountResearchSessionsArgs
     Competitor?: boolean | IdeaCountOutputTypeCountCompetitorArgs
   }
@@ -5609,13 +5480,6 @@ export namespace Prisma {
    */
   export type IdeaCountOutputTypeCountProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProjectWhereInput
-  }
-
-  /**
-   * IdeaCountOutputType without action
-   */
-  export type IdeaCountOutputTypeCountMarketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MarketResearchWhereInput
   }
 
   /**
@@ -6169,10 +6033,12 @@ export namespace Prisma {
 
   export type ResearchSessionCountOutputType = {
     phases: number
+    findings: number
   }
 
   export type ResearchSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     phases?: boolean | ResearchSessionCountOutputTypeCountPhasesArgs
+    findings?: boolean | ResearchSessionCountOutputTypeCountFindingsArgs
   }
 
   // Custom InputTypes
@@ -6191,6 +6057,13 @@ export namespace Prisma {
    */
   export type ResearchSessionCountOutputTypeCountPhasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ResearchPhaseResultWhereInput
+  }
+
+  /**
+   * ResearchSessionCountOutputType without action
+   */
+  export type ResearchSessionCountOutputTypeCountFindingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchFindingsWhereInput
   }
 
 
@@ -11311,12 +11184,10 @@ export namespace Prisma {
     milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
     issueDependency?: boolean | Organization$issueDependencyArgs<ExtArgs>
     issueLink?: boolean | Organization$issueLinkArgs<ExtArgs>
-    marketResearch?: boolean | Organization$marketResearchArgs<ExtArgs>
     assetViews?: boolean | Organization$assetViewsArgs<ExtArgs>
     assetDownloads?: boolean | Organization$assetDownloadsArgs<ExtArgs>
     referrals?: boolean | Organization$referralsArgs<ExtArgs>
     ApiKey?: boolean | Organization$ApiKeyArgs<ExtArgs>
-    ResearchResults?: boolean | Organization$ResearchResultsArgs<ExtArgs>
     researchSessions?: boolean | Organization$researchSessionsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
@@ -11367,12 +11238,10 @@ export namespace Prisma {
     milestoneDependency?: boolean | Organization$milestoneDependencyArgs<ExtArgs>
     issueDependency?: boolean | Organization$issueDependencyArgs<ExtArgs>
     issueLink?: boolean | Organization$issueLinkArgs<ExtArgs>
-    marketResearch?: boolean | Organization$marketResearchArgs<ExtArgs>
     assetViews?: boolean | Organization$assetViewsArgs<ExtArgs>
     assetDownloads?: boolean | Organization$assetDownloadsArgs<ExtArgs>
     referrals?: boolean | Organization$referralsArgs<ExtArgs>
     ApiKey?: boolean | Organization$ApiKeyArgs<ExtArgs>
-    ResearchResults?: boolean | Organization$ResearchResultsArgs<ExtArgs>
     researchSessions?: boolean | Organization$researchSessionsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -11399,12 +11268,10 @@ export namespace Prisma {
       milestoneDependency: Prisma.$MilestoneDependencyPayload<ExtArgs>[]
       issueDependency: Prisma.$IssueDependencyPayload<ExtArgs>[]
       issueLink: Prisma.$IssueLinkPayload<ExtArgs>[]
-      marketResearch: Prisma.$MarketResearchPayload<ExtArgs>[]
       assetViews: Prisma.$AssetViewPayload<ExtArgs>[]
       assetDownloads: Prisma.$AssetDownloadPayload<ExtArgs>[]
       referrals: Prisma.$ReferralPayload<ExtArgs>[]
       ApiKey: Prisma.$ApiKeyPayload<ExtArgs>[]
-      ResearchResults: Prisma.$ResearchResultsPayload<ExtArgs>[]
       researchSessions: Prisma.$ResearchSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -11825,12 +11692,10 @@ export namespace Prisma {
     milestoneDependency<T extends Organization$milestoneDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$milestoneDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MilestoneDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     issueDependency<T extends Organization$issueDependencyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueDependencyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueDependencyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     issueLink<T extends Organization$issueLinkArgs<ExtArgs> = {}>(args?: Subset<T, Organization$issueLinkArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IssueLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    marketResearch<T extends Organization$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, Organization$marketResearchArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assetViews<T extends Organization$assetViewsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetViewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetViewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assetDownloads<T extends Organization$assetDownloadsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$assetDownloadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AssetDownloadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     referrals<T extends Organization$referralsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ApiKey<T extends Organization$ApiKeyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ApiKeyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    ResearchResults<T extends Organization$ResearchResultsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ResearchResultsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     researchSessions<T extends Organization$researchSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$researchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -12663,30 +12528,6 @@ export namespace Prisma {
   }
 
   /**
-   * Organization.marketResearch
-   */
-  export type Organization$marketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    where?: MarketResearchWhereInput
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    cursor?: MarketResearchWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
-  }
-
-  /**
    * Organization.assetViews
    */
   export type Organization$assetViewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12780,30 +12621,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
-  }
-
-  /**
-   * Organization.ResearchResults
-   */
-  export type Organization$ResearchResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    where?: ResearchResultsWhereInput
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    cursor?: ResearchResultsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
   }
 
   /**
@@ -20152,7 +19969,6 @@ export namespace Prisma {
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     projects?: boolean | Idea$projectsArgs<ExtArgs>
-    marketResearch?: boolean | Idea$marketResearchArgs<ExtArgs>
     researchSessions?: boolean | Idea$researchSessionsArgs<ExtArgs>
     Competitor?: boolean | Idea$CompetitorArgs<ExtArgs>
     _count?: boolean | IdeaCountOutputTypeDefaultArgs<ExtArgs>
@@ -20218,7 +20034,6 @@ export namespace Prisma {
     owner?: boolean | Idea$ownerArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     projects?: boolean | Idea$projectsArgs<ExtArgs>
-    marketResearch?: boolean | Idea$marketResearchArgs<ExtArgs>
     researchSessions?: boolean | Idea$researchSessionsArgs<ExtArgs>
     Competitor?: boolean | Idea$CompetitorArgs<ExtArgs>
     _count?: boolean | IdeaCountOutputTypeDefaultArgs<ExtArgs>
@@ -20238,7 +20053,6 @@ export namespace Prisma {
       owner: Prisma.$UserPayload<ExtArgs> | null
       organization: Prisma.$OrganizationPayload<ExtArgs>
       projects: Prisma.$ProjectPayload<ExtArgs>[]
-      marketResearch: Prisma.$MarketResearchPayload<ExtArgs>[]
       researchSessions: Prisma.$ResearchSessionPayload<ExtArgs>[]
       Competitor: Prisma.$CompetitorPayload<ExtArgs>[]
     }
@@ -20654,7 +20468,6 @@ export namespace Prisma {
     owner<T extends Idea$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Idea$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     projects<T extends Idea$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Idea$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    marketResearch<T extends Idea$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, Idea$marketResearchArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     researchSessions<T extends Idea$researchSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Idea$researchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Competitor<T extends Idea$CompetitorArgs<ExtArgs> = {}>(args?: Subset<T, Idea$CompetitorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -21136,30 +20949,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProjectScalarFieldEnum | ProjectScalarFieldEnum[]
-  }
-
-  /**
-   * Idea.marketResearch
-   */
-  export type Idea$marketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    where?: MarketResearchWhereInput
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    cursor?: MarketResearchWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
   }
 
   /**
@@ -47786,4850 +47575,6 @@ export namespace Prisma {
 
 
   /**
-   * Model MarketResearch
-   */
-
-  export type AggregateMarketResearch = {
-    _count: MarketResearchCountAggregateOutputType | null
-    _avg: MarketResearchAvgAggregateOutputType | null
-    _sum: MarketResearchSumAggregateOutputType | null
-    _min: MarketResearchMinAggregateOutputType | null
-    _max: MarketResearchMaxAggregateOutputType | null
-  }
-
-  export type MarketResearchAvgAggregateOutputType = {
-    validationScore: number | null
-  }
-
-  export type MarketResearchSumAggregateOutputType = {
-    validationScore: number | null
-  }
-
-  export type MarketResearchMinAggregateOutputType = {
-    id: string | null
-    ideaId: string | null
-    organizationId: string | null
-    validationScore: number | null
-    confidenceLevel: $Enums.Importance | null
-    completed: boolean | null
-    lastUpdated: Date | null
-    createdAt: Date | null
-    type: $Enums.ResearchType | null
-  }
-
-  export type MarketResearchMaxAggregateOutputType = {
-    id: string | null
-    ideaId: string | null
-    organizationId: string | null
-    validationScore: number | null
-    confidenceLevel: $Enums.Importance | null
-    completed: boolean | null
-    lastUpdated: Date | null
-    createdAt: Date | null
-    type: $Enums.ResearchType | null
-  }
-
-  export type MarketResearchCountAggregateOutputType = {
-    id: number
-    ideaId: number
-    organizationId: number
-    validationScore: number
-    confidenceLevel: number
-    completed: number
-    lastUpdated: number
-    createdAt: number
-    type: number
-    _all: number
-  }
-
-
-  export type MarketResearchAvgAggregateInputType = {
-    validationScore?: true
-  }
-
-  export type MarketResearchSumAggregateInputType = {
-    validationScore?: true
-  }
-
-  export type MarketResearchMinAggregateInputType = {
-    id?: true
-    ideaId?: true
-    organizationId?: true
-    validationScore?: true
-    confidenceLevel?: true
-    completed?: true
-    lastUpdated?: true
-    createdAt?: true
-    type?: true
-  }
-
-  export type MarketResearchMaxAggregateInputType = {
-    id?: true
-    ideaId?: true
-    organizationId?: true
-    validationScore?: true
-    confidenceLevel?: true
-    completed?: true
-    lastUpdated?: true
-    createdAt?: true
-    type?: true
-  }
-
-  export type MarketResearchCountAggregateInputType = {
-    id?: true
-    ideaId?: true
-    organizationId?: true
-    validationScore?: true
-    confidenceLevel?: true
-    completed?: true
-    lastUpdated?: true
-    createdAt?: true
-    type?: true
-    _all?: true
-  }
-
-  export type MarketResearchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MarketResearch to aggregate.
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MarketResearches to fetch.
-     */
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: MarketResearchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MarketResearches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MarketResearches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned MarketResearches
-    **/
-    _count?: true | MarketResearchCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: MarketResearchAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: MarketResearchSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: MarketResearchMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: MarketResearchMaxAggregateInputType
-  }
-
-  export type GetMarketResearchAggregateType<T extends MarketResearchAggregateArgs> = {
-        [P in keyof T & keyof AggregateMarketResearch]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateMarketResearch[P]>
-      : GetScalarType<T[P], AggregateMarketResearch[P]>
-  }
-
-
-
-
-  export type MarketResearchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MarketResearchWhereInput
-    orderBy?: MarketResearchOrderByWithAggregationInput | MarketResearchOrderByWithAggregationInput[]
-    by: MarketResearchScalarFieldEnum[] | MarketResearchScalarFieldEnum
-    having?: MarketResearchScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: MarketResearchCountAggregateInputType | true
-    _avg?: MarketResearchAvgAggregateInputType
-    _sum?: MarketResearchSumAggregateInputType
-    _min?: MarketResearchMinAggregateInputType
-    _max?: MarketResearchMaxAggregateInputType
-  }
-
-  export type MarketResearchGroupByOutputType = {
-    id: string
-    ideaId: string
-    organizationId: string
-    validationScore: number | null
-    confidenceLevel: $Enums.Importance
-    completed: boolean
-    lastUpdated: Date
-    createdAt: Date
-    type: $Enums.ResearchType
-    _count: MarketResearchCountAggregateOutputType | null
-    _avg: MarketResearchAvgAggregateOutputType | null
-    _sum: MarketResearchSumAggregateOutputType | null
-    _min: MarketResearchMinAggregateOutputType | null
-    _max: MarketResearchMaxAggregateOutputType | null
-  }
-
-  type GetMarketResearchGroupByPayload<T extends MarketResearchGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<MarketResearchGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof MarketResearchGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], MarketResearchGroupByOutputType[P]>
-            : GetScalarType<T[P], MarketResearchGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type MarketResearchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    organizationId?: boolean
-    validationScore?: boolean
-    confidenceLevel?: boolean
-    completed?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    type?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    ResearchResults?: boolean | MarketResearch$ResearchResultsArgs<ExtArgs>
-  }, ExtArgs["result"]["marketResearch"]>
-
-  export type MarketResearchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    organizationId?: boolean
-    validationScore?: boolean
-    confidenceLevel?: boolean
-    completed?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    type?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["marketResearch"]>
-
-  export type MarketResearchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    organizationId?: boolean
-    validationScore?: boolean
-    confidenceLevel?: boolean
-    completed?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    type?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["marketResearch"]>
-
-  export type MarketResearchSelectScalar = {
-    id?: boolean
-    ideaId?: boolean
-    organizationId?: boolean
-    validationScore?: boolean
-    confidenceLevel?: boolean
-    completed?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    type?: boolean
-  }
-
-  export type MarketResearchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "organizationId" | "validationScore" | "confidenceLevel" | "completed" | "lastUpdated" | "createdAt" | "type", ExtArgs["result"]["marketResearch"]>
-  export type MarketResearchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    ResearchResults?: boolean | MarketResearch$ResearchResultsArgs<ExtArgs>
-  }
-  export type MarketResearchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }
-  export type MarketResearchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-  }
-
-  export type $MarketResearchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "MarketResearch"
-    objects: {
-      idea: Prisma.$IdeaPayload<ExtArgs>
-      organization: Prisma.$OrganizationPayload<ExtArgs>
-      ResearchResults: Prisma.$ResearchResultsPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      ideaId: string
-      organizationId: string
-      validationScore: number | null
-      confidenceLevel: $Enums.Importance
-      completed: boolean
-      lastUpdated: Date
-      createdAt: Date
-      type: $Enums.ResearchType
-    }, ExtArgs["result"]["marketResearch"]>
-    composites: {}
-  }
-
-  type MarketResearchGetPayload<S extends boolean | null | undefined | MarketResearchDefaultArgs> = $Result.GetResult<Prisma.$MarketResearchPayload, S>
-
-  type MarketResearchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<MarketResearchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: MarketResearchCountAggregateInputType | true
-    }
-
-  export interface MarketResearchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketResearch'], meta: { name: 'MarketResearch' } }
-    /**
-     * Find zero or one MarketResearch that matches the filter.
-     * @param {MarketResearchFindUniqueArgs} args - Arguments to find a MarketResearch
-     * @example
-     * // Get one MarketResearch
-     * const marketResearch = await prisma.marketResearch.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends MarketResearchFindUniqueArgs>(args: SelectSubset<T, MarketResearchFindUniqueArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one MarketResearch that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {MarketResearchFindUniqueOrThrowArgs} args - Arguments to find a MarketResearch
-     * @example
-     * // Get one MarketResearch
-     * const marketResearch = await prisma.marketResearch.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends MarketResearchFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketResearchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MarketResearch that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchFindFirstArgs} args - Arguments to find a MarketResearch
-     * @example
-     * // Get one MarketResearch
-     * const marketResearch = await prisma.marketResearch.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends MarketResearchFindFirstArgs>(args?: SelectSubset<T, MarketResearchFindFirstArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first MarketResearch that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchFindFirstOrThrowArgs} args - Arguments to find a MarketResearch
-     * @example
-     * // Get one MarketResearch
-     * const marketResearch = await prisma.marketResearch.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends MarketResearchFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketResearchFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more MarketResearches that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all MarketResearches
-     * const marketResearches = await prisma.marketResearch.findMany()
-     * 
-     * // Get first 10 MarketResearches
-     * const marketResearches = await prisma.marketResearch.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const marketResearchWithIdOnly = await prisma.marketResearch.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends MarketResearchFindManyArgs>(args?: SelectSubset<T, MarketResearchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a MarketResearch.
-     * @param {MarketResearchCreateArgs} args - Arguments to create a MarketResearch.
-     * @example
-     * // Create one MarketResearch
-     * const MarketResearch = await prisma.marketResearch.create({
-     *   data: {
-     *     // ... data to create a MarketResearch
-     *   }
-     * })
-     * 
-     */
-    create<T extends MarketResearchCreateArgs>(args: SelectSubset<T, MarketResearchCreateArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many MarketResearches.
-     * @param {MarketResearchCreateManyArgs} args - Arguments to create many MarketResearches.
-     * @example
-     * // Create many MarketResearches
-     * const marketResearch = await prisma.marketResearch.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends MarketResearchCreateManyArgs>(args?: SelectSubset<T, MarketResearchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many MarketResearches and returns the data saved in the database.
-     * @param {MarketResearchCreateManyAndReturnArgs} args - Arguments to create many MarketResearches.
-     * @example
-     * // Create many MarketResearches
-     * const marketResearch = await prisma.marketResearch.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many MarketResearches and only return the `id`
-     * const marketResearchWithIdOnly = await prisma.marketResearch.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends MarketResearchCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketResearchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a MarketResearch.
-     * @param {MarketResearchDeleteArgs} args - Arguments to delete one MarketResearch.
-     * @example
-     * // Delete one MarketResearch
-     * const MarketResearch = await prisma.marketResearch.delete({
-     *   where: {
-     *     // ... filter to delete one MarketResearch
-     *   }
-     * })
-     * 
-     */
-    delete<T extends MarketResearchDeleteArgs>(args: SelectSubset<T, MarketResearchDeleteArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one MarketResearch.
-     * @param {MarketResearchUpdateArgs} args - Arguments to update one MarketResearch.
-     * @example
-     * // Update one MarketResearch
-     * const marketResearch = await prisma.marketResearch.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends MarketResearchUpdateArgs>(args: SelectSubset<T, MarketResearchUpdateArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more MarketResearches.
-     * @param {MarketResearchDeleteManyArgs} args - Arguments to filter MarketResearches to delete.
-     * @example
-     * // Delete a few MarketResearches
-     * const { count } = await prisma.marketResearch.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends MarketResearchDeleteManyArgs>(args?: SelectSubset<T, MarketResearchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MarketResearches.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many MarketResearches
-     * const marketResearch = await prisma.marketResearch.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends MarketResearchUpdateManyArgs>(args: SelectSubset<T, MarketResearchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more MarketResearches and returns the data updated in the database.
-     * @param {MarketResearchUpdateManyAndReturnArgs} args - Arguments to update many MarketResearches.
-     * @example
-     * // Update many MarketResearches
-     * const marketResearch = await prisma.marketResearch.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more MarketResearches and only return the `id`
-     * const marketResearchWithIdOnly = await prisma.marketResearch.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends MarketResearchUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketResearchUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one MarketResearch.
-     * @param {MarketResearchUpsertArgs} args - Arguments to update or create a MarketResearch.
-     * @example
-     * // Update or create a MarketResearch
-     * const marketResearch = await prisma.marketResearch.upsert({
-     *   create: {
-     *     // ... data to create a MarketResearch
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the MarketResearch we want to update
-     *   }
-     * })
-     */
-    upsert<T extends MarketResearchUpsertArgs>(args: SelectSubset<T, MarketResearchUpsertArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of MarketResearches.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchCountArgs} args - Arguments to filter MarketResearches to count.
-     * @example
-     * // Count the number of MarketResearches
-     * const count = await prisma.marketResearch.count({
-     *   where: {
-     *     // ... the filter for the MarketResearches we want to count
-     *   }
-     * })
-    **/
-    count<T extends MarketResearchCountArgs>(
-      args?: Subset<T, MarketResearchCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], MarketResearchCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a MarketResearch.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends MarketResearchAggregateArgs>(args: Subset<T, MarketResearchAggregateArgs>): Prisma.PrismaPromise<GetMarketResearchAggregateType<T>>
-
-    /**
-     * Group by MarketResearch.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {MarketResearchGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends MarketResearchGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: MarketResearchGroupByArgs['orderBy'] }
-        : { orderBy?: MarketResearchGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, MarketResearchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketResearchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the MarketResearch model
-   */
-  readonly fields: MarketResearchFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for MarketResearch.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__MarketResearchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    ResearchResults<T extends MarketResearch$ResearchResultsArgs<ExtArgs> = {}>(args?: Subset<T, MarketResearch$ResearchResultsArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the MarketResearch model
-   */
-  interface MarketResearchFieldRefs {
-    readonly id: FieldRef<"MarketResearch", 'String'>
-    readonly ideaId: FieldRef<"MarketResearch", 'String'>
-    readonly organizationId: FieldRef<"MarketResearch", 'String'>
-    readonly validationScore: FieldRef<"MarketResearch", 'Float'>
-    readonly confidenceLevel: FieldRef<"MarketResearch", 'Importance'>
-    readonly completed: FieldRef<"MarketResearch", 'Boolean'>
-    readonly lastUpdated: FieldRef<"MarketResearch", 'DateTime'>
-    readonly createdAt: FieldRef<"MarketResearch", 'DateTime'>
-    readonly type: FieldRef<"MarketResearch", 'ResearchType'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * MarketResearch findUnique
-   */
-  export type MarketResearchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter, which MarketResearch to fetch.
-     */
-    where: MarketResearchWhereUniqueInput
-  }
-
-  /**
-   * MarketResearch findUniqueOrThrow
-   */
-  export type MarketResearchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter, which MarketResearch to fetch.
-     */
-    where: MarketResearchWhereUniqueInput
-  }
-
-  /**
-   * MarketResearch findFirst
-   */
-  export type MarketResearchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter, which MarketResearch to fetch.
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MarketResearches to fetch.
-     */
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MarketResearches.
-     */
-    cursor?: MarketResearchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MarketResearches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MarketResearches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MarketResearches.
-     */
-    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
-  }
-
-  /**
-   * MarketResearch findFirstOrThrow
-   */
-  export type MarketResearchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter, which MarketResearch to fetch.
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MarketResearches to fetch.
-     */
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for MarketResearches.
-     */
-    cursor?: MarketResearchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MarketResearches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MarketResearches.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of MarketResearches.
-     */
-    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
-  }
-
-  /**
-   * MarketResearch findMany
-   */
-  export type MarketResearchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter, which MarketResearches to fetch.
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of MarketResearches to fetch.
-     */
-    orderBy?: MarketResearchOrderByWithRelationInput | MarketResearchOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing MarketResearches.
-     */
-    cursor?: MarketResearchWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` MarketResearches from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` MarketResearches.
-     */
-    skip?: number
-    distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
-  }
-
-  /**
-   * MarketResearch create
-   */
-  export type MarketResearchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * The data needed to create a MarketResearch.
-     */
-    data: XOR<MarketResearchCreateInput, MarketResearchUncheckedCreateInput>
-  }
-
-  /**
-   * MarketResearch createMany
-   */
-  export type MarketResearchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many MarketResearches.
-     */
-    data: MarketResearchCreateManyInput | MarketResearchCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * MarketResearch createManyAndReturn
-   */
-  export type MarketResearchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * The data used to create many MarketResearches.
-     */
-    data: MarketResearchCreateManyInput | MarketResearchCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MarketResearch update
-   */
-  export type MarketResearchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * The data needed to update a MarketResearch.
-     */
-    data: XOR<MarketResearchUpdateInput, MarketResearchUncheckedUpdateInput>
-    /**
-     * Choose, which MarketResearch to update.
-     */
-    where: MarketResearchWhereUniqueInput
-  }
-
-  /**
-   * MarketResearch updateMany
-   */
-  export type MarketResearchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update MarketResearches.
-     */
-    data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyInput>
-    /**
-     * Filter which MarketResearches to update
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * Limit how many MarketResearches to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * MarketResearch updateManyAndReturn
-   */
-  export type MarketResearchUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * The data used to update MarketResearches.
-     */
-    data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyInput>
-    /**
-     * Filter which MarketResearches to update
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * Limit how many MarketResearches to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * MarketResearch upsert
-   */
-  export type MarketResearchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * The filter to search for the MarketResearch to update in case it exists.
-     */
-    where: MarketResearchWhereUniqueInput
-    /**
-     * In case the MarketResearch found by the `where` argument doesn't exist, create a new MarketResearch with this data.
-     */
-    create: XOR<MarketResearchCreateInput, MarketResearchUncheckedCreateInput>
-    /**
-     * In case the MarketResearch was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<MarketResearchUpdateInput, MarketResearchUncheckedUpdateInput>
-  }
-
-  /**
-   * MarketResearch delete
-   */
-  export type MarketResearchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    /**
-     * Filter which MarketResearch to delete.
-     */
-    where: MarketResearchWhereUniqueInput
-  }
-
-  /**
-   * MarketResearch deleteMany
-   */
-  export type MarketResearchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which MarketResearches to delete
-     */
-    where?: MarketResearchWhereInput
-    /**
-     * Limit how many MarketResearches to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * MarketResearch.ResearchResults
-   */
-  export type MarketResearch$ResearchResultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    where?: ResearchResultsWhereInput
-  }
-
-  /**
-   * MarketResearch without action
-   */
-  export type MarketResearchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model ResearchResults
-   */
-
-  export type AggregateResearchResults = {
-    _count: ResearchResultsCountAggregateOutputType | null
-    _min: ResearchResultsMinAggregateOutputType | null
-    _max: ResearchResultsMaxAggregateOutputType | null
-  }
-
-  export type ResearchResultsMinAggregateOutputType = {
-    id: string | null
-    organizationId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    content: string | null
-    marketResearchId: string | null
-  }
-
-  export type ResearchResultsMaxAggregateOutputType = {
-    id: string | null
-    organizationId: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
-    content: string | null
-    marketResearchId: string | null
-  }
-
-  export type ResearchResultsCountAggregateOutputType = {
-    id: number
-    organizationId: number
-    createdAt: number
-    updatedAt: number
-    content: number
-    marketResearchId: number
-    _all: number
-  }
-
-
-  export type ResearchResultsMinAggregateInputType = {
-    id?: true
-    organizationId?: true
-    createdAt?: true
-    updatedAt?: true
-    content?: true
-    marketResearchId?: true
-  }
-
-  export type ResearchResultsMaxAggregateInputType = {
-    id?: true
-    organizationId?: true
-    createdAt?: true
-    updatedAt?: true
-    content?: true
-    marketResearchId?: true
-  }
-
-  export type ResearchResultsCountAggregateInputType = {
-    id?: true
-    organizationId?: true
-    createdAt?: true
-    updatedAt?: true
-    content?: true
-    marketResearchId?: true
-    _all?: true
-  }
-
-  export type ResearchResultsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ResearchResults to aggregate.
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ResearchResults to fetch.
-     */
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: ResearchResultsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ResearchResults from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ResearchResults.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned ResearchResults
-    **/
-    _count?: true | ResearchResultsCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: ResearchResultsMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: ResearchResultsMaxAggregateInputType
-  }
-
-  export type GetResearchResultsAggregateType<T extends ResearchResultsAggregateArgs> = {
-        [P in keyof T & keyof AggregateResearchResults]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateResearchResults[P]>
-      : GetScalarType<T[P], AggregateResearchResults[P]>
-  }
-
-
-
-
-  export type ResearchResultsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ResearchResultsWhereInput
-    orderBy?: ResearchResultsOrderByWithAggregationInput | ResearchResultsOrderByWithAggregationInput[]
-    by: ResearchResultsScalarFieldEnum[] | ResearchResultsScalarFieldEnum
-    having?: ResearchResultsScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ResearchResultsCountAggregateInputType | true
-    _min?: ResearchResultsMinAggregateInputType
-    _max?: ResearchResultsMaxAggregateInputType
-  }
-
-  export type ResearchResultsGroupByOutputType = {
-    id: string
-    organizationId: string
-    createdAt: Date
-    updatedAt: Date
-    content: string
-    marketResearchId: string
-    _count: ResearchResultsCountAggregateOutputType | null
-    _min: ResearchResultsMinAggregateOutputType | null
-    _max: ResearchResultsMaxAggregateOutputType | null
-  }
-
-  type GetResearchResultsGroupByPayload<T extends ResearchResultsGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ResearchResultsGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ResearchResultsGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ResearchResultsGroupByOutputType[P]>
-            : GetScalarType<T[P], ResearchResultsGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type ResearchResultsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    content?: boolean
-    marketResearchId?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }, ExtArgs["result"]["researchResults"]>
-
-  export type ResearchResultsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    content?: boolean
-    marketResearchId?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }, ExtArgs["result"]["researchResults"]>
-
-  export type ResearchResultsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    organizationId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    content?: boolean
-    marketResearchId?: boolean
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }, ExtArgs["result"]["researchResults"]>
-
-  export type ResearchResultsSelectScalar = {
-    id?: boolean
-    organizationId?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    content?: boolean
-    marketResearchId?: boolean
-  }
-
-  export type ResearchResultsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "createdAt" | "updatedAt" | "content" | "marketResearchId", ExtArgs["result"]["researchResults"]>
-  export type ResearchResultsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }
-  export type ResearchResultsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }
-  export type ResearchResultsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
-    marketResearch?: boolean | ResearchResults$marketResearchArgs<ExtArgs>
-  }
-
-  export type $ResearchResultsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "ResearchResults"
-    objects: {
-      organization: Prisma.$OrganizationPayload<ExtArgs>
-      marketResearch: Prisma.$MarketResearchPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      organizationId: string
-      createdAt: Date
-      updatedAt: Date
-      content: string
-      marketResearchId: string
-    }, ExtArgs["result"]["researchResults"]>
-    composites: {}
-  }
-
-  type ResearchResultsGetPayload<S extends boolean | null | undefined | ResearchResultsDefaultArgs> = $Result.GetResult<Prisma.$ResearchResultsPayload, S>
-
-  type ResearchResultsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ResearchResultsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: ResearchResultsCountAggregateInputType | true
-    }
-
-  export interface ResearchResultsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ResearchResults'], meta: { name: 'ResearchResults' } }
-    /**
-     * Find zero or one ResearchResults that matches the filter.
-     * @param {ResearchResultsFindUniqueArgs} args - Arguments to find a ResearchResults
-     * @example
-     * // Get one ResearchResults
-     * const researchResults = await prisma.researchResults.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends ResearchResultsFindUniqueArgs>(args: SelectSubset<T, ResearchResultsFindUniqueArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one ResearchResults that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {ResearchResultsFindUniqueOrThrowArgs} args - Arguments to find a ResearchResults
-     * @example
-     * // Get one ResearchResults
-     * const researchResults = await prisma.researchResults.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends ResearchResultsFindUniqueOrThrowArgs>(args: SelectSubset<T, ResearchResultsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ResearchResults that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsFindFirstArgs} args - Arguments to find a ResearchResults
-     * @example
-     * // Get one ResearchResults
-     * const researchResults = await prisma.researchResults.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends ResearchResultsFindFirstArgs>(args?: SelectSubset<T, ResearchResultsFindFirstArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first ResearchResults that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsFindFirstOrThrowArgs} args - Arguments to find a ResearchResults
-     * @example
-     * // Get one ResearchResults
-     * const researchResults = await prisma.researchResults.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends ResearchResultsFindFirstOrThrowArgs>(args?: SelectSubset<T, ResearchResultsFindFirstOrThrowArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more ResearchResults that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all ResearchResults
-     * const researchResults = await prisma.researchResults.findMany()
-     * 
-     * // Get first 10 ResearchResults
-     * const researchResults = await prisma.researchResults.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const researchResultsWithIdOnly = await prisma.researchResults.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends ResearchResultsFindManyArgs>(args?: SelectSubset<T, ResearchResultsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a ResearchResults.
-     * @param {ResearchResultsCreateArgs} args - Arguments to create a ResearchResults.
-     * @example
-     * // Create one ResearchResults
-     * const ResearchResults = await prisma.researchResults.create({
-     *   data: {
-     *     // ... data to create a ResearchResults
-     *   }
-     * })
-     * 
-     */
-    create<T extends ResearchResultsCreateArgs>(args: SelectSubset<T, ResearchResultsCreateArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many ResearchResults.
-     * @param {ResearchResultsCreateManyArgs} args - Arguments to create many ResearchResults.
-     * @example
-     * // Create many ResearchResults
-     * const researchResults = await prisma.researchResults.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends ResearchResultsCreateManyArgs>(args?: SelectSubset<T, ResearchResultsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many ResearchResults and returns the data saved in the database.
-     * @param {ResearchResultsCreateManyAndReturnArgs} args - Arguments to create many ResearchResults.
-     * @example
-     * // Create many ResearchResults
-     * const researchResults = await prisma.researchResults.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many ResearchResults and only return the `id`
-     * const researchResultsWithIdOnly = await prisma.researchResults.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends ResearchResultsCreateManyAndReturnArgs>(args?: SelectSubset<T, ResearchResultsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a ResearchResults.
-     * @param {ResearchResultsDeleteArgs} args - Arguments to delete one ResearchResults.
-     * @example
-     * // Delete one ResearchResults
-     * const ResearchResults = await prisma.researchResults.delete({
-     *   where: {
-     *     // ... filter to delete one ResearchResults
-     *   }
-     * })
-     * 
-     */
-    delete<T extends ResearchResultsDeleteArgs>(args: SelectSubset<T, ResearchResultsDeleteArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one ResearchResults.
-     * @param {ResearchResultsUpdateArgs} args - Arguments to update one ResearchResults.
-     * @example
-     * // Update one ResearchResults
-     * const researchResults = await prisma.researchResults.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends ResearchResultsUpdateArgs>(args: SelectSubset<T, ResearchResultsUpdateArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more ResearchResults.
-     * @param {ResearchResultsDeleteManyArgs} args - Arguments to filter ResearchResults to delete.
-     * @example
-     * // Delete a few ResearchResults
-     * const { count } = await prisma.researchResults.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends ResearchResultsDeleteManyArgs>(args?: SelectSubset<T, ResearchResultsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ResearchResults.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many ResearchResults
-     * const researchResults = await prisma.researchResults.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends ResearchResultsUpdateManyArgs>(args: SelectSubset<T, ResearchResultsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more ResearchResults and returns the data updated in the database.
-     * @param {ResearchResultsUpdateManyAndReturnArgs} args - Arguments to update many ResearchResults.
-     * @example
-     * // Update many ResearchResults
-     * const researchResults = await prisma.researchResults.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more ResearchResults and only return the `id`
-     * const researchResultsWithIdOnly = await prisma.researchResults.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends ResearchResultsUpdateManyAndReturnArgs>(args: SelectSubset<T, ResearchResultsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one ResearchResults.
-     * @param {ResearchResultsUpsertArgs} args - Arguments to update or create a ResearchResults.
-     * @example
-     * // Update or create a ResearchResults
-     * const researchResults = await prisma.researchResults.upsert({
-     *   create: {
-     *     // ... data to create a ResearchResults
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the ResearchResults we want to update
-     *   }
-     * })
-     */
-    upsert<T extends ResearchResultsUpsertArgs>(args: SelectSubset<T, ResearchResultsUpsertArgs<ExtArgs>>): Prisma__ResearchResultsClient<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of ResearchResults.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsCountArgs} args - Arguments to filter ResearchResults to count.
-     * @example
-     * // Count the number of ResearchResults
-     * const count = await prisma.researchResults.count({
-     *   where: {
-     *     // ... the filter for the ResearchResults we want to count
-     *   }
-     * })
-    **/
-    count<T extends ResearchResultsCountArgs>(
-      args?: Subset<T, ResearchResultsCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], ResearchResultsCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a ResearchResults.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends ResearchResultsAggregateArgs>(args: Subset<T, ResearchResultsAggregateArgs>): Prisma.PrismaPromise<GetResearchResultsAggregateType<T>>
-
-    /**
-     * Group by ResearchResults.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {ResearchResultsGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends ResearchResultsGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: ResearchResultsGroupByArgs['orderBy'] }
-        : { orderBy?: ResearchResultsGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, ResearchResultsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetResearchResultsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the ResearchResults model
-   */
-  readonly fields: ResearchResultsFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for ResearchResults.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__ResearchResultsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    marketResearch<T extends ResearchResults$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, ResearchResults$marketResearchArgs<ExtArgs>>): Prisma__MarketResearchClient<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the ResearchResults model
-   */
-  interface ResearchResultsFieldRefs {
-    readonly id: FieldRef<"ResearchResults", 'String'>
-    readonly organizationId: FieldRef<"ResearchResults", 'String'>
-    readonly createdAt: FieldRef<"ResearchResults", 'DateTime'>
-    readonly updatedAt: FieldRef<"ResearchResults", 'DateTime'>
-    readonly content: FieldRef<"ResearchResults", 'String'>
-    readonly marketResearchId: FieldRef<"ResearchResults", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * ResearchResults findUnique
-   */
-  export type ResearchResultsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter, which ResearchResults to fetch.
-     */
-    where: ResearchResultsWhereUniqueInput
-  }
-
-  /**
-   * ResearchResults findUniqueOrThrow
-   */
-  export type ResearchResultsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter, which ResearchResults to fetch.
-     */
-    where: ResearchResultsWhereUniqueInput
-  }
-
-  /**
-   * ResearchResults findFirst
-   */
-  export type ResearchResultsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter, which ResearchResults to fetch.
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ResearchResults to fetch.
-     */
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ResearchResults.
-     */
-    cursor?: ResearchResultsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ResearchResults from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ResearchResults.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ResearchResults.
-     */
-    distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
-  }
-
-  /**
-   * ResearchResults findFirstOrThrow
-   */
-  export type ResearchResultsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter, which ResearchResults to fetch.
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ResearchResults to fetch.
-     */
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for ResearchResults.
-     */
-    cursor?: ResearchResultsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ResearchResults from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ResearchResults.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of ResearchResults.
-     */
-    distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
-  }
-
-  /**
-   * ResearchResults findMany
-   */
-  export type ResearchResultsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter, which ResearchResults to fetch.
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of ResearchResults to fetch.
-     */
-    orderBy?: ResearchResultsOrderByWithRelationInput | ResearchResultsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing ResearchResults.
-     */
-    cursor?: ResearchResultsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` ResearchResults from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` ResearchResults.
-     */
-    skip?: number
-    distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
-  }
-
-  /**
-   * ResearchResults create
-   */
-  export type ResearchResultsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * The data needed to create a ResearchResults.
-     */
-    data: XOR<ResearchResultsCreateInput, ResearchResultsUncheckedCreateInput>
-  }
-
-  /**
-   * ResearchResults createMany
-   */
-  export type ResearchResultsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many ResearchResults.
-     */
-    data: ResearchResultsCreateManyInput | ResearchResultsCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * ResearchResults createManyAndReturn
-   */
-  export type ResearchResultsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * The data used to create many ResearchResults.
-     */
-    data: ResearchResultsCreateManyInput | ResearchResultsCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ResearchResults update
-   */
-  export type ResearchResultsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * The data needed to update a ResearchResults.
-     */
-    data: XOR<ResearchResultsUpdateInput, ResearchResultsUncheckedUpdateInput>
-    /**
-     * Choose, which ResearchResults to update.
-     */
-    where: ResearchResultsWhereUniqueInput
-  }
-
-  /**
-   * ResearchResults updateMany
-   */
-  export type ResearchResultsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update ResearchResults.
-     */
-    data: XOR<ResearchResultsUpdateManyMutationInput, ResearchResultsUncheckedUpdateManyInput>
-    /**
-     * Filter which ResearchResults to update
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * Limit how many ResearchResults to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * ResearchResults updateManyAndReturn
-   */
-  export type ResearchResultsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * The data used to update ResearchResults.
-     */
-    data: XOR<ResearchResultsUpdateManyMutationInput, ResearchResultsUncheckedUpdateManyInput>
-    /**
-     * Filter which ResearchResults to update
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * Limit how many ResearchResults to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * ResearchResults upsert
-   */
-  export type ResearchResultsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * The filter to search for the ResearchResults to update in case it exists.
-     */
-    where: ResearchResultsWhereUniqueInput
-    /**
-     * In case the ResearchResults found by the `where` argument doesn't exist, create a new ResearchResults with this data.
-     */
-    create: XOR<ResearchResultsCreateInput, ResearchResultsUncheckedCreateInput>
-    /**
-     * In case the ResearchResults was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<ResearchResultsUpdateInput, ResearchResultsUncheckedUpdateInput>
-  }
-
-  /**
-   * ResearchResults delete
-   */
-  export type ResearchResultsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-    /**
-     * Filter which ResearchResults to delete.
-     */
-    where: ResearchResultsWhereUniqueInput
-  }
-
-  /**
-   * ResearchResults deleteMany
-   */
-  export type ResearchResultsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which ResearchResults to delete
-     */
-    where?: ResearchResultsWhereInput
-    /**
-     * Limit how many ResearchResults to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * ResearchResults.marketResearch
-   */
-  export type ResearchResults$marketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MarketResearch
-     */
-    select?: MarketResearchSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MarketResearch
-     */
-    omit?: MarketResearchOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MarketResearchInclude<ExtArgs> | null
-    where?: MarketResearchWhereInput
-  }
-
-  /**
-   * ResearchResults without action
-   */
-  export type ResearchResultsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ResearchResults
-     */
-    select?: ResearchResultsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ResearchResults
-     */
-    omit?: ResearchResultsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ResearchResultsInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model Competitor
-   */
-
-  export type AggregateCompetitor = {
-    _count: CompetitorCountAggregateOutputType | null
-    _avg: CompetitorAvgAggregateOutputType | null
-    _sum: CompetitorSumAggregateOutputType | null
-    _min: CompetitorMinAggregateOutputType | null
-    _max: CompetitorMaxAggregateOutputType | null
-  }
-
-  export type CompetitorAvgAggregateOutputType = {
-    marketShare: number | null
-    annualRevenue: number | null
-    foundedYear: number | null
-    userGrowthRate: number | null
-    churnRate: number | null
-    customerSatisfaction: number | null
-    marketCap: number | null
-  }
-
-  export type CompetitorSumAggregateOutputType = {
-    marketShare: number | null
-    annualRevenue: number | null
-    foundedYear: number | null
-    userGrowthRate: number | null
-    churnRate: number | null
-    customerSatisfaction: number | null
-    marketCap: number | null
-  }
-
-  export type CompetitorMinAggregateOutputType = {
-    id: string | null
-    ideaId: string | null
-    name: string | null
-    website: string | null
-    description: string | null
-    logoUrl: string | null
-    marketShare: number | null
-    annualRevenue: number | null
-    employeeCount: string | null
-    foundedYear: number | null
-    headquarters: string | null
-    targetAudience: string | null
-    threatLevel: $Enums.Importance | null
-    userGrowthRate: number | null
-    churnRate: number | null
-    customerSatisfaction: number | null
-    marketCap: number | null
-    lastUpdated: Date | null
-    createdAt: Date | null
-    isActive: boolean | null
-  }
-
-  export type CompetitorMaxAggregateOutputType = {
-    id: string | null
-    ideaId: string | null
-    name: string | null
-    website: string | null
-    description: string | null
-    logoUrl: string | null
-    marketShare: number | null
-    annualRevenue: number | null
-    employeeCount: string | null
-    foundedYear: number | null
-    headquarters: string | null
-    targetAudience: string | null
-    threatLevel: $Enums.Importance | null
-    userGrowthRate: number | null
-    churnRate: number | null
-    customerSatisfaction: number | null
-    marketCap: number | null
-    lastUpdated: Date | null
-    createdAt: Date | null
-    isActive: boolean | null
-  }
-
-  export type CompetitorCountAggregateOutputType = {
-    id: number
-    ideaId: number
-    name: number
-    website: number
-    description: number
-    logoUrl: number
-    marketShare: number
-    annualRevenue: number
-    employeeCount: number
-    foundedYear: number
-    headquarters: number
-    targetAudience: number
-    threatLevel: number
-    userGrowthRate: number
-    churnRate: number
-    customerSatisfaction: number
-    marketCap: number
-    lastUpdated: number
-    createdAt: number
-    isActive: number
-    _all: number
-  }
-
-
-  export type CompetitorAvgAggregateInputType = {
-    marketShare?: true
-    annualRevenue?: true
-    foundedYear?: true
-    userGrowthRate?: true
-    churnRate?: true
-    customerSatisfaction?: true
-    marketCap?: true
-  }
-
-  export type CompetitorSumAggregateInputType = {
-    marketShare?: true
-    annualRevenue?: true
-    foundedYear?: true
-    userGrowthRate?: true
-    churnRate?: true
-    customerSatisfaction?: true
-    marketCap?: true
-  }
-
-  export type CompetitorMinAggregateInputType = {
-    id?: true
-    ideaId?: true
-    name?: true
-    website?: true
-    description?: true
-    logoUrl?: true
-    marketShare?: true
-    annualRevenue?: true
-    employeeCount?: true
-    foundedYear?: true
-    headquarters?: true
-    targetAudience?: true
-    threatLevel?: true
-    userGrowthRate?: true
-    churnRate?: true
-    customerSatisfaction?: true
-    marketCap?: true
-    lastUpdated?: true
-    createdAt?: true
-    isActive?: true
-  }
-
-  export type CompetitorMaxAggregateInputType = {
-    id?: true
-    ideaId?: true
-    name?: true
-    website?: true
-    description?: true
-    logoUrl?: true
-    marketShare?: true
-    annualRevenue?: true
-    employeeCount?: true
-    foundedYear?: true
-    headquarters?: true
-    targetAudience?: true
-    threatLevel?: true
-    userGrowthRate?: true
-    churnRate?: true
-    customerSatisfaction?: true
-    marketCap?: true
-    lastUpdated?: true
-    createdAt?: true
-    isActive?: true
-  }
-
-  export type CompetitorCountAggregateInputType = {
-    id?: true
-    ideaId?: true
-    name?: true
-    website?: true
-    description?: true
-    logoUrl?: true
-    marketShare?: true
-    annualRevenue?: true
-    employeeCount?: true
-    foundedYear?: true
-    headquarters?: true
-    targetAudience?: true
-    threatLevel?: true
-    userGrowthRate?: true
-    churnRate?: true
-    customerSatisfaction?: true
-    marketCap?: true
-    lastUpdated?: true
-    createdAt?: true
-    isActive?: true
-    _all?: true
-  }
-
-  export type CompetitorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Competitor to aggregate.
-     */
-    where?: CompetitorWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Competitors to fetch.
-     */
-    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CompetitorWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Competitors from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Competitors.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Competitors
-    **/
-    _count?: true | CompetitorCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: CompetitorAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: CompetitorSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CompetitorMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CompetitorMaxAggregateInputType
-  }
-
-  export type GetCompetitorAggregateType<T extends CompetitorAggregateArgs> = {
-        [P in keyof T & keyof AggregateCompetitor]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCompetitor[P]>
-      : GetScalarType<T[P], AggregateCompetitor[P]>
-  }
-
-
-
-
-  export type CompetitorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CompetitorWhereInput
-    orderBy?: CompetitorOrderByWithAggregationInput | CompetitorOrderByWithAggregationInput[]
-    by: CompetitorScalarFieldEnum[] | CompetitorScalarFieldEnum
-    having?: CompetitorScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CompetitorCountAggregateInputType | true
-    _avg?: CompetitorAvgAggregateInputType
-    _sum?: CompetitorSumAggregateInputType
-    _min?: CompetitorMinAggregateInputType
-    _max?: CompetitorMaxAggregateInputType
-  }
-
-  export type CompetitorGroupByOutputType = {
-    id: string
-    ideaId: string
-    name: string
-    website: string | null
-    description: string | null
-    logoUrl: string | null
-    marketShare: number | null
-    annualRevenue: number | null
-    employeeCount: string | null
-    foundedYear: number | null
-    headquarters: string | null
-    targetAudience: string | null
-    threatLevel: $Enums.Importance
-    userGrowthRate: number | null
-    churnRate: number | null
-    customerSatisfaction: number | null
-    marketCap: number | null
-    lastUpdated: Date
-    createdAt: Date
-    isActive: boolean
-    _count: CompetitorCountAggregateOutputType | null
-    _avg: CompetitorAvgAggregateOutputType | null
-    _sum: CompetitorSumAggregateOutputType | null
-    _min: CompetitorMinAggregateOutputType | null
-    _max: CompetitorMaxAggregateOutputType | null
-  }
-
-  type GetCompetitorGroupByPayload<T extends CompetitorGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CompetitorGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CompetitorGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CompetitorGroupByOutputType[P]>
-            : GetScalarType<T[P], CompetitorGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CompetitorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    name?: boolean
-    website?: boolean
-    description?: boolean
-    logoUrl?: boolean
-    marketShare?: boolean
-    annualRevenue?: boolean
-    employeeCount?: boolean
-    foundedYear?: boolean
-    headquarters?: boolean
-    targetAudience?: boolean
-    threatLevel?: boolean
-    userGrowthRate?: boolean
-    churnRate?: boolean
-    customerSatisfaction?: boolean
-    marketCap?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    isActive?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    competitiveMoves?: boolean | Competitor$competitiveMovesArgs<ExtArgs>
-    _count?: boolean | CompetitorCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["competitor"]>
-
-  export type CompetitorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    name?: boolean
-    website?: boolean
-    description?: boolean
-    logoUrl?: boolean
-    marketShare?: boolean
-    annualRevenue?: boolean
-    employeeCount?: boolean
-    foundedYear?: boolean
-    headquarters?: boolean
-    targetAudience?: boolean
-    threatLevel?: boolean
-    userGrowthRate?: boolean
-    churnRate?: boolean
-    customerSatisfaction?: boolean
-    marketCap?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    isActive?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["competitor"]>
-
-  export type CompetitorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    ideaId?: boolean
-    name?: boolean
-    website?: boolean
-    description?: boolean
-    logoUrl?: boolean
-    marketShare?: boolean
-    annualRevenue?: boolean
-    employeeCount?: boolean
-    foundedYear?: boolean
-    headquarters?: boolean
-    targetAudience?: boolean
-    threatLevel?: boolean
-    userGrowthRate?: boolean
-    churnRate?: boolean
-    customerSatisfaction?: boolean
-    marketCap?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    isActive?: boolean
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["competitor"]>
-
-  export type CompetitorSelectScalar = {
-    id?: boolean
-    ideaId?: boolean
-    name?: boolean
-    website?: boolean
-    description?: boolean
-    logoUrl?: boolean
-    marketShare?: boolean
-    annualRevenue?: boolean
-    employeeCount?: boolean
-    foundedYear?: boolean
-    headquarters?: boolean
-    targetAudience?: boolean
-    threatLevel?: boolean
-    userGrowthRate?: boolean
-    churnRate?: boolean
-    customerSatisfaction?: boolean
-    marketCap?: boolean
-    lastUpdated?: boolean
-    createdAt?: boolean
-    isActive?: boolean
-  }
-
-  export type CompetitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "name" | "website" | "description" | "logoUrl" | "marketShare" | "annualRevenue" | "employeeCount" | "foundedYear" | "headquarters" | "targetAudience" | "threatLevel" | "userGrowthRate" | "churnRate" | "customerSatisfaction" | "marketCap" | "lastUpdated" | "createdAt" | "isActive", ExtArgs["result"]["competitor"]>
-  export type CompetitorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-    competitiveMoves?: boolean | Competitor$competitiveMovesArgs<ExtArgs>
-    _count?: boolean | CompetitorCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type CompetitorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-  }
-  export type CompetitorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    idea?: boolean | IdeaDefaultArgs<ExtArgs>
-  }
-
-  export type $CompetitorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Competitor"
-    objects: {
-      idea: Prisma.$IdeaPayload<ExtArgs>
-      competitiveMoves: Prisma.$CompetitiveMovePayload<ExtArgs>[]
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      ideaId: string
-      name: string
-      website: string | null
-      description: string | null
-      logoUrl: string | null
-      marketShare: number | null
-      annualRevenue: number | null
-      employeeCount: string | null
-      foundedYear: number | null
-      headquarters: string | null
-      targetAudience: string | null
-      threatLevel: $Enums.Importance
-      userGrowthRate: number | null
-      churnRate: number | null
-      customerSatisfaction: number | null
-      marketCap: number | null
-      lastUpdated: Date
-      createdAt: Date
-      isActive: boolean
-    }, ExtArgs["result"]["competitor"]>
-    composites: {}
-  }
-
-  type CompetitorGetPayload<S extends boolean | null | undefined | CompetitorDefaultArgs> = $Result.GetResult<Prisma.$CompetitorPayload, S>
-
-  type CompetitorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CompetitorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CompetitorCountAggregateInputType | true
-    }
-
-  export interface CompetitorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Competitor'], meta: { name: 'Competitor' } }
-    /**
-     * Find zero or one Competitor that matches the filter.
-     * @param {CompetitorFindUniqueArgs} args - Arguments to find a Competitor
-     * @example
-     * // Get one Competitor
-     * const competitor = await prisma.competitor.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CompetitorFindUniqueArgs>(args: SelectSubset<T, CompetitorFindUniqueArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Competitor that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CompetitorFindUniqueOrThrowArgs} args - Arguments to find a Competitor
-     * @example
-     * // Get one Competitor
-     * const competitor = await prisma.competitor.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CompetitorFindUniqueOrThrowArgs>(args: SelectSubset<T, CompetitorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Competitor that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorFindFirstArgs} args - Arguments to find a Competitor
-     * @example
-     * // Get one Competitor
-     * const competitor = await prisma.competitor.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CompetitorFindFirstArgs>(args?: SelectSubset<T, CompetitorFindFirstArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Competitor that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorFindFirstOrThrowArgs} args - Arguments to find a Competitor
-     * @example
-     * // Get one Competitor
-     * const competitor = await prisma.competitor.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CompetitorFindFirstOrThrowArgs>(args?: SelectSubset<T, CompetitorFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Competitors that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Competitors
-     * const competitors = await prisma.competitor.findMany()
-     * 
-     * // Get first 10 Competitors
-     * const competitors = await prisma.competitor.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const competitorWithIdOnly = await prisma.competitor.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CompetitorFindManyArgs>(args?: SelectSubset<T, CompetitorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Competitor.
-     * @param {CompetitorCreateArgs} args - Arguments to create a Competitor.
-     * @example
-     * // Create one Competitor
-     * const Competitor = await prisma.competitor.create({
-     *   data: {
-     *     // ... data to create a Competitor
-     *   }
-     * })
-     * 
-     */
-    create<T extends CompetitorCreateArgs>(args: SelectSubset<T, CompetitorCreateArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Competitors.
-     * @param {CompetitorCreateManyArgs} args - Arguments to create many Competitors.
-     * @example
-     * // Create many Competitors
-     * const competitor = await prisma.competitor.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CompetitorCreateManyArgs>(args?: SelectSubset<T, CompetitorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Competitors and returns the data saved in the database.
-     * @param {CompetitorCreateManyAndReturnArgs} args - Arguments to create many Competitors.
-     * @example
-     * // Create many Competitors
-     * const competitor = await prisma.competitor.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Competitors and only return the `id`
-     * const competitorWithIdOnly = await prisma.competitor.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CompetitorCreateManyAndReturnArgs>(args?: SelectSubset<T, CompetitorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Competitor.
-     * @param {CompetitorDeleteArgs} args - Arguments to delete one Competitor.
-     * @example
-     * // Delete one Competitor
-     * const Competitor = await prisma.competitor.delete({
-     *   where: {
-     *     // ... filter to delete one Competitor
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CompetitorDeleteArgs>(args: SelectSubset<T, CompetitorDeleteArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Competitor.
-     * @param {CompetitorUpdateArgs} args - Arguments to update one Competitor.
-     * @example
-     * // Update one Competitor
-     * const competitor = await prisma.competitor.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CompetitorUpdateArgs>(args: SelectSubset<T, CompetitorUpdateArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Competitors.
-     * @param {CompetitorDeleteManyArgs} args - Arguments to filter Competitors to delete.
-     * @example
-     * // Delete a few Competitors
-     * const { count } = await prisma.competitor.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CompetitorDeleteManyArgs>(args?: SelectSubset<T, CompetitorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Competitors.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Competitors
-     * const competitor = await prisma.competitor.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CompetitorUpdateManyArgs>(args: SelectSubset<T, CompetitorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Competitors and returns the data updated in the database.
-     * @param {CompetitorUpdateManyAndReturnArgs} args - Arguments to update many Competitors.
-     * @example
-     * // Update many Competitors
-     * const competitor = await prisma.competitor.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Competitors and only return the `id`
-     * const competitorWithIdOnly = await prisma.competitor.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CompetitorUpdateManyAndReturnArgs>(args: SelectSubset<T, CompetitorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Competitor.
-     * @param {CompetitorUpsertArgs} args - Arguments to update or create a Competitor.
-     * @example
-     * // Update or create a Competitor
-     * const competitor = await prisma.competitor.upsert({
-     *   create: {
-     *     // ... data to create a Competitor
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Competitor we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CompetitorUpsertArgs>(args: SelectSubset<T, CompetitorUpsertArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Competitors.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorCountArgs} args - Arguments to filter Competitors to count.
-     * @example
-     * // Count the number of Competitors
-     * const count = await prisma.competitor.count({
-     *   where: {
-     *     // ... the filter for the Competitors we want to count
-     *   }
-     * })
-    **/
-    count<T extends CompetitorCountArgs>(
-      args?: Subset<T, CompetitorCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CompetitorCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Competitor.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CompetitorAggregateArgs>(args: Subset<T, CompetitorAggregateArgs>): Prisma.PrismaPromise<GetCompetitorAggregateType<T>>
-
-    /**
-     * Group by Competitor.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitorGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CompetitorGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CompetitorGroupByArgs['orderBy'] }
-        : { orderBy?: CompetitorGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CompetitorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompetitorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Competitor model
-   */
-  readonly fields: CompetitorFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Competitor.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CompetitorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    competitiveMoves<T extends Competitor$competitiveMovesArgs<ExtArgs> = {}>(args?: Subset<T, Competitor$competitiveMovesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Competitor model
-   */
-  interface CompetitorFieldRefs {
-    readonly id: FieldRef<"Competitor", 'String'>
-    readonly ideaId: FieldRef<"Competitor", 'String'>
-    readonly name: FieldRef<"Competitor", 'String'>
-    readonly website: FieldRef<"Competitor", 'String'>
-    readonly description: FieldRef<"Competitor", 'String'>
-    readonly logoUrl: FieldRef<"Competitor", 'String'>
-    readonly marketShare: FieldRef<"Competitor", 'Float'>
-    readonly annualRevenue: FieldRef<"Competitor", 'Float'>
-    readonly employeeCount: FieldRef<"Competitor", 'String'>
-    readonly foundedYear: FieldRef<"Competitor", 'Int'>
-    readonly headquarters: FieldRef<"Competitor", 'String'>
-    readonly targetAudience: FieldRef<"Competitor", 'String'>
-    readonly threatLevel: FieldRef<"Competitor", 'Importance'>
-    readonly userGrowthRate: FieldRef<"Competitor", 'Float'>
-    readonly churnRate: FieldRef<"Competitor", 'Float'>
-    readonly customerSatisfaction: FieldRef<"Competitor", 'Float'>
-    readonly marketCap: FieldRef<"Competitor", 'Float'>
-    readonly lastUpdated: FieldRef<"Competitor", 'DateTime'>
-    readonly createdAt: FieldRef<"Competitor", 'DateTime'>
-    readonly isActive: FieldRef<"Competitor", 'Boolean'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Competitor findUnique
-   */
-  export type CompetitorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter, which Competitor to fetch.
-     */
-    where: CompetitorWhereUniqueInput
-  }
-
-  /**
-   * Competitor findUniqueOrThrow
-   */
-  export type CompetitorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter, which Competitor to fetch.
-     */
-    where: CompetitorWhereUniqueInput
-  }
-
-  /**
-   * Competitor findFirst
-   */
-  export type CompetitorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter, which Competitor to fetch.
-     */
-    where?: CompetitorWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Competitors to fetch.
-     */
-    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Competitors.
-     */
-    cursor?: CompetitorWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Competitors from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Competitors.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Competitors.
-     */
-    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
-  }
-
-  /**
-   * Competitor findFirstOrThrow
-   */
-  export type CompetitorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter, which Competitor to fetch.
-     */
-    where?: CompetitorWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Competitors to fetch.
-     */
-    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Competitors.
-     */
-    cursor?: CompetitorWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Competitors from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Competitors.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Competitors.
-     */
-    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
-  }
-
-  /**
-   * Competitor findMany
-   */
-  export type CompetitorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter, which Competitors to fetch.
-     */
-    where?: CompetitorWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Competitors to fetch.
-     */
-    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Competitors.
-     */
-    cursor?: CompetitorWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Competitors from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Competitors.
-     */
-    skip?: number
-    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
-  }
-
-  /**
-   * Competitor create
-   */
-  export type CompetitorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * The data needed to create a Competitor.
-     */
-    data: XOR<CompetitorCreateInput, CompetitorUncheckedCreateInput>
-  }
-
-  /**
-   * Competitor createMany
-   */
-  export type CompetitorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Competitors.
-     */
-    data: CompetitorCreateManyInput | CompetitorCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Competitor createManyAndReturn
-   */
-  export type CompetitorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * The data used to create many Competitors.
-     */
-    data: CompetitorCreateManyInput | CompetitorCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Competitor update
-   */
-  export type CompetitorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * The data needed to update a Competitor.
-     */
-    data: XOR<CompetitorUpdateInput, CompetitorUncheckedUpdateInput>
-    /**
-     * Choose, which Competitor to update.
-     */
-    where: CompetitorWhereUniqueInput
-  }
-
-  /**
-   * Competitor updateMany
-   */
-  export type CompetitorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Competitors.
-     */
-    data: XOR<CompetitorUpdateManyMutationInput, CompetitorUncheckedUpdateManyInput>
-    /**
-     * Filter which Competitors to update
-     */
-    where?: CompetitorWhereInput
-    /**
-     * Limit how many Competitors to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Competitor updateManyAndReturn
-   */
-  export type CompetitorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * The data used to update Competitors.
-     */
-    data: XOR<CompetitorUpdateManyMutationInput, CompetitorUncheckedUpdateManyInput>
-    /**
-     * Filter which Competitors to update
-     */
-    where?: CompetitorWhereInput
-    /**
-     * Limit how many Competitors to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * Competitor upsert
-   */
-  export type CompetitorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * The filter to search for the Competitor to update in case it exists.
-     */
-    where: CompetitorWhereUniqueInput
-    /**
-     * In case the Competitor found by the `where` argument doesn't exist, create a new Competitor with this data.
-     */
-    create: XOR<CompetitorCreateInput, CompetitorUncheckedCreateInput>
-    /**
-     * In case the Competitor was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CompetitorUpdateInput, CompetitorUncheckedUpdateInput>
-  }
-
-  /**
-   * Competitor delete
-   */
-  export type CompetitorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    /**
-     * Filter which Competitor to delete.
-     */
-    where: CompetitorWhereUniqueInput
-  }
-
-  /**
-   * Competitor deleteMany
-   */
-  export type CompetitorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Competitors to delete
-     */
-    where?: CompetitorWhereInput
-    /**
-     * Limit how many Competitors to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Competitor.competitiveMoves
-   */
-  export type Competitor$competitiveMovesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    where?: CompetitiveMoveWhereInput
-    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
-    cursor?: CompetitiveMoveWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
-  }
-
-  /**
-   * Competitor without action
-   */
-  export type CompetitorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-  }
-
-
-  /**
-   * Model CompetitiveMove
-   */
-
-  export type AggregateCompetitiveMove = {
-    _count: CompetitiveMoveCountAggregateOutputType | null
-    _min: CompetitiveMoveMinAggregateOutputType | null
-    _max: CompetitiveMoveMaxAggregateOutputType | null
-  }
-
-  export type CompetitiveMoveMinAggregateOutputType = {
-    id: string | null
-    competitorId: string | null
-    moveType: string | null
-    title: string | null
-    description: string | null
-    impactLevel: $Enums.Importance | null
-    targetAudience: string | null
-    announcedDate: Date | null
-    launchDate: Date | null
-    completionDate: Date | null
-    userFeedback: string | null
-    responseRequired: boolean | null
-    responseStrategy: string | null
-    createdAt: Date | null
-  }
-
-  export type CompetitiveMoveMaxAggregateOutputType = {
-    id: string | null
-    competitorId: string | null
-    moveType: string | null
-    title: string | null
-    description: string | null
-    impactLevel: $Enums.Importance | null
-    targetAudience: string | null
-    announcedDate: Date | null
-    launchDate: Date | null
-    completionDate: Date | null
-    userFeedback: string | null
-    responseRequired: boolean | null
-    responseStrategy: string | null
-    createdAt: Date | null
-  }
-
-  export type CompetitiveMoveCountAggregateOutputType = {
-    id: number
-    competitorId: number
-    moveType: number
-    title: number
-    description: number
-    impactLevel: number
-    targetAudience: number
-    affectedFeatures: number
-    announcedDate: number
-    launchDate: number
-    completionDate: number
-    userFeedback: number
-    pressCoverage: number
-    opportunities: number
-    threats: number
-    responseRequired: number
-    responseStrategy: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type CompetitiveMoveMinAggregateInputType = {
-    id?: true
-    competitorId?: true
-    moveType?: true
-    title?: true
-    description?: true
-    impactLevel?: true
-    targetAudience?: true
-    announcedDate?: true
-    launchDate?: true
-    completionDate?: true
-    userFeedback?: true
-    responseRequired?: true
-    responseStrategy?: true
-    createdAt?: true
-  }
-
-  export type CompetitiveMoveMaxAggregateInputType = {
-    id?: true
-    competitorId?: true
-    moveType?: true
-    title?: true
-    description?: true
-    impactLevel?: true
-    targetAudience?: true
-    announcedDate?: true
-    launchDate?: true
-    completionDate?: true
-    userFeedback?: true
-    responseRequired?: true
-    responseStrategy?: true
-    createdAt?: true
-  }
-
-  export type CompetitiveMoveCountAggregateInputType = {
-    id?: true
-    competitorId?: true
-    moveType?: true
-    title?: true
-    description?: true
-    impactLevel?: true
-    targetAudience?: true
-    affectedFeatures?: true
-    announcedDate?: true
-    launchDate?: true
-    completionDate?: true
-    userFeedback?: true
-    pressCoverage?: true
-    opportunities?: true
-    threats?: true
-    responseRequired?: true
-    responseStrategy?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type CompetitiveMoveAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CompetitiveMove to aggregate.
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompetitiveMoves to fetch.
-     */
-    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: CompetitiveMoveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompetitiveMoves from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompetitiveMoves.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned CompetitiveMoves
-    **/
-    _count?: true | CompetitiveMoveCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: CompetitiveMoveMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: CompetitiveMoveMaxAggregateInputType
-  }
-
-  export type GetCompetitiveMoveAggregateType<T extends CompetitiveMoveAggregateArgs> = {
-        [P in keyof T & keyof AggregateCompetitiveMove]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateCompetitiveMove[P]>
-      : GetScalarType<T[P], AggregateCompetitiveMove[P]>
-  }
-
-
-
-
-  export type CompetitiveMoveGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: CompetitiveMoveWhereInput
-    orderBy?: CompetitiveMoveOrderByWithAggregationInput | CompetitiveMoveOrderByWithAggregationInput[]
-    by: CompetitiveMoveScalarFieldEnum[] | CompetitiveMoveScalarFieldEnum
-    having?: CompetitiveMoveScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: CompetitiveMoveCountAggregateInputType | true
-    _min?: CompetitiveMoveMinAggregateInputType
-    _max?: CompetitiveMoveMaxAggregateInputType
-  }
-
-  export type CompetitiveMoveGroupByOutputType = {
-    id: string
-    competitorId: string | null
-    moveType: string
-    title: string
-    description: string
-    impactLevel: $Enums.Importance
-    targetAudience: string | null
-    affectedFeatures: string[]
-    announcedDate: Date | null
-    launchDate: Date | null
-    completionDate: Date | null
-    userFeedback: string | null
-    pressCoverage: string[]
-    opportunities: string[]
-    threats: string[]
-    responseRequired: boolean
-    responseStrategy: string | null
-    createdAt: Date
-    _count: CompetitiveMoveCountAggregateOutputType | null
-    _min: CompetitiveMoveMinAggregateOutputType | null
-    _max: CompetitiveMoveMaxAggregateOutputType | null
-  }
-
-  type GetCompetitiveMoveGroupByPayload<T extends CompetitiveMoveGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<CompetitiveMoveGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof CompetitiveMoveGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], CompetitiveMoveGroupByOutputType[P]>
-            : GetScalarType<T[P], CompetitiveMoveGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type CompetitiveMoveSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    competitorId?: boolean
-    moveType?: boolean
-    title?: boolean
-    description?: boolean
-    impactLevel?: boolean
-    targetAudience?: boolean
-    affectedFeatures?: boolean
-    announcedDate?: boolean
-    launchDate?: boolean
-    completionDate?: boolean
-    userFeedback?: boolean
-    pressCoverage?: boolean
-    opportunities?: boolean
-    threats?: boolean
-    responseRequired?: boolean
-    responseStrategy?: boolean
-    createdAt?: boolean
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }, ExtArgs["result"]["competitiveMove"]>
-
-  export type CompetitiveMoveSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    competitorId?: boolean
-    moveType?: boolean
-    title?: boolean
-    description?: boolean
-    impactLevel?: boolean
-    targetAudience?: boolean
-    affectedFeatures?: boolean
-    announcedDate?: boolean
-    launchDate?: boolean
-    completionDate?: boolean
-    userFeedback?: boolean
-    pressCoverage?: boolean
-    opportunities?: boolean
-    threats?: boolean
-    responseRequired?: boolean
-    responseStrategy?: boolean
-    createdAt?: boolean
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }, ExtArgs["result"]["competitiveMove"]>
-
-  export type CompetitiveMoveSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    competitorId?: boolean
-    moveType?: boolean
-    title?: boolean
-    description?: boolean
-    impactLevel?: boolean
-    targetAudience?: boolean
-    affectedFeatures?: boolean
-    announcedDate?: boolean
-    launchDate?: boolean
-    completionDate?: boolean
-    userFeedback?: boolean
-    pressCoverage?: boolean
-    opportunities?: boolean
-    threats?: boolean
-    responseRequired?: boolean
-    responseStrategy?: boolean
-    createdAt?: boolean
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }, ExtArgs["result"]["competitiveMove"]>
-
-  export type CompetitiveMoveSelectScalar = {
-    id?: boolean
-    competitorId?: boolean
-    moveType?: boolean
-    title?: boolean
-    description?: boolean
-    impactLevel?: boolean
-    targetAudience?: boolean
-    affectedFeatures?: boolean
-    announcedDate?: boolean
-    launchDate?: boolean
-    completionDate?: boolean
-    userFeedback?: boolean
-    pressCoverage?: boolean
-    opportunities?: boolean
-    threats?: boolean
-    responseRequired?: boolean
-    responseStrategy?: boolean
-    createdAt?: boolean
-  }
-
-  export type CompetitiveMoveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "competitorId" | "moveType" | "title" | "description" | "impactLevel" | "targetAudience" | "affectedFeatures" | "announcedDate" | "launchDate" | "completionDate" | "userFeedback" | "pressCoverage" | "opportunities" | "threats" | "responseRequired" | "responseStrategy" | "createdAt", ExtArgs["result"]["competitiveMove"]>
-  export type CompetitiveMoveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }
-  export type CompetitiveMoveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }
-  export type CompetitiveMoveIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
-  }
-
-  export type $CompetitiveMovePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "CompetitiveMove"
-    objects: {
-      competitor: Prisma.$CompetitorPayload<ExtArgs> | null
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      competitorId: string | null
-      moveType: string
-      title: string
-      description: string
-      impactLevel: $Enums.Importance
-      targetAudience: string | null
-      affectedFeatures: string[]
-      announcedDate: Date | null
-      launchDate: Date | null
-      completionDate: Date | null
-      userFeedback: string | null
-      pressCoverage: string[]
-      opportunities: string[]
-      threats: string[]
-      responseRequired: boolean
-      responseStrategy: string | null
-      createdAt: Date
-    }, ExtArgs["result"]["competitiveMove"]>
-    composites: {}
-  }
-
-  type CompetitiveMoveGetPayload<S extends boolean | null | undefined | CompetitiveMoveDefaultArgs> = $Result.GetResult<Prisma.$CompetitiveMovePayload, S>
-
-  type CompetitiveMoveCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<CompetitiveMoveFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: CompetitiveMoveCountAggregateInputType | true
-    }
-
-  export interface CompetitiveMoveDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CompetitiveMove'], meta: { name: 'CompetitiveMove' } }
-    /**
-     * Find zero or one CompetitiveMove that matches the filter.
-     * @param {CompetitiveMoveFindUniqueArgs} args - Arguments to find a CompetitiveMove
-     * @example
-     * // Get one CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends CompetitiveMoveFindUniqueArgs>(args: SelectSubset<T, CompetitiveMoveFindUniqueArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one CompetitiveMove that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {CompetitiveMoveFindUniqueOrThrowArgs} args - Arguments to find a CompetitiveMove
-     * @example
-     * // Get one CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends CompetitiveMoveFindUniqueOrThrowArgs>(args: SelectSubset<T, CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CompetitiveMove that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveFindFirstArgs} args - Arguments to find a CompetitiveMove
-     * @example
-     * // Get one CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends CompetitiveMoveFindFirstArgs>(args?: SelectSubset<T, CompetitiveMoveFindFirstArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first CompetitiveMove that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveFindFirstOrThrowArgs} args - Arguments to find a CompetitiveMove
-     * @example
-     * // Get one CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends CompetitiveMoveFindFirstOrThrowArgs>(args?: SelectSubset<T, CompetitiveMoveFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more CompetitiveMoves that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all CompetitiveMoves
-     * const competitiveMoves = await prisma.competitiveMove.findMany()
-     * 
-     * // Get first 10 CompetitiveMoves
-     * const competitiveMoves = await prisma.competitiveMove.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends CompetitiveMoveFindManyArgs>(args?: SelectSubset<T, CompetitiveMoveFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a CompetitiveMove.
-     * @param {CompetitiveMoveCreateArgs} args - Arguments to create a CompetitiveMove.
-     * @example
-     * // Create one CompetitiveMove
-     * const CompetitiveMove = await prisma.competitiveMove.create({
-     *   data: {
-     *     // ... data to create a CompetitiveMove
-     *   }
-     * })
-     * 
-     */
-    create<T extends CompetitiveMoveCreateArgs>(args: SelectSubset<T, CompetitiveMoveCreateArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many CompetitiveMoves.
-     * @param {CompetitiveMoveCreateManyArgs} args - Arguments to create many CompetitiveMoves.
-     * @example
-     * // Create many CompetitiveMoves
-     * const competitiveMove = await prisma.competitiveMove.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends CompetitiveMoveCreateManyArgs>(args?: SelectSubset<T, CompetitiveMoveCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many CompetitiveMoves and returns the data saved in the database.
-     * @param {CompetitiveMoveCreateManyAndReturnArgs} args - Arguments to create many CompetitiveMoves.
-     * @example
-     * // Create many CompetitiveMoves
-     * const competitiveMove = await prisma.competitiveMove.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many CompetitiveMoves and only return the `id`
-     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends CompetitiveMoveCreateManyAndReturnArgs>(args?: SelectSubset<T, CompetitiveMoveCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a CompetitiveMove.
-     * @param {CompetitiveMoveDeleteArgs} args - Arguments to delete one CompetitiveMove.
-     * @example
-     * // Delete one CompetitiveMove
-     * const CompetitiveMove = await prisma.competitiveMove.delete({
-     *   where: {
-     *     // ... filter to delete one CompetitiveMove
-     *   }
-     * })
-     * 
-     */
-    delete<T extends CompetitiveMoveDeleteArgs>(args: SelectSubset<T, CompetitiveMoveDeleteArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one CompetitiveMove.
-     * @param {CompetitiveMoveUpdateArgs} args - Arguments to update one CompetitiveMove.
-     * @example
-     * // Update one CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends CompetitiveMoveUpdateArgs>(args: SelectSubset<T, CompetitiveMoveUpdateArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more CompetitiveMoves.
-     * @param {CompetitiveMoveDeleteManyArgs} args - Arguments to filter CompetitiveMoves to delete.
-     * @example
-     * // Delete a few CompetitiveMoves
-     * const { count } = await prisma.competitiveMove.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends CompetitiveMoveDeleteManyArgs>(args?: SelectSubset<T, CompetitiveMoveDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CompetitiveMoves.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many CompetitiveMoves
-     * const competitiveMove = await prisma.competitiveMove.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends CompetitiveMoveUpdateManyArgs>(args: SelectSubset<T, CompetitiveMoveUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more CompetitiveMoves and returns the data updated in the database.
-     * @param {CompetitiveMoveUpdateManyAndReturnArgs} args - Arguments to update many CompetitiveMoves.
-     * @example
-     * // Update many CompetitiveMoves
-     * const competitiveMove = await prisma.competitiveMove.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more CompetitiveMoves and only return the `id`
-     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends CompetitiveMoveUpdateManyAndReturnArgs>(args: SelectSubset<T, CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one CompetitiveMove.
-     * @param {CompetitiveMoveUpsertArgs} args - Arguments to update or create a CompetitiveMove.
-     * @example
-     * // Update or create a CompetitiveMove
-     * const competitiveMove = await prisma.competitiveMove.upsert({
-     *   create: {
-     *     // ... data to create a CompetitiveMove
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the CompetitiveMove we want to update
-     *   }
-     * })
-     */
-    upsert<T extends CompetitiveMoveUpsertArgs>(args: SelectSubset<T, CompetitiveMoveUpsertArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of CompetitiveMoves.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveCountArgs} args - Arguments to filter CompetitiveMoves to count.
-     * @example
-     * // Count the number of CompetitiveMoves
-     * const count = await prisma.competitiveMove.count({
-     *   where: {
-     *     // ... the filter for the CompetitiveMoves we want to count
-     *   }
-     * })
-    **/
-    count<T extends CompetitiveMoveCountArgs>(
-      args?: Subset<T, CompetitiveMoveCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], CompetitiveMoveCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a CompetitiveMove.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends CompetitiveMoveAggregateArgs>(args: Subset<T, CompetitiveMoveAggregateArgs>): Prisma.PrismaPromise<GetCompetitiveMoveAggregateType<T>>
-
-    /**
-     * Group by CompetitiveMove.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {CompetitiveMoveGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends CompetitiveMoveGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: CompetitiveMoveGroupByArgs['orderBy'] }
-        : { orderBy?: CompetitiveMoveGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, CompetitiveMoveGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompetitiveMoveGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the CompetitiveMove model
-   */
-  readonly fields: CompetitiveMoveFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for CompetitiveMove.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__CompetitiveMoveClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    competitor<T extends CompetitiveMove$competitorArgs<ExtArgs> = {}>(args?: Subset<T, CompetitiveMove$competitorArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the CompetitiveMove model
-   */
-  interface CompetitiveMoveFieldRefs {
-    readonly id: FieldRef<"CompetitiveMove", 'String'>
-    readonly competitorId: FieldRef<"CompetitiveMove", 'String'>
-    readonly moveType: FieldRef<"CompetitiveMove", 'String'>
-    readonly title: FieldRef<"CompetitiveMove", 'String'>
-    readonly description: FieldRef<"CompetitiveMove", 'String'>
-    readonly impactLevel: FieldRef<"CompetitiveMove", 'Importance'>
-    readonly targetAudience: FieldRef<"CompetitiveMove", 'String'>
-    readonly affectedFeatures: FieldRef<"CompetitiveMove", 'String[]'>
-    readonly announcedDate: FieldRef<"CompetitiveMove", 'DateTime'>
-    readonly launchDate: FieldRef<"CompetitiveMove", 'DateTime'>
-    readonly completionDate: FieldRef<"CompetitiveMove", 'DateTime'>
-    readonly userFeedback: FieldRef<"CompetitiveMove", 'String'>
-    readonly pressCoverage: FieldRef<"CompetitiveMove", 'String[]'>
-    readonly opportunities: FieldRef<"CompetitiveMove", 'String[]'>
-    readonly threats: FieldRef<"CompetitiveMove", 'String[]'>
-    readonly responseRequired: FieldRef<"CompetitiveMove", 'Boolean'>
-    readonly responseStrategy: FieldRef<"CompetitiveMove", 'String'>
-    readonly createdAt: FieldRef<"CompetitiveMove", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * CompetitiveMove findUnique
-   */
-  export type CompetitiveMoveFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter, which CompetitiveMove to fetch.
-     */
-    where: CompetitiveMoveWhereUniqueInput
-  }
-
-  /**
-   * CompetitiveMove findUniqueOrThrow
-   */
-  export type CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter, which CompetitiveMove to fetch.
-     */
-    where: CompetitiveMoveWhereUniqueInput
-  }
-
-  /**
-   * CompetitiveMove findFirst
-   */
-  export type CompetitiveMoveFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter, which CompetitiveMove to fetch.
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompetitiveMoves to fetch.
-     */
-    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CompetitiveMoves.
-     */
-    cursor?: CompetitiveMoveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompetitiveMoves from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompetitiveMoves.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CompetitiveMoves.
-     */
-    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
-  }
-
-  /**
-   * CompetitiveMove findFirstOrThrow
-   */
-  export type CompetitiveMoveFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter, which CompetitiveMove to fetch.
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompetitiveMoves to fetch.
-     */
-    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for CompetitiveMoves.
-     */
-    cursor?: CompetitiveMoveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompetitiveMoves from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompetitiveMoves.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of CompetitiveMoves.
-     */
-    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
-  }
-
-  /**
-   * CompetitiveMove findMany
-   */
-  export type CompetitiveMoveFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter, which CompetitiveMoves to fetch.
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of CompetitiveMoves to fetch.
-     */
-    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing CompetitiveMoves.
-     */
-    cursor?: CompetitiveMoveWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` CompetitiveMoves from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` CompetitiveMoves.
-     */
-    skip?: number
-    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
-  }
-
-  /**
-   * CompetitiveMove create
-   */
-  export type CompetitiveMoveCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * The data needed to create a CompetitiveMove.
-     */
-    data: XOR<CompetitiveMoveCreateInput, CompetitiveMoveUncheckedCreateInput>
-  }
-
-  /**
-   * CompetitiveMove createMany
-   */
-  export type CompetitiveMoveCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many CompetitiveMoves.
-     */
-    data: CompetitiveMoveCreateManyInput | CompetitiveMoveCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * CompetitiveMove createManyAndReturn
-   */
-  export type CompetitiveMoveCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * The data used to create many CompetitiveMoves.
-     */
-    data: CompetitiveMoveCreateManyInput | CompetitiveMoveCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * CompetitiveMove update
-   */
-  export type CompetitiveMoveUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * The data needed to update a CompetitiveMove.
-     */
-    data: XOR<CompetitiveMoveUpdateInput, CompetitiveMoveUncheckedUpdateInput>
-    /**
-     * Choose, which CompetitiveMove to update.
-     */
-    where: CompetitiveMoveWhereUniqueInput
-  }
-
-  /**
-   * CompetitiveMove updateMany
-   */
-  export type CompetitiveMoveUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update CompetitiveMoves.
-     */
-    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyInput>
-    /**
-     * Filter which CompetitiveMoves to update
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * Limit how many CompetitiveMoves to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * CompetitiveMove updateManyAndReturn
-   */
-  export type CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * The data used to update CompetitiveMoves.
-     */
-    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyInput>
-    /**
-     * Filter which CompetitiveMoves to update
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * Limit how many CompetitiveMoves to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * CompetitiveMove upsert
-   */
-  export type CompetitiveMoveUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * The filter to search for the CompetitiveMove to update in case it exists.
-     */
-    where: CompetitiveMoveWhereUniqueInput
-    /**
-     * In case the CompetitiveMove found by the `where` argument doesn't exist, create a new CompetitiveMove with this data.
-     */
-    create: XOR<CompetitiveMoveCreateInput, CompetitiveMoveUncheckedCreateInput>
-    /**
-     * In case the CompetitiveMove was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<CompetitiveMoveUpdateInput, CompetitiveMoveUncheckedUpdateInput>
-  }
-
-  /**
-   * CompetitiveMove delete
-   */
-  export type CompetitiveMoveDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-    /**
-     * Filter which CompetitiveMove to delete.
-     */
-    where: CompetitiveMoveWhereUniqueInput
-  }
-
-  /**
-   * CompetitiveMove deleteMany
-   */
-  export type CompetitiveMoveDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which CompetitiveMoves to delete
-     */
-    where?: CompetitiveMoveWhereInput
-    /**
-     * Limit how many CompetitiveMoves to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * CompetitiveMove.competitor
-   */
-  export type CompetitiveMove$competitorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Competitor
-     */
-    select?: CompetitorSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Competitor
-     */
-    omit?: CompetitorOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitorInclude<ExtArgs> | null
-    where?: CompetitorWhereInput
-  }
-
-  /**
-   * CompetitiveMove without action
-   */
-  export type CompetitiveMoveDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CompetitiveMove
-     */
-    select?: CompetitiveMoveSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the CompetitiveMove
-     */
-    omit?: CompetitiveMoveOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: CompetitiveMoveInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Model AssetView
    */
 
@@ -56033,6 +50978,2577 @@ export namespace Prisma {
 
 
   /**
+   * Model Competitor
+   */
+
+  export type AggregateCompetitor = {
+    _count: CompetitorCountAggregateOutputType | null
+    _avg: CompetitorAvgAggregateOutputType | null
+    _sum: CompetitorSumAggregateOutputType | null
+    _min: CompetitorMinAggregateOutputType | null
+    _max: CompetitorMaxAggregateOutputType | null
+  }
+
+  export type CompetitorAvgAggregateOutputType = {
+    marketShare: number | null
+    annualRevenue: number | null
+    foundedYear: number | null
+    userGrowthRate: number | null
+    churnRate: number | null
+    customerSatisfaction: number | null
+    marketCap: number | null
+  }
+
+  export type CompetitorSumAggregateOutputType = {
+    marketShare: number | null
+    annualRevenue: number | null
+    foundedYear: number | null
+    userGrowthRate: number | null
+    churnRate: number | null
+    customerSatisfaction: number | null
+    marketCap: number | null
+  }
+
+  export type CompetitorMinAggregateOutputType = {
+    id: string | null
+    ideaId: string | null
+    name: string | null
+    website: string | null
+    description: string | null
+    logoUrl: string | null
+    marketShare: number | null
+    annualRevenue: number | null
+    employeeCount: string | null
+    foundedYear: number | null
+    headquarters: string | null
+    targetAudience: string | null
+    threatLevel: $Enums.Importance | null
+    userGrowthRate: number | null
+    churnRate: number | null
+    customerSatisfaction: number | null
+    marketCap: number | null
+    lastUpdated: Date | null
+    createdAt: Date | null
+    isActive: boolean | null
+  }
+
+  export type CompetitorMaxAggregateOutputType = {
+    id: string | null
+    ideaId: string | null
+    name: string | null
+    website: string | null
+    description: string | null
+    logoUrl: string | null
+    marketShare: number | null
+    annualRevenue: number | null
+    employeeCount: string | null
+    foundedYear: number | null
+    headquarters: string | null
+    targetAudience: string | null
+    threatLevel: $Enums.Importance | null
+    userGrowthRate: number | null
+    churnRate: number | null
+    customerSatisfaction: number | null
+    marketCap: number | null
+    lastUpdated: Date | null
+    createdAt: Date | null
+    isActive: boolean | null
+  }
+
+  export type CompetitorCountAggregateOutputType = {
+    id: number
+    ideaId: number
+    name: number
+    website: number
+    description: number
+    logoUrl: number
+    marketShare: number
+    annualRevenue: number
+    employeeCount: number
+    foundedYear: number
+    headquarters: number
+    targetAudience: number
+    threatLevel: number
+    userGrowthRate: number
+    churnRate: number
+    customerSatisfaction: number
+    marketCap: number
+    lastUpdated: number
+    createdAt: number
+    isActive: number
+    _all: number
+  }
+
+
+  export type CompetitorAvgAggregateInputType = {
+    marketShare?: true
+    annualRevenue?: true
+    foundedYear?: true
+    userGrowthRate?: true
+    churnRate?: true
+    customerSatisfaction?: true
+    marketCap?: true
+  }
+
+  export type CompetitorSumAggregateInputType = {
+    marketShare?: true
+    annualRevenue?: true
+    foundedYear?: true
+    userGrowthRate?: true
+    churnRate?: true
+    customerSatisfaction?: true
+    marketCap?: true
+  }
+
+  export type CompetitorMinAggregateInputType = {
+    id?: true
+    ideaId?: true
+    name?: true
+    website?: true
+    description?: true
+    logoUrl?: true
+    marketShare?: true
+    annualRevenue?: true
+    employeeCount?: true
+    foundedYear?: true
+    headquarters?: true
+    targetAudience?: true
+    threatLevel?: true
+    userGrowthRate?: true
+    churnRate?: true
+    customerSatisfaction?: true
+    marketCap?: true
+    lastUpdated?: true
+    createdAt?: true
+    isActive?: true
+  }
+
+  export type CompetitorMaxAggregateInputType = {
+    id?: true
+    ideaId?: true
+    name?: true
+    website?: true
+    description?: true
+    logoUrl?: true
+    marketShare?: true
+    annualRevenue?: true
+    employeeCount?: true
+    foundedYear?: true
+    headquarters?: true
+    targetAudience?: true
+    threatLevel?: true
+    userGrowthRate?: true
+    churnRate?: true
+    customerSatisfaction?: true
+    marketCap?: true
+    lastUpdated?: true
+    createdAt?: true
+    isActive?: true
+  }
+
+  export type CompetitorCountAggregateInputType = {
+    id?: true
+    ideaId?: true
+    name?: true
+    website?: true
+    description?: true
+    logoUrl?: true
+    marketShare?: true
+    annualRevenue?: true
+    employeeCount?: true
+    foundedYear?: true
+    headquarters?: true
+    targetAudience?: true
+    threatLevel?: true
+    userGrowthRate?: true
+    churnRate?: true
+    customerSatisfaction?: true
+    marketCap?: true
+    lastUpdated?: true
+    createdAt?: true
+    isActive?: true
+    _all?: true
+  }
+
+  export type CompetitorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Competitor to aggregate.
+     */
+    where?: CompetitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Competitors to fetch.
+     */
+    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CompetitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Competitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Competitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Competitors
+    **/
+    _count?: true | CompetitorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CompetitorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CompetitorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CompetitorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CompetitorMaxAggregateInputType
+  }
+
+  export type GetCompetitorAggregateType<T extends CompetitorAggregateArgs> = {
+        [P in keyof T & keyof AggregateCompetitor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCompetitor[P]>
+      : GetScalarType<T[P], AggregateCompetitor[P]>
+  }
+
+
+
+
+  export type CompetitorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompetitorWhereInput
+    orderBy?: CompetitorOrderByWithAggregationInput | CompetitorOrderByWithAggregationInput[]
+    by: CompetitorScalarFieldEnum[] | CompetitorScalarFieldEnum
+    having?: CompetitorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CompetitorCountAggregateInputType | true
+    _avg?: CompetitorAvgAggregateInputType
+    _sum?: CompetitorSumAggregateInputType
+    _min?: CompetitorMinAggregateInputType
+    _max?: CompetitorMaxAggregateInputType
+  }
+
+  export type CompetitorGroupByOutputType = {
+    id: string
+    ideaId: string
+    name: string
+    website: string | null
+    description: string | null
+    logoUrl: string | null
+    marketShare: number | null
+    annualRevenue: number | null
+    employeeCount: string | null
+    foundedYear: number | null
+    headquarters: string | null
+    targetAudience: string | null
+    threatLevel: $Enums.Importance
+    userGrowthRate: number | null
+    churnRate: number | null
+    customerSatisfaction: number | null
+    marketCap: number | null
+    lastUpdated: Date
+    createdAt: Date
+    isActive: boolean
+    _count: CompetitorCountAggregateOutputType | null
+    _avg: CompetitorAvgAggregateOutputType | null
+    _sum: CompetitorSumAggregateOutputType | null
+    _min: CompetitorMinAggregateOutputType | null
+    _max: CompetitorMaxAggregateOutputType | null
+  }
+
+  type GetCompetitorGroupByPayload<T extends CompetitorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CompetitorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CompetitorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CompetitorGroupByOutputType[P]>
+            : GetScalarType<T[P], CompetitorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CompetitorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    name?: boolean
+    website?: boolean
+    description?: boolean
+    logoUrl?: boolean
+    marketShare?: boolean
+    annualRevenue?: boolean
+    employeeCount?: boolean
+    foundedYear?: boolean
+    headquarters?: boolean
+    targetAudience?: boolean
+    threatLevel?: boolean
+    userGrowthRate?: boolean
+    churnRate?: boolean
+    customerSatisfaction?: boolean
+    marketCap?: boolean
+    lastUpdated?: boolean
+    createdAt?: boolean
+    isActive?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    competitiveMoves?: boolean | Competitor$competitiveMovesArgs<ExtArgs>
+    _count?: boolean | CompetitorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["competitor"]>
+
+  export type CompetitorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    name?: boolean
+    website?: boolean
+    description?: boolean
+    logoUrl?: boolean
+    marketShare?: boolean
+    annualRevenue?: boolean
+    employeeCount?: boolean
+    foundedYear?: boolean
+    headquarters?: boolean
+    targetAudience?: boolean
+    threatLevel?: boolean
+    userGrowthRate?: boolean
+    churnRate?: boolean
+    customerSatisfaction?: boolean
+    marketCap?: boolean
+    lastUpdated?: boolean
+    createdAt?: boolean
+    isActive?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["competitor"]>
+
+  export type CompetitorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    name?: boolean
+    website?: boolean
+    description?: boolean
+    logoUrl?: boolean
+    marketShare?: boolean
+    annualRevenue?: boolean
+    employeeCount?: boolean
+    foundedYear?: boolean
+    headquarters?: boolean
+    targetAudience?: boolean
+    threatLevel?: boolean
+    userGrowthRate?: boolean
+    churnRate?: boolean
+    customerSatisfaction?: boolean
+    marketCap?: boolean
+    lastUpdated?: boolean
+    createdAt?: boolean
+    isActive?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["competitor"]>
+
+  export type CompetitorSelectScalar = {
+    id?: boolean
+    ideaId?: boolean
+    name?: boolean
+    website?: boolean
+    description?: boolean
+    logoUrl?: boolean
+    marketShare?: boolean
+    annualRevenue?: boolean
+    employeeCount?: boolean
+    foundedYear?: boolean
+    headquarters?: boolean
+    targetAudience?: boolean
+    threatLevel?: boolean
+    userGrowthRate?: boolean
+    churnRate?: boolean
+    customerSatisfaction?: boolean
+    marketCap?: boolean
+    lastUpdated?: boolean
+    createdAt?: boolean
+    isActive?: boolean
+  }
+
+  export type CompetitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "name" | "website" | "description" | "logoUrl" | "marketShare" | "annualRevenue" | "employeeCount" | "foundedYear" | "headquarters" | "targetAudience" | "threatLevel" | "userGrowthRate" | "churnRate" | "customerSatisfaction" | "marketCap" | "lastUpdated" | "createdAt" | "isActive", ExtArgs["result"]["competitor"]>
+  export type CompetitorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    competitiveMoves?: boolean | Competitor$competitiveMovesArgs<ExtArgs>
+    _count?: boolean | CompetitorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CompetitorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+  }
+  export type CompetitorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+  }
+
+  export type $CompetitorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Competitor"
+    objects: {
+      idea: Prisma.$IdeaPayload<ExtArgs>
+      competitiveMoves: Prisma.$CompetitiveMovePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ideaId: string
+      name: string
+      website: string | null
+      description: string | null
+      logoUrl: string | null
+      marketShare: number | null
+      annualRevenue: number | null
+      employeeCount: string | null
+      foundedYear: number | null
+      headquarters: string | null
+      targetAudience: string | null
+      threatLevel: $Enums.Importance
+      userGrowthRate: number | null
+      churnRate: number | null
+      customerSatisfaction: number | null
+      marketCap: number | null
+      lastUpdated: Date
+      createdAt: Date
+      isActive: boolean
+    }, ExtArgs["result"]["competitor"]>
+    composites: {}
+  }
+
+  type CompetitorGetPayload<S extends boolean | null | undefined | CompetitorDefaultArgs> = $Result.GetResult<Prisma.$CompetitorPayload, S>
+
+  type CompetitorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CompetitorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CompetitorCountAggregateInputType | true
+    }
+
+  export interface CompetitorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Competitor'], meta: { name: 'Competitor' } }
+    /**
+     * Find zero or one Competitor that matches the filter.
+     * @param {CompetitorFindUniqueArgs} args - Arguments to find a Competitor
+     * @example
+     * // Get one Competitor
+     * const competitor = await prisma.competitor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CompetitorFindUniqueArgs>(args: SelectSubset<T, CompetitorFindUniqueArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Competitor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CompetitorFindUniqueOrThrowArgs} args - Arguments to find a Competitor
+     * @example
+     * // Get one Competitor
+     * const competitor = await prisma.competitor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CompetitorFindUniqueOrThrowArgs>(args: SelectSubset<T, CompetitorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Competitor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorFindFirstArgs} args - Arguments to find a Competitor
+     * @example
+     * // Get one Competitor
+     * const competitor = await prisma.competitor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CompetitorFindFirstArgs>(args?: SelectSubset<T, CompetitorFindFirstArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Competitor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorFindFirstOrThrowArgs} args - Arguments to find a Competitor
+     * @example
+     * // Get one Competitor
+     * const competitor = await prisma.competitor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CompetitorFindFirstOrThrowArgs>(args?: SelectSubset<T, CompetitorFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Competitors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Competitors
+     * const competitors = await prisma.competitor.findMany()
+     * 
+     * // Get first 10 Competitors
+     * const competitors = await prisma.competitor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const competitorWithIdOnly = await prisma.competitor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CompetitorFindManyArgs>(args?: SelectSubset<T, CompetitorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Competitor.
+     * @param {CompetitorCreateArgs} args - Arguments to create a Competitor.
+     * @example
+     * // Create one Competitor
+     * const Competitor = await prisma.competitor.create({
+     *   data: {
+     *     // ... data to create a Competitor
+     *   }
+     * })
+     * 
+     */
+    create<T extends CompetitorCreateArgs>(args: SelectSubset<T, CompetitorCreateArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Competitors.
+     * @param {CompetitorCreateManyArgs} args - Arguments to create many Competitors.
+     * @example
+     * // Create many Competitors
+     * const competitor = await prisma.competitor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CompetitorCreateManyArgs>(args?: SelectSubset<T, CompetitorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Competitors and returns the data saved in the database.
+     * @param {CompetitorCreateManyAndReturnArgs} args - Arguments to create many Competitors.
+     * @example
+     * // Create many Competitors
+     * const competitor = await prisma.competitor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Competitors and only return the `id`
+     * const competitorWithIdOnly = await prisma.competitor.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CompetitorCreateManyAndReturnArgs>(args?: SelectSubset<T, CompetitorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Competitor.
+     * @param {CompetitorDeleteArgs} args - Arguments to delete one Competitor.
+     * @example
+     * // Delete one Competitor
+     * const Competitor = await prisma.competitor.delete({
+     *   where: {
+     *     // ... filter to delete one Competitor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CompetitorDeleteArgs>(args: SelectSubset<T, CompetitorDeleteArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Competitor.
+     * @param {CompetitorUpdateArgs} args - Arguments to update one Competitor.
+     * @example
+     * // Update one Competitor
+     * const competitor = await prisma.competitor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CompetitorUpdateArgs>(args: SelectSubset<T, CompetitorUpdateArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Competitors.
+     * @param {CompetitorDeleteManyArgs} args - Arguments to filter Competitors to delete.
+     * @example
+     * // Delete a few Competitors
+     * const { count } = await prisma.competitor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CompetitorDeleteManyArgs>(args?: SelectSubset<T, CompetitorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Competitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Competitors
+     * const competitor = await prisma.competitor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CompetitorUpdateManyArgs>(args: SelectSubset<T, CompetitorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Competitors and returns the data updated in the database.
+     * @param {CompetitorUpdateManyAndReturnArgs} args - Arguments to update many Competitors.
+     * @example
+     * // Update many Competitors
+     * const competitor = await prisma.competitor.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Competitors and only return the `id`
+     * const competitorWithIdOnly = await prisma.competitor.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CompetitorUpdateManyAndReturnArgs>(args: SelectSubset<T, CompetitorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Competitor.
+     * @param {CompetitorUpsertArgs} args - Arguments to update or create a Competitor.
+     * @example
+     * // Update or create a Competitor
+     * const competitor = await prisma.competitor.upsert({
+     *   create: {
+     *     // ... data to create a Competitor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Competitor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CompetitorUpsertArgs>(args: SelectSubset<T, CompetitorUpsertArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Competitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorCountArgs} args - Arguments to filter Competitors to count.
+     * @example
+     * // Count the number of Competitors
+     * const count = await prisma.competitor.count({
+     *   where: {
+     *     // ... the filter for the Competitors we want to count
+     *   }
+     * })
+    **/
+    count<T extends CompetitorCountArgs>(
+      args?: Subset<T, CompetitorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CompetitorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Competitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CompetitorAggregateArgs>(args: Subset<T, CompetitorAggregateArgs>): Prisma.PrismaPromise<GetCompetitorAggregateType<T>>
+
+    /**
+     * Group by Competitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CompetitorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CompetitorGroupByArgs['orderBy'] }
+        : { orderBy?: CompetitorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CompetitorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompetitorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Competitor model
+   */
+  readonly fields: CompetitorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Competitor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CompetitorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    competitiveMoves<T extends Competitor$competitiveMovesArgs<ExtArgs> = {}>(args?: Subset<T, Competitor$competitiveMovesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Competitor model
+   */
+  interface CompetitorFieldRefs {
+    readonly id: FieldRef<"Competitor", 'String'>
+    readonly ideaId: FieldRef<"Competitor", 'String'>
+    readonly name: FieldRef<"Competitor", 'String'>
+    readonly website: FieldRef<"Competitor", 'String'>
+    readonly description: FieldRef<"Competitor", 'String'>
+    readonly logoUrl: FieldRef<"Competitor", 'String'>
+    readonly marketShare: FieldRef<"Competitor", 'Float'>
+    readonly annualRevenue: FieldRef<"Competitor", 'Float'>
+    readonly employeeCount: FieldRef<"Competitor", 'String'>
+    readonly foundedYear: FieldRef<"Competitor", 'Int'>
+    readonly headquarters: FieldRef<"Competitor", 'String'>
+    readonly targetAudience: FieldRef<"Competitor", 'String'>
+    readonly threatLevel: FieldRef<"Competitor", 'Importance'>
+    readonly userGrowthRate: FieldRef<"Competitor", 'Float'>
+    readonly churnRate: FieldRef<"Competitor", 'Float'>
+    readonly customerSatisfaction: FieldRef<"Competitor", 'Float'>
+    readonly marketCap: FieldRef<"Competitor", 'Float'>
+    readonly lastUpdated: FieldRef<"Competitor", 'DateTime'>
+    readonly createdAt: FieldRef<"Competitor", 'DateTime'>
+    readonly isActive: FieldRef<"Competitor", 'Boolean'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Competitor findUnique
+   */
+  export type CompetitorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Competitor to fetch.
+     */
+    where: CompetitorWhereUniqueInput
+  }
+
+  /**
+   * Competitor findUniqueOrThrow
+   */
+  export type CompetitorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Competitor to fetch.
+     */
+    where: CompetitorWhereUniqueInput
+  }
+
+  /**
+   * Competitor findFirst
+   */
+  export type CompetitorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Competitor to fetch.
+     */
+    where?: CompetitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Competitors to fetch.
+     */
+    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Competitors.
+     */
+    cursor?: CompetitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Competitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Competitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Competitors.
+     */
+    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
+  }
+
+  /**
+   * Competitor findFirstOrThrow
+   */
+  export type CompetitorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Competitor to fetch.
+     */
+    where?: CompetitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Competitors to fetch.
+     */
+    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Competitors.
+     */
+    cursor?: CompetitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Competitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Competitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Competitors.
+     */
+    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
+  }
+
+  /**
+   * Competitor findMany
+   */
+  export type CompetitorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter, which Competitors to fetch.
+     */
+    where?: CompetitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Competitors to fetch.
+     */
+    orderBy?: CompetitorOrderByWithRelationInput | CompetitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Competitors.
+     */
+    cursor?: CompetitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Competitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Competitors.
+     */
+    skip?: number
+    distinct?: CompetitorScalarFieldEnum | CompetitorScalarFieldEnum[]
+  }
+
+  /**
+   * Competitor create
+   */
+  export type CompetitorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Competitor.
+     */
+    data: XOR<CompetitorCreateInput, CompetitorUncheckedCreateInput>
+  }
+
+  /**
+   * Competitor createMany
+   */
+  export type CompetitorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Competitors.
+     */
+    data: CompetitorCreateManyInput | CompetitorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Competitor createManyAndReturn
+   */
+  export type CompetitorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * The data used to create many Competitors.
+     */
+    data: CompetitorCreateManyInput | CompetitorCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Competitor update
+   */
+  export type CompetitorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Competitor.
+     */
+    data: XOR<CompetitorUpdateInput, CompetitorUncheckedUpdateInput>
+    /**
+     * Choose, which Competitor to update.
+     */
+    where: CompetitorWhereUniqueInput
+  }
+
+  /**
+   * Competitor updateMany
+   */
+  export type CompetitorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Competitors.
+     */
+    data: XOR<CompetitorUpdateManyMutationInput, CompetitorUncheckedUpdateManyInput>
+    /**
+     * Filter which Competitors to update
+     */
+    where?: CompetitorWhereInput
+    /**
+     * Limit how many Competitors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Competitor updateManyAndReturn
+   */
+  export type CompetitorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * The data used to update Competitors.
+     */
+    data: XOR<CompetitorUpdateManyMutationInput, CompetitorUncheckedUpdateManyInput>
+    /**
+     * Filter which Competitors to update
+     */
+    where?: CompetitorWhereInput
+    /**
+     * Limit how many Competitors to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Competitor upsert
+   */
+  export type CompetitorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Competitor to update in case it exists.
+     */
+    where: CompetitorWhereUniqueInput
+    /**
+     * In case the Competitor found by the `where` argument doesn't exist, create a new Competitor with this data.
+     */
+    create: XOR<CompetitorCreateInput, CompetitorUncheckedCreateInput>
+    /**
+     * In case the Competitor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CompetitorUpdateInput, CompetitorUncheckedUpdateInput>
+  }
+
+  /**
+   * Competitor delete
+   */
+  export type CompetitorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    /**
+     * Filter which Competitor to delete.
+     */
+    where: CompetitorWhereUniqueInput
+  }
+
+  /**
+   * Competitor deleteMany
+   */
+  export type CompetitorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Competitors to delete
+     */
+    where?: CompetitorWhereInput
+    /**
+     * Limit how many Competitors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Competitor.competitiveMoves
+   */
+  export type Competitor$competitiveMovesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    where?: CompetitiveMoveWhereInput
+    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
+    cursor?: CompetitiveMoveWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
+  }
+
+  /**
+   * Competitor without action
+   */
+  export type CompetitorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CompetitiveMove
+   */
+
+  export type AggregateCompetitiveMove = {
+    _count: CompetitiveMoveCountAggregateOutputType | null
+    _min: CompetitiveMoveMinAggregateOutputType | null
+    _max: CompetitiveMoveMaxAggregateOutputType | null
+  }
+
+  export type CompetitiveMoveMinAggregateOutputType = {
+    id: string | null
+    competitorId: string | null
+    moveType: string | null
+    title: string | null
+    description: string | null
+    impactLevel: $Enums.Importance | null
+    targetAudience: string | null
+    announcedDate: Date | null
+    launchDate: Date | null
+    completionDate: Date | null
+    userFeedback: string | null
+    responseRequired: boolean | null
+    responseStrategy: string | null
+    createdAt: Date | null
+  }
+
+  export type CompetitiveMoveMaxAggregateOutputType = {
+    id: string | null
+    competitorId: string | null
+    moveType: string | null
+    title: string | null
+    description: string | null
+    impactLevel: $Enums.Importance | null
+    targetAudience: string | null
+    announcedDate: Date | null
+    launchDate: Date | null
+    completionDate: Date | null
+    userFeedback: string | null
+    responseRequired: boolean | null
+    responseStrategy: string | null
+    createdAt: Date | null
+  }
+
+  export type CompetitiveMoveCountAggregateOutputType = {
+    id: number
+    competitorId: number
+    moveType: number
+    title: number
+    description: number
+    impactLevel: number
+    targetAudience: number
+    affectedFeatures: number
+    announcedDate: number
+    launchDate: number
+    completionDate: number
+    userFeedback: number
+    pressCoverage: number
+    opportunities: number
+    threats: number
+    responseRequired: number
+    responseStrategy: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CompetitiveMoveMinAggregateInputType = {
+    id?: true
+    competitorId?: true
+    moveType?: true
+    title?: true
+    description?: true
+    impactLevel?: true
+    targetAudience?: true
+    announcedDate?: true
+    launchDate?: true
+    completionDate?: true
+    userFeedback?: true
+    responseRequired?: true
+    responseStrategy?: true
+    createdAt?: true
+  }
+
+  export type CompetitiveMoveMaxAggregateInputType = {
+    id?: true
+    competitorId?: true
+    moveType?: true
+    title?: true
+    description?: true
+    impactLevel?: true
+    targetAudience?: true
+    announcedDate?: true
+    launchDate?: true
+    completionDate?: true
+    userFeedback?: true
+    responseRequired?: true
+    responseStrategy?: true
+    createdAt?: true
+  }
+
+  export type CompetitiveMoveCountAggregateInputType = {
+    id?: true
+    competitorId?: true
+    moveType?: true
+    title?: true
+    description?: true
+    impactLevel?: true
+    targetAudience?: true
+    affectedFeatures?: true
+    announcedDate?: true
+    launchDate?: true
+    completionDate?: true
+    userFeedback?: true
+    pressCoverage?: true
+    opportunities?: true
+    threats?: true
+    responseRequired?: true
+    responseStrategy?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CompetitiveMoveAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CompetitiveMove to aggregate.
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompetitiveMoves to fetch.
+     */
+    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CompetitiveMoveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompetitiveMoves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompetitiveMoves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CompetitiveMoves
+    **/
+    _count?: true | CompetitiveMoveCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CompetitiveMoveMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CompetitiveMoveMaxAggregateInputType
+  }
+
+  export type GetCompetitiveMoveAggregateType<T extends CompetitiveMoveAggregateArgs> = {
+        [P in keyof T & keyof AggregateCompetitiveMove]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCompetitiveMove[P]>
+      : GetScalarType<T[P], AggregateCompetitiveMove[P]>
+  }
+
+
+
+
+  export type CompetitiveMoveGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CompetitiveMoveWhereInput
+    orderBy?: CompetitiveMoveOrderByWithAggregationInput | CompetitiveMoveOrderByWithAggregationInput[]
+    by: CompetitiveMoveScalarFieldEnum[] | CompetitiveMoveScalarFieldEnum
+    having?: CompetitiveMoveScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CompetitiveMoveCountAggregateInputType | true
+    _min?: CompetitiveMoveMinAggregateInputType
+    _max?: CompetitiveMoveMaxAggregateInputType
+  }
+
+  export type CompetitiveMoveGroupByOutputType = {
+    id: string
+    competitorId: string | null
+    moveType: string
+    title: string
+    description: string
+    impactLevel: $Enums.Importance
+    targetAudience: string | null
+    affectedFeatures: string[]
+    announcedDate: Date | null
+    launchDate: Date | null
+    completionDate: Date | null
+    userFeedback: string | null
+    pressCoverage: string[]
+    opportunities: string[]
+    threats: string[]
+    responseRequired: boolean
+    responseStrategy: string | null
+    createdAt: Date
+    _count: CompetitiveMoveCountAggregateOutputType | null
+    _min: CompetitiveMoveMinAggregateOutputType | null
+    _max: CompetitiveMoveMaxAggregateOutputType | null
+  }
+
+  type GetCompetitiveMoveGroupByPayload<T extends CompetitiveMoveGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CompetitiveMoveGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CompetitiveMoveGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CompetitiveMoveGroupByOutputType[P]>
+            : GetScalarType<T[P], CompetitiveMoveGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CompetitiveMoveSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    competitorId?: boolean
+    moveType?: boolean
+    title?: boolean
+    description?: boolean
+    impactLevel?: boolean
+    targetAudience?: boolean
+    affectedFeatures?: boolean
+    announcedDate?: boolean
+    launchDate?: boolean
+    completionDate?: boolean
+    userFeedback?: boolean
+    pressCoverage?: boolean
+    opportunities?: boolean
+    threats?: boolean
+    responseRequired?: boolean
+    responseStrategy?: boolean
+    createdAt?: boolean
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }, ExtArgs["result"]["competitiveMove"]>
+
+  export type CompetitiveMoveSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    competitorId?: boolean
+    moveType?: boolean
+    title?: boolean
+    description?: boolean
+    impactLevel?: boolean
+    targetAudience?: boolean
+    affectedFeatures?: boolean
+    announcedDate?: boolean
+    launchDate?: boolean
+    completionDate?: boolean
+    userFeedback?: boolean
+    pressCoverage?: boolean
+    opportunities?: boolean
+    threats?: boolean
+    responseRequired?: boolean
+    responseStrategy?: boolean
+    createdAt?: boolean
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }, ExtArgs["result"]["competitiveMove"]>
+
+  export type CompetitiveMoveSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    competitorId?: boolean
+    moveType?: boolean
+    title?: boolean
+    description?: boolean
+    impactLevel?: boolean
+    targetAudience?: boolean
+    affectedFeatures?: boolean
+    announcedDate?: boolean
+    launchDate?: boolean
+    completionDate?: boolean
+    userFeedback?: boolean
+    pressCoverage?: boolean
+    opportunities?: boolean
+    threats?: boolean
+    responseRequired?: boolean
+    responseStrategy?: boolean
+    createdAt?: boolean
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }, ExtArgs["result"]["competitiveMove"]>
+
+  export type CompetitiveMoveSelectScalar = {
+    id?: boolean
+    competitorId?: boolean
+    moveType?: boolean
+    title?: boolean
+    description?: boolean
+    impactLevel?: boolean
+    targetAudience?: boolean
+    affectedFeatures?: boolean
+    announcedDate?: boolean
+    launchDate?: boolean
+    completionDate?: boolean
+    userFeedback?: boolean
+    pressCoverage?: boolean
+    opportunities?: boolean
+    threats?: boolean
+    responseRequired?: boolean
+    responseStrategy?: boolean
+    createdAt?: boolean
+  }
+
+  export type CompetitiveMoveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "competitorId" | "moveType" | "title" | "description" | "impactLevel" | "targetAudience" | "affectedFeatures" | "announcedDate" | "launchDate" | "completionDate" | "userFeedback" | "pressCoverage" | "opportunities" | "threats" | "responseRequired" | "responseStrategy" | "createdAt", ExtArgs["result"]["competitiveMove"]>
+  export type CompetitiveMoveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }
+  export type CompetitiveMoveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }
+  export type CompetitiveMoveIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    competitor?: boolean | CompetitiveMove$competitorArgs<ExtArgs>
+  }
+
+  export type $CompetitiveMovePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CompetitiveMove"
+    objects: {
+      competitor: Prisma.$CompetitorPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      competitorId: string | null
+      moveType: string
+      title: string
+      description: string
+      impactLevel: $Enums.Importance
+      targetAudience: string | null
+      affectedFeatures: string[]
+      announcedDate: Date | null
+      launchDate: Date | null
+      completionDate: Date | null
+      userFeedback: string | null
+      pressCoverage: string[]
+      opportunities: string[]
+      threats: string[]
+      responseRequired: boolean
+      responseStrategy: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["competitiveMove"]>
+    composites: {}
+  }
+
+  type CompetitiveMoveGetPayload<S extends boolean | null | undefined | CompetitiveMoveDefaultArgs> = $Result.GetResult<Prisma.$CompetitiveMovePayload, S>
+
+  type CompetitiveMoveCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CompetitiveMoveFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CompetitiveMoveCountAggregateInputType | true
+    }
+
+  export interface CompetitiveMoveDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CompetitiveMove'], meta: { name: 'CompetitiveMove' } }
+    /**
+     * Find zero or one CompetitiveMove that matches the filter.
+     * @param {CompetitiveMoveFindUniqueArgs} args - Arguments to find a CompetitiveMove
+     * @example
+     * // Get one CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CompetitiveMoveFindUniqueArgs>(args: SelectSubset<T, CompetitiveMoveFindUniqueArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CompetitiveMove that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CompetitiveMoveFindUniqueOrThrowArgs} args - Arguments to find a CompetitiveMove
+     * @example
+     * // Get one CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CompetitiveMoveFindUniqueOrThrowArgs>(args: SelectSubset<T, CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CompetitiveMove that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveFindFirstArgs} args - Arguments to find a CompetitiveMove
+     * @example
+     * // Get one CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CompetitiveMoveFindFirstArgs>(args?: SelectSubset<T, CompetitiveMoveFindFirstArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CompetitiveMove that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveFindFirstOrThrowArgs} args - Arguments to find a CompetitiveMove
+     * @example
+     * // Get one CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CompetitiveMoveFindFirstOrThrowArgs>(args?: SelectSubset<T, CompetitiveMoveFindFirstOrThrowArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CompetitiveMoves that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CompetitiveMoves
+     * const competitiveMoves = await prisma.competitiveMove.findMany()
+     * 
+     * // Get first 10 CompetitiveMoves
+     * const competitiveMoves = await prisma.competitiveMove.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CompetitiveMoveFindManyArgs>(args?: SelectSubset<T, CompetitiveMoveFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CompetitiveMove.
+     * @param {CompetitiveMoveCreateArgs} args - Arguments to create a CompetitiveMove.
+     * @example
+     * // Create one CompetitiveMove
+     * const CompetitiveMove = await prisma.competitiveMove.create({
+     *   data: {
+     *     // ... data to create a CompetitiveMove
+     *   }
+     * })
+     * 
+     */
+    create<T extends CompetitiveMoveCreateArgs>(args: SelectSubset<T, CompetitiveMoveCreateArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CompetitiveMoves.
+     * @param {CompetitiveMoveCreateManyArgs} args - Arguments to create many CompetitiveMoves.
+     * @example
+     * // Create many CompetitiveMoves
+     * const competitiveMove = await prisma.competitiveMove.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CompetitiveMoveCreateManyArgs>(args?: SelectSubset<T, CompetitiveMoveCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CompetitiveMoves and returns the data saved in the database.
+     * @param {CompetitiveMoveCreateManyAndReturnArgs} args - Arguments to create many CompetitiveMoves.
+     * @example
+     * // Create many CompetitiveMoves
+     * const competitiveMove = await prisma.competitiveMove.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CompetitiveMoves and only return the `id`
+     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CompetitiveMoveCreateManyAndReturnArgs>(args?: SelectSubset<T, CompetitiveMoveCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CompetitiveMove.
+     * @param {CompetitiveMoveDeleteArgs} args - Arguments to delete one CompetitiveMove.
+     * @example
+     * // Delete one CompetitiveMove
+     * const CompetitiveMove = await prisma.competitiveMove.delete({
+     *   where: {
+     *     // ... filter to delete one CompetitiveMove
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CompetitiveMoveDeleteArgs>(args: SelectSubset<T, CompetitiveMoveDeleteArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CompetitiveMove.
+     * @param {CompetitiveMoveUpdateArgs} args - Arguments to update one CompetitiveMove.
+     * @example
+     * // Update one CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CompetitiveMoveUpdateArgs>(args: SelectSubset<T, CompetitiveMoveUpdateArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CompetitiveMoves.
+     * @param {CompetitiveMoveDeleteManyArgs} args - Arguments to filter CompetitiveMoves to delete.
+     * @example
+     * // Delete a few CompetitiveMoves
+     * const { count } = await prisma.competitiveMove.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CompetitiveMoveDeleteManyArgs>(args?: SelectSubset<T, CompetitiveMoveDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CompetitiveMoves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CompetitiveMoves
+     * const competitiveMove = await prisma.competitiveMove.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CompetitiveMoveUpdateManyArgs>(args: SelectSubset<T, CompetitiveMoveUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CompetitiveMoves and returns the data updated in the database.
+     * @param {CompetitiveMoveUpdateManyAndReturnArgs} args - Arguments to update many CompetitiveMoves.
+     * @example
+     * // Update many CompetitiveMoves
+     * const competitiveMove = await prisma.competitiveMove.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CompetitiveMoves and only return the `id`
+     * const competitiveMoveWithIdOnly = await prisma.competitiveMove.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CompetitiveMoveUpdateManyAndReturnArgs>(args: SelectSubset<T, CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CompetitiveMove.
+     * @param {CompetitiveMoveUpsertArgs} args - Arguments to update or create a CompetitiveMove.
+     * @example
+     * // Update or create a CompetitiveMove
+     * const competitiveMove = await prisma.competitiveMove.upsert({
+     *   create: {
+     *     // ... data to create a CompetitiveMove
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CompetitiveMove we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CompetitiveMoveUpsertArgs>(args: SelectSubset<T, CompetitiveMoveUpsertArgs<ExtArgs>>): Prisma__CompetitiveMoveClient<$Result.GetResult<Prisma.$CompetitiveMovePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CompetitiveMoves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveCountArgs} args - Arguments to filter CompetitiveMoves to count.
+     * @example
+     * // Count the number of CompetitiveMoves
+     * const count = await prisma.competitiveMove.count({
+     *   where: {
+     *     // ... the filter for the CompetitiveMoves we want to count
+     *   }
+     * })
+    **/
+    count<T extends CompetitiveMoveCountArgs>(
+      args?: Subset<T, CompetitiveMoveCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CompetitiveMoveCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CompetitiveMove.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CompetitiveMoveAggregateArgs>(args: Subset<T, CompetitiveMoveAggregateArgs>): Prisma.PrismaPromise<GetCompetitiveMoveAggregateType<T>>
+
+    /**
+     * Group by CompetitiveMove.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CompetitiveMoveGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CompetitiveMoveGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CompetitiveMoveGroupByArgs['orderBy'] }
+        : { orderBy?: CompetitiveMoveGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CompetitiveMoveGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCompetitiveMoveGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CompetitiveMove model
+   */
+  readonly fields: CompetitiveMoveFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CompetitiveMove.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CompetitiveMoveClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    competitor<T extends CompetitiveMove$competitorArgs<ExtArgs> = {}>(args?: Subset<T, CompetitiveMove$competitorArgs<ExtArgs>>): Prisma__CompetitorClient<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CompetitiveMove model
+   */
+  interface CompetitiveMoveFieldRefs {
+    readonly id: FieldRef<"CompetitiveMove", 'String'>
+    readonly competitorId: FieldRef<"CompetitiveMove", 'String'>
+    readonly moveType: FieldRef<"CompetitiveMove", 'String'>
+    readonly title: FieldRef<"CompetitiveMove", 'String'>
+    readonly description: FieldRef<"CompetitiveMove", 'String'>
+    readonly impactLevel: FieldRef<"CompetitiveMove", 'Importance'>
+    readonly targetAudience: FieldRef<"CompetitiveMove", 'String'>
+    readonly affectedFeatures: FieldRef<"CompetitiveMove", 'String[]'>
+    readonly announcedDate: FieldRef<"CompetitiveMove", 'DateTime'>
+    readonly launchDate: FieldRef<"CompetitiveMove", 'DateTime'>
+    readonly completionDate: FieldRef<"CompetitiveMove", 'DateTime'>
+    readonly userFeedback: FieldRef<"CompetitiveMove", 'String'>
+    readonly pressCoverage: FieldRef<"CompetitiveMove", 'String[]'>
+    readonly opportunities: FieldRef<"CompetitiveMove", 'String[]'>
+    readonly threats: FieldRef<"CompetitiveMove", 'String[]'>
+    readonly responseRequired: FieldRef<"CompetitiveMove", 'Boolean'>
+    readonly responseStrategy: FieldRef<"CompetitiveMove", 'String'>
+    readonly createdAt: FieldRef<"CompetitiveMove", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CompetitiveMove findUnique
+   */
+  export type CompetitiveMoveFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter, which CompetitiveMove to fetch.
+     */
+    where: CompetitiveMoveWhereUniqueInput
+  }
+
+  /**
+   * CompetitiveMove findUniqueOrThrow
+   */
+  export type CompetitiveMoveFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter, which CompetitiveMove to fetch.
+     */
+    where: CompetitiveMoveWhereUniqueInput
+  }
+
+  /**
+   * CompetitiveMove findFirst
+   */
+  export type CompetitiveMoveFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter, which CompetitiveMove to fetch.
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompetitiveMoves to fetch.
+     */
+    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CompetitiveMoves.
+     */
+    cursor?: CompetitiveMoveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompetitiveMoves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompetitiveMoves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CompetitiveMoves.
+     */
+    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
+  }
+
+  /**
+   * CompetitiveMove findFirstOrThrow
+   */
+  export type CompetitiveMoveFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter, which CompetitiveMove to fetch.
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompetitiveMoves to fetch.
+     */
+    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CompetitiveMoves.
+     */
+    cursor?: CompetitiveMoveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompetitiveMoves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompetitiveMoves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CompetitiveMoves.
+     */
+    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
+  }
+
+  /**
+   * CompetitiveMove findMany
+   */
+  export type CompetitiveMoveFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter, which CompetitiveMoves to fetch.
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CompetitiveMoves to fetch.
+     */
+    orderBy?: CompetitiveMoveOrderByWithRelationInput | CompetitiveMoveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CompetitiveMoves.
+     */
+    cursor?: CompetitiveMoveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CompetitiveMoves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CompetitiveMoves.
+     */
+    skip?: number
+    distinct?: CompetitiveMoveScalarFieldEnum | CompetitiveMoveScalarFieldEnum[]
+  }
+
+  /**
+   * CompetitiveMove create
+   */
+  export type CompetitiveMoveCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CompetitiveMove.
+     */
+    data: XOR<CompetitiveMoveCreateInput, CompetitiveMoveUncheckedCreateInput>
+  }
+
+  /**
+   * CompetitiveMove createMany
+   */
+  export type CompetitiveMoveCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CompetitiveMoves.
+     */
+    data: CompetitiveMoveCreateManyInput | CompetitiveMoveCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CompetitiveMove createManyAndReturn
+   */
+  export type CompetitiveMoveCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * The data used to create many CompetitiveMoves.
+     */
+    data: CompetitiveMoveCreateManyInput | CompetitiveMoveCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CompetitiveMove update
+   */
+  export type CompetitiveMoveUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CompetitiveMove.
+     */
+    data: XOR<CompetitiveMoveUpdateInput, CompetitiveMoveUncheckedUpdateInput>
+    /**
+     * Choose, which CompetitiveMove to update.
+     */
+    where: CompetitiveMoveWhereUniqueInput
+  }
+
+  /**
+   * CompetitiveMove updateMany
+   */
+  export type CompetitiveMoveUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CompetitiveMoves.
+     */
+    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyInput>
+    /**
+     * Filter which CompetitiveMoves to update
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * Limit how many CompetitiveMoves to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CompetitiveMove updateManyAndReturn
+   */
+  export type CompetitiveMoveUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * The data used to update CompetitiveMoves.
+     */
+    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyInput>
+    /**
+     * Filter which CompetitiveMoves to update
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * Limit how many CompetitiveMoves to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CompetitiveMove upsert
+   */
+  export type CompetitiveMoveUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CompetitiveMove to update in case it exists.
+     */
+    where: CompetitiveMoveWhereUniqueInput
+    /**
+     * In case the CompetitiveMove found by the `where` argument doesn't exist, create a new CompetitiveMove with this data.
+     */
+    create: XOR<CompetitiveMoveCreateInput, CompetitiveMoveUncheckedCreateInput>
+    /**
+     * In case the CompetitiveMove was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CompetitiveMoveUpdateInput, CompetitiveMoveUncheckedUpdateInput>
+  }
+
+  /**
+   * CompetitiveMove delete
+   */
+  export type CompetitiveMoveDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+    /**
+     * Filter which CompetitiveMove to delete.
+     */
+    where: CompetitiveMoveWhereUniqueInput
+  }
+
+  /**
+   * CompetitiveMove deleteMany
+   */
+  export type CompetitiveMoveDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CompetitiveMoves to delete
+     */
+    where?: CompetitiveMoveWhereInput
+    /**
+     * Limit how many CompetitiveMoves to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CompetitiveMove.competitor
+   */
+  export type CompetitiveMove$competitorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Competitor
+     */
+    select?: CompetitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Competitor
+     */
+    omit?: CompetitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitorInclude<ExtArgs> | null
+    where?: CompetitorWhereInput
+  }
+
+  /**
+   * CompetitiveMove without action
+   */
+  export type CompetitiveMoveDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CompetitiveMove
+     */
+    select?: CompetitiveMoveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CompetitiveMove
+     */
+    omit?: CompetitiveMoveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CompetitiveMoveInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model ResearchSession
    */
 
@@ -56060,6 +53576,9 @@ export namespace Prisma {
     id: string | null
     ideaId: string | null
     organizationId: string | null
+    name: string | null
+    finalContent: string | null
+    prompt: string | null
     depth: $Enums.ResearchDepth | null
     status: $Enums.ResearchStatus | null
     currentPhaseIndex: number | null
@@ -56075,6 +53594,9 @@ export namespace Prisma {
     id: string | null
     ideaId: string | null
     organizationId: string | null
+    name: string | null
+    finalContent: string | null
+    prompt: string | null
     depth: $Enums.ResearchDepth | null
     status: $Enums.ResearchStatus | null
     currentPhaseIndex: number | null
@@ -56090,6 +53612,9 @@ export namespace Prisma {
     id: number
     ideaId: number
     organizationId: number
+    name: number
+    finalContent: number
+    prompt: number
     depth: number
     status: number
     currentPhaseIndex: number
@@ -56119,6 +53644,9 @@ export namespace Prisma {
     id?: true
     ideaId?: true
     organizationId?: true
+    name?: true
+    finalContent?: true
+    prompt?: true
     depth?: true
     status?: true
     currentPhaseIndex?: true
@@ -56134,6 +53662,9 @@ export namespace Prisma {
     id?: true
     ideaId?: true
     organizationId?: true
+    name?: true
+    finalContent?: true
+    prompt?: true
     depth?: true
     status?: true
     currentPhaseIndex?: true
@@ -56149,6 +53680,9 @@ export namespace Prisma {
     id?: true
     ideaId?: true
     organizationId?: true
+    name?: true
+    finalContent?: true
+    prompt?: true
     depth?: true
     status?: true
     currentPhaseIndex?: true
@@ -56251,6 +53785,9 @@ export namespace Prisma {
     id: string
     ideaId: string
     organizationId: string
+    name: string | null
+    finalContent: string | null
+    prompt: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex: number
@@ -56285,6 +53822,9 @@ export namespace Prisma {
     id?: boolean
     ideaId?: boolean
     organizationId?: boolean
+    name?: boolean
+    finalContent?: boolean
+    prompt?: boolean
     depth?: boolean
     status?: boolean
     currentPhaseIndex?: boolean
@@ -56297,6 +53837,7 @@ export namespace Prisma {
     idea?: boolean | IdeaDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     phases?: boolean | ResearchSession$phasesArgs<ExtArgs>
+    findings?: boolean | ResearchSession$findingsArgs<ExtArgs>
     _count?: boolean | ResearchSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["researchSession"]>
 
@@ -56304,6 +53845,9 @@ export namespace Prisma {
     id?: boolean
     ideaId?: boolean
     organizationId?: boolean
+    name?: boolean
+    finalContent?: boolean
+    prompt?: boolean
     depth?: boolean
     status?: boolean
     currentPhaseIndex?: boolean
@@ -56321,6 +53865,9 @@ export namespace Prisma {
     id?: boolean
     ideaId?: boolean
     organizationId?: boolean
+    name?: boolean
+    finalContent?: boolean
+    prompt?: boolean
     depth?: boolean
     status?: boolean
     currentPhaseIndex?: boolean
@@ -56338,6 +53885,9 @@ export namespace Prisma {
     id?: boolean
     ideaId?: boolean
     organizationId?: boolean
+    name?: boolean
+    finalContent?: boolean
+    prompt?: boolean
     depth?: boolean
     status?: boolean
     currentPhaseIndex?: boolean
@@ -56349,11 +53899,12 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ResearchSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "organizationId" | "depth" | "status" | "currentPhaseIndex" | "overallConfidence" | "estimatedCompletion" | "actualCompletion" | "totalCost" | "createdAt" | "updatedAt", ExtArgs["result"]["researchSession"]>
+  export type ResearchSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "organizationId" | "name" | "finalContent" | "prompt" | "depth" | "status" | "currentPhaseIndex" | "overallConfidence" | "estimatedCompletion" | "actualCompletion" | "totalCost" | "createdAt" | "updatedAt", ExtArgs["result"]["researchSession"]>
   export type ResearchSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     idea?: boolean | IdeaDefaultArgs<ExtArgs>
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     phases?: boolean | ResearchSession$phasesArgs<ExtArgs>
+    findings?: boolean | ResearchSession$findingsArgs<ExtArgs>
     _count?: boolean | ResearchSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ResearchSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -56371,11 +53922,15 @@ export namespace Prisma {
       idea: Prisma.$IdeaPayload<ExtArgs>
       organization: Prisma.$OrganizationPayload<ExtArgs>
       phases: Prisma.$ResearchPhaseResultPayload<ExtArgs>[]
+      findings: Prisma.$ResearchFindingsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       ideaId: string
       organizationId: string
+      name: string | null
+      finalContent: string | null
+      prompt: string | null
       depth: $Enums.ResearchDepth
       status: $Enums.ResearchStatus
       currentPhaseIndex: number
@@ -56782,6 +54337,7 @@ export namespace Prisma {
     idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     phases<T extends ResearchSession$phasesArgs<ExtArgs> = {}>(args?: Subset<T, ResearchSession$phasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    findings<T extends ResearchSession$findingsArgs<ExtArgs> = {}>(args?: Subset<T, ResearchSession$findingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -56814,6 +54370,9 @@ export namespace Prisma {
     readonly id: FieldRef<"ResearchSession", 'String'>
     readonly ideaId: FieldRef<"ResearchSession", 'String'>
     readonly organizationId: FieldRef<"ResearchSession", 'String'>
+    readonly name: FieldRef<"ResearchSession", 'String'>
+    readonly finalContent: FieldRef<"ResearchSession", 'String'>
+    readonly prompt: FieldRef<"ResearchSession", 'String'>
     readonly depth: FieldRef<"ResearchSession", 'ResearchDepth'>
     readonly status: FieldRef<"ResearchSession", 'ResearchStatus'>
     readonly currentPhaseIndex: FieldRef<"ResearchSession", 'Int'>
@@ -57243,6 +54802,30 @@ export namespace Prisma {
   }
 
   /**
+   * ResearchSession.findings
+   */
+  export type ResearchSession$findingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    where?: ResearchFindingsWhereInput
+    orderBy?: ResearchFindingsOrderByWithRelationInput | ResearchFindingsOrderByWithRelationInput[]
+    cursor?: ResearchFindingsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ResearchFindingsScalarFieldEnum | ResearchFindingsScalarFieldEnum[]
+  }
+
+  /**
    * ResearchSession without action
    */
   export type ResearchSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -57275,14 +54858,10 @@ export namespace Prisma {
 
   export type ResearchPhaseResultAvgAggregateOutputType = {
     confidence: number | null
-    duration: number | null
-    iterations: number | null
   }
 
   export type ResearchPhaseResultSumAggregateOutputType = {
     confidence: number | null
-    duration: number | null
-    iterations: number | null
   }
 
   export type ResearchPhaseResultMinAggregateOutputType = {
@@ -57290,12 +54869,8 @@ export namespace Prisma {
     sessionId: string | null
     phaseName: $Enums.ResearchPhaseType | null
     status: $Enums.PhaseStatus | null
+    conclusion: string | null
     confidence: number | null
-    duration: number | null
-    iterations: number | null
-    startedAt: Date | null
-    completedAt: Date | null
-    error: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -57305,12 +54880,8 @@ export namespace Prisma {
     sessionId: string | null
     phaseName: $Enums.ResearchPhaseType | null
     status: $Enums.PhaseStatus | null
+    conclusion: string | null
     confidence: number | null
-    duration: number | null
-    iterations: number | null
-    startedAt: Date | null
-    completedAt: Date | null
-    error: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -57320,13 +54891,8 @@ export namespace Prisma {
     sessionId: number
     phaseName: number
     status: number
-    findings: number
+    conclusion: number
     confidence: number
-    duration: number
-    iterations: number
-    startedAt: number
-    completedAt: number
-    error: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -57335,14 +54901,10 @@ export namespace Prisma {
 
   export type ResearchPhaseResultAvgAggregateInputType = {
     confidence?: true
-    duration?: true
-    iterations?: true
   }
 
   export type ResearchPhaseResultSumAggregateInputType = {
     confidence?: true
-    duration?: true
-    iterations?: true
   }
 
   export type ResearchPhaseResultMinAggregateInputType = {
@@ -57350,12 +54912,8 @@ export namespace Prisma {
     sessionId?: true
     phaseName?: true
     status?: true
+    conclusion?: true
     confidence?: true
-    duration?: true
-    iterations?: true
-    startedAt?: true
-    completedAt?: true
-    error?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -57365,12 +54923,8 @@ export namespace Prisma {
     sessionId?: true
     phaseName?: true
     status?: true
+    conclusion?: true
     confidence?: true
-    duration?: true
-    iterations?: true
-    startedAt?: true
-    completedAt?: true
-    error?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -57380,13 +54934,8 @@ export namespace Prisma {
     sessionId?: true
     phaseName?: true
     status?: true
-    findings?: true
+    conclusion?: true
     confidence?: true
-    duration?: true
-    iterations?: true
-    startedAt?: true
-    completedAt?: true
-    error?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -57483,13 +55032,8 @@ export namespace Prisma {
     sessionId: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonValue
+    conclusion: string | null
     confidence: number
-    duration: number
-    iterations: number
-    startedAt: Date | null
-    completedAt: Date | null
-    error: string | null
     createdAt: Date
     updatedAt: Date
     _count: ResearchPhaseResultCountAggregateOutputType | null
@@ -57518,13 +55062,8 @@ export namespace Prisma {
     sessionId?: boolean
     phaseName?: boolean
     status?: boolean
-    findings?: boolean
+    conclusion?: boolean
     confidence?: boolean
-    duration?: boolean
-    iterations?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
@@ -57535,13 +55074,8 @@ export namespace Prisma {
     sessionId?: boolean
     phaseName?: boolean
     status?: boolean
-    findings?: boolean
+    conclusion?: boolean
     confidence?: boolean
-    duration?: boolean
-    iterations?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
@@ -57552,13 +55086,8 @@ export namespace Prisma {
     sessionId?: boolean
     phaseName?: boolean
     status?: boolean
-    findings?: boolean
+    conclusion?: boolean
     confidence?: boolean
-    duration?: boolean
-    iterations?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
@@ -57569,18 +55098,13 @@ export namespace Prisma {
     sessionId?: boolean
     phaseName?: boolean
     status?: boolean
-    findings?: boolean
+    conclusion?: boolean
     confidence?: boolean
-    duration?: boolean
-    iterations?: boolean
-    startedAt?: boolean
-    completedAt?: boolean
-    error?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ResearchPhaseResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "phaseName" | "status" | "findings" | "confidence" | "duration" | "iterations" | "startedAt" | "completedAt" | "error" | "createdAt" | "updatedAt", ExtArgs["result"]["researchPhaseResult"]>
+  export type ResearchPhaseResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "phaseName" | "status" | "conclusion" | "confidence" | "createdAt" | "updatedAt", ExtArgs["result"]["researchPhaseResult"]>
   export type ResearchPhaseResultInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
   }
@@ -57601,13 +55125,8 @@ export namespace Prisma {
       sessionId: string
       phaseName: $Enums.ResearchPhaseType
       status: $Enums.PhaseStatus
-      findings: Prisma.JsonValue
+      conclusion: string | null
       confidence: number
-      duration: number
-      iterations: number
-      startedAt: Date | null
-      completedAt: Date | null
-      error: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["researchPhaseResult"]>
@@ -58038,13 +55557,8 @@ export namespace Prisma {
     readonly sessionId: FieldRef<"ResearchPhaseResult", 'String'>
     readonly phaseName: FieldRef<"ResearchPhaseResult", 'ResearchPhaseType'>
     readonly status: FieldRef<"ResearchPhaseResult", 'PhaseStatus'>
-    readonly findings: FieldRef<"ResearchPhaseResult", 'Json'>
+    readonly conclusion: FieldRef<"ResearchPhaseResult", 'String'>
     readonly confidence: FieldRef<"ResearchPhaseResult", 'Float'>
-    readonly duration: FieldRef<"ResearchPhaseResult", 'Int'>
-    readonly iterations: FieldRef<"ResearchPhaseResult", 'Int'>
-    readonly startedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
-    readonly completedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
-    readonly error: FieldRef<"ResearchPhaseResult", 'String'>
     readonly createdAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
     readonly updatedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
   }
@@ -58458,6 +55972,1064 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ResearchPhaseResultInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ResearchFindings
+   */
+
+  export type AggregateResearchFindings = {
+    _count: ResearchFindingsCountAggregateOutputType | null
+    _min: ResearchFindingsMinAggregateOutputType | null
+    _max: ResearchFindingsMaxAggregateOutputType | null
+  }
+
+  export type ResearchFindingsMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    findings: string | null
+    impact: $Enums.Importance | null
+    createdAt: Date | null
+  }
+
+  export type ResearchFindingsMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    findings: string | null
+    impact: $Enums.Importance | null
+    createdAt: Date | null
+  }
+
+  export type ResearchFindingsCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    findings: number
+    impact: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type ResearchFindingsMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    findings?: true
+    impact?: true
+    createdAt?: true
+  }
+
+  export type ResearchFindingsMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    findings?: true
+    impact?: true
+    createdAt?: true
+  }
+
+  export type ResearchFindingsCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    findings?: true
+    impact?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type ResearchFindingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchFindings to aggregate.
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchFindings to fetch.
+     */
+    orderBy?: ResearchFindingsOrderByWithRelationInput | ResearchFindingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ResearchFindingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ResearchFindings
+    **/
+    _count?: true | ResearchFindingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ResearchFindingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ResearchFindingsMaxAggregateInputType
+  }
+
+  export type GetResearchFindingsAggregateType<T extends ResearchFindingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateResearchFindings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateResearchFindings[P]>
+      : GetScalarType<T[P], AggregateResearchFindings[P]>
+  }
+
+
+
+
+  export type ResearchFindingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchFindingsWhereInput
+    orderBy?: ResearchFindingsOrderByWithAggregationInput | ResearchFindingsOrderByWithAggregationInput[]
+    by: ResearchFindingsScalarFieldEnum[] | ResearchFindingsScalarFieldEnum
+    having?: ResearchFindingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ResearchFindingsCountAggregateInputType | true
+    _min?: ResearchFindingsMinAggregateInputType
+    _max?: ResearchFindingsMaxAggregateInputType
+  }
+
+  export type ResearchFindingsGroupByOutputType = {
+    id: string
+    sessionId: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt: Date
+    _count: ResearchFindingsCountAggregateOutputType | null
+    _min: ResearchFindingsMinAggregateOutputType | null
+    _max: ResearchFindingsMaxAggregateOutputType | null
+  }
+
+  type GetResearchFindingsGroupByPayload<T extends ResearchFindingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ResearchFindingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ResearchFindingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ResearchFindingsGroupByOutputType[P]>
+            : GetScalarType<T[P], ResearchFindingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ResearchFindingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    findings?: boolean
+    impact?: boolean
+    createdAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchFindings"]>
+
+  export type ResearchFindingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    findings?: boolean
+    impact?: boolean
+    createdAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchFindings"]>
+
+  export type ResearchFindingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    findings?: boolean
+    impact?: boolean
+    createdAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchFindings"]>
+
+  export type ResearchFindingsSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    findings?: boolean
+    impact?: boolean
+    createdAt?: boolean
+  }
+
+  export type ResearchFindingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "findings" | "impact" | "createdAt", ExtArgs["result"]["researchFindings"]>
+  export type ResearchFindingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+  export type ResearchFindingsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+  export type ResearchFindingsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $ResearchFindingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ResearchFindings"
+    objects: {
+      session: Prisma.$ResearchSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      findings: string
+      impact: $Enums.Importance
+      createdAt: Date
+    }, ExtArgs["result"]["researchFindings"]>
+    composites: {}
+  }
+
+  type ResearchFindingsGetPayload<S extends boolean | null | undefined | ResearchFindingsDefaultArgs> = $Result.GetResult<Prisma.$ResearchFindingsPayload, S>
+
+  type ResearchFindingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ResearchFindingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ResearchFindingsCountAggregateInputType | true
+    }
+
+  export interface ResearchFindingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ResearchFindings'], meta: { name: 'ResearchFindings' } }
+    /**
+     * Find zero or one ResearchFindings that matches the filter.
+     * @param {ResearchFindingsFindUniqueArgs} args - Arguments to find a ResearchFindings
+     * @example
+     * // Get one ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ResearchFindingsFindUniqueArgs>(args: SelectSubset<T, ResearchFindingsFindUniqueArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ResearchFindings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ResearchFindingsFindUniqueOrThrowArgs} args - Arguments to find a ResearchFindings
+     * @example
+     * // Get one ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ResearchFindingsFindUniqueOrThrowArgs>(args: SelectSubset<T, ResearchFindingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchFindings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsFindFirstArgs} args - Arguments to find a ResearchFindings
+     * @example
+     * // Get one ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ResearchFindingsFindFirstArgs>(args?: SelectSubset<T, ResearchFindingsFindFirstArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchFindings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsFindFirstOrThrowArgs} args - Arguments to find a ResearchFindings
+     * @example
+     * // Get one ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ResearchFindingsFindFirstOrThrowArgs>(args?: SelectSubset<T, ResearchFindingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ResearchFindings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findMany()
+     * 
+     * // Get first 10 ResearchFindings
+     * const researchFindings = await prisma.researchFindings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const researchFindingsWithIdOnly = await prisma.researchFindings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ResearchFindingsFindManyArgs>(args?: SelectSubset<T, ResearchFindingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ResearchFindings.
+     * @param {ResearchFindingsCreateArgs} args - Arguments to create a ResearchFindings.
+     * @example
+     * // Create one ResearchFindings
+     * const ResearchFindings = await prisma.researchFindings.create({
+     *   data: {
+     *     // ... data to create a ResearchFindings
+     *   }
+     * })
+     * 
+     */
+    create<T extends ResearchFindingsCreateArgs>(args: SelectSubset<T, ResearchFindingsCreateArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ResearchFindings.
+     * @param {ResearchFindingsCreateManyArgs} args - Arguments to create many ResearchFindings.
+     * @example
+     * // Create many ResearchFindings
+     * const researchFindings = await prisma.researchFindings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ResearchFindingsCreateManyArgs>(args?: SelectSubset<T, ResearchFindingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ResearchFindings and returns the data saved in the database.
+     * @param {ResearchFindingsCreateManyAndReturnArgs} args - Arguments to create many ResearchFindings.
+     * @example
+     * // Create many ResearchFindings
+     * const researchFindings = await prisma.researchFindings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ResearchFindings and only return the `id`
+     * const researchFindingsWithIdOnly = await prisma.researchFindings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ResearchFindingsCreateManyAndReturnArgs>(args?: SelectSubset<T, ResearchFindingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ResearchFindings.
+     * @param {ResearchFindingsDeleteArgs} args - Arguments to delete one ResearchFindings.
+     * @example
+     * // Delete one ResearchFindings
+     * const ResearchFindings = await prisma.researchFindings.delete({
+     *   where: {
+     *     // ... filter to delete one ResearchFindings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ResearchFindingsDeleteArgs>(args: SelectSubset<T, ResearchFindingsDeleteArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ResearchFindings.
+     * @param {ResearchFindingsUpdateArgs} args - Arguments to update one ResearchFindings.
+     * @example
+     * // Update one ResearchFindings
+     * const researchFindings = await prisma.researchFindings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ResearchFindingsUpdateArgs>(args: SelectSubset<T, ResearchFindingsUpdateArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ResearchFindings.
+     * @param {ResearchFindingsDeleteManyArgs} args - Arguments to filter ResearchFindings to delete.
+     * @example
+     * // Delete a few ResearchFindings
+     * const { count } = await prisma.researchFindings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ResearchFindingsDeleteManyArgs>(args?: SelectSubset<T, ResearchFindingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ResearchFindings
+     * const researchFindings = await prisma.researchFindings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ResearchFindingsUpdateManyArgs>(args: SelectSubset<T, ResearchFindingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchFindings and returns the data updated in the database.
+     * @param {ResearchFindingsUpdateManyAndReturnArgs} args - Arguments to update many ResearchFindings.
+     * @example
+     * // Update many ResearchFindings
+     * const researchFindings = await prisma.researchFindings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ResearchFindings and only return the `id`
+     * const researchFindingsWithIdOnly = await prisma.researchFindings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ResearchFindingsUpdateManyAndReturnArgs>(args: SelectSubset<T, ResearchFindingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ResearchFindings.
+     * @param {ResearchFindingsUpsertArgs} args - Arguments to update or create a ResearchFindings.
+     * @example
+     * // Update or create a ResearchFindings
+     * const researchFindings = await prisma.researchFindings.upsert({
+     *   create: {
+     *     // ... data to create a ResearchFindings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ResearchFindings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ResearchFindingsUpsertArgs>(args: SelectSubset<T, ResearchFindingsUpsertArgs<ExtArgs>>): Prisma__ResearchFindingsClient<$Result.GetResult<Prisma.$ResearchFindingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ResearchFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsCountArgs} args - Arguments to filter ResearchFindings to count.
+     * @example
+     * // Count the number of ResearchFindings
+     * const count = await prisma.researchFindings.count({
+     *   where: {
+     *     // ... the filter for the ResearchFindings we want to count
+     *   }
+     * })
+    **/
+    count<T extends ResearchFindingsCountArgs>(
+      args?: Subset<T, ResearchFindingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ResearchFindingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ResearchFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ResearchFindingsAggregateArgs>(args: Subset<T, ResearchFindingsAggregateArgs>): Prisma.PrismaPromise<GetResearchFindingsAggregateType<T>>
+
+    /**
+     * Group by ResearchFindings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchFindingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ResearchFindingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ResearchFindingsGroupByArgs['orderBy'] }
+        : { orderBy?: ResearchFindingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ResearchFindingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetResearchFindingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ResearchFindings model
+   */
+  readonly fields: ResearchFindingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ResearchFindings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ResearchFindingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends ResearchSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ResearchSessionDefaultArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ResearchFindings model
+   */
+  interface ResearchFindingsFieldRefs {
+    readonly id: FieldRef<"ResearchFindings", 'String'>
+    readonly sessionId: FieldRef<"ResearchFindings", 'String'>
+    readonly findings: FieldRef<"ResearchFindings", 'String'>
+    readonly impact: FieldRef<"ResearchFindings", 'Importance'>
+    readonly createdAt: FieldRef<"ResearchFindings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ResearchFindings findUnique
+   */
+  export type ResearchFindingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchFindings to fetch.
+     */
+    where: ResearchFindingsWhereUniqueInput
+  }
+
+  /**
+   * ResearchFindings findUniqueOrThrow
+   */
+  export type ResearchFindingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchFindings to fetch.
+     */
+    where: ResearchFindingsWhereUniqueInput
+  }
+
+  /**
+   * ResearchFindings findFirst
+   */
+  export type ResearchFindingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchFindings to fetch.
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchFindings to fetch.
+     */
+    orderBy?: ResearchFindingsOrderByWithRelationInput | ResearchFindingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchFindings.
+     */
+    cursor?: ResearchFindingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchFindings.
+     */
+    distinct?: ResearchFindingsScalarFieldEnum | ResearchFindingsScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchFindings findFirstOrThrow
+   */
+  export type ResearchFindingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchFindings to fetch.
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchFindings to fetch.
+     */
+    orderBy?: ResearchFindingsOrderByWithRelationInput | ResearchFindingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchFindings.
+     */
+    cursor?: ResearchFindingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchFindings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchFindings.
+     */
+    distinct?: ResearchFindingsScalarFieldEnum | ResearchFindingsScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchFindings findMany
+   */
+  export type ResearchFindingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchFindings to fetch.
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchFindings to fetch.
+     */
+    orderBy?: ResearchFindingsOrderByWithRelationInput | ResearchFindingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ResearchFindings.
+     */
+    cursor?: ResearchFindingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchFindings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchFindings.
+     */
+    skip?: number
+    distinct?: ResearchFindingsScalarFieldEnum | ResearchFindingsScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchFindings create
+   */
+  export type ResearchFindingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ResearchFindings.
+     */
+    data: XOR<ResearchFindingsCreateInput, ResearchFindingsUncheckedCreateInput>
+  }
+
+  /**
+   * ResearchFindings createMany
+   */
+  export type ResearchFindingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ResearchFindings.
+     */
+    data: ResearchFindingsCreateManyInput | ResearchFindingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ResearchFindings createManyAndReturn
+   */
+  export type ResearchFindingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many ResearchFindings.
+     */
+    data: ResearchFindingsCreateManyInput | ResearchFindingsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchFindings update
+   */
+  export type ResearchFindingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ResearchFindings.
+     */
+    data: XOR<ResearchFindingsUpdateInput, ResearchFindingsUncheckedUpdateInput>
+    /**
+     * Choose, which ResearchFindings to update.
+     */
+    where: ResearchFindingsWhereUniqueInput
+  }
+
+  /**
+   * ResearchFindings updateMany
+   */
+  export type ResearchFindingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ResearchFindings.
+     */
+    data: XOR<ResearchFindingsUpdateManyMutationInput, ResearchFindingsUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchFindings to update
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * Limit how many ResearchFindings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchFindings updateManyAndReturn
+   */
+  export type ResearchFindingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * The data used to update ResearchFindings.
+     */
+    data: XOR<ResearchFindingsUpdateManyMutationInput, ResearchFindingsUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchFindings to update
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * Limit how many ResearchFindings to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchFindings upsert
+   */
+  export type ResearchFindingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ResearchFindings to update in case it exists.
+     */
+    where: ResearchFindingsWhereUniqueInput
+    /**
+     * In case the ResearchFindings found by the `where` argument doesn't exist, create a new ResearchFindings with this data.
+     */
+    create: XOR<ResearchFindingsCreateInput, ResearchFindingsUncheckedCreateInput>
+    /**
+     * In case the ResearchFindings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ResearchFindingsUpdateInput, ResearchFindingsUncheckedUpdateInput>
+  }
+
+  /**
+   * ResearchFindings delete
+   */
+  export type ResearchFindingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
+    /**
+     * Filter which ResearchFindings to delete.
+     */
+    where: ResearchFindingsWhereUniqueInput
+  }
+
+  /**
+   * ResearchFindings deleteMany
+   */
+  export type ResearchFindingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchFindings to delete
+     */
+    where?: ResearchFindingsWhereInput
+    /**
+     * Limit how many ResearchFindings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchFindings without action
+   */
+  export type ResearchFindingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchFindings
+     */
+    select?: ResearchFindingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchFindings
+     */
+    omit?: ResearchFindingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchFindingsInclude<ExtArgs> | null
   }
 
 
@@ -59031,31 +57603,48 @@ export namespace Prisma {
   export type MilestoneDependencyScalarFieldEnum = (typeof MilestoneDependencyScalarFieldEnum)[keyof typeof MilestoneDependencyScalarFieldEnum]
 
 
-  export const MarketResearchScalarFieldEnum: {
+  export const AssetViewScalarFieldEnum: {
     id: 'id',
-    ideaId: 'ideaId',
+    assetId: 'assetId',
     organizationId: 'organizationId',
-    validationScore: 'validationScore',
-    confidenceLevel: 'confidenceLevel',
-    completed: 'completed',
-    lastUpdated: 'lastUpdated',
-    createdAt: 'createdAt',
-    type: 'type'
+    userId: 'userId',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    referrer: 'referrer',
+    viewedAt: 'viewedAt'
   };
 
-  export type MarketResearchScalarFieldEnum = (typeof MarketResearchScalarFieldEnum)[keyof typeof MarketResearchScalarFieldEnum]
+  export type AssetViewScalarFieldEnum = (typeof AssetViewScalarFieldEnum)[keyof typeof AssetViewScalarFieldEnum]
 
 
-  export const ResearchResultsScalarFieldEnum: {
+  export const AssetDownloadScalarFieldEnum: {
     id: 'id',
+    assetId: 'assetId',
     organizationId: 'organizationId',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    content: 'content',
-    marketResearchId: 'marketResearchId'
+    userId: 'userId',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    referrer: 'referrer',
+    downloadedAt: 'downloadedAt'
   };
 
-  export type ResearchResultsScalarFieldEnum = (typeof ResearchResultsScalarFieldEnum)[keyof typeof ResearchResultsScalarFieldEnum]
+  export type AssetDownloadScalarFieldEnum = (typeof AssetDownloadScalarFieldEnum)[keyof typeof AssetDownloadScalarFieldEnum]
+
+
+  export const ReferralScalarFieldEnum: {
+    id: 'id',
+    referrerId: 'referrerId',
+    referredEmail: 'referredEmail',
+    referredName: 'referredName',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent',
+    referrerCode: 'referrerCode',
+    waitlistId: 'waitlistId',
+    organizationId: 'organizationId',
+    createdAt: 'createdAt'
+  };
+
+  export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
 
 
   export const CompetitorScalarFieldEnum: {
@@ -59108,54 +57697,13 @@ export namespace Prisma {
   export type CompetitiveMoveScalarFieldEnum = (typeof CompetitiveMoveScalarFieldEnum)[keyof typeof CompetitiveMoveScalarFieldEnum]
 
 
-  export const AssetViewScalarFieldEnum: {
-    id: 'id',
-    assetId: 'assetId',
-    organizationId: 'organizationId',
-    userId: 'userId',
-    ipAddress: 'ipAddress',
-    userAgent: 'userAgent',
-    referrer: 'referrer',
-    viewedAt: 'viewedAt'
-  };
-
-  export type AssetViewScalarFieldEnum = (typeof AssetViewScalarFieldEnum)[keyof typeof AssetViewScalarFieldEnum]
-
-
-  export const AssetDownloadScalarFieldEnum: {
-    id: 'id',
-    assetId: 'assetId',
-    organizationId: 'organizationId',
-    userId: 'userId',
-    ipAddress: 'ipAddress',
-    userAgent: 'userAgent',
-    referrer: 'referrer',
-    downloadedAt: 'downloadedAt'
-  };
-
-  export type AssetDownloadScalarFieldEnum = (typeof AssetDownloadScalarFieldEnum)[keyof typeof AssetDownloadScalarFieldEnum]
-
-
-  export const ReferralScalarFieldEnum: {
-    id: 'id',
-    referrerId: 'referrerId',
-    referredEmail: 'referredEmail',
-    referredName: 'referredName',
-    ipAddress: 'ipAddress',
-    userAgent: 'userAgent',
-    referrerCode: 'referrerCode',
-    waitlistId: 'waitlistId',
-    organizationId: 'organizationId',
-    createdAt: 'createdAt'
-  };
-
-  export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
-
-
   export const ResearchSessionScalarFieldEnum: {
     id: 'id',
     ideaId: 'ideaId',
     organizationId: 'organizationId',
+    name: 'name',
+    finalContent: 'finalContent',
+    prompt: 'prompt',
     depth: 'depth',
     status: 'status',
     currentPhaseIndex: 'currentPhaseIndex',
@@ -59175,18 +57723,24 @@ export namespace Prisma {
     sessionId: 'sessionId',
     phaseName: 'phaseName',
     status: 'status',
-    findings: 'findings',
+    conclusion: 'conclusion',
     confidence: 'confidence',
-    duration: 'duration',
-    iterations: 'iterations',
-    startedAt: 'startedAt',
-    completedAt: 'completedAt',
-    error: 'error',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type ResearchPhaseResultScalarFieldEnum = (typeof ResearchPhaseResultScalarFieldEnum)[keyof typeof ResearchPhaseResultScalarFieldEnum]
+
+
+  export const ResearchFindingsScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    findings: 'findings',
+    impact: 'impact',
+    createdAt: 'createdAt'
+  };
+
+  export type ResearchFindingsScalarFieldEnum = (typeof ResearchFindingsScalarFieldEnum)[keyof typeof ResearchFindingsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -59574,20 +58128,6 @@ export namespace Prisma {
    * Reference to a field of type 'MilestoneStatus[]'
    */
   export type ListEnumMilestoneStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MilestoneStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'ResearchType'
-   */
-  export type EnumResearchTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchType'>
-    
-
-
-  /**
-   * Reference to a field of type 'ResearchType[]'
-   */
-  export type ListEnumResearchTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchType[]'>
     
 
 
@@ -60035,12 +58575,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyListRelationFilter
     issueDependency?: IssueDependencyListRelationFilter
     issueLink?: IssueLinkListRelationFilter
-    marketResearch?: MarketResearchListRelationFilter
     assetViews?: AssetViewListRelationFilter
     assetDownloads?: AssetDownloadListRelationFilter
     referrals?: ReferralListRelationFilter
     ApiKey?: ApiKeyListRelationFilter
-    ResearchResults?: ResearchResultsListRelationFilter
     researchSessions?: ResearchSessionListRelationFilter
   }
 
@@ -60068,12 +58606,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyOrderByRelationAggregateInput
     issueDependency?: IssueDependencyOrderByRelationAggregateInput
     issueLink?: IssueLinkOrderByRelationAggregateInput
-    marketResearch?: MarketResearchOrderByRelationAggregateInput
     assetViews?: AssetViewOrderByRelationAggregateInput
     assetDownloads?: AssetDownloadOrderByRelationAggregateInput
     referrals?: ReferralOrderByRelationAggregateInput
     ApiKey?: ApiKeyOrderByRelationAggregateInput
-    ResearchResults?: ResearchResultsOrderByRelationAggregateInput
     researchSessions?: ResearchSessionOrderByRelationAggregateInput
   }
 
@@ -60104,12 +58640,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyListRelationFilter
     issueDependency?: IssueDependencyListRelationFilter
     issueLink?: IssueLinkListRelationFilter
-    marketResearch?: MarketResearchListRelationFilter
     assetViews?: AssetViewListRelationFilter
     assetDownloads?: AssetDownloadListRelationFilter
     referrals?: ReferralListRelationFilter
     ApiKey?: ApiKeyListRelationFilter
-    ResearchResults?: ResearchResultsListRelationFilter
     researchSessions?: ResearchSessionListRelationFilter
   }, "id" | "slug">
 
@@ -60633,7 +59167,6 @@ export namespace Prisma {
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
-    marketResearch?: MarketResearchListRelationFilter
     researchSessions?: ResearchSessionListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }
@@ -60656,7 +59189,6 @@ export namespace Prisma {
     owner?: UserOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
     projects?: ProjectOrderByRelationAggregateInput
-    marketResearch?: MarketResearchOrderByRelationAggregateInput
     researchSessions?: ResearchSessionOrderByRelationAggregateInput
     Competitor?: CompetitorOrderByRelationAggregateInput
   }
@@ -60682,7 +59214,6 @@ export namespace Prisma {
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
-    marketResearch?: MarketResearchListRelationFilter
     researchSessions?: ResearchSessionListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }, "id">
@@ -62791,150 +61322,242 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"MilestoneDependency"> | Date | string
   }
 
-  export type MarketResearchWhereInput = {
-    AND?: MarketResearchWhereInput | MarketResearchWhereInput[]
-    OR?: MarketResearchWhereInput[]
-    NOT?: MarketResearchWhereInput | MarketResearchWhereInput[]
-    id?: StringFilter<"MarketResearch"> | string
-    ideaId?: StringFilter<"MarketResearch"> | string
-    organizationId?: StringFilter<"MarketResearch"> | string
-    validationScore?: FloatNullableFilter<"MarketResearch"> | number | null
-    confidenceLevel?: EnumImportanceFilter<"MarketResearch"> | $Enums.Importance
-    completed?: BoolFilter<"MarketResearch"> | boolean
-    lastUpdated?: DateTimeFilter<"MarketResearch"> | Date | string
-    createdAt?: DateTimeFilter<"MarketResearch"> | Date | string
-    type?: EnumResearchTypeFilter<"MarketResearch"> | $Enums.ResearchType
-    idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
+  export type AssetViewWhereInput = {
+    AND?: AssetViewWhereInput | AssetViewWhereInput[]
+    OR?: AssetViewWhereInput[]
+    NOT?: AssetViewWhereInput | AssetViewWhereInput[]
+    id?: StringFilter<"AssetView"> | string
+    assetId?: StringFilter<"AssetView"> | string
+    organizationId?: StringFilter<"AssetView"> | string
+    userId?: StringNullableFilter<"AssetView"> | string | null
+    ipAddress?: StringFilter<"AssetView"> | string
+    userAgent?: StringNullableFilter<"AssetView"> | string | null
+    referrer?: StringNullableFilter<"AssetView"> | string | null
+    viewedAt?: DateTimeFilter<"AssetView"> | Date | string
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    ResearchResults?: XOR<ResearchResultsNullableScalarRelationFilter, ResearchResultsWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
-  export type MarketResearchOrderByWithRelationInput = {
+  export type AssetViewOrderByWithRelationInput = {
     id?: SortOrder
-    ideaId?: SortOrder
+    assetId?: SortOrder
     organizationId?: SortOrder
-    validationScore?: SortOrderInput | SortOrder
-    confidenceLevel?: SortOrder
-    completed?: SortOrder
-    lastUpdated?: SortOrder
-    createdAt?: SortOrder
-    type?: SortOrder
-    idea?: IdeaOrderByWithRelationInput
+    userId?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    viewedAt?: SortOrder
+    asset?: AssetOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
-    ResearchResults?: ResearchResultsOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
-  export type MarketResearchWhereUniqueInput = Prisma.AtLeast<{
+  export type AssetViewWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    AND?: MarketResearchWhereInput | MarketResearchWhereInput[]
-    OR?: MarketResearchWhereInput[]
-    NOT?: MarketResearchWhereInput | MarketResearchWhereInput[]
-    ideaId?: StringFilter<"MarketResearch"> | string
-    organizationId?: StringFilter<"MarketResearch"> | string
-    validationScore?: FloatNullableFilter<"MarketResearch"> | number | null
-    confidenceLevel?: EnumImportanceFilter<"MarketResearch"> | $Enums.Importance
-    completed?: BoolFilter<"MarketResearch"> | boolean
-    lastUpdated?: DateTimeFilter<"MarketResearch"> | Date | string
-    createdAt?: DateTimeFilter<"MarketResearch"> | Date | string
-    type?: EnumResearchTypeFilter<"MarketResearch"> | $Enums.ResearchType
-    idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
+    AND?: AssetViewWhereInput | AssetViewWhereInput[]
+    OR?: AssetViewWhereInput[]
+    NOT?: AssetViewWhereInput | AssetViewWhereInput[]
+    assetId?: StringFilter<"AssetView"> | string
+    organizationId?: StringFilter<"AssetView"> | string
+    userId?: StringNullableFilter<"AssetView"> | string | null
+    ipAddress?: StringFilter<"AssetView"> | string
+    userAgent?: StringNullableFilter<"AssetView"> | string | null
+    referrer?: StringNullableFilter<"AssetView"> | string | null
+    viewedAt?: DateTimeFilter<"AssetView"> | Date | string
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    ResearchResults?: XOR<ResearchResultsNullableScalarRelationFilter, ResearchResultsWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
-  export type MarketResearchOrderByWithAggregationInput = {
+  export type AssetViewOrderByWithAggregationInput = {
     id?: SortOrder
-    ideaId?: SortOrder
+    assetId?: SortOrder
     organizationId?: SortOrder
-    validationScore?: SortOrderInput | SortOrder
-    confidenceLevel?: SortOrder
-    completed?: SortOrder
-    lastUpdated?: SortOrder
-    createdAt?: SortOrder
-    type?: SortOrder
-    _count?: MarketResearchCountOrderByAggregateInput
-    _avg?: MarketResearchAvgOrderByAggregateInput
-    _max?: MarketResearchMaxOrderByAggregateInput
-    _min?: MarketResearchMinOrderByAggregateInput
-    _sum?: MarketResearchSumOrderByAggregateInput
+    userId?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    viewedAt?: SortOrder
+    _count?: AssetViewCountOrderByAggregateInput
+    _max?: AssetViewMaxOrderByAggregateInput
+    _min?: AssetViewMinOrderByAggregateInput
   }
 
-  export type MarketResearchScalarWhereWithAggregatesInput = {
-    AND?: MarketResearchScalarWhereWithAggregatesInput | MarketResearchScalarWhereWithAggregatesInput[]
-    OR?: MarketResearchScalarWhereWithAggregatesInput[]
-    NOT?: MarketResearchScalarWhereWithAggregatesInput | MarketResearchScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"MarketResearch"> | string
-    ideaId?: StringWithAggregatesFilter<"MarketResearch"> | string
-    organizationId?: StringWithAggregatesFilter<"MarketResearch"> | string
-    validationScore?: FloatNullableWithAggregatesFilter<"MarketResearch"> | number | null
-    confidenceLevel?: EnumImportanceWithAggregatesFilter<"MarketResearch"> | $Enums.Importance
-    completed?: BoolWithAggregatesFilter<"MarketResearch"> | boolean
-    lastUpdated?: DateTimeWithAggregatesFilter<"MarketResearch"> | Date | string
-    createdAt?: DateTimeWithAggregatesFilter<"MarketResearch"> | Date | string
-    type?: EnumResearchTypeWithAggregatesFilter<"MarketResearch"> | $Enums.ResearchType
+  export type AssetViewScalarWhereWithAggregatesInput = {
+    AND?: AssetViewScalarWhereWithAggregatesInput | AssetViewScalarWhereWithAggregatesInput[]
+    OR?: AssetViewScalarWhereWithAggregatesInput[]
+    NOT?: AssetViewScalarWhereWithAggregatesInput | AssetViewScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AssetView"> | string
+    assetId?: StringWithAggregatesFilter<"AssetView"> | string
+    organizationId?: StringWithAggregatesFilter<"AssetView"> | string
+    userId?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
+    ipAddress?: StringWithAggregatesFilter<"AssetView"> | string
+    userAgent?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
+    referrer?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
+    viewedAt?: DateTimeWithAggregatesFilter<"AssetView"> | Date | string
   }
 
-  export type ResearchResultsWhereInput = {
-    AND?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
-    OR?: ResearchResultsWhereInput[]
-    NOT?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
-    id?: StringFilter<"ResearchResults"> | string
-    organizationId?: StringFilter<"ResearchResults"> | string
-    createdAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    updatedAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    content?: StringFilter<"ResearchResults"> | string
-    marketResearchId?: StringFilter<"ResearchResults"> | string
+  export type AssetDownloadWhereInput = {
+    AND?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
+    OR?: AssetDownloadWhereInput[]
+    NOT?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
+    id?: StringFilter<"AssetDownload"> | string
+    assetId?: StringFilter<"AssetDownload"> | string
+    organizationId?: StringFilter<"AssetDownload"> | string
+    userId?: StringNullableFilter<"AssetDownload"> | string | null
+    ipAddress?: StringFilter<"AssetDownload"> | string
+    userAgent?: StringNullableFilter<"AssetDownload"> | string | null
+    referrer?: StringNullableFilter<"AssetDownload"> | string | null
+    downloadedAt?: DateTimeFilter<"AssetDownload"> | Date | string
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    marketResearch?: XOR<MarketResearchNullableScalarRelationFilter, MarketResearchWhereInput> | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
-  export type ResearchResultsOrderByWithRelationInput = {
+  export type AssetDownloadOrderByWithRelationInput = {
     id?: SortOrder
+    assetId?: SortOrder
     organizationId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    content?: SortOrder
-    marketResearchId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    downloadedAt?: SortOrder
+    asset?: AssetOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
-    marketResearch?: MarketResearchOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
   }
 
-  export type ResearchResultsWhereUniqueInput = Prisma.AtLeast<{
+  export type AssetDownloadWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    marketResearchId?: string
-    AND?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
-    OR?: ResearchResultsWhereInput[]
-    NOT?: ResearchResultsWhereInput | ResearchResultsWhereInput[]
-    organizationId?: StringFilter<"ResearchResults"> | string
-    createdAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    updatedAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    content?: StringFilter<"ResearchResults"> | string
+    AND?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
+    OR?: AssetDownloadWhereInput[]
+    NOT?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
+    assetId?: StringFilter<"AssetDownload"> | string
+    organizationId?: StringFilter<"AssetDownload"> | string
+    userId?: StringNullableFilter<"AssetDownload"> | string | null
+    ipAddress?: StringFilter<"AssetDownload"> | string
+    userAgent?: StringNullableFilter<"AssetDownload"> | string | null
+    referrer?: StringNullableFilter<"AssetDownload"> | string | null
+    downloadedAt?: DateTimeFilter<"AssetDownload"> | Date | string
+    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    marketResearch?: XOR<MarketResearchNullableScalarRelationFilter, MarketResearchWhereInput> | null
-  }, "id" | "marketResearchId">
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
 
-  export type ResearchResultsOrderByWithAggregationInput = {
+  export type AssetDownloadOrderByWithAggregationInput = {
     id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    downloadedAt?: SortOrder
+    _count?: AssetDownloadCountOrderByAggregateInput
+    _max?: AssetDownloadMaxOrderByAggregateInput
+    _min?: AssetDownloadMinOrderByAggregateInput
+  }
+
+  export type AssetDownloadScalarWhereWithAggregatesInput = {
+    AND?: AssetDownloadScalarWhereWithAggregatesInput | AssetDownloadScalarWhereWithAggregatesInput[]
+    OR?: AssetDownloadScalarWhereWithAggregatesInput[]
+    NOT?: AssetDownloadScalarWhereWithAggregatesInput | AssetDownloadScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AssetDownload"> | string
+    assetId?: StringWithAggregatesFilter<"AssetDownload"> | string
+    organizationId?: StringWithAggregatesFilter<"AssetDownload"> | string
+    userId?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
+    ipAddress?: StringWithAggregatesFilter<"AssetDownload"> | string
+    userAgent?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
+    referrer?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
+    downloadedAt?: DateTimeWithAggregatesFilter<"AssetDownload"> | Date | string
+  }
+
+  export type ReferralWhereInput = {
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    id?: StringFilter<"Referral"> | string
+    referrerId?: StringFilter<"Referral"> | string
+    referredEmail?: StringFilter<"Referral"> | string
+    referredName?: StringNullableFilter<"Referral"> | string | null
+    ipAddress?: StringFilter<"Referral"> | string
+    userAgent?: StringNullableFilter<"Referral"> | string | null
+    referrerCode?: StringFilter<"Referral"> | string
+    waitlistId?: StringFilter<"Referral"> | string
+    organizationId?: StringFilter<"Referral"> | string
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    referrer?: XOR<WaitlistEntryScalarRelationFilter, WaitlistEntryWhereInput>
+    waitlist?: XOR<WaitlistScalarRelationFilter, WaitlistWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }
+
+  export type ReferralOrderByWithRelationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    referredEmail?: SortOrder
+    referredName?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrerCode?: SortOrder
+    waitlistId?: SortOrder
     organizationId?: SortOrder
     createdAt?: SortOrder
-    updatedAt?: SortOrder
-    content?: SortOrder
-    marketResearchId?: SortOrder
-    _count?: ResearchResultsCountOrderByAggregateInput
-    _max?: ResearchResultsMaxOrderByAggregateInput
-    _min?: ResearchResultsMinOrderByAggregateInput
+    referrer?: WaitlistEntryOrderByWithRelationInput
+    waitlist?: WaitlistOrderByWithRelationInput
+    organization?: OrganizationOrderByWithRelationInput
   }
 
-  export type ResearchResultsScalarWhereWithAggregatesInput = {
-    AND?: ResearchResultsScalarWhereWithAggregatesInput | ResearchResultsScalarWhereWithAggregatesInput[]
-    OR?: ResearchResultsScalarWhereWithAggregatesInput[]
-    NOT?: ResearchResultsScalarWhereWithAggregatesInput | ResearchResultsScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"ResearchResults"> | string
-    organizationId?: StringWithAggregatesFilter<"ResearchResults"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"ResearchResults"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"ResearchResults"> | Date | string
-    content?: StringWithAggregatesFilter<"ResearchResults"> | string
-    marketResearchId?: StringWithAggregatesFilter<"ResearchResults"> | string
+  export type ReferralWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    referrerId?: StringFilter<"Referral"> | string
+    referredEmail?: StringFilter<"Referral"> | string
+    referredName?: StringNullableFilter<"Referral"> | string | null
+    ipAddress?: StringFilter<"Referral"> | string
+    userAgent?: StringNullableFilter<"Referral"> | string | null
+    referrerCode?: StringFilter<"Referral"> | string
+    waitlistId?: StringFilter<"Referral"> | string
+    organizationId?: StringFilter<"Referral"> | string
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    referrer?: XOR<WaitlistEntryScalarRelationFilter, WaitlistEntryWhereInput>
+    waitlist?: XOR<WaitlistScalarRelationFilter, WaitlistWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }, "id">
+
+  export type ReferralOrderByWithAggregationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    referredEmail?: SortOrder
+    referredName?: SortOrderInput | SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    referrerCode?: SortOrder
+    waitlistId?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+    _count?: ReferralCountOrderByAggregateInput
+    _max?: ReferralMaxOrderByAggregateInput
+    _min?: ReferralMinOrderByAggregateInput
+  }
+
+  export type ReferralScalarWhereWithAggregatesInput = {
+    AND?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    OR?: ReferralScalarWhereWithAggregatesInput[]
+    NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Referral"> | string
+    referrerId?: StringWithAggregatesFilter<"Referral"> | string
+    referredEmail?: StringWithAggregatesFilter<"Referral"> | string
+    referredName?: StringNullableWithAggregatesFilter<"Referral"> | string | null
+    ipAddress?: StringWithAggregatesFilter<"Referral"> | string
+    userAgent?: StringNullableWithAggregatesFilter<"Referral"> | string | null
+    referrerCode?: StringWithAggregatesFilter<"Referral"> | string
+    waitlistId?: StringWithAggregatesFilter<"Referral"> | string
+    organizationId?: StringWithAggregatesFilter<"Referral"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
   }
 
   export type CompetitorWhereInput = {
@@ -63192,244 +61815,6 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CompetitiveMove"> | Date | string
   }
 
-  export type AssetViewWhereInput = {
-    AND?: AssetViewWhereInput | AssetViewWhereInput[]
-    OR?: AssetViewWhereInput[]
-    NOT?: AssetViewWhereInput | AssetViewWhereInput[]
-    id?: StringFilter<"AssetView"> | string
-    assetId?: StringFilter<"AssetView"> | string
-    organizationId?: StringFilter<"AssetView"> | string
-    userId?: StringNullableFilter<"AssetView"> | string | null
-    ipAddress?: StringFilter<"AssetView"> | string
-    userAgent?: StringNullableFilter<"AssetView"> | string | null
-    referrer?: StringNullableFilter<"AssetView"> | string | null
-    viewedAt?: DateTimeFilter<"AssetView"> | Date | string
-    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }
-
-  export type AssetViewOrderByWithRelationInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrer?: SortOrderInput | SortOrder
-    viewedAt?: SortOrder
-    asset?: AssetOrderByWithRelationInput
-    organization?: OrganizationOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type AssetViewWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: AssetViewWhereInput | AssetViewWhereInput[]
-    OR?: AssetViewWhereInput[]
-    NOT?: AssetViewWhereInput | AssetViewWhereInput[]
-    assetId?: StringFilter<"AssetView"> | string
-    organizationId?: StringFilter<"AssetView"> | string
-    userId?: StringNullableFilter<"AssetView"> | string | null
-    ipAddress?: StringFilter<"AssetView"> | string
-    userAgent?: StringNullableFilter<"AssetView"> | string | null
-    referrer?: StringNullableFilter<"AssetView"> | string | null
-    viewedAt?: DateTimeFilter<"AssetView"> | Date | string
-    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }, "id">
-
-  export type AssetViewOrderByWithAggregationInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrer?: SortOrderInput | SortOrder
-    viewedAt?: SortOrder
-    _count?: AssetViewCountOrderByAggregateInput
-    _max?: AssetViewMaxOrderByAggregateInput
-    _min?: AssetViewMinOrderByAggregateInput
-  }
-
-  export type AssetViewScalarWhereWithAggregatesInput = {
-    AND?: AssetViewScalarWhereWithAggregatesInput | AssetViewScalarWhereWithAggregatesInput[]
-    OR?: AssetViewScalarWhereWithAggregatesInput[]
-    NOT?: AssetViewScalarWhereWithAggregatesInput | AssetViewScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"AssetView"> | string
-    assetId?: StringWithAggregatesFilter<"AssetView"> | string
-    organizationId?: StringWithAggregatesFilter<"AssetView"> | string
-    userId?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
-    ipAddress?: StringWithAggregatesFilter<"AssetView"> | string
-    userAgent?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
-    referrer?: StringNullableWithAggregatesFilter<"AssetView"> | string | null
-    viewedAt?: DateTimeWithAggregatesFilter<"AssetView"> | Date | string
-  }
-
-  export type AssetDownloadWhereInput = {
-    AND?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
-    OR?: AssetDownloadWhereInput[]
-    NOT?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
-    id?: StringFilter<"AssetDownload"> | string
-    assetId?: StringFilter<"AssetDownload"> | string
-    organizationId?: StringFilter<"AssetDownload"> | string
-    userId?: StringNullableFilter<"AssetDownload"> | string | null
-    ipAddress?: StringFilter<"AssetDownload"> | string
-    userAgent?: StringNullableFilter<"AssetDownload"> | string | null
-    referrer?: StringNullableFilter<"AssetDownload"> | string | null
-    downloadedAt?: DateTimeFilter<"AssetDownload"> | Date | string
-    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }
-
-  export type AssetDownloadOrderByWithRelationInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrer?: SortOrderInput | SortOrder
-    downloadedAt?: SortOrder
-    asset?: AssetOrderByWithRelationInput
-    organization?: OrganizationOrderByWithRelationInput
-    user?: UserOrderByWithRelationInput
-  }
-
-  export type AssetDownloadWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
-    OR?: AssetDownloadWhereInput[]
-    NOT?: AssetDownloadWhereInput | AssetDownloadWhereInput[]
-    assetId?: StringFilter<"AssetDownload"> | string
-    organizationId?: StringFilter<"AssetDownload"> | string
-    userId?: StringNullableFilter<"AssetDownload"> | string | null
-    ipAddress?: StringFilter<"AssetDownload"> | string
-    userAgent?: StringNullableFilter<"AssetDownload"> | string | null
-    referrer?: StringNullableFilter<"AssetDownload"> | string | null
-    downloadedAt?: DateTimeFilter<"AssetDownload"> | Date | string
-    asset?: XOR<AssetScalarRelationFilter, AssetWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
-  }, "id">
-
-  export type AssetDownloadOrderByWithAggregationInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrer?: SortOrderInput | SortOrder
-    downloadedAt?: SortOrder
-    _count?: AssetDownloadCountOrderByAggregateInput
-    _max?: AssetDownloadMaxOrderByAggregateInput
-    _min?: AssetDownloadMinOrderByAggregateInput
-  }
-
-  export type AssetDownloadScalarWhereWithAggregatesInput = {
-    AND?: AssetDownloadScalarWhereWithAggregatesInput | AssetDownloadScalarWhereWithAggregatesInput[]
-    OR?: AssetDownloadScalarWhereWithAggregatesInput[]
-    NOT?: AssetDownloadScalarWhereWithAggregatesInput | AssetDownloadScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"AssetDownload"> | string
-    assetId?: StringWithAggregatesFilter<"AssetDownload"> | string
-    organizationId?: StringWithAggregatesFilter<"AssetDownload"> | string
-    userId?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
-    ipAddress?: StringWithAggregatesFilter<"AssetDownload"> | string
-    userAgent?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
-    referrer?: StringNullableWithAggregatesFilter<"AssetDownload"> | string | null
-    downloadedAt?: DateTimeWithAggregatesFilter<"AssetDownload"> | Date | string
-  }
-
-  export type ReferralWhereInput = {
-    AND?: ReferralWhereInput | ReferralWhereInput[]
-    OR?: ReferralWhereInput[]
-    NOT?: ReferralWhereInput | ReferralWhereInput[]
-    id?: StringFilter<"Referral"> | string
-    referrerId?: StringFilter<"Referral"> | string
-    referredEmail?: StringFilter<"Referral"> | string
-    referredName?: StringNullableFilter<"Referral"> | string | null
-    ipAddress?: StringFilter<"Referral"> | string
-    userAgent?: StringNullableFilter<"Referral"> | string | null
-    referrerCode?: StringFilter<"Referral"> | string
-    waitlistId?: StringFilter<"Referral"> | string
-    organizationId?: StringFilter<"Referral"> | string
-    createdAt?: DateTimeFilter<"Referral"> | Date | string
-    referrer?: XOR<WaitlistEntryScalarRelationFilter, WaitlistEntryWhereInput>
-    waitlist?: XOR<WaitlistScalarRelationFilter, WaitlistWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-  }
-
-  export type ReferralOrderByWithRelationInput = {
-    id?: SortOrder
-    referrerId?: SortOrder
-    referredEmail?: SortOrder
-    referredName?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrerCode?: SortOrder
-    waitlistId?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-    referrer?: WaitlistEntryOrderByWithRelationInput
-    waitlist?: WaitlistOrderByWithRelationInput
-    organization?: OrganizationOrderByWithRelationInput
-  }
-
-  export type ReferralWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: ReferralWhereInput | ReferralWhereInput[]
-    OR?: ReferralWhereInput[]
-    NOT?: ReferralWhereInput | ReferralWhereInput[]
-    referrerId?: StringFilter<"Referral"> | string
-    referredEmail?: StringFilter<"Referral"> | string
-    referredName?: StringNullableFilter<"Referral"> | string | null
-    ipAddress?: StringFilter<"Referral"> | string
-    userAgent?: StringNullableFilter<"Referral"> | string | null
-    referrerCode?: StringFilter<"Referral"> | string
-    waitlistId?: StringFilter<"Referral"> | string
-    organizationId?: StringFilter<"Referral"> | string
-    createdAt?: DateTimeFilter<"Referral"> | Date | string
-    referrer?: XOR<WaitlistEntryScalarRelationFilter, WaitlistEntryWhereInput>
-    waitlist?: XOR<WaitlistScalarRelationFilter, WaitlistWhereInput>
-    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
-  }, "id">
-
-  export type ReferralOrderByWithAggregationInput = {
-    id?: SortOrder
-    referrerId?: SortOrder
-    referredEmail?: SortOrder
-    referredName?: SortOrderInput | SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrderInput | SortOrder
-    referrerCode?: SortOrder
-    waitlistId?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-    _count?: ReferralCountOrderByAggregateInput
-    _max?: ReferralMaxOrderByAggregateInput
-    _min?: ReferralMinOrderByAggregateInput
-  }
-
-  export type ReferralScalarWhereWithAggregatesInput = {
-    AND?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
-    OR?: ReferralScalarWhereWithAggregatesInput[]
-    NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"Referral"> | string
-    referrerId?: StringWithAggregatesFilter<"Referral"> | string
-    referredEmail?: StringWithAggregatesFilter<"Referral"> | string
-    referredName?: StringNullableWithAggregatesFilter<"Referral"> | string | null
-    ipAddress?: StringWithAggregatesFilter<"Referral"> | string
-    userAgent?: StringNullableWithAggregatesFilter<"Referral"> | string | null
-    referrerCode?: StringWithAggregatesFilter<"Referral"> | string
-    waitlistId?: StringWithAggregatesFilter<"Referral"> | string
-    organizationId?: StringWithAggregatesFilter<"Referral"> | string
-    createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
-  }
-
   export type ResearchSessionWhereInput = {
     AND?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
     OR?: ResearchSessionWhereInput[]
@@ -63437,6 +61822,9 @@ export namespace Prisma {
     id?: StringFilter<"ResearchSession"> | string
     ideaId?: StringFilter<"ResearchSession"> | string
     organizationId?: StringFilter<"ResearchSession"> | string
+    name?: StringNullableFilter<"ResearchSession"> | string | null
+    finalContent?: StringNullableFilter<"ResearchSession"> | string | null
+    prompt?: StringNullableFilter<"ResearchSession"> | string | null
     depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
     status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
     currentPhaseIndex?: IntFilter<"ResearchSession"> | number
@@ -63449,12 +61837,16 @@ export namespace Prisma {
     idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     phases?: ResearchPhaseResultListRelationFilter
+    findings?: ResearchFindingsListRelationFilter
   }
 
   export type ResearchSessionOrderByWithRelationInput = {
     id?: SortOrder
     ideaId?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    finalContent?: SortOrderInput | SortOrder
+    prompt?: SortOrderInput | SortOrder
     depth?: SortOrder
     status?: SortOrder
     currentPhaseIndex?: SortOrder
@@ -63467,6 +61859,7 @@ export namespace Prisma {
     idea?: IdeaOrderByWithRelationInput
     organization?: OrganizationOrderByWithRelationInput
     phases?: ResearchPhaseResultOrderByRelationAggregateInput
+    findings?: ResearchFindingsOrderByRelationAggregateInput
   }
 
   export type ResearchSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -63476,6 +61869,9 @@ export namespace Prisma {
     NOT?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
     ideaId?: StringFilter<"ResearchSession"> | string
     organizationId?: StringFilter<"ResearchSession"> | string
+    name?: StringNullableFilter<"ResearchSession"> | string | null
+    finalContent?: StringNullableFilter<"ResearchSession"> | string | null
+    prompt?: StringNullableFilter<"ResearchSession"> | string | null
     depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
     status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
     currentPhaseIndex?: IntFilter<"ResearchSession"> | number
@@ -63488,12 +61884,16 @@ export namespace Prisma {
     idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     phases?: ResearchPhaseResultListRelationFilter
+    findings?: ResearchFindingsListRelationFilter
   }, "id">
 
   export type ResearchSessionOrderByWithAggregationInput = {
     id?: SortOrder
     ideaId?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    finalContent?: SortOrderInput | SortOrder
+    prompt?: SortOrderInput | SortOrder
     depth?: SortOrder
     status?: SortOrder
     currentPhaseIndex?: SortOrder
@@ -63517,6 +61917,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ResearchSession"> | string
     ideaId?: StringWithAggregatesFilter<"ResearchSession"> | string
     organizationId?: StringWithAggregatesFilter<"ResearchSession"> | string
+    name?: StringNullableWithAggregatesFilter<"ResearchSession"> | string | null
+    finalContent?: StringNullableWithAggregatesFilter<"ResearchSession"> | string | null
+    prompt?: StringNullableWithAggregatesFilter<"ResearchSession"> | string | null
     depth?: EnumResearchDepthWithAggregatesFilter<"ResearchSession"> | $Enums.ResearchDepth
     status?: EnumResearchStatusWithAggregatesFilter<"ResearchSession"> | $Enums.ResearchStatus
     currentPhaseIndex?: IntWithAggregatesFilter<"ResearchSession"> | number
@@ -63536,13 +61939,8 @@ export namespace Prisma {
     sessionId?: StringFilter<"ResearchPhaseResult"> | string
     phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
-    findings?: JsonFilter<"ResearchPhaseResult">
+    conclusion?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     confidence?: FloatFilter<"ResearchPhaseResult"> | number
-    duration?: IntFilter<"ResearchPhaseResult"> | number
-    iterations?: IntFilter<"ResearchPhaseResult"> | number
-    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
     updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
     session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
@@ -63553,13 +61951,8 @@ export namespace Prisma {
     sessionId?: SortOrder
     phaseName?: SortOrder
     status?: SortOrder
-    findings?: SortOrder
+    conclusion?: SortOrderInput | SortOrder
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
-    startedAt?: SortOrderInput | SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    error?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     session?: ResearchSessionOrderByWithRelationInput
@@ -63573,13 +61966,8 @@ export namespace Prisma {
     sessionId?: StringFilter<"ResearchPhaseResult"> | string
     phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
-    findings?: JsonFilter<"ResearchPhaseResult">
+    conclusion?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     confidence?: FloatFilter<"ResearchPhaseResult"> | number
-    duration?: IntFilter<"ResearchPhaseResult"> | number
-    iterations?: IntFilter<"ResearchPhaseResult"> | number
-    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
     updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
     session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
@@ -63590,13 +61978,8 @@ export namespace Prisma {
     sessionId?: SortOrder
     phaseName?: SortOrder
     status?: SortOrder
-    findings?: SortOrder
+    conclusion?: SortOrderInput | SortOrder
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
-    startedAt?: SortOrderInput | SortOrder
-    completedAt?: SortOrderInput | SortOrder
-    error?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ResearchPhaseResultCountOrderByAggregateInput
@@ -63614,15 +61997,65 @@ export namespace Prisma {
     sessionId?: StringWithAggregatesFilter<"ResearchPhaseResult"> | string
     phaseName?: EnumResearchPhaseTypeWithAggregatesFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusWithAggregatesFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
-    findings?: JsonWithAggregatesFilter<"ResearchPhaseResult">
+    conclusion?: StringNullableWithAggregatesFilter<"ResearchPhaseResult"> | string | null
     confidence?: FloatWithAggregatesFilter<"ResearchPhaseResult"> | number
-    duration?: IntWithAggregatesFilter<"ResearchPhaseResult"> | number
-    iterations?: IntWithAggregatesFilter<"ResearchPhaseResult"> | number
-    startedAt?: DateTimeNullableWithAggregatesFilter<"ResearchPhaseResult"> | Date | string | null
-    completedAt?: DateTimeNullableWithAggregatesFilter<"ResearchPhaseResult"> | Date | string | null
-    error?: StringNullableWithAggregatesFilter<"ResearchPhaseResult"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ResearchPhaseResult"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ResearchPhaseResult"> | Date | string
+  }
+
+  export type ResearchFindingsWhereInput = {
+    AND?: ResearchFindingsWhereInput | ResearchFindingsWhereInput[]
+    OR?: ResearchFindingsWhereInput[]
+    NOT?: ResearchFindingsWhereInput | ResearchFindingsWhereInput[]
+    id?: StringFilter<"ResearchFindings"> | string
+    sessionId?: StringFilter<"ResearchFindings"> | string
+    findings?: StringFilter<"ResearchFindings"> | string
+    impact?: EnumImportanceFilter<"ResearchFindings"> | $Enums.Importance
+    createdAt?: DateTimeFilter<"ResearchFindings"> | Date | string
+    session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
+  }
+
+  export type ResearchFindingsOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    findings?: SortOrder
+    impact?: SortOrder
+    createdAt?: SortOrder
+    session?: ResearchSessionOrderByWithRelationInput
+  }
+
+  export type ResearchFindingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ResearchFindingsWhereInput | ResearchFindingsWhereInput[]
+    OR?: ResearchFindingsWhereInput[]
+    NOT?: ResearchFindingsWhereInput | ResearchFindingsWhereInput[]
+    sessionId?: StringFilter<"ResearchFindings"> | string
+    findings?: StringFilter<"ResearchFindings"> | string
+    impact?: EnumImportanceFilter<"ResearchFindings"> | $Enums.Importance
+    createdAt?: DateTimeFilter<"ResearchFindings"> | Date | string
+    session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
+  }, "id">
+
+  export type ResearchFindingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    findings?: SortOrder
+    impact?: SortOrder
+    createdAt?: SortOrder
+    _count?: ResearchFindingsCountOrderByAggregateInput
+    _max?: ResearchFindingsMaxOrderByAggregateInput
+    _min?: ResearchFindingsMinOrderByAggregateInput
+  }
+
+  export type ResearchFindingsScalarWhereWithAggregatesInput = {
+    AND?: ResearchFindingsScalarWhereWithAggregatesInput | ResearchFindingsScalarWhereWithAggregatesInput[]
+    OR?: ResearchFindingsScalarWhereWithAggregatesInput[]
+    NOT?: ResearchFindingsScalarWhereWithAggregatesInput | ResearchFindingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ResearchFindings"> | string
+    sessionId?: StringWithAggregatesFilter<"ResearchFindings"> | string
+    findings?: StringWithAggregatesFilter<"ResearchFindings"> | string
+    impact?: EnumImportanceWithAggregatesFilter<"ResearchFindings"> | $Enums.Importance
+    createdAt?: DateTimeWithAggregatesFilter<"ResearchFindings"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -64069,12 +62502,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64102,12 +62533,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -64135,12 +62564,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -64168,12 +62595,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -64723,7 +63148,6 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
@@ -64744,7 +63168,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
@@ -64765,7 +63188,6 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
@@ -64786,7 +63208,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
@@ -67067,151 +65488,240 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MarketResearchCreateInput = {
+  export type AssetViewCreateInput = {
     id?: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    idea: IdeaCreateNestedOneWithoutMarketResearchInput
-    organization: OrganizationCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedOneWithoutMarketResearchInput
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    viewedAt?: Date | string
+    asset: AssetCreateNestedOneWithoutAssetViewsInput
+    organization: OrganizationCreateNestedOneWithoutAssetViewsInput
+    user?: UserCreateNestedOneWithoutAssetViewsInput
   }
 
-  export type MarketResearchUncheckedCreateInput = {
+  export type AssetViewUncheckedCreateInput = {
     id?: string
-    ideaId: string
+    assetId: string
     organizationId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutMarketResearchInput
+    userId?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    viewedAt?: Date | string
   }
 
-  export type MarketResearchUpdateInput = {
+  export type AssetViewUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    idea?: IdeaUpdateOneRequiredWithoutMarketResearchNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateOneWithoutMarketResearchNestedInput
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    asset?: AssetUpdateOneRequiredWithoutAssetViewsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutAssetViewsNestedInput
+    user?: UserUpdateOneWithoutAssetViewsNestedInput
   }
 
-  export type MarketResearchUncheckedUpdateInput = {
+  export type AssetViewUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutMarketResearchNestedInput
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MarketResearchCreateManyInput = {
+  export type AssetViewCreateManyInput = {
     id?: string
-    ideaId: string
+    assetId: string
     organizationId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
+    userId?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    viewedAt?: Date | string
   }
 
-  export type MarketResearchUpdateManyMutationInput = {
+  export type AssetViewUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MarketResearchUncheckedUpdateManyInput = {
+  export type AssetViewUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ResearchResultsCreateInput = {
+  export type AssetDownloadCreateInput = {
     id?: string
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    downloadedAt?: Date | string
+    asset: AssetCreateNestedOneWithoutAssetDownloadsInput
+    organization: OrganizationCreateNestedOneWithoutAssetDownloadsInput
+    user?: UserCreateNestedOneWithoutAssetDownloadsInput
+  }
+
+  export type AssetDownloadUncheckedCreateInput = {
+    id?: string
+    assetId: string
+    organizationId: string
+    userId?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    downloadedAt?: Date | string
+  }
+
+  export type AssetDownloadUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    asset?: AssetUpdateOneRequiredWithoutAssetDownloadsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutAssetDownloadsNestedInput
+    user?: UserUpdateOneWithoutAssetDownloadsNestedInput
+  }
+
+  export type AssetDownloadUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetDownloadCreateManyInput = {
+    id?: string
+    assetId: string
+    organizationId: string
+    userId?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrer?: string | null
+    downloadedAt?: Date | string
+  }
+
+  export type AssetDownloadUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AssetDownloadUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    assetId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ReferralCreateInput = {
+    id?: string
+    referredEmail: string
+    referredName?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrerCode: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    organization: OrganizationCreateNestedOneWithoutResearchResultsInput
-    marketResearch?: MarketResearchCreateNestedOneWithoutResearchResultsInput
+    referrer: WaitlistEntryCreateNestedOneWithoutReferralsInput
+    waitlist: WaitlistCreateNestedOneWithoutReferralsInput
+    organization: OrganizationCreateNestedOneWithoutReferralsInput
   }
 
-  export type ResearchResultsUncheckedCreateInput = {
+  export type ReferralUncheckedCreateInput = {
     id?: string
+    referrerId: string
+    referredEmail: string
+    referredName?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrerCode: string
+    waitlistId: string
     organizationId: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    marketResearchId: string
   }
 
-  export type ResearchResultsUpdateInput = {
+  export type ReferralUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    referredEmail?: StringFieldUpdateOperationsInput | string
+    referredName?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    organization?: OrganizationUpdateOneRequiredWithoutResearchResultsNestedInput
-    marketResearch?: MarketResearchUpdateOneWithoutResearchResultsNestedInput
+    referrer?: WaitlistEntryUpdateOneRequiredWithoutReferralsNestedInput
+    waitlist?: WaitlistUpdateOneRequiredWithoutReferralsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutReferralsNestedInput
   }
 
-  export type ResearchResultsUncheckedUpdateInput = {
+  export type ReferralUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    referrerId?: StringFieldUpdateOperationsInput | string
+    referredEmail?: StringFieldUpdateOperationsInput | string
+    referredName?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrerCode?: StringFieldUpdateOperationsInput | string
+    waitlistId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    marketResearchId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ResearchResultsCreateManyInput = {
+  export type ReferralCreateManyInput = {
     id?: string
+    referrerId: string
+    referredEmail: string
+    referredName?: string | null
+    ipAddress: string
+    userAgent?: string | null
+    referrerCode: string
+    waitlistId: string
     organizationId: string
     createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    marketResearchId: string
   }
 
-  export type ResearchResultsUpdateManyMutationInput = {
+  export type ReferralUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    referredEmail?: StringFieldUpdateOperationsInput | string
+    referredName?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrerCode?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
   }
 
-  export type ResearchResultsUncheckedUpdateManyInput = {
+  export type ReferralUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    referrerId?: StringFieldUpdateOperationsInput | string
+    referredEmail?: StringFieldUpdateOperationsInput | string
+    referredName?: NullableStringFieldUpdateOperationsInput | string | null
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    referrerCode?: StringFieldUpdateOperationsInput | string
+    waitlistId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    marketResearchId?: StringFieldUpdateOperationsInput | string
   }
 
   export type CompetitorCreateInput = {
@@ -67524,244 +66034,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AssetViewCreateInput = {
-    id?: string
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    viewedAt?: Date | string
-    asset: AssetCreateNestedOneWithoutAssetViewsInput
-    organization: OrganizationCreateNestedOneWithoutAssetViewsInput
-    user?: UserCreateNestedOneWithoutAssetViewsInput
-  }
-
-  export type AssetViewUncheckedCreateInput = {
-    id?: string
-    assetId: string
-    organizationId: string
-    userId?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    viewedAt?: Date | string
-  }
-
-  export type AssetViewUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    asset?: AssetUpdateOneRequiredWithoutAssetViewsNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutAssetViewsNestedInput
-    user?: UserUpdateOneWithoutAssetViewsNestedInput
-  }
-
-  export type AssetViewUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AssetViewCreateManyInput = {
-    id?: string
-    assetId: string
-    organizationId: string
-    userId?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    viewedAt?: Date | string
-  }
-
-  export type AssetViewUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AssetViewUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    viewedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AssetDownloadCreateInput = {
-    id?: string
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    downloadedAt?: Date | string
-    asset: AssetCreateNestedOneWithoutAssetDownloadsInput
-    organization: OrganizationCreateNestedOneWithoutAssetDownloadsInput
-    user?: UserCreateNestedOneWithoutAssetDownloadsInput
-  }
-
-  export type AssetDownloadUncheckedCreateInput = {
-    id?: string
-    assetId: string
-    organizationId: string
-    userId?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    downloadedAt?: Date | string
-  }
-
-  export type AssetDownloadUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    asset?: AssetUpdateOneRequiredWithoutAssetDownloadsNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutAssetDownloadsNestedInput
-    user?: UserUpdateOneWithoutAssetDownloadsNestedInput
-  }
-
-  export type AssetDownloadUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AssetDownloadCreateManyInput = {
-    id?: string
-    assetId: string
-    organizationId: string
-    userId?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrer?: string | null
-    downloadedAt?: Date | string
-  }
-
-  export type AssetDownloadUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AssetDownloadUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    assetId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    userId?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrer?: NullableStringFieldUpdateOperationsInput | string | null
-    downloadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReferralCreateInput = {
-    id?: string
-    referredEmail: string
-    referredName?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrerCode: string
-    createdAt?: Date | string
-    referrer: WaitlistEntryCreateNestedOneWithoutReferralsInput
-    waitlist: WaitlistCreateNestedOneWithoutReferralsInput
-    organization: OrganizationCreateNestedOneWithoutReferralsInput
-  }
-
-  export type ReferralUncheckedCreateInput = {
-    id?: string
-    referrerId: string
-    referredEmail: string
-    referredName?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrerCode: string
-    waitlistId: string
-    organizationId: string
-    createdAt?: Date | string
-  }
-
-  export type ReferralUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    referredEmail?: StringFieldUpdateOperationsInput | string
-    referredName?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrerCode?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    referrer?: WaitlistEntryUpdateOneRequiredWithoutReferralsNestedInput
-    waitlist?: WaitlistUpdateOneRequiredWithoutReferralsNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutReferralsNestedInput
-  }
-
-  export type ReferralUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    referrerId?: StringFieldUpdateOperationsInput | string
-    referredEmail?: StringFieldUpdateOperationsInput | string
-    referredName?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrerCode?: StringFieldUpdateOperationsInput | string
-    waitlistId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReferralCreateManyInput = {
-    id?: string
-    referrerId: string
-    referredEmail: string
-    referredName?: string | null
-    ipAddress: string
-    userAgent?: string | null
-    referrerCode: string
-    waitlistId: string
-    organizationId: string
-    createdAt?: Date | string
-  }
-
-  export type ReferralUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    referredEmail?: StringFieldUpdateOperationsInput | string
-    referredName?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrerCode?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ReferralUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    referrerId?: StringFieldUpdateOperationsInput | string
-    referredEmail?: StringFieldUpdateOperationsInput | string
-    referredName?: NullableStringFieldUpdateOperationsInput | string | null
-    ipAddress?: StringFieldUpdateOperationsInput | string
-    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
-    referrerCode?: StringFieldUpdateOperationsInput | string
-    waitlistId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type ResearchSessionCreateInput = {
     id?: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -67774,12 +66051,16 @@ export namespace Prisma {
     idea: IdeaCreateNestedOneWithoutResearchSessionsInput
     organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
     phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionUncheckedCreateInput = {
     id?: string
     ideaId: string
     organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -67790,10 +66071,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -67806,12 +66091,16 @@ export namespace Prisma {
     idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
     phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     ideaId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -67822,12 +66111,16 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionCreateManyInput = {
     id?: string
     ideaId: string
     organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -67841,6 +66134,9 @@ export namespace Prisma {
 
   export type ResearchSessionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -67856,6 +66152,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     ideaId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -67871,13 +66170,8 @@ export namespace Prisma {
     id?: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     session: ResearchSessionCreateNestedOneWithoutPhasesInput
@@ -67888,13 +66182,8 @@ export namespace Prisma {
     sessionId: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -67903,13 +66192,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     session?: ResearchSessionUpdateOneRequiredWithoutPhasesNestedInput
@@ -67920,13 +66204,8 @@ export namespace Prisma {
     sessionId?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67936,13 +66215,8 @@ export namespace Prisma {
     sessionId: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -67951,13 +66225,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -67967,15 +66236,65 @@ export namespace Prisma {
     sessionId?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsCreateInput = {
+    id?: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
+    session: ResearchSessionCreateNestedOneWithoutFindingsInput
+  }
+
+  export type ResearchFindingsUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
+  }
+
+  export type ResearchFindingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ResearchSessionUpdateOneRequiredWithoutFindingsNestedInput
+  }
+
+  export type ResearchFindingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsCreateManyInput = {
+    id?: string
+    sessionId: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
+  }
+
+  export type ResearchFindingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -68491,12 +66810,6 @@ export namespace Prisma {
     none?: IssueLinkWhereInput
   }
 
-  export type MarketResearchListRelationFilter = {
-    every?: MarketResearchWhereInput
-    some?: MarketResearchWhereInput
-    none?: MarketResearchWhereInput
-  }
-
   export type ReferralListRelationFilter = {
     every?: ReferralWhereInput
     some?: ReferralWhereInput
@@ -68507,12 +66820,6 @@ export namespace Prisma {
     every?: ApiKeyWhereInput
     some?: ApiKeyWhereInput
     none?: ApiKeyWhereInput
-  }
-
-  export type ResearchResultsListRelationFilter = {
-    every?: ResearchResultsWhereInput
-    some?: ResearchResultsWhereInput
-    none?: ResearchResultsWhereInput
   }
 
   export type ResearchSessionListRelationFilter = {
@@ -68545,19 +66852,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type MarketResearchOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type ReferralOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type ApiKeyOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type ResearchResultsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -70458,107 +68757,124 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type EnumResearchTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ResearchType | EnumResearchTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumResearchTypeFilter<$PrismaModel> | $Enums.ResearchType
+  export type AssetScalarRelationFilter = {
+    is?: AssetWhereInput
+    isNot?: AssetWhereInput
+  }
+
+  export type AssetViewCountOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    viewedAt?: SortOrder
+  }
+
+  export type AssetViewMaxOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    viewedAt?: SortOrder
+  }
+
+  export type AssetViewMinOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    viewedAt?: SortOrder
+  }
+
+  export type AssetDownloadCountOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    downloadedAt?: SortOrder
+  }
+
+  export type AssetDownloadMaxOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    downloadedAt?: SortOrder
+  }
+
+  export type AssetDownloadMinOrderByAggregateInput = {
+    id?: SortOrder
+    assetId?: SortOrder
+    organizationId?: SortOrder
+    userId?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrer?: SortOrder
+    downloadedAt?: SortOrder
+  }
+
+  export type WaitlistEntryScalarRelationFilter = {
+    is?: WaitlistEntryWhereInput
+    isNot?: WaitlistEntryWhereInput
+  }
+
+  export type ReferralCountOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    referredEmail?: SortOrder
+    referredName?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrerCode?: SortOrder
+    waitlistId?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReferralMaxOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    referredEmail?: SortOrder
+    referredName?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrerCode?: SortOrder
+    waitlistId?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ReferralMinOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    referredEmail?: SortOrder
+    referredName?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+    referrerCode?: SortOrder
+    waitlistId?: SortOrder
+    organizationId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type IdeaScalarRelationFilter = {
     is?: IdeaWhereInput
     isNot?: IdeaWhereInput
-  }
-
-  export type ResearchResultsNullableScalarRelationFilter = {
-    is?: ResearchResultsWhereInput | null
-    isNot?: ResearchResultsWhereInput | null
-  }
-
-  export type MarketResearchCountOrderByAggregateInput = {
-    id?: SortOrder
-    ideaId?: SortOrder
-    organizationId?: SortOrder
-    validationScore?: SortOrder
-    confidenceLevel?: SortOrder
-    completed?: SortOrder
-    lastUpdated?: SortOrder
-    createdAt?: SortOrder
-    type?: SortOrder
-  }
-
-  export type MarketResearchAvgOrderByAggregateInput = {
-    validationScore?: SortOrder
-  }
-
-  export type MarketResearchMaxOrderByAggregateInput = {
-    id?: SortOrder
-    ideaId?: SortOrder
-    organizationId?: SortOrder
-    validationScore?: SortOrder
-    confidenceLevel?: SortOrder
-    completed?: SortOrder
-    lastUpdated?: SortOrder
-    createdAt?: SortOrder
-    type?: SortOrder
-  }
-
-  export type MarketResearchMinOrderByAggregateInput = {
-    id?: SortOrder
-    ideaId?: SortOrder
-    organizationId?: SortOrder
-    validationScore?: SortOrder
-    confidenceLevel?: SortOrder
-    completed?: SortOrder
-    lastUpdated?: SortOrder
-    createdAt?: SortOrder
-    type?: SortOrder
-  }
-
-  export type MarketResearchSumOrderByAggregateInput = {
-    validationScore?: SortOrder
-  }
-
-  export type EnumResearchTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ResearchType | EnumResearchTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumResearchTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResearchType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumResearchTypeFilter<$PrismaModel>
-    _max?: NestedEnumResearchTypeFilter<$PrismaModel>
-  }
-
-  export type MarketResearchNullableScalarRelationFilter = {
-    is?: MarketResearchWhereInput | null
-    isNot?: MarketResearchWhereInput | null
-  }
-
-  export type ResearchResultsCountOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    content?: SortOrder
-    marketResearchId?: SortOrder
-  }
-
-  export type ResearchResultsMaxOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    content?: SortOrder
-    marketResearchId?: SortOrder
-  }
-
-  export type ResearchResultsMinOrderByAggregateInput = {
-    id?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    content?: SortOrder
-    marketResearchId?: SortOrder
   }
 
   export type CompetitiveMoveListRelationFilter = {
@@ -70720,121 +69036,6 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
-  export type AssetScalarRelationFilter = {
-    is?: AssetWhereInput
-    isNot?: AssetWhereInput
-  }
-
-  export type AssetViewCountOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    viewedAt?: SortOrder
-  }
-
-  export type AssetViewMaxOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    viewedAt?: SortOrder
-  }
-
-  export type AssetViewMinOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    viewedAt?: SortOrder
-  }
-
-  export type AssetDownloadCountOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    downloadedAt?: SortOrder
-  }
-
-  export type AssetDownloadMaxOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    downloadedAt?: SortOrder
-  }
-
-  export type AssetDownloadMinOrderByAggregateInput = {
-    id?: SortOrder
-    assetId?: SortOrder
-    organizationId?: SortOrder
-    userId?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrer?: SortOrder
-    downloadedAt?: SortOrder
-  }
-
-  export type WaitlistEntryScalarRelationFilter = {
-    is?: WaitlistEntryWhereInput
-    isNot?: WaitlistEntryWhereInput
-  }
-
-  export type ReferralCountOrderByAggregateInput = {
-    id?: SortOrder
-    referrerId?: SortOrder
-    referredEmail?: SortOrder
-    referredName?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrerCode?: SortOrder
-    waitlistId?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ReferralMaxOrderByAggregateInput = {
-    id?: SortOrder
-    referrerId?: SortOrder
-    referredEmail?: SortOrder
-    referredName?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrerCode?: SortOrder
-    waitlistId?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type ReferralMinOrderByAggregateInput = {
-    id?: SortOrder
-    referrerId?: SortOrder
-    referredEmail?: SortOrder
-    referredName?: SortOrder
-    ipAddress?: SortOrder
-    userAgent?: SortOrder
-    referrerCode?: SortOrder
-    waitlistId?: SortOrder
-    organizationId?: SortOrder
-    createdAt?: SortOrder
-  }
-
   export type EnumResearchDepthFilter<$PrismaModel = never> = {
     equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
     in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
@@ -70866,7 +69067,17 @@ export namespace Prisma {
     none?: ResearchPhaseResultWhereInput
   }
 
+  export type ResearchFindingsListRelationFilter = {
+    every?: ResearchFindingsWhereInput
+    some?: ResearchFindingsWhereInput
+    none?: ResearchFindingsWhereInput
+  }
+
   export type ResearchPhaseResultOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ResearchFindingsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -70874,6 +69085,9 @@ export namespace Prisma {
     id?: SortOrder
     ideaId?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    finalContent?: SortOrder
+    prompt?: SortOrder
     depth?: SortOrder
     status?: SortOrder
     currentPhaseIndex?: SortOrder
@@ -70895,6 +69109,9 @@ export namespace Prisma {
     id?: SortOrder
     ideaId?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    finalContent?: SortOrder
+    prompt?: SortOrder
     depth?: SortOrder
     status?: SortOrder
     currentPhaseIndex?: SortOrder
@@ -70910,6 +69127,9 @@ export namespace Prisma {
     id?: SortOrder
     ideaId?: SortOrder
     organizationId?: SortOrder
+    name?: SortOrder
+    finalContent?: SortOrder
+    prompt?: SortOrder
     depth?: SortOrder
     status?: SortOrder
     currentPhaseIndex?: SortOrder
@@ -70987,21 +69207,14 @@ export namespace Prisma {
     sessionId?: SortOrder
     phaseName?: SortOrder
     status?: SortOrder
-    findings?: SortOrder
+    conclusion?: SortOrder
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    error?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ResearchPhaseResultAvgOrderByAggregateInput = {
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
   }
 
   export type ResearchPhaseResultMaxOrderByAggregateInput = {
@@ -71009,12 +69222,8 @@ export namespace Prisma {
     sessionId?: SortOrder
     phaseName?: SortOrder
     status?: SortOrder
+    conclusion?: SortOrder
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    error?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -71024,20 +69233,14 @@ export namespace Prisma {
     sessionId?: SortOrder
     phaseName?: SortOrder
     status?: SortOrder
+    conclusion?: SortOrder
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
-    startedAt?: SortOrder
-    completedAt?: SortOrder
-    error?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ResearchPhaseResultSumOrderByAggregateInput = {
     confidence?: SortOrder
-    duration?: SortOrder
-    iterations?: SortOrder
   }
 
   export type EnumResearchPhaseTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -71058,6 +69261,30 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPhaseStatusFilter<$PrismaModel>
     _max?: NestedEnumPhaseStatusFilter<$PrismaModel>
+  }
+
+  export type ResearchFindingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    findings?: SortOrder
+    impact?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ResearchFindingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    findings?: SortOrder
+    impact?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type ResearchFindingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    findings?: SortOrder
+    impact?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -71981,13 +70208,6 @@ export namespace Prisma {
     connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
   }
 
-  export type MarketResearchCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput> | MarketResearchCreateWithoutOrganizationInput[] | MarketResearchUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutOrganizationInput | MarketResearchCreateOrConnectWithoutOrganizationInput[]
-    createMany?: MarketResearchCreateManyOrganizationInputEnvelope
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-  }
-
   export type AssetViewCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<AssetViewCreateWithoutOrganizationInput, AssetViewUncheckedCreateWithoutOrganizationInput> | AssetViewCreateWithoutOrganizationInput[] | AssetViewUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: AssetViewCreateOrConnectWithoutOrganizationInput | AssetViewCreateOrConnectWithoutOrganizationInput[]
@@ -72014,13 +70234,6 @@ export namespace Prisma {
     connectOrCreate?: ApiKeyCreateOrConnectWithoutOrganizationInput | ApiKeyCreateOrConnectWithoutOrganizationInput[]
     createMany?: ApiKeyCreateManyOrganizationInputEnvelope
     connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-  }
-
-  export type ResearchResultsCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput> | ResearchResultsCreateWithoutOrganizationInput[] | ResearchResultsUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutOrganizationInput | ResearchResultsCreateOrConnectWithoutOrganizationInput[]
-    createMany?: ResearchResultsCreateManyOrganizationInputEnvelope
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
   }
 
   export type ResearchSessionCreateNestedManyWithoutOrganizationInput = {
@@ -72149,13 +70362,6 @@ export namespace Prisma {
     connect?: IssueLinkWhereUniqueInput | IssueLinkWhereUniqueInput[]
   }
 
-  export type MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput> | MarketResearchCreateWithoutOrganizationInput[] | MarketResearchUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutOrganizationInput | MarketResearchCreateOrConnectWithoutOrganizationInput[]
-    createMany?: MarketResearchCreateManyOrganizationInputEnvelope
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-  }
-
   export type AssetViewUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<AssetViewCreateWithoutOrganizationInput, AssetViewUncheckedCreateWithoutOrganizationInput> | AssetViewCreateWithoutOrganizationInput[] | AssetViewUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: AssetViewCreateOrConnectWithoutOrganizationInput | AssetViewCreateOrConnectWithoutOrganizationInput[]
@@ -72182,13 +70388,6 @@ export namespace Prisma {
     connectOrCreate?: ApiKeyCreateOrConnectWithoutOrganizationInput | ApiKeyCreateOrConnectWithoutOrganizationInput[]
     createMany?: ApiKeyCreateManyOrganizationInputEnvelope
     connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
-  }
-
-  export type ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput = {
-    create?: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput> | ResearchResultsCreateWithoutOrganizationInput[] | ResearchResultsUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutOrganizationInput | ResearchResultsCreateOrConnectWithoutOrganizationInput[]
-    createMany?: ResearchResultsCreateManyOrganizationInputEnvelope
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
   }
 
   export type ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput = {
@@ -72436,20 +70635,6 @@ export namespace Prisma {
     deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
   }
 
-  export type MarketResearchUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput> | MarketResearchCreateWithoutOrganizationInput[] | MarketResearchUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutOrganizationInput | MarketResearchCreateOrConnectWithoutOrganizationInput[]
-    upsert?: MarketResearchUpsertWithWhereUniqueWithoutOrganizationInput | MarketResearchUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: MarketResearchCreateManyOrganizationInputEnvelope
-    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    update?: MarketResearchUpdateWithWhereUniqueWithoutOrganizationInput | MarketResearchUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: MarketResearchUpdateManyWithWhereWithoutOrganizationInput | MarketResearchUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
-  }
-
   export type AssetViewUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<AssetViewCreateWithoutOrganizationInput, AssetViewUncheckedCreateWithoutOrganizationInput> | AssetViewCreateWithoutOrganizationInput[] | AssetViewUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: AssetViewCreateOrConnectWithoutOrganizationInput | AssetViewCreateOrConnectWithoutOrganizationInput[]
@@ -72504,20 +70689,6 @@ export namespace Prisma {
     update?: ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput | ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: ApiKeyUpdateManyWithWhereWithoutOrganizationInput | ApiKeyUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
-  }
-
-  export type ResearchResultsUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput> | ResearchResultsCreateWithoutOrganizationInput[] | ResearchResultsUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutOrganizationInput | ResearchResultsCreateOrConnectWithoutOrganizationInput[]
-    upsert?: ResearchResultsUpsertWithWhereUniqueWithoutOrganizationInput | ResearchResultsUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: ResearchResultsCreateManyOrganizationInputEnvelope
-    set?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    disconnect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    delete?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    update?: ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput | ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: ResearchResultsUpdateManyWithWhereWithoutOrganizationInput | ResearchResultsUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
   }
 
   export type ResearchSessionUpdateManyWithoutOrganizationNestedInput = {
@@ -72772,20 +70943,6 @@ export namespace Prisma {
     deleteMany?: IssueLinkScalarWhereInput | IssueLinkScalarWhereInput[]
   }
 
-  export type MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput> | MarketResearchCreateWithoutOrganizationInput[] | MarketResearchUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutOrganizationInput | MarketResearchCreateOrConnectWithoutOrganizationInput[]
-    upsert?: MarketResearchUpsertWithWhereUniqueWithoutOrganizationInput | MarketResearchUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: MarketResearchCreateManyOrganizationInputEnvelope
-    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    update?: MarketResearchUpdateWithWhereUniqueWithoutOrganizationInput | MarketResearchUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: MarketResearchUpdateManyWithWhereWithoutOrganizationInput | MarketResearchUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
-  }
-
   export type AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<AssetViewCreateWithoutOrganizationInput, AssetViewUncheckedCreateWithoutOrganizationInput> | AssetViewCreateWithoutOrganizationInput[] | AssetViewUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: AssetViewCreateOrConnectWithoutOrganizationInput | AssetViewCreateOrConnectWithoutOrganizationInput[]
@@ -72840,20 +70997,6 @@ export namespace Prisma {
     update?: ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput | ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: ApiKeyUpdateManyWithWhereWithoutOrganizationInput | ApiKeyUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
-  }
-
-  export type ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput> | ResearchResultsCreateWithoutOrganizationInput[] | ResearchResultsUncheckedCreateWithoutOrganizationInput[]
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutOrganizationInput | ResearchResultsCreateOrConnectWithoutOrganizationInput[]
-    upsert?: ResearchResultsUpsertWithWhereUniqueWithoutOrganizationInput | ResearchResultsUpsertWithWhereUniqueWithoutOrganizationInput[]
-    createMany?: ResearchResultsCreateManyOrganizationInputEnvelope
-    set?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    disconnect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    delete?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
-    update?: ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput | ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput[]
-    updateMany?: ResearchResultsUpdateManyWithWhereWithoutOrganizationInput | ResearchResultsUpdateManyWithWhereWithoutOrganizationInput[]
-    deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
   }
 
   export type ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput = {
@@ -73327,13 +71470,6 @@ export namespace Prisma {
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
   }
 
-  export type MarketResearchCreateNestedManyWithoutIdeaInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
-    createMany?: MarketResearchCreateManyIdeaInputEnvelope
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-  }
-
   export type ResearchSessionCreateNestedManyWithoutIdeaInput = {
     create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
     connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
@@ -73353,13 +71489,6 @@ export namespace Prisma {
     connectOrCreate?: ProjectCreateOrConnectWithoutIdeaInput | ProjectCreateOrConnectWithoutIdeaInput[]
     createMany?: ProjectCreateManyIdeaInputEnvelope
     connect?: ProjectWhereUniqueInput | ProjectWhereUniqueInput[]
-  }
-
-  export type MarketResearchUncheckedCreateNestedManyWithoutIdeaInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
-    createMany?: MarketResearchCreateManyIdeaInputEnvelope
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
   }
 
   export type ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput = {
@@ -73420,20 +71549,6 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type MarketResearchUpdateManyWithoutIdeaNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
-    upsert?: MarketResearchUpsertWithWhereUniqueWithoutIdeaInput | MarketResearchUpsertWithWhereUniqueWithoutIdeaInput[]
-    createMany?: MarketResearchCreateManyIdeaInputEnvelope
-    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    update?: MarketResearchUpdateWithWhereUniqueWithoutIdeaInput | MarketResearchUpdateWithWhereUniqueWithoutIdeaInput[]
-    updateMany?: MarketResearchUpdateManyWithWhereWithoutIdeaInput | MarketResearchUpdateManyWithWhereWithoutIdeaInput[]
-    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
-  }
-
   export type ResearchSessionUpdateManyWithoutIdeaNestedInput = {
     create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
     connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
@@ -73474,20 +71589,6 @@ export namespace Prisma {
     update?: ProjectUpdateWithWhereUniqueWithoutIdeaInput | ProjectUpdateWithWhereUniqueWithoutIdeaInput[]
     updateMany?: ProjectUpdateManyWithWhereWithoutIdeaInput | ProjectUpdateManyWithWhereWithoutIdeaInput[]
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
-  }
-
-  export type MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput> | MarketResearchCreateWithoutIdeaInput[] | MarketResearchUncheckedCreateWithoutIdeaInput[]
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
-    upsert?: MarketResearchUpsertWithWhereUniqueWithoutIdeaInput | MarketResearchUpsertWithWhereUniqueWithoutIdeaInput[]
-    createMany?: MarketResearchCreateManyIdeaInputEnvelope
-    set?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    disconnect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    delete?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
-    update?: MarketResearchUpdateWithWhereUniqueWithoutIdeaInput | MarketResearchUpdateWithWhereUniqueWithoutIdeaInput[]
-    updateMany?: MarketResearchUpdateManyWithWhereWithoutIdeaInput | MarketResearchUpdateManyWithWhereWithoutIdeaInput[]
-    deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
   }
 
   export type ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput = {
@@ -75706,208 +73807,6 @@ export namespace Prisma {
     update?: XOR<XOR<MilestoneUpdateToOneWithWhereWithoutBlockingInput, MilestoneUpdateWithoutBlockingInput>, MilestoneUncheckedUpdateWithoutBlockingInput>
   }
 
-  export type IdeaCreateNestedOneWithoutMarketResearchInput = {
-    create?: XOR<IdeaCreateWithoutMarketResearchInput, IdeaUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: IdeaCreateOrConnectWithoutMarketResearchInput
-    connect?: IdeaWhereUniqueInput
-  }
-
-  export type OrganizationCreateNestedOneWithoutMarketResearchInput = {
-    create?: XOR<OrganizationCreateWithoutMarketResearchInput, OrganizationUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutMarketResearchInput
-    connect?: OrganizationWhereUniqueInput
-  }
-
-  export type ResearchResultsCreateNestedOneWithoutMarketResearchInput = {
-    create?: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutMarketResearchInput
-    connect?: ResearchResultsWhereUniqueInput
-  }
-
-  export type ResearchResultsUncheckedCreateNestedOneWithoutMarketResearchInput = {
-    create?: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutMarketResearchInput
-    connect?: ResearchResultsWhereUniqueInput
-  }
-
-  export type EnumResearchTypeFieldUpdateOperationsInput = {
-    set?: $Enums.ResearchType
-  }
-
-  export type IdeaUpdateOneRequiredWithoutMarketResearchNestedInput = {
-    create?: XOR<IdeaCreateWithoutMarketResearchInput, IdeaUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: IdeaCreateOrConnectWithoutMarketResearchInput
-    upsert?: IdeaUpsertWithoutMarketResearchInput
-    connect?: IdeaWhereUniqueInput
-    update?: XOR<XOR<IdeaUpdateToOneWithWhereWithoutMarketResearchInput, IdeaUpdateWithoutMarketResearchInput>, IdeaUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput = {
-    create?: XOR<OrganizationCreateWithoutMarketResearchInput, OrganizationUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutMarketResearchInput
-    upsert?: OrganizationUpsertWithoutMarketResearchInput
-    connect?: OrganizationWhereUniqueInput
-    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutMarketResearchInput, OrganizationUpdateWithoutMarketResearchInput>, OrganizationUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type ResearchResultsUpdateOneWithoutMarketResearchNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutMarketResearchInput
-    upsert?: ResearchResultsUpsertWithoutMarketResearchInput
-    disconnect?: ResearchResultsWhereInput | boolean
-    delete?: ResearchResultsWhereInput | boolean
-    connect?: ResearchResultsWhereUniqueInput
-    update?: XOR<XOR<ResearchResultsUpdateToOneWithWhereWithoutMarketResearchInput, ResearchResultsUpdateWithoutMarketResearchInput>, ResearchResultsUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type ResearchResultsUncheckedUpdateOneWithoutMarketResearchNestedInput = {
-    create?: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-    connectOrCreate?: ResearchResultsCreateOrConnectWithoutMarketResearchInput
-    upsert?: ResearchResultsUpsertWithoutMarketResearchInput
-    disconnect?: ResearchResultsWhereInput | boolean
-    delete?: ResearchResultsWhereInput | boolean
-    connect?: ResearchResultsWhereUniqueInput
-    update?: XOR<XOR<ResearchResultsUpdateToOneWithWhereWithoutMarketResearchInput, ResearchResultsUpdateWithoutMarketResearchInput>, ResearchResultsUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type OrganizationCreateNestedOneWithoutResearchResultsInput = {
-    create?: XOR<OrganizationCreateWithoutResearchResultsInput, OrganizationUncheckedCreateWithoutResearchResultsInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutResearchResultsInput
-    connect?: OrganizationWhereUniqueInput
-  }
-
-  export type MarketResearchCreateNestedOneWithoutResearchResultsInput = {
-    create?: XOR<MarketResearchCreateWithoutResearchResultsInput, MarketResearchUncheckedCreateWithoutResearchResultsInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutResearchResultsInput
-    connect?: MarketResearchWhereUniqueInput
-  }
-
-  export type OrganizationUpdateOneRequiredWithoutResearchResultsNestedInput = {
-    create?: XOR<OrganizationCreateWithoutResearchResultsInput, OrganizationUncheckedCreateWithoutResearchResultsInput>
-    connectOrCreate?: OrganizationCreateOrConnectWithoutResearchResultsInput
-    upsert?: OrganizationUpsertWithoutResearchResultsInput
-    connect?: OrganizationWhereUniqueInput
-    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutResearchResultsInput, OrganizationUpdateWithoutResearchResultsInput>, OrganizationUncheckedUpdateWithoutResearchResultsInput>
-  }
-
-  export type MarketResearchUpdateOneWithoutResearchResultsNestedInput = {
-    create?: XOR<MarketResearchCreateWithoutResearchResultsInput, MarketResearchUncheckedCreateWithoutResearchResultsInput>
-    connectOrCreate?: MarketResearchCreateOrConnectWithoutResearchResultsInput
-    upsert?: MarketResearchUpsertWithoutResearchResultsInput
-    disconnect?: MarketResearchWhereInput | boolean
-    delete?: MarketResearchWhereInput | boolean
-    connect?: MarketResearchWhereUniqueInput
-    update?: XOR<XOR<MarketResearchUpdateToOneWithWhereWithoutResearchResultsInput, MarketResearchUpdateWithoutResearchResultsInput>, MarketResearchUncheckedUpdateWithoutResearchResultsInput>
-  }
-
-  export type IdeaCreateNestedOneWithoutCompetitorInput = {
-    create?: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
-    connectOrCreate?: IdeaCreateOrConnectWithoutCompetitorInput
-    connect?: IdeaWhereUniqueInput
-  }
-
-  export type CompetitiveMoveCreateNestedManyWithoutCompetitorInput = {
-    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
-    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
-    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
-    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-  }
-
-  export type CompetitiveMoveUncheckedCreateNestedManyWithoutCompetitorInput = {
-    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
-    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
-    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
-    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-  }
-
-  export type IdeaUpdateOneRequiredWithoutCompetitorNestedInput = {
-    create?: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
-    connectOrCreate?: IdeaCreateOrConnectWithoutCompetitorInput
-    upsert?: IdeaUpsertWithoutCompetitorInput
-    connect?: IdeaWhereUniqueInput
-    update?: XOR<XOR<IdeaUpdateToOneWithWhereWithoutCompetitorInput, IdeaUpdateWithoutCompetitorInput>, IdeaUncheckedUpdateWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveUpdateManyWithoutCompetitorNestedInput = {
-    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
-    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
-    upsert?: CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput[]
-    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
-    set?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    disconnect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    delete?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    update?: CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput[]
-    updateMany?: CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput | CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput[]
-    deleteMany?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
-  }
-
-  export type CompetitiveMoveUncheckedUpdateManyWithoutCompetitorNestedInput = {
-    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
-    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
-    upsert?: CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput[]
-    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
-    set?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    disconnect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    delete?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
-    update?: CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput[]
-    updateMany?: CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput | CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput[]
-    deleteMany?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
-  }
-
-  export type CompetitiveMoveCreateaffectedFeaturesInput = {
-    set: string[]
-  }
-
-  export type CompetitiveMoveCreatepressCoverageInput = {
-    set: string[]
-  }
-
-  export type CompetitiveMoveCreateopportunitiesInput = {
-    set: string[]
-  }
-
-  export type CompetitiveMoveCreatethreatsInput = {
-    set: string[]
-  }
-
-  export type CompetitorCreateNestedOneWithoutCompetitiveMovesInput = {
-    create?: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
-    connectOrCreate?: CompetitorCreateOrConnectWithoutCompetitiveMovesInput
-    connect?: CompetitorWhereUniqueInput
-  }
-
-  export type CompetitiveMoveUpdateaffectedFeaturesInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type CompetitiveMoveUpdatepressCoverageInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type CompetitiveMoveUpdateopportunitiesInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type CompetitiveMoveUpdatethreatsInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type CompetitorUpdateOneWithoutCompetitiveMovesNestedInput = {
-    create?: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
-    connectOrCreate?: CompetitorCreateOrConnectWithoutCompetitiveMovesInput
-    upsert?: CompetitorUpsertWithoutCompetitiveMovesInput
-    disconnect?: CompetitorWhereInput | boolean
-    delete?: CompetitorWhereInput | boolean
-    connect?: CompetitorWhereUniqueInput
-    update?: XOR<XOR<CompetitorUpdateToOneWithWhereWithoutCompetitiveMovesInput, CompetitorUpdateWithoutCompetitiveMovesInput>, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
-  }
-
   export type AssetCreateNestedOneWithoutAssetViewsInput = {
     create?: XOR<AssetCreateWithoutAssetViewsInput, AssetUncheckedCreateWithoutAssetViewsInput>
     connectOrCreate?: AssetCreateOrConnectWithoutAssetViewsInput
@@ -76038,6 +73937,114 @@ export namespace Prisma {
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutReferralsInput, OrganizationUpdateWithoutReferralsInput>, OrganizationUncheckedUpdateWithoutReferralsInput>
   }
 
+  export type IdeaCreateNestedOneWithoutCompetitorInput = {
+    create?: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
+    connectOrCreate?: IdeaCreateOrConnectWithoutCompetitorInput
+    connect?: IdeaWhereUniqueInput
+  }
+
+  export type CompetitiveMoveCreateNestedManyWithoutCompetitorInput = {
+    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
+    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
+    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
+    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+  }
+
+  export type CompetitiveMoveUncheckedCreateNestedManyWithoutCompetitorInput = {
+    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
+    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
+    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
+    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+  }
+
+  export type IdeaUpdateOneRequiredWithoutCompetitorNestedInput = {
+    create?: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
+    connectOrCreate?: IdeaCreateOrConnectWithoutCompetitorInput
+    upsert?: IdeaUpsertWithoutCompetitorInput
+    connect?: IdeaWhereUniqueInput
+    update?: XOR<XOR<IdeaUpdateToOneWithWhereWithoutCompetitorInput, IdeaUpdateWithoutCompetitorInput>, IdeaUncheckedUpdateWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveUpdateManyWithoutCompetitorNestedInput = {
+    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
+    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
+    upsert?: CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput[]
+    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
+    set?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    disconnect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    delete?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    update?: CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput[]
+    updateMany?: CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput | CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput[]
+    deleteMany?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
+  }
+
+  export type CompetitiveMoveUncheckedUpdateManyWithoutCompetitorNestedInput = {
+    create?: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput> | CompetitiveMoveCreateWithoutCompetitorInput[] | CompetitiveMoveUncheckedCreateWithoutCompetitorInput[]
+    connectOrCreate?: CompetitiveMoveCreateOrConnectWithoutCompetitorInput | CompetitiveMoveCreateOrConnectWithoutCompetitorInput[]
+    upsert?: CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput[]
+    createMany?: CompetitiveMoveCreateManyCompetitorInputEnvelope
+    set?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    disconnect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    delete?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    connect?: CompetitiveMoveWhereUniqueInput | CompetitiveMoveWhereUniqueInput[]
+    update?: CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput | CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput[]
+    updateMany?: CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput | CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput[]
+    deleteMany?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
+  }
+
+  export type CompetitiveMoveCreateaffectedFeaturesInput = {
+    set: string[]
+  }
+
+  export type CompetitiveMoveCreatepressCoverageInput = {
+    set: string[]
+  }
+
+  export type CompetitiveMoveCreateopportunitiesInput = {
+    set: string[]
+  }
+
+  export type CompetitiveMoveCreatethreatsInput = {
+    set: string[]
+  }
+
+  export type CompetitorCreateNestedOneWithoutCompetitiveMovesInput = {
+    create?: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
+    connectOrCreate?: CompetitorCreateOrConnectWithoutCompetitiveMovesInput
+    connect?: CompetitorWhereUniqueInput
+  }
+
+  export type CompetitiveMoveUpdateaffectedFeaturesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CompetitiveMoveUpdatepressCoverageInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CompetitiveMoveUpdateopportunitiesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CompetitiveMoveUpdatethreatsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CompetitorUpdateOneWithoutCompetitiveMovesNestedInput = {
+    create?: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
+    connectOrCreate?: CompetitorCreateOrConnectWithoutCompetitiveMovesInput
+    upsert?: CompetitorUpsertWithoutCompetitiveMovesInput
+    disconnect?: CompetitorWhereInput | boolean
+    delete?: CompetitorWhereInput | boolean
+    connect?: CompetitorWhereUniqueInput
+    update?: XOR<XOR<CompetitorUpdateToOneWithWhereWithoutCompetitiveMovesInput, CompetitorUpdateWithoutCompetitiveMovesInput>, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
+  }
+
   export type IdeaCreateNestedOneWithoutResearchSessionsInput = {
     create?: XOR<IdeaCreateWithoutResearchSessionsInput, IdeaUncheckedCreateWithoutResearchSessionsInput>
     connectOrCreate?: IdeaCreateOrConnectWithoutResearchSessionsInput
@@ -76057,11 +74064,25 @@ export namespace Prisma {
     connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
   }
 
+  export type ResearchFindingsCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput> | ResearchFindingsCreateWithoutSessionInput[] | ResearchFindingsUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchFindingsCreateOrConnectWithoutSessionInput | ResearchFindingsCreateOrConnectWithoutSessionInput[]
+    createMany?: ResearchFindingsCreateManySessionInputEnvelope
+    connect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+  }
+
   export type ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput = {
     create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
     createMany?: ResearchPhaseResultCreateManySessionInputEnvelope
     connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+  }
+
+  export type ResearchFindingsUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput> | ResearchFindingsCreateWithoutSessionInput[] | ResearchFindingsUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchFindingsCreateOrConnectWithoutSessionInput | ResearchFindingsCreateOrConnectWithoutSessionInput[]
+    createMany?: ResearchFindingsCreateManySessionInputEnvelope
+    connect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
   }
 
   export type EnumResearchDepthFieldUpdateOperationsInput = {
@@ -76110,6 +74131,20 @@ export namespace Prisma {
     deleteMany?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
   }
 
+  export type ResearchFindingsUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput> | ResearchFindingsCreateWithoutSessionInput[] | ResearchFindingsUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchFindingsCreateOrConnectWithoutSessionInput | ResearchFindingsCreateOrConnectWithoutSessionInput[]
+    upsert?: ResearchFindingsUpsertWithWhereUniqueWithoutSessionInput | ResearchFindingsUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ResearchFindingsCreateManySessionInputEnvelope
+    set?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    disconnect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    delete?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    connect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    update?: ResearchFindingsUpdateWithWhereUniqueWithoutSessionInput | ResearchFindingsUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ResearchFindingsUpdateManyWithWhereWithoutSessionInput | ResearchFindingsUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ResearchFindingsScalarWhereInput | ResearchFindingsScalarWhereInput[]
+  }
+
   export type ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput = {
     create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
     connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
@@ -76122,6 +74157,20 @@ export namespace Prisma {
     update?: ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput | ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput[]
     updateMany?: ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput | ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput[]
     deleteMany?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
+  }
+
+  export type ResearchFindingsUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput> | ResearchFindingsCreateWithoutSessionInput[] | ResearchFindingsUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchFindingsCreateOrConnectWithoutSessionInput | ResearchFindingsCreateOrConnectWithoutSessionInput[]
+    upsert?: ResearchFindingsUpsertWithWhereUniqueWithoutSessionInput | ResearchFindingsUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ResearchFindingsCreateManySessionInputEnvelope
+    set?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    disconnect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    delete?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    connect?: ResearchFindingsWhereUniqueInput | ResearchFindingsWhereUniqueInput[]
+    update?: ResearchFindingsUpdateWithWhereUniqueWithoutSessionInput | ResearchFindingsUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ResearchFindingsUpdateManyWithWhereWithoutSessionInput | ResearchFindingsUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ResearchFindingsScalarWhereInput | ResearchFindingsScalarWhereInput[]
   }
 
   export type ResearchSessionCreateNestedOneWithoutPhasesInput = {
@@ -76144,6 +74193,20 @@ export namespace Prisma {
     upsert?: ResearchSessionUpsertWithoutPhasesInput
     connect?: ResearchSessionWhereUniqueInput
     update?: XOR<XOR<ResearchSessionUpdateToOneWithWhereWithoutPhasesInput, ResearchSessionUpdateWithoutPhasesInput>, ResearchSessionUncheckedUpdateWithoutPhasesInput>
+  }
+
+  export type ResearchSessionCreateNestedOneWithoutFindingsInput = {
+    create?: XOR<ResearchSessionCreateWithoutFindingsInput, ResearchSessionUncheckedCreateWithoutFindingsInput>
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutFindingsInput
+    connect?: ResearchSessionWhereUniqueInput
+  }
+
+  export type ResearchSessionUpdateOneRequiredWithoutFindingsNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutFindingsInput, ResearchSessionUncheckedCreateWithoutFindingsInput>
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutFindingsInput
+    upsert?: ResearchSessionUpsertWithoutFindingsInput
+    connect?: ResearchSessionWhereUniqueInput
+    update?: XOR<XOR<ResearchSessionUpdateToOneWithWhereWithoutFindingsInput, ResearchSessionUpdateWithoutFindingsInput>, ResearchSessionUncheckedUpdateWithoutFindingsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -76722,23 +74785,6 @@ export namespace Prisma {
     _max?: NestedEnumMilestoneStatusFilter<$PrismaModel>
   }
 
-  export type NestedEnumResearchTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.ResearchType | EnumResearchTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumResearchTypeFilter<$PrismaModel> | $Enums.ResearchType
-  }
-
-  export type NestedEnumResearchTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.ResearchType | EnumResearchTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.ResearchType[] | ListEnumResearchTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumResearchTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResearchType
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumResearchTypeFilter<$PrismaModel>
-    _max?: NestedEnumResearchTypeFilter<$PrismaModel>
-  }
-
   export type NestedEnumResearchDepthFilter<$PrismaModel = never> = {
     equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
     in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
@@ -77107,7 +75153,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
@@ -77127,7 +75172,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
@@ -78563,7 +76607,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
@@ -78583,7 +76626,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
@@ -79058,40 +77100,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MarketResearchCreateWithoutOrganizationInput = {
-    id?: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    idea: IdeaCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedOneWithoutMarketResearchInput
-  }
-
-  export type MarketResearchUncheckedCreateWithoutOrganizationInput = {
-    id?: string
-    ideaId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutMarketResearchInput
-  }
-
-  export type MarketResearchCreateOrConnectWithoutOrganizationInput = {
-    where: MarketResearchWhereUniqueInput
-    create: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type MarketResearchCreateManyOrganizationInputEnvelope = {
-    data: MarketResearchCreateManyOrganizationInput | MarketResearchCreateManyOrganizationInput[]
-    skipDuplicates?: boolean
-  }
-
   export type AssetViewCreateWithoutOrganizationInput = {
     id?: string
     ipAddress: string
@@ -79222,34 +77230,11 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ResearchResultsCreateWithoutOrganizationInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    marketResearch?: MarketResearchCreateNestedOneWithoutResearchResultsInput
-  }
-
-  export type ResearchResultsUncheckedCreateWithoutOrganizationInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    marketResearchId: string
-  }
-
-  export type ResearchResultsCreateOrConnectWithoutOrganizationInput = {
-    where: ResearchResultsWhereUniqueInput
-    create: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type ResearchResultsCreateManyOrganizationInputEnvelope = {
-    data: ResearchResultsCreateManyOrganizationInput | ResearchResultsCreateManyOrganizationInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ResearchSessionCreateWithoutOrganizationInput = {
     id?: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -79261,11 +77246,15 @@ export namespace Prisma {
     updatedAt?: Date | string
     idea: IdeaCreateNestedOneWithoutResearchSessionsInput
     phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionUncheckedCreateWithoutOrganizationInput = {
     id?: string
     ideaId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -79276,6 +77265,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionCreateOrConnectWithoutOrganizationInput = {
@@ -79629,37 +77619,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"IssueLink"> | Date | string
   }
 
-  export type MarketResearchUpsertWithWhereUniqueWithoutOrganizationInput = {
-    where: MarketResearchWhereUniqueInput
-    update: XOR<MarketResearchUpdateWithoutOrganizationInput, MarketResearchUncheckedUpdateWithoutOrganizationInput>
-    create: XOR<MarketResearchCreateWithoutOrganizationInput, MarketResearchUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type MarketResearchUpdateWithWhereUniqueWithoutOrganizationInput = {
-    where: MarketResearchWhereUniqueInput
-    data: XOR<MarketResearchUpdateWithoutOrganizationInput, MarketResearchUncheckedUpdateWithoutOrganizationInput>
-  }
-
-  export type MarketResearchUpdateManyWithWhereWithoutOrganizationInput = {
-    where: MarketResearchScalarWhereInput
-    data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyWithoutOrganizationInput>
-  }
-
-  export type MarketResearchScalarWhereInput = {
-    AND?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
-    OR?: MarketResearchScalarWhereInput[]
-    NOT?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
-    id?: StringFilter<"MarketResearch"> | string
-    ideaId?: StringFilter<"MarketResearch"> | string
-    organizationId?: StringFilter<"MarketResearch"> | string
-    validationScore?: FloatNullableFilter<"MarketResearch"> | number | null
-    confidenceLevel?: EnumImportanceFilter<"MarketResearch"> | $Enums.Importance
-    completed?: BoolFilter<"MarketResearch"> | boolean
-    lastUpdated?: DateTimeFilter<"MarketResearch"> | Date | string
-    createdAt?: DateTimeFilter<"MarketResearch"> | Date | string
-    type?: EnumResearchTypeFilter<"MarketResearch"> | $Enums.ResearchType
-  }
-
   export type AssetViewUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: AssetViewWhereUniqueInput
     update: XOR<AssetViewUpdateWithoutOrganizationInput, AssetViewUncheckedUpdateWithoutOrganizationInput>
@@ -79757,34 +77716,6 @@ export namespace Prisma {
     expiresAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
   }
 
-  export type ResearchResultsUpsertWithWhereUniqueWithoutOrganizationInput = {
-    where: ResearchResultsWhereUniqueInput
-    update: XOR<ResearchResultsUpdateWithoutOrganizationInput, ResearchResultsUncheckedUpdateWithoutOrganizationInput>
-    create: XOR<ResearchResultsCreateWithoutOrganizationInput, ResearchResultsUncheckedCreateWithoutOrganizationInput>
-  }
-
-  export type ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput = {
-    where: ResearchResultsWhereUniqueInput
-    data: XOR<ResearchResultsUpdateWithoutOrganizationInput, ResearchResultsUncheckedUpdateWithoutOrganizationInput>
-  }
-
-  export type ResearchResultsUpdateManyWithWhereWithoutOrganizationInput = {
-    where: ResearchResultsScalarWhereInput
-    data: XOR<ResearchResultsUpdateManyMutationInput, ResearchResultsUncheckedUpdateManyWithoutOrganizationInput>
-  }
-
-  export type ResearchResultsScalarWhereInput = {
-    AND?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
-    OR?: ResearchResultsScalarWhereInput[]
-    NOT?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
-    id?: StringFilter<"ResearchResults"> | string
-    organizationId?: StringFilter<"ResearchResults"> | string
-    createdAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    updatedAt?: DateTimeFilter<"ResearchResults"> | Date | string
-    content?: StringFilter<"ResearchResults"> | string
-    marketResearchId?: StringFilter<"ResearchResults"> | string
-  }
-
   export type ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: ResearchSessionWhereUniqueInput
     update: XOR<ResearchSessionUpdateWithoutOrganizationInput, ResearchSessionUncheckedUpdateWithoutOrganizationInput>
@@ -79808,6 +77739,9 @@ export namespace Prisma {
     id?: StringFilter<"ResearchSession"> | string
     ideaId?: StringFilter<"ResearchSession"> | string
     organizationId?: StringFilter<"ResearchSession"> | string
+    name?: StringNullableFilter<"ResearchSession"> | string | null
+    finalContent?: StringNullableFilter<"ResearchSession"> | string | null
+    prompt?: StringNullableFilter<"ResearchSession"> | string | null
     depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
     status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
     currentPhaseIndex?: IntFilter<"ResearchSession"> | number
@@ -79842,12 +77776,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -79874,12 +77806,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -79985,12 +77915,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80017,12 +77945,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80118,12 +78044,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -80150,12 +78074,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -80261,12 +78183,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80293,12 +78213,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80658,12 +78576,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -80690,12 +78606,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -80801,12 +78715,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80833,12 +78745,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -80926,7 +78836,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
@@ -80946,7 +78855,6 @@ export namespace Prisma {
     solutionOffered?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
@@ -80979,12 +78887,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -81011,12 +78917,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -81422,7 +79326,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
@@ -81442,7 +79345,6 @@ export namespace Prisma {
     solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
@@ -81481,12 +79383,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -81513,12 +79413,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -81789,12 +79687,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -81821,12 +79717,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -81895,42 +79789,11 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type MarketResearchCreateWithoutIdeaInput = {
-    id?: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    organization: OrganizationCreateNestedOneWithoutMarketResearchInput
-    ResearchResults?: ResearchResultsCreateNestedOneWithoutMarketResearchInput
-  }
-
-  export type MarketResearchUncheckedCreateWithoutIdeaInput = {
-    id?: string
-    organizationId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedCreateNestedOneWithoutMarketResearchInput
-  }
-
-  export type MarketResearchCreateOrConnectWithoutIdeaInput = {
-    where: MarketResearchWhereUniqueInput
-    create: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-  }
-
-  export type MarketResearchCreateManyIdeaInputEnvelope = {
-    data: MarketResearchCreateManyIdeaInput | MarketResearchCreateManyIdeaInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ResearchSessionCreateWithoutIdeaInput = {
     id?: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -81942,11 +79805,15 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
     phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionUncheckedCreateWithoutIdeaInput = {
     id?: string
     organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -81957,6 +79824,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+    findings?: ResearchFindingsUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionCreateOrConnectWithoutIdeaInput = {
@@ -82128,12 +79996,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -82160,12 +80026,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -82183,22 +80047,6 @@ export namespace Prisma {
   export type ProjectUpdateManyWithWhereWithoutIdeaInput = {
     where: ProjectScalarWhereInput
     data: XOR<ProjectUpdateManyMutationInput, ProjectUncheckedUpdateManyWithoutIdeaInput>
-  }
-
-  export type MarketResearchUpsertWithWhereUniqueWithoutIdeaInput = {
-    where: MarketResearchWhereUniqueInput
-    update: XOR<MarketResearchUpdateWithoutIdeaInput, MarketResearchUncheckedUpdateWithoutIdeaInput>
-    create: XOR<MarketResearchCreateWithoutIdeaInput, MarketResearchUncheckedCreateWithoutIdeaInput>
-  }
-
-  export type MarketResearchUpdateWithWhereUniqueWithoutIdeaInput = {
-    where: MarketResearchWhereUniqueInput
-    data: XOR<MarketResearchUpdateWithoutIdeaInput, MarketResearchUncheckedUpdateWithoutIdeaInput>
-  }
-
-  export type MarketResearchUpdateManyWithWhereWithoutIdeaInput = {
-    where: MarketResearchScalarWhereInput
-    data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyWithoutIdeaInput>
   }
 
   export type ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -82282,12 +80130,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -82314,12 +80160,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -82840,12 +80684,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -82872,12 +80714,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -83316,12 +81156,10 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -83348,12 +81186,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -83510,12 +81346,10 @@ export namespace Prisma {
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -83542,12 +81376,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -83700,12 +81532,10 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -83732,12 +81562,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -83837,12 +81665,10 @@ export namespace Prisma {
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -83869,12 +81695,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84019,12 +81843,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84051,12 +81873,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84283,12 +82103,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84315,12 +82133,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84449,11 +82265,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84481,11 +82295,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84529,11 +82341,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84561,11 +82371,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84592,12 +82400,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84624,12 +82430,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -84735,12 +82539,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -84767,12 +82569,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -86677,12 +84477,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -86709,12 +84507,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -86850,12 +84646,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -86882,12 +84676,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -87132,12 +84924,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -87164,12 +84954,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -87424,12 +85212,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -87456,12 +85242,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -87867,12 +85651,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -87899,12 +85681,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -88383,12 +86163,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -88415,12 +86193,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -88718,12 +86494,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -88750,12 +86524,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -88908,12 +86680,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -88940,12 +86710,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -89094,12 +86862,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -89126,12 +86892,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -89229,12 +86993,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -89261,12 +87023,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -89409,12 +87169,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -89441,12 +87199,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -89783,12 +87539,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -89815,12 +87569,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -89980,12 +87732,10 @@ export namespace Prisma {
     milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -90012,12 +87762,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -90138,12 +87886,10 @@ export namespace Prisma {
     milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -90170,12 +87916,10 @@ export namespace Prisma {
     milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -90269,796 +88013,6 @@ export namespace Prisma {
     dependsOn?: MilestoneDependencyUncheckedUpdateManyWithoutMilestoneNestedInput
   }
 
-  export type IdeaCreateWithoutMarketResearchInput = {
-    id?: string
-    name: string
-    description: string
-    industry: string
-    internal: boolean
-    openSource: boolean
-    status: $Enums.IdeaStatus
-    aiOverallValidation?: number | null
-    problemSolved?: string | null
-    solutionOffered?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    owner?: UserCreateNestedOneWithoutIdeaInput
-    organization: OrganizationCreateNestedOneWithoutIdeaInput
-    projects?: ProjectCreateNestedManyWithoutIdeaInput
-    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
-    Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
-  }
-
-  export type IdeaUncheckedCreateWithoutMarketResearchInput = {
-    id?: string
-    name: string
-    description: string
-    industry: string
-    ownerId?: string | null
-    organizationId: string
-    internal: boolean
-    openSource: boolean
-    status: $Enums.IdeaStatus
-    aiOverallValidation?: number | null
-    problemSolved?: string | null
-    solutionOffered?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
-    Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
-  }
-
-  export type IdeaCreateOrConnectWithoutMarketResearchInput = {
-    where: IdeaWhereUniqueInput
-    create: XOR<IdeaCreateWithoutMarketResearchInput, IdeaUncheckedCreateWithoutMarketResearchInput>
-  }
-
-  export type OrganizationCreateWithoutMarketResearchInput = {
-    id?: string
-    name: string
-    slug?: string | null
-    logo?: string | null
-    createdAt?: Date | string
-    metadata?: string | null
-    members?: MemberCreateNestedManyWithoutOrganizationInput
-    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
-    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
-    project?: ProjectCreateNestedManyWithoutOrganizationInput
-    idea?: IdeaCreateNestedManyWithoutOrganizationInput
-    issue?: IssueCreateNestedManyWithoutOrganizationInput
-    asset?: AssetCreateNestedManyWithoutOrganizationInput
-    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
-    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
-    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
-    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
-    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
-    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
-    assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
-    referrals?: ReferralCreateNestedManyWithoutOrganizationInput
-    ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
-    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationUncheckedCreateWithoutMarketResearchInput = {
-    id?: string
-    name: string
-    slug?: string | null
-    logo?: string | null
-    createdAt?: Date | string
-    metadata?: string | null
-    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
-    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
-    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
-    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
-    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
-    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
-    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
-    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
-    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
-    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
-    assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
-    referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
-    ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
-    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationCreateOrConnectWithoutMarketResearchInput = {
-    where: OrganizationWhereUniqueInput
-    create: XOR<OrganizationCreateWithoutMarketResearchInput, OrganizationUncheckedCreateWithoutMarketResearchInput>
-  }
-
-  export type ResearchResultsCreateWithoutMarketResearchInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    organization: OrganizationCreateNestedOneWithoutResearchResultsInput
-  }
-
-  export type ResearchResultsUncheckedCreateWithoutMarketResearchInput = {
-    id?: string
-    organizationId: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-  }
-
-  export type ResearchResultsCreateOrConnectWithoutMarketResearchInput = {
-    where: ResearchResultsWhereUniqueInput
-    create: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-  }
-
-  export type IdeaUpsertWithoutMarketResearchInput = {
-    update: XOR<IdeaUpdateWithoutMarketResearchInput, IdeaUncheckedUpdateWithoutMarketResearchInput>
-    create: XOR<IdeaCreateWithoutMarketResearchInput, IdeaUncheckedCreateWithoutMarketResearchInput>
-    where?: IdeaWhereInput
-  }
-
-  export type IdeaUpdateToOneWithWhereWithoutMarketResearchInput = {
-    where?: IdeaWhereInput
-    data: XOR<IdeaUpdateWithoutMarketResearchInput, IdeaUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type IdeaUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    industry?: StringFieldUpdateOperationsInput | string
-    internal?: BoolFieldUpdateOperationsInput | boolean
-    openSource?: BoolFieldUpdateOperationsInput | boolean
-    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
-    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
-    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    owner?: UserUpdateOneWithoutIdeaNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
-    projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
-    Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
-  }
-
-  export type IdeaUncheckedUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    industry?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    organizationId?: StringFieldUpdateOperationsInput | string
-    internal?: BoolFieldUpdateOperationsInput | boolean
-    openSource?: BoolFieldUpdateOperationsInput | boolean
-    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
-    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
-    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
-    Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
-  }
-
-  export type OrganizationUpsertWithoutMarketResearchInput = {
-    update: XOR<OrganizationUpdateWithoutMarketResearchInput, OrganizationUncheckedUpdateWithoutMarketResearchInput>
-    create: XOR<OrganizationCreateWithoutMarketResearchInput, OrganizationUncheckedCreateWithoutMarketResearchInput>
-    where?: OrganizationWhereInput
-  }
-
-  export type OrganizationUpdateToOneWithWhereWithoutMarketResearchInput = {
-    where?: OrganizationWhereInput
-    data: XOR<OrganizationUpdateWithoutMarketResearchInput, OrganizationUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type OrganizationUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    metadata?: NullableStringFieldUpdateOperationsInput | string | null
-    members?: MemberUpdateManyWithoutOrganizationNestedInput
-    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
-    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
-    project?: ProjectUpdateManyWithoutOrganizationNestedInput
-    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
-    issue?: IssueUpdateManyWithoutOrganizationNestedInput
-    asset?: AssetUpdateManyWithoutOrganizationNestedInput
-    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
-    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
-    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
-    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
-    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
-    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
-    assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
-    referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
-    ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
-    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type OrganizationUncheckedUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    metadata?: NullableStringFieldUpdateOperationsInput | string | null
-    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
-    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
-    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
-    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
-    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
-    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
-    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
-    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
-    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
-    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
-    assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
-    referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
-    ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
-    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type ResearchResultsUpsertWithoutMarketResearchInput = {
-    update: XOR<ResearchResultsUpdateWithoutMarketResearchInput, ResearchResultsUncheckedUpdateWithoutMarketResearchInput>
-    create: XOR<ResearchResultsCreateWithoutMarketResearchInput, ResearchResultsUncheckedCreateWithoutMarketResearchInput>
-    where?: ResearchResultsWhereInput
-  }
-
-  export type ResearchResultsUpdateToOneWithWhereWithoutMarketResearchInput = {
-    where?: ResearchResultsWhereInput
-    data: XOR<ResearchResultsUpdateWithoutMarketResearchInput, ResearchResultsUncheckedUpdateWithoutMarketResearchInput>
-  }
-
-  export type ResearchResultsUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    organization?: OrganizationUpdateOneRequiredWithoutResearchResultsNestedInput
-  }
-
-  export type ResearchResultsUncheckedUpdateWithoutMarketResearchInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type OrganizationCreateWithoutResearchResultsInput = {
-    id?: string
-    name: string
-    slug?: string | null
-    logo?: string | null
-    createdAt?: Date | string
-    metadata?: string | null
-    members?: MemberCreateNestedManyWithoutOrganizationInput
-    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
-    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
-    project?: ProjectCreateNestedManyWithoutOrganizationInput
-    idea?: IdeaCreateNestedManyWithoutOrganizationInput
-    issue?: IssueCreateNestedManyWithoutOrganizationInput
-    asset?: AssetCreateNestedManyWithoutOrganizationInput
-    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
-    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
-    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
-    feature?: FeatureCreateNestedManyWithoutOrganizationInput
-    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
-    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
-    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
-    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
-    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
-    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
-    assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
-    assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
-    referrals?: ReferralCreateNestedManyWithoutOrganizationInput
-    ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationUncheckedCreateWithoutResearchResultsInput = {
-    id?: string
-    name: string
-    slug?: string | null
-    logo?: string | null
-    createdAt?: Date | string
-    metadata?: string | null
-    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
-    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
-    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
-    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
-    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
-    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
-    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
-    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
-    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
-    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
-    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
-    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
-    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
-    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
-    assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
-    assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
-    referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
-    ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
-  }
-
-  export type OrganizationCreateOrConnectWithoutResearchResultsInput = {
-    where: OrganizationWhereUniqueInput
-    create: XOR<OrganizationCreateWithoutResearchResultsInput, OrganizationUncheckedCreateWithoutResearchResultsInput>
-  }
-
-  export type MarketResearchCreateWithoutResearchResultsInput = {
-    id?: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-    idea: IdeaCreateNestedOneWithoutMarketResearchInput
-    organization: OrganizationCreateNestedOneWithoutMarketResearchInput
-  }
-
-  export type MarketResearchUncheckedCreateWithoutResearchResultsInput = {
-    id?: string
-    ideaId: string
-    organizationId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-  }
-
-  export type MarketResearchCreateOrConnectWithoutResearchResultsInput = {
-    where: MarketResearchWhereUniqueInput
-    create: XOR<MarketResearchCreateWithoutResearchResultsInput, MarketResearchUncheckedCreateWithoutResearchResultsInput>
-  }
-
-  export type OrganizationUpsertWithoutResearchResultsInput = {
-    update: XOR<OrganizationUpdateWithoutResearchResultsInput, OrganizationUncheckedUpdateWithoutResearchResultsInput>
-    create: XOR<OrganizationCreateWithoutResearchResultsInput, OrganizationUncheckedCreateWithoutResearchResultsInput>
-    where?: OrganizationWhereInput
-  }
-
-  export type OrganizationUpdateToOneWithWhereWithoutResearchResultsInput = {
-    where?: OrganizationWhereInput
-    data: XOR<OrganizationUpdateWithoutResearchResultsInput, OrganizationUncheckedUpdateWithoutResearchResultsInput>
-  }
-
-  export type OrganizationUpdateWithoutResearchResultsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    metadata?: NullableStringFieldUpdateOperationsInput | string | null
-    members?: MemberUpdateManyWithoutOrganizationNestedInput
-    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
-    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
-    project?: ProjectUpdateManyWithoutOrganizationNestedInput
-    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
-    issue?: IssueUpdateManyWithoutOrganizationNestedInput
-    asset?: AssetUpdateManyWithoutOrganizationNestedInput
-    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
-    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
-    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
-    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
-    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
-    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
-    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
-    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
-    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
-    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
-    assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
-    assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
-    referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
-    ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type OrganizationUncheckedUpdateWithoutResearchResultsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    logo?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    metadata?: NullableStringFieldUpdateOperationsInput | string | null
-    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
-    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
-    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
-    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
-    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
-    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
-    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
-    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
-    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
-    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
-    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
-    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
-    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
-    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
-    assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
-    assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
-    referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
-    ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
-  }
-
-  export type MarketResearchUpsertWithoutResearchResultsInput = {
-    update: XOR<MarketResearchUpdateWithoutResearchResultsInput, MarketResearchUncheckedUpdateWithoutResearchResultsInput>
-    create: XOR<MarketResearchCreateWithoutResearchResultsInput, MarketResearchUncheckedCreateWithoutResearchResultsInput>
-    where?: MarketResearchWhereInput
-  }
-
-  export type MarketResearchUpdateToOneWithWhereWithoutResearchResultsInput = {
-    where?: MarketResearchWhereInput
-    data: XOR<MarketResearchUpdateWithoutResearchResultsInput, MarketResearchUncheckedUpdateWithoutResearchResultsInput>
-  }
-
-  export type MarketResearchUpdateWithoutResearchResultsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    idea?: IdeaUpdateOneRequiredWithoutMarketResearchNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateWithoutResearchResultsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-  }
-
-  export type IdeaCreateWithoutCompetitorInput = {
-    id?: string
-    name: string
-    description: string
-    industry: string
-    internal: boolean
-    openSource: boolean
-    status: $Enums.IdeaStatus
-    aiOverallValidation?: number | null
-    problemSolved?: string | null
-    solutionOffered?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    owner?: UserCreateNestedOneWithoutIdeaInput
-    organization: OrganizationCreateNestedOneWithoutIdeaInput
-    projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
-    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
-  }
-
-  export type IdeaUncheckedCreateWithoutCompetitorInput = {
-    id?: string
-    name: string
-    description: string
-    industry: string
-    ownerId?: string | null
-    organizationId: string
-    internal: boolean
-    openSource: boolean
-    status: $Enums.IdeaStatus
-    aiOverallValidation?: number | null
-    problemSolved?: string | null
-    solutionOffered?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
-    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
-  }
-
-  export type IdeaCreateOrConnectWithoutCompetitorInput = {
-    where: IdeaWhereUniqueInput
-    create: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveCreateWithoutCompetitorInput = {
-    id?: string
-    moveType: string
-    title: string
-    description: string
-    impactLevel: $Enums.Importance
-    targetAudience?: string | null
-    affectedFeatures?: CompetitiveMoveCreateaffectedFeaturesInput | string[]
-    announcedDate?: Date | string | null
-    launchDate?: Date | string | null
-    completionDate?: Date | string | null
-    userFeedback?: string | null
-    pressCoverage?: CompetitiveMoveCreatepressCoverageInput | string[]
-    opportunities?: CompetitiveMoveCreateopportunitiesInput | string[]
-    threats?: CompetitiveMoveCreatethreatsInput | string[]
-    responseRequired?: boolean
-    responseStrategy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type CompetitiveMoveUncheckedCreateWithoutCompetitorInput = {
-    id?: string
-    moveType: string
-    title: string
-    description: string
-    impactLevel: $Enums.Importance
-    targetAudience?: string | null
-    affectedFeatures?: CompetitiveMoveCreateaffectedFeaturesInput | string[]
-    announcedDate?: Date | string | null
-    launchDate?: Date | string | null
-    completionDate?: Date | string | null
-    userFeedback?: string | null
-    pressCoverage?: CompetitiveMoveCreatepressCoverageInput | string[]
-    opportunities?: CompetitiveMoveCreateopportunitiesInput | string[]
-    threats?: CompetitiveMoveCreatethreatsInput | string[]
-    responseRequired?: boolean
-    responseStrategy?: string | null
-    createdAt?: Date | string
-  }
-
-  export type CompetitiveMoveCreateOrConnectWithoutCompetitorInput = {
-    where: CompetitiveMoveWhereUniqueInput
-    create: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveCreateManyCompetitorInputEnvelope = {
-    data: CompetitiveMoveCreateManyCompetitorInput | CompetitiveMoveCreateManyCompetitorInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type IdeaUpsertWithoutCompetitorInput = {
-    update: XOR<IdeaUpdateWithoutCompetitorInput, IdeaUncheckedUpdateWithoutCompetitorInput>
-    create: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
-    where?: IdeaWhereInput
-  }
-
-  export type IdeaUpdateToOneWithWhereWithoutCompetitorInput = {
-    where?: IdeaWhereInput
-    data: XOR<IdeaUpdateWithoutCompetitorInput, IdeaUncheckedUpdateWithoutCompetitorInput>
-  }
-
-  export type IdeaUpdateWithoutCompetitorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    industry?: StringFieldUpdateOperationsInput | string
-    internal?: BoolFieldUpdateOperationsInput | boolean
-    openSource?: BoolFieldUpdateOperationsInput | boolean
-    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
-    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
-    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    owner?: UserUpdateOneWithoutIdeaNestedInput
-    organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
-    projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
-    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
-  }
-
-  export type IdeaUncheckedUpdateWithoutCompetitorInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: StringFieldUpdateOperationsInput | string
-    industry?: StringFieldUpdateOperationsInput | string
-    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
-    organizationId?: StringFieldUpdateOperationsInput | string
-    internal?: BoolFieldUpdateOperationsInput | boolean
-    openSource?: BoolFieldUpdateOperationsInput | boolean
-    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
-    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
-    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
-    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
-    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
-  }
-
-  export type CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput = {
-    where: CompetitiveMoveWhereUniqueInput
-    update: XOR<CompetitiveMoveUpdateWithoutCompetitorInput, CompetitiveMoveUncheckedUpdateWithoutCompetitorInput>
-    create: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput = {
-    where: CompetitiveMoveWhereUniqueInput
-    data: XOR<CompetitiveMoveUpdateWithoutCompetitorInput, CompetitiveMoveUncheckedUpdateWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput = {
-    where: CompetitiveMoveScalarWhereInput
-    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyWithoutCompetitorInput>
-  }
-
-  export type CompetitiveMoveScalarWhereInput = {
-    AND?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
-    OR?: CompetitiveMoveScalarWhereInput[]
-    NOT?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
-    id?: StringFilter<"CompetitiveMove"> | string
-    competitorId?: StringNullableFilter<"CompetitiveMove"> | string | null
-    moveType?: StringFilter<"CompetitiveMove"> | string
-    title?: StringFilter<"CompetitiveMove"> | string
-    description?: StringFilter<"CompetitiveMove"> | string
-    impactLevel?: EnumImportanceFilter<"CompetitiveMove"> | $Enums.Importance
-    targetAudience?: StringNullableFilter<"CompetitiveMove"> | string | null
-    affectedFeatures?: StringNullableListFilter<"CompetitiveMove">
-    announcedDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
-    launchDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
-    completionDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
-    userFeedback?: StringNullableFilter<"CompetitiveMove"> | string | null
-    pressCoverage?: StringNullableListFilter<"CompetitiveMove">
-    opportunities?: StringNullableListFilter<"CompetitiveMove">
-    threats?: StringNullableListFilter<"CompetitiveMove">
-    responseRequired?: BoolFilter<"CompetitiveMove"> | boolean
-    responseStrategy?: StringNullableFilter<"CompetitiveMove"> | string | null
-    createdAt?: DateTimeFilter<"CompetitiveMove"> | Date | string
-  }
-
-  export type CompetitorCreateWithoutCompetitiveMovesInput = {
-    id?: string
-    name: string
-    website?: string | null
-    description?: string | null
-    logoUrl?: string | null
-    marketShare?: number | null
-    annualRevenue?: number | null
-    employeeCount?: string | null
-    foundedYear?: number | null
-    headquarters?: string | null
-    targetAudience?: string | null
-    threatLevel: $Enums.Importance
-    userGrowthRate?: number | null
-    churnRate?: number | null
-    customerSatisfaction?: number | null
-    marketCap?: number | null
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    isActive?: boolean
-    idea: IdeaCreateNestedOneWithoutCompetitorInput
-  }
-
-  export type CompetitorUncheckedCreateWithoutCompetitiveMovesInput = {
-    id?: string
-    ideaId: string
-    name: string
-    website?: string | null
-    description?: string | null
-    logoUrl?: string | null
-    marketShare?: number | null
-    annualRevenue?: number | null
-    employeeCount?: string | null
-    foundedYear?: number | null
-    headquarters?: string | null
-    targetAudience?: string | null
-    threatLevel: $Enums.Importance
-    userGrowthRate?: number | null
-    churnRate?: number | null
-    customerSatisfaction?: number | null
-    marketCap?: number | null
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    isActive?: boolean
-  }
-
-  export type CompetitorCreateOrConnectWithoutCompetitiveMovesInput = {
-    where: CompetitorWhereUniqueInput
-    create: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
-  }
-
-  export type CompetitorUpsertWithoutCompetitiveMovesInput = {
-    update: XOR<CompetitorUpdateWithoutCompetitiveMovesInput, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
-    create: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
-    where?: CompetitorWhereInput
-  }
-
-  export type CompetitorUpdateToOneWithWhereWithoutCompetitiveMovesInput = {
-    where?: CompetitorWhereInput
-    data: XOR<CompetitorUpdateWithoutCompetitiveMovesInput, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
-  }
-
-  export type CompetitorUpdateWithoutCompetitiveMovesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    marketShare?: NullableFloatFieldUpdateOperationsInput | number | null
-    annualRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
-    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
-    foundedYear?: NullableIntFieldUpdateOperationsInput | number | null
-    headquarters?: NullableStringFieldUpdateOperationsInput | string | null
-    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
-    threatLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    userGrowthRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    churnRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerSatisfaction?: NullableFloatFieldUpdateOperationsInput | number | null
-    marketCap?: NullableFloatFieldUpdateOperationsInput | number | null
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    idea?: IdeaUpdateOneRequiredWithoutCompetitorNestedInput
-  }
-
-  export type CompetitorUncheckedUpdateWithoutCompetitiveMovesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    marketShare?: NullableFloatFieldUpdateOperationsInput | number | null
-    annualRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
-    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
-    foundedYear?: NullableIntFieldUpdateOperationsInput | number | null
-    headquarters?: NullableStringFieldUpdateOperationsInput | string | null
-    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
-    threatLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    userGrowthRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    churnRate?: NullableFloatFieldUpdateOperationsInput | number | null
-    customerSatisfaction?: NullableFloatFieldUpdateOperationsInput | number | null
-    marketCap?: NullableFloatFieldUpdateOperationsInput | number | null
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-  }
-
   export type AssetCreateWithoutAssetViewsInput = {
     id?: string
     name: string
@@ -91134,11 +88088,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -91166,11 +88118,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -91334,11 +88284,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -91366,11 +88314,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -91518,11 +88464,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -91550,11 +88494,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -91718,11 +88660,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -91750,11 +88690,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -91941,11 +88879,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
@@ -91973,11 +88909,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
     researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
@@ -92123,11 +89057,9 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
@@ -92155,12 +89087,300 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type IdeaCreateWithoutCompetitorInput = {
+    id?: string
+    name: string
+    description: string
+    industry: string
+    internal: boolean
+    openSource: boolean
+    status: $Enums.IdeaStatus
+    aiOverallValidation?: number | null
+    problemSolved?: string | null
+    solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner?: UserCreateNestedOneWithoutIdeaInput
+    organization: OrganizationCreateNestedOneWithoutIdeaInput
+    projects?: ProjectCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
+  }
+
+  export type IdeaUncheckedCreateWithoutCompetitorInput = {
+    id?: string
+    name: string
+    description: string
+    industry: string
+    ownerId?: string | null
+    organizationId: string
+    internal: boolean
+    openSource: boolean
+    status: $Enums.IdeaStatus
+    aiOverallValidation?: number | null
+    problemSolved?: string | null
+    solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
+  }
+
+  export type IdeaCreateOrConnectWithoutCompetitorInput = {
+    where: IdeaWhereUniqueInput
+    create: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveCreateWithoutCompetitorInput = {
+    id?: string
+    moveType: string
+    title: string
+    description: string
+    impactLevel: $Enums.Importance
+    targetAudience?: string | null
+    affectedFeatures?: CompetitiveMoveCreateaffectedFeaturesInput | string[]
+    announcedDate?: Date | string | null
+    launchDate?: Date | string | null
+    completionDate?: Date | string | null
+    userFeedback?: string | null
+    pressCoverage?: CompetitiveMoveCreatepressCoverageInput | string[]
+    opportunities?: CompetitiveMoveCreateopportunitiesInput | string[]
+    threats?: CompetitiveMoveCreatethreatsInput | string[]
+    responseRequired?: boolean
+    responseStrategy?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CompetitiveMoveUncheckedCreateWithoutCompetitorInput = {
+    id?: string
+    moveType: string
+    title: string
+    description: string
+    impactLevel: $Enums.Importance
+    targetAudience?: string | null
+    affectedFeatures?: CompetitiveMoveCreateaffectedFeaturesInput | string[]
+    announcedDate?: Date | string | null
+    launchDate?: Date | string | null
+    completionDate?: Date | string | null
+    userFeedback?: string | null
+    pressCoverage?: CompetitiveMoveCreatepressCoverageInput | string[]
+    opportunities?: CompetitiveMoveCreateopportunitiesInput | string[]
+    threats?: CompetitiveMoveCreatethreatsInput | string[]
+    responseRequired?: boolean
+    responseStrategy?: string | null
+    createdAt?: Date | string
+  }
+
+  export type CompetitiveMoveCreateOrConnectWithoutCompetitorInput = {
+    where: CompetitiveMoveWhereUniqueInput
+    create: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveCreateManyCompetitorInputEnvelope = {
+    data: CompetitiveMoveCreateManyCompetitorInput | CompetitiveMoveCreateManyCompetitorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IdeaUpsertWithoutCompetitorInput = {
+    update: XOR<IdeaUpdateWithoutCompetitorInput, IdeaUncheckedUpdateWithoutCompetitorInput>
+    create: XOR<IdeaCreateWithoutCompetitorInput, IdeaUncheckedCreateWithoutCompetitorInput>
+    where?: IdeaWhereInput
+  }
+
+  export type IdeaUpdateToOneWithWhereWithoutCompetitorInput = {
+    where?: IdeaWhereInput
+    data: XOR<IdeaUpdateWithoutCompetitorInput, IdeaUncheckedUpdateWithoutCompetitorInput>
+  }
+
+  export type IdeaUpdateWithoutCompetitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    industry?: StringFieldUpdateOperationsInput | string
+    internal?: BoolFieldUpdateOperationsInput | boolean
+    openSource?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
+    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
+    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneWithoutIdeaNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
+    projects?: ProjectUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
+  }
+
+  export type IdeaUncheckedUpdateWithoutCompetitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    industry?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    internal?: BoolFieldUpdateOperationsInput | boolean
+    openSource?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
+    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
+    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
+  }
+
+  export type CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput = {
+    where: CompetitiveMoveWhereUniqueInput
+    update: XOR<CompetitiveMoveUpdateWithoutCompetitorInput, CompetitiveMoveUncheckedUpdateWithoutCompetitorInput>
+    create: XOR<CompetitiveMoveCreateWithoutCompetitorInput, CompetitiveMoveUncheckedCreateWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveUpdateWithWhereUniqueWithoutCompetitorInput = {
+    where: CompetitiveMoveWhereUniqueInput
+    data: XOR<CompetitiveMoveUpdateWithoutCompetitorInput, CompetitiveMoveUncheckedUpdateWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveUpdateManyWithWhereWithoutCompetitorInput = {
+    where: CompetitiveMoveScalarWhereInput
+    data: XOR<CompetitiveMoveUpdateManyMutationInput, CompetitiveMoveUncheckedUpdateManyWithoutCompetitorInput>
+  }
+
+  export type CompetitiveMoveScalarWhereInput = {
+    AND?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
+    OR?: CompetitiveMoveScalarWhereInput[]
+    NOT?: CompetitiveMoveScalarWhereInput | CompetitiveMoveScalarWhereInput[]
+    id?: StringFilter<"CompetitiveMove"> | string
+    competitorId?: StringNullableFilter<"CompetitiveMove"> | string | null
+    moveType?: StringFilter<"CompetitiveMove"> | string
+    title?: StringFilter<"CompetitiveMove"> | string
+    description?: StringFilter<"CompetitiveMove"> | string
+    impactLevel?: EnumImportanceFilter<"CompetitiveMove"> | $Enums.Importance
+    targetAudience?: StringNullableFilter<"CompetitiveMove"> | string | null
+    affectedFeatures?: StringNullableListFilter<"CompetitiveMove">
+    announcedDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
+    launchDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
+    completionDate?: DateTimeNullableFilter<"CompetitiveMove"> | Date | string | null
+    userFeedback?: StringNullableFilter<"CompetitiveMove"> | string | null
+    pressCoverage?: StringNullableListFilter<"CompetitiveMove">
+    opportunities?: StringNullableListFilter<"CompetitiveMove">
+    threats?: StringNullableListFilter<"CompetitiveMove">
+    responseRequired?: BoolFilter<"CompetitiveMove"> | boolean
+    responseStrategy?: StringNullableFilter<"CompetitiveMove"> | string | null
+    createdAt?: DateTimeFilter<"CompetitiveMove"> | Date | string
+  }
+
+  export type CompetitorCreateWithoutCompetitiveMovesInput = {
+    id?: string
+    name: string
+    website?: string | null
+    description?: string | null
+    logoUrl?: string | null
+    marketShare?: number | null
+    annualRevenue?: number | null
+    employeeCount?: string | null
+    foundedYear?: number | null
+    headquarters?: string | null
+    targetAudience?: string | null
+    threatLevel: $Enums.Importance
+    userGrowthRate?: number | null
+    churnRate?: number | null
+    customerSatisfaction?: number | null
+    marketCap?: number | null
+    lastUpdated?: Date | string
+    createdAt?: Date | string
+    isActive?: boolean
+    idea: IdeaCreateNestedOneWithoutCompetitorInput
+  }
+
+  export type CompetitorUncheckedCreateWithoutCompetitiveMovesInput = {
+    id?: string
+    ideaId: string
+    name: string
+    website?: string | null
+    description?: string | null
+    logoUrl?: string | null
+    marketShare?: number | null
+    annualRevenue?: number | null
+    employeeCount?: string | null
+    foundedYear?: number | null
+    headquarters?: string | null
+    targetAudience?: string | null
+    threatLevel: $Enums.Importance
+    userGrowthRate?: number | null
+    churnRate?: number | null
+    customerSatisfaction?: number | null
+    marketCap?: number | null
+    lastUpdated?: Date | string
+    createdAt?: Date | string
+    isActive?: boolean
+  }
+
+  export type CompetitorCreateOrConnectWithoutCompetitiveMovesInput = {
+    where: CompetitorWhereUniqueInput
+    create: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
+  }
+
+  export type CompetitorUpsertWithoutCompetitiveMovesInput = {
+    update: XOR<CompetitorUpdateWithoutCompetitiveMovesInput, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
+    create: XOR<CompetitorCreateWithoutCompetitiveMovesInput, CompetitorUncheckedCreateWithoutCompetitiveMovesInput>
+    where?: CompetitorWhereInput
+  }
+
+  export type CompetitorUpdateToOneWithWhereWithoutCompetitiveMovesInput = {
+    where?: CompetitorWhereInput
+    data: XOR<CompetitorUpdateWithoutCompetitiveMovesInput, CompetitorUncheckedUpdateWithoutCompetitiveMovesInput>
+  }
+
+  export type CompetitorUpdateWithoutCompetitiveMovesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    marketShare?: NullableFloatFieldUpdateOperationsInput | number | null
+    annualRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
+    foundedYear?: NullableIntFieldUpdateOperationsInput | number | null
+    headquarters?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    threatLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    userGrowthRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    churnRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerSatisfaction?: NullableFloatFieldUpdateOperationsInput | number | null
+    marketCap?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    idea?: IdeaUpdateOneRequiredWithoutCompetitorNestedInput
+  }
+
+  export type CompetitorUncheckedUpdateWithoutCompetitiveMovesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    marketShare?: NullableFloatFieldUpdateOperationsInput | number | null
+    annualRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    employeeCount?: NullableStringFieldUpdateOperationsInput | string | null
+    foundedYear?: NullableIntFieldUpdateOperationsInput | number | null
+    headquarters?: NullableStringFieldUpdateOperationsInput | string | null
+    targetAudience?: NullableStringFieldUpdateOperationsInput | string | null
+    threatLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    userGrowthRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    churnRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    customerSatisfaction?: NullableFloatFieldUpdateOperationsInput | number | null
+    marketCap?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type IdeaCreateWithoutResearchSessionsInput = {
@@ -92179,7 +89399,6 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -92199,7 +89418,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -92232,12 +89450,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutResearchSessionsInput = {
@@ -92264,12 +89480,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
     issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
-    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
     assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
-    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutResearchSessionsInput = {
@@ -92281,13 +89495,8 @@ export namespace Prisma {
     id?: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -92296,13 +89505,8 @@ export namespace Prisma {
     id?: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -92314,6 +89518,30 @@ export namespace Prisma {
 
   export type ResearchPhaseResultCreateManySessionInputEnvelope = {
     data: ResearchPhaseResultCreateManySessionInput | ResearchPhaseResultCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ResearchFindingsCreateWithoutSessionInput = {
+    id?: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
+  }
+
+  export type ResearchFindingsUncheckedCreateWithoutSessionInput = {
+    id?: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
+  }
+
+  export type ResearchFindingsCreateOrConnectWithoutSessionInput = {
+    where: ResearchFindingsWhereUniqueInput
+    create: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ResearchFindingsCreateManySessionInputEnvelope = {
+    data: ResearchFindingsCreateManySessionInput | ResearchFindingsCreateManySessionInput[]
     skipDuplicates?: boolean
   }
 
@@ -92344,7 +89572,6 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -92364,7 +89591,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -92403,12 +89629,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutResearchSessionsInput = {
@@ -92435,12 +89659,10 @@ export namespace Prisma {
     milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
     issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
     assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
-    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput = {
@@ -92467,19 +89689,44 @@ export namespace Prisma {
     sessionId?: StringFilter<"ResearchPhaseResult"> | string
     phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
-    findings?: JsonFilter<"ResearchPhaseResult">
+    conclusion?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     confidence?: FloatFilter<"ResearchPhaseResult"> | number
-    duration?: IntFilter<"ResearchPhaseResult"> | number
-    iterations?: IntFilter<"ResearchPhaseResult"> | number
-    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
-    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
     createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
     updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
   }
 
+  export type ResearchFindingsUpsertWithWhereUniqueWithoutSessionInput = {
+    where: ResearchFindingsWhereUniqueInput
+    update: XOR<ResearchFindingsUpdateWithoutSessionInput, ResearchFindingsUncheckedUpdateWithoutSessionInput>
+    create: XOR<ResearchFindingsCreateWithoutSessionInput, ResearchFindingsUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ResearchFindingsUpdateWithWhereUniqueWithoutSessionInput = {
+    where: ResearchFindingsWhereUniqueInput
+    data: XOR<ResearchFindingsUpdateWithoutSessionInput, ResearchFindingsUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type ResearchFindingsUpdateManyWithWhereWithoutSessionInput = {
+    where: ResearchFindingsScalarWhereInput
+    data: XOR<ResearchFindingsUpdateManyMutationInput, ResearchFindingsUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type ResearchFindingsScalarWhereInput = {
+    AND?: ResearchFindingsScalarWhereInput | ResearchFindingsScalarWhereInput[]
+    OR?: ResearchFindingsScalarWhereInput[]
+    NOT?: ResearchFindingsScalarWhereInput | ResearchFindingsScalarWhereInput[]
+    id?: StringFilter<"ResearchFindings"> | string
+    sessionId?: StringFilter<"ResearchFindings"> | string
+    findings?: StringFilter<"ResearchFindings"> | string
+    impact?: EnumImportanceFilter<"ResearchFindings"> | $Enums.Importance
+    createdAt?: DateTimeFilter<"ResearchFindings"> | Date | string
+  }
+
   export type ResearchSessionCreateWithoutPhasesInput = {
     id?: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -92491,12 +89738,16 @@ export namespace Prisma {
     updatedAt?: Date | string
     idea: IdeaCreateNestedOneWithoutResearchSessionsInput
     organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
+    findings?: ResearchFindingsCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionUncheckedCreateWithoutPhasesInput = {
     id?: string
     ideaId: string
     organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -92506,6 +89757,7 @@ export namespace Prisma {
     totalCost?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    findings?: ResearchFindingsUncheckedCreateNestedManyWithoutSessionInput
   }
 
   export type ResearchSessionCreateOrConnectWithoutPhasesInput = {
@@ -92526,6 +89778,9 @@ export namespace Prisma {
 
   export type ResearchSessionUpdateWithoutPhasesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -92537,12 +89792,16 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
+    findings?: ResearchFindingsUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateWithoutPhasesInput = {
     id?: StringFieldUpdateOperationsInput | string
     ideaId?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -92552,6 +89811,99 @@ export namespace Prisma {
     totalCost?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    findings?: ResearchFindingsUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionCreateWithoutFindingsInput = {
+    id?: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea: IdeaCreateNestedOneWithoutResearchSessionsInput
+    organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
+    phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionUncheckedCreateWithoutFindingsInput = {
+    id?: string
+    ideaId: string
+    organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionCreateOrConnectWithoutFindingsInput = {
+    where: ResearchSessionWhereUniqueInput
+    create: XOR<ResearchSessionCreateWithoutFindingsInput, ResearchSessionUncheckedCreateWithoutFindingsInput>
+  }
+
+  export type ResearchSessionUpsertWithoutFindingsInput = {
+    update: XOR<ResearchSessionUpdateWithoutFindingsInput, ResearchSessionUncheckedUpdateWithoutFindingsInput>
+    create: XOR<ResearchSessionCreateWithoutFindingsInput, ResearchSessionUncheckedCreateWithoutFindingsInput>
+    where?: ResearchSessionWhereInput
+  }
+
+  export type ResearchSessionUpdateToOneWithWhereWithoutFindingsInput = {
+    where?: ResearchSessionWhereInput
+    data: XOR<ResearchSessionUpdateWithoutFindingsInput, ResearchSessionUncheckedUpdateWithoutFindingsInput>
+  }
+
+  export type ResearchSessionUpdateWithoutFindingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
+    phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateWithoutFindingsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -93053,7 +90405,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
@@ -93073,7 +90424,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
@@ -93744,17 +91094,6 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type MarketResearchCreateManyOrganizationInput = {
-    id?: string
-    ideaId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-  }
-
   export type AssetViewCreateManyOrganizationInput = {
     id?: string
     assetId: string
@@ -93800,17 +91139,12 @@ export namespace Prisma {
     expiresAt?: Date | string | null
   }
 
-  export type ResearchResultsCreateManyOrganizationInput = {
-    id?: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    content: string
-    marketResearchId: string
-  }
-
   export type ResearchSessionCreateManyOrganizationInput = {
     id?: string
     ideaId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -93984,7 +91318,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
@@ -94004,7 +91337,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
-    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
     researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
@@ -94512,41 +91844,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MarketResearchUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    idea?: IdeaUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateOneWithoutMarketResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutMarketResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateManyWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    ideaId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-  }
-
   export type AssetViewUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     ipAddress?: StringFieldUpdateOperationsInput | string
@@ -94682,32 +91979,11 @@ export namespace Prisma {
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type ResearchResultsUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    marketResearch?: MarketResearchUpdateOneWithoutResearchResultsNestedInput
-  }
-
-  export type ResearchResultsUncheckedUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    marketResearchId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type ResearchResultsUncheckedUpdateManyWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    content?: StringFieldUpdateOperationsInput | string
-    marketResearchId?: StringFieldUpdateOperationsInput | string
-  }
-
   export type ResearchSessionUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -94719,11 +91995,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
     phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     ideaId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -94734,11 +92014,15 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateManyWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     ideaId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -95215,20 +92499,12 @@ export namespace Prisma {
     createdById?: string | null
   }
 
-  export type MarketResearchCreateManyIdeaInput = {
-    id?: string
-    organizationId: string
-    validationScore?: number | null
-    confidenceLevel: $Enums.Importance
-    completed?: boolean
-    lastUpdated?: Date | string
-    createdAt?: Date | string
-    type?: $Enums.ResearchType
-  }
-
   export type ResearchSessionCreateManyIdeaInput = {
     id?: string
     organizationId: string
+    name?: string | null
+    finalContent?: string | null
+    prompt?: string | null
     depth: $Enums.ResearchDepth
     status: $Enums.ResearchStatus
     currentPhaseIndex?: number
@@ -95331,43 +92607,11 @@ export namespace Prisma {
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type MarketResearchUpdateWithoutIdeaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    organization?: OrganizationUpdateOneRequiredWithoutMarketResearchNestedInput
-    ResearchResults?: ResearchResultsUpdateOneWithoutMarketResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateWithoutIdeaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-    ResearchResults?: ResearchResultsUncheckedUpdateOneWithoutMarketResearchNestedInput
-  }
-
-  export type MarketResearchUncheckedUpdateManyWithoutIdeaInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    organizationId?: StringFieldUpdateOperationsInput | string
-    validationScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    confidenceLevel?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
-    completed?: BoolFieldUpdateOperationsInput | boolean
-    lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
-  }
-
   export type ResearchSessionUpdateWithoutIdeaInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -95379,11 +92623,15 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
     phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateWithoutIdeaInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -95394,11 +92642,15 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+    findings?: ResearchFindingsUncheckedUpdateManyWithoutSessionNestedInput
   }
 
   export type ResearchSessionUncheckedUpdateManyWithoutIdeaInput = {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    finalContent?: NullableStringFieldUpdateOperationsInput | string | null
+    prompt?: NullableStringFieldUpdateOperationsInput | string | null
     depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
     status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
     currentPhaseIndex?: IntFieldUpdateOperationsInput | number
@@ -97268,28 +94520,25 @@ export namespace Prisma {
     id?: string
     phaseName: $Enums.ResearchPhaseType
     status: $Enums.PhaseStatus
-    findings: JsonNullValueInput | InputJsonValue
+    conclusion?: string | null
     confidence?: number
-    duration?: number
-    iterations?: number
-    startedAt?: Date | string | null
-    completedAt?: Date | string | null
-    error?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type ResearchFindingsCreateManySessionInput = {
+    id?: string
+    findings: string
+    impact: $Enums.Importance
+    createdAt?: Date | string
   }
 
   export type ResearchPhaseResultUpdateWithoutSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -97298,13 +94547,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -97313,15 +94557,31 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
     status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
-    findings?: JsonNullValueInput | InputJsonValue
+    conclusion?: NullableStringFieldUpdateOperationsInput | string | null
     confidence?: FloatFieldUpdateOperationsInput | number
-    duration?: IntFieldUpdateOperationsInput | number
-    iterations?: IntFieldUpdateOperationsInput | number
-    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchFindingsUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    findings?: StringFieldUpdateOperationsInput | string
+    impact?: EnumImportanceFieldUpdateOperationsInput | $Enums.Importance
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

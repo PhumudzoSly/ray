@@ -574,25 +574,39 @@ exports.Prisma.MilestoneDependencyScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.MarketResearchScalarFieldEnum = {
+exports.Prisma.AssetViewScalarFieldEnum = {
   id: 'id',
-  ideaId: 'ideaId',
+  assetId: 'assetId',
   organizationId: 'organizationId',
-  validationScore: 'validationScore',
-  confidenceLevel: 'confidenceLevel',
-  completed: 'completed',
-  lastUpdated: 'lastUpdated',
-  createdAt: 'createdAt',
-  type: 'type'
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrer: 'referrer',
+  viewedAt: 'viewedAt'
 };
 
-exports.Prisma.ResearchResultsScalarFieldEnum = {
+exports.Prisma.AssetDownloadScalarFieldEnum = {
   id: 'id',
+  assetId: 'assetId',
   organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  content: 'content',
-  marketResearchId: 'marketResearchId'
+  userId: 'userId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrer: 'referrer',
+  downloadedAt: 'downloadedAt'
+};
+
+exports.Prisma.ReferralScalarFieldEnum = {
+  id: 'id',
+  referrerId: 'referrerId',
+  referredEmail: 'referredEmail',
+  referredName: 'referredName',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrerCode: 'referrerCode',
+  waitlistId: 'waitlistId',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CompetitorScalarFieldEnum = {
@@ -639,45 +653,13 @@ exports.Prisma.CompetitiveMoveScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.AssetViewScalarFieldEnum = {
-  id: 'id',
-  assetId: 'assetId',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  referrer: 'referrer',
-  viewedAt: 'viewedAt'
-};
-
-exports.Prisma.AssetDownloadScalarFieldEnum = {
-  id: 'id',
-  assetId: 'assetId',
-  organizationId: 'organizationId',
-  userId: 'userId',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  referrer: 'referrer',
-  downloadedAt: 'downloadedAt'
-};
-
-exports.Prisma.ReferralScalarFieldEnum = {
-  id: 'id',
-  referrerId: 'referrerId',
-  referredEmail: 'referredEmail',
-  referredName: 'referredName',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  referrerCode: 'referrerCode',
-  waitlistId: 'waitlistId',
-  organizationId: 'organizationId',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.ResearchSessionScalarFieldEnum = {
   id: 'id',
   ideaId: 'ideaId',
   organizationId: 'organizationId',
+  name: 'name',
+  finalContent: 'finalContent',
+  prompt: 'prompt',
   depth: 'depth',
   status: 'status',
   currentPhaseIndex: 'currentPhaseIndex',
@@ -694,15 +676,18 @@ exports.Prisma.ResearchPhaseResultScalarFieldEnum = {
   sessionId: 'sessionId',
   phaseName: 'phaseName',
   status: 'status',
-  findings: 'findings',
+  conclusion: 'conclusion',
   confidence: 'confidence',
-  duration: 'duration',
-  iterations: 'iterations',
-  startedAt: 'startedAt',
-  completedAt: 'completedAt',
-  error: 'error',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ResearchFindingsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  findings: 'findings',
+  impact: 'impact',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -908,20 +893,6 @@ exports.MilestoneStatus = exports.$Enums.MilestoneStatus = {
   DELAYED: 'DELAYED'
 };
 
-exports.ResearchType = exports.$Enums.ResearchType = {
-  COMPLETE: 'COMPLETE',
-  BUSINESS_MODEL: 'BUSINESS_MODEL',
-  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
-  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
-  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
-  GO_TO_MARKET: 'GO_TO_MARKET',
-  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
-  MARKET_OPPORTUNITY: 'MARKET_OPPORTUNITY',
-  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT',
-  RISK_ANALYSIS: 'RISK_ANALYSIS',
-  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
-};
-
 exports.ResearchDepth = exports.$Enums.ResearchDepth = {
   QUICK: 'QUICK',
   STANDARD: 'STANDARD',
@@ -939,13 +910,16 @@ exports.ResearchStatus = exports.$Enums.ResearchStatus = {
 
 exports.ResearchPhaseType = exports.$Enums.ResearchPhaseType = {
   MARKET_SCAN: 'MARKET_SCAN',
-  COMPETITIVE_OVERVIEW: 'COMPETITIVE_OVERVIEW',
-  COMPETITIVE_DEEP_DIVE: 'COMPETITIVE_DEEP_DIVE',
   CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
   BUSINESS_MODEL: 'BUSINESS_MODEL',
   FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
   RISK_ANALYSIS: 'RISK_ANALYSIS',
-  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY',
+  COMPLETE: 'COMPLETE',
+  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
+  GO_TO_MARKET: 'GO_TO_MARKET',
+  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
+  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT'
 };
 
 exports.PhaseStatus = exports.$Enums.PhaseStatus = {
@@ -991,15 +965,14 @@ exports.Prisma.ModelName = {
   FeatureLink: 'FeatureLink',
   Milestone: 'Milestone',
   MilestoneDependency: 'MilestoneDependency',
-  MarketResearch: 'MarketResearch',
-  ResearchResults: 'ResearchResults',
-  Competitor: 'Competitor',
-  CompetitiveMove: 'CompetitiveMove',
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
   Referral: 'Referral',
+  Competitor: 'Competitor',
+  CompetitiveMove: 'CompetitiveMove',
   ResearchSession: 'ResearchSession',
-  ResearchPhaseResult: 'ResearchPhaseResult'
+  ResearchPhaseResult: 'ResearchPhaseResult',
+  ResearchFindings: 'ResearchFindings'
 };
 
 /**

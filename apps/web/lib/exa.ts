@@ -1,7 +1,7 @@
 import { google } from "@ai-sdk/google";
 import { generateObject, tool } from "ai";
 import Exa from "exa-js";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const exa = new Exa(process.env.EXA_API_KEY);
 
@@ -88,7 +88,7 @@ export const deepSearch = tool({
 });
 
 export const generateQuestions = tool({
-  description: "Generate research questions for a given topic",
+  description: "Generate 5 research questions for a given SaaS idea",
   parameters: z.object({
     query: z
       .string()

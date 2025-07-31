@@ -1,7 +1,7 @@
 import { deepSearch, generateQuestions, webSearch } from "@/lib/exa";
 import { google } from "@ai-sdk/google";
 import { prisma, PROMPT } from "@workspace/backend";
-import { generateText, tool } from "ai";
+import { generateText, tool, stepCountIs } from "ai";
 
 export const fullValidator = async (id: string) => {
   const idea = await prisma.idea.findUnique({
@@ -26,12 +26,17 @@ export const fullValidator = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.SAAS_VALIDATION_PROMPT}
+
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -61,12 +66,16 @@ export const marketAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.MARKET_OPPORTUNITY_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -96,12 +105,16 @@ export const businessModelAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.BUSINESS_MODEL_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -131,12 +144,16 @@ export const competitiveAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.COMPETITIVE_ANALYSIS_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -166,12 +183,16 @@ export const customerAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.CUSTOMER_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -201,12 +222,16 @@ export const financeAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.FINANCIAL_PROJECTIONS_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -236,12 +261,16 @@ export const goToMarketAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.GO_TO_MARKET_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -271,12 +300,16 @@ export const investmentAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.INVESTMENT_RECOMMENDATION_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -306,12 +339,16 @@ export const marketFitAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.PRODUCT_MARKET_FIT_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -341,12 +378,16 @@ export const riskAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.RISK_ANALYSIS_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 
@@ -376,12 +417,16 @@ export const techAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
+    stopWhen: [stepCountIs(5)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
     The idea: ${JSON.stringify(idea)}
 
     PROMPT: ${PROMPT.TECHNICAL_FEASIBILITY_VALIDATION_PROMPT}
+
+    OUTPUT FORMAT: Super clean markdown, making use of tables, emojis, nice grouping, avoiding too much bullet list, going deep into paragraph explaination instead of one liners... 
+    include the source of where you received the data from
     `,
   });
 

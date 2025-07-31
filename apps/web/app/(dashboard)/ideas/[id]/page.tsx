@@ -1,9 +1,10 @@
 import React, { Suspense } from "react";
-import { getResearches, getSingleIdea } from "@/actions/idea";
+import { getSingleIdea } from "@/actions/idea";
 import { IdeaDetailsSkeleton } from "@/components/idea/core/idea-details-skeleton";
 import { ResearchTable } from "@/components/idea/core/research-table";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query/getQueryClient";
+import { getValidations } from "@/actions/idea/validate";
 
 interface IdeaPageProps {
   params: Promise<{ id: string }>;
@@ -21,7 +22,7 @@ const IdeaPage = async ({ params }: IdeaPageProps) => {
     }),
     queryClient.prefetchQuery({
       queryKey: ["idea-research", id],
-      queryFn: () => getResearches({ id }),
+      queryFn: () => getValidations({ id }),
     }),
   ]);
 
