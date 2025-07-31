@@ -134,6 +134,7 @@ model Organization {
   referrals           Referral[]
   ApiKey              ApiKey[]
   ResearchResults     ResearchResults[]
+  researchSessions    ResearchSession[]
 
   @@unique([slug])
   @@map("organization")
@@ -251,13 +252,13 @@ model Project {
 }
 
 model Idea {
-  id                  String           @id @default(uuid())
+  id                  String            @id @default(uuid())
   name                String
   description         String
   industry            String
-  owner               User?            @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  owner               User?             @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   ownerId             String?
-  organization        Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId      String
   internal            Boolean
   openSource          Boolean
@@ -267,8 +268,9 @@ model Idea {
   solutionOffered     String?
   projects            Project[]
   marketResearch      MarketResearch[]
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  researchSessions    ResearchSession[]
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
   Competitor          Competitor[]
 }
 
@@ -1215,4 +1217,83 @@ enum ChangelogEntryType {
   DEPRECATION
   DOCUMENTATION
   PERFORMANCE
+}
+
+// ============================================================================
+// DEEP RESEARCH SAAS VALIDATION MODELS
+// ============================================================================
+
+model ResearchSession {
+  id                  String         @id @default(cuid())
+  ideaId              String
+  organizationId      String
+  depth               ResearchDepth
+  status              ResearchStatus
+  currentPhaseIndex   Int            @default(0)
+  overallConfidence   Float          @default(0)
+  estimatedCompletion DateTime?
+  actualCompletion    DateTime?
+  totalCost           Float          @default(0)
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  idea         Idea                  @relation(fields: [ideaId], references: [id])
+  organization Organization          @relation(fields: [organizationId], references: [id])
+  phases       ResearchPhaseResult[]
+
+  @@map("research_sessions")
+}
+
+model ResearchPhaseResult {
+  id          String            @id @default(cuid())
+  sessionId   String
+  phaseName   ResearchPhaseType
+  status      PhaseStatus
+  findings    Json
+  confidence  Float             @default(0)
+  duration    Int               @default(0)
+  iterations  Int               @default(0)
+  startedAt   DateTime?
+  completedAt DateTime?
+  error       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  session ResearchSession @relation(fields: [sessionId], references: [id])
+
+  @@map("research_phase_results")
+}
+
+enum ResearchDepth {
+  QUICK
+  STANDARD
+  DEEP
+  EXHAUSTIVE
+}
+
+enum ResearchStatus {
+  INITIALIZING
+  IN_PROGRESS
+  PAUSED
+  COMPLETED
+  FAILED
+}
+
+enum ResearchPhaseType {
+  MARKET_SCAN
+  COMPETITIVE_OVERVIEW
+  COMPETITIVE_DEEP_DIVE
+  CUSTOMER_VALIDATION
+  BUSINESS_MODEL
+  FINANCIAL_PROJECTIONS
+  RISK_ANALYSIS
+  TECHNICAL_FEASIBILITY
+}
+
+enum PhaseStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  PAUSED
 }

@@ -162,22 +162,17 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
             </a>
           ),
           blockquote: ({ node, children, ...props }) => (
-            <Callout className="my-4">
-              <blockquote className="italic text-sm md:text-base" {...props}>
+            <div className="my-4 border-l-4 border-blue-200 bg-blue-50 dark:bg-blue-950/70 p-4 rounded-r-md">
+              <blockquote
+                className="italic text-sm md:text-base text-blue-900 dark:text-blue-400"
+                {...props}
+              >
                 {children}
               </blockquote>
-            </Callout>
+            </div>
           ),
-          code: ({
-            inline,
-            className,
-            children,
-            ...props
-          }: {
-            inline?: boolean;
-            className?: string;
-            children: React.ReactNode;
-          } & React.HTMLProps<HTMLElement>) => {
+          code: (props: any) => {
+            const { inline, className, children, ...restProps } = props;
             const match = /language-(\w+)/.exec(className || "");
             const language = match ? match[1] : "";
 
@@ -185,7 +180,7 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
               return (
                 <code
                   className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono text-foreground/80"
-                  {...props}
+                  {...restProps}
                 >
                   {children}
                 </code>
@@ -215,7 +210,7 @@ function EnhancedMarkdownRenderer({ content }: { content: string }) {
                 </div>
                 <pre
                   className="bg-muted p-4 rounded-lg overflow-x-auto text-xs md:text-sm font-mono"
-                  {...props}
+                  {...restProps}
                 >
                   <code className={className}>{children}</code>
                 </pre>

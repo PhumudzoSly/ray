@@ -138,6 +138,10 @@ export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organi
 
 export const ReferralScalarFieldEnumSchema = z.enum(['id','referrerId','referredEmail','referredName','ipAddress','userAgent','referrerCode','waitlistId','organizationId','createdAt']);
 
+export const ResearchSessionScalarFieldEnumSchema = z.enum(['id','ideaId','organizationId','depth','status','currentPhaseIndex','overallConfidence','estimatedCompletion','actualCompletion','totalCost','createdAt','updatedAt']);
+
+export const ResearchPhaseResultScalarFieldEnumSchema = z.enum(['id','sessionId','phaseName','status','findings','confidence','duration','iterations','startedAt','completedAt','error','createdAt','updatedAt']);
+
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const JsonNullValueInputSchema = z.enum(['JsonNull',]).transform((value) => (value === 'JsonNull' ? Prisma.JsonNull : value));
@@ -227,6 +231,22 @@ export type ApiPermissionType = `${z.infer<typeof ApiPermissionSchema>}`
 export const ChangelogEntryTypeSchema = z.enum(['FEATURE','FIX','IMPROVEMENT','BREAKING','SECURITY','DEPRECATION','DOCUMENTATION','PERFORMANCE']);
 
 export type ChangelogEntryTypeType = `${z.infer<typeof ChangelogEntryTypeSchema>}`
+
+export const ResearchDepthSchema = z.enum(['QUICK','STANDARD','DEEP','EXHAUSTIVE']);
+
+export type ResearchDepthType = `${z.infer<typeof ResearchDepthSchema>}`
+
+export const ResearchStatusSchema = z.enum(['INITIALIZING','IN_PROGRESS','PAUSED','COMPLETED','FAILED']);
+
+export type ResearchStatusType = `${z.infer<typeof ResearchStatusSchema>}`
+
+export const ResearchPhaseTypeSchema = z.enum(['MARKET_SCAN','COMPETITIVE_OVERVIEW','COMPETITIVE_DEEP_DIVE','CUSTOMER_VALIDATION','BUSINESS_MODEL','FINANCIAL_PROJECTIONS','RISK_ANALYSIS','TECHNICAL_FEASIBILITY']);
+
+export type ResearchPhaseTypeType = `${z.infer<typeof ResearchPhaseTypeSchema>}`
+
+export const PhaseStatusSchema = z.enum(['PENDING','IN_PROGRESS','COMPLETED','FAILED','PAUSED']);
+
+export type PhaseStatusType = `${z.infer<typeof PhaseStatusSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -1460,3 +1480,74 @@ export const ReferralOptionalDefaultsSchema = ReferralSchema.merge(z.object({
 }))
 
 export type ReferralOptionalDefaults = z.infer<typeof ReferralOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// RESEARCH SESSION SCHEMA
+/////////////////////////////////////////
+
+export const ResearchSessionSchema = z.object({
+  depth: ResearchDepthSchema,
+  status: ResearchStatusSchema,
+  id: z.string().cuid(),
+  ideaId: z.string(),
+  organizationId: z.string(),
+  currentPhaseIndex: z.number().int(),
+  overallConfidence: z.number(),
+  estimatedCompletion: z.coerce.date().nullish(),
+  actualCompletion: z.coerce.date().nullish(),
+  totalCost: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ResearchSession = z.infer<typeof ResearchSessionSchema>
+
+// RESEARCH SESSION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ResearchSessionOptionalDefaultsSchema = ResearchSessionSchema.merge(z.object({
+  id: z.string().cuid().optional(),
+  currentPhaseIndex: z.number().int().optional(),
+  overallConfidence: z.number().optional(),
+  totalCost: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ResearchSessionOptionalDefaults = z.infer<typeof ResearchSessionOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// RESEARCH PHASE RESULT SCHEMA
+/////////////////////////////////////////
+
+export const ResearchPhaseResultSchema = z.object({
+  phaseName: ResearchPhaseTypeSchema,
+  status: PhaseStatusSchema,
+  id: z.string().cuid(),
+  sessionId: z.string(),
+  findings: JsonValueSchema,
+  confidence: z.number(),
+  duration: z.number().int(),
+  iterations: z.number().int(),
+  startedAt: z.coerce.date().nullish(),
+  completedAt: z.coerce.date().nullish(),
+  error: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ResearchPhaseResult = z.infer<typeof ResearchPhaseResultSchema>
+
+// RESEARCH PHASE RESULT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ResearchPhaseResultOptionalDefaultsSchema = ResearchPhaseResultSchema.merge(z.object({
+  id: z.string().cuid().optional(),
+  confidence: z.number().optional(),
+  duration: z.number().int().optional(),
+  iterations: z.number().int().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ResearchPhaseResultOptionalDefaults = z.infer<typeof ResearchPhaseResultOptionalDefaultsSchema>

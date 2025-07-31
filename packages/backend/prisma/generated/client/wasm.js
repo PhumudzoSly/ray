@@ -674,6 +674,37 @@ exports.Prisma.ReferralScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ResearchSessionScalarFieldEnum = {
+  id: 'id',
+  ideaId: 'ideaId',
+  organizationId: 'organizationId',
+  depth: 'depth',
+  status: 'status',
+  currentPhaseIndex: 'currentPhaseIndex',
+  overallConfidence: 'overallConfidence',
+  estimatedCompletion: 'estimatedCompletion',
+  actualCompletion: 'actualCompletion',
+  totalCost: 'totalCost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ResearchPhaseResultScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  phaseName: 'phaseName',
+  status: 'status',
+  findings: 'findings',
+  confidence: 'confidence',
+  duration: 'duration',
+  iterations: 'iterations',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  error: 'error',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -891,6 +922,40 @@ exports.ResearchType = exports.$Enums.ResearchType = {
   TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
 };
 
+exports.ResearchDepth = exports.$Enums.ResearchDepth = {
+  QUICK: 'QUICK',
+  STANDARD: 'STANDARD',
+  DEEP: 'DEEP',
+  EXHAUSTIVE: 'EXHAUSTIVE'
+};
+
+exports.ResearchStatus = exports.$Enums.ResearchStatus = {
+  INITIALIZING: 'INITIALIZING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.ResearchPhaseType = exports.$Enums.ResearchPhaseType = {
+  MARKET_SCAN: 'MARKET_SCAN',
+  COMPETITIVE_OVERVIEW: 'COMPETITIVE_OVERVIEW',
+  COMPETITIVE_DEEP_DIVE: 'COMPETITIVE_DEEP_DIVE',
+  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
+  BUSINESS_MODEL: 'BUSINESS_MODEL',
+  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
+  RISK_ANALYSIS: 'RISK_ANALYSIS',
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
+};
+
+exports.PhaseStatus = exports.$Enums.PhaseStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  PAUSED: 'PAUSED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
@@ -932,7 +997,9 @@ exports.Prisma.ModelName = {
   CompetitiveMove: 'CompetitiveMove',
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
-  Referral: 'Referral'
+  Referral: 'Referral',
+  ResearchSession: 'ResearchSession',
+  ResearchPhaseResult: 'ResearchPhaseResult'
 };
 
 /**

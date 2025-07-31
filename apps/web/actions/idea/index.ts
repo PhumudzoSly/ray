@@ -192,12 +192,23 @@ export const getResearchDetails = async ({
 }) => {
   const { org } = await getSession();
 
-  const research = await prisma.researchResults.findUnique({
-    where: { researchId },
+  const research = await prisma.marketResearch.findFirst({
+    where: {
+      id: researchId,
+      ideaId,
+      organizationId: org,
+    },
     include: {
-      research: true,
+      ResearchResults: true,
     },
   });
 
-  return research;
+  if (!research) {
+    throw new Error("Research not found");
+  }
+
+  return {
+    research,
+    content: research.ResearchResults?.content || null,
+  };
 };

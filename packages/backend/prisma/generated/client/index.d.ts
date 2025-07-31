@@ -218,6 +218,16 @@ export type AssetDownload = $Result.DefaultSelection<Prisma.$AssetDownloadPayloa
  * 
  */
 export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
+/**
+ * Model ResearchSession
+ * 
+ */
+export type ResearchSession = $Result.DefaultSelection<Prisma.$ResearchSessionPayload>
+/**
+ * Model ResearchPhaseResult
+ * 
+ */
+export type ResearchPhaseResult = $Result.DefaultSelection<Prisma.$ResearchPhaseResultPayload>
 
 /**
  * Enums
@@ -475,6 +485,52 @@ export const ChangelogEntryType: {
 
 export type ChangelogEntryType = (typeof ChangelogEntryType)[keyof typeof ChangelogEntryType]
 
+
+export const ResearchDepth: {
+  QUICK: 'QUICK',
+  STANDARD: 'STANDARD',
+  DEEP: 'DEEP',
+  EXHAUSTIVE: 'EXHAUSTIVE'
+};
+
+export type ResearchDepth = (typeof ResearchDepth)[keyof typeof ResearchDepth]
+
+
+export const ResearchStatus: {
+  INITIALIZING: 'INITIALIZING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+export type ResearchStatus = (typeof ResearchStatus)[keyof typeof ResearchStatus]
+
+
+export const ResearchPhaseType: {
+  MARKET_SCAN: 'MARKET_SCAN',
+  COMPETITIVE_OVERVIEW: 'COMPETITIVE_OVERVIEW',
+  COMPETITIVE_DEEP_DIVE: 'COMPETITIVE_DEEP_DIVE',
+  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
+  BUSINESS_MODEL: 'BUSINESS_MODEL',
+  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
+  RISK_ANALYSIS: 'RISK_ANALYSIS',
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY'
+};
+
+export type ResearchPhaseType = (typeof ResearchPhaseType)[keyof typeof ResearchPhaseType]
+
+
+export const PhaseStatus: {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  PAUSED: 'PAUSED'
+};
+
+export type PhaseStatus = (typeof PhaseStatus)[keyof typeof PhaseStatus]
+
 }
 
 export type ActivityType = $Enums.ActivityType
@@ -556,6 +612,22 @@ export const ApiPermission: typeof $Enums.ApiPermission
 export type ChangelogEntryType = $Enums.ChangelogEntryType
 
 export const ChangelogEntryType: typeof $Enums.ChangelogEntryType
+
+export type ResearchDepth = $Enums.ResearchDepth
+
+export const ResearchDepth: typeof $Enums.ResearchDepth
+
+export type ResearchStatus = $Enums.ResearchStatus
+
+export const ResearchStatus: typeof $Enums.ResearchStatus
+
+export type ResearchPhaseType = $Enums.ResearchPhaseType
+
+export const ResearchPhaseType: typeof $Enums.ResearchPhaseType
+
+export type PhaseStatus = $Enums.PhaseStatus
+
+export const PhaseStatus: typeof $Enums.PhaseStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1091,6 +1163,26 @@ export class PrismaClient<
     * ```
     */
   get referral(): Prisma.ReferralDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.researchSession`: Exposes CRUD operations for the **ResearchSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ResearchSessions
+    * const researchSessions = await prisma.researchSession.findMany()
+    * ```
+    */
+  get researchSession(): Prisma.ResearchSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.researchPhaseResult`: Exposes CRUD operations for the **ResearchPhaseResult** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ResearchPhaseResults
+    * const researchPhaseResults = await prisma.researchPhaseResult.findMany()
+    * ```
+    */
+  get researchPhaseResult(): Prisma.ResearchPhaseResultDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1571,7 +1663,9 @@ export namespace Prisma {
     CompetitiveMove: 'CompetitiveMove',
     AssetView: 'AssetView',
     AssetDownload: 'AssetDownload',
-    Referral: 'Referral'
+    Referral: 'Referral',
+    ResearchSession: 'ResearchSession',
+    ResearchPhaseResult: 'ResearchPhaseResult'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1590,7 +1684,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "changelogEntry" | "featureRequest" | "integration" | "integrationUsage" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency" | "marketResearch" | "researchResults" | "competitor" | "competitiveMove" | "assetView" | "assetDownload" | "referral"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "member" | "invitation" | "passkey" | "twoFactor" | "subscription" | "project" | "idea" | "issue" | "issueDependency" | "issueLink" | "asset" | "apiKey" | "activityFeed" | "publicRoadmap" | "roadmapItem" | "roadmapVote" | "roadmapFeedback" | "roadmapChangelog" | "changelogEntry" | "featureRequest" | "integration" | "integrationUsage" | "waitlist" | "waitlistEntry" | "feature" | "featureDependency" | "featureLink" | "milestone" | "milestoneDependency" | "marketResearch" | "researchResults" | "competitor" | "competitiveMove" | "assetView" | "assetDownload" | "referral" | "researchSession" | "researchPhaseResult"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4628,6 +4722,154 @@ export namespace Prisma {
           }
         }
       }
+      ResearchSession: {
+        payload: Prisma.$ResearchSessionPayload<ExtArgs>
+        fields: Prisma.ResearchSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ResearchSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ResearchSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.ResearchSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ResearchSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          findMany: {
+            args: Prisma.ResearchSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>[]
+          }
+          create: {
+            args: Prisma.ResearchSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          createMany: {
+            args: Prisma.ResearchSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ResearchSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.ResearchSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          update: {
+            args: Prisma.ResearchSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ResearchSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ResearchSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ResearchSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ResearchSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.ResearchSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateResearchSession>
+          }
+          groupBy: {
+            args: Prisma.ResearchSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ResearchSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ResearchSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<ResearchSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      ResearchPhaseResult: {
+        payload: Prisma.$ResearchPhaseResultPayload<ExtArgs>
+        fields: Prisma.ResearchPhaseResultFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ResearchPhaseResultFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ResearchPhaseResultFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          findFirst: {
+            args: Prisma.ResearchPhaseResultFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ResearchPhaseResultFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          findMany: {
+            args: Prisma.ResearchPhaseResultFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>[]
+          }
+          create: {
+            args: Prisma.ResearchPhaseResultCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          createMany: {
+            args: Prisma.ResearchPhaseResultCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ResearchPhaseResultCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>[]
+          }
+          delete: {
+            args: Prisma.ResearchPhaseResultDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          update: {
+            args: Prisma.ResearchPhaseResultUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          deleteMany: {
+            args: Prisma.ResearchPhaseResultDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ResearchPhaseResultUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ResearchPhaseResultUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>[]
+          }
+          upsert: {
+            args: Prisma.ResearchPhaseResultUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ResearchPhaseResultPayload>
+          }
+          aggregate: {
+            args: Prisma.ResearchPhaseResultAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateResearchPhaseResult>
+          }
+          groupBy: {
+            args: Prisma.ResearchPhaseResultGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ResearchPhaseResultGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ResearchPhaseResultCountArgs<ExtArgs>
+            result: $Utils.Optional<ResearchPhaseResultCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4753,6 +4995,8 @@ export namespace Prisma {
     assetView?: AssetViewOmit
     assetDownload?: AssetDownloadOmit
     referral?: ReferralOmit
+    researchSession?: ResearchSessionOmit
+    researchPhaseResult?: ResearchPhaseResultOmit
   }
 
   /* Types for Logging */
@@ -5045,6 +5289,7 @@ export namespace Prisma {
     referrals: number
     ApiKey: number
     ResearchResults: number
+    researchSessions: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5071,6 +5316,7 @@ export namespace Prisma {
     referrals?: boolean | OrganizationCountOutputTypeCountReferralsArgs
     ApiKey?: boolean | OrganizationCountOutputTypeCountApiKeyArgs
     ResearchResults?: boolean | OrganizationCountOutputTypeCountResearchResultsArgs
+    researchSessions?: boolean | OrganizationCountOutputTypeCountResearchSessionsArgs
   }
 
   // Custom InputTypes
@@ -5245,6 +5491,13 @@ export namespace Prisma {
     where?: ResearchResultsWhereInput
   }
 
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountResearchSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchSessionWhereInput
+  }
+
 
   /**
    * Count Type ProjectCountOutputType
@@ -5329,12 +5582,14 @@ export namespace Prisma {
   export type IdeaCountOutputType = {
     projects: number
     marketResearch: number
+    researchSessions: number
     Competitor: number
   }
 
   export type IdeaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     projects?: boolean | IdeaCountOutputTypeCountProjectsArgs
     marketResearch?: boolean | IdeaCountOutputTypeCountMarketResearchArgs
+    researchSessions?: boolean | IdeaCountOutputTypeCountResearchSessionsArgs
     Competitor?: boolean | IdeaCountOutputTypeCountCompetitorArgs
   }
 
@@ -5361,6 +5616,13 @@ export namespace Prisma {
    */
   export type IdeaCountOutputTypeCountMarketResearchArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MarketResearchWhereInput
+  }
+
+  /**
+   * IdeaCountOutputType without action
+   */
+  export type IdeaCountOutputTypeCountResearchSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchSessionWhereInput
   }
 
   /**
@@ -5898,6 +6160,37 @@ export namespace Prisma {
    */
   export type CompetitorCountOutputTypeCountCompetitiveMovesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CompetitiveMoveWhereInput
+  }
+
+
+  /**
+   * Count Type ResearchSessionCountOutputType
+   */
+
+  export type ResearchSessionCountOutputType = {
+    phases: number
+  }
+
+  export type ResearchSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    phases?: boolean | ResearchSessionCountOutputTypeCountPhasesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ResearchSessionCountOutputType without action
+   */
+  export type ResearchSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSessionCountOutputType
+     */
+    select?: ResearchSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ResearchSessionCountOutputType without action
+   */
+  export type ResearchSessionCountOutputTypeCountPhasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchPhaseResultWhereInput
   }
 
 
@@ -11024,6 +11317,7 @@ export namespace Prisma {
     referrals?: boolean | Organization$referralsArgs<ExtArgs>
     ApiKey?: boolean | Organization$ApiKeyArgs<ExtArgs>
     ResearchResults?: boolean | Organization$ResearchResultsArgs<ExtArgs>
+    researchSessions?: boolean | Organization$researchSessionsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -11079,6 +11373,7 @@ export namespace Prisma {
     referrals?: boolean | Organization$referralsArgs<ExtArgs>
     ApiKey?: boolean | Organization$ApiKeyArgs<ExtArgs>
     ResearchResults?: boolean | Organization$ResearchResultsArgs<ExtArgs>
+    researchSessions?: boolean | Organization$researchSessionsArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11110,6 +11405,7 @@ export namespace Prisma {
       referrals: Prisma.$ReferralPayload<ExtArgs>[]
       ApiKey: Prisma.$ApiKeyPayload<ExtArgs>[]
       ResearchResults: Prisma.$ResearchResultsPayload<ExtArgs>[]
+      researchSessions: Prisma.$ResearchSessionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11535,6 +11831,7 @@ export namespace Prisma {
     referrals<T extends Organization$referralsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ApiKey<T extends Organization$ApiKeyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ApiKeyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ResearchResults<T extends Organization$ResearchResultsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$ResearchResultsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchResultsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    researchSessions<T extends Organization$researchSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$researchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12507,6 +12804,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ResearchResultsScalarFieldEnum | ResearchResultsScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.researchSessions
+   */
+  export type Organization$researchSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    where?: ResearchSessionWhereInput
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    cursor?: ResearchSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ResearchSessionScalarFieldEnum | ResearchSessionScalarFieldEnum[]
   }
 
   /**
@@ -19832,6 +20153,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     projects?: boolean | Idea$projectsArgs<ExtArgs>
     marketResearch?: boolean | Idea$marketResearchArgs<ExtArgs>
+    researchSessions?: boolean | Idea$researchSessionsArgs<ExtArgs>
     Competitor?: boolean | Idea$CompetitorArgs<ExtArgs>
     _count?: boolean | IdeaCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["idea"]>
@@ -19897,6 +20219,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     projects?: boolean | Idea$projectsArgs<ExtArgs>
     marketResearch?: boolean | Idea$marketResearchArgs<ExtArgs>
+    researchSessions?: boolean | Idea$researchSessionsArgs<ExtArgs>
     Competitor?: boolean | Idea$CompetitorArgs<ExtArgs>
     _count?: boolean | IdeaCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -19916,6 +20239,7 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       projects: Prisma.$ProjectPayload<ExtArgs>[]
       marketResearch: Prisma.$MarketResearchPayload<ExtArgs>[]
+      researchSessions: Prisma.$ResearchSessionPayload<ExtArgs>[]
       Competitor: Prisma.$CompetitorPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -20331,6 +20655,7 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     projects<T extends Idea$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Idea$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     marketResearch<T extends Idea$marketResearchArgs<ExtArgs> = {}>(args?: Subset<T, Idea$marketResearchArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketResearchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    researchSessions<T extends Idea$researchSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Idea$researchSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     Competitor<T extends Idea$CompetitorArgs<ExtArgs> = {}>(args?: Subset<T, Idea$CompetitorArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CompetitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -20835,6 +21160,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MarketResearchScalarFieldEnum | MarketResearchScalarFieldEnum[]
+  }
+
+  /**
+   * Idea.researchSessions
+   */
+  export type Idea$researchSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    where?: ResearchSessionWhereInput
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    cursor?: ResearchSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ResearchSessionScalarFieldEnum | ResearchSessionScalarFieldEnum[]
   }
 
   /**
@@ -55684,6 +56033,2435 @@ export namespace Prisma {
 
 
   /**
+   * Model ResearchSession
+   */
+
+  export type AggregateResearchSession = {
+    _count: ResearchSessionCountAggregateOutputType | null
+    _avg: ResearchSessionAvgAggregateOutputType | null
+    _sum: ResearchSessionSumAggregateOutputType | null
+    _min: ResearchSessionMinAggregateOutputType | null
+    _max: ResearchSessionMaxAggregateOutputType | null
+  }
+
+  export type ResearchSessionAvgAggregateOutputType = {
+    currentPhaseIndex: number | null
+    overallConfidence: number | null
+    totalCost: number | null
+  }
+
+  export type ResearchSessionSumAggregateOutputType = {
+    currentPhaseIndex: number | null
+    overallConfidence: number | null
+    totalCost: number | null
+  }
+
+  export type ResearchSessionMinAggregateOutputType = {
+    id: string | null
+    ideaId: string | null
+    organizationId: string | null
+    depth: $Enums.ResearchDepth | null
+    status: $Enums.ResearchStatus | null
+    currentPhaseIndex: number | null
+    overallConfidence: number | null
+    estimatedCompletion: Date | null
+    actualCompletion: Date | null
+    totalCost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ResearchSessionMaxAggregateOutputType = {
+    id: string | null
+    ideaId: string | null
+    organizationId: string | null
+    depth: $Enums.ResearchDepth | null
+    status: $Enums.ResearchStatus | null
+    currentPhaseIndex: number | null
+    overallConfidence: number | null
+    estimatedCompletion: Date | null
+    actualCompletion: Date | null
+    totalCost: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ResearchSessionCountAggregateOutputType = {
+    id: number
+    ideaId: number
+    organizationId: number
+    depth: number
+    status: number
+    currentPhaseIndex: number
+    overallConfidence: number
+    estimatedCompletion: number
+    actualCompletion: number
+    totalCost: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ResearchSessionAvgAggregateInputType = {
+    currentPhaseIndex?: true
+    overallConfidence?: true
+    totalCost?: true
+  }
+
+  export type ResearchSessionSumAggregateInputType = {
+    currentPhaseIndex?: true
+    overallConfidence?: true
+    totalCost?: true
+  }
+
+  export type ResearchSessionMinAggregateInputType = {
+    id?: true
+    ideaId?: true
+    organizationId?: true
+    depth?: true
+    status?: true
+    currentPhaseIndex?: true
+    overallConfidence?: true
+    estimatedCompletion?: true
+    actualCompletion?: true
+    totalCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ResearchSessionMaxAggregateInputType = {
+    id?: true
+    ideaId?: true
+    organizationId?: true
+    depth?: true
+    status?: true
+    currentPhaseIndex?: true
+    overallConfidence?: true
+    estimatedCompletion?: true
+    actualCompletion?: true
+    totalCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ResearchSessionCountAggregateInputType = {
+    id?: true
+    ideaId?: true
+    organizationId?: true
+    depth?: true
+    status?: true
+    currentPhaseIndex?: true
+    overallConfidence?: true
+    estimatedCompletion?: true
+    actualCompletion?: true
+    totalCost?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ResearchSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchSession to aggregate.
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchSessions to fetch.
+     */
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ResearchSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ResearchSessions
+    **/
+    _count?: true | ResearchSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ResearchSessionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ResearchSessionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ResearchSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ResearchSessionMaxAggregateInputType
+  }
+
+  export type GetResearchSessionAggregateType<T extends ResearchSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateResearchSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateResearchSession[P]>
+      : GetScalarType<T[P], AggregateResearchSession[P]>
+  }
+
+
+
+
+  export type ResearchSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchSessionWhereInput
+    orderBy?: ResearchSessionOrderByWithAggregationInput | ResearchSessionOrderByWithAggregationInput[]
+    by: ResearchSessionScalarFieldEnum[] | ResearchSessionScalarFieldEnum
+    having?: ResearchSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ResearchSessionCountAggregateInputType | true
+    _avg?: ResearchSessionAvgAggregateInputType
+    _sum?: ResearchSessionSumAggregateInputType
+    _min?: ResearchSessionMinAggregateInputType
+    _max?: ResearchSessionMaxAggregateInputType
+  }
+
+  export type ResearchSessionGroupByOutputType = {
+    id: string
+    ideaId: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex: number
+    overallConfidence: number
+    estimatedCompletion: Date | null
+    actualCompletion: Date | null
+    totalCost: number
+    createdAt: Date
+    updatedAt: Date
+    _count: ResearchSessionCountAggregateOutputType | null
+    _avg: ResearchSessionAvgAggregateOutputType | null
+    _sum: ResearchSessionSumAggregateOutputType | null
+    _min: ResearchSessionMinAggregateOutputType | null
+    _max: ResearchSessionMaxAggregateOutputType | null
+  }
+
+  type GetResearchSessionGroupByPayload<T extends ResearchSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ResearchSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ResearchSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ResearchSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], ResearchSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ResearchSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    organizationId?: boolean
+    depth?: boolean
+    status?: boolean
+    currentPhaseIndex?: boolean
+    overallConfidence?: boolean
+    estimatedCompletion?: boolean
+    actualCompletion?: boolean
+    totalCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    phases?: boolean | ResearchSession$phasesArgs<ExtArgs>
+    _count?: boolean | ResearchSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchSession"]>
+
+  export type ResearchSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    organizationId?: boolean
+    depth?: boolean
+    status?: boolean
+    currentPhaseIndex?: boolean
+    overallConfidence?: boolean
+    estimatedCompletion?: boolean
+    actualCompletion?: boolean
+    totalCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchSession"]>
+
+  export type ResearchSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ideaId?: boolean
+    organizationId?: boolean
+    depth?: boolean
+    status?: boolean
+    currentPhaseIndex?: boolean
+    overallConfidence?: boolean
+    estimatedCompletion?: boolean
+    actualCompletion?: boolean
+    totalCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchSession"]>
+
+  export type ResearchSessionSelectScalar = {
+    id?: boolean
+    ideaId?: boolean
+    organizationId?: boolean
+    depth?: boolean
+    status?: boolean
+    currentPhaseIndex?: boolean
+    overallConfidence?: boolean
+    estimatedCompletion?: boolean
+    actualCompletion?: boolean
+    totalCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ResearchSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ideaId" | "organizationId" | "depth" | "status" | "currentPhaseIndex" | "overallConfidence" | "estimatedCompletion" | "actualCompletion" | "totalCost" | "createdAt" | "updatedAt", ExtArgs["result"]["researchSession"]>
+  export type ResearchSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    phases?: boolean | ResearchSession$phasesArgs<ExtArgs>
+    _count?: boolean | ResearchSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ResearchSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type ResearchSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    idea?: boolean | IdeaDefaultArgs<ExtArgs>
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $ResearchSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ResearchSession"
+    objects: {
+      idea: Prisma.$IdeaPayload<ExtArgs>
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      phases: Prisma.$ResearchPhaseResultPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      ideaId: string
+      organizationId: string
+      depth: $Enums.ResearchDepth
+      status: $Enums.ResearchStatus
+      currentPhaseIndex: number
+      overallConfidence: number
+      estimatedCompletion: Date | null
+      actualCompletion: Date | null
+      totalCost: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["researchSession"]>
+    composites: {}
+  }
+
+  type ResearchSessionGetPayload<S extends boolean | null | undefined | ResearchSessionDefaultArgs> = $Result.GetResult<Prisma.$ResearchSessionPayload, S>
+
+  type ResearchSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ResearchSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ResearchSessionCountAggregateInputType | true
+    }
+
+  export interface ResearchSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ResearchSession'], meta: { name: 'ResearchSession' } }
+    /**
+     * Find zero or one ResearchSession that matches the filter.
+     * @param {ResearchSessionFindUniqueArgs} args - Arguments to find a ResearchSession
+     * @example
+     * // Get one ResearchSession
+     * const researchSession = await prisma.researchSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ResearchSessionFindUniqueArgs>(args: SelectSubset<T, ResearchSessionFindUniqueArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ResearchSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ResearchSessionFindUniqueOrThrowArgs} args - Arguments to find a ResearchSession
+     * @example
+     * // Get one ResearchSession
+     * const researchSession = await prisma.researchSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ResearchSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, ResearchSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionFindFirstArgs} args - Arguments to find a ResearchSession
+     * @example
+     * // Get one ResearchSession
+     * const researchSession = await prisma.researchSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ResearchSessionFindFirstArgs>(args?: SelectSubset<T, ResearchSessionFindFirstArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionFindFirstOrThrowArgs} args - Arguments to find a ResearchSession
+     * @example
+     * // Get one ResearchSession
+     * const researchSession = await prisma.researchSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ResearchSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, ResearchSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ResearchSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ResearchSessions
+     * const researchSessions = await prisma.researchSession.findMany()
+     * 
+     * // Get first 10 ResearchSessions
+     * const researchSessions = await prisma.researchSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const researchSessionWithIdOnly = await prisma.researchSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ResearchSessionFindManyArgs>(args?: SelectSubset<T, ResearchSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ResearchSession.
+     * @param {ResearchSessionCreateArgs} args - Arguments to create a ResearchSession.
+     * @example
+     * // Create one ResearchSession
+     * const ResearchSession = await prisma.researchSession.create({
+     *   data: {
+     *     // ... data to create a ResearchSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends ResearchSessionCreateArgs>(args: SelectSubset<T, ResearchSessionCreateArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ResearchSessions.
+     * @param {ResearchSessionCreateManyArgs} args - Arguments to create many ResearchSessions.
+     * @example
+     * // Create many ResearchSessions
+     * const researchSession = await prisma.researchSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ResearchSessionCreateManyArgs>(args?: SelectSubset<T, ResearchSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ResearchSessions and returns the data saved in the database.
+     * @param {ResearchSessionCreateManyAndReturnArgs} args - Arguments to create many ResearchSessions.
+     * @example
+     * // Create many ResearchSessions
+     * const researchSession = await prisma.researchSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ResearchSessions and only return the `id`
+     * const researchSessionWithIdOnly = await prisma.researchSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ResearchSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, ResearchSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ResearchSession.
+     * @param {ResearchSessionDeleteArgs} args - Arguments to delete one ResearchSession.
+     * @example
+     * // Delete one ResearchSession
+     * const ResearchSession = await prisma.researchSession.delete({
+     *   where: {
+     *     // ... filter to delete one ResearchSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ResearchSessionDeleteArgs>(args: SelectSubset<T, ResearchSessionDeleteArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ResearchSession.
+     * @param {ResearchSessionUpdateArgs} args - Arguments to update one ResearchSession.
+     * @example
+     * // Update one ResearchSession
+     * const researchSession = await prisma.researchSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ResearchSessionUpdateArgs>(args: SelectSubset<T, ResearchSessionUpdateArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ResearchSessions.
+     * @param {ResearchSessionDeleteManyArgs} args - Arguments to filter ResearchSessions to delete.
+     * @example
+     * // Delete a few ResearchSessions
+     * const { count } = await prisma.researchSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ResearchSessionDeleteManyArgs>(args?: SelectSubset<T, ResearchSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ResearchSessions
+     * const researchSession = await prisma.researchSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ResearchSessionUpdateManyArgs>(args: SelectSubset<T, ResearchSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchSessions and returns the data updated in the database.
+     * @param {ResearchSessionUpdateManyAndReturnArgs} args - Arguments to update many ResearchSessions.
+     * @example
+     * // Update many ResearchSessions
+     * const researchSession = await prisma.researchSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ResearchSessions and only return the `id`
+     * const researchSessionWithIdOnly = await prisma.researchSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ResearchSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, ResearchSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ResearchSession.
+     * @param {ResearchSessionUpsertArgs} args - Arguments to update or create a ResearchSession.
+     * @example
+     * // Update or create a ResearchSession
+     * const researchSession = await prisma.researchSession.upsert({
+     *   create: {
+     *     // ... data to create a ResearchSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ResearchSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ResearchSessionUpsertArgs>(args: SelectSubset<T, ResearchSessionUpsertArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ResearchSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionCountArgs} args - Arguments to filter ResearchSessions to count.
+     * @example
+     * // Count the number of ResearchSessions
+     * const count = await prisma.researchSession.count({
+     *   where: {
+     *     // ... the filter for the ResearchSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ResearchSessionCountArgs>(
+      args?: Subset<T, ResearchSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ResearchSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ResearchSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ResearchSessionAggregateArgs>(args: Subset<T, ResearchSessionAggregateArgs>): Prisma.PrismaPromise<GetResearchSessionAggregateType<T>>
+
+    /**
+     * Group by ResearchSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ResearchSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ResearchSessionGroupByArgs['orderBy'] }
+        : { orderBy?: ResearchSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ResearchSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetResearchSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ResearchSession model
+   */
+  readonly fields: ResearchSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ResearchSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ResearchSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    idea<T extends IdeaDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IdeaDefaultArgs<ExtArgs>>): Prisma__IdeaClient<$Result.GetResult<Prisma.$IdeaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    phases<T extends ResearchSession$phasesArgs<ExtArgs> = {}>(args?: Subset<T, ResearchSession$phasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ResearchSession model
+   */
+  interface ResearchSessionFieldRefs {
+    readonly id: FieldRef<"ResearchSession", 'String'>
+    readonly ideaId: FieldRef<"ResearchSession", 'String'>
+    readonly organizationId: FieldRef<"ResearchSession", 'String'>
+    readonly depth: FieldRef<"ResearchSession", 'ResearchDepth'>
+    readonly status: FieldRef<"ResearchSession", 'ResearchStatus'>
+    readonly currentPhaseIndex: FieldRef<"ResearchSession", 'Int'>
+    readonly overallConfidence: FieldRef<"ResearchSession", 'Float'>
+    readonly estimatedCompletion: FieldRef<"ResearchSession", 'DateTime'>
+    readonly actualCompletion: FieldRef<"ResearchSession", 'DateTime'>
+    readonly totalCost: FieldRef<"ResearchSession", 'Float'>
+    readonly createdAt: FieldRef<"ResearchSession", 'DateTime'>
+    readonly updatedAt: FieldRef<"ResearchSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ResearchSession findUnique
+   */
+  export type ResearchSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchSession to fetch.
+     */
+    where: ResearchSessionWhereUniqueInput
+  }
+
+  /**
+   * ResearchSession findUniqueOrThrow
+   */
+  export type ResearchSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchSession to fetch.
+     */
+    where: ResearchSessionWhereUniqueInput
+  }
+
+  /**
+   * ResearchSession findFirst
+   */
+  export type ResearchSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchSession to fetch.
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchSessions to fetch.
+     */
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchSessions.
+     */
+    cursor?: ResearchSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchSessions.
+     */
+    distinct?: ResearchSessionScalarFieldEnum | ResearchSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchSession findFirstOrThrow
+   */
+  export type ResearchSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchSession to fetch.
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchSessions to fetch.
+     */
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchSessions.
+     */
+    cursor?: ResearchSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchSessions.
+     */
+    distinct?: ResearchSessionScalarFieldEnum | ResearchSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchSession findMany
+   */
+  export type ResearchSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchSessions to fetch.
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchSessions to fetch.
+     */
+    orderBy?: ResearchSessionOrderByWithRelationInput | ResearchSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ResearchSessions.
+     */
+    cursor?: ResearchSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchSessions.
+     */
+    skip?: number
+    distinct?: ResearchSessionScalarFieldEnum | ResearchSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchSession create
+   */
+  export type ResearchSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ResearchSession.
+     */
+    data: XOR<ResearchSessionCreateInput, ResearchSessionUncheckedCreateInput>
+  }
+
+  /**
+   * ResearchSession createMany
+   */
+  export type ResearchSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ResearchSessions.
+     */
+    data: ResearchSessionCreateManyInput | ResearchSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ResearchSession createManyAndReturn
+   */
+  export type ResearchSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many ResearchSessions.
+     */
+    data: ResearchSessionCreateManyInput | ResearchSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchSession update
+   */
+  export type ResearchSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ResearchSession.
+     */
+    data: XOR<ResearchSessionUpdateInput, ResearchSessionUncheckedUpdateInput>
+    /**
+     * Choose, which ResearchSession to update.
+     */
+    where: ResearchSessionWhereUniqueInput
+  }
+
+  /**
+   * ResearchSession updateMany
+   */
+  export type ResearchSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ResearchSessions.
+     */
+    data: XOR<ResearchSessionUpdateManyMutationInput, ResearchSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchSessions to update
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * Limit how many ResearchSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchSession updateManyAndReturn
+   */
+  export type ResearchSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update ResearchSessions.
+     */
+    data: XOR<ResearchSessionUpdateManyMutationInput, ResearchSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchSessions to update
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * Limit how many ResearchSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchSession upsert
+   */
+  export type ResearchSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ResearchSession to update in case it exists.
+     */
+    where: ResearchSessionWhereUniqueInput
+    /**
+     * In case the ResearchSession found by the `where` argument doesn't exist, create a new ResearchSession with this data.
+     */
+    create: XOR<ResearchSessionCreateInput, ResearchSessionUncheckedCreateInput>
+    /**
+     * In case the ResearchSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ResearchSessionUpdateInput, ResearchSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * ResearchSession delete
+   */
+  export type ResearchSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+    /**
+     * Filter which ResearchSession to delete.
+     */
+    where: ResearchSessionWhereUniqueInput
+  }
+
+  /**
+   * ResearchSession deleteMany
+   */
+  export type ResearchSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchSessions to delete
+     */
+    where?: ResearchSessionWhereInput
+    /**
+     * Limit how many ResearchSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchSession.phases
+   */
+  export type ResearchSession$phasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    where?: ResearchPhaseResultWhereInput
+    orderBy?: ResearchPhaseResultOrderByWithRelationInput | ResearchPhaseResultOrderByWithRelationInput[]
+    cursor?: ResearchPhaseResultWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ResearchPhaseResultScalarFieldEnum | ResearchPhaseResultScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchSession without action
+   */
+  export type ResearchSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchSession
+     */
+    select?: ResearchSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchSession
+     */
+    omit?: ResearchSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ResearchPhaseResult
+   */
+
+  export type AggregateResearchPhaseResult = {
+    _count: ResearchPhaseResultCountAggregateOutputType | null
+    _avg: ResearchPhaseResultAvgAggregateOutputType | null
+    _sum: ResearchPhaseResultSumAggregateOutputType | null
+    _min: ResearchPhaseResultMinAggregateOutputType | null
+    _max: ResearchPhaseResultMaxAggregateOutputType | null
+  }
+
+  export type ResearchPhaseResultAvgAggregateOutputType = {
+    confidence: number | null
+    duration: number | null
+    iterations: number | null
+  }
+
+  export type ResearchPhaseResultSumAggregateOutputType = {
+    confidence: number | null
+    duration: number | null
+    iterations: number | null
+  }
+
+  export type ResearchPhaseResultMinAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    phaseName: $Enums.ResearchPhaseType | null
+    status: $Enums.PhaseStatus | null
+    confidence: number | null
+    duration: number | null
+    iterations: number | null
+    startedAt: Date | null
+    completedAt: Date | null
+    error: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ResearchPhaseResultMaxAggregateOutputType = {
+    id: string | null
+    sessionId: string | null
+    phaseName: $Enums.ResearchPhaseType | null
+    status: $Enums.PhaseStatus | null
+    confidence: number | null
+    duration: number | null
+    iterations: number | null
+    startedAt: Date | null
+    completedAt: Date | null
+    error: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ResearchPhaseResultCountAggregateOutputType = {
+    id: number
+    sessionId: number
+    phaseName: number
+    status: number
+    findings: number
+    confidence: number
+    duration: number
+    iterations: number
+    startedAt: number
+    completedAt: number
+    error: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ResearchPhaseResultAvgAggregateInputType = {
+    confidence?: true
+    duration?: true
+    iterations?: true
+  }
+
+  export type ResearchPhaseResultSumAggregateInputType = {
+    confidence?: true
+    duration?: true
+    iterations?: true
+  }
+
+  export type ResearchPhaseResultMinAggregateInputType = {
+    id?: true
+    sessionId?: true
+    phaseName?: true
+    status?: true
+    confidence?: true
+    duration?: true
+    iterations?: true
+    startedAt?: true
+    completedAt?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ResearchPhaseResultMaxAggregateInputType = {
+    id?: true
+    sessionId?: true
+    phaseName?: true
+    status?: true
+    confidence?: true
+    duration?: true
+    iterations?: true
+    startedAt?: true
+    completedAt?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ResearchPhaseResultCountAggregateInputType = {
+    id?: true
+    sessionId?: true
+    phaseName?: true
+    status?: true
+    findings?: true
+    confidence?: true
+    duration?: true
+    iterations?: true
+    startedAt?: true
+    completedAt?: true
+    error?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ResearchPhaseResultAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchPhaseResult to aggregate.
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchPhaseResults to fetch.
+     */
+    orderBy?: ResearchPhaseResultOrderByWithRelationInput | ResearchPhaseResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ResearchPhaseResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchPhaseResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchPhaseResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ResearchPhaseResults
+    **/
+    _count?: true | ResearchPhaseResultCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ResearchPhaseResultAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ResearchPhaseResultSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ResearchPhaseResultMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ResearchPhaseResultMaxAggregateInputType
+  }
+
+  export type GetResearchPhaseResultAggregateType<T extends ResearchPhaseResultAggregateArgs> = {
+        [P in keyof T & keyof AggregateResearchPhaseResult]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateResearchPhaseResult[P]>
+      : GetScalarType<T[P], AggregateResearchPhaseResult[P]>
+  }
+
+
+
+
+  export type ResearchPhaseResultGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ResearchPhaseResultWhereInput
+    orderBy?: ResearchPhaseResultOrderByWithAggregationInput | ResearchPhaseResultOrderByWithAggregationInput[]
+    by: ResearchPhaseResultScalarFieldEnum[] | ResearchPhaseResultScalarFieldEnum
+    having?: ResearchPhaseResultScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ResearchPhaseResultCountAggregateInputType | true
+    _avg?: ResearchPhaseResultAvgAggregateInputType
+    _sum?: ResearchPhaseResultSumAggregateInputType
+    _min?: ResearchPhaseResultMinAggregateInputType
+    _max?: ResearchPhaseResultMaxAggregateInputType
+  }
+
+  export type ResearchPhaseResultGroupByOutputType = {
+    id: string
+    sessionId: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonValue
+    confidence: number
+    duration: number
+    iterations: number
+    startedAt: Date | null
+    completedAt: Date | null
+    error: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ResearchPhaseResultCountAggregateOutputType | null
+    _avg: ResearchPhaseResultAvgAggregateOutputType | null
+    _sum: ResearchPhaseResultSumAggregateOutputType | null
+    _min: ResearchPhaseResultMinAggregateOutputType | null
+    _max: ResearchPhaseResultMaxAggregateOutputType | null
+  }
+
+  type GetResearchPhaseResultGroupByPayload<T extends ResearchPhaseResultGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ResearchPhaseResultGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ResearchPhaseResultGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ResearchPhaseResultGroupByOutputType[P]>
+            : GetScalarType<T[P], ResearchPhaseResultGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ResearchPhaseResultSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    phaseName?: boolean
+    status?: boolean
+    findings?: boolean
+    confidence?: boolean
+    duration?: boolean
+    iterations?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchPhaseResult"]>
+
+  export type ResearchPhaseResultSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    phaseName?: boolean
+    status?: boolean
+    findings?: boolean
+    confidence?: boolean
+    duration?: boolean
+    iterations?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchPhaseResult"]>
+
+  export type ResearchPhaseResultSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sessionId?: boolean
+    phaseName?: boolean
+    status?: boolean
+    findings?: boolean
+    confidence?: boolean
+    duration?: boolean
+    iterations?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["researchPhaseResult"]>
+
+  export type ResearchPhaseResultSelectScalar = {
+    id?: boolean
+    sessionId?: boolean
+    phaseName?: boolean
+    status?: boolean
+    findings?: boolean
+    confidence?: boolean
+    duration?: boolean
+    iterations?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    error?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ResearchPhaseResultOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sessionId" | "phaseName" | "status" | "findings" | "confidence" | "duration" | "iterations" | "startedAt" | "completedAt" | "error" | "createdAt" | "updatedAt", ExtArgs["result"]["researchPhaseResult"]>
+  export type ResearchPhaseResultInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+  export type ResearchPhaseResultIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+  export type ResearchPhaseResultIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    session?: boolean | ResearchSessionDefaultArgs<ExtArgs>
+  }
+
+  export type $ResearchPhaseResultPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ResearchPhaseResult"
+    objects: {
+      session: Prisma.$ResearchSessionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sessionId: string
+      phaseName: $Enums.ResearchPhaseType
+      status: $Enums.PhaseStatus
+      findings: Prisma.JsonValue
+      confidence: number
+      duration: number
+      iterations: number
+      startedAt: Date | null
+      completedAt: Date | null
+      error: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["researchPhaseResult"]>
+    composites: {}
+  }
+
+  type ResearchPhaseResultGetPayload<S extends boolean | null | undefined | ResearchPhaseResultDefaultArgs> = $Result.GetResult<Prisma.$ResearchPhaseResultPayload, S>
+
+  type ResearchPhaseResultCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ResearchPhaseResultFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ResearchPhaseResultCountAggregateInputType | true
+    }
+
+  export interface ResearchPhaseResultDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ResearchPhaseResult'], meta: { name: 'ResearchPhaseResult' } }
+    /**
+     * Find zero or one ResearchPhaseResult that matches the filter.
+     * @param {ResearchPhaseResultFindUniqueArgs} args - Arguments to find a ResearchPhaseResult
+     * @example
+     * // Get one ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ResearchPhaseResultFindUniqueArgs>(args: SelectSubset<T, ResearchPhaseResultFindUniqueArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ResearchPhaseResult that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ResearchPhaseResultFindUniqueOrThrowArgs} args - Arguments to find a ResearchPhaseResult
+     * @example
+     * // Get one ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ResearchPhaseResultFindUniqueOrThrowArgs>(args: SelectSubset<T, ResearchPhaseResultFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchPhaseResult that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultFindFirstArgs} args - Arguments to find a ResearchPhaseResult
+     * @example
+     * // Get one ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ResearchPhaseResultFindFirstArgs>(args?: SelectSubset<T, ResearchPhaseResultFindFirstArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ResearchPhaseResult that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultFindFirstOrThrowArgs} args - Arguments to find a ResearchPhaseResult
+     * @example
+     * // Get one ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ResearchPhaseResultFindFirstOrThrowArgs>(args?: SelectSubset<T, ResearchPhaseResultFindFirstOrThrowArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ResearchPhaseResults that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ResearchPhaseResults
+     * const researchPhaseResults = await prisma.researchPhaseResult.findMany()
+     * 
+     * // Get first 10 ResearchPhaseResults
+     * const researchPhaseResults = await prisma.researchPhaseResult.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const researchPhaseResultWithIdOnly = await prisma.researchPhaseResult.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ResearchPhaseResultFindManyArgs>(args?: SelectSubset<T, ResearchPhaseResultFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ResearchPhaseResult.
+     * @param {ResearchPhaseResultCreateArgs} args - Arguments to create a ResearchPhaseResult.
+     * @example
+     * // Create one ResearchPhaseResult
+     * const ResearchPhaseResult = await prisma.researchPhaseResult.create({
+     *   data: {
+     *     // ... data to create a ResearchPhaseResult
+     *   }
+     * })
+     * 
+     */
+    create<T extends ResearchPhaseResultCreateArgs>(args: SelectSubset<T, ResearchPhaseResultCreateArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ResearchPhaseResults.
+     * @param {ResearchPhaseResultCreateManyArgs} args - Arguments to create many ResearchPhaseResults.
+     * @example
+     * // Create many ResearchPhaseResults
+     * const researchPhaseResult = await prisma.researchPhaseResult.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ResearchPhaseResultCreateManyArgs>(args?: SelectSubset<T, ResearchPhaseResultCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ResearchPhaseResults and returns the data saved in the database.
+     * @param {ResearchPhaseResultCreateManyAndReturnArgs} args - Arguments to create many ResearchPhaseResults.
+     * @example
+     * // Create many ResearchPhaseResults
+     * const researchPhaseResult = await prisma.researchPhaseResult.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ResearchPhaseResults and only return the `id`
+     * const researchPhaseResultWithIdOnly = await prisma.researchPhaseResult.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ResearchPhaseResultCreateManyAndReturnArgs>(args?: SelectSubset<T, ResearchPhaseResultCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ResearchPhaseResult.
+     * @param {ResearchPhaseResultDeleteArgs} args - Arguments to delete one ResearchPhaseResult.
+     * @example
+     * // Delete one ResearchPhaseResult
+     * const ResearchPhaseResult = await prisma.researchPhaseResult.delete({
+     *   where: {
+     *     // ... filter to delete one ResearchPhaseResult
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ResearchPhaseResultDeleteArgs>(args: SelectSubset<T, ResearchPhaseResultDeleteArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ResearchPhaseResult.
+     * @param {ResearchPhaseResultUpdateArgs} args - Arguments to update one ResearchPhaseResult.
+     * @example
+     * // Update one ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ResearchPhaseResultUpdateArgs>(args: SelectSubset<T, ResearchPhaseResultUpdateArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ResearchPhaseResults.
+     * @param {ResearchPhaseResultDeleteManyArgs} args - Arguments to filter ResearchPhaseResults to delete.
+     * @example
+     * // Delete a few ResearchPhaseResults
+     * const { count } = await prisma.researchPhaseResult.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ResearchPhaseResultDeleteManyArgs>(args?: SelectSubset<T, ResearchPhaseResultDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchPhaseResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ResearchPhaseResults
+     * const researchPhaseResult = await prisma.researchPhaseResult.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ResearchPhaseResultUpdateManyArgs>(args: SelectSubset<T, ResearchPhaseResultUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ResearchPhaseResults and returns the data updated in the database.
+     * @param {ResearchPhaseResultUpdateManyAndReturnArgs} args - Arguments to update many ResearchPhaseResults.
+     * @example
+     * // Update many ResearchPhaseResults
+     * const researchPhaseResult = await prisma.researchPhaseResult.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ResearchPhaseResults and only return the `id`
+     * const researchPhaseResultWithIdOnly = await prisma.researchPhaseResult.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ResearchPhaseResultUpdateManyAndReturnArgs>(args: SelectSubset<T, ResearchPhaseResultUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ResearchPhaseResult.
+     * @param {ResearchPhaseResultUpsertArgs} args - Arguments to update or create a ResearchPhaseResult.
+     * @example
+     * // Update or create a ResearchPhaseResult
+     * const researchPhaseResult = await prisma.researchPhaseResult.upsert({
+     *   create: {
+     *     // ... data to create a ResearchPhaseResult
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ResearchPhaseResult we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ResearchPhaseResultUpsertArgs>(args: SelectSubset<T, ResearchPhaseResultUpsertArgs<ExtArgs>>): Prisma__ResearchPhaseResultClient<$Result.GetResult<Prisma.$ResearchPhaseResultPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ResearchPhaseResults.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultCountArgs} args - Arguments to filter ResearchPhaseResults to count.
+     * @example
+     * // Count the number of ResearchPhaseResults
+     * const count = await prisma.researchPhaseResult.count({
+     *   where: {
+     *     // ... the filter for the ResearchPhaseResults we want to count
+     *   }
+     * })
+    **/
+    count<T extends ResearchPhaseResultCountArgs>(
+      args?: Subset<T, ResearchPhaseResultCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ResearchPhaseResultCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ResearchPhaseResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ResearchPhaseResultAggregateArgs>(args: Subset<T, ResearchPhaseResultAggregateArgs>): Prisma.PrismaPromise<GetResearchPhaseResultAggregateType<T>>
+
+    /**
+     * Group by ResearchPhaseResult.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ResearchPhaseResultGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ResearchPhaseResultGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ResearchPhaseResultGroupByArgs['orderBy'] }
+        : { orderBy?: ResearchPhaseResultGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ResearchPhaseResultGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetResearchPhaseResultGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ResearchPhaseResult model
+   */
+  readonly fields: ResearchPhaseResultFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ResearchPhaseResult.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ResearchPhaseResultClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    session<T extends ResearchSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ResearchSessionDefaultArgs<ExtArgs>>): Prisma__ResearchSessionClient<$Result.GetResult<Prisma.$ResearchSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ResearchPhaseResult model
+   */
+  interface ResearchPhaseResultFieldRefs {
+    readonly id: FieldRef<"ResearchPhaseResult", 'String'>
+    readonly sessionId: FieldRef<"ResearchPhaseResult", 'String'>
+    readonly phaseName: FieldRef<"ResearchPhaseResult", 'ResearchPhaseType'>
+    readonly status: FieldRef<"ResearchPhaseResult", 'PhaseStatus'>
+    readonly findings: FieldRef<"ResearchPhaseResult", 'Json'>
+    readonly confidence: FieldRef<"ResearchPhaseResult", 'Float'>
+    readonly duration: FieldRef<"ResearchPhaseResult", 'Int'>
+    readonly iterations: FieldRef<"ResearchPhaseResult", 'Int'>
+    readonly startedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
+    readonly completedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
+    readonly error: FieldRef<"ResearchPhaseResult", 'String'>
+    readonly createdAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
+    readonly updatedAt: FieldRef<"ResearchPhaseResult", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ResearchPhaseResult findUnique
+   */
+  export type ResearchPhaseResultFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchPhaseResult to fetch.
+     */
+    where: ResearchPhaseResultWhereUniqueInput
+  }
+
+  /**
+   * ResearchPhaseResult findUniqueOrThrow
+   */
+  export type ResearchPhaseResultFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchPhaseResult to fetch.
+     */
+    where: ResearchPhaseResultWhereUniqueInput
+  }
+
+  /**
+   * ResearchPhaseResult findFirst
+   */
+  export type ResearchPhaseResultFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchPhaseResult to fetch.
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchPhaseResults to fetch.
+     */
+    orderBy?: ResearchPhaseResultOrderByWithRelationInput | ResearchPhaseResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchPhaseResults.
+     */
+    cursor?: ResearchPhaseResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchPhaseResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchPhaseResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchPhaseResults.
+     */
+    distinct?: ResearchPhaseResultScalarFieldEnum | ResearchPhaseResultScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchPhaseResult findFirstOrThrow
+   */
+  export type ResearchPhaseResultFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchPhaseResult to fetch.
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchPhaseResults to fetch.
+     */
+    orderBy?: ResearchPhaseResultOrderByWithRelationInput | ResearchPhaseResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ResearchPhaseResults.
+     */
+    cursor?: ResearchPhaseResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchPhaseResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchPhaseResults.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ResearchPhaseResults.
+     */
+    distinct?: ResearchPhaseResultScalarFieldEnum | ResearchPhaseResultScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchPhaseResult findMany
+   */
+  export type ResearchPhaseResultFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter, which ResearchPhaseResults to fetch.
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ResearchPhaseResults to fetch.
+     */
+    orderBy?: ResearchPhaseResultOrderByWithRelationInput | ResearchPhaseResultOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ResearchPhaseResults.
+     */
+    cursor?: ResearchPhaseResultWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ResearchPhaseResults from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ResearchPhaseResults.
+     */
+    skip?: number
+    distinct?: ResearchPhaseResultScalarFieldEnum | ResearchPhaseResultScalarFieldEnum[]
+  }
+
+  /**
+   * ResearchPhaseResult create
+   */
+  export type ResearchPhaseResultCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ResearchPhaseResult.
+     */
+    data: XOR<ResearchPhaseResultCreateInput, ResearchPhaseResultUncheckedCreateInput>
+  }
+
+  /**
+   * ResearchPhaseResult createMany
+   */
+  export type ResearchPhaseResultCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ResearchPhaseResults.
+     */
+    data: ResearchPhaseResultCreateManyInput | ResearchPhaseResultCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ResearchPhaseResult createManyAndReturn
+   */
+  export type ResearchPhaseResultCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * The data used to create many ResearchPhaseResults.
+     */
+    data: ResearchPhaseResultCreateManyInput | ResearchPhaseResultCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchPhaseResult update
+   */
+  export type ResearchPhaseResultUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ResearchPhaseResult.
+     */
+    data: XOR<ResearchPhaseResultUpdateInput, ResearchPhaseResultUncheckedUpdateInput>
+    /**
+     * Choose, which ResearchPhaseResult to update.
+     */
+    where: ResearchPhaseResultWhereUniqueInput
+  }
+
+  /**
+   * ResearchPhaseResult updateMany
+   */
+  export type ResearchPhaseResultUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ResearchPhaseResults.
+     */
+    data: XOR<ResearchPhaseResultUpdateManyMutationInput, ResearchPhaseResultUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchPhaseResults to update
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * Limit how many ResearchPhaseResults to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchPhaseResult updateManyAndReturn
+   */
+  export type ResearchPhaseResultUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * The data used to update ResearchPhaseResults.
+     */
+    data: XOR<ResearchPhaseResultUpdateManyMutationInput, ResearchPhaseResultUncheckedUpdateManyInput>
+    /**
+     * Filter which ResearchPhaseResults to update
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * Limit how many ResearchPhaseResults to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ResearchPhaseResult upsert
+   */
+  export type ResearchPhaseResultUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ResearchPhaseResult to update in case it exists.
+     */
+    where: ResearchPhaseResultWhereUniqueInput
+    /**
+     * In case the ResearchPhaseResult found by the `where` argument doesn't exist, create a new ResearchPhaseResult with this data.
+     */
+    create: XOR<ResearchPhaseResultCreateInput, ResearchPhaseResultUncheckedCreateInput>
+    /**
+     * In case the ResearchPhaseResult was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ResearchPhaseResultUpdateInput, ResearchPhaseResultUncheckedUpdateInput>
+  }
+
+  /**
+   * ResearchPhaseResult delete
+   */
+  export type ResearchPhaseResultDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+    /**
+     * Filter which ResearchPhaseResult to delete.
+     */
+    where: ResearchPhaseResultWhereUniqueInput
+  }
+
+  /**
+   * ResearchPhaseResult deleteMany
+   */
+  export type ResearchPhaseResultDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ResearchPhaseResults to delete
+     */
+    where?: ResearchPhaseResultWhereInput
+    /**
+     * Limit how many ResearchPhaseResults to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ResearchPhaseResult without action
+   */
+  export type ResearchPhaseResultDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ResearchPhaseResult
+     */
+    select?: ResearchPhaseResultSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ResearchPhaseResult
+     */
+    omit?: ResearchPhaseResultOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ResearchPhaseResultInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -56374,6 +59152,43 @@ export namespace Prisma {
   export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
 
 
+  export const ResearchSessionScalarFieldEnum: {
+    id: 'id',
+    ideaId: 'ideaId',
+    organizationId: 'organizationId',
+    depth: 'depth',
+    status: 'status',
+    currentPhaseIndex: 'currentPhaseIndex',
+    overallConfidence: 'overallConfidence',
+    estimatedCompletion: 'estimatedCompletion',
+    actualCompletion: 'actualCompletion',
+    totalCost: 'totalCost',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ResearchSessionScalarFieldEnum = (typeof ResearchSessionScalarFieldEnum)[keyof typeof ResearchSessionScalarFieldEnum]
+
+
+  export const ResearchPhaseResultScalarFieldEnum: {
+    id: 'id',
+    sessionId: 'sessionId',
+    phaseName: 'phaseName',
+    status: 'status',
+    findings: 'findings',
+    confidence: 'confidence',
+    duration: 'duration',
+    iterations: 'iterations',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt',
+    error: 'error',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ResearchPhaseResultScalarFieldEnum = (typeof ResearchPhaseResultScalarFieldEnum)[keyof typeof ResearchPhaseResultScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -56774,6 +59589,62 @@ export namespace Prisma {
    */
   export type ListEnumResearchTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'ResearchDepth'
+   */
+  export type EnumResearchDepthFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchDepth'>
+    
+
+
+  /**
+   * Reference to a field of type 'ResearchDepth[]'
+   */
+  export type ListEnumResearchDepthFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchDepth[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ResearchStatus'
+   */
+  export type EnumResearchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'ResearchStatus[]'
+   */
+  export type ListEnumResearchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ResearchPhaseType'
+   */
+  export type EnumResearchPhaseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchPhaseType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ResearchPhaseType[]'
+   */
+  export type ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ResearchPhaseType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PhaseStatus'
+   */
+  export type EnumPhaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PhaseStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PhaseStatus[]'
+   */
+  export type ListEnumPhaseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PhaseStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -57170,6 +60041,7 @@ export namespace Prisma {
     referrals?: ReferralListRelationFilter
     ApiKey?: ApiKeyListRelationFilter
     ResearchResults?: ResearchResultsListRelationFilter
+    researchSessions?: ResearchSessionListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -57202,6 +60074,7 @@ export namespace Prisma {
     referrals?: ReferralOrderByRelationAggregateInput
     ApiKey?: ApiKeyOrderByRelationAggregateInput
     ResearchResults?: ResearchResultsOrderByRelationAggregateInput
+    researchSessions?: ResearchSessionOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -57237,6 +60110,7 @@ export namespace Prisma {
     referrals?: ReferralListRelationFilter
     ApiKey?: ApiKeyListRelationFilter
     ResearchResults?: ResearchResultsListRelationFilter
+    researchSessions?: ResearchSessionListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -57760,6 +60634,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
     marketResearch?: MarketResearchListRelationFilter
+    researchSessions?: ResearchSessionListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }
 
@@ -57782,6 +60657,7 @@ export namespace Prisma {
     organization?: OrganizationOrderByWithRelationInput
     projects?: ProjectOrderByRelationAggregateInput
     marketResearch?: MarketResearchOrderByRelationAggregateInput
+    researchSessions?: ResearchSessionOrderByRelationAggregateInput
     Competitor?: CompetitorOrderByRelationAggregateInput
   }
 
@@ -57807,6 +60683,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     projects?: ProjectListRelationFilter
     marketResearch?: MarketResearchListRelationFilter
+    researchSessions?: ResearchSessionListRelationFilter
     Competitor?: CompetitorListRelationFilter
   }, "id">
 
@@ -60553,6 +63430,201 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
   }
 
+  export type ResearchSessionWhereInput = {
+    AND?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
+    OR?: ResearchSessionWhereInput[]
+    NOT?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
+    id?: StringFilter<"ResearchSession"> | string
+    ideaId?: StringFilter<"ResearchSession"> | string
+    organizationId?: StringFilter<"ResearchSession"> | string
+    depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
+    status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFilter<"ResearchSession"> | number
+    overallConfidence?: FloatFilter<"ResearchSession"> | number
+    estimatedCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    actualCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    totalCost?: FloatFilter<"ResearchSession"> | number
+    createdAt?: DateTimeFilter<"ResearchSession"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchSession"> | Date | string
+    idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    phases?: ResearchPhaseResultListRelationFilter
+  }
+
+  export type ResearchSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    ideaId?: SortOrder
+    organizationId?: SortOrder
+    depth?: SortOrder
+    status?: SortOrder
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    estimatedCompletion?: SortOrderInput | SortOrder
+    actualCompletion?: SortOrderInput | SortOrder
+    totalCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    idea?: IdeaOrderByWithRelationInput
+    organization?: OrganizationOrderByWithRelationInput
+    phases?: ResearchPhaseResultOrderByRelationAggregateInput
+  }
+
+  export type ResearchSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
+    OR?: ResearchSessionWhereInput[]
+    NOT?: ResearchSessionWhereInput | ResearchSessionWhereInput[]
+    ideaId?: StringFilter<"ResearchSession"> | string
+    organizationId?: StringFilter<"ResearchSession"> | string
+    depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
+    status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFilter<"ResearchSession"> | number
+    overallConfidence?: FloatFilter<"ResearchSession"> | number
+    estimatedCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    actualCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    totalCost?: FloatFilter<"ResearchSession"> | number
+    createdAt?: DateTimeFilter<"ResearchSession"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchSession"> | Date | string
+    idea?: XOR<IdeaScalarRelationFilter, IdeaWhereInput>
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    phases?: ResearchPhaseResultListRelationFilter
+  }, "id">
+
+  export type ResearchSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    ideaId?: SortOrder
+    organizationId?: SortOrder
+    depth?: SortOrder
+    status?: SortOrder
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    estimatedCompletion?: SortOrderInput | SortOrder
+    actualCompletion?: SortOrderInput | SortOrder
+    totalCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ResearchSessionCountOrderByAggregateInput
+    _avg?: ResearchSessionAvgOrderByAggregateInput
+    _max?: ResearchSessionMaxOrderByAggregateInput
+    _min?: ResearchSessionMinOrderByAggregateInput
+    _sum?: ResearchSessionSumOrderByAggregateInput
+  }
+
+  export type ResearchSessionScalarWhereWithAggregatesInput = {
+    AND?: ResearchSessionScalarWhereWithAggregatesInput | ResearchSessionScalarWhereWithAggregatesInput[]
+    OR?: ResearchSessionScalarWhereWithAggregatesInput[]
+    NOT?: ResearchSessionScalarWhereWithAggregatesInput | ResearchSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ResearchSession"> | string
+    ideaId?: StringWithAggregatesFilter<"ResearchSession"> | string
+    organizationId?: StringWithAggregatesFilter<"ResearchSession"> | string
+    depth?: EnumResearchDepthWithAggregatesFilter<"ResearchSession"> | $Enums.ResearchDepth
+    status?: EnumResearchStatusWithAggregatesFilter<"ResearchSession"> | $Enums.ResearchStatus
+    currentPhaseIndex?: IntWithAggregatesFilter<"ResearchSession"> | number
+    overallConfidence?: FloatWithAggregatesFilter<"ResearchSession"> | number
+    estimatedCompletion?: DateTimeNullableWithAggregatesFilter<"ResearchSession"> | Date | string | null
+    actualCompletion?: DateTimeNullableWithAggregatesFilter<"ResearchSession"> | Date | string | null
+    totalCost?: FloatWithAggregatesFilter<"ResearchSession"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"ResearchSession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ResearchSession"> | Date | string
+  }
+
+  export type ResearchPhaseResultWhereInput = {
+    AND?: ResearchPhaseResultWhereInput | ResearchPhaseResultWhereInput[]
+    OR?: ResearchPhaseResultWhereInput[]
+    NOT?: ResearchPhaseResultWhereInput | ResearchPhaseResultWhereInput[]
+    id?: StringFilter<"ResearchPhaseResult"> | string
+    sessionId?: StringFilter<"ResearchPhaseResult"> | string
+    phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
+    findings?: JsonFilter<"ResearchPhaseResult">
+    confidence?: FloatFilter<"ResearchPhaseResult"> | number
+    duration?: IntFilter<"ResearchPhaseResult"> | number
+    iterations?: IntFilter<"ResearchPhaseResult"> | number
+    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
+    createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+    session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
+  }
+
+  export type ResearchPhaseResultOrderByWithRelationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    phaseName?: SortOrder
+    status?: SortOrder
+    findings?: SortOrder
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    session?: ResearchSessionOrderByWithRelationInput
+  }
+
+  export type ResearchPhaseResultWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ResearchPhaseResultWhereInput | ResearchPhaseResultWhereInput[]
+    OR?: ResearchPhaseResultWhereInput[]
+    NOT?: ResearchPhaseResultWhereInput | ResearchPhaseResultWhereInput[]
+    sessionId?: StringFilter<"ResearchPhaseResult"> | string
+    phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
+    findings?: JsonFilter<"ResearchPhaseResult">
+    confidence?: FloatFilter<"ResearchPhaseResult"> | number
+    duration?: IntFilter<"ResearchPhaseResult"> | number
+    iterations?: IntFilter<"ResearchPhaseResult"> | number
+    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
+    createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+    session?: XOR<ResearchSessionScalarRelationFilter, ResearchSessionWhereInput>
+  }, "id">
+
+  export type ResearchPhaseResultOrderByWithAggregationInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    phaseName?: SortOrder
+    status?: SortOrder
+    findings?: SortOrder
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+    startedAt?: SortOrderInput | SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ResearchPhaseResultCountOrderByAggregateInput
+    _avg?: ResearchPhaseResultAvgOrderByAggregateInput
+    _max?: ResearchPhaseResultMaxOrderByAggregateInput
+    _min?: ResearchPhaseResultMinOrderByAggregateInput
+    _sum?: ResearchPhaseResultSumOrderByAggregateInput
+  }
+
+  export type ResearchPhaseResultScalarWhereWithAggregatesInput = {
+    AND?: ResearchPhaseResultScalarWhereWithAggregatesInput | ResearchPhaseResultScalarWhereWithAggregatesInput[]
+    OR?: ResearchPhaseResultScalarWhereWithAggregatesInput[]
+    NOT?: ResearchPhaseResultScalarWhereWithAggregatesInput | ResearchPhaseResultScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ResearchPhaseResult"> | string
+    sessionId?: StringWithAggregatesFilter<"ResearchPhaseResult"> | string
+    phaseName?: EnumResearchPhaseTypeWithAggregatesFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusWithAggregatesFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
+    findings?: JsonWithAggregatesFilter<"ResearchPhaseResult">
+    confidence?: FloatWithAggregatesFilter<"ResearchPhaseResult"> | number
+    duration?: IntWithAggregatesFilter<"ResearchPhaseResult"> | number
+    iterations?: IntWithAggregatesFilter<"ResearchPhaseResult"> | number
+    startedAt?: DateTimeNullableWithAggregatesFilter<"ResearchPhaseResult"> | Date | string | null
+    completedAt?: DateTimeNullableWithAggregatesFilter<"ResearchPhaseResult"> | Date | string | null
+    error?: StringNullableWithAggregatesFilter<"ResearchPhaseResult"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ResearchPhaseResult"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ResearchPhaseResult"> | Date | string
+  }
+
   export type UserCreateInput = {
     id: string
     name: string
@@ -61003,6 +64075,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -61035,6 +64108,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -61067,6 +64141,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -61099,6 +64174,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -61648,6 +64724,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -61668,6 +64745,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -61688,6 +64766,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -61708,6 +64787,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -64680,6 +67760,224 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ResearchSessionCreateInput = {
+    id?: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea: IdeaCreateNestedOneWithoutResearchSessionsInput
+    organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
+    phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionUncheckedCreateInput = {
+    id?: string
+    ideaId: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
+    phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionCreateManyInput = {
+    id?: string
+    ideaId: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultCreateInput = {
+    id?: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    session: ResearchSessionCreateNestedOneWithoutPhasesInput
+  }
+
+  export type ResearchPhaseResultUncheckedCreateInput = {
+    id?: string
+    sessionId: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchPhaseResultUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    session?: ResearchSessionUpdateOneRequiredWithoutPhasesNestedInput
+  }
+
+  export type ResearchPhaseResultUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultCreateManyInput = {
+    id?: string
+    sessionId: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchPhaseResultUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -65217,6 +68515,12 @@ export namespace Prisma {
     none?: ResearchResultsWhereInput
   }
 
+  export type ResearchSessionListRelationFilter = {
+    every?: ResearchSessionWhereInput
+    some?: ResearchSessionWhereInput
+    none?: ResearchSessionWhereInput
+  }
+
   export type SubscriptionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -65254,6 +68558,10 @@ export namespace Prisma {
   }
 
   export type ResearchResultsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ResearchSessionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -67527,6 +70835,231 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumResearchDepthFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchDepthFilter<$PrismaModel> | $Enums.ResearchDepth
+  }
+
+  export type EnumResearchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchStatus | EnumResearchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchStatusFilter<$PrismaModel> | $Enums.ResearchStatus
+  }
+
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type ResearchPhaseResultListRelationFilter = {
+    every?: ResearchPhaseResultWhereInput
+    some?: ResearchPhaseResultWhereInput
+    none?: ResearchPhaseResultWhereInput
+  }
+
+  export type ResearchPhaseResultOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ResearchSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    ideaId?: SortOrder
+    organizationId?: SortOrder
+    depth?: SortOrder
+    status?: SortOrder
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    estimatedCompletion?: SortOrder
+    actualCompletion?: SortOrder
+    totalCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchSessionAvgOrderByAggregateInput = {
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type ResearchSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ideaId?: SortOrder
+    organizationId?: SortOrder
+    depth?: SortOrder
+    status?: SortOrder
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    estimatedCompletion?: SortOrder
+    actualCompletion?: SortOrder
+    totalCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    ideaId?: SortOrder
+    organizationId?: SortOrder
+    depth?: SortOrder
+    status?: SortOrder
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    estimatedCompletion?: SortOrder
+    actualCompletion?: SortOrder
+    totalCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchSessionSumOrderByAggregateInput = {
+    currentPhaseIndex?: SortOrder
+    overallConfidence?: SortOrder
+    totalCost?: SortOrder
+  }
+
+  export type EnumResearchDepthWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchDepthWithAggregatesFilter<$PrismaModel> | $Enums.ResearchDepth
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchDepthFilter<$PrismaModel>
+    _max?: NestedEnumResearchDepthFilter<$PrismaModel>
+  }
+
+  export type EnumResearchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchStatus | EnumResearchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchStatusWithAggregatesFilter<$PrismaModel> | $Enums.ResearchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchStatusFilter<$PrismaModel>
+    _max?: NestedEnumResearchStatusFilter<$PrismaModel>
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type EnumResearchPhaseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchPhaseType | EnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchPhaseTypeFilter<$PrismaModel> | $Enums.ResearchPhaseType
+  }
+
+  export type EnumPhaseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PhaseStatus | EnumPhaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPhaseStatusFilter<$PrismaModel> | $Enums.PhaseStatus
+  }
+
+  export type ResearchSessionScalarRelationFilter = {
+    is?: ResearchSessionWhereInput
+    isNot?: ResearchSessionWhereInput
+  }
+
+  export type ResearchPhaseResultCountOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    phaseName?: SortOrder
+    status?: SortOrder
+    findings?: SortOrder
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchPhaseResultAvgOrderByAggregateInput = {
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+  }
+
+  export type ResearchPhaseResultMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    phaseName?: SortOrder
+    status?: SortOrder
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchPhaseResultMinOrderByAggregateInput = {
+    id?: SortOrder
+    sessionId?: SortOrder
+    phaseName?: SortOrder
+    status?: SortOrder
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ResearchPhaseResultSumOrderByAggregateInput = {
+    confidence?: SortOrder
+    duration?: SortOrder
+    iterations?: SortOrder
+  }
+
+  export type EnumResearchPhaseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchPhaseType | EnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchPhaseTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResearchPhaseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchPhaseTypeFilter<$PrismaModel>
+    _max?: NestedEnumResearchPhaseTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPhaseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PhaseStatus | EnumPhaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPhaseStatusWithAggregatesFilter<$PrismaModel> | $Enums.PhaseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPhaseStatusFilter<$PrismaModel>
+    _max?: NestedEnumPhaseStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -68490,6 +72023,13 @@ export namespace Prisma {
     connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
   }
 
+  export type ResearchSessionCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput> | ResearchSessionCreateWithoutOrganizationInput[] | ResearchSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutOrganizationInput | ResearchSessionCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ResearchSessionCreateManyOrganizationInputEnvelope
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -68649,6 +72189,13 @@ export namespace Prisma {
     connectOrCreate?: ResearchResultsCreateOrConnectWithoutOrganizationInput | ResearchResultsCreateOrConnectWithoutOrganizationInput[]
     createMany?: ResearchResultsCreateManyOrganizationInputEnvelope
     connect?: ResearchResultsWhereUniqueInput | ResearchResultsWhereUniqueInput[]
+  }
+
+  export type ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput> | ResearchSessionCreateWithoutOrganizationInput[] | ResearchSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutOrganizationInput | ResearchSessionCreateOrConnectWithoutOrganizationInput[]
+    createMany?: ResearchSessionCreateManyOrganizationInputEnvelope
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
   }
 
   export type MemberUpdateManyWithoutOrganizationNestedInput = {
@@ -68973,6 +72520,20 @@ export namespace Prisma {
     deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
   }
 
+  export type ResearchSessionUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput> | ResearchSessionCreateWithoutOrganizationInput[] | ResearchSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutOrganizationInput | ResearchSessionCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput | ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ResearchSessionCreateManyOrganizationInputEnvelope
+    set?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    disconnect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    delete?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    update?: ResearchSessionUpdateWithWhereUniqueWithoutOrganizationInput | ResearchSessionUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ResearchSessionUpdateManyWithWhereWithoutOrganizationInput | ResearchSessionUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
+  }
+
   export type MemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<MemberCreateWithoutOrganizationInput, MemberUncheckedCreateWithoutOrganizationInput> | MemberCreateWithoutOrganizationInput[] | MemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutOrganizationInput | MemberCreateOrConnectWithoutOrganizationInput[]
@@ -69293,6 +72854,20 @@ export namespace Prisma {
     update?: ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput | ResearchResultsUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: ResearchResultsUpdateManyWithWhereWithoutOrganizationInput | ResearchResultsUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: ResearchResultsScalarWhereInput | ResearchResultsScalarWhereInput[]
+  }
+
+  export type ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput> | ResearchSessionCreateWithoutOrganizationInput[] | ResearchSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutOrganizationInput | ResearchSessionCreateOrConnectWithoutOrganizationInput[]
+    upsert?: ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput | ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: ResearchSessionCreateManyOrganizationInputEnvelope
+    set?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    disconnect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    delete?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    update?: ResearchSessionUpdateWithWhereUniqueWithoutOrganizationInput | ResearchSessionUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: ResearchSessionUpdateManyWithWhereWithoutOrganizationInput | ResearchSessionUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
   }
 
   export type OrganizationCreateNestedOneWithoutMembersInput = {
@@ -69759,6 +73334,13 @@ export namespace Prisma {
     connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
   }
 
+  export type ResearchSessionCreateNestedManyWithoutIdeaInput = {
+    create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
+    createMany?: ResearchSessionCreateManyIdeaInputEnvelope
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+  }
+
   export type CompetitorCreateNestedManyWithoutIdeaInput = {
     create?: XOR<CompetitorCreateWithoutIdeaInput, CompetitorUncheckedCreateWithoutIdeaInput> | CompetitorCreateWithoutIdeaInput[] | CompetitorUncheckedCreateWithoutIdeaInput[]
     connectOrCreate?: CompetitorCreateOrConnectWithoutIdeaInput | CompetitorCreateOrConnectWithoutIdeaInput[]
@@ -69778,6 +73360,13 @@ export namespace Prisma {
     connectOrCreate?: MarketResearchCreateOrConnectWithoutIdeaInput | MarketResearchCreateOrConnectWithoutIdeaInput[]
     createMany?: MarketResearchCreateManyIdeaInputEnvelope
     connect?: MarketResearchWhereUniqueInput | MarketResearchWhereUniqueInput[]
+  }
+
+  export type ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput = {
+    create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
+    createMany?: ResearchSessionCreateManyIdeaInputEnvelope
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
   }
 
   export type CompetitorUncheckedCreateNestedManyWithoutIdeaInput = {
@@ -69845,6 +73434,20 @@ export namespace Prisma {
     deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
   }
 
+  export type ResearchSessionUpdateManyWithoutIdeaNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
+    upsert?: ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput | ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput[]
+    createMany?: ResearchSessionCreateManyIdeaInputEnvelope
+    set?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    disconnect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    delete?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    update?: ResearchSessionUpdateWithWhereUniqueWithoutIdeaInput | ResearchSessionUpdateWithWhereUniqueWithoutIdeaInput[]
+    updateMany?: ResearchSessionUpdateManyWithWhereWithoutIdeaInput | ResearchSessionUpdateManyWithWhereWithoutIdeaInput[]
+    deleteMany?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
+  }
+
   export type CompetitorUpdateManyWithoutIdeaNestedInput = {
     create?: XOR<CompetitorCreateWithoutIdeaInput, CompetitorUncheckedCreateWithoutIdeaInput> | CompetitorCreateWithoutIdeaInput[] | CompetitorUncheckedCreateWithoutIdeaInput[]
     connectOrCreate?: CompetitorCreateOrConnectWithoutIdeaInput | CompetitorCreateOrConnectWithoutIdeaInput[]
@@ -69885,6 +73488,20 @@ export namespace Prisma {
     update?: MarketResearchUpdateWithWhereUniqueWithoutIdeaInput | MarketResearchUpdateWithWhereUniqueWithoutIdeaInput[]
     updateMany?: MarketResearchUpdateManyWithWhereWithoutIdeaInput | MarketResearchUpdateManyWithWhereWithoutIdeaInput[]
     deleteMany?: MarketResearchScalarWhereInput | MarketResearchScalarWhereInput[]
+  }
+
+  export type ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput> | ResearchSessionCreateWithoutIdeaInput[] | ResearchSessionUncheckedCreateWithoutIdeaInput[]
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutIdeaInput | ResearchSessionCreateOrConnectWithoutIdeaInput[]
+    upsert?: ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput | ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput[]
+    createMany?: ResearchSessionCreateManyIdeaInputEnvelope
+    set?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    disconnect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    delete?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    connect?: ResearchSessionWhereUniqueInput | ResearchSessionWhereUniqueInput[]
+    update?: ResearchSessionUpdateWithWhereUniqueWithoutIdeaInput | ResearchSessionUpdateWithWhereUniqueWithoutIdeaInput[]
+    updateMany?: ResearchSessionUpdateManyWithWhereWithoutIdeaInput | ResearchSessionUpdateManyWithWhereWithoutIdeaInput[]
+    deleteMany?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
   }
 
   export type CompetitorUncheckedUpdateManyWithoutIdeaNestedInput = {
@@ -72421,6 +76038,114 @@ export namespace Prisma {
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutReferralsInput, OrganizationUpdateWithoutReferralsInput>, OrganizationUncheckedUpdateWithoutReferralsInput>
   }
 
+  export type IdeaCreateNestedOneWithoutResearchSessionsInput = {
+    create?: XOR<IdeaCreateWithoutResearchSessionsInput, IdeaUncheckedCreateWithoutResearchSessionsInput>
+    connectOrCreate?: IdeaCreateOrConnectWithoutResearchSessionsInput
+    connect?: IdeaWhereUniqueInput
+  }
+
+  export type OrganizationCreateNestedOneWithoutResearchSessionsInput = {
+    create?: XOR<OrganizationCreateWithoutResearchSessionsInput, OrganizationUncheckedCreateWithoutResearchSessionsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutResearchSessionsInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type ResearchPhaseResultCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
+    createMany?: ResearchPhaseResultCreateManySessionInputEnvelope
+    connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+  }
+
+  export type ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
+    createMany?: ResearchPhaseResultCreateManySessionInputEnvelope
+    connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+  }
+
+  export type EnumResearchDepthFieldUpdateOperationsInput = {
+    set?: $Enums.ResearchDepth
+  }
+
+  export type EnumResearchStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ResearchStatus
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput = {
+    create?: XOR<IdeaCreateWithoutResearchSessionsInput, IdeaUncheckedCreateWithoutResearchSessionsInput>
+    connectOrCreate?: IdeaCreateOrConnectWithoutResearchSessionsInput
+    upsert?: IdeaUpsertWithoutResearchSessionsInput
+    connect?: IdeaWhereUniqueInput
+    update?: XOR<XOR<IdeaUpdateToOneWithWhereWithoutResearchSessionsInput, IdeaUpdateWithoutResearchSessionsInput>, IdeaUncheckedUpdateWithoutResearchSessionsInput>
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput = {
+    create?: XOR<OrganizationCreateWithoutResearchSessionsInput, OrganizationUncheckedCreateWithoutResearchSessionsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutResearchSessionsInput
+    upsert?: OrganizationUpsertWithoutResearchSessionsInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutResearchSessionsInput, OrganizationUpdateWithoutResearchSessionsInput>, OrganizationUncheckedUpdateWithoutResearchSessionsInput>
+  }
+
+  export type ResearchPhaseResultUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
+    upsert?: ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput | ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ResearchPhaseResultCreateManySessionInputEnvelope
+    set?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    disconnect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    delete?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    update?: ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput | ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput | ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
+  }
+
+  export type ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput> | ResearchPhaseResultCreateWithoutSessionInput[] | ResearchPhaseResultUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: ResearchPhaseResultCreateOrConnectWithoutSessionInput | ResearchPhaseResultCreateOrConnectWithoutSessionInput[]
+    upsert?: ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput | ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: ResearchPhaseResultCreateManySessionInputEnvelope
+    set?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    disconnect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    delete?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    connect?: ResearchPhaseResultWhereUniqueInput | ResearchPhaseResultWhereUniqueInput[]
+    update?: ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput | ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput | ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
+  }
+
+  export type ResearchSessionCreateNestedOneWithoutPhasesInput = {
+    create?: XOR<ResearchSessionCreateWithoutPhasesInput, ResearchSessionUncheckedCreateWithoutPhasesInput>
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutPhasesInput
+    connect?: ResearchSessionWhereUniqueInput
+  }
+
+  export type EnumResearchPhaseTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ResearchPhaseType
+  }
+
+  export type EnumPhaseStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PhaseStatus
+  }
+
+  export type ResearchSessionUpdateOneRequiredWithoutPhasesNestedInput = {
+    create?: XOR<ResearchSessionCreateWithoutPhasesInput, ResearchSessionUncheckedCreateWithoutPhasesInput>
+    connectOrCreate?: ResearchSessionCreateOrConnectWithoutPhasesInput
+    upsert?: ResearchSessionUpsertWithoutPhasesInput
+    connect?: ResearchSessionWhereUniqueInput
+    update?: XOR<XOR<ResearchSessionUpdateToOneWithWhereWithoutPhasesInput, ResearchSessionUpdateWithoutPhasesInput>, ResearchSessionUncheckedUpdateWithoutPhasesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -73014,6 +76739,90 @@ export namespace Prisma {
     _max?: NestedEnumResearchTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumResearchDepthFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchDepthFilter<$PrismaModel> | $Enums.ResearchDepth
+  }
+
+  export type NestedEnumResearchStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchStatus | EnumResearchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchStatusFilter<$PrismaModel> | $Enums.ResearchStatus
+  }
+
+  export type NestedEnumResearchDepthWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchDepth | EnumResearchDepthFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchDepth[] | ListEnumResearchDepthFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchDepthWithAggregatesFilter<$PrismaModel> | $Enums.ResearchDepth
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchDepthFilter<$PrismaModel>
+    _max?: NestedEnumResearchDepthFilter<$PrismaModel>
+  }
+
+  export type NestedEnumResearchStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchStatus | EnumResearchStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchStatus[] | ListEnumResearchStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchStatusWithAggregatesFilter<$PrismaModel> | $Enums.ResearchStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchStatusFilter<$PrismaModel>
+    _max?: NestedEnumResearchStatusFilter<$PrismaModel>
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumResearchPhaseTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchPhaseType | EnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchPhaseTypeFilter<$PrismaModel> | $Enums.ResearchPhaseType
+  }
+
+  export type NestedEnumPhaseStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PhaseStatus | EnumPhaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPhaseStatusFilter<$PrismaModel> | $Enums.PhaseStatus
+  }
+
+  export type NestedEnumResearchPhaseTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ResearchPhaseType | EnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ResearchPhaseType[] | ListEnumResearchPhaseTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumResearchPhaseTypeWithAggregatesFilter<$PrismaModel> | $Enums.ResearchPhaseType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumResearchPhaseTypeFilter<$PrismaModel>
+    _max?: NestedEnumResearchPhaseTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPhaseStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PhaseStatus | EnumPhaseStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PhaseStatus[] | ListEnumPhaseStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPhaseStatusWithAggregatesFilter<$PrismaModel> | $Enums.PhaseStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPhaseStatusFilter<$PrismaModel>
+    _max?: NestedEnumPhaseStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -73299,6 +77108,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -73318,6 +77128,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -74753,6 +78564,7 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -74772,6 +78584,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -75435,6 +79248,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ResearchSessionCreateWithoutOrganizationInput = {
+    id?: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea: IdeaCreateNestedOneWithoutResearchSessionsInput
+    phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    ideaId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionCreateOrConnectWithoutOrganizationInput = {
+    where: ResearchSessionWhereUniqueInput
+    create: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ResearchSessionCreateManyOrganizationInputEnvelope = {
+    data: ResearchSessionCreateManyOrganizationInput | ResearchSessionCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MemberUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: MemberWhereUniqueInput
     update: XOR<MemberUpdateWithoutOrganizationInput, MemberUncheckedUpdateWithoutOrganizationInput>
@@ -75932,6 +79785,40 @@ export namespace Prisma {
     marketResearchId?: StringFilter<"ResearchResults"> | string
   }
 
+  export type ResearchSessionUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: ResearchSessionWhereUniqueInput
+    update: XOR<ResearchSessionUpdateWithoutOrganizationInput, ResearchSessionUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<ResearchSessionCreateWithoutOrganizationInput, ResearchSessionUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type ResearchSessionUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: ResearchSessionWhereUniqueInput
+    data: XOR<ResearchSessionUpdateWithoutOrganizationInput, ResearchSessionUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type ResearchSessionUpdateManyWithWhereWithoutOrganizationInput = {
+    where: ResearchSessionScalarWhereInput
+    data: XOR<ResearchSessionUpdateManyMutationInput, ResearchSessionUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type ResearchSessionScalarWhereInput = {
+    AND?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
+    OR?: ResearchSessionScalarWhereInput[]
+    NOT?: ResearchSessionScalarWhereInput | ResearchSessionScalarWhereInput[]
+    id?: StringFilter<"ResearchSession"> | string
+    ideaId?: StringFilter<"ResearchSession"> | string
+    organizationId?: StringFilter<"ResearchSession"> | string
+    depth?: EnumResearchDepthFilter<"ResearchSession"> | $Enums.ResearchDepth
+    status?: EnumResearchStatusFilter<"ResearchSession"> | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFilter<"ResearchSession"> | number
+    overallConfidence?: FloatFilter<"ResearchSession"> | number
+    estimatedCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    actualCompletion?: DateTimeNullableFilter<"ResearchSession"> | Date | string | null
+    totalCost?: FloatFilter<"ResearchSession"> | number
+    createdAt?: DateTimeFilter<"ResearchSession"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchSession"> | Date | string
+  }
+
   export type OrganizationCreateWithoutMembersInput = {
     id?: string
     name: string
@@ -75961,6 +79848,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -75992,6 +79880,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -76102,6 +79991,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -76133,6 +80023,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMembersInput = {
@@ -76233,6 +80124,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutInvitationsInput = {
@@ -76264,6 +80156,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutInvitationsInput = {
@@ -76374,6 +80267,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutInvitationsInput = {
@@ -76405,6 +80299,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutInvitationsInput = {
@@ -76769,6 +80664,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -76800,6 +80696,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -76910,6 +80807,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -76941,6 +80839,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutSubscriptionInput = {
@@ -77028,6 +80927,7 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -77047,6 +80947,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -77084,6 +80985,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutProjectInput = {
@@ -77115,6 +81017,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutProjectInput = {
@@ -77520,6 +81423,7 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -77539,6 +81443,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -77582,6 +81487,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutProjectInput = {
@@ -77613,6 +81519,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithWhereUniqueWithoutProjectInput = {
@@ -77888,6 +81795,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIdeaInput = {
@@ -77919,6 +81827,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIdeaInput = {
@@ -78017,6 +81926,46 @@ export namespace Prisma {
 
   export type MarketResearchCreateManyIdeaInputEnvelope = {
     data: MarketResearchCreateManyIdeaInput | MarketResearchCreateManyIdeaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ResearchSessionCreateWithoutIdeaInput = {
+    id?: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
+    phases?: ResearchPhaseResultCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionUncheckedCreateWithoutIdeaInput = {
+    id?: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    phases?: ResearchPhaseResultUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type ResearchSessionCreateOrConnectWithoutIdeaInput = {
+    where: ResearchSessionWhereUniqueInput
+    create: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput>
+  }
+
+  export type ResearchSessionCreateManyIdeaInputEnvelope = {
+    data: ResearchSessionCreateManyIdeaInput | ResearchSessionCreateManyIdeaInput[]
     skipDuplicates?: boolean
   }
 
@@ -78185,6 +82134,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIdeaInput = {
@@ -78216,6 +82166,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -78248,6 +82199,22 @@ export namespace Prisma {
   export type MarketResearchUpdateManyWithWhereWithoutIdeaInput = {
     where: MarketResearchScalarWhereInput
     data: XOR<MarketResearchUpdateManyMutationInput, MarketResearchUncheckedUpdateManyWithoutIdeaInput>
+  }
+
+  export type ResearchSessionUpsertWithWhereUniqueWithoutIdeaInput = {
+    where: ResearchSessionWhereUniqueInput
+    update: XOR<ResearchSessionUpdateWithoutIdeaInput, ResearchSessionUncheckedUpdateWithoutIdeaInput>
+    create: XOR<ResearchSessionCreateWithoutIdeaInput, ResearchSessionUncheckedCreateWithoutIdeaInput>
+  }
+
+  export type ResearchSessionUpdateWithWhereUniqueWithoutIdeaInput = {
+    where: ResearchSessionWhereUniqueInput
+    data: XOR<ResearchSessionUpdateWithoutIdeaInput, ResearchSessionUncheckedUpdateWithoutIdeaInput>
+  }
+
+  export type ResearchSessionUpdateManyWithWhereWithoutIdeaInput = {
+    where: ResearchSessionScalarWhereInput
+    data: XOR<ResearchSessionUpdateManyMutationInput, ResearchSessionUncheckedUpdateManyWithoutIdeaInput>
   }
 
   export type CompetitorUpsertWithWhereUniqueWithoutIdeaInput = {
@@ -78321,6 +82288,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueInput = {
@@ -78352,6 +82320,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueInput = {
@@ -78877,6 +82846,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueInput = {
@@ -78908,6 +82878,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ProjectUpsertWithoutIssuesInput = {
@@ -79351,6 +83322,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueDependencyInput = {
@@ -79382,6 +83354,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueDependencyInput = {
@@ -79543,6 +83516,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueDependencyInput = {
@@ -79574,6 +83548,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithoutDependenciesInput = {
@@ -79731,6 +83706,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIssueLinkInput = {
@@ -79762,6 +83738,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIssueLinkInput = {
@@ -79866,6 +83843,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIssueLinkInput = {
@@ -79897,6 +83875,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IssueUpsertWithoutLinksInput = {
@@ -80046,6 +84025,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetInput = {
@@ -80077,6 +84057,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetInput = {
@@ -80308,6 +84289,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetInput = {
@@ -80339,6 +84321,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetInput = {
@@ -80471,6 +84454,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutApiKeyInput = {
@@ -80502,6 +84486,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutApiKeyInput = {
@@ -80549,6 +84534,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutApiKeyInput = {
@@ -80580,6 +84566,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutActivityFeedInput = {
@@ -80611,6 +84598,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutActivityFeedInput = {
@@ -80642,6 +84630,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutActivityFeedInput = {
@@ -80752,6 +84741,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutActivityFeedInput = {
@@ -80783,6 +84773,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutActivityFeedInput = {
@@ -82692,6 +86683,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIntegrationInput = {
@@ -82723,6 +86715,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIntegrationInput = {
@@ -82863,6 +86856,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIntegrationInput = {
@@ -82894,6 +86888,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutIntegrationInput = {
@@ -83143,6 +87138,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWaitlistInput = {
@@ -83174,6 +87170,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWaitlistInput = {
@@ -83433,6 +87430,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWaitlistInput = {
@@ -83464,6 +87462,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutWaitlistInput = {
@@ -83874,6 +87873,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureInput = {
@@ -83905,6 +87905,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureInput = {
@@ -84388,6 +88389,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureInput = {
@@ -84419,6 +88421,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutFeatureInput = {
@@ -84721,6 +88724,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureDependencyInput = {
@@ -84752,6 +88756,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureDependencyInput = {
@@ -84909,6 +88914,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureDependencyInput = {
@@ -84940,6 +88946,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutDependenciesInput = {
@@ -85093,6 +89100,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFeatureLinkInput = {
@@ -85124,6 +89132,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFeatureLinkInput = {
@@ -85226,6 +89235,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFeatureLinkInput = {
@@ -85257,6 +89267,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type FeatureUpsertWithoutFeatureLinkInput = {
@@ -85404,6 +89415,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMilestoneInput = {
@@ -85435,6 +89447,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMilestoneInput = {
@@ -85776,6 +89789,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMilestoneInput = {
@@ -85807,6 +89821,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutMilestoneInput = {
@@ -85971,6 +89986,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMilestoneDependencyInput = {
@@ -86002,6 +90018,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMilestoneDependencyInput = {
@@ -86127,6 +90144,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMilestoneDependencyInput = {
@@ -86158,6 +90176,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type MilestoneUpsertWithoutDependsOnInput = {
@@ -86266,6 +90285,7 @@ export namespace Prisma {
     owner?: UserCreateNestedOneWithoutIdeaInput
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
   }
 
@@ -86285,6 +90305,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
     Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
   }
 
@@ -86322,6 +90343,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMarketResearchInput = {
@@ -86353,6 +90375,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMarketResearchInput = {
@@ -86408,6 +90431,7 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -86427,6 +90451,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -86470,6 +90495,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMarketResearchInput = {
@@ -86501,6 +90527,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type ResearchResultsUpsertWithoutMarketResearchInput = {
@@ -86559,6 +90586,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutResearchResultsInput = {
@@ -86590,6 +90618,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutResearchResultsInput = {
@@ -86666,6 +90695,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutResearchResultsInput = {
@@ -86697,6 +90727,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type MarketResearchUpsertWithoutResearchResultsInput = {
@@ -86751,6 +90782,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutIdeaInput
     projects?: ProjectCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutIdeaInput
   }
 
   export type IdeaUncheckedCreateWithoutCompetitorInput = {
@@ -86770,6 +90802,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
     marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutIdeaInput
   }
 
   export type IdeaCreateOrConnectWithoutCompetitorInput = {
@@ -86855,6 +90888,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
   }
 
   export type IdeaUncheckedUpdateWithoutCompetitorInput = {
@@ -86874,6 +90908,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
   export type CompetitiveMoveUpsertWithWhereUniqueWithoutCompetitorInput = {
@@ -87104,6 +91139,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetViewsInput = {
@@ -87135,6 +91171,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetViewsInput = {
@@ -87302,6 +91339,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetViewsInput = {
@@ -87333,6 +91371,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetViewsInput = {
@@ -87484,6 +91523,7 @@ export namespace Prisma {
     referrals?: ReferralCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutAssetDownloadsInput = {
@@ -87515,6 +91555,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutAssetDownloadsInput = {
@@ -87682,6 +91723,7 @@ export namespace Prisma {
     referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutAssetDownloadsInput = {
@@ -87713,6 +91755,7 @@ export namespace Prisma {
     referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type UserUpsertWithoutAssetDownloadsInput = {
@@ -87903,6 +91946,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutReferralsInput = {
@@ -87934,6 +91978,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
     ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
     ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+    researchSessions?: ResearchSessionUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutReferralsInput = {
@@ -88083,6 +92128,7 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutReferralsInput = {
@@ -88114,6 +92160,398 @@ export namespace Prisma {
     assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
     ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type IdeaCreateWithoutResearchSessionsInput = {
+    id?: string
+    name: string
+    description: string
+    industry: string
+    internal: boolean
+    openSource: boolean
+    status: $Enums.IdeaStatus
+    aiOverallValidation?: number | null
+    problemSolved?: string | null
+    solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner?: UserCreateNestedOneWithoutIdeaInput
+    organization: OrganizationCreateNestedOneWithoutIdeaInput
+    projects?: ProjectCreateNestedManyWithoutIdeaInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutIdeaInput
+    Competitor?: CompetitorCreateNestedManyWithoutIdeaInput
+  }
+
+  export type IdeaUncheckedCreateWithoutResearchSessionsInput = {
+    id?: string
+    name: string
+    description: string
+    industry: string
+    ownerId?: string | null
+    organizationId: string
+    internal: boolean
+    openSource: boolean
+    status: $Enums.IdeaStatus
+    aiOverallValidation?: number | null
+    problemSolved?: string | null
+    solutionOffered?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projects?: ProjectUncheckedCreateNestedManyWithoutIdeaInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutIdeaInput
+    Competitor?: CompetitorUncheckedCreateNestedManyWithoutIdeaInput
+  }
+
+  export type IdeaCreateOrConnectWithoutResearchSessionsInput = {
+    where: IdeaWhereUniqueInput
+    create: XOR<IdeaCreateWithoutResearchSessionsInput, IdeaUncheckedCreateWithoutResearchSessionsInput>
+  }
+
+  export type OrganizationCreateWithoutResearchSessionsInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedManyWithoutOrganizationInput
+    project?: ProjectCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaCreateNestedManyWithoutOrganizationInput
+    issue?: IssueCreateNestedManyWithoutOrganizationInput
+    asset?: AssetCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkCreateNestedManyWithoutOrganizationInput
+    marketResearch?: MarketResearchCreateNestedManyWithoutOrganizationInput
+    assetViews?: AssetViewCreateNestedManyWithoutOrganizationInput
+    assetDownloads?: AssetDownloadCreateNestedManyWithoutOrganizationInput
+    referrals?: ReferralCreateNestedManyWithoutOrganizationInput
+    ApiKey?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    ResearchResults?: ResearchResultsCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutResearchSessionsInput = {
+    id?: string
+    name: string
+    slug?: string | null
+    logo?: string | null
+    createdAt?: Date | string
+    metadata?: string | null
+    members?: MemberUncheckedCreateNestedManyWithoutOrganizationInput
+    invitations?: InvitationUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedManyWithoutOrganizationInput
+    project?: ProjectUncheckedCreateNestedManyWithoutOrganizationInput
+    idea?: IdeaUncheckedCreateNestedManyWithoutOrganizationInput
+    issue?: IssueUncheckedCreateNestedManyWithoutOrganizationInput
+    asset?: AssetUncheckedCreateNestedManyWithoutOrganizationInput
+    waitlist?: WaitlistUncheckedCreateNestedManyWithoutOrganizationInput
+    integration?: IntegrationUncheckedCreateNestedManyWithoutOrganizationInput
+    activityFeed?: ActivityFeedUncheckedCreateNestedManyWithoutOrganizationInput
+    feature?: FeatureUncheckedCreateNestedManyWithoutOrganizationInput
+    featureDependency?: FeatureDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    featureLink?: FeatureLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    milestone?: MilestoneUncheckedCreateNestedManyWithoutOrganizationInput
+    milestoneDependency?: MilestoneDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueDependency?: IssueDependencyUncheckedCreateNestedManyWithoutOrganizationInput
+    issueLink?: IssueLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    marketResearch?: MarketResearchUncheckedCreateNestedManyWithoutOrganizationInput
+    assetViews?: AssetViewUncheckedCreateNestedManyWithoutOrganizationInput
+    assetDownloads?: AssetDownloadUncheckedCreateNestedManyWithoutOrganizationInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutOrganizationInput
+    ApiKey?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    ResearchResults?: ResearchResultsUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutResearchSessionsInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutResearchSessionsInput, OrganizationUncheckedCreateWithoutResearchSessionsInput>
+  }
+
+  export type ResearchPhaseResultCreateWithoutSessionInput = {
+    id?: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchPhaseResultUncheckedCreateWithoutSessionInput = {
+    id?: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchPhaseResultCreateOrConnectWithoutSessionInput = {
+    where: ResearchPhaseResultWhereUniqueInput
+    create: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ResearchPhaseResultCreateManySessionInputEnvelope = {
+    data: ResearchPhaseResultCreateManySessionInput | ResearchPhaseResultCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IdeaUpsertWithoutResearchSessionsInput = {
+    update: XOR<IdeaUpdateWithoutResearchSessionsInput, IdeaUncheckedUpdateWithoutResearchSessionsInput>
+    create: XOR<IdeaCreateWithoutResearchSessionsInput, IdeaUncheckedCreateWithoutResearchSessionsInput>
+    where?: IdeaWhereInput
+  }
+
+  export type IdeaUpdateToOneWithWhereWithoutResearchSessionsInput = {
+    where?: IdeaWhereInput
+    data: XOR<IdeaUpdateWithoutResearchSessionsInput, IdeaUncheckedUpdateWithoutResearchSessionsInput>
+  }
+
+  export type IdeaUpdateWithoutResearchSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    industry?: StringFieldUpdateOperationsInput | string
+    internal?: BoolFieldUpdateOperationsInput | boolean
+    openSource?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
+    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
+    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneWithoutIdeaNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
+    projects?: ProjectUpdateManyWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
+  }
+
+  export type IdeaUncheckedUpdateWithoutResearchSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    industry?: StringFieldUpdateOperationsInput | string
+    ownerId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    internal?: BoolFieldUpdateOperationsInput | boolean
+    openSource?: BoolFieldUpdateOperationsInput | boolean
+    status?: EnumIdeaStatusFieldUpdateOperationsInput | $Enums.IdeaStatus
+    aiOverallValidation?: NullableFloatFieldUpdateOperationsInput | number | null
+    problemSolved?: NullableStringFieldUpdateOperationsInput | string | null
+    solutionOffered?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
+  }
+
+  export type OrganizationUpsertWithoutResearchSessionsInput = {
+    update: XOR<OrganizationUpdateWithoutResearchSessionsInput, OrganizationUncheckedUpdateWithoutResearchSessionsInput>
+    create: XOR<OrganizationCreateWithoutResearchSessionsInput, OrganizationUncheckedCreateWithoutResearchSessionsInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutResearchSessionsInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutResearchSessionsInput, OrganizationUncheckedUpdateWithoutResearchSessionsInput>
+  }
+
+  export type OrganizationUpdateWithoutResearchSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUpdateManyWithoutOrganizationNestedInput
+    marketResearch?: MarketResearchUpdateManyWithoutOrganizationNestedInput
+    assetViews?: AssetViewUpdateManyWithoutOrganizationNestedInput
+    assetDownloads?: AssetDownloadUpdateManyWithoutOrganizationNestedInput
+    referrals?: ReferralUpdateManyWithoutOrganizationNestedInput
+    ApiKey?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    ResearchResults?: ResearchResultsUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutResearchSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: NullableStringFieldUpdateOperationsInput | string | null
+    logo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metadata?: NullableStringFieldUpdateOperationsInput | string | null
+    members?: MemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    invitations?: InvitationUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateManyWithoutOrganizationNestedInput
+    project?: ProjectUncheckedUpdateManyWithoutOrganizationNestedInput
+    idea?: IdeaUncheckedUpdateManyWithoutOrganizationNestedInput
+    issue?: IssueUncheckedUpdateManyWithoutOrganizationNestedInput
+    asset?: AssetUncheckedUpdateManyWithoutOrganizationNestedInput
+    waitlist?: WaitlistUncheckedUpdateManyWithoutOrganizationNestedInput
+    integration?: IntegrationUncheckedUpdateManyWithoutOrganizationNestedInput
+    activityFeed?: ActivityFeedUncheckedUpdateManyWithoutOrganizationNestedInput
+    feature?: FeatureUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureDependency?: FeatureDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    featureLink?: FeatureLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestone?: MilestoneUncheckedUpdateManyWithoutOrganizationNestedInput
+    milestoneDependency?: MilestoneDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueDependency?: IssueDependencyUncheckedUpdateManyWithoutOrganizationNestedInput
+    issueLink?: IssueLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    marketResearch?: MarketResearchUncheckedUpdateManyWithoutOrganizationNestedInput
+    assetViews?: AssetViewUncheckedUpdateManyWithoutOrganizationNestedInput
+    assetDownloads?: AssetDownloadUncheckedUpdateManyWithoutOrganizationNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutOrganizationNestedInput
+    ApiKey?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    ResearchResults?: ResearchResultsUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type ResearchPhaseResultUpsertWithWhereUniqueWithoutSessionInput = {
+    where: ResearchPhaseResultWhereUniqueInput
+    update: XOR<ResearchPhaseResultUpdateWithoutSessionInput, ResearchPhaseResultUncheckedUpdateWithoutSessionInput>
+    create: XOR<ResearchPhaseResultCreateWithoutSessionInput, ResearchPhaseResultUncheckedCreateWithoutSessionInput>
+  }
+
+  export type ResearchPhaseResultUpdateWithWhereUniqueWithoutSessionInput = {
+    where: ResearchPhaseResultWhereUniqueInput
+    data: XOR<ResearchPhaseResultUpdateWithoutSessionInput, ResearchPhaseResultUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type ResearchPhaseResultUpdateManyWithWhereWithoutSessionInput = {
+    where: ResearchPhaseResultScalarWhereInput
+    data: XOR<ResearchPhaseResultUpdateManyMutationInput, ResearchPhaseResultUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type ResearchPhaseResultScalarWhereInput = {
+    AND?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
+    OR?: ResearchPhaseResultScalarWhereInput[]
+    NOT?: ResearchPhaseResultScalarWhereInput | ResearchPhaseResultScalarWhereInput[]
+    id?: StringFilter<"ResearchPhaseResult"> | string
+    sessionId?: StringFilter<"ResearchPhaseResult"> | string
+    phaseName?: EnumResearchPhaseTypeFilter<"ResearchPhaseResult"> | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFilter<"ResearchPhaseResult"> | $Enums.PhaseStatus
+    findings?: JsonFilter<"ResearchPhaseResult">
+    confidence?: FloatFilter<"ResearchPhaseResult"> | number
+    duration?: IntFilter<"ResearchPhaseResult"> | number
+    iterations?: IntFilter<"ResearchPhaseResult"> | number
+    startedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    completedAt?: DateTimeNullableFilter<"ResearchPhaseResult"> | Date | string | null
+    error?: StringNullableFilter<"ResearchPhaseResult"> | string | null
+    createdAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+    updatedAt?: DateTimeFilter<"ResearchPhaseResult"> | Date | string
+  }
+
+  export type ResearchSessionCreateWithoutPhasesInput = {
+    id?: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    idea: IdeaCreateNestedOneWithoutResearchSessionsInput
+    organization: OrganizationCreateNestedOneWithoutResearchSessionsInput
+  }
+
+  export type ResearchSessionUncheckedCreateWithoutPhasesInput = {
+    id?: string
+    ideaId: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchSessionCreateOrConnectWithoutPhasesInput = {
+    where: ResearchSessionWhereUniqueInput
+    create: XOR<ResearchSessionCreateWithoutPhasesInput, ResearchSessionUncheckedCreateWithoutPhasesInput>
+  }
+
+  export type ResearchSessionUpsertWithoutPhasesInput = {
+    update: XOR<ResearchSessionUpdateWithoutPhasesInput, ResearchSessionUncheckedUpdateWithoutPhasesInput>
+    create: XOR<ResearchSessionCreateWithoutPhasesInput, ResearchSessionUncheckedCreateWithoutPhasesInput>
+    where?: ResearchSessionWhereInput
+  }
+
+  export type ResearchSessionUpdateToOneWithWhereWithoutPhasesInput = {
+    where?: ResearchSessionWhereInput
+    data: XOR<ResearchSessionUpdateWithoutPhasesInput, ResearchSessionUncheckedUpdateWithoutPhasesInput>
+  }
+
+  export type ResearchSessionUpdateWithoutPhasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateWithoutPhasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionCreateManyUserInput = {
@@ -88616,6 +93054,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -88635,6 +93074,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -89368,6 +93808,20 @@ export namespace Prisma {
     marketResearchId: string
   }
 
+  export type ResearchSessionCreateManyOrganizationInput = {
+    id?: string
+    ideaId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type MemberUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
@@ -89531,6 +93985,7 @@ export namespace Prisma {
     owner?: UserUpdateOneWithoutIdeaNestedInput
     projects?: ProjectUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUpdateManyWithoutIdeaNestedInput
   }
 
@@ -89550,6 +94005,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutIdeaNestedInput
     marketResearch?: MarketResearchUncheckedUpdateManyWithoutIdeaNestedInput
+    researchSessions?: ResearchSessionUncheckedUpdateManyWithoutIdeaNestedInput
     Competitor?: CompetitorUncheckedUpdateManyWithoutIdeaNestedInput
   }
 
@@ -90250,6 +94706,50 @@ export namespace Prisma {
     marketResearchId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ResearchSessionUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    idea?: IdeaUpdateOneRequiredWithoutResearchSessionsNestedInput
+    phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ideaId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IssueCreateManyProjectInput = {
     id?: string
     title: string
@@ -90726,6 +95226,20 @@ export namespace Prisma {
     type?: $Enums.ResearchType
   }
 
+  export type ResearchSessionCreateManyIdeaInput = {
+    id?: string
+    organizationId: string
+    depth: $Enums.ResearchDepth
+    status: $Enums.ResearchStatus
+    currentPhaseIndex?: number
+    overallConfidence?: number
+    estimatedCompletion?: Date | string | null
+    actualCompletion?: Date | string | null
+    totalCost?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CompetitorCreateManyIdeaInput = {
     id?: string
     name: string
@@ -90850,6 +95364,50 @@ export namespace Prisma {
     lastUpdated?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumResearchTypeFieldUpdateOperationsInput | $Enums.ResearchType
+  }
+
+  export type ResearchSessionUpdateWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutResearchSessionsNestedInput
+    phases?: ResearchPhaseResultUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    phases?: ResearchPhaseResultUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type ResearchSessionUncheckedUpdateManyWithoutIdeaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    depth?: EnumResearchDepthFieldUpdateOperationsInput | $Enums.ResearchDepth
+    status?: EnumResearchStatusFieldUpdateOperationsInput | $Enums.ResearchStatus
+    currentPhaseIndex?: IntFieldUpdateOperationsInput | number
+    overallConfidence?: FloatFieldUpdateOperationsInput | number
+    estimatedCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actualCompletion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totalCost?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CompetitorUpdateWithoutIdeaInput = {
@@ -92704,6 +97262,66 @@ export namespace Prisma {
     responseRequired?: BoolFieldUpdateOperationsInput | boolean
     responseStrategy?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultCreateManySessionInput = {
+    id?: string
+    phaseName: $Enums.ResearchPhaseType
+    status: $Enums.PhaseStatus
+    findings: JsonNullValueInput | InputJsonValue
+    confidence?: number
+    duration?: number
+    iterations?: number
+    startedAt?: Date | string | null
+    completedAt?: Date | string | null
+    error?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ResearchPhaseResultUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ResearchPhaseResultUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    phaseName?: EnumResearchPhaseTypeFieldUpdateOperationsInput | $Enums.ResearchPhaseType
+    status?: EnumPhaseStatusFieldUpdateOperationsInput | $Enums.PhaseStatus
+    findings?: JsonNullValueInput | InputJsonValue
+    confidence?: FloatFieldUpdateOperationsInput | number
+    duration?: IntFieldUpdateOperationsInput | number
+    iterations?: IntFieldUpdateOperationsInput | number
+    startedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

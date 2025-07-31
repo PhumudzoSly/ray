@@ -170,7 +170,7 @@ export const saasValidator = inngestClient.createFunction(
         }),
         prisma.researchResults.create({
           data: {
-            researchId,
+            marketResearchId: researchId,
             content: finalResults,
             organizationId: idea.organizationId,
           },
