@@ -4,7 +4,7 @@ export const RESEARCH_DEPTHS = {
   QUICK: {
     maxIterations: 3,
     timeout: 300000, // 5 minutes
-    phases: ["MARKET_SCAN", "COMPETITIVE_OVERVIEW"] as ResearchPhaseType[],
+    phases: ["MARKET_SCAN", "COMPETITIVE_ANALYSIS"] as ResearchPhaseType[],
     aiModel: "gemini-2.0-flash-thinking-exp",
     costEstimate: 0.05,
   },
@@ -13,7 +13,7 @@ export const RESEARCH_DEPTHS = {
     timeout: 600000, // 10 minutes
     phases: [
       "MARKET_SCAN",
-      "COMPETITIVE_DEEP_DIVE",
+      "COMPETITIVE_ANALYSIS",
       "CUSTOMER_VALIDATION",
     ] as ResearchPhaseType[],
     aiModel: "gemini-2.0-flash-thinking-exp",
@@ -24,7 +24,7 @@ export const RESEARCH_DEPTHS = {
     timeout: 900000, // 15 minutes
     phases: [
       "MARKET_SCAN",
-      "COMPETITIVE_DEEP_DIVE",
+      "COMPETITIVE_ANALYSIS",
       "CUSTOMER_VALIDATION",
       "BUSINESS_MODEL",
       "FINANCIAL_PROJECTIONS",
@@ -37,12 +37,15 @@ export const RESEARCH_DEPTHS = {
     timeout: 1800000, // 30 minutes
     phases: [
       "MARKET_SCAN",
-      "COMPETITIVE_DEEP_DIVE",
+      "COMPETITIVE_ANALYSIS",
       "CUSTOMER_VALIDATION",
       "BUSINESS_MODEL",
       "FINANCIAL_PROJECTIONS",
       "RISK_ANALYSIS",
       "TECHNICAL_FEASIBILITY",
+      "GO_TO_MARKET",
+      "INVESTMENT_RECOMMENDATION",
+      "PRODUCT_MARKET_FIT",
     ] as ResearchPhaseType[],
     aiModel: "gemini-2.0-flash-thinking-exp",
     costEstimate: 0.75,
@@ -55,14 +58,9 @@ export const PHASE_DESCRIPTIONS = {
     description: "Analyze market size, trends, and opportunities",
     estimatedDuration: 60000, // 1 minute
   },
-  COMPETITIVE_OVERVIEW: {
-    name: "Competitive Overview",
-    description: "Quick competitive landscape analysis",
-    estimatedDuration: 120000, // 2 minutes
-  },
-  COMPETITIVE_DEEP_DIVE: {
-    name: "Competitive Deep Dive",
-    description: "Detailed competitor analysis and positioning",
+  COMPETITIVE_ANALYSIS: {
+    name: "Competitive Analysis",
+    description: "Comprehensive competitive landscape analysis",
     estimatedDuration: 180000, // 3 minutes
   },
   CUSTOMER_VALIDATION: {
@@ -89,6 +87,26 @@ export const PHASE_DESCRIPTIONS = {
     name: "Technical Feasibility",
     description: "Technical implementation assessment",
     estimatedDuration: 200000, // 3.3 minutes
+  },
+  GO_TO_MARKET: {
+    name: "Go-to-Market Strategy",
+    description: "Market entry strategy and launch planning",
+    estimatedDuration: 180000, // 3 minutes
+  },
+  INVESTMENT_RECOMMENDATION: {
+    name: "Investment Recommendation",
+    description: "Investment analysis and funding recommendations",
+    estimatedDuration: 240000, // 4 minutes
+  },
+  PRODUCT_MARKET_FIT: {
+    name: "Product-Market Fit",
+    description: "Product-market fit validation and optimization",
+    estimatedDuration: 150000, // 2.5 minutes
+  },
+  COMPLETE: {
+    name: "Complete Analysis",
+    description: "Final comprehensive analysis and recommendations",
+    estimatedDuration: 120000, // 2 minutes
   },
 } as const;
 

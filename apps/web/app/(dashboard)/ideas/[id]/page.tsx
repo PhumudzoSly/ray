@@ -22,7 +22,7 @@ const IdeaPage = async ({ params }: IdeaPageProps) => {
     }),
     queryClient.prefetchQuery({
       queryKey: ["idea-research", id],
-      queryFn: () => getValidations({ id }),
+      queryFn: () => getValidations({ ideaId: id }),
     }),
   ]);
 
