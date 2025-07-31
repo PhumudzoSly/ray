@@ -1,4 +1,4 @@
-import type { Redis } from "@upstash/redis";
+import { redis, testRedisConnection } from "@/lib/redis";
 import type {
   ResearchSession,
   ResearchPhase,
@@ -9,11 +9,7 @@ import type {
 } from "@/types/research";
 
 export class ResearchStateManager {
-  private redis: Redis;
-
-  constructor(redis: Redis) {
-    this.redis = redis;
-  }
+  private redis = redis;
 
   // Key patterns for Redis storage
   private getKeys(sessionId: string) {
@@ -36,44 +32,51 @@ export class ResearchStateManager {
     const ttl = this.getTTL(session.depth);
 
     try {
-      const pipeline = this.redis.pipeline();
+      // Check if Redis is available
+      if (!this.redis) {
+        throw new Error("Redis client is not initialized");
+      }
 
-      // Store session data
-      pipeline.hset(keys.session, {
+      // Test Redis connection
+      const isConnected = await testRedisConnection();
+      if (!isConnected) {
+        throw new Error("Redis connection is not available");
+      }
+
+      // Store session data first
+      await this.redis.hset(keys.session, {
         id: session.id,
         ideaId: session.ideaId,
         organizationId: session.organizationId,
         depth: session.depth,
         status: session.status,
-        currentPhaseIndex: session.currentPhaseIndex,
-        overallConfidence: session.overallConfidence,
-        totalCost: session.totalCost,
+        currentPhaseIndex: session.currentPhaseIndex.toString(),
+        overallConfidence: session.overallConfidence.toString(),
+        totalCost: session.totalCost.toString(),
         createdAt: session.createdAt.toISOString(),
         updatedAt: session.updatedAt.toISOString(),
-        estimatedCompletion: session.estimatedCompletion?.toISOString(),
-        actualCompletion: session.actualCompletion?.toISOString(),
+        estimatedCompletion: session.estimatedCompletion?.toISOString() || "",
+        actualCompletion: session.actualCompletion?.toISOString() || "",
       });
 
-      pipeline.expire(keys.session, ttl);
+      await this.redis.expire(keys.session, ttl);
 
-      // Initialize phases
+      // Initialize phases one by one to avoid pipeline issues
       for (const phase of session.phases) {
         const phaseKey = keys.phase(phase.id);
-        pipeline.hset(phaseKey, {
+        await this.redis.hset(phaseKey, {
           id: phase.id,
           name: phase.name,
           status: phase.status,
-          confidence: phase.confidence,
-          duration: phase.duration,
-          iterations: phase.iterations,
+          confidence: phase.confidence.toString(),
+          duration: phase.duration.toString(),
+          iterations: phase.iterations.toString(),
           startedAt: phase.startedAt?.toISOString() || "",
           completedAt: phase.completedAt?.toISOString() || "",
           error: phase.error || "",
         });
-        pipeline.expire(phaseKey, ttl);
+        await this.redis.expire(phaseKey, ttl);
       }
-
-      await pipeline.exec();
     } catch (error) {
       console.error("Failed to initialize research session in Redis:", error);
       throw new Error("Failed to initialize research session");
@@ -113,13 +116,13 @@ export class ResearchStateManager {
 
       if (additionalData) {
         if (additionalData.confidence !== undefined) {
-          updateData.confidence = additionalData.confidence;
+          updateData.confidence = additionalData.confidence.toString();
         }
         if (additionalData.duration !== undefined) {
-          updateData.duration = additionalData.duration;
+          updateData.duration = additionalData.duration.toString();
         }
         if (additionalData.iterations !== undefined) {
-          updateData.iterations = additionalData.iterations;
+          updateData.iterations = additionalData.iterations.toString();
         }
         if (additionalData.startedAt) {
           updateData.startedAt = additionalData.startedAt.toISOString();
@@ -272,9 +275,9 @@ export class ResearchStateManager {
       await this.redis.hset(keys.progress, {
         sessionId: progress.sessionId,
         currentPhase: progress.currentPhase,
-        phaseProgress: progress.phaseProgress,
-        overallProgress: progress.overallProgress,
-        estimatedTimeRemaining: progress.estimatedTimeRemaining,
+        phaseProgress: progress.phaseProgress.toString(),
+        overallProgress: progress.overallProgress.toString(),
+        estimatedTimeRemaining: progress.estimatedTimeRemaining.toString(),
         completedPhases: JSON.stringify(progress.completedPhases),
         failedPhases: JSON.stringify(progress.failedPhases),
         updatedAt: new Date().toISOString(),
@@ -362,11 +365,11 @@ export class ResearchStateManager {
 
       if (updates.status) updateData.status = updates.status;
       if (updates.currentPhaseIndex !== undefined)
-        updateData.currentPhaseIndex = updates.currentPhaseIndex;
+        updateData.currentPhaseIndex = updates.currentPhaseIndex.toString();
       if (updates.overallConfidence !== undefined)
-        updateData.overallConfidence = updates.overallConfidence;
+        updateData.overallConfidence = updates.overallConfidence.toString();
       if (updates.totalCost !== undefined)
-        updateData.totalCost = updates.totalCost;
+        updateData.totalCost = updates.totalCost.toString();
       if (updates.actualCompletion)
         updateData.actualCompletion = updates.actualCompletion.toISOString();
 

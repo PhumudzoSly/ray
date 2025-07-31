@@ -1,5 +1,4 @@
 import { ResearchStateManager } from "@/lib/redis/researchState";
-import { redis } from "@/lib/redis";
 import type {
   ResearchSession,
   ResearchPhase,
@@ -31,7 +30,7 @@ export class ResearchOrchestrator {
   private phaseAnalyzers: Map<ResearchPhaseType, PhaseAnalyzer>;
 
   constructor() {
-    this.stateManager = new ResearchStateManager(redis);
+    this.stateManager = new ResearchStateManager();
     this.phaseAnalyzers = new Map();
     this.initializeAnalyzers();
   }
@@ -363,7 +362,7 @@ export class ResearchOrchestrator {
     depth: ResearchDepth,
     context: ResearchContext
   ): Promise<string> {
-    const sessionId = `research_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const sessionId = `research_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     const config = RESEARCH_DEPTHS[depth];
 
     // Create phases based on depth configuration

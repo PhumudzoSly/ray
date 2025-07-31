@@ -290,9 +290,11 @@ export function ResearchDetails({
   const { data: research, isLoading } = useQuery({
     queryKey: ["idea-research", ideaId, researchId],
     queryFn: () => getResearchDetails({ ideaId, researchId: researchId! }),
+    enabled: !!researchId, // Only run query when researchId is not null
   });
 
-  if (!research) {
+  // Don't render anything if researchId is null or research data is not available
+  if (!researchId || !research) {
     return null;
   }
 

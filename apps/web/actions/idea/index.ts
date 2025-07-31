@@ -136,7 +136,35 @@ export const startValidation = async ({
   ideaId: string;
   type: ResearchType;
 }) => {
-  const { org } = await getSession();
+  const { org, userId } = await getSession();
+
+  // Map research type to depth - for now using STANDARD as default
+  // You can customize this mapping based on your needs
+  const getDepthForType = (
+    researchType: ResearchType
+  ): "QUICK" | "STANDARD" | "DEEP" | "EXHAUSTIVE" => {
+    switch (researchType) {
+      case "MARKET_OPPORTUNITY":
+      case "COMPETITIVE_ANALYSIS":
+        return "QUICK";
+      case "CUSTOMER_VALIDATION":
+      case "PRODUCT_MARKET_FIT":
+        return "STANDARD";
+      case "BUSINESS_MODEL":
+      case "FINANCIAL_PROJECTIONS":
+      case "GO_TO_MARKET":
+        return "DEEP";
+      case "COMPLETE":
+      case "INVESTMENT_RECOMMENDATION":
+      case "RISK_ANALYSIS":
+      case "TECHNICAL_FEASIBILITY":
+        return "EXHAUSTIVE";
+      default:
+        return "STANDARD";
+    }
+  };
+
+  const depth = getDepthForType(type);
 
   const research = await prisma.marketResearch.create({
     data: {
@@ -148,29 +176,42 @@ export const startValidation = async ({
     },
   });
 
-  // Trigger Inngest background job with additional context
+  // Trigger deep research agent
   try {
     await inngestClient.send({
-      name: "idea/validate",
+      name: "deep-research/start",
       data: {
-        type,
         ideaId,
-        researchId: research.id,
+        organizationId: org,
+        depth,
+        userId,
+        researchId: research.id, // Include research ID for tracking
       },
     });
-  } catch (error) {
-    console.error("Failed to trigger Inngest validation:", error);
-    // Reset the status back to INVALIDATED if Inngest fails
+
+    // Update idea status to indicate validation is in progress
     await prisma.idea.update({
       where: { id: ideaId },
       data: {
-        status: "INVALIDATED",
+        status: "IN_PROGRESS",
       },
     });
+  } catch (error) {
+    console.error("Failed to trigger deep research agent:", error);
+
+    // Clean up the research record if Inngest fails
+    await prisma.marketResearch.delete({
+      where: { id: research.id },
+    });
+
     throw new Error("Failed to start validation. Please try again.");
   }
 
-  return { success: true, message: "Validation started" };
+  return {
+    success: true,
+    message: "Deep research validation started",
+    researchId: research.id,
+  };
 };
 
 export const getResearches = async ({ id }: { id: string }) => {

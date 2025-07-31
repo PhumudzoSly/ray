@@ -15,12 +15,14 @@ export const deepResearchAgent = inngestClient.createFunction(
   },
   { event: "deep-research/start" },
   async ({ step, event }) => {
-    const { ideaId, organizationId, depth, userId } = event.data as {
-      ideaId: string;
-      organizationId: string;
-      depth: ResearchDepth;
-      userId: string;
-    };
+    const { ideaId, organizationId, depth, userId, researchId } =
+      event.data as {
+        ideaId: string;
+        organizationId: string;
+        depth: ResearchDepth;
+        userId: string;
+        researchId?: string;
+      };
 
     console.log("🚀 Starting deep research process", { ideaId, depth });
 
@@ -87,19 +89,23 @@ export const deepResearchAgent = inngestClient.createFunction(
     const result = await step.run("execute-research", async () => {
       const orchestrator = new ResearchOrchestrator();
 
-      // Simple progress callback that only updates database
+      // Progress callback that updates both session and research records
       const progressCallback = async (progress: any) => {
+        // Calculate current phase index based on completed phases
+        const currentPhaseIndex = progress.completedPhases?.length || 0;
+
         await prisma.researchSession.update({
           where: { id: sessionId },
           data: {
-            currentPhaseIndex: Math.floor(
-              (progress.overallProgress / 100) *
-                RESEARCH_DEPTHS[depth].phases.length
-            ),
-            overallConfidence: progress.overallProgress,
+            currentPhaseIndex,
+            // Don't overwrite overallConfidence with progress percentage
+            // It will be updated with actual confidence when research completes
             updatedAt: new Date(),
           },
         });
+
+        // Only update marketResearch with actual confidence scores, not progress
+        // This will be done in the final persist-results step
       };
 
       try {
@@ -121,6 +127,25 @@ export const deepResearchAgent = inngestClient.createFunction(
             updatedAt: new Date(),
           },
         });
+
+        // Also mark the marketResearch as failed if provided
+        if (researchId) {
+          await prisma.marketResearch.update({
+            where: { id: researchId },
+            data: {
+              completed: false,
+              lastUpdated: new Date(),
+            },
+          });
+
+          // Reset idea status back to invalidated
+          await prisma.idea.update({
+            where: { id: ideaId },
+            data: {
+              status: "INVALIDATED",
+            },
+          });
+        }
 
         throw error;
       }
@@ -164,6 +189,32 @@ export const deepResearchAgent = inngestClient.createFunction(
           updatedAt: new Date(),
         },
       });
+
+      // Mark the marketResearch as completed if provided
+      if (researchId && finalSession.status === "COMPLETED") {
+        await prisma.marketResearch.update({
+          where: { id: researchId },
+          data: {
+            completed: true,
+            validationScore: finalSession.overallConfidence,
+            confidenceLevel:
+              finalSession.overallConfidence > 80
+                ? "HIGH"
+                : finalSession.overallConfidence > 60
+                  ? "MEDIUM"
+                  : "LOW",
+            lastUpdated: new Date(),
+          },
+        });
+
+        // Update idea status to validated
+        await prisma.idea.update({
+          where: { id: ideaId },
+          data: {
+            status: "VALIDATED",
+          },
+        });
+      }
     });
 
     console.log("✅ Deep research process completed", { sessionId });

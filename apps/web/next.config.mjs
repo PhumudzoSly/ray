@@ -3,6 +3,10 @@ import { PrismaPlugin } from '@prisma/nextjs-monorepo-workaround-plugin'
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  serverExternalPackages: [
+    '@opentelemetry/instrumentation',
+    'import-in-the-middle'
+  ],
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.plugins = [...config.plugins, new PrismaPlugin()]

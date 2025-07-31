@@ -134,8 +134,6 @@ export async function updateOrganizationName(
   name: string
 ) {
   try {
-    const prisma = (await import("@workspace/backend")).prisma;
-
     await prisma.organization.update({
       where: { id: organizationId },
       data: { name },

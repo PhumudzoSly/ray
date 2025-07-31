@@ -12,4 +12,19 @@ if (
 export const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  retry: {
+    retries: 3,
+    backoff: (retryCount) => Math.exp(retryCount) * 50,
+  },
 });
+
+// Test Redis connection
+export async function testRedisConnection(): Promise<boolean> {
+  try {
+    await redis.ping();
+    return true;
+  } catch (error) {
+    console.error("Redis connection test failed:", error);
+    return false;
+  }
+}

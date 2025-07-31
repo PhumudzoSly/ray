@@ -96,10 +96,17 @@ export function ResearchTable({ ideaId }: ResearchTableProps) {
   const startValidationMutation = useMutation({
     mutationFn: ({ type }: { type: ResearchTypeType }) =>
       startValidation({ ideaId, type }),
-    onSuccess: () => {
+    onSuccess: (result) => {
       queryClient.invalidateQueries({ queryKey: ["idea-research", ideaId] });
       setIsNewResearchOpen(false);
       setSelectedType("");
+
+      // Show success message
+      console.log("Deep research validation started:", result);
+    },
+    onError: (error) => {
+      console.error("Failed to start validation:", error);
+      // You could add a toast notification here
     },
   });
 
@@ -177,7 +184,8 @@ export function ResearchTable({ ideaId }: ResearchTableProps) {
                   <DialogTitle>Start New Validation</DialogTitle>
                   <DialogDescription>
                     Choose the type of validation you want to conduct for this
-                    idea.
+                    idea. This will trigger our AI-powered deep research agent
+                    to analyze your idea comprehensively.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
