@@ -1024,14 +1024,17 @@ model MarketResearch {
 }
 
 model ResearchResults {
-  id             String         @id @default(uuid())
-  content        String
-  research       MarketResearch @relation(fields: [researchId], references: [id])
-  researchId     String         @unique
-  organizationId String
-  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id               String          @id @default(uuid())
+  organizationId   String
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  content          String
+  marketResearch   MarketResearch? @relation(fields: [marketResearchId], references: [id])
+  marketResearchId String          @unique
 
-  createdAt DateTime @default(now())
+  @@index([organizationId])
+  @@map("research_results")
 }
 
 model Competitor {

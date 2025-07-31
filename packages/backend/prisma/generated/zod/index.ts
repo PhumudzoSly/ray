@@ -126,7 +126,7 @@ export const MilestoneDependencyScalarFieldEnumSchema = z.enum(['id','organizati
 
 export const MarketResearchScalarFieldEnumSchema = z.enum(['id','ideaId','organizationId','validationScore','confidenceLevel','completed','lastUpdated','createdAt','type']);
 
-export const ResearchResultsScalarFieldEnumSchema = z.enum(['id','content','researchId','organizationId','createdAt']);
+export const ResearchResultsScalarFieldEnumSchema = z.enum(['id','organizationId','createdAt','updatedAt','content','marketResearchId']);
 
 export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','website','description','logoUrl','marketShare','annualRevenue','employeeCount','foundedYear','headquarters','targetAudience','threatLevel','userGrowthRate','churnRate','customerSatisfaction','marketCap','lastUpdated','createdAt','isActive']);
 
@@ -1279,10 +1279,11 @@ export type MarketResearchOptionalDefaults = z.infer<typeof MarketResearchOption
 
 export const ResearchResultsSchema = z.object({
   id: z.string().uuid(),
-  content: z.string(),
-  researchId: z.string(),
   organizationId: z.string(),
   createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  content: z.string(),
+  marketResearchId: z.string(),
 })
 
 export type ResearchResults = z.infer<typeof ResearchResultsSchema>
@@ -1293,6 +1294,7 @@ export type ResearchResults = z.infer<typeof ResearchResultsSchema>
 export const ResearchResultsOptionalDefaultsSchema = ResearchResultsSchema.merge(z.object({
   id: z.string().uuid().optional(),
   createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 }))
 
 export type ResearchResultsOptionalDefaults = z.infer<typeof ResearchResultsOptionalDefaultsSchema>

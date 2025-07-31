@@ -588,10 +588,11 @@ exports.Prisma.MarketResearchScalarFieldEnum = {
 
 exports.Prisma.ResearchResultsScalarFieldEnum = {
   id: 'id',
-  content: 'content',
-  researchId: 'researchId',
   organizationId: 'organizationId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  content: 'content',
+  marketResearchId: 'marketResearchId'
 };
 
 exports.Prisma.CompetitorScalarFieldEnum = {
