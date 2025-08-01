@@ -10,6 +10,7 @@ import {
   API_LIMITS,
   ALL_LIMITS,
 } from "@/types/limits";
+import { GeneralFeature } from "@/types/features";
 
 /**
  * Checks if the organization has reached its team member limit based on subscription
@@ -188,6 +189,107 @@ export async function checkAPICallLimit() {
 }
 
 /**
+ * Checks if a specific feature is available based on subscription
+ * @param feature - The feature to check
+ * @returns Object containing feature availability information
+ */
+export async function checkFeatureAccess(feature: GeneralFeature) {
+  const subscription = await getSubscription();
+
+  if (!subscription) {
+    return {
+      feature,
+      available: false,
+      reason: "No active subscription",
+    };
+  }
+
+  const allLimits = ALL_LIMITS[subscription.productId];
+
+  if (!allLimits) {
+    return {
+      feature,
+      available: false,
+      reason: "Subscription plan not found",
+    };
+  }
+
+  // Define which features are available per subscription tier
+  const featureAvailability = {
+    free: {
+      [GeneralFeature.Agent]: false,
+      [GeneralFeature.Inbox]: true,
+      [GeneralFeature.Feedback]: false,
+      [GeneralFeature.Analytics]: false,
+      [GeneralFeature.Integration]: false,
+    },
+    starter: {
+      [GeneralFeature.Agent]: true,
+      [GeneralFeature.Inbox]: true,
+      [GeneralFeature.Feedback]: true,
+      [GeneralFeature.Analytics]: false,
+      [GeneralFeature.Integration]: false,
+    },
+    pro: {
+      [GeneralFeature.Agent]: true,
+      [GeneralFeature.Inbox]: true,
+      [GeneralFeature.Feedback]: true,
+      [GeneralFeature.Analytics]: true,
+      [GeneralFeature.Integration]: true,
+    },
+    enterprise: {
+      [GeneralFeature.Agent]: true,
+      [GeneralFeature.Inbox]: true,
+      [GeneralFeature.Feedback]: true,
+      [GeneralFeature.Analytics]: true,
+      [GeneralFeature.Integration]: true,
+    },
+  };
+
+  const planFeatures =
+    featureAvailability[
+      subscription.productId as keyof typeof featureAvailability
+    ];
+
+  if (!planFeatures) {
+    return {
+      feature,
+      available: false,
+      reason: "Unknown subscription plan",
+    };
+  }
+
+  return {
+    feature,
+    available: planFeatures[feature] || false,
+    reason: planFeatures[feature] ? "" : "Feature not included in current plan",
+  };
+}
+
+/**
+ * Gets all feature access for the current organization
+ * @returns Object containing all feature availability information
+ */
+export async function getAllFeatureAccess() {
+  const features = Object.values(GeneralFeature);
+
+  const featureAccess = await Promise.all(
+    features.map((feature) => checkFeatureAccess(feature))
+  );
+
+  return featureAccess.reduce(
+    (acc, access) => {
+      acc[access.feature] = {
+        available: access.available,
+        reason: access.reason,
+      };
+      return acc;
+    },
+    {} as Record<GeneralFeature, { available: boolean; reason: string }>
+  );
+}
+
+/**
  * Gets all limits for the current organization's subscription
  * @returns Object containing all limit information
  */
@@ -229,5 +331,49 @@ export async function getAllLimits() {
     projects,
     aiValidations,
     apiCalls,
+  };
+}
+
+/**
+ * Gets comprehensive limits and feature access information for the current organization
+ * @returns Object containing all limits and feature access information
+ */
+export async function getCompleteAccessOverview() {
+  const subscription = await getSubscription();
+
+  if (!subscription) {
+    return {
+      subscription: null,
+      limits: {
+        teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
+        projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
+        aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
+        apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
+      },
+      features: Object.values(GeneralFeature).reduce(
+        (acc, feature) => {
+          acc[feature] = {
+            available: false,
+            reason: "No active subscription",
+          };
+          return acc;
+        },
+        {} as Record<GeneralFeature, { available: boolean; reason: string }>
+      ),
+    };
+  }
+
+  const [limits, features] = await Promise.all([
+    getAllLimits(),
+    getAllFeatureAccess(),
+  ]);
+
+  return {
+    subscription: {
+      productId: subscription.productId,
+      status: subscription.status,
+    },
+    limits,
+    features,
   };
 }
