@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "jsdom": "^26.1.0",
-    "require-in-the-middle": "^7.5.2"
+    "require-in-the-middle": "^7.5.2",
+    "react-hook-form": "^7.61.1"
   }
 }
