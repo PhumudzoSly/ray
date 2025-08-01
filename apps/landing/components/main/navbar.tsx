@@ -180,7 +180,7 @@ export default function Navbar() {
                     <Link href="https://rayai.dev/auth/sign-in">Sign In</Link>
                   </Button>
                   <Button asChild className="w-full">
-                    <Link href="https://rayai.dev/auth/sign-up">
+                    <Link href="https://app.rayai.dev/auth/sign-up">
                       Get Started
                     </Link>
                   </Button>

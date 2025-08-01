@@ -87,7 +87,7 @@ export default function Hero() {
                       className="bg-foreground/10 rounded-[14px] border p-0.5"
                     >
                       <Button asChild size="lg">
-                        <Link href="https://rayai.dev/auth/sign-up">
+                        <Link href="https://app.rayai.dev/auth/sign-up">
                           <span className="text-nowrap">Start Building</span>
                         </Link>
                       </Button>
