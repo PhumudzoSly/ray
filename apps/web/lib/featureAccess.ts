@@ -23,9 +23,9 @@ export const getPlanNameByProductId = (productId: string): string | null => {
 const PLAN_HIERARCHY = [START_PLAN, BUSINESS_PLAN, ENTERPRISE_PLAN];
 
 export const featureAccessConfig: { [productId: string]: Feature[] } = {
-  [START_PLAN]: [GeneralFeature.AiTools, GeneralFeature.Projects],
-  [BUSINESS_PLAN]: [GeneralFeature.AiTools, GeneralFeature.Projects],
-  [ENTERPRISE_PLAN]: [GeneralFeature.AiTools, GeneralFeature.Projects],
+  [START_PLAN]: [GeneralFeature.Inbox, GeneralFeature.Integration],
+  [BUSINESS_PLAN]: [GeneralFeature.Agent, GeneralFeature.Analytics],
+  [ENTERPRISE_PLAN]: [GeneralFeature.Feedback, GeneralFeature.Integration],
 };
 
 /**

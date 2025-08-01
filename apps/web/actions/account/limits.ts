@@ -122,7 +122,7 @@ export async function checkAIValidationLimit() {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const validationCount = await prisma.marketResearch.count({
+  const validationCount = await prisma.researchSession.count({
     where: {
       idea: {
         organizationId: org,
