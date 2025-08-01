@@ -7,9 +7,9 @@ interface LoadingSpinnerProps {
   variant?: "default" | "text" | "card";
 }
 
-export default function LoadingSpinner({ 
-  className, 
-  variant = "default" 
+export default function LoadingSpinner({
+  className,
+  variant = "default",
 }: LoadingSpinnerProps) {
   if (variant === "text") {
     return (

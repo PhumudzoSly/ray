@@ -22,7 +22,7 @@ export default function ContactForm() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -37,10 +37,13 @@ export default function ContactForm() {
       const result = await submitContactForm(formData);
 
       if (result.success) {
-        toast.success("Message sent successfully! We'll get back to you soon.", {
-          icon: <CheckCircle className="w-4 h-4" />,
-        });
-        
+        toast.success(
+          "Message sent successfully! We'll get back to you soon.",
+          {
+            icon: <CheckCircle className="w-4 h-4" />,
+          }
+        );
+
         // Reset form
         setFormData({
           name: "",
@@ -69,10 +72,7 @@ export default function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="flex flex-col gap-2">
-        <label
-          htmlFor="name"
-          className="text-sm font-medium text-foreground"
-        >
+        <label htmlFor="name" className="text-sm font-medium text-foreground">
           Name
         </label>
         <Input
@@ -91,10 +91,7 @@ export default function ContactForm() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label
-          htmlFor="email"
-          className="text-sm font-medium text-foreground"
-        >
+        <label htmlFor="email" className="text-sm font-medium text-foreground">
           Email
         </label>
         <Input

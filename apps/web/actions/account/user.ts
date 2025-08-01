@@ -11,6 +11,11 @@ import {
   hashApiKey,
   getApiKeyPreview,
 } from "@/lib/api-key-utils";
+import {
+  seedDemoData,
+  shouldSeedDemoData,
+  isUserMemberOfOtherOrgs,
+} from "@workspace/backend";
 
 export async function createOrg({ name }: { name: string }) {
   const headersList = await headers();
@@ -29,12 +34,37 @@ export async function createOrg({ name }: { name: string }) {
 
   if (!org) throw new Error("Failed to create organization");
 
-  auth.api.setActiveOrganization({
+  // Set the new organization as active
+  await auth.api.setActiveOrganization({
     body: {
       organizationId: org?.id,
     },
     headers: headersList,
   });
+
+  // Check if this user needs demo data seeding
+  try {
+    // Check if user is not a member of any other organization and if the new org needs demo data
+    const [isNewUser, needsDemoData] = await Promise.all([
+      isUserMemberOfOtherOrgs(session.user.id, org.id).then(
+        (result) => !result
+      ),
+      shouldSeedDemoData(org.id),
+    ]);
+
+    // Seed demo data if this is a new user and the organization is empty
+    if (isNewUser && needsDemoData) {
+      console.log(`Seeding demo data for new organization: ${org.id}`);
+      await seedDemoData({
+        organizationId: org.id,
+        userId: session.user.id,
+      });
+      console.log(`Demo data seeded successfully for organization: ${org.id}`);
+    }
+  } catch (error) {
+    // Don't fail organization creation if demo data seeding fails
+    console.error("Failed to seed demo data:", error);
+  }
 }
 
 export async function getSession() {

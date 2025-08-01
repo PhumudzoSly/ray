@@ -16,13 +16,16 @@ export async function submitContactForm(formData: ContactFormData) {
     const validatedData = contactSchema.parse(formData);
 
     // Make request to our API route
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'}/api/contact`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(validatedData),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3002"}/api/contact`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validatedData),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -33,7 +36,7 @@ export async function submitContactForm(formData: ContactFormData) {
     return { success: true, message: "Message sent successfully!" };
   } catch (error) {
     console.error("Contact form submission error:", error);
-    
+
     if (error instanceof z.ZodError) {
       return {
         success: false,
