@@ -1,5 +1,5 @@
 "use server";
-import { ApiPermissionType, prisma } from "@workspace/backend";
+import { prisma, Zod } from "@workspace/backend";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
@@ -161,10 +161,6 @@ export async function deleteAccount() {
   }
 }
 
-export async function subscribeToUpdates(active: boolean) {
-  const { userId, email, name } = await getSession();
-}
-
 export async function reportBug({
   data,
 }: {
@@ -186,7 +182,7 @@ export async function createApiKey({
   permissions,
 }: {
   name: string;
-  permissions: ApiPermissionType[];
+  permissions: Zod.ApiPermissionType[];
 }) {
   const { userId, org } = await getSession();
 

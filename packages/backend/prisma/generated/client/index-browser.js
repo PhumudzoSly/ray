@@ -338,6 +338,19 @@ exports.Prisma.ApiKeyScalarFieldEnum = {
   expiresAt: 'expiresAt'
 };
 
+exports.Prisma.ApiCallScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  apiKeyId: 'apiKeyId',
+  endpoint: 'endpoint',
+  method: 'method',
+  statusCode: 'statusCode',
+  responseTime: 'responseTime',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.ActivityFeedScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -948,6 +961,7 @@ exports.Prisma.ModelName = {
   IssueLink: 'IssueLink',
   Asset: 'Asset',
   ApiKey: 'ApiKey',
+  ApiCall: 'ApiCall',
   ActivityFeed: 'ActivityFeed',
   PublicRoadmap: 'PublicRoadmap',
   RoadmapItem: 'RoadmapItem',

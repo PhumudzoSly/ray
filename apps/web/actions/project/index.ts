@@ -2,6 +2,7 @@
 
 import { ProjectOptionalDefaults, prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
+import { checkProjectLimit } from "../account/limits";
 
 // Health score calculation types
 interface ProjectHealthMetrics {
@@ -553,6 +554,15 @@ async function getRecentProjectActivity(projectId: string) {
 
 export const createProject = async (data: ProjectOptionalDefaults) => {
   const { org } = await getSession();
+
+  // Check project limits before creating
+  const projectLimit = await checkProjectLimit();
+
+  if (projectLimit.limitReached) {
+    throw new Error(
+      `Project limit reached. You have ${projectLimit.currentCount}/${projectLimit.maxAllowed} projects. Please upgrade your subscription to create more projects.`
+    );
+  }
 
   const project = await prisma.project.create({
     data: {

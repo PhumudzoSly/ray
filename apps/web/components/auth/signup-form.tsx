@@ -19,14 +19,14 @@ import { signUp } from "@/lib/authClient";
 import { toast } from "sonner";
 import { PasswordInput } from "@workspace/ui/components/password-input";
 import { DEFAULT_LOGIN_REDIRECT } from "@/utils/config";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SignUpForm = () => {
   //
   const [isPending, startTransition] = useTransition();
   const params = useSearchParams();
   const redirectURL = params.get("redirectUrl") || DEFAULT_LOGIN_REDIRECT;
-
+  const router = useRouter();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -48,6 +48,10 @@ const SignUpForm = () => {
 
       if (error) {
         toast.error(error.message);
+      }
+      if (data) {
+        toast.success("Account created successfully");
+        router.push(redirectURL);
       }
     });
   };

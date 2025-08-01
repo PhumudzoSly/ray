@@ -1,4 +1,9 @@
 {
-  "extends": "@workspace/typescript-config/base.json"
+  "extends": "@workspace/typescript-config/base.json",
+  "compilerOptions": {
+    "paths": {
+      "@prisma/client": ["./packages/backend/prisma/generated/client"]
+    }
+  }
 }
 

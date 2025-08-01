@@ -1,7 +1,7 @@
 generator client {
   provider      = "prisma-client-js"
   output        = "./generated/client"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  binaryTargets = ["native", "linux-musl", "rhel-openssl-3.0.x"]
 }
 
 generator zod {
@@ -18,35 +18,33 @@ datasource db {
 }
 
 model User {
-  id            String   @id
-  name          String
-  email         String
-  emailVerified Boolean
-  image         String?
-  role          String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
+  id               String          @id
+  name             String
+  email            String
+  emailVerified    Boolean
+  image            String?
+  role             String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
   twoFactorEnabled Boolean?
-
-  sessions       Session[]
-  accounts       Account[]
-  members        Member[]
-  invitations    Invitation[]
-  passkeys       Passkey[]
-  twofactors     TwoFactor[]
-  subscription   Subscription?
-  project        Project[]       @relation("CreatedProjects")
-  idea           Idea[]          @relation("IdeaOwner")
-  issue          Issue[]         @relation("AssignedIssues")
-  asset          Asset[]         @relation("UploadedAssets")
-  waitlist       Waitlist[]      @relation("CreatedWaitlists")
-  integration    Integration[]   @relation("CreatedIntegrations")
-  activityFeed   ActivityFeed[]
-  feature        Feature[]
-  milestone      Milestone[]     @relation("MilestoneOwner")
-  assetViews     AssetView[]
-  assetDownloads AssetDownload[]
+  sessions         Session[]
+  accounts         Account[]
+  members          Member[]
+  invitations      Invitation[]
+  passkeys         Passkey[]
+  twofactors       TwoFactor[]
+  subscription     Subscription?
+  project          Project[]       @relation("CreatedProjects")
+  idea             Idea[]          @relation("IdeaOwner")
+  issue            Issue[]         @relation("AssignedIssues")
+  asset            Asset[]         @relation("UploadedAssets")
+  waitlist         Waitlist[]      @relation("CreatedWaitlists")
+  integration      Integration[]   @relation("CreatedIntegrations")
+  activityFeed     ActivityFeed[]
+  feature          Feature[]
+  milestone        Milestone[]     @relation("MilestoneOwner")
+  assetViews       AssetView[]
+  assetDownloads   AssetDownload[]
 
   @@unique([email])
   @@map("user")
@@ -72,17 +70,16 @@ model Session {
 }
 
 model Account {
-  id           String    @id
-  accountId    String
-  providerId   String
-  userId       String?
-  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  accessToken  String?
-  refreshToken String?
-  idToken      String?
-  expiresAt    DateTime?
-  password     String?
-
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String?
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  expiresAt             DateTime?
+  password              String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -405,11 +402,33 @@ model ApiKey {
   lastUsed       DateTime?
   isActive       Boolean
   expiresAt      DateTime?
+  apiCalls       ApiCall[]
 
   @@index([organizationId])
   @@index([organizationId, isActive])
   @@index([createdBy])
   @@index([keyHash])
+}
+
+model ApiCall {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  apiKeyId       String?
+  apiKey         ApiKey?      @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint       String
+  method         String
+  statusCode     Int
+  responseTime   Int? // in milliseconds
+  userAgent      String?
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([organizationId, createdAt])
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([method])
 }
 
 model ActivityFeed {

@@ -5,7 +5,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack -p 3000",
-		"build": "next build --turbopack",
+		"build": "next build",
 		"start": "next start -p 3000",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check .",
@@ -38,8 +38,8 @@
 		"@next/swc-wasm-nodejs": "15.4.4",
 		"@polar-sh/better-auth": "1.0.8",
 		"@polar-sh/sdk": "0.34.8",
-		"@prisma/nextjs-monorepo-workaround-plugin": "^6.13.0",
-		"@radix-ui/react-dialog": "^1.1.14",
+		"@prisma/client": "^6.12.0",
+		"@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@tanstack/query-core": "^5.83.1",
 		"@tanstack/react-query": "^5.84.0",
@@ -108,6 +108,7 @@
 		"@types/react-dom": "^19",
 		"@types/uuid": "^10.0.0",
 		"@workspace/typescript-config": "workspace:*",
-		"typescript": "^5.9.2"
+		"prisma": "^6.12.0",
+		"typescript": "^5.8.3"
 	}
 }

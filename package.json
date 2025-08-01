@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "pnpm db:generate && turbo build",
     "start": "turbo start",
     "dev": "turbo dev",
     "lint": "turbo run lint",

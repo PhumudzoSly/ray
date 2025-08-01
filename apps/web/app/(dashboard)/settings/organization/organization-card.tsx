@@ -48,7 +48,7 @@ import {
   UserCheck,
   Mail,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CopyButton from "@workspace/ui/components/copy-button";
 import { toast } from "sonner";
 import {
@@ -59,6 +59,7 @@ import {
 } from "@workspace/ui/components/tabs";
 import { useRouter } from "next/navigation";
 import { getCurrentOrg } from "@/actions/account/user";
+import { checkTeamMemberLimit } from "@/actions/account/limits";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,29 +71,27 @@ import { Badge } from "@workspace/ui/components/badge";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { OrganizationSettingsDialog } from "./organization-setting-dialog";
 import { Separator } from "@workspace/ui/components/separator";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function OrganizationCard(props: { session: Session | null }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isRevoking, setIsRevoking] = useState<string[]>([]);
   const [showSettings, setShowSettings] = useState(false);
-  const [activeOrg, setActiveOrg] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchOrganization = async () => {
-      try {
-        setLoading(true);
-        const data = await getCurrentOrg();
-        setActiveOrg(data);
-      } catch (error) {
-        console.error("Failed to fetch organization:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Use TanStack Query to fetch organization data
+  const { data: activeOrg, isLoading } = useQuery({
+    queryKey: ["currentOrganization"],
+    queryFn: getCurrentOrg,
+  });
 
-    fetchOrganization();
-  }, []);
+  // Mutation for refreshing organization data
+  const refreshOrgMutation = useMutation({
+    mutationFn: getCurrentOrg,
+    onSuccess: (data) => {
+      queryClient.setQueryData(["currentOrganization"], data);
+    },
+  });
 
   const { data } = useSession.get();
   const session = data || props.session;
@@ -105,7 +104,7 @@ export function OrganizationCard(props: { session: Session | null }) {
     (invitation: any) => invitation.status === "pending"
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <Card className="border-0 shadow-sm">
@@ -171,8 +170,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                 <InviteMemberDialog
                   activeOrg={activeOrg}
                   onMemberInvited={async () => {
-                    const data = await getCurrentOrg();
-                    setActiveOrg(data);
+                    await refreshOrgMutation.mutateAsync();
                   }}
                 />
               )}
@@ -296,8 +294,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                                 memberIdOrEmail: member.id,
                                 organizationId: activeOrg.id,
                               });
-                              const data = await getCurrentOrg();
-                              setActiveOrg(data);
+                              await refreshOrgMutation.mutateAsync();
                               toast.success(
                                 `${member.user.name} has been removed from the organization`
                               );
@@ -409,8 +406,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                                     (id) => id !== invitation.id
                                   )
                                 );
-                                const data = await getCurrentOrg();
-                                setActiveOrg(data);
+                                await refreshOrgMutation.mutateAsync();
                               },
                               onError: (ctx) => {
                                 toast.error(ctx.error.message);
@@ -477,9 +473,35 @@ function InviteMemberDialog({
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("member");
   const [loading, setLoading] = useState(false);
+  const [limitInfo, setLimitInfo] = useState<{
+    currentCount: number;
+    maxAllowed: number;
+    limitReached: boolean;
+  } | null>(null);
+
+  // Check team member limits when dialog opens
+  const checkLimits = async () => {
+    try {
+      const limits = await checkTeamMemberLimit();
+      setLimitInfo(limits);
+    } catch (error) {
+      console.error("Failed to check team member limits:", error);
+      toast.error("Failed to check team member limits");
+    }
+  };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(newOpen) => {
+        setOpen(newOpen);
+        if (newOpen) {
+          checkLimits();
+        } else {
+          setLimitInfo(null);
+        }
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="gap-2 h-9 px-4">
           <UserPlus className="h-4 w-4" />
@@ -493,6 +515,24 @@ function InviteMemberDialog({
             Send an invitation to collaborate in your organization. They'll
             receive an email with instructions to join.
           </DialogDescription>
+          {limitInfo && (
+            <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50 border">
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Team Members</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">
+                  {limitInfo.currentCount} / {limitInfo.maxAllowed}
+                </span>
+                {limitInfo.limitReached && (
+                  <Badge variant="destructive" className="text-xs">
+                    Limit Reached
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
         </DialogHeader>
         <div className="space-y-6 py-4">
           <div className="space-y-3">

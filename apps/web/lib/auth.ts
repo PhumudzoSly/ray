@@ -9,8 +9,8 @@ import { polar, portal, webhooks, checkout } from "@polar-sh/better-auth";
 import { prisma } from "@workspace/backend";
 
 export const polarClient = new Polar({
-  accessToken: process.env.POLAR_ACCESS_TOKEN,
-  server: "sandbox",
+  accessToken: process.env.POLAR_TOKEN,
+  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
 });
 
 export const auth = betterAuth({
@@ -26,7 +26,10 @@ export const auth = betterAuth({
         portal(),
         checkout({
           authenticatedUsersOnly: true,
-          successUrl: process.env.NODE_ENV === "production" ? "/stay-tuned" : "/dashboard",
+          successUrl:
+            process.env.NODE_ENV === "production"
+              ? "/stay-tuned"
+              : "/dashboard",
         }),
         webhooks({
           secret: process.env.POLAR_WEBHOOK_SECRET || "", // We need to enable webhooks on Polar as well
@@ -42,6 +45,7 @@ export const auth = betterAuth({
               const org = await prisma.organization.findUnique({
                 where: { id: data.metadata.org as string },
               });
+
               if (!org) throw new Error("Error, something happened");
               await prisma.subscription.upsert({
                 create: {

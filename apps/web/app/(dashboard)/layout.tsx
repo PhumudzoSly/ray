@@ -1,4 +1,5 @@
 import { getSession } from "@/actions/account/user";
+import { getSubscription } from "@/actions/account/subscription";
 import { SessionProvider } from "@/context/session-context";
 import Appbar from "@/components/sidebar/app-bar";
 import { auth } from "@/lib/auth";
@@ -14,8 +15,24 @@ export default async function DashboardLayout({
 }) {
   const headersList = await headers();
   const session = await auth.api.getSession({ headers: headersList });
+
   if (!session) redirect("/auth/sign-in");
-  const sessionData = await getSession();
+
+  // In production, redirect authenticated users to stay-tuned page
+  if (process.env.NODE_ENV === "production") {
+    redirect("/stay-tuned");
+  }
+
+  // Fetch session data and subscription in parallel
+  const [sessionData, subscription] = await Promise.all([
+    getSession(),
+    getSubscription().catch(() => null), // Catch any errors and return null
+  ]);
+
+  // If no active subscription, redirect to checkout
+  if (!subscription) {
+    redirect("/checkout");
+  }
 
   return (
     <SessionProvider sessionData={sessionData}>

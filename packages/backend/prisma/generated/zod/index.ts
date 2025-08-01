@@ -90,6 +90,8 @@ export const AssetScalarFieldEnumSchema = z.enum(['id','name','description','typ
 
 export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','permissions','createdBy','createdAt','lastUsed','isActive','expiresAt']);
 
+export const ApiCallScalarFieldEnumSchema = z.enum(['id','organizationId','apiKeyId','endpoint','method','statusCode','responseTime','userAgent','ipAddress','createdAt']);
+
 export const ActivityFeedScalarFieldEnumSchema = z.enum(['id','type','title','description','entityType','entityId','organizationId','userId','oldValue','newValue','createdAt','updatedAt']);
 
 export const PublicRoadmapScalarFieldEnumSchema = z.enum(['id','projectId','name','slug','description','isPublic','allowVoting','allowFeedback','createdAt','updatedAt']);
@@ -731,6 +733,35 @@ export const ApiKeyOptionalDefaultsSchema = ApiKeySchema.merge(z.object({
 }))
 
 export type ApiKeyOptionalDefaults = z.infer<typeof ApiKeyOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// API CALL SCHEMA
+/////////////////////////////////////////
+
+export const ApiCallSchema = z.object({
+  id: z.string().uuid(),
+  organizationId: z.string(),
+  apiKeyId: z.string().nullish(),
+  endpoint: z.string(),
+  method: z.string(),
+  statusCode: z.number().int(),
+  responseTime: z.number().int().nullish(),
+  userAgent: z.string().nullish(),
+  ipAddress: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type ApiCall = z.infer<typeof ApiCallSchema>
+
+// API CALL OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ApiCallOptionalDefaultsSchema = ApiCallSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type ApiCallOptionalDefaults = z.infer<typeof ApiCallOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // ACTIVITY FEED SCHEMA
