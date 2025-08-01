@@ -1,16 +1,13 @@
 "use client";
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as projectActions from "@/actions/project";
-import { CreateProjectDialog } from "@/components/create-project-dialog";
 import { EnhancedProjectFilters } from "@/components/project/enhanced-project-filters";
 import { KanbanView } from "@/components/project/kanban-view";
 import { TableView } from "@/components/project/table-view";
 import { ProjectsLoading } from "@/components/project/projects-loading";
 import { toast } from "sonner";
 import NoData from "@/components/shared/no-data";
-import Header from "@/components/shared/header";
 import { useSession } from "@/context/session-context";
 
 export default function ProjectClient() {

@@ -1,7 +1,6 @@
 import { GeneralFeature } from "@/types/features";
 
 // Demo Product IDs - Replace with actual Polar product IDs later
-// TODO Replace with real prices
 
 const START_PLAN = process.env.POLAR_STARTER_PRICING!;
 const BUSINESS_PLAN = process.env.POLAR_BUSINESS_PRICING!;
@@ -23,9 +22,25 @@ export const getPlanNameByProductId = (productId: string): string | null => {
 const PLAN_HIERARCHY = [START_PLAN, BUSINESS_PLAN, ENTERPRISE_PLAN];
 
 export const featureAccessConfig: { [productId: string]: Feature[] } = {
-  [START_PLAN]: [GeneralFeature.Inbox, GeneralFeature.Integration],
-  [BUSINESS_PLAN]: [GeneralFeature.Agent, GeneralFeature.Analytics],
-  [ENTERPRISE_PLAN]: [GeneralFeature.Feedback, GeneralFeature.Integration],
+  [START_PLAN]: [
+    GeneralFeature.Agent,
+    GeneralFeature.Inbox,
+    GeneralFeature.Feedback,
+  ],
+  [BUSINESS_PLAN]: [
+    GeneralFeature.Agent,
+    GeneralFeature.Inbox,
+    GeneralFeature.Feedback,
+    GeneralFeature.Analytics,
+    GeneralFeature.Integration,
+  ],
+  [ENTERPRISE_PLAN]: [
+    GeneralFeature.Agent,
+    GeneralFeature.Inbox,
+    GeneralFeature.Feedback,
+    GeneralFeature.Analytics,
+    GeneralFeature.Integration,
+  ],
 };
 
 /**

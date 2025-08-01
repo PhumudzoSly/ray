@@ -105,10 +105,11 @@ export function KanbanView({
             key={status.id}
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-[200px] p-2 rounded-lg border-2 border-dashed transition-colors ${snapshot.isDraggingOver
-              ? "border-primary bg-primary/5"
-              : "border-muted bg-muted/20"
-              }`}
+            className={`min-h-[200px] p-2 rounded-lg border-2 border-dashed transition-colors ${
+              snapshot.isDraggingOver
+                ? "border-primary bg-primary/5"
+                : "border-muted bg-muted/20"
+            }`}
           >
             {projects.map((project, index) => (
               <Draggable
@@ -136,7 +137,6 @@ export function KanbanView({
               </Draggable>
             ))}
             {provided.placeholder}
-
             {projects.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 <div className="text-sm">
