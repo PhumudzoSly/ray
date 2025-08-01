@@ -7,24 +7,71 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@workspace/ui/components/accordion";
-import {
-  Check,
-  ArrowRight,
-  X,
-  Star,
-  Zap,
-  Users,
-  TrendingUp,
-  Shield,
-  Sparkles,
-  Target,
-  BarChart3,
-  MessageSquare,
-} from "lucide-react";
+import { Check, ArrowRight, X, Star, Shield, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { plans, comparisonData, faqs } from "./data";
 import { DetailedPricingTable } from "./_components/detailed-pricing-table";
 import { UsageCalculator } from "./_components/usage-calculator";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Ray AI Pricing - Affordable Plans for Every SaaS Stage",
+  description:
+    "Choose the perfect Ray AI plan for your SaaS. Flexible pricing for idea validation, product management, and growth. Get started with our free tier or scale up with Pro and Enterprise plans.",
+  keywords: [
+    "SaaS pricing",
+    "AI platform cost",
+    "product management pricing",
+    "startup plans",
+    "enterprise SaaS",
+    "free tier",
+    "subscription plans",
+    "Ray AI cost",
+  ],
+  authors: [{ name: "Ray AI" }],
+  creator: "Ray AI",
+  publisher: "Ray AI",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://rayai.dev/pricing",
+    siteName: "Ray AI",
+    title: "Ray AI Pricing - Affordable Plans for Every SaaS Stage",
+    description:
+      "Choose the perfect Ray AI plan for your SaaS. Flexible pricing for idea validation, product management, and growth. Get started with our free tier or scale up with Pro and Enterprise plans.",
+    images: [
+      {
+        url: "https://rayai.dev/og-image.jpg", // Replace with an actual image for your pricing page
+        width: 1200,
+        height: 630,
+        alt: "Ray AI Pricing Plans",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ray AI Pricing - Affordable Plans for Every SaaS Stage",
+    description:
+      "Choose the perfect Ray AI plan for your SaaS. Flexible pricing for idea validation, product management, and growth. Get started with our free tier or scale up with Pro and Enterprise plans.",
+    images: ["https://rayai.dev/twitter-image.jpg"], // Replace with an actual image for your pricing page
+    creator: "@rayai_dev",
+  },
+  alternates: {
+    canonical: "https://rayai.dev/pricing",
+  },
+  category: "SaaS Pricing",
+};
 
 export default function PricingPage() {
   return (

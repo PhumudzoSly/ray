@@ -82,7 +82,7 @@ const DashboardPage = async () => {
         </div>
 
         <div className="grid grid-cols-1  md:grid-cols-2 gap-4">
-          <IssuesSummary />
+          {/* <IssuesSummary /> */}
           <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
             <AdvancedStat
               title="Projects"
@@ -119,9 +119,7 @@ const DashboardPage = async () => {
               icon={Target}
               iconColor="text-red-500"
             />
-            <div className="md:col-span-2">
-              <ActivityChart />
-            </div>
+            <div className="md:col-span-2">{/* <ActivityChart /> */}</div>
           </div>
         </div>
       </div>

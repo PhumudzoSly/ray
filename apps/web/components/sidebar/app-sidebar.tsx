@@ -57,17 +57,12 @@ const data: NavData = {
       icon: LayoutDashboard,
     },
     {
-      name: "Agent",
-      url: "/chat",
-      icon: MessageCircle,
-    },
-  ],
-  build: [
-    {
       name: "Ideas",
       url: "/ideas",
       icon: Lightbulb,
     },
+  ],
+  build: [
     {
       name: "Projects",
       url: "/project",
@@ -99,15 +94,15 @@ const data: NavData = {
         variant: "warning",
       },
     },
-    {
-      name: "Analytics",
-      url: "/analytics",
-      icon: ChartBar,
-      badge: {
-        text: "Planned",
-        variant: "default",
-      },
-    },
+    // {
+    //   name: "Analytics",
+    //   url: "/analytics",
+    //   icon: ChartBar,
+    //   badge: {
+    //     text: "Planned",
+    //     variant: "default",
+    //   },
+    // },
   ],
 };
 

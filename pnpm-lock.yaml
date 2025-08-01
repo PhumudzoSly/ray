@@ -229,6 +229,9 @@ importers:
       remark-math:
         specifier: ^6.0.0
         version: 6.0.0
+      resend:
+        specifier: ^4.7.0
+        version: 4.7.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       sonner:
         specifier: ^2.0.6
         version: 2.0.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)

@@ -3,7 +3,67 @@ import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
-import { Mail } from "lucide-react";
+import { Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { Metadata } from "next";
+import ContactForm from "./contact-form";
+
+export const metadata: Metadata = {
+  title: "Ray AI Help Center - Get Support for Your SaaS Platform",
+  description:
+    "Find answers to your questions and get support for Ray AI. Contact our team for assistance with idea validation, product management, issue tracking, and more.",
+  keywords: [
+    "Ray AI support",
+    "help center",
+    "SaaS platform help",
+    "product management support",
+    "issue tracking help",
+    "contact support",
+    "customer service",
+  ],
+  authors: [{ name: "Ray AI" }],
+  creator: "Ray AI",
+  publisher: "Ray AI",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://rayai.dev/help",
+    siteName: "Ray AI",
+    title: "Ray AI Help Center - Get Support for Your SaaS Platform",
+    description:
+      "Find answers to your questions and get support for Ray AI. Contact our team for assistance with idea validation, product management, issue tracking, and more.",
+    images: [
+      {
+        url: "https://rayai.dev/og-image.jpg", // Replace with an actual image for your help page
+        width: 1200,
+        height: 630,
+        alt: "Ray AI Help Center",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ray AI Help Center - Get Support for Your SaaS Platform",
+    description:
+      "Find answers to your questions and get support for Ray AI. Contact our team for assistance with idea validation, product management, issue tracking, and more.",
+    images: ["https://rayai.dev/twitter-image.jpg"], // Replace with an actual image for your help page
+    creator: "@rayai_dev",
+  },
+  alternates: {
+    canonical: "https://rayai.dev/help",
+  },
+  category: "Support",
+};
 
 export default function HelpPage() {
   return (
@@ -27,51 +87,7 @@ export default function HelpPage() {
       {/* Contact Form */}
       <div className="max-w-xl mx-auto px-4 py-16">
         <Card className="p-8">
-          <form className="space-y-6">
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="name"
-                className="text-sm font-medium text-foreground"
-              >
-                Name
-              </label>
-              <Input id="name" name="name" placeholder="Your name" required />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="email"
-                className="text-sm font-medium text-foreground"
-              >
-                Email
-              </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="message"
-                className="text-sm font-medium text-foreground"
-              >
-                Message
-              </label>
-              <Textarea
-                id="message"
-                name="message"
-                placeholder="How can we help you?"
-                rows={5}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              Send Message
-            </Button>
-          </form>
+          <ContactForm />
         </Card>
       </div>
     </div>
