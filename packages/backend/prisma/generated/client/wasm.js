@@ -120,113 +120,102 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.UserScalarFieldEnum = {
+exports.Prisma.IdeaScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  email: 'email',
-  emailVerified: 'emailVerified',
-  image: 'image',
-  role: 'role',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  twoFactorEnabled: 'twoFactorEnabled'
-};
-
-exports.Prisma.SessionScalarFieldEnum = {
-  id: 'id',
-  expiresAt: 'expiresAt',
-  ipAddress: 'ipAddress',
-  userAgent: 'userAgent',
-  userId: 'userId',
-  activeOrganizationId: 'activeOrganizationId',
-  token: 'token',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
-  accountId: 'accountId',
-  providerId: 'providerId',
-  userId: 'userId',
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
-  idToken: 'idToken',
-  expiresAt: 'expiresAt',
-  password: 'password',
-  accessTokenExpiresAt: 'accessTokenExpiresAt',
-  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
-  scope: 'scope',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.VerificationScalarFieldEnum = {
-  id: 'id',
-  identifier: 'identifier',
-  value: 'value',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.OrganizationScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  logo: 'logo',
-  createdAt: 'createdAt',
-  metadata: 'metadata'
-};
-
-exports.Prisma.MemberScalarFieldEnum = {
-  id: 'id',
+  description: 'description',
+  industry: 'industry',
+  ownerId: 'ownerId',
   organizationId: 'organizationId',
-  userId: 'userId',
-  role: 'role',
+  internal: 'internal',
+  openSource: 'openSource',
+  status: 'status',
+  aiOverallValidation: 'aiOverallValidation',
+  problemSolved: 'problemSolved',
+  solutionOffered: 'solutionOffered',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CompetitorScalarFieldEnum = {
+  id: 'id',
+  ideaId: 'ideaId',
+  name: 'name',
+  website: 'website',
+  description: 'description',
+  logoUrl: 'logoUrl',
+  marketShare: 'marketShare',
+  annualRevenue: 'annualRevenue',
+  employeeCount: 'employeeCount',
+  foundedYear: 'foundedYear',
+  headquarters: 'headquarters',
+  targetAudience: 'targetAudience',
+  threatLevel: 'threatLevel',
+  userGrowthRate: 'userGrowthRate',
+  churnRate: 'churnRate',
+  customerSatisfaction: 'customerSatisfaction',
+  marketCap: 'marketCap',
+  lastUpdated: 'lastUpdated',
+  createdAt: 'createdAt',
+  isActive: 'isActive'
+};
+
+exports.Prisma.CompetitiveMoveScalarFieldEnum = {
+  id: 'id',
+  competitorId: 'competitorId',
+  moveType: 'moveType',
+  title: 'title',
+  description: 'description',
+  impactLevel: 'impactLevel',
+  targetAudience: 'targetAudience',
+  affectedFeatures: 'affectedFeatures',
+  announcedDate: 'announcedDate',
+  launchDate: 'launchDate',
+  completionDate: 'completionDate',
+  userFeedback: 'userFeedback',
+  pressCoverage: 'pressCoverage',
+  opportunities: 'opportunities',
+  threats: 'threats',
+  responseRequired: 'responseRequired',
+  responseStrategy: 'responseStrategy',
   createdAt: 'createdAt'
 };
 
-exports.Prisma.InvitationScalarFieldEnum = {
+exports.Prisma.ResearchSessionScalarFieldEnum = {
   id: 'id',
+  ideaId: 'ideaId',
   organizationId: 'organizationId',
-  email: 'email',
-  role: 'role',
-  status: 'status',
-  expiresAt: 'expiresAt',
-  inviterId: 'inviterId'
-};
-
-exports.Prisma.PasskeyScalarFieldEnum = {
-  id: 'id',
   name: 'name',
-  publicKey: 'publicKey',
-  userId: 'userId',
-  webauthnUserID: 'webauthnUserID',
-  counter: 'counter',
-  deviceType: 'deviceType',
-  backedUp: 'backedUp',
-  transports: 'transports',
-  createdAt: 'createdAt',
-  credentialID: 'credentialID'
-};
-
-exports.Prisma.TwoFactorScalarFieldEnum = {
-  id: 'id',
-  secret: 'secret',
-  backupCodes: 'backupCodes',
-  userId: 'userId'
-};
-
-exports.Prisma.SubscriptionScalarFieldEnum = {
-  id: 'id',
+  finalContent: 'finalContent',
+  prompt: 'prompt',
+  depth: 'depth',
   status: 'status',
-  organisation_id: 'organisation_id',
-  subscription_id: 'subscription_id',
-  product_id: 'product_id',
-  userId: 'userId',
+  currentPhaseIndex: 'currentPhaseIndex',
+  overallConfidence: 'overallConfidence',
+  estimatedCompletion: 'estimatedCompletion',
+  actualCompletion: 'actualCompletion',
+  totalCost: 'totalCost',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ResearchPhaseResultScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  phaseName: 'phaseName',
+  status: 'status',
+  conclusion: 'conclusion',
+  confidence: 'confidence',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ResearchFindingsScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  findings: 'findings',
+  impact: 'impact',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
@@ -247,23 +236,6 @@ exports.Prisma.ProjectScalarFieldEnum = {
   updatedAt: 'updatedAt',
   organizationId: 'organizationId',
   createdById: 'createdById'
-};
-
-exports.Prisma.IdeaScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  industry: 'industry',
-  ownerId: 'ownerId',
-  organizationId: 'organizationId',
-  internal: 'internal',
-  openSource: 'openSource',
-  status: 'status',
-  aiOverallValidation: 'aiOverallValidation',
-  problemSolved: 'problemSolved',
-  solutionOffered: 'solutionOffered',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.IssueScalarFieldEnum = {
@@ -322,33 +294,6 @@ exports.Prisma.AssetScalarFieldEnum = {
   uploadedById: 'uploadedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.ApiKeyScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  name: 'name',
-  keyHash: 'keyHash',
-  keyPreview: 'keyPreview',
-  permissions: 'permissions',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  lastUsed: 'lastUsed',
-  isActive: 'isActive',
-  expiresAt: 'expiresAt'
-};
-
-exports.Prisma.ApiCallScalarFieldEnum = {
-  id: 'id',
-  organizationId: 'organizationId',
-  apiKeyId: 'apiKeyId',
-  endpoint: 'endpoint',
-  method: 'method',
-  statusCode: 'statusCode',
-  responseTime: 'responseTime',
-  userAgent: 'userAgent',
-  ipAddress: 'ipAddress',
-  createdAt: 'createdAt'
 };
 
 exports.Prisma.ActivityFeedScalarFieldEnum = {
@@ -468,29 +413,6 @@ exports.Prisma.FeatureRequestScalarFieldEnum = {
   conversionNotes: 'conversionNotes'
 };
 
-exports.Prisma.IntegrationScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  type: 'type',
-  config: 'config',
-  isActive: 'isActive',
-  organizationId: 'organizationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  createdById: 'createdById'
-};
-
-exports.Prisma.IntegrationUsageScalarFieldEnum = {
-  id: 'id',
-  integrationId: 'integrationId',
-  entityType: 'entityType',
-  entityId: 'entityId',
-  purpose: 'purpose',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.WaitlistScalarFieldEnum = {
   id: 'id',
   projectId: 'projectId',
@@ -587,6 +509,19 @@ exports.Prisma.MilestoneDependencyScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ReferralScalarFieldEnum = {
+  id: 'id',
+  referrerId: 'referrerId',
+  referredEmail: 'referredEmail',
+  referredName: 'referredName',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  referrerCode: 'referrerCode',
+  waitlistId: 'waitlistId',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.AssetViewScalarFieldEnum = {
   id: 'id',
   assetId: 'assetId',
@@ -609,97 +544,162 @@ exports.Prisma.AssetDownloadScalarFieldEnum = {
   downloadedAt: 'downloadedAt'
 };
 
-exports.Prisma.ReferralScalarFieldEnum = {
+exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
-  referrerId: 'referrerId',
-  referredEmail: 'referredEmail',
-  referredName: 'referredName',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  image: 'image',
+  role: 'role',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  twoFactorEnabled: 'twoFactorEnabled'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  expiresAt: 'expiresAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  referrerCode: 'referrerCode',
-  waitlistId: 'waitlistId',
-  organizationId: 'organizationId',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.CompetitorScalarFieldEnum = {
-  id: 'id',
-  ideaId: 'ideaId',
-  name: 'name',
-  website: 'website',
-  description: 'description',
-  logoUrl: 'logoUrl',
-  marketShare: 'marketShare',
-  annualRevenue: 'annualRevenue',
-  employeeCount: 'employeeCount',
-  foundedYear: 'foundedYear',
-  headquarters: 'headquarters',
-  targetAudience: 'targetAudience',
-  threatLevel: 'threatLevel',
-  userGrowthRate: 'userGrowthRate',
-  churnRate: 'churnRate',
-  customerSatisfaction: 'customerSatisfaction',
-  marketCap: 'marketCap',
-  lastUpdated: 'lastUpdated',
-  createdAt: 'createdAt',
-  isActive: 'isActive'
-};
-
-exports.Prisma.CompetitiveMoveScalarFieldEnum = {
-  id: 'id',
-  competitorId: 'competitorId',
-  moveType: 'moveType',
-  title: 'title',
-  description: 'description',
-  impactLevel: 'impactLevel',
-  targetAudience: 'targetAudience',
-  affectedFeatures: 'affectedFeatures',
-  announcedDate: 'announcedDate',
-  launchDate: 'launchDate',
-  completionDate: 'completionDate',
-  userFeedback: 'userFeedback',
-  pressCoverage: 'pressCoverage',
-  opportunities: 'opportunities',
-  threats: 'threats',
-  responseRequired: 'responseRequired',
-  responseStrategy: 'responseStrategy',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ResearchSessionScalarFieldEnum = {
-  id: 'id',
-  ideaId: 'ideaId',
-  organizationId: 'organizationId',
-  name: 'name',
-  finalContent: 'finalContent',
-  prompt: 'prompt',
-  depth: 'depth',
-  status: 'status',
-  currentPhaseIndex: 'currentPhaseIndex',
-  overallConfidence: 'overallConfidence',
-  estimatedCompletion: 'estimatedCompletion',
-  actualCompletion: 'actualCompletion',
-  totalCost: 'totalCost',
+  userId: 'userId',
+  activeOrganizationId: 'activeOrganizationId',
+  token: 'token',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ResearchPhaseResultScalarFieldEnum = {
+exports.Prisma.AccountScalarFieldEnum = {
   id: 'id',
-  sessionId: 'sessionId',
-  phaseName: 'phaseName',
-  status: 'status',
-  conclusion: 'conclusion',
-  confidence: 'confidence',
+  accountId: 'accountId',
+  providerId: 'providerId',
+  userId: 'userId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  idToken: 'idToken',
+  expiresAt: 'expiresAt',
+  password: 'password',
+  accessTokenExpiresAt: 'accessTokenExpiresAt',
+  refreshTokenExpiresAt: 'refreshTokenExpiresAt',
+  scope: 'scope',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ResearchFindingsScalarFieldEnum = {
+exports.Prisma.VerificationScalarFieldEnum = {
   id: 'id',
-  sessionId: 'sessionId',
-  findings: 'findings',
-  impact: 'impact',
+  identifier: 'identifier',
+  value: 'value',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  logo: 'logo',
+  createdAt: 'createdAt',
+  metadata: 'metadata'
+};
+
+exports.Prisma.MemberScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  userId: 'userId',
+  role: 'role',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.InvitationScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  email: 'email',
+  role: 'role',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  inviterId: 'inviterId'
+};
+
+exports.Prisma.PasskeyScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  publicKey: 'publicKey',
+  userId: 'userId',
+  webauthnUserID: 'webauthnUserID',
+  counter: 'counter',
+  deviceType: 'deviceType',
+  backedUp: 'backedUp',
+  transports: 'transports',
+  createdAt: 'createdAt',
+  credentialID: 'credentialID'
+};
+
+exports.Prisma.TwoFactorScalarFieldEnum = {
+  id: 'id',
+  secret: 'secret',
+  backupCodes: 'backupCodes',
+  userId: 'userId'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  organisation_id: 'organisation_id',
+  subscription_id: 'subscription_id',
+  product_id: 'product_id',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.IntegrationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  config: 'config',
+  isActive: 'isActive',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  createdById: 'createdById'
+};
+
+exports.Prisma.IntegrationUsageScalarFieldEnum = {
+  id: 'id',
+  integrationId: 'integrationId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  purpose: 'purpose',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ApiKeyScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  keyHash: 'keyHash',
+  keyPreview: 'keyPreview',
+  permissions: 'permissions',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  lastUsed: 'lastUsed',
+  isActive: 'isActive',
+  expiresAt: 'expiresAt'
+};
+
+exports.Prisma.ApiCallScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  apiKeyId: 'apiKeyId',
+  endpoint: 'endpoint',
+  method: 'method',
+  statusCode: 'statusCode',
+  responseTime: 'responseTime',
+  userAgent: 'userAgent',
+  ipAddress: 'ipAddress',
   createdAt: 'createdAt'
 };
 
@@ -727,6 +727,58 @@ exports.Prisma.JsonNullValueFilter = {
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+exports.IdeaStatus = exports.$Enums.IdeaStatus = {
+  INVALIDATED: 'INVALIDATED',
+  VALIDATED: 'VALIDATED',
+  FAILED: 'FAILED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  LAUNCHED: 'LAUNCHED'
+};
+
+exports.Importance = exports.$Enums.Importance = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+};
+
+exports.ResearchDepth = exports.$Enums.ResearchDepth = {
+  QUICK: 'QUICK',
+  STANDARD: 'STANDARD',
+  DEEP: 'DEEP',
+  EXHAUSTIVE: 'EXHAUSTIVE'
+};
+
+exports.ResearchStatus = exports.$Enums.ResearchStatus = {
+  INITIALIZING: 'INITIALIZING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+};
+
+exports.ResearchPhaseType = exports.$Enums.ResearchPhaseType = {
+  MARKET_SCAN: 'MARKET_SCAN',
+  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
+  BUSINESS_MODEL: 'BUSINESS_MODEL',
+  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
+  RISK_ANALYSIS: 'RISK_ANALYSIS',
+  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY',
+  COMPLETE: 'COMPLETE',
+  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
+  GO_TO_MARKET: 'GO_TO_MARKET',
+  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
+  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT'
+};
+
+exports.PhaseStatus = exports.$Enums.PhaseStatus = {
+  PENDING: 'PENDING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  PAUSED: 'PAUSED'
+};
+
 exports.ProjectPlatform = exports.$Enums.ProjectPlatform = {
   web: 'web',
   mobile: 'mobile',
@@ -744,14 +796,6 @@ exports.ProjectStatus = exports.$Enums.ProjectStatus = {
   completed: 'completed'
 };
 
-exports.IdeaStatus = exports.$Enums.IdeaStatus = {
-  INVALIDATED: 'INVALIDATED',
-  VALIDATED: 'VALIDATED',
-  FAILED: 'FAILED',
-  IN_PROGRESS: 'IN_PROGRESS',
-  LAUNCHED: 'LAUNCHED'
-};
-
 exports.IssueStatus = exports.$Enums.IssueStatus = {
   BACKLOG: 'BACKLOG',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -759,13 +803,6 @@ exports.IssueStatus = exports.$Enums.IssueStatus = {
   DONE: 'DONE',
   BLOCKED: 'BLOCKED',
   CANCELLED: 'CANCELLED'
-};
-
-exports.Importance = exports.$Enums.Importance = {
-  CRITICAL: 'CRITICAL',
-  HIGH: 'HIGH',
-  MEDIUM: 'MEDIUM',
-  LOW: 'LOW'
 };
 
 exports.IssueLabel = exports.$Enums.IssueLabel = {
@@ -814,13 +851,6 @@ exports.AssetCategory = exports.$Enums.AssetCategory = {
   presentations: 'presentations',
   tutorials: 'tutorials',
   other: 'other'
-};
-
-exports.ApiPermission = exports.$Enums.ApiPermission = {
-  READ: 'READ',
-  WRITE: 'WRITE',
-  DELETE: 'DELETE',
-  ADMIN: 'ADMIN'
 };
 
 exports.ActivityType = exports.$Enums.ActivityType = {
@@ -877,15 +907,6 @@ exports.FeatureRequestPriority = exports.$Enums.FeatureRequestPriority = {
   urgent: 'urgent'
 };
 
-exports.IntegrationType = exports.$Enums.IntegrationType = {
-  RESEND: 'RESEND',
-  LOOPS: 'LOOPS',
-  SENDGRID: 'SENDGRID',
-  MAILCHIMP: 'MAILCHIMP',
-  CONVERTKIT: 'CONVERTKIT',
-  GITHUB: 'GITHUB'
-};
-
 exports.FeaturePhase = exports.$Enums.FeaturePhase = {
   DISCOVERY: 'DISCOVERY',
   PLANNING: 'PLANNING',
@@ -906,44 +927,52 @@ exports.MilestoneStatus = exports.$Enums.MilestoneStatus = {
   DELAYED: 'DELAYED'
 };
 
-exports.ResearchDepth = exports.$Enums.ResearchDepth = {
-  QUICK: 'QUICK',
-  STANDARD: 'STANDARD',
-  DEEP: 'DEEP',
-  EXHAUSTIVE: 'EXHAUSTIVE'
+exports.IntegrationType = exports.$Enums.IntegrationType = {
+  RESEND: 'RESEND',
+  LOOPS: 'LOOPS',
+  SENDGRID: 'SENDGRID',
+  MAILCHIMP: 'MAILCHIMP',
+  CONVERTKIT: 'CONVERTKIT',
+  GITHUB: 'GITHUB'
 };
 
-exports.ResearchStatus = exports.$Enums.ResearchStatus = {
-  INITIALIZING: 'INITIALIZING',
-  IN_PROGRESS: 'IN_PROGRESS',
-  PAUSED: 'PAUSED',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
-};
-
-exports.ResearchPhaseType = exports.$Enums.ResearchPhaseType = {
-  MARKET_SCAN: 'MARKET_SCAN',
-  CUSTOMER_VALIDATION: 'CUSTOMER_VALIDATION',
-  BUSINESS_MODEL: 'BUSINESS_MODEL',
-  FINANCIAL_PROJECTIONS: 'FINANCIAL_PROJECTIONS',
-  RISK_ANALYSIS: 'RISK_ANALYSIS',
-  TECHNICAL_FEASIBILITY: 'TECHNICAL_FEASIBILITY',
-  COMPLETE: 'COMPLETE',
-  COMPETITIVE_ANALYSIS: 'COMPETITIVE_ANALYSIS',
-  GO_TO_MARKET: 'GO_TO_MARKET',
-  INVESTMENT_RECOMMENDATION: 'INVESTMENT_RECOMMENDATION',
-  PRODUCT_MARKET_FIT: 'PRODUCT_MARKET_FIT'
-};
-
-exports.PhaseStatus = exports.$Enums.PhaseStatus = {
-  PENDING: 'PENDING',
-  IN_PROGRESS: 'IN_PROGRESS',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED',
-  PAUSED: 'PAUSED'
+exports.ApiPermission = exports.$Enums.ApiPermission = {
+  READ: 'READ',
+  WRITE: 'WRITE',
+  DELETE: 'DELETE',
+  ADMIN: 'ADMIN'
 };
 
 exports.Prisma.ModelName = {
+  Idea: 'Idea',
+  Competitor: 'Competitor',
+  CompetitiveMove: 'CompetitiveMove',
+  ResearchSession: 'ResearchSession',
+  ResearchPhaseResult: 'ResearchPhaseResult',
+  ResearchFindings: 'ResearchFindings',
+  Project: 'Project',
+  Issue: 'Issue',
+  IssueDependency: 'IssueDependency',
+  IssueLink: 'IssueLink',
+  Asset: 'Asset',
+  ActivityFeed: 'ActivityFeed',
+  PublicRoadmap: 'PublicRoadmap',
+  RoadmapItem: 'RoadmapItem',
+  RoadmapVote: 'RoadmapVote',
+  RoadmapFeedback: 'RoadmapFeedback',
+  RoadmapChangelog: 'RoadmapChangelog',
+  ChangelogEntry: 'ChangelogEntry',
+  FeatureRequest: 'FeatureRequest',
+  Waitlist: 'Waitlist',
+  WaitlistEntry: 'WaitlistEntry',
+  Feature: 'Feature',
+  FeatureDependency: 'FeatureDependency',
+  FeatureLink: 'FeatureLink',
+  Milestone: 'Milestone',
+  MilestoneDependency: 'MilestoneDependency',
+  Referral: 'Referral',
+  AssetView: 'AssetView',
+  AssetDownload: 'AssetDownload',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
@@ -954,39 +983,10 @@ exports.Prisma.ModelName = {
   Passkey: 'Passkey',
   TwoFactor: 'TwoFactor',
   Subscription: 'Subscription',
-  Project: 'Project',
-  Idea: 'Idea',
-  Issue: 'Issue',
-  IssueDependency: 'IssueDependency',
-  IssueLink: 'IssueLink',
-  Asset: 'Asset',
-  ApiKey: 'ApiKey',
-  ApiCall: 'ApiCall',
-  ActivityFeed: 'ActivityFeed',
-  PublicRoadmap: 'PublicRoadmap',
-  RoadmapItem: 'RoadmapItem',
-  RoadmapVote: 'RoadmapVote',
-  RoadmapFeedback: 'RoadmapFeedback',
-  RoadmapChangelog: 'RoadmapChangelog',
-  ChangelogEntry: 'ChangelogEntry',
-  FeatureRequest: 'FeatureRequest',
   Integration: 'Integration',
   IntegrationUsage: 'IntegrationUsage',
-  Waitlist: 'Waitlist',
-  WaitlistEntry: 'WaitlistEntry',
-  Feature: 'Feature',
-  FeatureDependency: 'FeatureDependency',
-  FeatureLink: 'FeatureLink',
-  Milestone: 'Milestone',
-  MilestoneDependency: 'MilestoneDependency',
-  AssetView: 'AssetView',
-  AssetDownload: 'AssetDownload',
-  Referral: 'Referral',
-  Competitor: 'Competitor',
-  CompetitiveMove: 'CompetitiveMove',
-  ResearchSession: 'ResearchSession',
-  ResearchPhaseResult: 'ResearchPhaseResult',
-  ResearchFindings: 'ResearchFindings'
+  ApiKey: 'ApiKey',
+  ApiCall: 'ApiCall'
 };
 
 /**

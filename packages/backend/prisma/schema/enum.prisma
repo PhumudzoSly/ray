@@ -1,0 +1,215 @@
+enum ActivityType {
+    CREATED
+    UPDATED
+    PHASE_CHANGED
+    ASSIGNED
+    UNASSIGNED
+    DEPENDENCY_ADDED
+    DEPENDENCY_REMOVED
+    LINK_ADDED
+    LINK_REMOVED
+    PARENT_CHANGED
+}
+
+enum EntityType {
+    PROJECT
+    FEATURE
+    ISSUE
+    IDEA
+    ROADMAP
+    MILESTONE
+}
+
+enum IdeaStatus {
+    INVALIDATED
+    VALIDATED
+    FAILED
+    IN_PROGRESS
+    LAUNCHED
+}
+
+enum Importance {
+    CRITICAL
+    HIGH
+    MEDIUM
+    LOW
+}
+
+enum ProjectPlatform {
+    web
+    mobile
+    both
+    api
+    plugin
+    desktop
+    cli
+}
+
+enum ProjectStatus {
+    planning
+    in_progress
+    review
+    completed
+}
+
+enum IssueStatus {
+    BACKLOG
+    IN_PROGRESS
+    IN_REVIEW
+    DONE
+    BLOCKED
+    CANCELLED
+}
+
+enum IssueLabel {
+    UI
+    BUG
+    FEATURE
+    IMPROVEMENT
+    TASK
+    DOCUMENTATION
+    REFACTOR
+    PERFORMANCE
+    DESIGN
+    SECURITY
+    ACCESSIBILITY
+    TESTING
+    INTERNATIONALIZATION
+}
+
+enum AssetType {
+    image
+    document
+    video
+    link
+    code
+    design
+    other
+}
+
+enum LinkType {
+    youtube
+    figma
+    notion
+    github
+    dribbble
+    behance
+    external
+}
+
+enum AssetCategory {
+    branding
+    ui_design
+    mockups
+    documentation
+    inspiration
+    code_snippets
+    presentations
+    tutorials
+    other
+}
+
+enum RoadmapFeedbackSentiment {
+    positive
+    neutral
+    negative
+}
+
+enum FeatureRequestStatus {
+    pending
+    under_review
+    approved
+    rejected
+    implemented
+}
+
+enum FeatureRequestPriority {
+    low
+    medium
+    high
+    urgent
+}
+
+enum FeaturePhase {
+    DISCOVERY
+    PLANNING
+    DEVELOPMENT
+    TESTING
+    DEPLOYMENT
+    COMPLETED
+    RELEASE
+    LIVE
+    DEPRECATED
+}
+
+enum MilestoneStatus {
+    NOT_STARTED
+    IN_PROGRESS
+    AT_RISK
+    COMPLETED
+    DELAYED
+}
+
+enum IntegrationType {
+    RESEND
+    LOOPS
+    SENDGRID
+    MAILCHIMP
+    CONVERTKIT
+    GITHUB
+}
+
+enum ApiPermission {
+    READ
+    WRITE
+    DELETE
+    ADMIN
+}
+
+enum ResearchDepth {
+    QUICK
+    STANDARD
+    DEEP
+    EXHAUSTIVE
+}
+
+enum ResearchStatus {
+    INITIALIZING
+    IN_PROGRESS
+    PAUSED
+    COMPLETED
+    FAILED
+}
+
+enum ResearchPhaseType {
+    MARKET_SCAN
+    CUSTOMER_VALIDATION
+    BUSINESS_MODEL
+    FINANCIAL_PROJECTIONS
+    RISK_ANALYSIS
+    TECHNICAL_FEASIBILITY
+    COMPLETE
+    COMPETITIVE_ANALYSIS
+    GO_TO_MARKET
+    INVESTMENT_RECOMMENDATION
+    PRODUCT_MARKET_FIT
+}
+
+enum PhaseStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+    FAILED
+    PAUSED
+}
+
+enum ChangelogEntryType {
+    FEATURE
+    FIX
+    IMPROVEMENT
+    BREAKING
+    SECURITY
+    DEPRECATION
+    DOCUMENTATION
+    PERFORMANCE
+}
