@@ -7,7 +7,6 @@ import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@/context/theme-provider";
 import { ConfirmDialogProvider } from "@workspace/ui/components/confirm-dialog";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import ReactQueryProvider from "@/lib/query/provider";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import getQueryClient from "@/lib/query/getQueryClient";
@@ -35,8 +34,10 @@ export default function RootLayout({
               nonce="b1282rp=1ed2h3od12ndu2boqjdh1ibuo2i3hn"
               defaultTheme="light"
             >
-              <ConfirmDialogProvider>{children}</ConfirmDialogProvider>
-              <Toaster richColors />
+              <ConfirmDialogProvider>
+                {children}
+                <Toaster richColors />
+              </ConfirmDialogProvider>
             </ThemeProvider>
           </HydrationBoundary>
         </ReactQueryProvider>

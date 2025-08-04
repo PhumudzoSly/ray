@@ -66,6 +66,8 @@ export default function Navbar() {
     return pathname.startsWith(href);
   };
 
+  if (pathname.startsWith("/wl/") || pathname.startsWith("/rm/")) return null;
+
   return (
     <header
       className={cn(

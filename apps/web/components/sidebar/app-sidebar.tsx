@@ -57,12 +57,21 @@ const data: NavData = {
       icon: LayoutDashboard,
     },
     {
+      name: "Inbox",
+      url: "/inbox",
+      icon: MessageCircleCode,
+      badge: {
+        text: "Coming soon",
+        variant: "warning",
+      },
+    },
+  ],
+  build: [
+    {
       name: "Ideas",
       url: "/ideas",
       icon: Lightbulb,
     },
-  ],
-  build: [
     {
       name: "Projects",
       url: "/project",
@@ -78,13 +87,13 @@ const data: NavData = {
       url: "/waitlist",
       icon: UsersRound,
     },
+  ],
+  grow: [
     {
       name: "Roadmap",
       url: "/roadmap",
       icon: TbRoad,
     },
-  ],
-  grow: [
     {
       name: "Feedback",
       url: "/feedback",
@@ -94,20 +103,10 @@ const data: NavData = {
         variant: "warning",
       },
     },
-    // {
-    //   name: "Analytics",
-    //   url: "/analytics",
-    //   icon: ChartBar,
-    //   badge: {
-    //     text: "Planned",
-    //     variant: "default",
-    //   },
-    // },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  //
   return (
     <Sidebar variant="sidebar" {...props}>
       <SidebarHeader className="bg-gray-50 dark:bg-inherit">
@@ -120,6 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="h-9 w-9 bg-white object-contain aspect-square transition-transform duration-200"
                   alt=""
                 />
+                <Badge className="text-sm font-medium">RayAI</Badge>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

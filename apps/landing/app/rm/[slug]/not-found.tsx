@@ -18,7 +18,8 @@ export default function RoadmapNotFound() {
             <div className="space-y-2">
               <h1 className="text-2xl font-bold">Roadmap Not Found</h1>
               <p className="text-muted-foreground">
-                The roadmap you're looking for doesn't exist or is not publicly available.
+                The roadmap you're looking for doesn't exist or is not publicly
+                available.
               </p>
             </div>
 
@@ -38,12 +39,6 @@ export default function RoadmapNotFound() {
                 <Link href="/">
                   <Home className="w-4 h-4 mr-2" />
                   Go Home
-                </Link>
-              </Button>
-              <Button asChild className="flex-1">
-                <Link href="/">
-                  <Search className="w-4 h-4 mr-2" />
-                  Browse Roadmaps
                 </Link>
               </Button>
             </div>

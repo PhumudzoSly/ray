@@ -1,8 +1,13 @@
+"use client";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function CTA() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/wl/") || pathname.startsWith("/rm/")) return null;
+
   return (
     <section className="relative border-t bg-gray-50 overflow-hidden py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-6 text-center">

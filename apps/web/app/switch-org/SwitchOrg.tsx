@@ -143,9 +143,6 @@ function SwitchOrg({ orgs, invitations }: SwitchOrgProps) {
                           <h4 className="font-medium">
                             {invitation.organization.name}
                           </h4>
-                          <p className="text-sm text-muted-foreground">
-                            Invited by {invitation.email}
-                          </p>
                           <p className="text-xs text-muted-foreground mt-1">
                             Role: {invitation.role}
                           </p>

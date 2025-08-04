@@ -197,6 +197,9 @@ export async function getInvitations() {
   const data = await prisma.invitation.findMany({
     where: {
       email: session?.user.email,
+      status: {
+        not: "accepted",
+      },
     },
     include: {
       organization: true,
@@ -204,6 +207,21 @@ export async function getInvitations() {
   });
 
   return data;
+}
+
+export async function getSingleInvitation(id: string) {
+  await getSession();
+
+  const invite = await prisma.invitation.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      organization: true,
+    },
+  });
+  if (invite?.status === "accepted") return null;
+  return invite;
 }
 
 export async function deleteAccount() {

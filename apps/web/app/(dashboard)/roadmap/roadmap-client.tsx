@@ -355,7 +355,7 @@ export default function RoadmapClient() {
                       <Eye className="h-4 w-4" />
                     </Link>
                     <Link
-                      href={`/roadmap/${roadmap.slug}`}
+                      href={`https://rayai.dev/rm/${roadmap.slug}`}
                       target="_blank"
                       className={buttonVariants({
                         size: "icon",

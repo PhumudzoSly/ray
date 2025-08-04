@@ -58,7 +58,7 @@ export function NavMenu({ items, title, collapsible = false }: NavMenuProps) {
                   className={cn(
                     "group relative flex w-full items-center gap-3 rounded-4xl transition-colors",
                     isActive &&
-                    "bg-linear-to-r from-transparent to-primary/40 border-r-8 border-r-primary"
+                      "bg-linear-to-r from-transparent to-primary/20 border-r-8 border-r-primary"
                   )}
                 >
                   <item.icon
