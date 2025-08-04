@@ -190,11 +190,13 @@ export async function acceptInvitation(invitationId: string) {
 }
 
 export async function getInvitations() {
-  const { email } = await getSession();
+  const headersList = await headers();
 
+  const session = await auth.api.getSession({ headers: headersList });
+  if (!session) throw new Error("Session invalid");
   const data = await prisma.invitation.findMany({
     where: {
-      email,
+      email: session?.user.email,
     },
     include: {
       organization: true,

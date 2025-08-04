@@ -27,6 +27,7 @@ const NewPasswordForm = () => {
 
   const params = useSearchParams();
   const redirectURL = params.get("redirectUrl") || DEFAULT_LOGIN_REDIRECT;
+  const token = params.get("token") || "";
 
   const form = useForm<z.infer<typeof passwordSchema>>({
     resolver: zodResolver(passwordSchema),
@@ -40,6 +41,7 @@ const NewPasswordForm = () => {
     startTransition(async () => {
       const { error } = await client.resetPassword({
         newPassword: values.password,
+        token,
       });
 
       if (error) {
