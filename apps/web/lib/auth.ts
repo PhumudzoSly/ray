@@ -27,10 +27,7 @@ export const auth = betterAuth({
         portal(),
         checkout({
           authenticatedUsersOnly: true,
-          successUrl:
-            process.env.NODE_ENV === "production"
-              ? "/stay-tuned"
-              : "/dashboard",
+          successUrl: "/dashboard",
         }),
         webhooks({
           secret: process.env.POLAR_WEBHOOK_SECRET || "", // We need to enable webhooks on Polar as well

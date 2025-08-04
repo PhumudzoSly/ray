@@ -18,11 +18,6 @@ export default async function DashboardLayout({
 
   if (!session) redirect("/auth/sign-in");
 
-  // In production, redirect authenticated users to stay-tuned page
-  if (process.env.NODE_ENV === "production") {
-    redirect("/stay-tuned");
-  }
-
   // Fetch session data and subscription in parallel
   const [sessionData, subscription] = await Promise.all([
     getSession(),

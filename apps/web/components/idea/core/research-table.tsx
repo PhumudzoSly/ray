@@ -45,6 +45,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ResearchDetails } from "./research-details";
 import { ResearchDepthSelector } from "@/components/research/ResearchDepthSelector";
 import type { ResearchDepth } from "@/types/research";
+import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
 interface ResearchTableProps {
   ideaId: string;
@@ -62,20 +63,6 @@ const RESEARCH_TYPE_LABELS: Record<ResearchPhaseTypeType, string> = {
   PRODUCT_MARKET_FIT: "Product-Market Fit",
   RISK_ANALYSIS: "Risk Analysis",
   TECHNICAL_FEASIBILITY: "Technical Feasibility",
-};
-
-const CONFIDENCE_LEVEL_COLORS: Record<ImportanceType, string> = {
-  CRITICAL: "bg-red-100 text-red-800",
-  HIGH: "bg-orange-100 text-orange-800",
-  MEDIUM: "bg-yellow-100 text-yellow-800",
-  LOW: "bg-green-100 text-green-800",
-};
-
-const CONFIDENCE_LEVEL_LABELS: Record<ImportanceType, string> = {
-  CRITICAL: "Critical",
-  HIGH: "High",
-  MEDIUM: "Medium",
-  LOW: "Low",
 };
 
 // Add interface for research data structure
@@ -202,7 +189,7 @@ export function ResearchTable({ ideaId }: ResearchTableProps) {
                   New Validation Research
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl h-[90vh]">
                 <DialogHeader>
                   <DialogTitle>Start New Validation</DialogTitle>
                   <DialogDescription>
@@ -210,72 +197,74 @@ export function ResearchTable({ ideaId }: ResearchTableProps) {
                     and research depth.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-6">
-                  {/* Validation Type Selection */}
-                  <div className="space-y-2">
-                    <Label htmlFor="validation-type">Validation Type</Label>
-                    <Select
-                      value={selectedType}
-                      onValueChange={(value) =>
-                        setSelectedType(value as ResearchPhaseTypeType)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select validation type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(RESEARCH_TYPE_LABELS).map(
-                          ([type, label]) => (
-                            <SelectItem key={type} value={type}>
-                              {label}
-                            </SelectItem>
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <ScrollArea className="p-4">
+                  <div className="space-y-6 p-2">
+                    {/* Validation Type Selection */}
+                    <div className="space-y-2">
+                      <Label htmlFor="validation-type">Validation Type</Label>
+                      <Select
+                        value={selectedType}
+                        onValueChange={(value) =>
+                          setSelectedType(value as ResearchPhaseTypeType)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select validation type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(RESEARCH_TYPE_LABELS).map(
+                            ([type, label]) => (
+                              <SelectItem key={type} value={type}>
+                                {label}
+                              </SelectItem>
+                            )
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
 
-                  {/* Name Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="validation-name">Validation Name</Label>
-                    <Input
-                      id="validation-name"
-                      placeholder="Enter a name for this validation"
-                      value={form.name}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
-                    />
-                  </div>
+                    {/* Name Field */}
+                    <div className="space-y-2">
+                      <Label htmlFor="validation-name">Validation Name</Label>
+                      <Input
+                        id="validation-name"
+                        placeholder="Enter a name for this validation"
+                        value={form.name}
+                        onChange={(e) =>
+                          setForm({ ...form, name: e.target.value })
+                        }
+                      />
+                    </div>
 
-                  {/* Prompt Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="validation-prompt">
-                      Custom Prompt (Optional)
-                    </Label>
-                    <Textarea
-                      id="validation-prompt"
-                      placeholder="Add any specific instructions or focus areas for this validation..."
-                      value={form.prompt}
-                      onChange={(e) =>
-                        setForm({ ...form, prompt: e.target.value })
-                      }
-                      rows={3}
-                    />
-                  </div>
+                    {/* Prompt Field */}
+                    <div className="space-y-2">
+                      <Label htmlFor="validation-prompt">
+                        Custom Prompt (Optional)
+                      </Label>
+                      <Textarea
+                        id="validation-prompt"
+                        placeholder="Add any specific instructions or focus areas for this validation..."
+                        value={form.prompt}
+                        onChange={(e) =>
+                          setForm({ ...form, prompt: e.target.value })
+                        }
+                        rows={3}
+                      />
+                    </div>
 
-                  {/* Research Depth Selector */}
-                  <div className="space-y-2">
-                    <Label>Research Depth</Label>
-                    <ResearchDepthSelector
-                      ideaId={ideaId}
-                      disabled={false}
-                      selectedDepth={selectedDepth}
-                      onDepthChange={setSelectedDepth}
-                      showButton={false}
-                    />
+                    {/* Research Depth Selector */}
+                    <div className="space-y-2">
+                      <Label>Research Depth</Label>
+                      <ResearchDepthSelector
+                        ideaId={ideaId}
+                        disabled={false}
+                        selectedDepth={selectedDepth}
+                        onDepthChange={setSelectedDepth}
+                        showButton={false}
+                      />
+                    </div>
                   </div>
-                </div>
+                </ScrollArea>
                 <DialogFooter>
                   <Button
                     variant="outline"

@@ -26,7 +26,7 @@ export const fullValidator = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -66,7 +66,7 @@ export const marketAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -105,7 +105,7 @@ export const businessModelAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -144,7 +144,7 @@ export const competitiveAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -183,7 +183,7 @@ export const customerAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -222,7 +222,7 @@ export const financeAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -261,7 +261,7 @@ export const goToMarketAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -300,7 +300,7 @@ export const investmentAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -339,7 +339,7 @@ export const marketFitAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -378,7 +378,7 @@ export const riskAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 
@@ -417,7 +417,7 @@ export const techAnalyzer = async (id: string) => {
       deepSearch,
       generateQuestions,
     },
-    stopWhen: [stepCountIs(5)],
+    stopWhen: [stepCountIs(4)],
     prompt: `
     Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
 

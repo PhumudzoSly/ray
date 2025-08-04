@@ -373,19 +373,13 @@ export const deepResearchAgent = inngestClient.createFunction(
 
     await step.sleep("rest", "3 mins");
 
-    const startValidation = await step.run("start-validate", async () => {
-      const startedResearch = await prisma.researchSession.update({
-        where: { id: researchId },
-        data: {
-          status: "IN_PROGRESS",
-          overallConfidence: 10,
-        },
-      });
-
-      return startedResearch;
+    const research = await prisma.researchSession.update({
+      where: { id: researchId },
+      data: {
+        status: "IN_PROGRESS",
+        overallConfidence: 10,
+      },
     });
-
-    await step.sleep("rest", "3 mins");
 
     const validation = await step.run("validate-and-fetch-idea", async () => {
       const idea = await prisma.idea.findUnique({
@@ -396,11 +390,23 @@ export const deepResearchAgent = inngestClient.createFunction(
       });
 
       if (!idea) {
+        await prisma.researchSession.update({
+          where: { id: researchId },
+          data: {
+            status: "FAILED",
+          },
+        });
         throw new Error(`Idea not found: ${ideaId}`);
       }
 
       const { text } = await generateText({
         model: google("gemini-2.0-flash-lite"),
+        prompt: `
+        Given the following SaaS idea, I need you to validate the SaaS idea under the following criteria:
+
+        The idea: ${JSON.stringify(idea)}
+
+        `,
         stopWhen: [
           stepCountIs(
             depth === "DEEP"
@@ -425,8 +431,6 @@ export const deepResearchAgent = inngestClient.createFunction(
       return text;
     });
 
-    await step.sleep("rest", "3 mins");
-
     await step.run("finalize-validation", async () => {
       const idea = prisma.idea.findUnique({ where: { id: ideaId } });
 
@@ -446,6 +450,9 @@ export const deepResearchAgent = inngestClient.createFunction(
             "What's the total rating based on the quality of the data received"
           ),
         }),
+        prompt: `
+       Generate the findings and overall rating of this idea's validation. based on ${JSON.stringify(validation)}
+        `,
       });
 
       const finalData = findings.finding.map((f) => {
@@ -456,7 +463,7 @@ export const deepResearchAgent = inngestClient.createFunction(
         };
       });
 
-      const data = await prisma.researchFindings.createMany({
+      await prisma.researchFindings.createMany({
         data: finalData,
       });
 

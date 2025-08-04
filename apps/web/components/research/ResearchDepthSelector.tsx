@@ -1,16 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import type { ResearchDepth } from "@/types/research";
 import { RESEARCH_DEPTHS } from "@/lib/config/researchConfig";
+import { Zap, BarChart2, Search, Layers } from "lucide-react";
 
 interface ResearchDepthSelectorProps {
   ideaId: string;
@@ -45,42 +39,33 @@ export function ResearchDepthSelector({
     depth: ResearchDepth;
     title: string;
     description: string;
-    duration: string;
-    phases: number;
-    cost: string;
+    icon: React.ReactNode;
   }> = [
     {
       depth: "QUICK",
       title: "Quick Scan",
-      description: "Basic market overview and competitive landscape",
-      duration: "2-5 minutes",
-      phases: RESEARCH_DEPTHS.QUICK.phases.length,
-      cost: `$${RESEARCH_DEPTHS.QUICK.costEstimate.toFixed(2)}`,
+      description: "Basic search with limited tools and platforms",
+      icon: <Zap className="h-4 w-4" />,
     },
     {
       depth: "STANDARD",
       title: "Standard Analysis",
-      description: "Comprehensive market, competitive, and customer analysis",
-      duration: "5-10 minutes",
-      phases: RESEARCH_DEPTHS.STANDARD.phases.length,
-      cost: `$${RESEARCH_DEPTHS.STANDARD.costEstimate.toFixed(2)}`,
+      description: "More comprehensive search with additional tools",
+      icon: <BarChart2 className="h-4 w-4" />,
     },
     {
       depth: "DEEP",
       title: "Deep Research",
-      description: "Detailed analysis including business model and financials",
-      duration: "10-15 minutes",
-      phases: RESEARCH_DEPTHS.DEEP.phases.length,
-      cost: `$${RESEARCH_DEPTHS.DEEP.costEstimate.toFixed(2)}`,
+      description:
+        "Takes more time with expanded search tools and platforms like Reddit",
+      icon: <Search className="h-4 w-4" />,
     },
     {
       depth: "EXHAUSTIVE",
       title: "Exhaustive Study",
       description:
-        "Complete analysis with risk assessment and technical feasibility",
-      duration: "15-30 minutes",
-      phases: RESEARCH_DEPTHS.EXHAUSTIVE.phases.length,
-      cost: `$${RESEARCH_DEPTHS.EXHAUSTIVE.costEstimate.toFixed(2)}`,
+        "Takes the most time with all search tools and platforms including Reddit, X, and more",
+      icon: <Layers className="h-4 w-4" />,
     },
   ];
 
@@ -96,33 +81,30 @@ export function ResearchDepthSelector({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-2">
         {depthOptions.map((option) => (
-          <Card
+          <div
             key={option.depth}
-            className={`cursor-pointer transition-all ${
+            className={`flex items-center gap-3 p-3 rounded-md cursor-pointer transition-all ${
               selectedDepth === option.depth
-                ? "ring-2 ring-blue-500 border-blue-500"
-                : "hover:border-gray-300"
+                ? "bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400"
+                : "hover:bg-gray-50 dark:hover:bg-gray-900"
             }`}
             onClick={() => !disabled && handleDepthChange(option.depth)}
           >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base">{option.title}</CardTitle>
-                <Badge variant="secondary">{option.cost}</Badge>
-              </div>
-              <CardDescription className="text-sm">
+            <div className="flex-shrink-0">{option.icon}</div>
+            <div className="flex-grow">
+              <div className="font-medium">{option.title}</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 {option.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>{option.duration}</span>
-                <span>{option.phases} phases</span>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            {selectedDepth === option.depth && (
+              <Badge variant="secondary" className="ml-auto">
+                Selected
+              </Badge>
+            )}
+          </div>
         ))}
       </div>
 
@@ -133,8 +115,7 @@ export function ResearchDepthSelector({
             {depthOptions.find((o) => o.depth === selectedDepth)?.title}
             <br />
             <span className="text-xs">
-              This will conduct real web research using Exa for up-to-date
-              market data
+              This will conduct real web research for up-to-date market data
             </span>
           </div>
         </div>
