@@ -1,11 +1,11 @@
 model Idea {
-    id                  String            @id @default(uuid())
+    id                  String       @id @default(uuid())
     name                String
     description         String
     industry            String
-    owner               User?             @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+    owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
     ownerId             String?
-    organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId      String
     internal            Boolean
     openSource          Boolean
@@ -14,10 +14,10 @@ model Idea {
     problemSolved       String?
     solutionOffered     String?
     projects            Project[]
-    researchSessions    ResearchSession[]
-    createdAt           DateTime          @default(now())
-    updatedAt           DateTime          @updatedAt
+    createdAt           DateTime     @default(now())
+    updatedAt           DateTime     @updatedAt
     Competitor          Competitor[]
+    validation          IdeaValidation?
 }
 
 model Competitor {
@@ -56,6 +56,7 @@ model Competitor {
 
     // Relations
     competitiveMoves CompetitiveMove[]
+    CompetitorSwot   CompetitorSwot[]
 
     @@index([ideaId])
     @@index([name])
@@ -98,53 +99,15 @@ model CompetitiveMove {
     @@map("competitive_move")
 }
 
-model ResearchSession {
-    id                  String                @id @default(cuid())
-    ideaId              String
-    organizationId      String
-    name                String?
-    finalContent        String?
-    prompt              String?
-    depth               ResearchDepth
-    status              ResearchStatus
-    currentPhaseIndex   Int                   @default(0)
-    overallConfidence   Float                 @default(0)
-    estimatedCompletion DateTime?
-    actualCompletion    DateTime?
-    totalCost           Float                 @default(0)
-    createdAt           DateTime              @default(now())
-    updatedAt           DateTime              @updatedAt
-    idea                Idea                  @relation(fields: [ideaId], references: [id])
-    organization        Organization          @relation(fields: [organizationId], references: [id])
-    phases              ResearchPhaseResult[]
-    findings            ResearchFindings[]
+model CompetitorSwot {
+    id           String     @id @default(ulid())
+    impact       Importance @default(MEDIUM)
+    type         SwotType
+    swotAnalysis String
 
-    @@map("research_sessions")
-}
+    competitorId String?
+    competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
 
-model ResearchPhaseResult {
-    id         String            @id @default(cuid())
-    sessionId  String
-    phaseName  ResearchPhaseType
-    status     PhaseStatus
-    conclusion String?
-    confidence Float             @default(0)
-    createdAt  DateTime          @default(now())
-    updatedAt  DateTime          @updatedAt
-    session    ResearchSession   @relation(fields: [sessionId], references: [id])
-
-    @@index([sessionId])
-    @@map("research_phase_results")
-}
-
-model ResearchFindings {
-    id        String          @id @default(uuid())
-    sessionId String
-    session   ResearchSession @relation(fields: [sessionId], references: [id])
-    findings  String
-    impact    Importance
-    createdAt DateTime        @default(now())
-
-    @@index([sessionId])
-    @@map("research_findings")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

@@ -129,7 +129,6 @@ model Organization {
     assetDownloads      AssetDownload[]
     referrals           Referral[]
     ApiKey              ApiKey[]
-    researchSessions    ResearchSession[]
     ApiCall             ApiCall[]
 
     @@unique([slug])

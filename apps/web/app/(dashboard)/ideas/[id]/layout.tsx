@@ -23,12 +23,24 @@ const IdeaLayout = async ({
 
   const tabsMenu = [
     {
-      title: "Validation",
+      title: "Overview",
       href: `/ideas/${id}`,
+    },
+    {
+      title: "Business",
+      href: `/ideas/${id}/business`,
+    },
+    {
+      title: "Audience",
+      href: `/ideas/${id}/audience`,
     },
     {
       title: "Competitors",
       href: `/ideas/${id}/competitors`,
+    },
+    {
+      title: "Pricing",
+      href: `/ideas/${id}/pricing`,
     },
   ];
 

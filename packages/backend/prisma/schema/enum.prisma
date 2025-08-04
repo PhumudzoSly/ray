@@ -166,43 +166,6 @@ enum ApiPermission {
     ADMIN
 }
 
-enum ResearchDepth {
-    QUICK
-    STANDARD
-    DEEP
-    EXHAUSTIVE
-}
-
-enum ResearchStatus {
-    INITIALIZING
-    IN_PROGRESS
-    PAUSED
-    COMPLETED
-    FAILED
-}
-
-enum ResearchPhaseType {
-    MARKET_SCAN
-    CUSTOMER_VALIDATION
-    BUSINESS_MODEL
-    FINANCIAL_PROJECTIONS
-    RISK_ANALYSIS
-    TECHNICAL_FEASIBILITY
-    COMPLETE
-    COMPETITIVE_ANALYSIS
-    GO_TO_MARKET
-    INVESTMENT_RECOMMENDATION
-    PRODUCT_MARKET_FIT
-}
-
-enum PhaseStatus {
-    PENDING
-    IN_PROGRESS
-    COMPLETED
-    FAILED
-    PAUSED
-}
-
 enum ChangelogEntryType {
     FEATURE
     FIX
@@ -212,4 +175,164 @@ enum ChangelogEntryType {
     DEPRECATION
     DOCUMENTATION
     PERFORMANCE
+}
+
+enum SwotType {
+    Strength
+    Weakness
+    Opportunity
+    Threat
+}
+
+// Validation System Enums
+enum ValidationStatus {
+    PENDING
+    IN_PROGRESS
+    COMPLETED
+    FAILED
+    REQUIRES_REVIEW
+}
+
+enum ValidationScore {
+    EXCELLENT
+    GOOD
+    AVERAGE
+    POOR
+    CRITICAL
+}
+
+enum MarketSize {
+    NICHE
+    SMALL
+    MEDIUM
+    LARGE
+    MASSIVE
+}
+
+enum MarketGrowthRate {
+    DECLINING
+    STAGNANT
+    SLOW_GROWTH
+    MODERATE_GROWTH
+    RAPID_GROWTH
+    EXPLOSIVE_GROWTH
+}
+
+enum MarketMaturity {
+    EMERGING
+    GROWTH
+    MATURE
+    DECLINING
+    TRANSFORMING
+}
+
+enum CompetitionLevel {
+    NONE
+    LOW
+    MODERATE
+    HIGH
+    SATURATED
+}
+
+enum CustomerSegment {
+    B2B_ENTERPRISE
+    B2B_SMB
+    B2C_CONSUMER
+    B2C_PROSUMER
+    B2G_GOVERNMENT
+    MARKETPLACE
+    PLATFORM
+}
+
+enum RevenueModel {
+    SUBSCRIPTION
+    FREEMIUM
+    ONE_TIME_PURCHASE
+    TRANSACTION_FEE
+    ADVERTISING
+    COMMISSION
+    LICENSING
+    USAGE_BASED
+    HYBRID
+}
+
+enum PricingStrategy {
+    PENETRATION
+    SKIMMING
+    COMPETITIVE
+    VALUE_BASED
+    COST_PLUS
+    DYNAMIC
+}
+
+enum RiskLevel {
+    MINIMAL
+    LOW
+    MODERATE
+    HIGH
+    EXTREME
+}
+
+enum RiskCategory {
+    MARKET
+    TECHNICAL
+    FINANCIAL
+    REGULATORY
+    COMPETITIVE
+    OPERATIONAL
+    TEAM
+    TIMING
+}
+
+enum FundingStage {
+    BOOTSTRAPPED
+    PRE_SEED
+    SEED
+    SERIES_A
+    SERIES_B
+    SERIES_C_PLUS
+    IPO_READY
+}
+
+enum InvestmentRecommendation {
+    STRONG_BUY
+    BUY
+    HOLD
+    WEAK_BUY
+    AVOID
+}
+
+enum GoToMarketStrategy {
+    DIRECT_SALES
+    INBOUND_MARKETING
+    OUTBOUND_MARKETING
+    PARTNERSHIPS
+    VIRAL_GROWTH
+    COMMUNITY_DRIVEN
+    PRODUCT_LED_GROWTH
+    CHANNEL_PARTNERS
+}
+
+enum ValidationMethod {
+    SURVEYS
+    INTERVIEWS
+    LANDING_PAGE_TEST
+    MVP_TEST
+    PROTOTYPE_TEST
+    MARKET_RESEARCH
+    COMPETITOR_ANALYSIS
+    EXPERT_CONSULTATION
+}
+
+enum FinancialMetric {
+    CAC
+    LTV
+    ARPU
+    MRR
+    ARR
+    CHURN_RATE
+    GROSS_MARGIN
+    BURN_RATE
+    RUNWAY
+    BREAK_EVEN
 }
