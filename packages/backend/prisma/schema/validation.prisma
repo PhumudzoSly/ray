@@ -16,9 +16,22 @@ model IdeaValidation {
     completedAt   DateTime?
     lastUpdatedAt DateTime  @updatedAt
 
+    // Revalidation support fields
+    version             Int              @default(1) // Version number for tracking changes
+    parentValidationId  String? // Reference to previous validation version
+    parentValidation    IdeaValidation?  @relation("ValidationHistory", fields: [parentValidationId], references: [id])
+    childValidations    IdeaValidation[] @relation("ValidationHistory")
+    isLatest            Boolean          @default(true) // Is this the latest version
+    revalidationReason  String? // Why revalidation was triggered
+    dataSourcesUpdated  String[] // Which data sources were updated
+    lastDataRefresh     DateTime? // When external data was last refreshed
+    nextRevalidationDue DateTime? // When next revalidation is recommended
+
     // Core validation modules
-    marketValidation   MarketValidation?
-    businessValidation BusinessValidation?
+    marketValidation         MarketValidation?
+    businessValidation       BusinessValidation?
+    riskAnalysis             RiskAnalysis?
+    productMarketFitAnalysis ProductMarketFitAnalysis?
 
     // Consolidated insights (structured for charts/metrics)
     validationMetrics          ValidationMetrics?
@@ -193,6 +206,90 @@ model BusinessInsight {
     createdAt DateTime @default(now())
 
     @@map("business_insights")
+}
+
+// Risk analysis model
+model RiskAnalysis {
+    id           String         @id @default(uuid())
+    validationId String         @unique
+    validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+    overallRiskScore Float            @default(0) // 0-100, calculated from items
+    status           ValidationStatus @default(PENDING)
+    riskItems        RiskItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("risk_analysis")
+}
+
+// Individual risk item
+model RiskItem {
+    id             String       @id @default(uuid())
+    riskAnalysisId String
+    riskAnalysis   RiskAnalysis @relation(fields: [riskAnalysisId], references: [id], onDelete: Cascade)
+
+    category    RiskCategory
+    description String
+    impact      Int // 1-5 (Low to High)
+    probability Int // 1-5 (Low to High)
+    mitigation  String // Mitigation plan
+
+    createdAt DateTime @default(now())
+
+    @@map("risk_items")
+}
+
+// Product-Market Fit analysis model
+model ProductMarketFitAnalysis {
+    id           String         @id @default(uuid())
+    validationId String         @unique
+    validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+    pmfScore Float            @default(0) // 0-100
+    status   ValidationStatus @default(PENDING)
+    metrics  PMFMetric[]
+    feedback PMFFeedback[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("product_market_fit_analysis")
+}
+
+// Metrics for Product-Market Fit
+model PMFMetric {
+    id                         String                   @id @default(uuid())
+    productMarketFitAnalysisId String
+    productMarketFitAnalysis   ProductMarketFitAnalysis @relation(fields: [productMarketFitAnalysisId], references: [id], onDelete: Cascade)
+
+    name      String // e.g., "NPS", "Churn Rate", "Activation Rate"
+    value     Float
+    unit      String // e.g., "%", "score", "users"
+    trend     Float? // e.g., monthly change
+    benchmark Float? // industry benchmark
+
+    createdAt DateTime @default(now())
+
+    @@unique([productMarketFitAnalysisId, name])
+    @@map("pmf_metrics")
+}
+
+// Qualitative feedback for Product-Market Fit
+model PMFFeedback {
+    id                         String                   @id @default(uuid())
+    productMarketFitAnalysisId String
+    productMarketFitAnalysis   ProductMarketFitAnalysis @relation(fields: [productMarketFitAnalysisId], references: [id], onDelete: Cascade)
+
+    source    String // e.g., "Survey", "User Interview"
+    sentiment String // "positive", "negative", "neutral"
+    content   String   @db.Text
+    tags      String[] // e.g., ["UI", "pricing", "feature_request"]
+
+    createdAt DateTime @default(now())
+
+    @@map("pmf_feedback")
 }
 
 // Monthly financial projections for time-series charts

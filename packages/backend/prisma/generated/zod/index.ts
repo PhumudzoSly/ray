@@ -62,11 +62,7 @@ export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','web
 
 export const CompetitiveMoveScalarFieldEnumSchema = z.enum(['id','competitorId','moveType','title','description','impactLevel','targetAudience','affectedFeatures','announcedDate','launchDate','completionDate','userFeedback','pressCoverage','opportunities','threats','responseRequired','responseStrategy','createdAt']);
 
-export const ResearchSessionScalarFieldEnumSchema = z.enum(['id','ideaId','organizationId','name','finalContent','prompt','depth','status','currentPhaseIndex','overallConfidence','estimatedCompletion','actualCompletion','totalCost','createdAt','updatedAt']);
-
-export const ResearchPhaseResultScalarFieldEnumSchema = z.enum(['id','sessionId','phaseName','status','conclusion','confidence','createdAt','updatedAt']);
-
-export const ResearchFindingsScalarFieldEnumSchema = z.enum(['id','sessionId','findings','impact','createdAt']);
+export const CompetitorSwotScalarFieldEnumSchema = z.enum(['id','impact','type','swotAnalysis','competitorId','createdAt','updatedAt']);
 
 export const ProjectScalarFieldEnumSchema = z.enum(['id','name','description','platform','ai','orm','database','auth','framework','infrastructure','dueDate','status','ideaId','createdAt','updatedAt','organizationId','createdById']);
 
@@ -141,6 +137,62 @@ export const IntegrationUsageScalarFieldEnumSchema = z.enum(['id','integrationId
 export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name','keyHash','keyPreview','permissions','createdBy','createdAt','lastUsed','isActive','expiresAt']);
 
 export const ApiCallScalarFieldEnumSchema = z.enum(['id','organizationId','apiKeyId','endpoint','method','statusCode','responseTime','userAgent','ipAddress','createdAt']);
+
+export const IdeaValidationScalarFieldEnumSchema = z.enum(['id','ideaId','overallScore','overallStatus','confidenceLevel','validationProgress','startedAt','completedAt','lastUpdatedAt','version','parentValidationId','isLatest','revalidationReason','dataSourcesUpdated','lastDataRefresh','nextRevalidationDue']);
+
+export const ValidationMetricsScalarFieldEnumSchema = z.enum(['id','validationId','overallStrengthScore','overallRiskScore','timeToMarket','fundingRequired','breakEvenMonth','customerPayback','marketPenetration','immediateActions','shortTermActions','longTermActions','createdAt','updatedAt']);
+
+export const MarketValidationScalarFieldEnumSchema = z.enum(['id','validationId','totalAddressableMarket','serviceableAddressableMarket','serviceableObtainableMarket','marketGrowthRate','primaryCustomerSegment','customerInterviews','surveyResponses','overallMarketScore','primaryRegions','status','createdAt','updatedAt']);
+
+export const MarketInsightScalarFieldEnumSchema = z.enum(['id','marketValidationId','category','impact','urgency','label','description','createdAt']);
+
+export const MarketRegionScoreScalarFieldEnumSchema = z.enum(['id','marketValidationId','region','score','createdAt']);
+
+export const BusinessValidationScalarFieldEnumSchema = z.enum(['id','validationId','primaryRevenueModel','pricingStrategy','pricePoint','customerAcquisitionCost','customerLifetimeValue','monthlyChurnRate','breakEvenMonth','initialInvestment','totalFundingNeeded','goToMarketStrategy','salesCycleLength','overallBusinessScore','status','createdAt','updatedAt']);
+
+export const BusinessInsightScalarFieldEnumSchema = z.enum(['id','businessValidationId','category','impact','urgency','cost','label','description','createdAt']);
+
+export const RiskAnalysisScalarFieldEnumSchema = z.enum(['id','validationId','overallRiskScore','status','createdAt','updatedAt']);
+
+export const RiskItemScalarFieldEnumSchema = z.enum(['id','riskAnalysisId','category','description','impact','probability','mitigation','createdAt']);
+
+export const ProductMarketFitAnalysisScalarFieldEnumSchema = z.enum(['id','validationId','pmfScore','status','createdAt','updatedAt']);
+
+export const PMFMetricScalarFieldEnumSchema = z.enum(['id','productMarketFitAnalysisId','name','value','unit','trend','benchmark','createdAt']);
+
+export const PMFFeedbackScalarFieldEnumSchema = z.enum(['id','productMarketFitAnalysisId','source','sentiment','content','tags','createdAt']);
+
+export const MonthlyProjectionScalarFieldEnumSchema = z.enum(['id','businessValidationId','month','revenue','costs','users','createdAt']);
+
+export const AcquisitionChannelScalarFieldEnumSchema = z.enum(['id','businessValidationId','channel','effectiveness','cost','createdAt']);
+
+export const PricingTierScalarFieldEnumSchema = z.enum(['id','pricingStrategyAnalysisId','tierName','tierPrice','tierFeatures','targetSegment','conversionRate','popularityScore','profitMargin','competitiveScore','createdAt']);
+
+export const CompetitorPricingScalarFieldEnumSchema = z.enum(['id','pricingStrategyAnalysisId','competitorName','pricingModel','basePrice','premiumPrice','featureComparison','valueComparison','marketPosition','marketShare','customerSatisfaction','pricingAdvantage','createdAt']);
+
+export const CustomerJourneyMappingScalarFieldEnumSchema = z.enum(['id','validationId','totalJourneyStages','averageJourneyTime','overallJourneyScore','conversionRate','dropOffRate','customerSatisfaction','createdAt','updatedAt']);
+
+export const JourneyStageScalarFieldEnumSchema = z.enum(['id','customerJourneyMappingId','stageName','stageOrder','averageDuration','conversionRate','satisfactionScore','frictionScore','emotionalState','customerGoals','customerActions','customerThoughts','customerEmotions','dropOffRate','supportTickets','timeToComplete','createdAt']);
+
+export const TouchpointScalarFieldEnumSchema = z.enum(['id','customerJourneyMappingId','touchpointName','touchpointType','channel','stageInJourney','effectivenessScore','satisfactionScore','usageFrequency','importanceScore','optimizationPotential','costEfficiency','automationPotential','customerExpectations','currentExperience','improvementAreas','createdAt']);
+
+export const JourneyPainPointScalarFieldEnumSchema = z.enum(['id','customerJourneyMappingId','painPointName','journeyStage','painCategory','severityScore','frequencyScore','impactScore','resolutionDifficulty','dropOffIncrease','supportCost','revenueImpact','currentMitigation','proposedSolution','solutionPriority','createdAt']);
+
+export const TargetAudienceSegmentationScalarFieldEnumSchema = z.enum(['id','validationId','primarySegment','totalSegments','totalMarketSize','overallSegmentationScore','averageSegmentSize','segmentAccessibility','marketPenetration','createdAt','updatedAt']);
+
+export const AudienceSegmentScalarFieldEnumSchema = z.enum(['id','targetAudienceSegmentationId','segmentName','segmentSize','attractivenessScore','accessibilityScore','profitabilityScore','primaryNeed','secondaryNeeds','preferredSolution','budgetRange','createdAt']);
+
+export const MarketTrendAnalysisScalarFieldEnumSchema = z.enum(['id','validationId','primaryTrend','totalTrendsTracked','analysisTimeframe','overallTrendScore','trendStrength','marketGrowthRate','adoptionRate','createdAt','updatedAt']);
+
+export const MarketTrendScalarFieldEnumSchema = z.enum(['id','marketTrendAnalysisId','trendName','trendCategory','impactScore','timelineMonths','certaintyLevel','opportunityScore','threatScore','description','createdAt']);
+
+export const CustomerNeedAnalysisScalarFieldEnumSchema = z.enum(['id','validationId','primaryNeed','totalNeedsIdentified','totalPainPoints','overallNeedScore','needUrgency','solutionGap','customerWillingness','createdAt','updatedAt']);
+
+export const CustomerNeedScalarFieldEnumSchema = z.enum(['id','customerNeedAnalysisId','needName','needCategory','intensityScore','frequencyScore','urgencyScore','satisfactionGap','triggerEvents','desiredOutcome','currentSolution','createdAt']);
+
+export const PainPointScalarFieldEnumSchema = z.enum(['id','customerNeedAnalysisId','painName','painCategory','severityScore','frequencyScore','impactScore','emotionalToll','timeCostHours','financialCost','opportunityCost','painTriggers','currentMitigation','createdAt']);
+
+export const PricingStrategyAnalysisScalarFieldEnumSchema = z.enum(['id','validationId','primaryStrategy','recommendedPrice','totalTiersAnalyzed','overallPricingScore','priceAcceptance','competitivenessScore','profitabilityScore','createdAt','updatedAt']);
 
 export const SortOrderSchema = z.enum(['asc','desc']);
 
@@ -224,25 +276,77 @@ export const ApiPermissionSchema = z.enum(['READ','WRITE','DELETE','ADMIN']);
 
 export type ApiPermissionType = `${z.infer<typeof ApiPermissionSchema>}`
 
-export const ResearchDepthSchema = z.enum(['QUICK','STANDARD','DEEP','EXHAUSTIVE']);
-
-export type ResearchDepthType = `${z.infer<typeof ResearchDepthSchema>}`
-
-export const ResearchStatusSchema = z.enum(['INITIALIZING','IN_PROGRESS','PAUSED','COMPLETED','FAILED']);
-
-export type ResearchStatusType = `${z.infer<typeof ResearchStatusSchema>}`
-
-export const ResearchPhaseTypeSchema = z.enum(['MARKET_SCAN','CUSTOMER_VALIDATION','BUSINESS_MODEL','FINANCIAL_PROJECTIONS','RISK_ANALYSIS','TECHNICAL_FEASIBILITY','COMPLETE','COMPETITIVE_ANALYSIS','GO_TO_MARKET','INVESTMENT_RECOMMENDATION','PRODUCT_MARKET_FIT']);
-
-export type ResearchPhaseTypeType = `${z.infer<typeof ResearchPhaseTypeSchema>}`
-
-export const PhaseStatusSchema = z.enum(['PENDING','IN_PROGRESS','COMPLETED','FAILED','PAUSED']);
-
-export type PhaseStatusType = `${z.infer<typeof PhaseStatusSchema>}`
-
 export const ChangelogEntryTypeSchema = z.enum(['FEATURE','FIX','IMPROVEMENT','BREAKING','SECURITY','DEPRECATION','DOCUMENTATION','PERFORMANCE']);
 
 export type ChangelogEntryTypeType = `${z.infer<typeof ChangelogEntryTypeSchema>}`
+
+export const SwotTypeSchema = z.enum(['Strength','Weakness','Opportunity','Threat']);
+
+export type SwotTypeType = `${z.infer<typeof SwotTypeSchema>}`
+
+export const ValidationStatusSchema = z.enum(['PENDING','IN_PROGRESS','COMPLETED','FAILED','REQUIRES_REVIEW']);
+
+export type ValidationStatusType = `${z.infer<typeof ValidationStatusSchema>}`
+
+export const ValidationScoreSchema = z.enum(['EXCELLENT','GOOD','AVERAGE','POOR','CRITICAL']);
+
+export type ValidationScoreType = `${z.infer<typeof ValidationScoreSchema>}`
+
+export const MarketSizeSchema = z.enum(['NICHE','SMALL','MEDIUM','LARGE','MASSIVE']);
+
+export type MarketSizeType = `${z.infer<typeof MarketSizeSchema>}`
+
+export const MarketGrowthRateSchema = z.enum(['DECLINING','STAGNANT','SLOW_GROWTH','MODERATE_GROWTH','RAPID_GROWTH','EXPLOSIVE_GROWTH']);
+
+export type MarketGrowthRateType = `${z.infer<typeof MarketGrowthRateSchema>}`
+
+export const MarketMaturitySchema = z.enum(['EMERGING','GROWTH','MATURE','DECLINING','TRANSFORMING']);
+
+export type MarketMaturityType = `${z.infer<typeof MarketMaturitySchema>}`
+
+export const CompetitionLevelSchema = z.enum(['NONE','LOW','MODERATE','HIGH','SATURATED']);
+
+export type CompetitionLevelType = `${z.infer<typeof CompetitionLevelSchema>}`
+
+export const CustomerSegmentSchema = z.enum(['B2B_ENTERPRISE','B2B_SMB','B2C_CONSUMER','B2C_PROSUMER','B2G_GOVERNMENT','MARKETPLACE','PLATFORM']);
+
+export type CustomerSegmentType = `${z.infer<typeof CustomerSegmentSchema>}`
+
+export const RevenueModelSchema = z.enum(['SUBSCRIPTION','FREEMIUM','ONE_TIME_PURCHASE','TRANSACTION_FEE','ADVERTISING','COMMISSION','LICENSING','USAGE_BASED','HYBRID']);
+
+export type RevenueModelType = `${z.infer<typeof RevenueModelSchema>}`
+
+export const PricingStrategySchema = z.enum(['PENETRATION','SKIMMING','COMPETITIVE','VALUE_BASED','COST_PLUS','DYNAMIC']);
+
+export type PricingStrategyType = `${z.infer<typeof PricingStrategySchema>}`
+
+export const RiskLevelSchema = z.enum(['MINIMAL','LOW','MODERATE','HIGH','EXTREME']);
+
+export type RiskLevelType = `${z.infer<typeof RiskLevelSchema>}`
+
+export const RiskCategorySchema = z.enum(['MARKET','TECHNICAL','FINANCIAL','REGULATORY','COMPETITIVE','OPERATIONAL','TEAM','TIMING']);
+
+export type RiskCategoryType = `${z.infer<typeof RiskCategorySchema>}`
+
+export const FundingStageSchema = z.enum(['BOOTSTRAPPED','PRE_SEED','SEED','SERIES_A','SERIES_B','SERIES_C_PLUS','IPO_READY']);
+
+export type FundingStageType = `${z.infer<typeof FundingStageSchema>}`
+
+export const InvestmentRecommendationSchema = z.enum(['STRONG_BUY','BUY','HOLD','WEAK_BUY','AVOID']);
+
+export type InvestmentRecommendationType = `${z.infer<typeof InvestmentRecommendationSchema>}`
+
+export const GoToMarketStrategySchema = z.enum(['DIRECT_SALES','INBOUND_MARKETING','OUTBOUND_MARKETING','PARTNERSHIPS','VIRAL_GROWTH','COMMUNITY_DRIVEN','PRODUCT_LED_GROWTH','CHANNEL_PARTNERS']);
+
+export type GoToMarketStrategyType = `${z.infer<typeof GoToMarketStrategySchema>}`
+
+export const ValidationMethodSchema = z.enum(['SURVEYS','INTERVIEWS','LANDING_PAGE_TEST','MVP_TEST','PROTOTYPE_TEST','MARKET_RESEARCH','COMPETITOR_ANALYSIS','EXPERT_CONSULTATION']);
+
+export type ValidationMethodType = `${z.infer<typeof ValidationMethodSchema>}`
+
+export const FinancialMetricSchema = z.enum(['CAC','LTV','ARPU','MRR','ARR','CHURN_RATE','GROSS_MARGIN','BURN_RATE','RUNWAY','BREAK_EVEN']);
+
+export type FinancialMetricType = `${z.infer<typeof FinancialMetricSchema>}`
 
 /////////////////////////////////////////
 // MODELS
@@ -362,95 +466,32 @@ export const CompetitiveMoveOptionalDefaultsSchema = CompetitiveMoveSchema.merge
 export type CompetitiveMoveOptionalDefaults = z.infer<typeof CompetitiveMoveOptionalDefaultsSchema>
 
 /////////////////////////////////////////
-// RESEARCH SESSION SCHEMA
+// COMPETITOR SWOT SCHEMA
 /////////////////////////////////////////
 
-export const ResearchSessionSchema = z.object({
-  depth: ResearchDepthSchema,
-  status: ResearchStatusSchema,
-  id: z.string().cuid(),
-  ideaId: z.string(),
-  organizationId: z.string(),
-  name: z.string().nullish(),
-  finalContent: z.string().nullish(),
-  prompt: z.string().nullish(),
-  currentPhaseIndex: z.number().int(),
-  overallConfidence: z.number(),
-  estimatedCompletion: z.coerce.date().nullish(),
-  actualCompletion: z.coerce.date().nullish(),
-  totalCost: z.number(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type ResearchSession = z.infer<typeof ResearchSessionSchema>
-
-// RESEARCH SESSION OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ResearchSessionOptionalDefaultsSchema = ResearchSessionSchema.merge(z.object({
-  id: z.string().cuid().optional(),
-  currentPhaseIndex: z.number().int().optional(),
-  overallConfidence: z.number().optional(),
-  totalCost: z.number().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type ResearchSessionOptionalDefaults = z.infer<typeof ResearchSessionOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// RESEARCH PHASE RESULT SCHEMA
-/////////////////////////////////////////
-
-export const ResearchPhaseResultSchema = z.object({
-  phaseName: ResearchPhaseTypeSchema,
-  status: PhaseStatusSchema,
-  id: z.string().cuid(),
-  sessionId: z.string(),
-  conclusion: z.string().nullish(),
-  confidence: z.number(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type ResearchPhaseResult = z.infer<typeof ResearchPhaseResultSchema>
-
-// RESEARCH PHASE RESULT OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ResearchPhaseResultOptionalDefaultsSchema = ResearchPhaseResultSchema.merge(z.object({
-  id: z.string().cuid().optional(),
-  confidence: z.number().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type ResearchPhaseResultOptionalDefaults = z.infer<typeof ResearchPhaseResultOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// RESEARCH FINDINGS SCHEMA
-/////////////////////////////////////////
-
-export const ResearchFindingsSchema = z.object({
+export const CompetitorSwotSchema = z.object({
   impact: ImportanceSchema,
-  id: z.string().uuid(),
-  sessionId: z.string(),
-  findings: z.string(),
+  type: SwotTypeSchema,
+  id: z.string(),
+  swotAnalysis: z.string(),
+  competitorId: z.string().nullish(),
   createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 })
 
-export type ResearchFindings = z.infer<typeof ResearchFindingsSchema>
+export type CompetitorSwot = z.infer<typeof CompetitorSwotSchema>
 
-// RESEARCH FINDINGS OPTIONAL DEFAULTS SCHEMA
+// COMPETITOR SWOT OPTIONAL DEFAULTS SCHEMA
 //------------------------------------------------------
 
-export const ResearchFindingsOptionalDefaultsSchema = ResearchFindingsSchema.merge(z.object({
-  id: z.string().uuid().optional(),
+export const CompetitorSwotOptionalDefaultsSchema = CompetitorSwotSchema.merge(z.object({
+  impact: ImportanceSchema.optional(),
+  id: z.string().optional(),
   createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 }))
 
-export type ResearchFindingsOptionalDefaults = z.infer<typeof ResearchFindingsOptionalDefaultsSchema>
+export type CompetitorSwotOptionalDefaults = z.infer<typeof CompetitorSwotOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // PROJECT SCHEMA
@@ -1539,3 +1580,962 @@ export const ApiCallOptionalDefaultsSchema = ApiCallSchema.merge(z.object({
 }))
 
 export type ApiCallOptionalDefaults = z.infer<typeof ApiCallOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// IDEA VALIDATION SCHEMA
+/////////////////////////////////////////
+
+export const IdeaValidationSchema = z.object({
+  overallStatus: ValidationStatusSchema,
+  id: z.string().uuid(),
+  ideaId: z.string(),
+  overallScore: z.number(),
+  confidenceLevel: z.number(),
+  validationProgress: z.number(),
+  startedAt: z.coerce.date(),
+  completedAt: z.coerce.date().nullish(),
+  lastUpdatedAt: z.coerce.date(),
+  version: z.number().int(),
+  parentValidationId: z.string().nullish(),
+  isLatest: z.boolean(),
+  revalidationReason: z.string().nullish(),
+  dataSourcesUpdated: z.string().array(),
+  lastDataRefresh: z.coerce.date().nullish(),
+  nextRevalidationDue: z.coerce.date().nullish(),
+})
+
+export type IdeaValidation = z.infer<typeof IdeaValidationSchema>
+
+// IDEA VALIDATION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const IdeaValidationOptionalDefaultsSchema = IdeaValidationSchema.merge(z.object({
+  overallStatus: ValidationStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  overallScore: z.number().optional(),
+  confidenceLevel: z.number().optional(),
+  validationProgress: z.number().optional(),
+  startedAt: z.coerce.date().optional(),
+  lastUpdatedAt: z.coerce.date().optional(),
+  version: z.number().int().optional(),
+  isLatest: z.boolean().optional(),
+}))
+
+export type IdeaValidationOptionalDefaults = z.infer<typeof IdeaValidationOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// VALIDATION METRICS SCHEMA
+/////////////////////////////////////////
+
+export const ValidationMetricsSchema = z.object({
+  id: z.string().uuid(),
+  validationId: z.string(),
+  overallStrengthScore: z.number(),
+  overallRiskScore: z.number(),
+  timeToMarket: z.number().int().nullish(),
+  fundingRequired: z.number().nullish(),
+  breakEvenMonth: z.number().int().nullish(),
+  customerPayback: z.number().int().nullish(),
+  marketPenetration: z.number().nullish(),
+  immediateActions: z.number().int(),
+  shortTermActions: z.number().int(),
+  longTermActions: z.number().int(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ValidationMetrics = z.infer<typeof ValidationMetricsSchema>
+
+// VALIDATION METRICS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ValidationMetricsOptionalDefaultsSchema = ValidationMetricsSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  overallStrengthScore: z.number().optional(),
+  overallRiskScore: z.number().optional(),
+  immediateActions: z.number().int().optional(),
+  shortTermActions: z.number().int().optional(),
+  longTermActions: z.number().int().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ValidationMetricsOptionalDefaults = z.infer<typeof ValidationMetricsOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MARKET VALIDATION SCHEMA
+/////////////////////////////////////////
+
+export const MarketValidationSchema = z.object({
+  primaryCustomerSegment: CustomerSegmentSchema,
+  status: ValidationStatusSchema,
+  id: z.string().uuid(),
+  validationId: z.string(),
+  totalAddressableMarket: z.number().nullish(),
+  serviceableAddressableMarket: z.number().nullish(),
+  serviceableObtainableMarket: z.number().nullish(),
+  marketGrowthRate: z.number().nullish(),
+  customerInterviews: z.number().int(),
+  surveyResponses: z.number().int(),
+  overallMarketScore: z.number(),
+  primaryRegions: z.string().array(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type MarketValidation = z.infer<typeof MarketValidationSchema>
+
+// MARKET VALIDATION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MarketValidationOptionalDefaultsSchema = MarketValidationSchema.merge(z.object({
+  status: ValidationStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  customerInterviews: z.number().int().optional(),
+  surveyResponses: z.number().int().optional(),
+  overallMarketScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type MarketValidationOptionalDefaults = z.infer<typeof MarketValidationOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MARKET INSIGHT SCHEMA
+/////////////////////////////////////////
+
+export const MarketInsightSchema = z.object({
+  id: z.string().uuid(),
+  marketValidationId: z.string(),
+  category: z.string(),
+  impact: z.number(),
+  urgency: z.number(),
+  label: z.string().nullish(),
+  description: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type MarketInsight = z.infer<typeof MarketInsightSchema>
+
+// MARKET INSIGHT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MarketInsightOptionalDefaultsSchema = MarketInsightSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  impact: z.number().optional(),
+  urgency: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type MarketInsightOptionalDefaults = z.infer<typeof MarketInsightOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MARKET REGION SCORE SCHEMA
+/////////////////////////////////////////
+
+export const MarketRegionScoreSchema = z.object({
+  id: z.string().uuid(),
+  marketValidationId: z.string(),
+  region: z.string(),
+  score: z.number(),
+  createdAt: z.coerce.date(),
+})
+
+export type MarketRegionScore = z.infer<typeof MarketRegionScoreSchema>
+
+// MARKET REGION SCORE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MarketRegionScoreOptionalDefaultsSchema = MarketRegionScoreSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  score: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type MarketRegionScoreOptionalDefaults = z.infer<typeof MarketRegionScoreOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// BUSINESS VALIDATION SCHEMA
+/////////////////////////////////////////
+
+export const BusinessValidationSchema = z.object({
+  primaryRevenueModel: RevenueModelSchema,
+  pricingStrategy: PricingStrategySchema,
+  goToMarketStrategy: GoToMarketStrategySchema,
+  status: ValidationStatusSchema,
+  id: z.string().uuid(),
+  validationId: z.string(),
+  pricePoint: z.number().nullish(),
+  customerAcquisitionCost: z.number().nullish(),
+  customerLifetimeValue: z.number().nullish(),
+  monthlyChurnRate: z.number().nullish(),
+  breakEvenMonth: z.number().int().nullish(),
+  initialInvestment: z.number().nullish(),
+  totalFundingNeeded: z.number().nullish(),
+  salesCycleLength: z.number().int().nullish(),
+  overallBusinessScore: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type BusinessValidation = z.infer<typeof BusinessValidationSchema>
+
+// BUSINESS VALIDATION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const BusinessValidationOptionalDefaultsSchema = BusinessValidationSchema.merge(z.object({
+  status: ValidationStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  overallBusinessScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type BusinessValidationOptionalDefaults = z.infer<typeof BusinessValidationOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// BUSINESS INSIGHT SCHEMA
+/////////////////////////////////////////
+
+export const BusinessInsightSchema = z.object({
+  id: z.string().uuid(),
+  businessValidationId: z.string(),
+  category: z.string(),
+  impact: z.number(),
+  urgency: z.number(),
+  cost: z.number().nullish(),
+  label: z.string().nullish(),
+  description: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type BusinessInsight = z.infer<typeof BusinessInsightSchema>
+
+// BUSINESS INSIGHT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const BusinessInsightOptionalDefaultsSchema = BusinessInsightSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  impact: z.number().optional(),
+  urgency: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type BusinessInsightOptionalDefaults = z.infer<typeof BusinessInsightOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// RISK ANALYSIS SCHEMA
+/////////////////////////////////////////
+
+export const RiskAnalysisSchema = z.object({
+  status: ValidationStatusSchema,
+  id: z.string().uuid(),
+  validationId: z.string(),
+  overallRiskScore: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type RiskAnalysis = z.infer<typeof RiskAnalysisSchema>
+
+// RISK ANALYSIS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const RiskAnalysisOptionalDefaultsSchema = RiskAnalysisSchema.merge(z.object({
+  status: ValidationStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  overallRiskScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type RiskAnalysisOptionalDefaults = z.infer<typeof RiskAnalysisOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// RISK ITEM SCHEMA
+/////////////////////////////////////////
+
+export const RiskItemSchema = z.object({
+  category: RiskCategorySchema,
+  id: z.string().uuid(),
+  riskAnalysisId: z.string(),
+  description: z.string(),
+  impact: z.number().int(),
+  probability: z.number().int(),
+  mitigation: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type RiskItem = z.infer<typeof RiskItemSchema>
+
+// RISK ITEM OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const RiskItemOptionalDefaultsSchema = RiskItemSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type RiskItemOptionalDefaults = z.infer<typeof RiskItemOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PRODUCT MARKET FIT ANALYSIS SCHEMA
+/////////////////////////////////////////
+
+export const ProductMarketFitAnalysisSchema = z.object({
+  status: ValidationStatusSchema,
+  id: z.string().uuid(),
+  validationId: z.string(),
+  pmfScore: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ProductMarketFitAnalysis = z.infer<typeof ProductMarketFitAnalysisSchema>
+
+// PRODUCT MARKET FIT ANALYSIS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ProductMarketFitAnalysisOptionalDefaultsSchema = ProductMarketFitAnalysisSchema.merge(z.object({
+  status: ValidationStatusSchema.optional(),
+  id: z.string().uuid().optional(),
+  pmfScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ProductMarketFitAnalysisOptionalDefaults = z.infer<typeof ProductMarketFitAnalysisOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PMF METRIC SCHEMA
+/////////////////////////////////////////
+
+export const PMFMetricSchema = z.object({
+  id: z.string().uuid(),
+  productMarketFitAnalysisId: z.string(),
+  name: z.string(),
+  value: z.number(),
+  unit: z.string(),
+  trend: z.number().nullish(),
+  benchmark: z.number().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type PMFMetric = z.infer<typeof PMFMetricSchema>
+
+// PMF METRIC OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PMFMetricOptionalDefaultsSchema = PMFMetricSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type PMFMetricOptionalDefaults = z.infer<typeof PMFMetricOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PMF FEEDBACK SCHEMA
+/////////////////////////////////////////
+
+export const PMFFeedbackSchema = z.object({
+  id: z.string().uuid(),
+  productMarketFitAnalysisId: z.string(),
+  source: z.string(),
+  sentiment: z.string(),
+  content: z.string(),
+  tags: z.string().array(),
+  createdAt: z.coerce.date(),
+})
+
+export type PMFFeedback = z.infer<typeof PMFFeedbackSchema>
+
+// PMF FEEDBACK OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PMFFeedbackOptionalDefaultsSchema = PMFFeedbackSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type PMFFeedbackOptionalDefaults = z.infer<typeof PMFFeedbackOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MONTHLY PROJECTION SCHEMA
+/////////////////////////////////////////
+
+export const MonthlyProjectionSchema = z.object({
+  id: z.string().uuid(),
+  businessValidationId: z.string(),
+  month: z.number().int(),
+  revenue: z.number(),
+  costs: z.number(),
+  users: z.number().int(),
+  createdAt: z.coerce.date(),
+})
+
+export type MonthlyProjection = z.infer<typeof MonthlyProjectionSchema>
+
+// MONTHLY PROJECTION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MonthlyProjectionOptionalDefaultsSchema = MonthlyProjectionSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  revenue: z.number().optional(),
+  costs: z.number().optional(),
+  users: z.number().int().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type MonthlyProjectionOptionalDefaults = z.infer<typeof MonthlyProjectionOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// ACQUISITION CHANNEL SCHEMA
+/////////////////////////////////////////
+
+export const AcquisitionChannelSchema = z.object({
+  id: z.string().uuid(),
+  businessValidationId: z.string(),
+  channel: z.string(),
+  effectiveness: z.number(),
+  cost: z.number().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type AcquisitionChannel = z.infer<typeof AcquisitionChannelSchema>
+
+// ACQUISITION CHANNEL OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const AcquisitionChannelOptionalDefaultsSchema = AcquisitionChannelSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  effectiveness: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type AcquisitionChannelOptionalDefaults = z.infer<typeof AcquisitionChannelOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PRICING TIER SCHEMA
+/////////////////////////////////////////
+
+export const PricingTierSchema = z.object({
+  id: z.string().uuid(),
+  pricingStrategyAnalysisId: z.string(),
+  tierName: z.string(),
+  tierPrice: z.number(),
+  tierFeatures: z.string().array(),
+  targetSegment: z.string(),
+  conversionRate: z.number(),
+  popularityScore: z.number(),
+  profitMargin: z.number(),
+  competitiveScore: z.number(),
+  createdAt: z.coerce.date(),
+})
+
+export type PricingTier = z.infer<typeof PricingTierSchema>
+
+// PRICING TIER OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PricingTierOptionalDefaultsSchema = PricingTierSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  tierPrice: z.number().optional(),
+  conversionRate: z.number().optional(),
+  popularityScore: z.number().optional(),
+  profitMargin: z.number().optional(),
+  competitiveScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type PricingTierOptionalDefaults = z.infer<typeof PricingTierOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// COMPETITOR PRICING SCHEMA
+/////////////////////////////////////////
+
+export const CompetitorPricingSchema = z.object({
+  id: z.string().uuid(),
+  pricingStrategyAnalysisId: z.string(),
+  competitorName: z.string(),
+  pricingModel: z.string(),
+  basePrice: z.number(),
+  premiumPrice: z.number().nullish(),
+  featureComparison: z.number(),
+  valueComparison: z.number(),
+  marketPosition: z.string(),
+  marketShare: z.number(),
+  customerSatisfaction: z.number(),
+  pricingAdvantage: z.number(),
+  createdAt: z.coerce.date(),
+})
+
+export type CompetitorPricing = z.infer<typeof CompetitorPricingSchema>
+
+// COMPETITOR PRICING OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CompetitorPricingOptionalDefaultsSchema = CompetitorPricingSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  basePrice: z.number().optional(),
+  featureComparison: z.number().optional(),
+  valueComparison: z.number().optional(),
+  marketShare: z.number().optional(),
+  customerSatisfaction: z.number().optional(),
+  pricingAdvantage: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type CompetitorPricingOptionalDefaults = z.infer<typeof CompetitorPricingOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CUSTOMER JOURNEY MAPPING SCHEMA
+/////////////////////////////////////////
+
+export const CustomerJourneyMappingSchema = z.object({
+  id: z.string().uuid(),
+  validationId: z.string(),
+  totalJourneyStages: z.number().int(),
+  averageJourneyTime: z.number().int(),
+  overallJourneyScore: z.number(),
+  conversionRate: z.number(),
+  dropOffRate: z.number(),
+  customerSatisfaction: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type CustomerJourneyMapping = z.infer<typeof CustomerJourneyMappingSchema>
+
+// CUSTOMER JOURNEY MAPPING OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CustomerJourneyMappingOptionalDefaultsSchema = CustomerJourneyMappingSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  totalJourneyStages: z.number().int().optional(),
+  averageJourneyTime: z.number().int().optional(),
+  overallJourneyScore: z.number().optional(),
+  conversionRate: z.number().optional(),
+  dropOffRate: z.number().optional(),
+  customerSatisfaction: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type CustomerJourneyMappingOptionalDefaults = z.infer<typeof CustomerJourneyMappingOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// JOURNEY STAGE SCHEMA
+/////////////////////////////////////////
+
+export const JourneyStageSchema = z.object({
+  id: z.string().uuid(),
+  customerJourneyMappingId: z.string(),
+  stageName: z.string(),
+  stageOrder: z.number().int(),
+  averageDuration: z.number().int().nullish(),
+  conversionRate: z.number(),
+  satisfactionScore: z.number(),
+  frictionScore: z.number(),
+  emotionalState: z.number(),
+  customerGoals: z.string().array(),
+  customerActions: z.string().array(),
+  customerThoughts: z.string().array(),
+  customerEmotions: z.string().array(),
+  dropOffRate: z.number(),
+  supportTickets: z.number().int(),
+  timeToComplete: z.number(),
+  createdAt: z.coerce.date(),
+})
+
+export type JourneyStage = z.infer<typeof JourneyStageSchema>
+
+// JOURNEY STAGE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const JourneyStageOptionalDefaultsSchema = JourneyStageSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  conversionRate: z.number().optional(),
+  satisfactionScore: z.number().optional(),
+  frictionScore: z.number().optional(),
+  emotionalState: z.number().optional(),
+  dropOffRate: z.number().optional(),
+  supportTickets: z.number().int().optional(),
+  timeToComplete: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type JourneyStageOptionalDefaults = z.infer<typeof JourneyStageOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// TOUCHPOINT SCHEMA
+/////////////////////////////////////////
+
+export const TouchpointSchema = z.object({
+  id: z.string().uuid(),
+  customerJourneyMappingId: z.string(),
+  touchpointName: z.string(),
+  touchpointType: z.string(),
+  channel: z.string(),
+  stageInJourney: z.string(),
+  effectivenessScore: z.number(),
+  satisfactionScore: z.number(),
+  usageFrequency: z.number(),
+  importanceScore: z.number(),
+  optimizationPotential: z.number(),
+  costEfficiency: z.number(),
+  automationPotential: z.number(),
+  customerExpectations: z.string().array(),
+  currentExperience: z.string().nullish(),
+  improvementAreas: z.string().array(),
+  createdAt: z.coerce.date(),
+})
+
+export type Touchpoint = z.infer<typeof TouchpointSchema>
+
+// TOUCHPOINT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const TouchpointOptionalDefaultsSchema = TouchpointSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  effectivenessScore: z.number().optional(),
+  satisfactionScore: z.number().optional(),
+  usageFrequency: z.number().optional(),
+  importanceScore: z.number().optional(),
+  optimizationPotential: z.number().optional(),
+  costEfficiency: z.number().optional(),
+  automationPotential: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type TouchpointOptionalDefaults = z.infer<typeof TouchpointOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// JOURNEY PAIN POINT SCHEMA
+/////////////////////////////////////////
+
+export const JourneyPainPointSchema = z.object({
+  id: z.string().uuid(),
+  customerJourneyMappingId: z.string(),
+  painPointName: z.string(),
+  journeyStage: z.string(),
+  painCategory: z.string(),
+  severityScore: z.number(),
+  frequencyScore: z.number(),
+  impactScore: z.number(),
+  resolutionDifficulty: z.number(),
+  dropOffIncrease: z.number(),
+  supportCost: z.number(),
+  revenueImpact: z.number(),
+  currentMitigation: z.string().nullish(),
+  proposedSolution: z.string().nullish(),
+  solutionPriority: z.number(),
+  createdAt: z.coerce.date(),
+})
+
+export type JourneyPainPoint = z.infer<typeof JourneyPainPointSchema>
+
+// JOURNEY PAIN POINT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const JourneyPainPointOptionalDefaultsSchema = JourneyPainPointSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  severityScore: z.number().optional(),
+  frequencyScore: z.number().optional(),
+  impactScore: z.number().optional(),
+  resolutionDifficulty: z.number().optional(),
+  dropOffIncrease: z.number().optional(),
+  supportCost: z.number().optional(),
+  revenueImpact: z.number().optional(),
+  solutionPriority: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type JourneyPainPointOptionalDefaults = z.infer<typeof JourneyPainPointOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// TARGET AUDIENCE SEGMENTATION SCHEMA
+/////////////////////////////////////////
+
+export const TargetAudienceSegmentationSchema = z.object({
+  id: z.string().uuid(),
+  validationId: z.string(),
+  primarySegment: z.string(),
+  totalSegments: z.number().int(),
+  totalMarketSize: z.number().int(),
+  overallSegmentationScore: z.number(),
+  averageSegmentSize: z.number().int(),
+  segmentAccessibility: z.number(),
+  marketPenetration: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type TargetAudienceSegmentation = z.infer<typeof TargetAudienceSegmentationSchema>
+
+// TARGET AUDIENCE SEGMENTATION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const TargetAudienceSegmentationOptionalDefaultsSchema = TargetAudienceSegmentationSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  totalSegments: z.number().int().optional(),
+  totalMarketSize: z.number().int().optional(),
+  overallSegmentationScore: z.number().optional(),
+  averageSegmentSize: z.number().int().optional(),
+  segmentAccessibility: z.number().optional(),
+  marketPenetration: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type TargetAudienceSegmentationOptionalDefaults = z.infer<typeof TargetAudienceSegmentationOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// AUDIENCE SEGMENT SCHEMA
+/////////////////////////////////////////
+
+export const AudienceSegmentSchema = z.object({
+  id: z.string().uuid(),
+  targetAudienceSegmentationId: z.string(),
+  segmentName: z.string(),
+  segmentSize: z.number(),
+  attractivenessScore: z.number(),
+  accessibilityScore: z.number(),
+  profitabilityScore: z.number(),
+  primaryNeed: z.string().nullish(),
+  secondaryNeeds: z.string().array(),
+  preferredSolution: z.string().nullish(),
+  budgetRange: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type AudienceSegment = z.infer<typeof AudienceSegmentSchema>
+
+// AUDIENCE SEGMENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const AudienceSegmentOptionalDefaultsSchema = AudienceSegmentSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  segmentSize: z.number().optional(),
+  attractivenessScore: z.number().optional(),
+  accessibilityScore: z.number().optional(),
+  profitabilityScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type AudienceSegmentOptionalDefaults = z.infer<typeof AudienceSegmentOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MARKET TREND ANALYSIS SCHEMA
+/////////////////////////////////////////
+
+export const MarketTrendAnalysisSchema = z.object({
+  id: z.string().uuid(),
+  validationId: z.string(),
+  primaryTrend: z.string(),
+  totalTrendsTracked: z.number().int(),
+  analysisTimeframe: z.number().int(),
+  overallTrendScore: z.number(),
+  trendStrength: z.number(),
+  marketGrowthRate: z.number(),
+  adoptionRate: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type MarketTrendAnalysis = z.infer<typeof MarketTrendAnalysisSchema>
+
+// MARKET TREND ANALYSIS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MarketTrendAnalysisOptionalDefaultsSchema = MarketTrendAnalysisSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  totalTrendsTracked: z.number().int().optional(),
+  analysisTimeframe: z.number().int().optional(),
+  overallTrendScore: z.number().optional(),
+  trendStrength: z.number().optional(),
+  marketGrowthRate: z.number().optional(),
+  adoptionRate: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type MarketTrendAnalysisOptionalDefaults = z.infer<typeof MarketTrendAnalysisOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// MARKET TREND SCHEMA
+/////////////////////////////////////////
+
+export const MarketTrendSchema = z.object({
+  id: z.string().uuid(),
+  marketTrendAnalysisId: z.string(),
+  trendName: z.string(),
+  trendCategory: z.string(),
+  impactScore: z.number(),
+  timelineMonths: z.number().int().nullish(),
+  certaintyLevel: z.number(),
+  opportunityScore: z.number(),
+  threatScore: z.number(),
+  description: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type MarketTrend = z.infer<typeof MarketTrendSchema>
+
+// MARKET TREND OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const MarketTrendOptionalDefaultsSchema = MarketTrendSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  impactScore: z.number().optional(),
+  certaintyLevel: z.number().optional(),
+  opportunityScore: z.number().optional(),
+  threatScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type MarketTrendOptionalDefaults = z.infer<typeof MarketTrendOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CUSTOMER NEED ANALYSIS SCHEMA
+/////////////////////////////////////////
+
+export const CustomerNeedAnalysisSchema = z.object({
+  id: z.string().uuid(),
+  validationId: z.string(),
+  primaryNeed: z.string(),
+  totalNeedsIdentified: z.number().int(),
+  totalPainPoints: z.number().int(),
+  overallNeedScore: z.number(),
+  needUrgency: z.number(),
+  solutionGap: z.number(),
+  customerWillingness: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type CustomerNeedAnalysis = z.infer<typeof CustomerNeedAnalysisSchema>
+
+// CUSTOMER NEED ANALYSIS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CustomerNeedAnalysisOptionalDefaultsSchema = CustomerNeedAnalysisSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  totalNeedsIdentified: z.number().int().optional(),
+  totalPainPoints: z.number().int().optional(),
+  overallNeedScore: z.number().optional(),
+  needUrgency: z.number().optional(),
+  solutionGap: z.number().optional(),
+  customerWillingness: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type CustomerNeedAnalysisOptionalDefaults = z.infer<typeof CustomerNeedAnalysisOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CUSTOMER NEED SCHEMA
+/////////////////////////////////////////
+
+export const CustomerNeedSchema = z.object({
+  id: z.string().uuid(),
+  customerNeedAnalysisId: z.string(),
+  needName: z.string(),
+  needCategory: z.string(),
+  intensityScore: z.number(),
+  frequencyScore: z.number(),
+  urgencyScore: z.number(),
+  satisfactionGap: z.number(),
+  triggerEvents: z.string().array(),
+  desiredOutcome: z.string().nullish(),
+  currentSolution: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type CustomerNeed = z.infer<typeof CustomerNeedSchema>
+
+// CUSTOMER NEED OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CustomerNeedOptionalDefaultsSchema = CustomerNeedSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  intensityScore: z.number().optional(),
+  frequencyScore: z.number().optional(),
+  urgencyScore: z.number().optional(),
+  satisfactionGap: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type CustomerNeedOptionalDefaults = z.infer<typeof CustomerNeedOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PAIN POINT SCHEMA
+/////////////////////////////////////////
+
+export const PainPointSchema = z.object({
+  id: z.string().uuid(),
+  customerNeedAnalysisId: z.string(),
+  painName: z.string(),
+  painCategory: z.string(),
+  severityScore: z.number(),
+  frequencyScore: z.number(),
+  impactScore: z.number(),
+  emotionalToll: z.number(),
+  timeCostHours: z.number().nullish(),
+  financialCost: z.number().nullish(),
+  opportunityCost: z.number().nullish(),
+  painTriggers: z.string().array(),
+  currentMitigation: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type PainPoint = z.infer<typeof PainPointSchema>
+
+// PAIN POINT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PainPointOptionalDefaultsSchema = PainPointSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  severityScore: z.number().optional(),
+  frequencyScore: z.number().optional(),
+  impactScore: z.number().optional(),
+  emotionalToll: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type PainPointOptionalDefaults = z.infer<typeof PainPointOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// PRICING STRATEGY ANALYSIS SCHEMA
+/////////////////////////////////////////
+
+export const PricingStrategyAnalysisSchema = z.object({
+  primaryStrategy: PricingStrategySchema,
+  id: z.string().uuid(),
+  validationId: z.string(),
+  recommendedPrice: z.number().nullish(),
+  totalTiersAnalyzed: z.number().int(),
+  overallPricingScore: z.number(),
+  priceAcceptance: z.number(),
+  competitivenessScore: z.number(),
+  profitabilityScore: z.number(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type PricingStrategyAnalysis = z.infer<typeof PricingStrategyAnalysisSchema>
+
+// PRICING STRATEGY ANALYSIS OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const PricingStrategyAnalysisOptionalDefaultsSchema = PricingStrategyAnalysisSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  totalTiersAnalyzed: z.number().int().optional(),
+  overallPricingScore: z.number().optional(),
+  priceAcceptance: z.number().optional(),
+  competitivenessScore: z.number().optional(),
+  profitabilityScore: z.number().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type PricingStrategyAnalysisOptionalDefaults = z.infer<typeof PricingStrategyAnalysisOptionalDefaultsSchema>

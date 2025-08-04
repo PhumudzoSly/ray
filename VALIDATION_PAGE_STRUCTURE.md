@@ -40,6 +40,14 @@ Based on `layout.tsx`, we have 5 main validation pages:
 - **Priority Matrix** - Action items by urgency and impact
 - **Progress Tracker** - Completion status of action items
 
+### Product-Market Fit (PMF) Metrics
+- **PMF Score Gauge** - Overall PMF score (0-100)
+- **NPS Score Gauge** - Net Promoter Score (0-100)
+- **Retention Rate Chart** - User retention over time
+- **PMF Survey Results** - "Must-have" product score (Sean Ellis test)
+- **DAU/MAU Ratio** - Stickiness of the product
+- **Qualitative Feedback Summary** - Key themes from user feedback
+
 ### Quick Stats Cards
 - **Module Status Grid** - Summary cards for each validation module
 - **Progress Indicators** - Completion status for each validation area
@@ -55,179 +63,244 @@ Based on `layout.tsx`, we have 5 main validation pages:
 - `MarketTrendAnalysis` - Market trends and growth
 - Related sub-models: `MonthlyProjection`, `AcquisitionChannel`, `MarketInsight`, `MarketRegionScore`, `BusinessInsight`, `MarketTrend`
 
-**Content:**
+**Content & Components:**
 
 ### Business Validation Section
-- **Revenue Model & Strategy**
-  - Primary revenue model
-  - Pricing strategy
-  - Primary price point
-  - Go-to-market strategy
-  - Sales cycle length
 
-- **Unit Economics**
-  - Customer Acquisition Cost (CAC)
-  - Customer Lifetime Value (LTV)
-  - Monthly churn rate
-  - LTV/CAC ratio
+#### Revenue Model & Strategy
+- **Info Cards Grid** - Primary revenue model, pricing strategy, price point
+- **Strategy Badge** - Go-to-market strategy
+- **Duration Card** - Sales cycle length (days)
 
-- **Financial Projections**
-  - Monthly revenue/cost projections (time-series charts)
-  - Break-even analysis
-  - Initial investment requirements
-  - Total funding needed
+#### Unit Economics
+- **Metric Cards** - CAC, LTV, Monthly churn rate
+- **Ratio Gauge** - LTV/CAC ratio visualization
+- **Economics Dashboard** - Unit economics overview
 
-- **Acquisition Channels**
-  - Channel effectiveness scores
-  - Cost per acquisition by channel
-  - Channel optimization recommendations
+#### Financial Projections
+- **Line Chart** - Monthly revenue/cost projections (time-series)
+- **Break-even Chart** - Break-even analysis visualization
+- **Investment Cards** - Initial investment, total funding needed
+- **Financial Timeline** - Funding milestones and projections
+
+#### Acquisition Channels
+- **Channel Effectiveness Chart** - Bar/radar chart of channel scores
+- **Cost Comparison Table** - Cost per acquisition by channel
+- **Recommendations List** - Channel optimization suggestions
 
 ### Market Validation Section
-- **Market Size Analysis**
-  - Total Addressable Market (TAM)
-  - Serviceable Addressable Market (SAM)
-  - Serviceable Obtainable Market (SOM)
-  - Market growth rate
 
-- **Customer Research**
-  - Primary customer segment
-  - Customer interviews conducted
-  - Survey responses collected
+#### Market Size Analysis
+- **Funnel Chart** - TAM/SAM/SOM visualization
+- **Growth Rate Gauge** - Market growth rate indicator
+- **Market Size Cards** - Individual TAM/SAM/SOM values
 
-- **Geographic Analysis**
-  - Primary regions
-  - Regional market scores
-  - Geographic opportunity mapping
+#### Customer Research
+- **Segment Badge** - Primary customer segment
+- **Research Counter Cards** - Interview and survey counts
+- **Research Progress Bar** - Data collection progress
+
+#### Geographic Analysis
+- **Region Tags** - Primary regions list
+- **Heatmap** - Regional market scores visualization
+- **Geographic Table** - Regional opportunity breakdown
 
 ### Market Trends Section
-- **Trend Analysis Overview**
-  - Primary trend identification
-  - Total trends tracked
-  - Analysis timeframe
-  - Overall trend score
 
-- **Individual Market Trends**
-  - Trend categories (technology, social, economic, regulatory)
-  - Impact scores and timelines
-  - Opportunity vs threat assessment
-  - Certainty levels
+#### Trend Analysis Overview
+- **Trend Summary Card** - Primary trend, total tracked, timeframe
+- **Overall Score Gauge** - Overall trend score visualization
+
+#### Individual Market Trends
+- **Trend Cards Grid** - Individual trend analysis cards
+- **Category Tags** - Trend categories (technology, social, economic, regulatory)
+- **Impact Matrix** - Impact scores vs timeline scatter plot
+- **Opportunity vs Threat Chart** - Dual-axis comparison
+- **Certainty Indicators** - Confidence level badges
 
 **Charts & Visualizations:**
-- Revenue/cost projection timeline
-- Market size funnel (TAM/SAM/SOM)
-- Regional opportunity heatmap
-- Acquisition channel effectiveness
-- Market trend impact matrix
+- **Time-series Line Chart** - Revenue/cost projection timeline
+- **Funnel Diagram** - Market size funnel (TAM/SAM/SOM)
+- **Geographic Heatmap** - Regional opportunity mapping
+- **Horizontal Bar Chart** - Acquisition channel effectiveness
+- **Scatter Plot Matrix** - Market trend impact analysis
+
+### Risk Management Section
+
+**Primary Models:**
+- `RiskAnalysis` - Risk overview and scoring
+- `RiskItem` - Individual risk details
+
+**Content & Components:**
+
+#### Risk Overview
+- **Risk Matrix** - Likelihood vs. Impact of identified risks
+- **Top Risks List** - Top 5 risks by score
+- **Risk Score Gauge** - Overall risk score for the business validation
+
+#### Risk Breakdown
+- **Risk Category Donut Chart** - Breakdown of risks by category (Market, Financial, Technical, etc.)
+- **Risk Mitigation Table** - List of risks, their mitigation strategies, and owners
 
 ---
 
 ## 3. Audience Page (`/ideas/{id}/audience`)
 
 **Primary Models:**
-- `TargetAudienceSegmentation` - Audience segments
-- `CustomerJourneyMapping` - Customer journey analysis
+- `TargetAudienceSegmentation` - Audience analysis and segmentation
+- `CustomerJourneyMapping` - Customer journey and touchpoints
 - `CustomerNeedAnalysis` - Customer needs and pain points
 - Related sub-models: `AudienceSegment`, `JourneyStage`, `Touchpoint`, `JourneyPainPoint`, `CustomerNeed`, `PainPoint`
 
-**Content:**
+**Content & Components:**
 
-### Target Audience Segmentation
-- **Segmentation Overview**
-  - Primary segment identification
-  - Total segments analyzed
-  - Total market size
-  - Overall segmentation score
+### Target Audience Segmentation Section
 
-- **Segment Analysis**
-  - Segment sizes and attractiveness scores
-  - Accessibility and profitability scores
-  - Primary and secondary needs per segment
-  - Budget ranges and preferred solutions
+#### Segmentation Overview
+- **Primary Segment Badge** - Main target segment
+- **Segmentation Score Gauge** - Overall segmentation score
+- **Segment Counter Cards** - Total segments, market size, average segment size
 
-### Customer Journey Mapping
-- **Journey Overview**
-  - Total journey stages
-  - Average journey time
-  - Overall journey score
-  - Conversion and drop-off rates
+#### Market Metrics
+- **Accessibility Gauge** - Segment accessibility score
+- **Penetration Chart** - Market penetration visualization
+- **Size Comparison Chart** - Segment size comparison
 
-- **Journey Stages**
-  - Stage-by-stage analysis
-  - Conversion rates between stages
-  - Satisfaction and friction scores
-  - Customer goals, actions, thoughts, emotions
-  - Support ticket generation
+#### Individual Audience Segments
+- **Segment Cards Grid** - Individual segment analysis
+- **Demographics Table** - Age range, income, location breakdown
+- **Behavior Tags** - Behavioral characteristics
+- **Psychographics Cards** - Values, interests, lifestyle
+- **Channel Preference Chart** - Preferred communication channels
 
-- **Touchpoints**
-  - Touchpoint effectiveness and satisfaction
-  - Usage frequency and importance
-  - Optimization potential
-  - Cost efficiency analysis
+### Customer Journey Mapping Section
 
-- **Journey Pain Points**
-  - Pain point severity and frequency
-  - Business impact and resolution difficulty
-  - Revenue impact and support costs
-  - Proposed solutions and priorities
+#### Journey Overview
+- **Journey Score Gauge** - Overall journey score
+- **Stage Counter** - Total journey stages
+- **Journey Timeline** - Visual journey progression
 
-### Customer Needs Analysis
-- **Needs Overview**
-  - Primary need identification
-  - Total needs and pain points identified
-  - Overall need score
-  - Need urgency and solution gaps
+#### Journey Stages Analysis
+- **Stage Flow Diagram** - Sequential journey stages
+- **Stage Cards** - Individual stage details (name, description, duration)
+- **Touchpoint Matrix** - Touchpoints per stage visualization
+- **Pain Point Indicators** - Pain points distribution across stages
 
-- **Individual Customer Needs**
-  - Need categories (functional, emotional, social)
-  - Intensity, frequency, and urgency scores
-  - Satisfaction gaps
-  - Trigger events and desired outcomes
+#### Touchpoints & Interactions
+- **Touchpoint Grid** - All customer touchpoints
+- **Channel Distribution Chart** - Touchpoint channels breakdown
+- **Effectiveness Scores** - Touchpoint effectiveness ratings
+- **Optimization Recommendations** - Touchpoint improvement suggestions
 
-- **Pain Points Analysis**
-  - Pain categories (process, cost, time, quality, experience)
-  - Severity, frequency, and impact scores
-  - Time and financial costs
-  - Current mitigation strategies
+#### Journey Pain Points
+- **Pain Point Heatmap** - Pain points across journey stages
+- **Severity Indicators** - Pain point severity levels
+- **Impact Assessment** - Pain point impact on customer experience
+- **Resolution Priority Matrix** - Pain point resolution priorities
+
+### Customer Need Analysis Section
+
+#### Needs Overview
+- **Primary Need Badge** - Main customer need
+- **Need Score Gauge** - Overall need analysis score
+- **Need Counter Cards** - Total needs identified, pain points
+
+#### Need Assessment
+- **Need Urgency Gauge** - Customer need urgency level
+- **Solution Gap Chart** - Gap between current solutions and needs
+- **Willingness Indicator** - Customer willingness to pay/adopt
+
+#### Individual Customer Needs
+- **Need Cards Grid** - Individual need analysis
+- **Category Tags** - Need categories (functional, emotional, social)
+- **Priority Matrix** - Need importance vs satisfaction
+- **Validation Status** - Need validation progress
+
+#### Pain Points Analysis
+- **Pain Point Cards** - Individual pain point details
+- **Severity Distribution** - Pain point severity breakdown
+- **Frequency Chart** - How often pain points occur
+- **Impact Assessment** - Business impact of addressing pain points
 
 **Charts & Visualizations:**
-- Audience segment comparison matrix
-- Customer journey flow diagram
-- Touchpoint effectiveness radar
-- Pain point impact vs frequency scatter plot
-- Need intensity heatmap
+- **Segment Size Bubble Chart** - Audience segment comparison
+- **Customer Journey Flow** - Sequential journey visualization
+- **Pain Point Heatmap** - Journey stage vs pain point intensity
+- **Need-Solution Gap Analysis** - Current vs desired state
+- **Touchpoint Effectiveness Radar** - Multi-dimensional touchpoint analysis
 
 ---
 
 ## 4. Competitors Page (`/ideas/{id}/competitors`)
 
 **Primary Models:**
-- External competitor data (likely from `idea.prisma` - `Competitor` model)
-- `CompetitorPricing` - Competitive pricing analysis
+- External competitor data (from `idea.prisma` - `Competitor` model)
+- `CompetitorPricing` - Competitor pricing analysis
+- Market positioning analysis
 
-**Content:**
-- **Competitor Overview**
-  - Direct and indirect competitors
-  - Market positioning analysis
-  - Competitive landscape mapping
+**Content & Components:**
 
-- **Competitive Pricing Analysis**
-  - Competitor pricing models
-  - Base and premium pricing tiers
-  - Feature and value comparisons
-  - Market positioning (premium, value, budget)
-  - Market share and customer satisfaction
-  - Pricing advantages/disadvantages
+### Competitor Overview
 
-- **Competitive Intelligence**
-  - Strengths and weaknesses analysis
-  - Market gaps and opportunities
-  - Differentiation strategies
+#### Market Landscape
+- **Competitor Count Card** - Total competitors identified
+- **Market Position Map** - Competitive positioning scatter plot
+- **Threat Level Indicators** - Competitor threat assessment
+- **Market Share Chart** - Competitor market share distribution
+
+### Direct Competitors Analysis
+
+#### Competitor Profiles
+- **Competitor Cards Grid** - Individual competitor profiles
+- **Company Info Cards** - Name, description, founding year, size
+- **Strength Assessment** - Competitor strengths and weaknesses
+- **Feature Comparison Table** - Feature-by-feature comparison matrix
+
+#### Competitive Positioning
+- **Positioning Matrix** - Price vs quality/features positioning
+- **Differentiation Chart** - Unique value propositions comparison
+- **Target Audience Overlap** - Audience overlap analysis
+- **Geographic Presence Map** - Competitor geographic coverage
+
+### Pricing Competition Analysis
+
+#### Pricing Overview
+- **Pricing Strategy Cards** - Competitor pricing models
+- **Price Range Chart** - Pricing distribution across competitors
+- **Value Proposition Matrix** - Price vs value comparison
+
+#### Detailed Pricing Analysis
+- **Pricing Tier Table** - Competitor pricing tiers breakdown
+- **Feature-Price Matrix** - Features offered at different price points
+- **Pricing Trends Chart** - Historical pricing changes
+- **Competitive Pricing Recommendations** - Suggested pricing strategy
+
+### Competitive Intelligence
+
+#### Market Dynamics
+- **Competitive Intensity Gauge** - Overall market competition level
+- **Entry Barriers Assessment** - Market entry difficulty indicators
+- **Switching Costs Analysis** - Customer switching cost evaluation
+- **Innovation Rate Chart** - Rate of innovation in the market
+
+#### SWOT Analysis
+- **Strengths Cards** - Our competitive strengths
+- **Weaknesses Cards** - Areas for improvement
+- **Opportunities Cards** - Market opportunities to exploit
+- **Threats Cards** - Competitive threats to address
+
+#### Competitive Advantage
+- **Advantage Matrix** - Our advantages vs competitors
+- **Moat Analysis** - Sustainable competitive advantages
+- **Differentiation Factors** - Key differentiating factors
+- **Competitive Response Plan** - Strategic response recommendations
 
 **Charts & Visualizations:**
-- Competitive positioning matrix
-- Pricing comparison charts
-- Feature comparison tables
-- Market share visualization
+- **Competitive Positioning Scatter Plot** - Price vs features/quality
+- **Market Share Pie Chart** - Competitor market share distribution
+- **Feature Comparison Heatmap** - Feature availability across competitors
+- **Pricing Distribution Histogram** - Competitor pricing ranges
+- **SWOT Analysis Quadrant** - Strategic positioning analysis
 
 ---
 
@@ -235,52 +308,84 @@ Based on `layout.tsx`, we have 5 main validation pages:
 
 **Primary Models:**
 - `PricingStrategyAnalysis` - Pricing strategy and analysis
-- `PricingTier` - Pricing tier analysis
+- `PricingTier` - Individual pricing tiers
 - `CompetitorPricing` - Competitive pricing data
 
-**Content:**
+**Content & Components:**
 
-### Pricing Strategy Analysis
-- **Strategy Overview**
-  - Primary pricing strategy
-  - Recommended price point
-  - Total tiers analyzed
-  - Overall pricing score
+### Pricing Strategy Overview
 
-- **Pricing Metrics**
-  - Price acceptance score
-  - Competitiveness score
-  - Profitability score
+#### Strategy Summary
+- **Primary Strategy Badge** - Main pricing strategy (freemium, subscription, etc.)
+- **Pricing Score Gauge** - Overall pricing strategy score
+- **Recommended Price Card** - Optimal price point recommendation
 
-### Pricing Tier Analysis
-- **Tier Structure**
-  - Tier names and pricing
-  - Features included per tier
-  - Target segments
+#### Strategy Analysis
+- **Strategy Comparison Table** - Different pricing strategies evaluated
+- **Price Acceptance Gauge** - Customer price acceptance level
+- **Competitiveness Score** - Pricing competitiveness indicator
+- **Profitability Score** - Expected profitability assessment
 
-- **Tier Performance**
-  - Expected conversion rates
-  - Popularity scores
-  - Profit margins
-  - Competitive positioning
+### Pricing Tiers Analysis
+
+#### Tier Overview
+- **Tier Counter Card** - Total pricing tiers analyzed
+- **Tier Structure Diagram** - Visual pricing tier hierarchy
+- **Revenue Distribution Chart** - Expected revenue per tier
+
+#### Individual Pricing Tiers
+- **Tier Cards Grid** - Individual tier details
+- **Feature Matrix Table** - Features included per tier
+- **Price Point Cards** - Tier pricing and billing cycles
+- **Target Audience Tags** - Target customer segments per tier
+- **Value Proposition Cards** - Value delivered per tier
+
+#### Tier Performance Metrics
+- **Conversion Rate Chart** - Expected conversion rates per tier
+- **Customer Lifetime Value** - LTV projections per tier
+- **Churn Rate Indicators** - Expected churn rates
+- **Upgrade Path Diagram** - Customer upgrade journey
 
 ### Competitive Pricing Analysis
-- **Competitor Pricing Models**
-  - Pricing model types (subscription, one-time, usage-based, freemium)
-  - Base and premium pricing
-  - Feature and value comparisons
 
-- **Market Positioning**
-  - Market position analysis
-  - Customer satisfaction comparison
-  - Pricing advantage analysis
+#### Market Positioning
+- **Price Positioning Chart** - Our pricing vs competitors
+- **Value-Price Matrix** - Value delivered vs price charged
+- **Market Price Range** - Industry pricing benchmarks
+- **Competitive Advantage Cards** - Pricing advantages identified
+
+#### Competitor Pricing Details
+- **Competitor Pricing Table** - Detailed competitor pricing breakdown
+- **Feature-Price Comparison** - Features offered at different price points
+- **Pricing Strategy Tags** - Competitor pricing strategies
+- **Market Share Impact** - How pricing affects market share
+
+### Pricing Optimization
+
+#### Price Testing & Validation
+- **Price Sensitivity Analysis** - Customer price sensitivity curves
+- **A/B Test Results** - Pricing experiment outcomes
+- **Willingness to Pay Chart** - Customer willingness to pay distribution
+- **Price Elasticity Gauge** - Demand elasticity indicators
+
+#### Revenue Projections
+- **Revenue Forecast Chart** - Revenue projections by pricing model
+- **Break-even Analysis** - Break-even points for different prices
+- **Scenario Planning** - Best/worst/expected case scenarios
+- **ROI Calculator** - Return on investment projections
+
+#### Optimization Recommendations
+- **Pricing Recommendations Cards** - Strategic pricing suggestions
+- **Implementation Timeline** - Pricing rollout schedule
+- **Risk Assessment** - Pricing strategy risks and mitigations
+- **Success Metrics** - KPIs to track pricing success
 
 **Charts & Visualizations:**
-- Pricing tier comparison table
-- Price acceptance vs profitability matrix
-- Competitive pricing landscape
-- Tier popularity and conversion forecasts
-- Price elasticity analysis
+- **Pricing Strategy Comparison Matrix** - Strategy evaluation across criteria
+- **Tier Revenue Waterfall** - Revenue contribution by tier
+- **Competitive Pricing Scatter Plot** - Price vs value positioning
+- **Price Sensitivity Curve** - Demand response to price changes
+- **Revenue Projection Timeline** - Expected revenue over time
 
 ---
 
@@ -292,6 +397,8 @@ IdeaValidation (main container)
 ├── ValidationMetrics (overview dashboard)
 ├── BusinessValidation → MonthlyProjection, AcquisitionChannel, BusinessInsight
 ├── MarketValidation → MarketInsight, MarketRegionScore
+├── RiskAnalysis → RiskItem
+├── ProductMarketFitAnalysis
 ├── MarketTrendAnalysis → MarketTrend
 ├── TargetAudienceSegmentation → AudienceSegment
 ├── CustomerJourneyMapping → JourneyStage, Touchpoint, JourneyPainPoint
