@@ -18,7 +18,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Plus, Check, X, Loader2, Edit } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import * as roadmapActions from "@/actions/roadmap";
-import * as projectActions from "@/actions/project";
 import { toast } from "sonner";
 import { useSession } from "@/context/session-context";
 import { useRouter } from "next/navigation";
@@ -55,11 +54,8 @@ const RoadmapForm = ({
     slug: roadmap?.slug || "",
     description: roadmap?.description || "",
     isPublic: roadmap?.isPublic ?? true,
-    customDomain: roadmap?.customDomain || "",
-    theme: roadmap?.theme || "default",
     allowVoting: roadmap?.allowVoting ?? true,
     allowFeedback: roadmap?.allowFeedback ?? true,
-    showChangelog: roadmap?.showChangelog ?? true,
   });
 
   const [originalSlug, setOriginalSlug] = useState(roadmap?.slug || "");
@@ -75,11 +71,6 @@ const RoadmapForm = ({
     message: "",
   });
 
-  // Fetch projects
-  const { data: projects } = useQuery({
-    queryKey: ["projects"],
-    queryFn: async () => projectActions.getProjects(),
-  });
   // Mutations
   const createRoadmapMutation = useMutation({
     mutationFn: async (data: any) => roadmapActions.createPublicRoadmap(data),
@@ -200,11 +191,8 @@ const RoadmapForm = ({
         slug: "",
         description: "",
         isPublic: true,
-        customDomain: "",
-        theme: "default",
         allowVoting: true,
         allowFeedback: true,
-        showChangelog: true,
       });
       setSelectedProjectId(null);
     } else {
@@ -214,11 +202,8 @@ const RoadmapForm = ({
         slug: roadmap?.slug || "",
         description: roadmap?.description || "",
         isPublic: roadmap?.isPublic ?? true,
-        customDomain: roadmap?.customDomain || "",
-        theme: roadmap?.theme || "default",
         allowVoting: roadmap?.allowVoting ?? true,
         allowFeedback: roadmap?.allowFeedback ?? true,
-        showChangelog: roadmap?.showChangelog ?? true,
       });
       setSelectedProjectId(roadmap?.projectId || null);
     }
@@ -272,12 +257,12 @@ const RoadmapForm = ({
           slug: formData.slug,
           description: formData.description,
           isPublic: formData.isPublic,
-          customDomain: formData.customDomain || undefined,
-          theme: formData.theme,
           allowVoting: formData.allowVoting,
           allowFeedback: formData.allowFeedback,
-          showChangelog: formData.showChangelog,
         });
+
+        console.log("Create roadmap result:", result);
+
         if (result && result.success && result.data && result.data.id) {
           toast.success("Roadmap created successfully!");
           setOpen(false);
@@ -286,26 +271,39 @@ const RoadmapForm = ({
           if (navigateOnCreate) {
             router.push(`/roadmap/${result.data.id}`);
           }
+        } else {
+          // Handle server-side errors
+          const errorMessage = result?.error || "Unknown error occurred";
+          console.error("Failed to create roadmap:", errorMessage);
+          toast.error(`Failed to create roadmap: ${errorMessage}`);
         }
       } else {
-        await updateRoadmapMutation.mutateAsync({
+        const result = await updateRoadmapMutation.mutateAsync({
           id: roadmap.id,
           name: formData.name,
           slug: formData.slug,
           description: formData.description,
           isPublic: formData.isPublic,
-          customDomain: formData.customDomain || undefined,
-          theme: formData.theme,
           allowVoting: formData.allowVoting,
           allowFeedback: formData.allowFeedback,
-          showChangelog: formData.showChangelog,
         });
-        toast.success("Roadmap updated successfully!");
-        setOpen(false);
-        resetForm();
-        onSuccess?.();
+
+        console.log("Update roadmap result:", result);
+
+        if (result && result.success) {
+          toast.success("Roadmap updated successfully!");
+          setOpen(false);
+          resetForm();
+          onSuccess?.();
+        } else {
+          // Handle server-side errors
+          const errorMessage = result?.error || "Unknown error occurred";
+          console.error("Failed to update roadmap:", errorMessage);
+          toast.error(`Failed to update roadmap: ${errorMessage}`);
+        }
       }
     } catch (error) {
+      console.error("Mutation error:", error);
       toast.error(
         mode === "create"
           ? "Failed to create roadmap"
@@ -479,7 +477,7 @@ const RoadmapForm = ({
             <div className="space-y-2">
               <Label htmlFor="project">Project *</Label>
               <ProjectSelector
-                currentProject={roadmap?.projectId}
+                currentProject={selectedProjectId}
                 onChange={(project) => setSelectedProjectId(project)}
               />
             </div>
@@ -515,17 +513,6 @@ const RoadmapForm = ({
                   }
                 />
                 <Label htmlFor="allowFeedback">Allow Feedback</Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="showChangelog"
-                  checked={formData.showChangelog}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, showChangelog: checked })
-                  }
-                />
-                <Label htmlFor="showChangelog">Show Changelog</Label>
               </div>
             </div>
           </div>

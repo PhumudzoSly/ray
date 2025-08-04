@@ -175,6 +175,35 @@ export async function updateOrganizationName(
   }
 }
 
+export async function acceptInvitation(invitationId: string) {
+  await getSession();
+  const headersList = await headers();
+
+  const data = await auth.api.acceptInvitation({
+    body: {
+      invitationId,
+    },
+    headers: headersList,
+  });
+
+  return data;
+}
+
+export async function getInvitations() {
+  const { email } = await getSession();
+
+  const data = await prisma.invitation.findMany({
+    where: {
+      email,
+    },
+    include: {
+      organization: true,
+    },
+  });
+
+  return data;
+}
+
 export async function deleteAccount() {
   const { userId } = await getSession();
   const sub = await polarClient.customers.getStateExternal({

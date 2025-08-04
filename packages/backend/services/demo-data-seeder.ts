@@ -296,9 +296,9 @@ async function createDemoWaitlists(
         "Get early access to our AI-powered task management platform before the official launch.",
       isPublic: true,
       collectEmail: true,
-      collectName: true,
+      allowNameCapture: true,
       collectCompany: false,
-      enablePositionTracking: true,
+      showPosition: true,
       organizationId,
       projectId: projects[0]?.id, // TaskMaster Pro
       createdById: userId,
@@ -309,9 +309,9 @@ async function createDemoWaitlists(
         "Be the first to know when EcoEats launches in your area and get exclusive early-bird discounts.",
       isPublic: true,
       collectEmail: true,
-      collectName: true,
+      allowNameCapture: true,
       collectCompany: false,
-      enablePositionTracking: false,
+      showPosition: false,
       organizationId,
       projectId: projects[1]?.id, // EcoEats Mobile App
       createdById: userId,
@@ -322,9 +322,9 @@ async function createDemoWaitlists(
   await prisma.waitlist.createMany({
     data: demoWaitlists.map((waitlist) => ({
       ...waitlist,
-      slug: waitlist.name.toLowerCase().replace(/\s+/g, "-"),
-      allowNameCapture: waitlist.collectName,
-      showPosition: waitlist.enablePositionTracking,
+      slug: `${waitlist.name.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}`,
+      allowNameCapture: waitlist.allowNameCapture,
+      showPosition: waitlist.showPosition,
       showSocialProof: true,
     })),
   });
@@ -349,8 +349,7 @@ async function createDemoRoadmaps(
       isPublic: true,
       allowVoting: true,
       allowFeedback: true,
-      organizationId,
-      projectId: projects[0]?.id, // TaskMaster Pro
+      projectId: projects[0]?.id,
       createdById: userId,
     },
     {
@@ -360,8 +359,7 @@ async function createDemoRoadmaps(
       isPublic: true,
       allowVoting: false,
       allowFeedback: true,
-      organizationId,
-      projectId: projects[1]?.id, // EcoEats Mobile App
+      projectId: projects[1]?.id,
       createdById: userId,
     },
   ];

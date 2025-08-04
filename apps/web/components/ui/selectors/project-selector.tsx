@@ -61,7 +61,9 @@ export function ProjectSelector({
     enabled: !!token,
   });
 
-  const selectedProject = (projects ?? []).find((project: Project) => project.id === currentProject);
+  const selectedProject = (projects ?? []).find(
+    (project: Project) => project.id === currentProject
+  );
 
   // Find the project type configuration for the selected project
   const selectedProjectType = selectedProject

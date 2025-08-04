@@ -285,6 +285,17 @@ export async function generateCustomerURL() {
   return url;
 }
 
+// Server action specifically for client components
+export async function generateCustomerPortalURL(): Promise<string> {
+  "use server";
+  
+  const url = await generateCustomerURL();
+  if (!url) {
+    throw new Error("Failed to generate customer URL");
+  }
+  return url;
+}
+
 /**
  * Invalidate all subscription-related caches for an organization
  * Call this when subscription data changes (status, plan, etc.)

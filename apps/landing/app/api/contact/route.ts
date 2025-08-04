@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { LoopsClient } from "loops";
 import { z } from "zod";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+if (!process.env.LOOPS_API_KEY) {
+  throw new Error("Missing LOOPS_API_KEY environment variable");
+}
+
+const loops = new LoopsClient(process.env.LOOPS_API_KEY);
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -18,56 +22,19 @@ export async function POST(req: NextRequest) {
     const validatedData = contactSchema.parse(body);
     const { name, email, message } = validatedData;
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: "Ray AI Contact Form <noreply@rayai.dev>",
-      to: ["phumudzo@rayai.dev"],
-      subject: `New Contact Form Submission from ${name}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px;">
-            New Contact Form Submission
-          </h2>
-          
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #495057; margin-top: 0;">Contact Details</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-          </div>
-          
-          <div style="background-color: #ffffff; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
-            <h3 style="color: #495057; margin-top: 0;">Message</h3>
-            <p style="line-height: 1.6; color: #212529;">${message.replace(/\n/g, '<br>')}</p>
-          </div>
-          
-          <div style="margin-top: 20px; padding: 15px; background-color: #e9ecef; border-radius: 8px; font-size: 14px; color: #6c757d;">
-            <p style="margin: 0;">This email was sent from the Ray AI contact form on ${new Date().toLocaleString()}.</p>
-          </div>
-        </div>
-      `,
-      text: `
-New Contact Form Submission
-
-Name: ${name}
-Email: ${email}
-
-Message:
-${message}
-
-Sent on: ${new Date().toLocaleString()}
-      `,
+    // Send email using Loops
+    const data = await loops.sendTransactionalEmail({
+      transactionalId: "clz2b44a2000208ju953m5j3j",
+      email: "phumudzo@rayai.dev",
+      dataVariables: {
+        name,
+        email,
+        message,
+      }
     });
 
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json(
-        { error: "Failed to send email" },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json(
-      { message: "Email sent successfully", id: data?.id },
+      { message: "Email sent successfully", ...data },
       { status: 200 }
     );
   } catch (error) {
