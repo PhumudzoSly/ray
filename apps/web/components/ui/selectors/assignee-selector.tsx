@@ -158,14 +158,16 @@ export function AssigneeSelector({
           {iconOnly ? null : (
             <div>
               {value
-                ? orgMembers.find((user) => user.id === value)?.name
-                : "No lead assigned"}
+                ? orgMembers
+                    .find((user) => user.id === value)
+                    ?.name?.split(" ")[0]
+                : "No lead"}
             </div>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+        className="border-input  w-full min-w-[var(--radix-popper-anchor-width)] p-0"
         align="start"
       >
         <Command>

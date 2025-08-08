@@ -93,125 +93,6 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Value Comparison */}
-      <div className="border-b border-border/50 bg-muted/30">
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
-              One platform, everything you need
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Build, validate, and scale your SaaS with integrated tools that
-              work together
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-8 items-start">
-            {/* Left side - Separate tools */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-2 h-2 bg-destructive rounded-full"></div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  Buying separately
-                </h3>
-              </div>
-              <div className="space-y-3">
-                {comparisonData.map((item, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-background border border-border rounded-lg"
-                  >
-                    <div className="flex items-center gap-3">
-                      {item.icon}
-                      <div>
-                        <span className="font-medium text-foreground text-sm">
-                          {item.tool}
-                        </span>
-                        <p className="text-xs text-muted-foreground">
-                          {item.features}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-semibold text-foreground text-sm">
-                      {item.price}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-foreground">
-                    Total monthly cost
-                  </span>
-                  <span className="text-2xl font-bold text-destructive">
-                    $1,000+
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Plus integration headaches
-                </p>
-              </div>
-            </div>
-
-            {/* Right side - Ray */}
-            <div className="relative">
-              <div className="bg-background border-2 border-primary/20 rounded-lg p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <h3 className="text-lg font-semibold text-foreground">
-                    RayAI Bundle
-                  </h3>
-                </div>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-foreground text-sm">
-                      All features above + AI validation
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-foreground text-sm">
-                      Seamless integrations
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-foreground text-sm">
-                      Single dashboard
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-foreground text-sm">
-                      Priority support
-                    </span>
-                  </div>
-                </div>
-                <div className="border-t border-primary/20 pt-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold text-foreground">
-                      Total monthly cost
-                    </span>
-                    <span className="text-2xl font-bold text-primary">
-                      from $29
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Everything integrated seamlessly
-                  </p>
-                </div>
-                <div className="mt-4 p-3 bg-primary text-primary-foreground rounded-lg text-center">
-                  <span className="font-semibold text-sm">
-                    One platform, unlimited potential
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Pricing Cards */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="text-center mb-8">
@@ -371,11 +252,124 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Detailed Pricing Table */}
-      <DetailedPricingTable />
+      {/* Value Comparison */}
+      <div className="border-b border-border/50 bg-muted/30">
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-3 tracking-tight">
+              One platform, everything you need
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Build, validate, and scale your SaaS with integrated tools that
+              work together
+            </p>
+          </div>
 
-      {/* Usage Calculator */}
-      <UsageCalculator />
+          <div className="grid lg:grid-cols-2 gap-8 items-start">
+            {/* Left side - Separate tools */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-2 h-2 bg-destructive rounded-full"></div>
+                <h3 className="text-lg font-semibold text-foreground">
+                  Buying separately
+                </h3>
+              </div>
+              <div className="space-y-3">
+                {comparisonData.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-background border border-border rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      {item.icon}
+                      <div>
+                        <span className="font-medium text-foreground text-sm">
+                          {item.tool}
+                        </span>
+                        <p className="text-xs text-muted-foreground">
+                          {item.features}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="font-semibold text-foreground text-sm">
+                      {item.price}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold text-foreground">
+                    Total monthly cost
+                  </span>
+                  <span className="text-2xl font-bold text-destructive">
+                    $1,000+
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Plus integration headaches
+                </p>
+              </div>
+            </div>
+
+            {/* Right side - Ray */}
+            <div className="relative">
+              <div className="bg-background border-2 border-primary/20 rounded-lg p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    RayAI Bundle
+                  </h3>
+                </div>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-foreground text-sm">
+                      All features above + AI validation
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-foreground text-sm">
+                      Seamless integrations
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-foreground text-sm">
+                      Single dashboard
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-foreground text-sm">
+                      Priority support
+                    </span>
+                  </div>
+                </div>
+                <div className="border-t border-primary/20 pt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-foreground">
+                      Total monthly cost
+                    </span>
+                    <span className="text-2xl font-bold text-primary">
+                      from $29
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Everything integrated seamlessly
+                  </p>
+                </div>
+                <div className="mt-4 p-3 bg-primary text-primary-foreground rounded-lg text-center">
+                  <span className="font-semibold text-sm">
+                    One platform, unlimited potential
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* FAQ Section */}
       <div className="border-t border-border/50 bg-muted/30">

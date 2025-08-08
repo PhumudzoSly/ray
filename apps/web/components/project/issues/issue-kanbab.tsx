@@ -33,9 +33,15 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       issueId: string;
       status: IssueStatus;
     }) => {
-      const issue = displayIssues.find((i) => i.id === issueId);
-      if (!issue) throw new Error("Issue not found");
-      return issueActions.updateIssue(issueId, { ...issue, status });
+      // Only pass the status field to avoid Prisma validation errors
+      const result = await issueActions.updateIssue(issueId, { status });
+      
+      // Check if the update was successful
+      if (!result.success) {
+        throw new Error(result.error?.toString() || "Failed to update issue");
+      }
+      
+      return result.data;
     },
     onMutate: async ({ issueId, status }) => {
       // Cancel any outgoing refetches
@@ -54,13 +60,14 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       setIsUpdating(issueId);
 
       // Return a context object with the snapshotted value
-      return { previousIssues };
+      return { previousIssues, issueId };
     },
     onError: (err, variables, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
       if (context?.previousIssues) {
-        setOptimisticIssues([]);
+        queryClient.setQueryData(["issues"], context.previousIssues);
       }
+      setOptimisticIssues([]);
       setIsUpdating(null);
 
       console.error("Failed to update issue status:", err);
@@ -81,11 +88,11 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       // Show success message
       toast.success("Issue status updated successfully");
 
-      // Refresh the route to get the latest data
-      router.refresh();
-
       // Invalidate and refetch issues
       queryClient.invalidateQueries({ queryKey: ["issues"] });
+      
+      // Refresh the route to get the latest data
+      router.refresh();
     },
     onSettled: () => {
       // Always clear loading state
@@ -141,13 +148,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
     }
   };
 
-  const StatusColumn = ({
-    status,
-    issues,
-  }: {
-    status: any;
-    issues: any[];
-  }) => (
+  const StatusColumn = ({ status, issues }: { status: any; issues: any[] }) => (
     <div className="flex-1 min-w-[350px]">
       <div className="bg-card p-3 rounded-lg mb-3 border">
         <div className="flex items-center gap-2 justify-between">

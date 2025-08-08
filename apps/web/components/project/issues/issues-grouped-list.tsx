@@ -306,9 +306,11 @@ function IssueItemComponent({
         />
         <IssueLabelField issueId={item.id} value={item?.label as IssueLabel} />
         <AssigneeSelector
-          onChange={handleAssigneeChange}
+          onChange={async (e) => {
+            await handleAssigneeChange(e)
+          }}
+          
           assignee={item.assignedTo}
-          iconOnly
         />
       </div>
     </div>

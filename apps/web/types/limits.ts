@@ -14,6 +14,10 @@ export interface AILimits {
   maxValidations: number;
 }
 
+export interface IdeasLimits {
+  maxIdeas: number;
+}
+
 export interface APILimits {
   maxCalls: number;
 }
@@ -22,15 +26,16 @@ export interface AllLimits {
   maxTeamMembers: number;
   maxProject: number;
   maxValidations: number;
+  maxIdeas: number;
   maxCalls: number;
 }
 
 export const TEAM_LIMITS: { [productId: string]: TeamLimits } = {
   [process.env.POLAR_STARTER_PRICING!]: {
-    maxTeamMembers: 2,
+    maxTeamMembers: 1,
   },
   [process.env.POLAR_BUSINESS_PRICING!]: {
-    maxTeamMembers: 10,
+    maxTeamMembers: 5,
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
     maxTeamMembers: 50,
@@ -39,13 +44,13 @@ export const TEAM_LIMITS: { [productId: string]: TeamLimits } = {
 
 export const PROJECTS_LIMITS: { [productId: string]: ProjectLimits } = {
   [process.env.POLAR_STARTER_PRICING!]: {
-    maxProject: 3,
+    maxProject: 5,
   },
   [process.env.POLAR_BUSINESS_PRICING!]: {
     maxProject: 25,
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
-    maxProject: 100,
+    maxProject: 50,
   },
 };
 
@@ -58,6 +63,18 @@ export const AI_LIMITS: { [productId: string]: AILimits } = {
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
     maxValidations: 15,
+  },
+};
+
+export const IDEAS_LIMITS: { [productId: string]: IdeasLimits } = {
+  [process.env.POLAR_STARTER_PRICING!]: {
+    maxIdeas: 2,
+  },
+  [process.env.POLAR_BUSINESS_PRICING!]: {
+    maxIdeas: 5,
+  },
+  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+    maxIdeas: 10,
   },
 };
 
@@ -76,21 +93,24 @@ export const API_LIMITS: { [productId: string]: APILimits } = {
 // Combined limits for easy access
 export const ALL_LIMITS: { [productId: string]: AllLimits } = {
   [process.env.POLAR_STARTER_PRICING!]: {
-    maxTeamMembers: 2,
-    maxProject: 3,
+    maxTeamMembers: 1,
+    maxProject: 5,
     maxValidations: 3,
+    maxIdeas: 2,
     maxCalls: 10000,
   },
   [process.env.POLAR_BUSINESS_PRICING!]: {
-    maxTeamMembers: 10,
+    maxTeamMembers: 5,
     maxProject: 25,
     maxValidations: 8,
+    maxIdeas: 5,
     maxCalls: 100000,
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
     maxTeamMembers: 50,
-    maxProject: 100,
+    maxProject: 50,
     maxValidations: 15,
+    maxIdeas: 10,
     maxCalls: 1000000,
   },
 };
