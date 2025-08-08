@@ -1,0 +1,212 @@
+generator client {
+    provider      = "prisma-client-js"
+    output        = "../generated/client"
+    binaryTargets = ["native", "linux-musl", "rhel-openssl-3.0.x"]
+}
+
+generator zod {
+    provider                         = "zod-prisma-types"
+    createOptionalDefaultValuesTypes = "true"
+    writeNullishInModelTypes         = "true"
+    createInputTypes                 = "false"
+    output                           = "../generated/zod"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id               String          @id
+    name             String
+    email            String
+    emailVerified    Boolean
+    image            String?
+    role             String?
+    createdAt        DateTime        @default(now())
+    updatedAt        DateTime        @updatedAt
+    twoFactorEnabled Boolean?
+    sessions         Session[]
+    accounts         Account[]
+    members          Member[]
+    invitations      Invitation[]
+    passkeys         Passkey[]
+    twofactors       TwoFactor[]
+    subscription     Subscription?
+    project          Project[]       @relation("CreatedProjects")
+    idea             Idea[]          @relation("IdeaOwner")
+    issue            Issue[]         @relation("AssignedIssues")
+    asset            Asset[]         @relation("UploadedAssets")
+    waitlist         Waitlist[]      @relation("CreatedWaitlists")
+    integration      Integration[]   @relation("CreatedIntegrations")
+    activityFeed     ActivityFeed[]
+    feature          Feature[]
+    milestone        Milestone[]     @relation("MilestoneOwner")
+    assetViews       AssetView[]
+    assetDownloads   AssetDownload[]
+
+    @@unique([email])
+    @@map("user")
+}
+
+model Session {
+    id        String   @id
+    expiresAt DateTime
+    ipAddress String?
+    userAgent String?
+    userId    String?
+    user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    activeOrganizationId String?
+
+    token     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([token])
+    @@index([userId])
+    @@map("session")
+}
+
+model Account {
+    id                    String    @id
+    accountId             String
+    providerId            String
+    userId                String?
+    user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+    accessToken           String?
+    refreshToken          String?
+    idToken               String?
+    expiresAt             DateTime?
+    password              String?
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String?
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
+
+    @@index([userId])
+    @@map("account")
+}
+
+model Verification {
+    id         String   @id
+    identifier String
+    value      String
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+
+    @@map("verification")
+}
+
+model Organization {
+    id                  String                @id @default(uuid())
+    name                String
+    slug                String?
+    logo                String?
+    createdAt           DateTime              @default(now())
+    metadata            String?
+    members             Member[]
+    invitations         Invitation[]
+    subscription        Subscription[]
+    project             Project[]
+    idea                Idea[]
+    issue               Issue[]
+    asset               Asset[]
+    waitlist            Waitlist[]
+    integration         Integration[]
+    activityFeed        ActivityFeed[]
+    feature             Feature[]
+    featureDependency   FeatureDependency[]
+    featureLink         FeatureLink[]
+    milestone           Milestone[]
+    milestoneDependency MilestoneDependency[]
+    issueDependency     IssueDependency[]
+    issueLink           IssueLink[]
+    assetViews          AssetView[]
+    assetDownloads      AssetDownload[]
+    referrals           Referral[]
+    ApiKey              ApiKey[]
+    ApiCall             ApiCall[]
+
+    @@unique([slug])
+    @@map("organization")
+}
+
+model Member {
+    id             String       @id @default(uuid())
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    userId         String?
+    user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+    role           String
+    createdAt      DateTime
+
+    @@index([organizationId])
+    @@index([userId])
+    @@map("member")
+}
+
+model Invitation {
+    id             String       @id
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    email          String
+    role           String?
+    status         String
+    expiresAt      DateTime
+    inviterId      String?
+    user           User?        @relation(fields: [inviterId], references: [id], onDelete: SetNull)
+
+    @@index([organizationId])
+    @@index([inviterId])
+    @@map("invitation")
+}
+
+model Passkey {
+    id             String    @id
+    name           String?
+    publicKey      String
+    userId         String?
+    user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+    webauthnUserID String
+    counter        Int
+    deviceType     String
+    backedUp       Boolean
+    transports     String?
+    createdAt      DateTime?
+    credentialID   String
+
+    @@index([userId])
+    @@map("passkey")
+}
+
+model TwoFactor {
+    id          String  @id
+    secret      String
+    backupCodes String
+    userId      String?
+    user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    @@index([userId])
+    @@map("twoFactor")
+}
+
+model Subscription {
+    id              String       @id @default(cuid())
+    status          String?
+    organisation_id String       @unique
+    organization    Organization @relation(fields: [organisation_id], references: [id], onDelete: Cascade)
+    subscription_id String?
+    product_id      String?
+    userId          String?      @unique
+    user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([organisation_id])
+    @@map("subscription")
+}

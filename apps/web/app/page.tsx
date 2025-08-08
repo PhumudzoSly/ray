@@ -10,11 +10,6 @@ export default async function Page() {
     redirect("/auth/sign-in");
   }
   
-  // In production, redirect to stay-tuned page
-  if (process.env.NODE_ENV === "production") {
-    redirect("/stay-tuned");
-  }
-  
-  // In development, redirect to dashboard
+  // Always redirect to dashboard
   return redirect("/dashboard");
 }

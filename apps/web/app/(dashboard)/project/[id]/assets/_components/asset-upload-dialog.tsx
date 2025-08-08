@@ -24,19 +24,16 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Badge } from "@workspace/ui/components/badge";
 import {
-  Upload,
   X,
   File,
   Image,
   Video,
   Code,
   Palette,
-  AlertCircle,
   CheckCircle,
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import { UploadDropzone, useUploadThing } from "@/lib/uploadthing";
 
 interface AssetUploadDialogProps {
@@ -54,7 +51,7 @@ interface UploadedFileData {
   url: string;
 }
 
-const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_FILE_SIZE = 32 * 1024 * 1024; // 32MB (align with uploadthing 'blob' and 'video')
 const ALLOWED_TYPES = {
   image: [
     "image/jpeg",
@@ -371,6 +368,7 @@ export function AssetUploadDialog({
     }
   }, []);
 
+  // Note: File input handler replaced by UploadDropzone; keeping for potential future fallback
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       handleFileSelect(e.target.files[0]);
@@ -434,35 +432,73 @@ export function AssetUploadDialog({
           <div className="space-y-4">
             <Label>File</Label>
 
-            {/* Custom File Upload Area */}
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-              <input
-                type="file"
-                id="file-upload"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    handleFileUpload(file);
-                  }
-                }}
-                accept="image/*,video/*,audio/*,application/pdf,text/*,.doc,.docx,.txt,.js,.ts,.jsx,.tsx,.html,.css,.scss,.json,.xml,.yaml,.yml,.md,.py,.java,.cpp,.c,.php,.rb,.go,.rs,.swift,.kt,.psd,.ai,.indd,.sketch,.fig,.xd,.afdesign"
-              />
-              <label htmlFor="file-upload" className="cursor-pointer">
-                <div className="space-y-2">
-                  <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600 hover:text-blue-500">
-                      Click to upload
-                    </span>{" "}
-                    or drag and drop
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    Images, documents, videos, and code files up to 32MB
-                  </p>
-                </div>
-              </label>
-            </div>
+            {/* Dropzone-powered Upload (UploadThing) */}
+            <UploadDropzone
+              endpoint="fileUpload"
+              onClientUploadComplete={(files) => {
+                if (!files || files.length === 0) return;
+                const file = files[0];
+                if (!file || !file.url) return;
+
+                const uploadedFileData: UploadedFileData = {
+                  key: file.key || "",
+                  name: file.name || "Unknown file",
+                  size: file.size || 0,
+                  type: file.type || "application/octet-stream",
+                  url: file.url,
+                };
+
+                setUploadedFile(uploadedFileData);
+                setUploadProgress(100);
+                setIsUploadingFile(false);
+
+                // Infer type + default name
+                const inferredType = ((): string => {
+                  const extension = (file.name || "")
+                    .split(".")
+                    .pop()
+                    ?.toLowerCase();
+                  if (file.type?.startsWith("image")) return "image";
+                  if (file.type?.startsWith("video")) return "video";
+                  if (file.type?.startsWith("text")) return "code";
+                  if (file.type === "application/pdf") return "document";
+                  if (
+                    [
+                      "doc",
+                      "docx",
+                      "txt",
+                      "rtf",
+                      "odt",
+                      "pages",
+                      "pdf",
+                    ].includes(extension || "")
+                  )
+                    return "document";
+                  return "other";
+                })();
+                if (!assetType) setAssetType(inferredType);
+                if (!assetName) setAssetName(file.name || "Unknown file");
+                toast.success("File uploaded successfully!");
+              }}
+              onUploadError={(error) => {
+                console.error("Upload error:", error);
+                toast.error(error.message || "Failed to upload file");
+                setIsUploadingFile(false);
+                setUploadProgress(0);
+              }}
+              onUploadProgress={(p) => {
+                setIsUploadingFile(true);
+                setUploadProgress(p);
+              }}
+              content={{
+                label: "Drag & drop or click to upload",
+                allowedContent: "Images, docs, videos, code — up to 32MB",
+              }}
+              appearance={{
+                container: "ut-container border-2 border-dashed rounded-lg p-6",
+                button: "ut-button bg-primary text-primary-foreground",
+              }}
+            />
 
             {/* Upload Progress Indicator */}
             {isUploadingFile && (

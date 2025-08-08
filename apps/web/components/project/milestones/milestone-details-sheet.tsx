@@ -23,21 +23,15 @@ import {
   AlertDialogTrigger,
 } from "@workspace/ui/components/alert-dialog";
 import {
-  Calendar,
   CheckCircle2,
   Circle,
   AlertTriangle,
   Trash2,
   Clock,
   Target,
-  Activity,
-  MoreHorizontal,
   BarChart3,
   CheckSquare,
-  Square,
-  TrendingUp,
 } from "lucide-react";
-import { formatDate } from "@/lib/format";
 import { toast } from "sonner";
 import moment from "moment";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
@@ -55,12 +49,6 @@ import {
   deleteMilestone,
 } from "@/actions/project/milestone";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
-import {
   Alert,
   AlertDescription,
   AlertTitle,
@@ -76,30 +64,29 @@ const MILESTONE_STATUS_OPTIONS = [
   {
     value: "NOT_STARTED",
     label: "Not Started",
-    icon: <Circle className="h-3 w-3" />,
+    icon: <Circle className="h-3 w-3 text-gray-400" />,
   },
   {
     value: "IN_PROGRESS",
-    label: "In Progress",
-    icon: <Clock className="h-3 w-3" />,
+    label: "In Progress", 
+    icon: <Clock className="h-3 w-3 text-blue-500" />,
   },
   {
     value: "AT_RISK",
     label: "At Risk",
-    icon: <AlertTriangle className="h-3 w-3" />,
+    icon: <AlertTriangle className="h-3 w-3 text-amber-500" />,
   },
   {
     value: "COMPLETED",
     label: "Completed",
-    icon: <CheckCircle2 className="h-3 w-3" />,
+    icon: <CheckCircle2 className="h-3 w-3 text-green-500" />,
   },
   {
     value: "DELAYED",
     label: "Delayed",
-    icon: <AlertTriangle className="h-3 w-3" />,
+    icon: <AlertTriangle className="h-3 w-3 text-red-500" />,
   },
 ];
-
 export function MilestoneDetailsSheet({
   milestoneId,
   open,

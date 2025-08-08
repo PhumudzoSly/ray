@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@workspace/ui/components/table";
 import { Badge } from "@workspace/ui/components/badge";
-import { Button } from "@workspace/ui/components/button";
+import { Button, buttonVariants } from "@workspace/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +23,7 @@ import {
   CheckCircle,
   Star,
   TrendingUp,
+  Eye,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
@@ -73,11 +74,7 @@ interface TableViewProps {
   onDeleteProject?: (project: any) => void;
 }
 
-export function TableView({
-  onEditProject,
-  onDeleteProject,
-}: TableViewProps) {
-
+export function TableView({ onEditProject, onDeleteProject }: TableViewProps) {
   const { data: projects, isLoading } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
@@ -119,7 +116,7 @@ export function TableView({
             const completedFeatures = healthMetrics?.completedFeatures || 0;
             const inProgressFeatures = healthMetrics?.inProgressFeatures || 0;
             const healthScore = healthMetrics?.overallHealthScore || 0;
-            const healthStatus = healthMetrics?.healthStatus || 'fair';
+            const healthStatus = healthMetrics?.healthStatus || "fair";
 
             return (
               <TableRow key={project.id} className="hover:bg-muted/50">
@@ -127,7 +124,7 @@ export function TableView({
                   <div className="flex items-center gap-3">
                     <Link
                       href={`/project/${project.id}`}
-                      className="font-medium hover:text-primary transition-colors"
+                      className="font-medium hover:text-primary whitespace-nowrap transition-colors"
                     >
                       {project.name}
                     </Link>
@@ -135,7 +132,9 @@ export function TableView({
                 </TableCell>
                 <TableCell>
                   <Badge variant="outline" className="text-xs">
-                    {project.platform === "both" ? "Web & Mobile" : project?.platform}
+                    {project.platform === "both"
+                      ? "Web & Mobile"
+                      : project?.platform}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -158,13 +157,13 @@ export function TableView({
                     >
                       {healthScore}%
                     </Badge>
-                    {healthStatus === 'excellent' && (
+                    {healthStatus === "excellent" && (
                       <TrendingUp className="w-3 h-3 text-green-600" />
                     )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex  gap-1">
                     <Badge
                       variant="secondary"
                       className="text-xs px-1.5 py-0.5"
@@ -218,7 +217,7 @@ export function TableView({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1 text-sm whitespace-nowrap text-muted-foreground">
                     <Clock className="w-3 h-3" />
                     {formatDistanceToNow(new Date(project.updatedAt), {
                       addSuffix: true,
@@ -226,35 +225,15 @@ export function TableView({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link
-                          href={`/project/${project.id}`}
-                          className="flex items-center"
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          Open Project
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => onEditProject?.(project)}
-                      >
-                        Edit Project
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="text-destructive"
-                        onClick={() => onDeleteProject?.(project)}
-                      >
-                        Delete Project
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <Link
+                    href={`/project/${project.id}`}
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "icon-sm",
+                    })}
+                  >
+                    <Eye />
+                  </Link>
                 </TableCell>
               </TableRow>
             );

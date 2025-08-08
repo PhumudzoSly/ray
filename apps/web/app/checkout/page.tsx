@@ -29,7 +29,7 @@ export default async function Page() {
         </div>
 
         <div className="space-y-4 mb-16 text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Join Pulse</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Join RayAI</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Choose the plan that's right for you
           </p>

@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import { Dialog, DialogTrigger } from "@workspace/ui/components/dialog";
 import {
   Upload,
   Link,
@@ -34,6 +33,18 @@ import { AssetList } from "./asset-list";
 import * as assetActions from "@/actions/project/assets";
 import type { Asset } from "@/actions/project/assets";
 import type { AssetTypeType, AssetCategoryType } from "@workspace/backend";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
 
 const ASSET_TYPES = [
   { value: "all", label: "All Types", icon: FolderOpen },
@@ -166,38 +177,15 @@ export const AssetsClient = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <Dialog open={isLinkDialogOpen} onOpenChange={setIsLinkDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Link className="w-4 h-4 mr-2" />
-                Add Link
-              </Button>
-            </DialogTrigger>
-            <AssetLinkDialog
-              projectId={projectId}
-              onClose={() => setIsLinkDialogOpen(false)}
-              onSuccess={handleAssetCreated}
-              open={isLinkDialogOpen}
-            />
-          </Dialog>
+          <Button variant="outline" onClick={() => setIsLinkDialogOpen(true)}>
+            <Link className="w-4 h-4 mr-2" />
+            Add Link
+          </Button>
 
-          <Dialog
-            open={isUploadDialogOpen}
-            onOpenChange={setIsUploadDialogOpen}
-          >
-            <DialogTrigger asChild>
-              <Button>
-                <Upload className="w-4 h-4 mr-2" />
-                Upload Asset
-              </Button>
-            </DialogTrigger>
-            <AssetUploadDialog
-              projectId={projectId}
-              onClose={() => setIsUploadDialogOpen(false)}
-              onSuccess={handleAssetCreated}
-              open={isUploadDialogOpen}
-            />
-          </Dialog>
+          <Button onClick={() => setIsUploadDialogOpen(true)}>
+            <Upload className="w-4 h-4 mr-2" />
+            Upload Asset
+          </Button>
         </div>
       </div>
 

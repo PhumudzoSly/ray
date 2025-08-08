@@ -1,0 +1,113 @@
+model Idea {
+    id                  String       @id @default(uuid())
+    name                String
+    description         String
+    industry            String
+    owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+    ownerId             String?
+    organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organizationId      String
+    internal            Boolean
+    openSource          Boolean
+    status              IdeaStatus
+    aiOverallValidation Float?
+    problemSolved       String?
+    solutionOffered     String?
+    projects            Project[]
+    createdAt           DateTime     @default(now())
+    updatedAt           DateTime     @updatedAt
+    Competitor          Competitor[]
+    validation          IdeaValidation?
+}
+
+model Competitor {
+    id String @id @default(uuid())
+
+    ideaId String
+    idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+    // Basic Info (AI-generated)
+    name        String
+    website     String?
+    description String?
+    logoUrl     String?
+
+    // Market Position (AI-generated)
+    marketShare   Float? // Percentage
+    annualRevenue Float? // In millions USD
+    employeeCount String?
+    foundedYear   Int?
+    headquarters  String?
+
+    targetAudience String?
+
+    threatLevel Importance
+
+    // Performance Metrics (AI-generated)
+    userGrowthRate       Float?
+    churnRate            Float?
+    customerSatisfaction Float?
+    marketCap            Float? // If public company
+
+    // Tracking
+    lastUpdated DateTime @updatedAt
+    createdAt   DateTime @default(now())
+    isActive    Boolean  @default(true)
+
+    // Relations
+    competitiveMoves CompetitiveMove[]
+    CompetitorSwot   CompetitorSwot[]
+
+    @@index([ideaId])
+    @@index([name])
+    @@map("competitor")
+}
+
+model CompetitiveMove {
+    id String @id @default(uuid())
+
+    competitorId String?
+    competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+
+    moveType    String
+    title       String
+    description String
+
+    // Impact Analysis (AI-generated)
+    impactLevel      Importance
+    targetAudience   String?
+    affectedFeatures String[]
+
+    // Timing
+    announcedDate  DateTime?
+    launchDate     DateTime?
+    completionDate DateTime?
+
+    userFeedback  String?
+    pressCoverage String[]
+
+    // Strategic Implications (AI-generated)
+    opportunities    String[]
+    threats          String[]
+    responseRequired Boolean  @default(false)
+    responseStrategy String?
+
+    createdAt DateTime @default(now())
+
+    @@index([competitorId])
+    @@index([moveType])
+    @@map("competitive_move")
+}
+
+model CompetitorSwot {
+    id           String     @id @default(ulid())
+    impact       Importance @default(MEDIUM)
+    type         SwotType
+    swotAnalysis String
+
+    competitorId String?
+    competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

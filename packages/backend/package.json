@@ -1,45 +1,45 @@
 {
-	"name": "@workspace/backend",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"test": "vitest run",
-		"typecheck": "tsc --noEmit",
-		"build": "prisma generate && prisma db push",
-		"postinstall": "prisma generate",
-		"prisma:generate": "prisma generate",
-		"prisma:migrate": "prisma migrate dev",
-		"prisma:migrate:deploy": "prisma migrate deploy",
-		"prisma:studio": "prisma studio",
-		"prisma:db:push": "prisma db push",
-		"prisma:db:seed": "prisma db seed"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"@ai-sdk/google": "2.0.0-beta.14",
-		"@ai-sdk/openai": "2.0.0-beta.11",
-		"@ai-sdk/react": "2.0.0-beta.27",
-		"@prisma/client": "^6.13.0",
-		"ai": "5.0.0-beta.27",
-		"axios": "^1.11.0",
-		"cheerio": "^1.1.2",
-		"jsdom": "^26.1.0",
-		"resend": "^4.7.0",
-		"zod": "3.25.76",
-		"zod-prisma-types": "^3.2.4"
-	},
-	"devDependencies": {
-		"@types/jsdom": "^21.1.7",
-		"prisma": "^6.13.0"
-	},
-	"prisma": {
-		"schema": "./prisma/schema.prisma",
-		"output": {
-			"client": "./prisma/generated/client",
-			"zod": "./prisma/generated/zod"
-		}
-	}
+  "name": "@workspace/backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "prisma generate && prisma db push",
+    "postinstall": "prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:db:push": "prisma db push",
+    "prisma:db:seed": "prisma db seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@ai-sdk/google": "2.0.0-beta.14",
+    "@ai-sdk/openai": "2.0.0-beta.11",
+    "@ai-sdk/react": "2.0.0-beta.27",
+    "@prisma/client": "^6.13.0",
+    "ai": "5.0.0-beta.27",
+    "axios": "^1.11.0",
+    "cheerio": "^1.1.2",
+    "jsdom": "^26.1.0",
+    "resend": "^4.7.0",
+    "zod": "3.25.76",
+    "zod-prisma-types": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "prisma": "^6.13.0"
+  },
+  "prisma": {
+    "schema": "./prisma/schema",
+    "output": {
+      "client": "./prisma/generated/client",
+      "zod": "./prisma/generated/zod"
+    }
+  }
 }

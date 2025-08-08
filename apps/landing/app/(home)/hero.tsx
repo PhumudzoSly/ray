@@ -93,7 +93,7 @@ export default function Hero() {
                       </Button>
                     </div>
                     <Button key={2} asChild size="lg" variant="secondary">
-                      <Link href="/product">
+                      <Link href="/features">
                         <span className="text-nowrap">Features</span>
                       </Link>
                     </Button>

@@ -1,215 +1,454 @@
-generator client {
-  provider      = "prisma-client-js"
-  output        = "./generated/client"
-  binaryTargets = ["native", "linux-musl", "rhel-openssl-3.0.x"]
+enum ActivityType {
+  CREATED
+  UPDATED
+  PHASE_CHANGED
+  ASSIGNED
+  UNASSIGNED
+  DEPENDENCY_ADDED
+  DEPENDENCY_REMOVED
+  LINK_ADDED
+  LINK_REMOVED
+  PARENT_CHANGED
 }
 
-generator zod {
-  provider                         = "zod-prisma-types"
-  createOptionalDefaultValuesTypes = "true"
-  writeNullishInModelTypes         = "true"
-  createInputTypes                 = "false"
-  output                           = "./generated/zod"
+enum EntityType {
+  PROJECT
+  FEATURE
+  ISSUE
+  IDEA
+  ROADMAP
+  MILESTONE
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+enum IdeaStatus {
+  INVALIDATED
+  VALIDATED
+  FAILED
+  IN_PROGRESS
+  LAUNCHED
 }
 
-model User {
-  id               String          @id
-  name             String
-  email            String
-  emailVerified    Boolean
-  image            String?
-  role             String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  twoFactorEnabled Boolean?
-  sessions         Session[]
-  accounts         Account[]
-  members          Member[]
-  invitations      Invitation[]
-  passkeys         Passkey[]
-  twofactors       TwoFactor[]
-  subscription     Subscription?
-  project          Project[]       @relation("CreatedProjects")
-  idea             Idea[]          @relation("IdeaOwner")
-  issue            Issue[]         @relation("AssignedIssues")
-  asset            Asset[]         @relation("UploadedAssets")
-  waitlist         Waitlist[]      @relation("CreatedWaitlists")
-  integration      Integration[]   @relation("CreatedIntegrations")
-  activityFeed     ActivityFeed[]
-  feature          Feature[]
-  milestone        Milestone[]     @relation("MilestoneOwner")
-  assetViews       AssetView[]
-  assetDownloads   AssetDownload[]
-
-  @@unique([email])
-  @@map("user")
+enum Importance {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
 }
 
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  activeOrganizationId String?
-
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([token])
-  @@index([userId])
-  @@map("session")
+enum ProjectPlatform {
+  web
+  mobile
+  both
+  api
+  plugin
+  desktop
+  cli
 }
 
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String?
-  user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  expiresAt             DateTime?
-  password              String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@index([userId])
-  @@map("account")
+enum ProjectStatus {
+  planning
+  in_progress
+  review
+  completed
 }
 
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@map("verification")
+enum IssueStatus {
+  BACKLOG
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+  BLOCKED
+  CANCELLED
 }
 
-model Organization {
-  id                  String                @id @default(uuid())
+enum IssueLabel {
+  UI
+  BUG
+  FEATURE
+  IMPROVEMENT
+  TASK
+  DOCUMENTATION
+  REFACTOR
+  PERFORMANCE
+  DESIGN
+  SECURITY
+  ACCESSIBILITY
+  TESTING
+  INTERNATIONALIZATION
+}
+
+enum AssetType {
+  image
+  document
+  video
+  link
+  code
+  design
+  other
+}
+
+enum LinkType {
+  youtube
+  figma
+  notion
+  github
+  dribbble
+  behance
+  external
+}
+
+enum AssetCategory {
+  branding
+  ui_design
+  mockups
+  documentation
+  inspiration
+  code_snippets
+  presentations
+  tutorials
+  other
+}
+
+enum RoadmapFeedbackSentiment {
+  positive
+  neutral
+  negative
+}
+
+enum FeatureRequestStatus {
+  pending
+  under_review
+  approved
+  rejected
+  implemented
+}
+
+enum FeatureRequestPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum FeaturePhase {
+  DISCOVERY
+  PLANNING
+  DEVELOPMENT
+  TESTING
+  DEPLOYMENT
+  COMPLETED
+  RELEASE
+  LIVE
+  DEPRECATED
+}
+
+enum MilestoneStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  AT_RISK
+  COMPLETED
+  DELAYED
+}
+
+enum IntegrationType {
+  RESEND
+  LOOPS
+  SENDGRID
+  MAILCHIMP
+  CONVERTKIT
+  GITHUB
+}
+
+enum ApiPermission {
+  READ
+  WRITE
+  DELETE
+  ADMIN
+}
+
+enum ChangelogEntryType {
+  FEATURE
+  FIX
+  IMPROVEMENT
+  BREAKING
+  SECURITY
+  DEPRECATION
+  DOCUMENTATION
+  PERFORMANCE
+}
+
+enum SwotType {
+  Strength
+  Weakness
+  Opportunity
+  Threat
+}
+
+// Validation System Enums
+enum ValidationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  REQUIRES_REVIEW
+}
+
+enum ValidationScore {
+  EXCELLENT
+  GOOD
+  AVERAGE
+  POOR
+  CRITICAL
+}
+
+enum MarketSize {
+  NICHE
+  SMALL
+  MEDIUM
+  LARGE
+  MASSIVE
+}
+
+enum MarketGrowthRate {
+  DECLINING
+  STAGNANT
+  SLOW_GROWTH
+  MODERATE_GROWTH
+  RAPID_GROWTH
+  EXPLOSIVE_GROWTH
+}
+
+enum MarketMaturity {
+  EMERGING
+  GROWTH
+  MATURE
+  DECLINING
+  TRANSFORMING
+}
+
+enum CompetitionLevel {
+  NONE
+  LOW
+  MODERATE
+  HIGH
+  SATURATED
+}
+
+enum CustomerSegment {
+  B2B_ENTERPRISE
+  B2B_SMB
+  B2C_CONSUMER
+  B2C_PROSUMER
+  B2G_GOVERNMENT
+  MARKETPLACE
+  PLATFORM
+}
+
+enum RevenueModel {
+  SUBSCRIPTION
+  FREEMIUM
+  ONE_TIME_PURCHASE
+  TRANSACTION_FEE
+  ADVERTISING
+  COMMISSION
+  LICENSING
+  USAGE_BASED
+  HYBRID
+}
+
+enum PricingStrategy {
+  PENETRATION
+  SKIMMING
+  COMPETITIVE
+  VALUE_BASED
+  COST_PLUS
+  DYNAMIC
+}
+
+enum RiskLevel {
+  MINIMAL
+  LOW
+  MODERATE
+  HIGH
+  EXTREME
+}
+
+enum RiskCategory {
+  MARKET
+  TECHNICAL
+  FINANCIAL
+  REGULATORY
+  COMPETITIVE
+  OPERATIONAL
+  TEAM
+  TIMING
+}
+
+enum FundingStage {
+  BOOTSTRAPPED
+  PRE_SEED
+  SEED
+  SERIES_A
+  SERIES_B
+  SERIES_C_PLUS
+  IPO_READY
+}
+
+enum InvestmentRecommendation {
+  STRONG_BUY
+  BUY
+  HOLD
+  WEAK_BUY
+  AVOID
+}
+
+enum GoToMarketStrategy {
+  DIRECT_SALES
+  INBOUND_MARKETING
+  OUTBOUND_MARKETING
+  PARTNERSHIPS
+  VIRAL_GROWTH
+  COMMUNITY_DRIVEN
+  PRODUCT_LED_GROWTH
+  CHANNEL_PARTNERS
+}
+
+enum ValidationMethod {
+  SURVEYS
+  INTERVIEWS
+  LANDING_PAGE_TEST
+  MVP_TEST
+  PROTOTYPE_TEST
+  MARKET_RESEARCH
+  COMPETITOR_ANALYSIS
+  EXPERT_CONSULTATION
+}
+
+enum FinancialMetric {
+  CAC
+  LTV
+  ARPU
+  MRR
+  ARR
+  CHURN_RATE
+  GROSS_MARGIN
+  BURN_RATE
+  RUNWAY
+  BREAK_EVEN
+}
+
+model Idea {
+  id                  String          @id @default(uuid())
   name                String
-  slug                String?
-  logo                String?
-  createdAt           DateTime              @default(now())
-  metadata            String?
-  members             Member[]
-  invitations         Invitation[]
-  subscription        Subscription[]
-  project             Project[]
-  idea                Idea[]
-  issue               Issue[]
-  asset               Asset[]
-  waitlist            Waitlist[]
-  integration         Integration[]
-  activityFeed        ActivityFeed[]
-  feature             Feature[]
-  featureDependency   FeatureDependency[]
-  featureLink         FeatureLink[]
-  milestone           Milestone[]
-  milestoneDependency MilestoneDependency[]
-  issueDependency     IssueDependency[]
-  issueLink           IssueLink[]
-  assetViews          AssetView[]
-  assetDownloads      AssetDownload[]
-  referrals           Referral[]
-  ApiKey              ApiKey[]
-  researchSessions    ResearchSession[]
-  ApiCall             ApiCall[]
-
-  @@unique([slug])
-  @@map("organization")
+  description         String
+  industry            String
+  owner               User?           @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  ownerId             String?
+  organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId      String
+  internal            Boolean
+  openSource          Boolean
+  status              IdeaStatus
+  aiOverallValidation Float?
+  problemSolved       String?
+  solutionOffered     String?
+  projects            Project[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  Competitor          Competitor[]
+  validation          IdeaValidation?
 }
 
-model Member {
-  id             String       @id @default(uuid())
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String?
-  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
-  role           String
-  createdAt      DateTime
+model Competitor {
+  id String @id @default(uuid())
 
-  @@index([organizationId])
-  @@index([userId])
-  @@map("member")
+  ideaId String
+  idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+  // Basic Info (AI-generated)
+  name        String
+  website     String?
+  description String?
+  logoUrl     String?
+
+  // Market Position (AI-generated)
+  marketShare   Float? // Percentage
+  annualRevenue Float? // In millions USD
+  employeeCount String?
+  foundedYear   Int?
+  headquarters  String?
+
+  targetAudience String?
+
+  threatLevel Importance
+
+  // Performance Metrics (AI-generated)
+  userGrowthRate       Float?
+  churnRate            Float?
+  customerSatisfaction Float?
+  marketCap            Float? // If public company
+
+  // Tracking
+  lastUpdated DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  // Relations
+  competitiveMoves CompetitiveMove[]
+  CompetitorSwot   CompetitorSwot[]
+
+  @@index([ideaId])
+  @@index([name])
+  @@map("competitor")
 }
 
-model Invitation {
-  id             String       @id
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  email          String
-  role           String?
-  status         String
-  expiresAt      DateTime
-  inviterId      String?
-  user           User?        @relation(fields: [inviterId], references: [id], onDelete: SetNull)
+model CompetitiveMove {
+  id String @id @default(uuid())
 
-  @@index([organizationId])
-  @@index([inviterId])
-  @@map("invitation")
+  competitorId String?
+  competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+
+  moveType    String
+  title       String
+  description String
+
+  // Impact Analysis (AI-generated)
+  impactLevel      Importance
+  targetAudience   String?
+  affectedFeatures String[]
+
+  // Timing
+  announcedDate  DateTime?
+  launchDate     DateTime?
+  completionDate DateTime?
+
+  userFeedback  String?
+  pressCoverage String[]
+
+  // Strategic Implications (AI-generated)
+  opportunities    String[]
+  threats          String[]
+  responseRequired Boolean  @default(false)
+  responseStrategy String?
+
+  createdAt DateTime @default(now())
+
+  @@index([competitorId])
+  @@index([moveType])
+  @@map("competitive_move")
 }
 
-model Passkey {
-  id             String    @id
-  name           String?
-  publicKey      String
-  userId         String?
-  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  webauthnUserID String
-  counter        Int
-  deviceType     String
-  backedUp       Boolean
-  transports     String?
-  createdAt      DateTime?
-  credentialID   String
+model CompetitorSwot {
+  id           String     @id @default(ulid())
+  impact       Importance @default(MEDIUM)
+  type         SwotType
+  swotAnalysis String
 
-  @@index([userId])
-  @@map("passkey")
-}
-
-model TwoFactor {
-  id          String  @id
-  secret      String
-  backupCodes String
-  userId      String?
-  user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([userId])
-  @@map("twoFactor")
-}
-
-model Subscription {
-  id              String       @id @default(cuid())
-  status          String?
-  organisation_id String       @unique
-  organization    Organization @relation(fields: [organisation_id], references: [id], onDelete: Cascade)
-  subscription_id String?
-  product_id      String?
-  userId          String?      @unique
-  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  competitorId String?
+  competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  @@index([organisation_id])
-  @@map("subscription")
 }
 
 model Project {
@@ -245,28 +484,6 @@ model Project {
   @@index([organizationId, status])
   @@index([organizationId, dueDate])
   @@index([createdById])
-}
-
-model Idea {
-  id                  String            @id @default(uuid())
-  name                String
-  description         String
-  industry            String
-  owner               User?             @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
-  ownerId             String?
-  organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId      String
-  internal            Boolean
-  openSource          Boolean
-  status              IdeaStatus
-  aiOverallValidation Float?
-  problemSolved       String?
-  solutionOffered     String?
-  projects            Project[]
-  researchSessions    ResearchSession[]
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-  Competitor          Competitor[]
 }
 
 model Issue {
@@ -388,48 +605,6 @@ model Asset {
   @@index([createdAt])
   @@index([projectId, type])
   @@index([projectId, category])
-}
-
-model ApiKey {
-  id             String          @id @default(uuid())
-  organizationId String
-  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  name           String
-  keyHash        String
-  keyPreview     String
-  permissions    ApiPermission[] @default([])
-  createdBy      String
-  createdAt      DateTime
-  lastUsed       DateTime?
-  isActive       Boolean
-  expiresAt      DateTime?
-  apiCalls       ApiCall[]
-
-  @@index([organizationId])
-  @@index([organizationId, isActive])
-  @@index([createdBy])
-  @@index([keyHash])
-}
-
-model ApiCall {
-  id             String       @id @default(uuid())
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  apiKeyId       String?
-  apiKey         ApiKey?      @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
-  endpoint       String
-  method         String
-  statusCode     Int
-  responseTime   Int? // in milliseconds
-  userAgent      String?
-  ipAddress      String?
-  createdAt      DateTime     @default(now())
-
-  @@index([organizationId])
-  @@index([organizationId, createdAt])
-  @@index([apiKeyId])
-  @@index([endpoint])
-  @@index([method])
 }
 
 model ActivityFeed {
@@ -628,41 +803,6 @@ model FeatureRequest {
   @@index([convertedToRoadmapItemId])
 }
 
-model Integration {
-  id             String             @id @default(uuid())
-  name           String
-  type           IntegrationType
-  config         Json
-  isActive       Boolean            @default(true)
-  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  organizationId String
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  createdBy      User?              @relation("CreatedIntegrations", fields: [createdById], references: [id], onDelete: SetNull)
-  createdById    String?
-  usages         IntegrationUsage[]
-
-  @@index([organizationId])
-  @@map("integration")
-}
-
-model IntegrationUsage {
-  id            String      @id @default(uuid())
-  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
-  integrationId String
-  entityType    String // e.g., "waitlist", "project", "organization"
-  entityId      String // ID of the entity (waitlistId, projectId, etc.)
-  purpose       String // e.g., "email_sync", "analytics", "webhook", etc.
-  isActive      Boolean     @default(true)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-  @@index([integrationId])
-  @@index([entityType, entityId])
-  @@index([entityType, entityId, purpose])
-  @@map("integration_usage")
-}
-
 model Waitlist {
   id               String          @id @default(uuid())
   project          Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -854,177 +994,29 @@ model MilestoneDependency {
   @@map("milestoneDependency")
 }
 
-enum ActivityType {
-  CREATED
-  UPDATED
-  PHASE_CHANGED
-  ASSIGNED
-  UNASSIGNED
-  DEPENDENCY_ADDED
-  DEPENDENCY_REMOVED
-  LINK_ADDED
-  LINK_REMOVED
-  PARENT_CHANGED
-}
+model Referral {
+  id             String        @id @default(uuid())
+  referrer       WaitlistEntry @relation(fields: [referrerId], references: [id], onDelete: Cascade)
+  referrerId     String
+  referredEmail  String
+  referredName   String?
+  ipAddress      String
+  userAgent      String?
+  referrerCode   String
+  waitlistId     String
+  waitlist       Waitlist      @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
 
-enum EntityType {
-  PROJECT
-  FEATURE
-  ISSUE
-  IDEA
-  ROADMAP
-  MILESTONE
+  @@index([referrerId])
+  @@index([waitlistId])
+  @@index([organizationId])
+  @@index([referredEmail])
+  @@index([referrerCode])
+  @@index([createdAt])
+  @@map("referral")
 }
-
-enum IdeaStatus {
-  INVALIDATED
-  VALIDATED
-  FAILED
-  IN_PROGRESS
-  LAUNCHED
-}
-
-enum Importance {
-  CRITICAL
-  HIGH
-  MEDIUM
-  LOW
-}
-
-enum ProjectPlatform {
-  web
-  mobile
-  both
-  api
-  plugin
-  desktop
-  cli
-}
-
-enum ProjectStatus {
-  planning
-  in_progress
-  review
-  completed
-}
-
-enum IssueStatus {
-  BACKLOG
-  IN_PROGRESS
-  IN_REVIEW
-  DONE
-  BLOCKED
-  CANCELLED
-}
-
-enum IssueLabel {
-  UI
-  BUG
-  FEATURE
-  IMPROVEMENT
-  TASK
-  DOCUMENTATION
-  REFACTOR
-  PERFORMANCE
-  DESIGN
-  SECURITY
-  ACCESSIBILITY
-  TESTING
-  INTERNATIONALIZATION
-}
-
-enum AssetType {
-  image
-  document
-  video
-  link
-  code
-  design
-  other
-}
-
-enum LinkType {
-  youtube
-  figma
-  notion
-  github
-  dribbble
-  behance
-  external
-}
-
-enum AssetCategory {
-  branding
-  ui_design
-  mockups
-  documentation
-  inspiration
-  code_snippets
-  presentations
-  tutorials
-  other
-}
-
-enum RoadmapFeedbackSentiment {
-  positive
-  neutral
-  negative
-}
-
-enum FeatureRequestStatus {
-  pending
-  under_review
-  approved
-  rejected
-  implemented
-}
-
-enum FeatureRequestPriority {
-  low
-  medium
-  high
-  urgent
-}
-
-enum FeaturePhase {
-  DISCOVERY
-  PLANNING
-  DEVELOPMENT
-  TESTING
-  DEPLOYMENT
-  COMPLETED
-  RELEASE
-  LIVE
-  DEPRECATED
-}
-
-enum MilestoneStatus {
-  NOT_STARTED
-  IN_PROGRESS
-  AT_RISK
-  COMPLETED
-  DELAYED
-}
-
-enum IntegrationType {
-  RESEND
-  LOOPS
-  SENDGRID
-  MAILCHIMP
-  CONVERTKIT
-  GITHUB
-}
-
-enum ApiPermission {
-  READ
-  WRITE
-  DELETE
-  ADMIN
-}
-
-// ============================================================================
-// TRACKING TABLES FOR CALCULATED VALUES
-// ============================================================================
 
 model AssetView {
   id             String       @id @default(uuid())
@@ -1068,207 +1060,1006 @@ model AssetDownload {
   @@map("asset_download")
 }
 
-model Referral {
-  id             String        @id @default(uuid())
-  referrer       WaitlistEntry @relation(fields: [referrerId], references: [id], onDelete: Cascade)
-  referrerId     String
-  referredEmail  String
-  referredName   String?
-  ipAddress      String
-  userAgent      String?
-  referrerCode   String
-  waitlistId     String
-  waitlist       Waitlist      @relation(fields: [waitlistId], references: [id], onDelete: Cascade)
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../generated/client"
+  binaryTargets = ["native", "linux-musl", "rhel-openssl-3.0.x"]
+}
+
+generator zod {
+  provider                         = "zod-prisma-types"
+  createOptionalDefaultValuesTypes = "true"
+  writeNullishInModelTypes         = "true"
+  createInputTypes                 = "false"
+  output                           = "../generated/zod"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String          @id
+  name             String
+  email            String
+  emailVerified    Boolean
+  image            String?
+  role             String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  twoFactorEnabled Boolean?
+  sessions         Session[]
+  accounts         Account[]
+  members          Member[]
+  invitations      Invitation[]
+  passkeys         Passkey[]
+  twofactors       TwoFactor[]
+  subscription     Subscription?
+  project          Project[]       @relation("CreatedProjects")
+  idea             Idea[]          @relation("IdeaOwner")
+  issue            Issue[]         @relation("AssignedIssues")
+  asset            Asset[]         @relation("UploadedAssets")
+  waitlist         Waitlist[]      @relation("CreatedWaitlists")
+  integration      Integration[]   @relation("CreatedIntegrations")
+  activityFeed     ActivityFeed[]
+  feature          Feature[]
+  milestone        Milestone[]     @relation("MilestoneOwner")
+  assetViews       AssetView[]
+  assetDownloads   AssetDownload[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  activeOrganizationId String?
+
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String?
+  user                  User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  expiresAt             DateTime?
+  password              String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verification")
+}
+
+model Organization {
+  id                  String                @id @default(uuid())
+  name                String
+  slug                String?
+  logo                String?
+  createdAt           DateTime              @default(now())
+  metadata            String?
+  members             Member[]
+  invitations         Invitation[]
+  subscription        Subscription[]
+  project             Project[]
+  idea                Idea[]
+  issue               Issue[]
+  asset               Asset[]
+  waitlist            Waitlist[]
+  integration         Integration[]
+  activityFeed        ActivityFeed[]
+  feature             Feature[]
+  featureDependency   FeatureDependency[]
+  featureLink         FeatureLink[]
+  milestone           Milestone[]
+  milestoneDependency MilestoneDependency[]
+  issueDependency     IssueDependency[]
+  issueLink           IssueLink[]
+  assetViews          AssetView[]
+  assetDownloads      AssetDownload[]
+  referrals           Referral[]
+  ApiKey              ApiKey[]
+  ApiCall             ApiCall[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id @default(uuid())
   organizationId String
-  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  createdAt      DateTime      @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  role           String
+  createdAt      DateTime
 
-  @@index([referrerId])
-  @@index([waitlistId])
   @@index([organizationId])
-  @@index([referredEmail])
-  @@index([referrerCode])
-  @@index([createdAt])
-  @@map("referral")
+  @@index([userId])
+  @@map("member")
 }
 
-enum ChangelogEntryType {
-  FEATURE
-  FIX
-  IMPROVEMENT
-  BREAKING
-  SECURITY
-  DEPRECATION
-  DOCUMENTATION
-  PERFORMANCE
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String?
+  user           User?        @relation(fields: [inviterId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([inviterId])
+  @@map("invitation")
 }
 
-// ============================================================================
-// DEEP RESEARCH SAAS VALIDATION MODELS
-// ============================================================================
+model Passkey {
+  id             String    @id
+  name           String?
+  publicKey      String
+  userId         String?
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  webauthnUserID String
+  counter        Int
+  deviceType     String
+  backedUp       Boolean
+  transports     String?
+  createdAt      DateTime?
+  credentialID   String
 
-model Competitor {
-  id String @id @default(uuid())
+  @@index([userId])
+  @@map("passkey")
+}
 
-  ideaId String
+model TwoFactor {
+  id          String  @id
+  secret      String
+  backupCodes String
+  userId      String?
+  user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@map("twoFactor")
+}
+
+model Subscription {
+  id              String       @id @default(cuid())
+  status          String?
+  organisation_id String       @unique
+  organization    Organization @relation(fields: [organisation_id], references: [id], onDelete: Cascade)
+  subscription_id String?
+  product_id      String?
+  userId          String?      @unique
+  user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organisation_id])
+  @@map("subscription")
+}
+
+model Integration {
+  id             String             @id @default(uuid())
+  name           String
+  type           IntegrationType
+  config         Json
+  isActive       Boolean            @default(true)
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  createdBy      User?              @relation("CreatedIntegrations", fields: [createdById], references: [id], onDelete: SetNull)
+  createdById    String?
+  usages         IntegrationUsage[]
+
+  @@index([organizationId])
+  @@map("integration")
+}
+
+model IntegrationUsage {
+  id            String      @id @default(uuid())
+  integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  integrationId String
+  entityType    String // e.g., "waitlist", "project", "organization"
+  entityId      String // ID of the entity (waitlistId, projectId, etc.)
+  purpose       String // e.g., "email_sync", "analytics", "webhook", etc.
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([integrationId])
+  @@index([entityType, entityId])
+  @@index([entityType, entityId, purpose])
+  @@map("integration_usage")
+}
+
+model ApiKey {
+  id             String          @id @default(uuid())
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  keyHash        String
+  keyPreview     String
+  permissions    ApiPermission[] @default([])
+  createdBy      String
+  createdAt      DateTime
+  lastUsed       DateTime?
+  isActive       Boolean
+  expiresAt      DateTime?
+  apiCalls       ApiCall[]
+
+  @@index([organizationId])
+  @@index([organizationId, isActive])
+  @@index([createdBy])
+  @@index([keyHash])
+}
+
+model ApiCall {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  apiKeyId       String?
+  apiKey         ApiKey?      @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint       String
+  method         String
+  statusCode     Int
+  responseTime   Int? // in milliseconds
+  userAgent      String?
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+
+  @@index([organizationId])
+  @@index([organizationId, createdAt])
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([method])
+}
+
+// Chart-Optimized SaaS Idea Validation Models
+// Main validation container for an idea
+model IdeaValidation {
+  id     String @id @default(uuid())
+  ideaId String @unique
   idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
 
-  // Basic Info (AI-generated)
-  name        String
-  website     String?
-  description String?
-  logoUrl     String?
+  // Overall validation metrics (chart-friendly)
+  overallScore       Float            @default(0) // 0-100
+  overallStatus      ValidationStatus @default(PENDING)
+  confidenceLevel    Float            @default(0) // 0-100
+  validationProgress Float            @default(0) // 0-100 percentage complete
 
-  // Market Position (AI-generated)
-  marketShare   Float? // Percentage
-  annualRevenue Float? // In millions USD
-  employeeCount String?
-  foundedYear   Int?
-  headquarters  String?
+  // Validation timeline
+  startedAt     DateTime  @default(now())
+  completedAt   DateTime?
+  lastUpdatedAt DateTime  @updatedAt
 
-  targetAudience String?
+  // Revalidation support fields
+  version             Int              @default(1) // Version number for tracking changes
+  parentValidationId  String? // Reference to previous validation version
+  parentValidation    IdeaValidation?  @relation("ValidationHistory", fields: [parentValidationId], references: [id])
+  childValidations    IdeaValidation[] @relation("ValidationHistory")
+  isLatest            Boolean          @default(true) // Is this the latest version
+  revalidationReason  String? // Why revalidation was triggered
+  dataSourcesUpdated  String[] // Which data sources were updated
+  lastDataRefresh     DateTime? // When external data was last refreshed
+  nextRevalidationDue DateTime? // When next revalidation is recommended
 
-  threatLevel Importance
+  // Core validation modules
+  marketValidation         MarketValidation?
+  businessValidation       BusinessValidation?
+  riskAnalysis             RiskAnalysis?
+  productMarketFitAnalysis ProductMarketFitAnalysis?
 
-  // Performance Metrics (AI-generated)
-  userGrowthRate       Float?
-  churnRate            Float?
-  customerSatisfaction Float?
-  marketCap            Float? // If public company
+  // Consolidated insights (structured for charts/metrics)
+  validationMetrics          ValidationMetrics?
+  CustomerJourneyMapping     CustomerJourneyMapping?
+  TargetAudienceSegmentation TargetAudienceSegmentation?
+  MarketTrendAnalysis        MarketTrendAnalysis?
+  CustomerNeedAnalysis       CustomerNeedAnalysis?
+  PricingStrategyAnalysis    PricingStrategyAnalysis?
 
-  // Tracking
-  lastUpdated DateTime @updatedAt
-  createdAt   DateTime @default(now())
-  isActive    Boolean  @default(true)
-
-  // Relations
-  competitiveMoves CompetitiveMove[]
-
-  @@index([ideaId])
-  @@index([name])
-  @@map("competitor")
+  @@map("idea_validation")
 }
 
-model CompetitiveMove {
-  id String @id @default(uuid())
+// Consolidated metrics for better chart visualization
+model ValidationMetrics {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
 
-  competitorId String?
-  competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+  // Core strength score (0-100) - consolidated from 6 individual scores
+  overallStrengthScore Float @default(0)
 
-  moveType    String
-  title       String
-  description String
+  // Core risk score (0-100) - consolidated from 6 individual risk scores  
+  overallRiskScore Float @default(0)
 
-  // Impact Analysis (AI-generated)
-  impactLevel      Importance
-  targetAudience   String?
-  affectedFeatures String[]
+  // Key performance indicators
+  timeToMarket      Int? // Months
+  fundingRequired   Float? // USD
+  breakEvenMonth    Int? // Months
+  customerPayback   Int? // Months
+  marketPenetration Float? // Percentage
 
-  // Timing
-  announcedDate  DateTime?
-  launchDate     DateTime?
-  completionDate DateTime?
+  // Action priority counts
+  immediateActions Int @default(0)
+  shortTermActions Int @default(0)
+  longTermActions  Int @default(0)
 
-  userFeedback  String?
-  pressCoverage String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Strategic Implications (AI-generated)
-  opportunities    String[]
-  threats          String[]
-  responseRequired Boolean  @default(false)
-  responseStrategy String?
+  @@map("validation_metrics")
+}
+
+// Market validation with chart-optimized structure
+model MarketValidation {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Market Size Metrics (chart-friendly numbers)
+  totalAddressableMarket       Float? // TAM in millions USD
+  serviceableAddressableMarket Float? // SAM in millions USD  
+  serviceableObtainableMarket  Float? // SOM in millions USD
+  marketGrowthRate             Float? // Annual growth percentage
+
+  // Customer Metrics
+  primaryCustomerSegment CustomerSegment
+  customerInterviews     Int             @default(0)
+  surveyResponses        Int             @default(0)
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallMarketScore Float @default(0)
+
+  // Geographic distribution
+  primaryRegions String[] // Array of region codes
+  regionScores   MarketRegionScore[]
+
+  // Validation status
+  status ValidationStatus @default(PENDING)
+
+  // Simplified related data
+  marketInsights MarketInsight[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("market_validation")
+}
+
+// Simplified insights table for market data
+model MarketInsight {
+  id                 String           @id @default(uuid())
+  marketValidationId String
+  marketValidation   MarketValidation @relation(fields: [marketValidationId], references: [id], onDelete: Cascade)
+
+  category String // "trend", "opportunity", "threat", "pain_point", "success_factor"
+  impact   Float  @default(0) // 0-100 impact score
+  urgency  Float  @default(0) // 0-100 urgency score
+
+  // Optional details (only when needed for UI)
+  label       String?
+  description String?
 
   createdAt DateTime @default(now())
 
-  @@index([competitorId])
-  @@index([moveType])
-  @@map("competitive_move")
+  @@map("market_insights")
 }
 
-model ResearchSession {
-  id                  String                @id @default(cuid())
-  ideaId              String
-  organizationId      String
-  name                String?
-  finalContent        String?
-  prompt              String?
-  depth               ResearchDepth
-  status              ResearchStatus
-  currentPhaseIndex   Int                   @default(0)
-  overallConfidence   Float                 @default(0)
-  estimatedCompletion DateTime?
-  actualCompletion    DateTime?
-  totalCost           Float                 @default(0)
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  idea                Idea                  @relation(fields: [ideaId], references: [id])
-  organization        Organization          @relation(fields: [organizationId], references: [id])
-  phases              ResearchPhaseResult[]
-  findings            ResearchFindings[]
+// Market region scores for geographic visualization
+model MarketRegionScore {
+  id                 String           @id @default(uuid())
+  marketValidationId String
+  marketValidation   MarketValidation @relation(fields: [marketValidationId], references: [id], onDelete: Cascade)
 
-  @@map("research_sessions")
+  region String // Region code (e.g., "US", "EU", "APAC")
+  score  Float  @default(0) // 0-100 market opportunity score for this region
+
+  createdAt DateTime @default(now())
+
+  @@unique([marketValidationId, region])
+  @@map("market_region_scores")
 }
 
-model ResearchPhaseResult {
-  id         String            @id @default(cuid())
-  sessionId  String
-  phaseName  ResearchPhaseType
-  status     PhaseStatus
-  conclusion String?
-  confidence Float             @default(0)
-  createdAt  DateTime          @default(now())
-  updatedAt  DateTime          @updatedAt
-  session    ResearchSession   @relation(fields: [sessionId], references: [id])
+// Business validation with chart-optimized financial metrics
+model BusinessValidation {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
 
-  @@index([sessionId])
-  @@map("research_phase_results")
+  // Revenue Model (simplified)
+  primaryRevenueModel RevenueModel
+  pricingStrategy     PricingStrategy
+  pricePoint          Float? // Primary price in USD
+
+  // Core Unit Economics (essential metrics only)
+  customerAcquisitionCost Float? // CAC in USD
+  customerLifetimeValue   Float? // LTV in USD
+  monthlyChurnRate        Float? // Monthly churn percentage
+
+  // Financial Projections (time-series data for charts)
+  monthlyProjections MonthlyProjection[]
+
+  // Key Financial Metrics
+  breakEvenMonth     Int? // Month when revenue >= costs
+  initialInvestment  Float? // Required startup capital
+  totalFundingNeeded Float? // Total capital required
+
+  // Go-to-Market Metrics
+  goToMarketStrategy  GoToMarketStrategy
+  acquisitionChannels AcquisitionChannel[]
+  salesCycleLength    Int? // Days
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallBusinessScore Float @default(0)
+
+  // Validation status
+  status ValidationStatus @default(PENDING)
+
+  // Simplified related data
+  businessInsights BusinessInsight[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("business_validation")
 }
 
-model ResearchFindings {
-  id        String          @id @default(uuid())
-  sessionId String
-  session   ResearchSession @relation(fields: [sessionId], references: [id])
-  findings  String
-  impact    Importance
-  createdAt DateTime        @default(now())
+// Simplified insights table for business data
+model BusinessInsight {
+  id                   String             @id @default(uuid())
+  businessValidationId String
+  businessValidation   BusinessValidation @relation(fields: [businessValidationId], references: [id], onDelete: Cascade)
 
-  @@index([sessionId])
-  @@map("research_findings")
+  category String // "risk", "opportunity", "strategy", "metric"
+  impact   Float  @default(0) // 0-100 impact score
+  urgency  Float  @default(0) // 0-100 urgency score
+  cost     Float? // Associated cost in USD (if applicable)
+
+  // Optional details (only when needed for UI)
+  label       String?
+  description String?
+
+  createdAt DateTime @default(now())
+
+  @@map("business_insights")
 }
 
-enum ResearchDepth {
-  QUICK
-  STANDARD
-  DEEP
-  EXHAUSTIVE
+// Risk analysis model
+model RiskAnalysis {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  overallRiskScore Float            @default(0) // 0-100, calculated from items
+  status           ValidationStatus @default(PENDING)
+  riskItems        RiskItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("risk_analysis")
 }
 
-enum ResearchStatus {
-  INITIALIZING
-  IN_PROGRESS
-  PAUSED
-  COMPLETED
-  FAILED
+// Individual risk item
+model RiskItem {
+  id             String       @id @default(uuid())
+  riskAnalysisId String
+  riskAnalysis   RiskAnalysis @relation(fields: [riskAnalysisId], references: [id], onDelete: Cascade)
+
+  category    RiskCategory
+  description String
+  impact      Int // 1-5 (Low to High)
+  probability Int // 1-5 (Low to High)
+  mitigation  String // Mitigation plan
+
+  createdAt DateTime @default(now())
+
+  @@map("risk_items")
 }
 
-enum ResearchPhaseType {
-  MARKET_SCAN
-  CUSTOMER_VALIDATION
-  BUSINESS_MODEL
-  FINANCIAL_PROJECTIONS
-  RISK_ANALYSIS
-  TECHNICAL_FEASIBILITY
-  COMPLETE
-  COMPETITIVE_ANALYSIS
-  GO_TO_MARKET
-  INVESTMENT_RECOMMENDATION
-  PRODUCT_MARKET_FIT
+// Product-Market Fit analysis model
+model ProductMarketFitAnalysis {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  pmfScore Float            @default(0) // 0-100
+  status   ValidationStatus @default(PENDING)
+  metrics  PMFMetric[]
+  feedback PMFFeedback[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("product_market_fit_analysis")
 }
 
-enum PhaseStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-  PAUSED
+// Metrics for Product-Market Fit
+model PMFMetric {
+  id                         String                   @id @default(uuid())
+  productMarketFitAnalysisId String
+  productMarketFitAnalysis   ProductMarketFitAnalysis @relation(fields: [productMarketFitAnalysisId], references: [id], onDelete: Cascade)
+
+  name      String // e.g., "NPS", "Churn Rate", "Activation Rate"
+  value     Float
+  unit      String // e.g., "%", "score", "users"
+  trend     Float? // e.g., monthly change
+  benchmark Float? // industry benchmark
+
+  createdAt DateTime @default(now())
+
+  @@unique([productMarketFitAnalysisId, name])
+  @@map("pmf_metrics")
+}
+
+// Qualitative feedback for Product-Market Fit
+model PMFFeedback {
+  id                         String                   @id @default(uuid())
+  productMarketFitAnalysisId String
+  productMarketFitAnalysis   ProductMarketFitAnalysis @relation(fields: [productMarketFitAnalysisId], references: [id], onDelete: Cascade)
+
+  source    String // e.g., "Survey", "User Interview"
+  sentiment String // "positive", "negative", "neutral"
+  content   String   @db.Text
+  tags      String[] // e.g., ["UI", "pricing", "feature_request"]
+
+  createdAt DateTime @default(now())
+
+  @@map("pmf_feedback")
+}
+
+// Monthly financial projections for time-series charts
+model MonthlyProjection {
+  id                   String             @id @default(uuid())
+  businessValidationId String
+  businessValidation   BusinessValidation @relation(fields: [businessValidationId], references: [id], onDelete: Cascade)
+
+  month   Int // Month number (1-36 for 3-year projection)
+  revenue Float @default(0) // Projected revenue for this month
+  costs   Float @default(0) // Projected costs for this month
+  users   Int   @default(0) // Projected user count for this month
+
+  createdAt DateTime @default(now())
+
+  @@unique([businessValidationId, month])
+  @@map("monthly_projections")
+}
+
+// Customer acquisition channels with effectiveness scores
+model AcquisitionChannel {
+  id                   String             @id @default(uuid())
+  businessValidationId String
+  businessValidation   BusinessValidation @relation(fields: [businessValidationId], references: [id], onDelete: Cascade)
+
+  channel       String // Channel name (e.g., "SEO", "Paid Ads", "Content Marketing")
+  effectiveness Float  @default(0) // 0-100 effectiveness score
+  cost          Float? // Cost per acquisition for this channel
+
+  createdAt DateTime @default(now())
+
+  @@unique([businessValidationId, channel])
+  @@map("acquisition_channels")
+}
+
+// =============================================================================
+// DEEP RESEARCH FRAMEWORK - 10 Plug & Play Research Modules
+// =============================================================================
+
+// Pricing tiers and competitor analysis for pricing strategy
+model PricingTier {
+  id                        String                  @id @default(uuid())
+  pricingStrategyAnalysisId String
+  pricingStrategyAnalysis   PricingStrategyAnalysis @relation(fields: [pricingStrategyAnalysisId], references: [id], onDelete: Cascade)
+
+  tierName      String
+  tierPrice     Float    @default(0) // Price in USD
+  tierFeatures  String[] // Features included
+  targetSegment String // Target customer segment
+
+  // Tier performance
+  conversionRate   Float @default(0) // 0-100 expected conversion
+  popularityScore  Float @default(0) // 0-100 expected popularity
+  profitMargin     Float @default(0) // 0-100 profit margin
+  competitiveScore Float @default(0) // 0-100 competitive positioning
+
+  createdAt DateTime @default(now())
+
+  @@unique([pricingStrategyAnalysisId, tierName])
+  @@map("pricing_tiers")
+}
+
+model CompetitorPricing {
+  id                        String                  @id @default(uuid())
+  pricingStrategyAnalysisId String
+  pricingStrategyAnalysis   PricingStrategyAnalysis @relation(fields: [pricingStrategyAnalysisId], references: [id], onDelete: Cascade)
+
+  competitorName String
+  pricingModel   String // "subscription", "one-time", "usage-based", "freemium"
+  basePrice      Float  @default(0) // Base price in USD
+  premiumPrice   Float? // Premium tier price
+
+  // Competitive analysis
+  featureComparison Float  @default(0) // 0-100 feature comparison score
+  valueComparison   Float  @default(0) // 0-100 value comparison
+  marketPosition    String // "premium", "value", "budget"
+
+  // Market response
+  marketShare          Float @default(0) // 0-100 estimated market share
+  customerSatisfaction Float @default(0) // 0-100 customer satisfaction
+  pricingAdvantage     Float @default(0) // -100 to 100 pricing advantage vs us
+
+  createdAt DateTime @default(now())
+
+  @@unique([pricingStrategyAnalysisId, competitorName])
+  @@map("competitor_pricing")
+}
+
+// 6. Customer Journey Mapping Research
+model CustomerJourneyMapping {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Journey overview
+  totalJourneyStages Int @default(0)
+  averageJourneyTime Int @default(0) // Days
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallJourneyScore Float @default(0)
+
+  // Journey optimization metrics
+  conversionRate       Float @default(0) // Overall journey conversion rate
+  dropOffRate          Float @default(0) // Overall drop-off rate
+  customerSatisfaction Float @default(0) // 0-100 satisfaction score
+
+  // Related data
+  journeyStages     JourneyStage[]
+  touchpoints       Touchpoint[]
+  journeyPainPoints JourneyPainPoint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("customer_journey_mapping")
+}
+
+model JourneyStage {
+  id                       String                 @id @default(uuid())
+  customerJourneyMappingId String
+  customerJourneyMapping   CustomerJourneyMapping @relation(fields: [customerJourneyMappingId], references: [id], onDelete: Cascade)
+
+  stageName       String
+  stageOrder      Int // Order in the journey
+  averageDuration Int? // Average time spent in this stage (hours)
+
+  // Stage metrics
+  conversionRate    Float @default(0) // 0-100 conversion to next stage
+  satisfactionScore Float @default(0) // 0-100 satisfaction in this stage
+  frictionScore     Float @default(0) // 0-100 friction experienced
+  emotionalState    Float @default(0) // -100 to 100 emotional state
+
+  // Stage characteristics
+  customerGoals    String[] // What customer wants to achieve
+  customerActions  String[] // Actions customer takes
+  customerThoughts String[] // Customer thoughts/concerns
+  customerEmotions String[] // Customer emotions
+
+  // Business metrics
+  dropOffRate    Float @default(0) // 0-100 drop-off rate from this stage
+  supportTickets Int   @default(0) // Support tickets generated
+  timeToComplete Float @default(0) // Average time to complete stage
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerJourneyMappingId, stageName])
+  @@map("journey_stages")
+}
+
+model Touchpoint {
+  id                       String                 @id @default(uuid())
+  customerJourneyMappingId String
+  customerJourneyMapping   CustomerJourneyMapping @relation(fields: [customerJourneyMappingId], references: [id], onDelete: Cascade)
+
+  touchpointName String
+  touchpointType String // "digital", "physical", "human", "automated"
+  channel        String // "website", "email", "phone", "store", etc.
+  stageInJourney String // Which journey stage this belongs to
+
+  // Touchpoint performance
+  effectivenessScore Float @default(0) // 0-100 effectiveness
+  satisfactionScore  Float @default(0) // 0-100 customer satisfaction
+  usageFrequency     Float @default(0) // 0-100 how often used
+  importanceScore    Float @default(0) // 0-100 importance to journey
+
+  // Optimization metrics
+  optimizationPotential Float @default(0) // 0-100 optimization potential
+  costEfficiency        Float @default(0) // 0-100 cost efficiency
+  automationPotential   Float @default(0) // 0-100 automation potential
+
+  // Context
+  customerExpectations String[] // What customers expect
+  currentExperience    String? // Current experience description
+  improvementAreas     String[] // Areas for improvement
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerJourneyMappingId, touchpointName])
+  @@map("touchpoints")
+}
+
+model JourneyPainPoint {
+  id                       String                 @id @default(uuid())
+  customerJourneyMappingId String
+  customerJourneyMapping   CustomerJourneyMapping @relation(fields: [customerJourneyMappingId], references: [id], onDelete: Cascade)
+
+  painPointName String
+  journeyStage  String // Which stage this pain occurs
+  painCategory  String // "process", "information", "emotional", "technical"
+
+  // Pain metrics
+  severityScore        Float @default(0) // 0-100 severity
+  frequencyScore       Float @default(0) // 0-100 frequency of occurrence
+  impactScore          Float @default(0) // 0-100 impact on journey
+  resolutionDifficulty Float @default(0) // 0-100 difficulty to resolve
+
+  // Business impact
+  dropOffIncrease Float @default(0) // % increase in drop-off due to this pain
+  supportCost     Float @default(0) // Cost of support for this pain
+  revenueImpact   Float @default(0) // Revenue impact in USD
+
+  // Resolution
+  currentMitigation String? // How currently handled
+  proposedSolution  String? // Proposed solution
+  solutionPriority  Float   @default(0) // 0-100 priority for resolution
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerJourneyMappingId, painPointName])
+  @@map("journey_pain_points")
+}
+
+// 1. Target Audience Segmentation Research
+model TargetAudienceSegmentation {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Segmentation overview
+  primarySegment  String
+  totalSegments   Int    @default(0)
+  totalMarketSize Int    @default(0) // Total addressable market size
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallSegmentationScore Float @default(0)
+
+  // Key metrics
+  averageSegmentSize   Int   @default(0) // Average segment size
+  segmentAccessibility Float @default(0) // 0-100 ease of reaching segments
+  marketPenetration    Float @default(0) // Expected market penetration %
+
+  // Related data
+  audienceSegments AudienceSegment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("target_audience_segmentation")
+}
+
+model AudienceSegment {
+  id                           String                     @id @default(uuid())
+  targetAudienceSegmentationId String
+  targetAudienceSegmentation   TargetAudienceSegmentation @relation(fields: [targetAudienceSegmentationId], references: [id], onDelete: Cascade)
+
+  segmentName         String
+  segmentSize         Float  @default(0) // Percentage of total market
+  attractivenessScore Float  @default(0) // 0-100 score
+  accessibilityScore  Float  @default(0) // 0-100 ease of reach
+  profitabilityScore  Float  @default(0) // 0-100 profit potential
+
+  // Key characteristics
+  primaryNeed       String?
+  secondaryNeeds    String[]
+  preferredSolution String?
+  budgetRange       String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([targetAudienceSegmentationId, segmentName])
+  @@map("audience_segments")
+}
+
+// 2. Market Trend Analysis Research
+model MarketTrendAnalysis {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Trend analysis overview
+  primaryTrend       String
+  totalTrendsTracked Int    @default(0)
+  analysisTimeframe  Int    @default(12) // Months of trend analysis
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallTrendScore Float @default(0)
+
+  // Key trend metrics
+  trendStrength    Float @default(0) // 0-100 strength of primary trend
+  marketGrowthRate Float @default(0) // Annual market growth percentage
+  adoptionRate     Float @default(0) // Technology/trend adoption rate
+
+  // Related data
+  marketTrends MarketTrend[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("market_trend_analysis")
+}
+
+model MarketTrend {
+  id                    String              @id @default(uuid())
+  marketTrendAnalysisId String
+  marketTrendAnalysis   MarketTrendAnalysis @relation(fields: [marketTrendAnalysisId], references: [id], onDelete: Cascade)
+
+  trendName      String
+  trendCategory  String // "technology", "social", "economic", "regulatory"
+  impactScore    Float  @default(0) // 0-100 impact on business
+  timelineMonths Int? // Expected timeline
+  certaintyLevel Float  @default(0) // 0-100 certainty of trend
+
+  // Opportunity/threat assessment
+  opportunityScore Float @default(0) // 0-100 opportunity potential
+  threatScore      Float @default(0) // 0-100 threat level
+
+  description String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([marketTrendAnalysisId, trendName])
+  @@map("market_trends")
+}
+
+// 3. Customer Needs & Pain Points Research
+model CustomerNeedAnalysis {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Analysis overview
+  primaryNeed          String
+  totalNeedsIdentified Int    @default(0)
+  totalPainPoints      Int    @default(0)
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallNeedScore Float @default(0)
+
+  // Key metrics
+  needUrgency         Float @default(0) // 0-100 urgency of primary need
+  solutionGap         Float @default(0) // 0-100 gap in current solutions
+  customerWillingness Float @default(0) // 0-100 willingness to pay for solution
+
+  // Related data
+  customerNeeds CustomerNeed[]
+  painPoints    PainPoint[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("customer_need_analysis")
+}
+
+model CustomerNeed {
+  id                     String               @id @default(uuid())
+  customerNeedAnalysisId String
+  customerNeedAnalysis   CustomerNeedAnalysis @relation(fields: [customerNeedAnalysisId], references: [id], onDelete: Cascade)
+
+  needName        String
+  needCategory    String // "functional", "emotional", "social"
+  intensityScore  Float  @default(0) // 0-100 intensity
+  frequencyScore  Float  @default(0) // 0-100 frequency
+  urgencyScore    Float  @default(0) // 0-100 urgency
+  satisfactionGap Float  @default(0) // 0-100 gap in current satisfaction
+
+  // Context
+  triggerEvents   String[] // What triggers this need
+  desiredOutcome  String? // What success looks like
+  currentSolution String? // How they solve it now
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerNeedAnalysisId, needName])
+  @@map("customer_needs")
+}
+
+model PainPoint {
+  id                     String               @id @default(uuid())
+  customerNeedAnalysisId String
+  customerNeedAnalysis   CustomerNeedAnalysis @relation(fields: [customerNeedAnalysisId], references: [id], onDelete: Cascade)
+
+  painName       String
+  painCategory   String // "process", "cost", "time", "quality", "experience"
+  severityScore  Float  @default(0) // 0-100 severity
+  frequencyScore Float  @default(0) // 0-100 frequency
+  impactScore    Float  @default(0) // 0-100 business impact
+  emotionalToll  Float  @default(0) // 0-100 emotional impact
+
+  // Cost analysis
+  timeCostHours   Float? // Hours lost per occurrence
+  financialCost   Float? // Dollar cost per occurrence
+  opportunityCost Float? // Missed opportunities cost
+
+  // Context
+  painTriggers      String[] // What causes this pain
+  currentMitigation String? // How they currently handle it
+
+  createdAt DateTime @default(now())
+
+  @@unique([customerNeedAnalysisId, painName])
+  @@map("pain_points")
+}
+
+// 4. Pricing Strategy Analysis Research
+model PricingStrategyAnalysis {
+  id           String         @id @default(uuid())
+  validationId String         @unique
+  validation   IdeaValidation @relation(fields: [validationId], references: [id], onDelete: Cascade)
+
+  // Pricing strategy overview
+  primaryStrategy    PricingStrategy
+  recommendedPrice   Float? // Primary recommended price point
+  totalTiersAnalyzed Int             @default(0)
+
+  // Core validation scores (0-100) - consolidated from multiple individual scores
+  overallPricingScore Float @default(0)
+
+  // Key pricing metrics
+  priceAcceptance      Float @default(0) // 0-100 customer price acceptance
+  competitivenessScore Float @default(0) // 0-100 competitive positioning
+  profitabilityScore   Float @default(0) // 0-100 profitability potential
+
+  // Related data
+  pricingTiers      PricingTier[]
+  competitorPricing CompetitorPricing[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("pricing_strategy_analysis")
 }

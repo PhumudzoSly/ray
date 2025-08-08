@@ -31,7 +31,6 @@ export const authRoutes = [
   "/rm",
   "/home",
   "/api/inngest",
-  "/stay-tuned",
 ];
 
 /**
@@ -39,4 +38,4 @@ export const authRoutes = [
  */
 export const apiPrefix = "/api/auth";
 
-export const DEFAULT_LOGIN_REDIRECT = process.env.NODE_ENV === "production" ? "/stay-tuned" : "/switch-org";
+export const DEFAULT_LOGIN_REDIRECT = "/switch-org";

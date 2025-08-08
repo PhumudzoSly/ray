@@ -1,0 +1,76 @@
+model Integration {
+    id             String             @id @default(uuid())
+    name           String
+    type           IntegrationType
+    config         Json
+    isActive       Boolean            @default(true)
+    organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organizationId String
+    createdAt      DateTime           @default(now())
+    updatedAt      DateTime           @updatedAt
+    createdBy      User?              @relation("CreatedIntegrations", fields: [createdById], references: [id], onDelete: SetNull)
+    createdById    String?
+    usages         IntegrationUsage[]
+
+    @@index([organizationId])
+    @@map("integration")
+}
+
+model IntegrationUsage {
+    id            String      @id @default(uuid())
+    integration   Integration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+    integrationId String
+    entityType    String // e.g., "waitlist", "project", "organization"
+    entityId      String // ID of the entity (waitlistId, projectId, etc.)
+    purpose       String // e.g., "email_sync", "analytics", "webhook", etc.
+    isActive      Boolean     @default(true)
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+
+    @@index([integrationId])
+    @@index([entityType, entityId])
+    @@index([entityType, entityId, purpose])
+    @@map("integration_usage")
+}
+
+model ApiKey {
+    id             String          @id @default(uuid())
+    organizationId String
+    organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    name           String
+    keyHash        String
+    keyPreview     String
+    permissions    ApiPermission[] @default([])
+    createdBy      String
+    createdAt      DateTime
+    lastUsed       DateTime?
+    isActive       Boolean
+    expiresAt      DateTime?
+    apiCalls       ApiCall[]
+
+    @@index([organizationId])
+    @@index([organizationId, isActive])
+    @@index([createdBy])
+    @@index([keyHash])
+}
+
+model ApiCall {
+    id             String       @id @default(uuid())
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    apiKeyId       String?
+    apiKey         ApiKey?      @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+    endpoint       String
+    method         String
+    statusCode     Int
+    responseTime   Int? // in milliseconds
+    userAgent      String?
+    ipAddress      String?
+    createdAt      DateTime     @default(now())
+
+    @@index([organizationId])
+    @@index([organizationId, createdAt])
+    @@index([apiKeyId])
+    @@index([endpoint])
+    @@index([method])
+}
