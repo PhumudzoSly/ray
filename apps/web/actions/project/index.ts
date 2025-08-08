@@ -133,7 +133,9 @@ function calculateProjectHealth(
   }
 
   // Penalize too many features in planning (lack of execution)
-  if (planningFeatures > totalFeatures * 0.5) {
+  // Only penalize if there are actually features in planning AND they represent more than 50% of total features
+  // Also require at least 2 total features to avoid false positives with single features
+  if (planningFeatures > 0 && totalFeatures >= 2 && planningFeatures > totalFeatures * 0.5) {
     featureHealth -= 10;
     healthFactors.push("Too many features in planning");
   }
