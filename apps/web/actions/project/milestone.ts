@@ -89,7 +89,42 @@ export const getProjectMilestones = async (projectId: string) => {
       createdAt: "desc",
     },
   });
+
+// Get all milestones in the organization with basic info
+export const getAllMilestones = async () => {
+  const { org } = await getSession();
+
+  if (!org) {
+    throw new Error("No organization found");
+  }
+
+  return await prisma.milestone.findMany({
+    where: {
+      organizationId: org,
+    },
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      startDate: true,
+      endDate: true,
+      description: true,
+      projectId: true,
+      project: { select: { id: true, name: true } },
+      owner: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 };
+
 
 // Create a new milestone
 export const createMilestone = async (data: CreateMilestoneData) => {
