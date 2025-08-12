@@ -386,6 +386,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.35.3
         version: 1.35.3
+      '@upstash/search':
+        specifier: ^0.1.5
+        version: 0.1.5
       '@workspace/backend':
         specifier: workspace:*
         version: link:../../packages/backend
@@ -4046,6 +4049,12 @@ packages:
 
   '@upstash/redis@1.35.3':
     resolution: {integrity: sha512-hSjv66NOuahW3MisRGlSgoszU2uONAY2l5Qo3Sae8OT3/Tng9K+2/cBRuyPBX8egwEGcNNCF9+r0V6grNnhL+w==}
+
+  '@upstash/search@0.1.5':
+    resolution: {integrity: sha512-+vkNsxC6jRP1m1HZdnJx7MD8KqvKHlqZjZ+eJMhgnTNXIYoqeY63WBorHY8M3nN7Buhns+eRl1YUTRwnZuiwgQ==}
+
+  '@upstash/vector@1.2.2':
+    resolution: {integrity: sha512-ptQ9xnxtKqmpNK52PCcHCszlPOLxIBfjsv7ty8RoF95pkjctS9rSjTQ3Pl9bx5VFbpDj+0dMXw88WLt6swDkgQ==}
 
   '@use-gesture/core@10.3.1':
     resolution: {integrity: sha512-WcINiDt8WjqBdUXye25anHiNxPc0VOrlT8F6LLkU6cycrOGUDyY/yyFmsg3k8i5OLvv25llc0QC45GhR/C8llw==}
@@ -13704,6 +13713,12 @@ snapshots:
   '@upstash/redis@1.35.3':
     dependencies:
       uncrypto: 0.1.3
+
+  '@upstash/search@0.1.5':
+    dependencies:
+      '@upstash/vector': 1.2.2
+
+  '@upstash/vector@1.2.2': {}
 
   '@use-gesture/core@10.3.1': {}
 

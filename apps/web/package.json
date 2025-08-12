@@ -50,6 +50,7 @@
 		"@types/react-dom": "19.1.6",
 		"@uploadthing/react": "^7.3.2",
 		"@upstash/redis": "^1.35.3",
+		"@upstash/search": "^0.1.5",
 		"@workspace/backend": "workspace:*",
 		"@workspace/ui": "workspace:*",
 		"@xyflow/react": "^12.8.2",

@@ -34,7 +34,6 @@ import { RefreshCcwIcon } from "lucide-react";
 import { CopyIcon } from "lucide-react";
 import { UIMessage } from "ai";
 
-
 const Chat = ({
   initialMessages,
   org,
@@ -47,7 +46,7 @@ const Chat = ({
   const [input, setInput] = useState("");
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, regenerate } = useChat({
-    id: `${userId}-${org}`,
+    id: `user:${userId}:org:${org}`,
     messages: initialMessages,
     transport: new DefaultChatTransport({
       api: "/api/chat",
@@ -174,7 +173,6 @@ const Chat = ({
                 <GlobeIcon size={16} />
                 <span>Search</span>
               </PromptInputButton>
-  
             </PromptInputTools>
             <PromptInputSubmit disabled={!input} status={status} />
           </PromptInputToolbar>

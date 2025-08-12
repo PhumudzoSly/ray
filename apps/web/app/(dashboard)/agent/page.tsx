@@ -9,7 +9,11 @@ import { UIMessage } from "ai";
 
 const AgentPage = async () => {
   const { org, userId } = await getSession();
-  const messages = await redis.get<UIMessage[]>(`chat:history:${userId}-${org}`) || []
+  const key = `chat:history:user:${userId}:org:${org}`;
+  const messages =
+    (await redis.get<UIMessage[]>(key)) ||
+    (await redis.get<UIMessage[]>(`chat:history:${userId}-${org}`)) ||
+    []
   
   
   return (
