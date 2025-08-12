@@ -57,6 +57,11 @@ const data: NavData = {
       icon: LayoutDashboard,
     },
     {
+      name: "Agent",
+      url: "/agent",
+      icon: Bot,
+    },
+    {
       name: "Inbox",
       url: "/inbox",
       icon: MessageCircleCode,
