@@ -23,6 +23,15 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from "@workspace/ui/components/table";
+import {
   getAllIntegrations,
   deleteIntegration,
   IntegrationConfig,
@@ -65,30 +74,30 @@ const PLATFORMS = [
     managementUrl: (integration: Integration) =>
       integration.config?.dashboardUrl || null,
   },
-  {
-    key: "github",
-    name: "GitHub",
-    category: "Code Hosting",
-    description: "Git repository hosting and collaboration platform",
-    icon: (props: any) => (
-      <svg
-        {...props}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.84c.85.004 1.7.12 2.5.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .26.18.57.69.47C19.13 20.58 22 16.76 22 12.26 22 6.58 17.52 2 12 2z" />
-      </svg>
-    ),
-    managementUrl: (integration: Integration) =>
-      integration.config?.dashboardUrl || null,
-  },
+  // {
+  //   key: "github",
+  //   name: "GitHub",
+  //   category: "Code Hosting",
+  //   description: "Git repository hosting and collaboration platform",
+  //   icon: (props: any) => (
+  //     <svg
+  //       {...props}
+  //       viewBox="0 0 24 24"
+  //       fill="none"
+  //       stroke="currentColor"
+  //       strokeWidth="2"
+  //       strokeLinecap="round"
+  //       strokeLinejoin="round"
+  //     >
+  //       <path d="M12 2C6.48 2 2 6.58 2 12.26c0 4.5 2.87 8.32 6.84 9.67.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.84c.85.004 1.7.12 2.5.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.8-4.57 5.06.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .26.18.57.69.47C19.13 20.58 22 16.76 22 12.26 22 6.58 17.52 2 12 2z" />
+  //     </svg>
+  //   ),
+  //   managementUrl: (integration: Integration) =>
+  //     integration.config?.dashboardUrl || null,
+  // },
 ];
 
-const CATEGORIES = ["Email", "Code Hosting"];
+const CATEGORIES = ["Email"];
 
 // Helper to get default config for each platform
 function getDefaultConfig(type: string): IntegrationConfig {
@@ -97,8 +106,8 @@ function getDefaultConfig(type: string): IntegrationConfig {
       return { apiKey: "", audienceId: "" };
     case "LOOPS":
       return { apiKey: "" };
-    case "GITHUB":
-      return { apiKey: "", repositories: [], webhookUrl: "" };
+    // case "GITHUB":
+    //   return { apiKey: "", repositories: [], webhookUrl: "" };
     default:
       return { apiKey: "" };
   }
@@ -310,144 +319,95 @@ export function IntegrationsClient({
               </Button>
             </div>
           ) : (
-            <div className="space-y-8">
-              {CATEGORIES.map((category) => {
-                const categoryPlatforms = PLATFORMS.filter(
-                  (p) => p.category === category
-                );
-                const hasCategoryIntegrations = categoryPlatforms.some(
-                  (platform) =>
-                    (integrationsByPlatform[platform.key]?.length ?? 0) > 0
-                );
-
-                if (!hasCategoryIntegrations) return null;
-
-                return (
-                  <div key={category}>
-                    <h2 className="text-lg font-semibold mb-4">{category}</h2>
-                    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-                      {categoryPlatforms
-                        .filter(
-                          (platform) =>
-                            (integrationsByPlatform[platform.key]?.length ??
-                              0) > 0
-                        )
-                        .map((platform) => {
-                          const Icon = platform.icon;
-                          const platformIntegrations =
-                            integrationsByPlatform[platform.key] || [];
-
-                          return (
-                            <Card
-                              key={platform.key}
-                              className="flex flex-col justify-between"
+            <div className="space-y-4">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Integration</TableHead>
+                    <TableHead>Platform</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="hidden md:table-cell">Updated</TableHead>
+                    <TableHead className="w-[1%] whitespace-nowrap text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {safeIntegrations.map((integration) => {
+                    const platformKey = getIntegrationPlatformKey(integration.type);
+                    const platform = PLATFORMS.find((p) => p.key === platformKey);
+                    const Icon: any = (platform?.icon as any) || null;
+                    const manageUrl = platform?.managementUrl(integration) ?? null;
+                    return (
+                      <TableRow key={integration.id}>
+                        <TableCell className="font-medium">
+                          {integration.name}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {Icon ? <Icon className="h-4 w-4 text-primary" /> : null}
+                            <span>{platform?.name ?? integration.type}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {integration.isActive ? (
+                            <Badge
+                              variant="default"
+                              className="bg-green-100 text-green-800 hover:bg-green-100"
                             >
-                              <CardContent className="p-6">
-                                <div className="flex items-center space-x-4 mb-4">
-                                  <span className="p-2 rounded-lg bg-muted">
-                                    <Icon className="h-6 w-6 text-primary" />
-                                  </span>
-                                  <div>
-                                    <span className="font-medium text-base block">
-                                      {platform.name}
-                                    </span>
-                                    <span className="text-sm text-muted-foreground">
-                                      {platformIntegrations.length} integration
-                                      {platformIntegrations.length !== 1
-                                        ? "s"
-                                        : ""}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                  {platformIntegrations.map((integration) => (
-                                    <div
-                                      key={integration.id}
-                                      className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2"
-                                    >
-                                      <span className="truncate text-sm">
-                                        {integration.name}
-                                      </span>
-                                      <div className="flex items-center space-x-2">
-                                        {integration.isActive ? (
-                                          <Badge
-                                            variant="default"
-                                            className="bg-green-100 text-green-800 hover:bg-green-100 text-xs"
-                                          >
-                                            <CheckCircle className="h-3 w-3 mr-1" />
-                                            Active
-                                          </Badge>
-                                        ) : (
-                                          <Badge
-                                            variant="secondary"
-                                            className="text-xs"
-                                          >
-                                            <XCircle className="h-3 w-3 mr-1" />
-                                            Inactive
-                                          </Badge>
-                                        )}
-                                        {platform.managementUrl(integration) ? (
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() =>
-                                              window.open(
-                                                platform.managementUrl(
-                                                  integration
-                                                )!,
-                                                "_blank"
-                                              )
-                                            }
-                                            title="Manage on platform"
-                                          >
-                                            <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                                          </Button>
-                                        ) : (
-                                          <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="h-7"
-                                            onClick={() => {
-                                              setEditIntegration(
-                                                integration as any
-                                              );
-                                              setModalType(
-                                                getIntegrationPlatformKey(
-                                                  integration.type
-                                                )
-                                              );
-                                              setModalOpen(true);
-                                            }}
-                                          >
-                                            <Edit className="h-3 w-3 mr-1" />
-                                            Edit
-                                          </Button>
-                                        )}
-                                        <Button
-                                          variant="outline"
-                                          size="icon"
-                                          className="h-7 w-7"
-                                          onClick={() =>
-                                            handleDelete(integration.id)
-                                          }
-                                          title="Delete integration"
-                                        >
-                                          <Trash2 className="h-3 w-3" />
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              </CardContent>
-                            </Card>
-                          );
-                        })}
-                    </div>
-                  </div>
-                );
-              })}
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                              Active
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary">
+                              <XCircle className="h-3 w-3 mr-1" />
+                              Inactive
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="hidden md:table-cell text-muted-foreground">
+                          {new Date(integration.updatedAt).toLocaleString()}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center gap-2 justify-end">
+                            {manageUrl && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={() => window.open(manageUrl!, "_blank")}
+                                title="Manage on platform"
+                              >
+                                <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                              </Button>
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="h-7"
+                              onClick={() => {
+                                setEditIntegration(integration as any);
+                                setModalType(platformKey);
+                                setModalOpen(true);
+                              }}
+                            >
+                              <Edit className="h-3 w-3 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="h-7 w-7"
+                              onClick={() => handleDelete(integration.id)}
+                              title="Delete integration"
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
             </div>
           )}
         </TabsContent>
@@ -457,7 +417,7 @@ export function IntegrationsClient({
             {CATEGORIES.map((category) => (
               <div key={category}>
                 <h2 className="text-lg font-semibold mb-4">{category}</h2>
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                   {PLATFORMS.filter((p) => p.category === category).map(
                     (platform) => {
                       const Icon = platform.icon;
@@ -470,7 +430,7 @@ export function IntegrationsClient({
                           key={platform.key}
                           className="flex flex-col justify-between"
                         >
-                          <CardContent className="p-6">
+                          <CardContent >
                             <div className="flex items-center space-x-4 mb-3">
                               <span className="p-2 rounded-lg bg-muted">
                                 <Icon className="h-6 w-6 text-primary" />
@@ -486,7 +446,7 @@ export function IntegrationsClient({
                             </div>
 
                             {isConnected && (
-                              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <div className="mb-4 p-3  border border-green-200 rounded-lg">
                                 <div className="flex items-center text-sm text-green-800">
                                   <CheckCircle className="h-4 w-4 mr-2" />
                                   {platformIntegrations.length} integration
@@ -499,7 +459,7 @@ export function IntegrationsClient({
                             )}
 
                             <Button
-                              variant={isConnected ? "outline" : "default"}
+                              variant={isConnected ? "dark" : "secondary"}
                               className="w-full"
                               onClick={() => {
                                 setEditIntegration({
@@ -561,7 +521,7 @@ export function IntegrationsClient({
           onSuccess={handleModalSuccess}
         />
       )}
-      {modalType === "github" && (
+      {/* {modalType === "github" && (
         <GitHubIntegrationModal
           open={modalOpen}
           onOpenChange={(open) => {
@@ -574,7 +534,7 @@ export function IntegrationsClient({
           integration={editIntegration}
           onSuccess={handleModalSuccess}
         />
-      )}
+      )} */}
     </div>
   );
 }

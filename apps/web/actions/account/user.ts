@@ -16,6 +16,7 @@ import {
   shouldSeedDemoData,
   isUserMemberOfOtherOrgs,
 } from "@workspace/backend";
+import { revalidatePath } from "next/cache";
 
 export async function createOrg({ name }: { name: string }) {
   const headersList = await headers();
@@ -283,6 +284,7 @@ export async function createApiKey({
       },
     });
 
+    revalidatePath("/settings/api-keys"); 
     return {
       success: true,
       apiKey,
@@ -318,7 +320,7 @@ export async function listApiKeys() {
       expiresAt: key.expiresAt?.getTime(),
     }));
 
-    return {
+      return {
       success: true,
       apiKeys: transformedApiKeys,
     };

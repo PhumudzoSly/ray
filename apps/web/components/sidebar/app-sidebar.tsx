@@ -163,10 +163,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           >
             <List className="text-muted-foreground" size={15} /> Documentation
           </Link>
-          <Link href="/support" className="flex text-xs items-center gap-2">
-            <InfoIcon className="text-muted-foreground" size={15} /> Help &
-            Support
-          </Link>
           <NavUser />
         </div>
       </SidebarFooter>
