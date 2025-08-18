@@ -57,6 +57,11 @@ const data: NavData = {
       icon: LayoutDashboard,
     },
     {
+      name: "Agent",
+      url: "/agent",
+      icon: Bot,
+    },
+    {
       name: "Inbox",
       url: "/inbox",
       icon: MessageCircleCode,
@@ -162,10 +167,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             className="flex text-xs items-center gap-2"
           >
             <List className="text-muted-foreground" size={15} /> Documentation
-          </Link>
-          <Link href="/support" className="flex text-xs items-center gap-2">
-            <InfoIcon className="text-muted-foreground" size={15} /> Help &
-            Support
           </Link>
           <NavUser />
         </div>

@@ -1,12 +1,8 @@
 import {
-  Check,
-  ArrowRight,
-  X,
   Star,
   Zap,
   Users,
   TrendingUp,
-  Shield,
   Sparkles,
   Target,
   BarChart3,
@@ -18,22 +14,17 @@ export const plans = [
     name: "Starter",
     price: "$29",
     period: "/month",
-    description: "Perfect for solo founders and small teams",
+    description: "Perfect for solo founders.",
     icon: <Zap className="w-6 h-6 text-blue-500" />,
     features: {
       core: [
-        "Unlimited SaaS ideas",
         "Unlimited roadmaps",
         "Unlimited waitlists",
         "Unlimited issue tracking",
         "Full SaaS management",
+        "REST API access",
       ],
-      limits: [
-        "2 team members",
-        "3 projects",
-        "3 idea validations/month",
-        "10K API calls/month",
-      ],
+      limits: ["Solo builders", "2 ideas", "5 projects"],
       support: ["Email support"],
     },
     notAvailable: [
@@ -41,7 +32,6 @@ export const plans = [
       "AI Agent (Coming soon)",
       "Inbox (Coming soon)",
       "Custom integrations",
-      "Priority support",
     ],
     cta: "Get Started",
     href: "https://app.rayai.dev/auth/sign-in",
@@ -51,24 +41,19 @@ export const plans = [
   },
   {
     name: "Pro",
-    price: "$99",
+    price: "$49",
     period: "/month",
     description: "For growing teams and serious builders",
     icon: <Star className="w-6 h-6 text-amber-500" />,
     features: {
       core: [
-        "Unlimited SaaS ideas",
-        "Unlimited public roadmap",
-        "Unlimited waitlist",
+        "Unlimited public roadmaps",
+        "Unlimited waitlists",
         "Unlimited issue tracking",
         "Full SaaS management",
+        "REST API access",
       ],
-      limits: [
-        "Up to 10 team members",
-        "25 projects",
-        "8 idea validations/month",
-        "100K API calls/month",
-      ],
+      limits: ["Up to 5 team members", "5 ideas", "25 projects"],
       advanced: [
         "User feedback system",
         "Agent (Coming soon)",
@@ -84,25 +69,20 @@ export const plans = [
     gradient: "from-amber-50 via-orange-50 to-red-50",
   },
   {
-    name: "Team",
-    price: "$299",
+    name: "Enterprise",
+    price: "$199",
     period: "/month",
     description: "For established teams and organizations",
     icon: <Users className="w-6 h-6 text-emerald-500" />,
     features: {
       core: [
-        "Unlimited SaaS ideas",
-        "Unlimited public roadmap",
-        "Unlimited waitlist",
+        "Unlimited public roadmaps",
+        "Unlimited waitlists",
         "Unlimited issue tracking",
         "Full SaaS management",
+        "REST API access",
       ],
-      limits: [
-        "Up to 50 team members",
-        "100 projects",
-        "15 idea validations/month",
-        "1M API calls/month",
-      ],
+      limits: ["Up to 50 team members", "10 ideas", "50 projects"],
       advanced: [
         "User feedback system",
         "Agent (Coming soon)",
@@ -157,46 +137,37 @@ export const faqs = [
   {
     question: "How much would this cost if I bought each tool separately?",
     answer:
-      "Building this stack with separate tools would cost $200-400/month for a small team. Our all-in-one platform eliminates the complexity of managing multiple tools while providing seamless integration and our unique AI validation features.",
+      "Building this stack with separate tools would cost $200-400/month for a small team. Our all-in-one platform eliminates the complexity of managing multiple tools while providing seamless integration and powerful features.",
   },
   {
-    question: "How do team member and project limits work?",
+    question: "How do plan limits work?",
     answer:
-      "Each plan has a maximum number of team members and projects you can have. If you need more team members or projects, you'll need to upgrade to a higher plan. These limits help us provide fair pricing while ensuring quality service for all users.",
+      "Each plan has specific limits for team members, projects, and ideas to help us provide fair pricing while ensuring quality service. These limits are designed to match typical usage patterns for different team sizes.",
   },
   {
-    question: "How do AI validation and API call limits work?",
+    question: "What happens if I need more than my plan allows?",
     answer:
-      "Each plan includes a monthly allowance for AI validations and API calls. If you exceed these limits, you'll be charged at the overage rate. You can monitor your usage in real-time through the dashboard and set up alerts to avoid unexpected charges.",
-  },
-  {
-    question: "What happens if I exceed my monthly limits?",
-    answer:
-      "For AI validations and API calls, you'll be charged the overage rate for any usage beyond your plan limits. For team members and projects, you'll need to upgrade to a higher plan. We'll notify you when you're approaching your limits so you can plan accordingly.",
+      "Simply upgrade to a higher plan that meets your needs. We'll notify you when you're approaching your limits, and upgrades take effect immediately with prorated billing.",
   },
   {
     question: "Can I change plans at any time?",
     answer:
       "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and we'll prorate any billing adjustments.",
   },
-  {
-    question: "Is there a free trial?",
-    answer:
-      "No, we don't offer a free trial, but we are considering it in the future.",
-  },
+
   {
     question: "Can I cancel anytime?",
     answer:
       "Absolutely. You can cancel your subscription at any time from your account settings. Your access will continue until the end of your current billing period.",
   },
   {
-    question: "What's included in AI validation?",
-    answer:
-      "Our AI validation includes market research, competitive analysis, financial projections, target audience identification, technology assessment, and risk analysis to help validate your SaaS ideas.",
-  },
-  {
-    question: "What can I do with API access?",
+    question: "What's included in the REST API access?",
     answer:
       "Our REST API allows you to integrate RayAI with your existing tools, automate workflows, sync data with your CRM, and build custom integrations. Perfect for developers and teams who need programmatic access to their data.",
+  },
+  {
+    question: "What makes the Enterprise plan special?",
+    answer:
+      "The Enterprise plan includes advanced analytics, white-label options, higher limits for larger teams, and dedicated account management to help you get the most out of RayAI for your organization.",
   },
 ];

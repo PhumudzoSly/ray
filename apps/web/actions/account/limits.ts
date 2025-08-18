@@ -7,6 +7,7 @@ import {
   PROJECTS_LIMITS,
   TEAM_LIMITS,
   AI_LIMITS,
+  IDEAS_LIMITS,
   API_LIMITS,
   ALL_LIMITS,
 } from "@/types/limits";
@@ -123,12 +124,12 @@ export async function checkAIValidationLimit() {
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
 
-  const validationCount = await prisma.researchSession.count({
+  const validationCount = await prisma.ideaValidation.count({
     where: {
       idea: {
         organizationId: org,
       },
-      createdAt: {
+      startedAt: {
         gte: startOfMonth,
       },
     },
@@ -138,6 +139,43 @@ export async function checkAIValidationLimit() {
     currentCount: validationCount,
     maxAllowed: aiLimits.maxValidations,
     limitReached: validationCount >= aiLimits.maxValidations,
+  };
+}
+
+/**
+ * Checks if the organization has reached its ideas limit based on subscription
+ * @returns Object containing limit information and whether the limit is reached
+ */
+export async function checkIdeasLimit() {
+  const { org } = await getSession();
+  const subscription = await getSubscription();
+
+  if (!subscription) {
+    return {
+      currentCount: 0,
+      maxAllowed: 0,
+      limitReached: true,
+    };
+  }
+
+  const ideasLimits = IDEAS_LIMITS[subscription.productId];
+
+  if (!ideasLimits) {
+    return {
+      currentCount: 0,
+      maxAllowed: 0,
+      limitReached: true,
+    };
+  }
+
+  const ideasCount = await prisma.idea.count({
+    where: { organizationId: org },
+  });
+
+  return {
+    currentCount: ideasCount,
+    maxAllowed: ideasLimits.maxIdeas,
+    limitReached: ideasCount >= ideasLimits.maxIdeas,
   };
 }
 
@@ -296,6 +334,7 @@ export async function getAllLimits() {
       teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
       projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
       aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
+      ideas: { currentCount: 0, maxAllowed: 0, limitReached: true },
       apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
     };
   }
@@ -307,22 +346,26 @@ export async function getAllLimits() {
       teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
       projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
       aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
+      ideas: { currentCount: 0, maxAllowed: 0, limitReached: true },
       apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
     };
   }
 
   // Get all current counts
-  const [teamMembers, projects, aiValidations, apiCalls] = await Promise.all([
-    checkTeamMemberLimit(),
-    checkProjectLimit(),
-    checkAIValidationLimit(),
-    checkAPICallLimit(),
-  ]);
+  const [teamMembers, projects, aiValidations, ideas, apiCalls] =
+    await Promise.all([
+      checkTeamMemberLimit(),
+      checkProjectLimit(),
+      checkAIValidationLimit(),
+      checkIdeasLimit(),
+      checkAPICallLimit(),
+    ]);
 
   return {
     teamMembers,
     projects,
     aiValidations,
+    ideas,
     apiCalls,
   };
 }
@@ -341,6 +384,7 @@ export async function getCompleteAccessOverview() {
         teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
         projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
         aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
+        ideas: { currentCount: 0, maxAllowed: 0, limitReached: true },
         apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
       },
       features: Object.values(GeneralFeature).reduce(

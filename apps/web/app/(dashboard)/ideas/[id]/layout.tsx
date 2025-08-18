@@ -74,13 +74,11 @@ const IdeaLayout = async ({
       >
         {null}
       </Header>
-      <ExpandedLayoutContainer sidebar={<></>}>
-        <div className="container">
-          <IdeaInfo id={id} />
-          <IdeaTabs tabs={tabsMenu} ideaId={id} />
-          {children}
-        </div>
-      </ExpandedLayoutContainer>
+      <div className="container">
+        <IdeaInfo id={id} />
+        <IdeaTabs tabs={tabsMenu} ideaId={id} />
+        {children}
+      </div>
     </div>
   );
 };

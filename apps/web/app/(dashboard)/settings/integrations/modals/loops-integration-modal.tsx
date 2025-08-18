@@ -143,7 +143,7 @@ export function LoopsIntegrationModal({
               <p className="text-sm text-muted-foreground">
                 Get your API key from the{" "}
                 <a
-                  href="https://loops.so/api-keys"
+                  href="https://loops.so"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"

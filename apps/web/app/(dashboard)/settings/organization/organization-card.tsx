@@ -126,40 +126,35 @@ export function OrganizationCard(props: { session: Session | null }) {
   return (
     <div className="space-y-6">
       {/* Organization Header */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="p-8">
+      <Card>
+        <CardContent >
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-20 w-20 ring-4 ring-background shadow-lg">
+                <Avatar className="h-16 w-16">
                   <AvatarImage
                     className="object-cover"
                     src={activeOrg?.logo || ""}
                   />
-                  <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-2xl font-semibold">
+                  <AvatarFallback className="text-lg font-medium">
                     {activeOrg?.name?.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="absolute -bottom-1 -right-1 h-6 w-6 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
+                <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
                   <div className="h-2 w-2 bg-white rounded-full" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">
+              <div className="space-y-1">
+                <h1 className="text-2xl font-semibold">
                   {activeOrg?.name}
                 </h1>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    <span className="text-sm font-medium">
+                    <span className="text-sm">
                       {activeOrg?.members.length || 1}{" "}
                       {activeOrg?.members.length === 1 ? "member" : "members"}
                     </span>
-                  </div>
-                  <Separator orientation="vertical" className="h-4" />
-                  <div className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">Organization</span>
                   </div>
                 </div>
               </div>
@@ -184,7 +179,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem onClick={() => setShowSettings(true)}>
                     <Settings className="h-4 w-4 mr-3" />
-                    Organization Settings
+                    Change name
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -194,13 +189,13 @@ export function OrganizationCard(props: { session: Session | null }) {
       </Card>
 
       {/* Members & Invitations */}
-      <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-4">
+      <Card>
+        <CardHeader>
           <Tabs defaultValue="members" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:inline-flex">
+            <TabsList className="h-12 w-full justify-start rounded-none bg-transparent p-0">
               <TabsTrigger
                 value="members"
-                className="flex items-center gap-2 px-6"
+                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-6 font-medium flex items-center gap-2"
               >
                 <Users className="h-4 w-4" />
                 Members
@@ -210,7 +205,7 @@ export function OrganizationCard(props: { session: Session | null }) {
               </TabsTrigger>
               <TabsTrigger
                 value="invites"
-                className="flex items-center gap-2 px-6"
+                className="h-12 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-6 font-medium flex items-center gap-2"
               >
                 <Mail className="h-4 w-4" />
                 Invitations
@@ -226,27 +221,27 @@ export function OrganizationCard(props: { session: Session | null }) {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="members" className="mt-6">
-              <div className="space-y-1">
+            <TabsContent value="members" className="p-4">
+              <div className="space-y-2">
                 {activeOrg?.members.map((member: any, index: number) => (
                   <div
                     key={member.id}
-                    className="group flex items-center justify-between p-4 rounded-lg hover:bg-accent/50 transition-all duration-200 border border-transparent hover:border-border/50"
+                    className="group flex border-b items-center justify-between p-3 rounded-lg hover:bg-accent transition-colors"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                       <div className="relative">
-                        <Avatar className="h-10 w-10">
+                        <Avatar className="h-9 w-9">
                           <AvatarImage
                             src={member.user.image || ""}
                             alt={member.user.name || ""}
                           />
-                          <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 font-medium">
+                          <AvatarFallback className="text-sm font-medium">
                             {member.user.name?.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         {member.role === "owner" && (
-                          <div className="absolute -top-1 -right-1 h-5 w-5 bg-amber-500 rounded-full border-2 border-background flex items-center justify-center">
-                            <Crown className="h-2.5 w-2.5 text-white" />
+                          <div className="absolute -top-1 -right-1 h-4 w-4 bg-amber-500 rounded-full border-2 border-background flex items-center justify-center">
+                            <Crown className="h-2 w-2 text-white" />
                           </div>
                         )}
                       </div>

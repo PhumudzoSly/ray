@@ -1,11 +1,11 @@
 model Idea {
-    id                  String       @id @default(uuid())
+    id                  String          @id @default(uuid())
     name                String
     description         String
     industry            String
-    owner               User?        @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+    owner               User?           @relation("IdeaOwner", fields: [ownerId], references: [id], onDelete: SetNull)
     ownerId             String?
-    organization        Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId      String
     internal            Boolean
     openSource          Boolean
@@ -14,8 +14,8 @@ model Idea {
     problemSolved       String?
     solutionOffered     String?
     projects            Project[]
-    createdAt           DateTime     @default(now())
-    updatedAt           DateTime     @updatedAt
+    createdAt           DateTime        @default(now())
+    updatedAt           DateTime        @updatedAt
     Competitor          Competitor[]
     validation          IdeaValidation?
 }

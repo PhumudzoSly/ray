@@ -7,7 +7,7 @@ export const exa = new Exa(process.env.EXA_API_KEY);
 
 export const webSearch = tool({
   description: "Search the web for up-to-date information",
-  parameters: z.object({
+  inputSchema: z.object({
     query: z.string().min(1).max(100).describe("The search query"),
   }),
   //@ts-ignore
@@ -27,7 +27,7 @@ export const webSearch = tool({
 
 export const deepSearch = tool({
   description: "Perform deep research using Exa's research API",
-  parameters: z.object({
+  inputSchema: z.object({
     query: z.string().min(1).max(100).describe("The research topic or query"),
   }),
   //@ts-ignore
@@ -89,7 +89,7 @@ export const deepSearch = tool({
 
 export const generateQuestions = tool({
   description: "Generate 5 research questions for a given SaaS idea",
-  parameters: z.object({
+  inputSchema: z.object({
     query: z
       .string()
       .min(1)

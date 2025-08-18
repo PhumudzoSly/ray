@@ -68,7 +68,7 @@ const MILESTONE_STATUS_OPTIONS = [
   },
   {
     value: "IN_PROGRESS",
-    label: "In Progress", 
+    label: "In Progress",
     icon: <Clock className="h-3 w-3 text-blue-500" />,
   },
   {

@@ -1,9 +1,19 @@
 "use server";
 import { prisma, Zod } from "@workspace/backend";
 import { getSession } from "../account/user";
+import { checkIdeasLimit } from "../account/limits";
 
 export const createIdea = async (data: Zod.IdeaOptionalDefaults) => {
   const { org } = await getSession();
+
+  // Check ideas limits before creating
+  const ideasLimit = await checkIdeasLimit();
+
+  if (ideasLimit.limitReached) {
+    throw new Error(
+      `Ideas limit reached. You have ${ideasLimit.currentCount}/${ideasLimit.maxAllowed} ideas. Please upgrade your subscription to create more ideas.`
+    );
+  }
 
   const idea = await prisma.idea.create({
     data: {
