@@ -165,130 +165,120 @@ export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
-            Competitors ({competitors.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <div className="overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-b">
-                  <TableHead className="w-[300px]">Company</TableHead>
-                  <TableHead className="text-center">Founded</TableHead>
-                  <TableHead className="text-center">Employees</TableHead>
-                  <TableHead className="text-center">Revenue</TableHead>
-                  <TableHead className="text-center">Market Share</TableHead>
-                  <TableHead className="text-center">Threat Level</TableHead>
-                  <TableHead className="w-[100px] text-center">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {competitors.map((competitor) => {
-                  const ThreatIcon = getThreatLevelIcon(competitor.threatLevel);
-                  return (
-                    <TableRow
-                      key={competitor.id}
-                      className="group hover:bg-muted/50 cursor-pointer transition-colors"
-                      onClick={() => setSelectedCompetitor(competitor)}
-                    >
-                      <TableCell className="py-4">
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage
-                              src={competitor.logoUrl || ""}
-                              alt={competitor.name}
-                            />
-                            <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
-                              {getCompanyInitials(competitor.name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-semibold text-sm group-hover:text-primary transition-colors">
-                              {competitor.name}
-                            </div>
-                            {competitor.description && (
-                              <div className="text-xs text-muted-foreground truncate max-w-[200px]">
-                                {competitor.description}
-                              </div>
-                            )}
-                            {competitor.headquarters && (
-                              <div className="flex items-center gap-1 mt-1">
-                                <MapPin className="h-3 w-3 text-muted-foreground" />
-                                <span className="text-xs text-muted-foreground">
-                                  {competitor.headquarters}
-                                </span>
-                              </div>
-                            )}
+      <Card className="py-0">
+        <div className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-b">
+                <TableHead className="w-[300px]">Company</TableHead>
+                <TableHead className="text-center">Founded</TableHead>
+                <TableHead className="text-center">Employees</TableHead>
+                <TableHead className="text-center">Revenue</TableHead>
+                <TableHead className="text-center">Market Share</TableHead>
+                <TableHead className="text-center">Threat Level</TableHead>
+                <TableHead className="w-[100px] text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {competitors.map((competitor) => {
+                const ThreatIcon = getThreatLevelIcon(competitor.threatLevel);
+                return (
+                  <TableRow
+                    key={competitor.id}
+                    className="group hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => setSelectedCompetitor(competitor)}
+                  >
+                    <TableCell className="py-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage
+                            src={competitor.logoUrl || ""}
+                            alt={competitor.name}
+                          />
+                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                            {getCompanyInitials(competitor.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <div className="font-semibold text-sm group-hover:text-primary transition-colors">
+                            {competitor.name}
                           </div>
+                          {competitor.description && (
+                            <div className="text-xs text-muted-foreground truncate max-w-[200px]">
+                              {competitor.description}
+                            </div>
+                          )}
+                          {competitor.headquarters && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <MapPin className="h-3 w-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">
+                                {competitor.headquarters}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Calendar className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm">
-                            {competitor.foundedYear || "N/A"}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <Users className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm">
-                            {formatEmployeeCount(competitor.employeeCount)}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <DollarSign className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm font-medium">
-                            {formatCurrency(competitor.annualRevenue)}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <BarChart3 className="h-3 w-3 text-muted-foreground" />
-                          <span className="text-sm">
-                            {formatPercentage(competitor.marketShare)}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Badge
-                          variant={getThreatLevelColor(competitor.threatLevel)}
-                          className="gap-1"
-                        >
-                          <ThreatIcon className="h-3 w-3" />
-                          {competitor.threatLevel}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCompetitor(competitor);
-                          }}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <Calendar className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm">
+                          {competitor.foundedYear || "N/A"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <Users className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm">
+                          {formatEmployeeCount(competitor.employeeCount)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <DollarSign className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm font-medium">
+                          {formatCurrency(competitor.annualRevenue)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <BarChart3 className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-sm">
+                          {formatPercentage(competitor.marketShare)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge
+                        variant={getThreatLevelColor(competitor.threatLevel)}
+                        className="gap-1"
+                      >
+                        <ThreatIcon className="h-3 w-3" />
+                        {competitor.threatLevel}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedCompetitor(competitor);
+                        }}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       <CompetitorDetailsSheet

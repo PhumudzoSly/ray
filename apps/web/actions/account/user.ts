@@ -284,7 +284,7 @@ export async function createApiKey({
       },
     });
 
-    revalidatePath("/settings/api-keys"); 
+    revalidatePath("/settings/api-keys");
     return {
       success: true,
       apiKey,
@@ -320,7 +320,7 @@ export async function listApiKeys() {
       expiresAt: key.expiresAt?.getTime(),
     }));
 
-      return {
+    return {
       success: true,
       apiKeys: transformedApiKeys,
     };
