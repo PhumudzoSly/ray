@@ -2,6 +2,7 @@ import { CollaborativeEditor } from "@/components/collaborative-editor";
 import { getSession } from "@/actions/account/user";
 import { getEntityDocumentContent } from "@/actions/documents/document";
 import { Separator } from "@workspace/ui/components/separator";
+import { CommentThread } from "@/components/comments/comment-thread";
 
 // This comment is added to trigger a re-compilation and ensure type resolution.
 interface DocPageProps {
@@ -44,6 +45,18 @@ export default async function DocPage({ params }: DocPageProps) {
         />
       </div>
       <Separator />
+      <div className="p-4">
+        <CommentThread
+          entityType="project"
+          entityId={projectId}
+          organizationId={session.org}
+          currentUser={{
+            id: session.userId,
+            name: session.name,
+            image: session.image || undefined,
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -46,6 +46,11 @@ model User {
     assetViews       AssetView[]
     assetDownloads   AssetDownload[]
 
+    // Comment relations
+    authoredComments           Comment[]           @relation("AuthoredComments")
+    uploadedCommentAttachments CommentAttachment[] @relation("UploadedCommentAttachments")
+    commentReactions           CommentReaction[]   @relation("CommentReactions")
+
     @@unique([email])
     @@map("user")
 }
@@ -130,6 +135,9 @@ model Organization {
     referrals           Referral[]
     ApiKey              ApiKey[]
     ApiCall             ApiCall[]
+    Comment             Comment[]
+    CommentAttachment   CommentAttachment[]
+    CommentReaction     CommentReaction[]
 
     @@unique([slug])
     @@map("organization")

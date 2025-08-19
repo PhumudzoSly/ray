@@ -27,6 +27,9 @@ model Project {
     milestones     Milestone[]
     document       Document?
 
+    // Comment relations
+    comments Comment[]
+
     @@index([ideaId])
     @@index([organizationId])
     @@index([organizationId, status])
@@ -77,6 +80,7 @@ model Issue {
 
     // Documents
     document Document?
+    Comment  Comment[]
 
     @@index([organizationId, achieved])
     @@index([projectId, organizationId, achieved])
@@ -455,6 +459,7 @@ model Feature {
 
     // Documents
     document Document?
+    Comment  Comment[]
 
     @@index([projectId])
     @@index([milestoneId])
@@ -524,6 +529,7 @@ model Milestone {
 
     // Documents
     document Document?
+    Comment  Comment[]
 
     @@index([projectId])
     @@index([organizationId])

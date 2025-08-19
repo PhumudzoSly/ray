@@ -1,6 +1,8 @@
 import { getProjectInsights } from "@/actions/project";
+import { getSession } from "@/actions/account/user";
 import { Badge } from "@workspace/ui/components/badge";
 import { MilestoneMetrics } from "@/components/project/milestone-metrics";
+import { CommentThread } from "@/components/comments/comment-thread";
 import {
   TrendingUp,
   AlertTriangle,
@@ -24,7 +26,10 @@ interface ProjectPageProps {
 export default async function ProjectPage({ params }: ProjectPageProps) {
   const { id } = await params;
 
-  const insights = await getProjectInsights(id);
+  const [insights, session] = await Promise.all([
+    getProjectInsights(id),
+    getSession(),
+  ]);
 
   if (!insights) {
     return <div>Project not found</div>;
@@ -181,6 +186,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
 
         <UpcomingDeadlines projectId={id} />
+
+        {/* Comments Section */}
+        <div className="border rounded-lg p-6 bg-card">
+          <CommentThread
+            entityType="project"
+            entityId={id}
+            organizationId={session.org}
+            currentUser={{
+              id: session.userId,
+              name: session.name,
+              image: session.image || undefined,
+            }}
+          />
+        </div>
       </div>
     </>
   );

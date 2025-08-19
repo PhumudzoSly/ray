@@ -16,12 +16,24 @@ import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
 import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
-import { Comments } from "@/components/liveblocks/comments";
+import { CommentThread } from "@/components/comments/comment-thread";
 import { BiInfoCircle } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 
-const IssueDetails = ({ id }: { id: string }) => {
+const IssueDetails = ({
+  id,
+  currentUser,
+  organizationId,
+}: {
+  id: string;
+  currentUser: {
+    id: string;
+    name: string;
+    image?: string;
+  };
+  organizationId: string;
+}) => {
   const [view, setView] = useState<"details" | "relationship" | "activity">(
     "details"
   );
@@ -186,13 +198,18 @@ const IssueDetails = ({ id }: { id: string }) => {
           <Room id={id}>
             <div>
               <Editor />
-              <div className="flex items-center gap-2 mt-10 mb-4">
-                <Inbox size={18} />
-                <h6>Comments</h6>
-              </div>
-              <Comments id={id} />
             </div>
           </Room>
+
+          {/* Comments Section */}
+          <div className="mt-10 border rounded-lg p-6 bg-card">
+            <CommentThread
+              entityType="issue"
+              entityId={id}
+              organizationId={organizationId}
+              currentUser={currentUser}
+            />
+          </div>
         </>
       ) : null}
 

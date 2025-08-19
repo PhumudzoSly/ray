@@ -1,0 +1,84 @@
+model Comment {
+    id             String       @id @default(uuid())
+    content        String // Content with user:{userId} mentions
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    authorId       String?
+    author         User?        @relation("AuthoredComments", fields: [authorId], references: [id], onDelete: SetNull)
+
+    // Entity relationships (similar to Document model)
+    projectId   String?
+    project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    issueId     String?
+    issue       Issue?     @relation(fields: [issueId], references: [id], onDelete: Cascade)
+    featureId   String?
+    feature     Feature?   @relation(fields: [featureId], references: [id], onDelete: Cascade)
+    milestoneId String?
+    milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+    // Comment metadata
+    mentionedUserIds String[] // Array of user IDs for efficient querying
+    isEdited         Boolean   @default(false)
+    isDeleted        Boolean   @default(false)
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+    editedAt         DateTime?
+
+    // Relations
+    attachments CommentAttachment[]
+    reactions   CommentReaction[]
+
+    @@index([organizationId])
+    @@index([authorId])
+    @@index([projectId])
+    @@index([issueId])
+    @@index([featureId])
+    @@index([milestoneId])
+    @@index([organizationId, projectId])
+    @@index([organizationId, issueId])
+    @@index([organizationId, featureId])
+    @@index([organizationId, milestoneId])
+    @@index([createdAt])
+    @@index([mentionedUserIds])
+    @@map("comment")
+}
+
+model CommentAttachment {
+    id             String       @id @default(uuid())
+    commentId      String
+    comment        Comment      @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    fileName       String
+    originalName   String
+    mimeType       String
+    fileSize       Int
+    url            String
+    thumbnailUrl   String?
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    uploadedById   String?
+    uploadedBy     User?        @relation("UploadedCommentAttachments", fields: [uploadedById], references: [id], onDelete: SetNull)
+    createdAt      DateTime     @default(now())
+
+    @@index([commentId])
+    @@index([organizationId])
+    @@index([uploadedById])
+    @@map("commentAttachment")
+}
+
+model CommentReaction {
+    id             String       @id @default(uuid())
+    commentId      String
+    comment        Comment      @relation(fields: [commentId], references: [id], onDelete: Cascade)
+    userId         String
+    user           User         @relation("CommentReactions", fields: [userId], references: [id], onDelete: Cascade)
+    emoji          String // Unicode emoji
+    organizationId String
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    createdAt      DateTime     @default(now())
+
+    @@unique([commentId, userId, emoji])
+    @@index([commentId])
+    @@index([userId])
+    @@index([organizationId])
+    @@map("commentReaction")
+}

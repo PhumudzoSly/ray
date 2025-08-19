@@ -18,7 +18,7 @@ import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { cn } from "@/lib/utils";
 import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
-import { Comments } from "@/components/liveblocks/comments";
+import { CommentThread } from "@/components/comments/comment-thread";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFeatureById,
@@ -31,6 +31,7 @@ const FeatureDetails = ({ id }: { id: string }) => {
     "details" | "dependencies" | "prd" | "activity"
   >("prd");
   const queryClient = useQueryClient();
+  const session = useSession();
 
   // Fetch feature details (will use pre-hydrated data from server)
   const { data: featureResult, isPending: isFeaturePending } = useQuery({
@@ -243,13 +244,22 @@ const FeatureDetails = ({ id }: { id: string }) => {
           <Room id={id}>
             <div>
               <Editor />
-              <div className="flex items-center gap-2 mt-10 mb-4">
-                <Inbox size={18} />
-                <h6>Comments</h6>
-              </div>
-              <Comments id={id} />
             </div>
           </Room>
+
+          {/* Comments Section */}
+          <div className="mt-10 border rounded-lg p-6 bg-card">
+            <CommentThread
+              entityType="feature"
+              entityId={id}
+              organizationId={session.org}
+              currentUser={{
+                id: session.userId,
+                name: session.name,
+                image: session.image || undefined,
+              }}
+            />
+          </div>
         </>
       ) : null}
 

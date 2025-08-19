@@ -56,6 +56,12 @@ export type InputJsonValueType = z.infer<typeof InputJsonValueSchema>;
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
+export const CommentScalarFieldEnumSchema = z.enum(['id','content','organizationId','authorId','projectId','issueId','featureId','milestoneId','mentionedUserIds','isEdited','isDeleted','createdAt','updatedAt','editedAt']);
+
+export const CommentAttachmentScalarFieldEnumSchema = z.enum(['id','commentId','fileName','originalName','mimeType','fileSize','url','thumbnailUrl','organizationId','uploadedById','createdAt']);
+
+export const CommentReactionScalarFieldEnumSchema = z.enum(['id','commentId','userId','emoji','organizationId','createdAt']);
+
 export const IdeaScalarFieldEnumSchema = z.enum(['id','name','description','industry','ownerId','organizationId','internal','openSource','status','aiOverallValidation','problemSolved','solutionOffered','createdAt','updatedAt']);
 
 export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','website','description','logoUrl','marketShare','annualRevenue','employeeCount','foundedYear','headquarters','targetAudience','threatLevel','userGrowthRate','churnRate','customerSatisfaction','marketCap','lastUpdated','createdAt','isActive']);
@@ -353,6 +359,97 @@ export type FinancialMetricType = `${z.infer<typeof FinancialMetricSchema>}`
 /////////////////////////////////////////
 // MODELS
 /////////////////////////////////////////
+
+/////////////////////////////////////////
+// COMMENT SCHEMA
+/////////////////////////////////////////
+
+export const CommentSchema = z.object({
+  id: z.string().uuid(),
+  content: z.string(),
+  organizationId: z.string(),
+  authorId: z.string().nullish(),
+  projectId: z.string().nullish(),
+  issueId: z.string().nullish(),
+  featureId: z.string().nullish(),
+  milestoneId: z.string().nullish(),
+  mentionedUserIds: z.string().array(),
+  isEdited: z.boolean(),
+  isDeleted: z.boolean(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  editedAt: z.coerce.date().nullish(),
+})
+
+export type Comment = z.infer<typeof CommentSchema>
+
+// COMMENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CommentOptionalDefaultsSchema = CommentSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  isEdited: z.boolean().optional(),
+  isDeleted: z.boolean().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type CommentOptionalDefaults = z.infer<typeof CommentOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// COMMENT ATTACHMENT SCHEMA
+/////////////////////////////////////////
+
+export const CommentAttachmentSchema = z.object({
+  id: z.string().uuid(),
+  commentId: z.string(),
+  fileName: z.string(),
+  originalName: z.string(),
+  mimeType: z.string(),
+  fileSize: z.number().int(),
+  url: z.string(),
+  thumbnailUrl: z.string().nullish(),
+  organizationId: z.string(),
+  uploadedById: z.string().nullish(),
+  createdAt: z.coerce.date(),
+})
+
+export type CommentAttachment = z.infer<typeof CommentAttachmentSchema>
+
+// COMMENT ATTACHMENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CommentAttachmentOptionalDefaultsSchema = CommentAttachmentSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type CommentAttachmentOptionalDefaults = z.infer<typeof CommentAttachmentOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// COMMENT REACTION SCHEMA
+/////////////////////////////////////////
+
+export const CommentReactionSchema = z.object({
+  id: z.string().uuid(),
+  commentId: z.string(),
+  userId: z.string(),
+  emoji: z.string(),
+  organizationId: z.string(),
+  createdAt: z.coerce.date(),
+})
+
+export type CommentReaction = z.infer<typeof CommentReactionSchema>
+
+// COMMENT REACTION OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const CommentReactionOptionalDefaultsSchema = CommentReactionSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type CommentReactionOptionalDefaults = z.infer<typeof CommentReactionOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // IDEA SCHEMA

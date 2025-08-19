@@ -120,6 +120,46 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  organizationId: 'organizationId',
+  authorId: 'authorId',
+  projectId: 'projectId',
+  issueId: 'issueId',
+  featureId: 'featureId',
+  milestoneId: 'milestoneId',
+  mentionedUserIds: 'mentionedUserIds',
+  isEdited: 'isEdited',
+  isDeleted: 'isDeleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  editedAt: 'editedAt'
+};
+
+exports.Prisma.CommentAttachmentScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  fileName: 'fileName',
+  originalName: 'originalName',
+  mimeType: 'mimeType',
+  fileSize: 'fileSize',
+  url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
+  organizationId: 'organizationId',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommentReactionScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  userId: 'userId',
+  emoji: 'emoji',
+  organizationId: 'organizationId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.IdeaScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1350,6 +1390,9 @@ exports.RiskCategory = exports.$Enums.RiskCategory = {
 };
 
 exports.Prisma.ModelName = {
+  Comment: 'Comment',
+  CommentAttachment: 'CommentAttachment',
+  CommentReaction: 'CommentReaction',
   Idea: 'Idea',
   Competitor: 'Competitor',
   CompetitiveMove: 'CompetitiveMove',

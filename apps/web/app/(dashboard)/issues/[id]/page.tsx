@@ -14,7 +14,7 @@ const SingleIssuePage = async ({
 }) => {
   //
   const { id } = await params;
-  const { token } = await getSession();
+  const session = await getSession();
 
   const { success, data: issue } = await getIssue(id);
 
@@ -29,11 +29,17 @@ const SingleIssuePage = async ({
       >
         {null}
       </Header>
-      <ExpandedLayoutContainer
-        sidebar={<IssueSidebar issueId={id} />}
-      >
+      <ExpandedLayoutContainer sidebar={<IssueSidebar issueId={id} />}>
         <div className="p-4">
-          <IssueDetails id={id} />
+          <IssueDetails
+            id={id}
+            currentUser={{
+              id: session.userId,
+              name: session.name,
+              image: session.image || undefined,
+            }}
+            organizationId={session.org}
+          />
         </div>
       </ExpandedLayoutContainer>
     </>
