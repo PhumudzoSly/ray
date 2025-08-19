@@ -160,6 +160,16 @@ export async function getOrgMembers() {
   return data?.members;
 }
 
+export async function getUser(id: string) {
+  await getSession();
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return user;
+}
+
 export async function updateOrganizationName(
   organizationId: string,
   name: string
@@ -379,16 +389,4 @@ export async function deactivateApiKey(keyId: string) {
         error instanceof Error ? error.message : "Failed to deactivate API key",
     };
   }
-}
-
-export async function getUser(id: string) {
-  await getSession();
-
-  const user = await prisma.user.findFirst({
-    where: {
-      id,
-    },
-  });
-
-  return user;
 }

@@ -43,6 +43,7 @@ export default async function DocPage({ params }: DocPageProps) {
           initialContent={initialContent}
         />
       </div>
+      <Separator />
     </div>
   );
 }
