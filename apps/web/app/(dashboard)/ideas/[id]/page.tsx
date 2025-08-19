@@ -68,7 +68,7 @@ function ValidationOverviewSkeleton() {
 
 // Main content component
 async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
-  const validation = await getValidationOverview({ ideaId });
+  const validation = await getValidationOverview({ ideaId: ideaId });
 
   if (!validation) {
     return (
@@ -125,13 +125,13 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
     },
     {
       title: "Audience Segmentation",
-      status: validation.TargetAudienceSegmentation?.status,
+      status: undefined, // TargetAudienceSegmentation model doesn't have status property
       score: validation.TargetAudienceSegmentation?.overallSegmentationScore,
       progress: undefined
     },
     {
       title: "Pricing Strategy",
-      status: validation.PricingStrategyAnalysis?.status,
+      status: undefined, // PricingStrategyAnalysis model doesn't have status property
       score: validation.PricingStrategyAnalysis?.overallPricingScore,
       progress: undefined
     }
@@ -162,28 +162,22 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
     {
       title: "Audience Segmentation",
       progress: validation.TargetAudienceSegmentation?.overallSegmentationScore,
-      status: validation.TargetAudienceSegmentation?.status
+      status: undefined // TargetAudienceSegmentation model doesn't have status property
     },
     {
       title: "Pricing Strategy",
       progress: validation.PricingStrategyAnalysis?.overallPricingScore,
-      status: validation.PricingStrategyAnalysis?.status
+      status: undefined // PricingStrategyAnalysis model doesn't have status property
     }
   ];
 
   // Prepare action items data
-  const actionItems = [
+  const actionItems: any[] = [
     // This would come from actual action items in the database
   ];
 
-  // Prepare feedback data
-  const feedbackItems = validation.productMarketFitAnalysis?.feedback.map(feedback => ({
-    id: feedback.id,
-    source: feedback.source,
-    sentiment: feedback.sentiment,
-    content: feedback.content,
-    tags: feedback.tags
-  })) || [];
+  // Prepare feedback data (feedback property doesn't exist on ProductMarketFitAnalysis model)
+  const feedbackItems: any[] = [];
 
   // Get DAU/MAU ratio from metrics
   const dauMauMetric = pmfMetrics.find(metric => metric.name === "DAU_MAU_Ratio");

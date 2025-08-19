@@ -89,6 +89,7 @@ export const getProjectMilestones = async (projectId: string) => {
       createdAt: "desc",
     },
   });
+};
 
 // Get all milestones in the organization with basic info
 export const getAllMilestones = async () => {

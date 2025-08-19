@@ -517,6 +517,16 @@ exports.Prisma.AssetDownloadScalarFieldEnum = {
   downloadedAt: 'downloadedAt'
 };
 
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  version: 'version',
+  projectId: 'projectId',
+  issueId: 'issueId',
+  featureId: 'featureId',
+  milestoneId: 'milestoneId'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1367,6 +1377,7 @@ exports.Prisma.ModelName = {
   Referral: 'Referral',
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
+  Document: 'Document',
   User: 'User',
   Session: 'Session',
   Account: 'Account',

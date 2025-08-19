@@ -25,6 +25,7 @@ model Project {
     waitlists      Waitlist[]
     features       Feature[]
     milestones     Milestone[]
+    document       Document?
 
     @@index([ideaId])
     @@index([organizationId])
@@ -73,6 +74,9 @@ model Issue {
 
     // Changelog entries
     changelogEntries ChangelogEntry[]
+
+    // Documents
+    document Document?
 
     @@index([organizationId, achieved])
     @@index([projectId, organizationId, achieved])
@@ -449,6 +453,9 @@ model Feature {
     // Changelog entries
     changelogEntries ChangelogEntry[]
 
+    // Documents
+    document Document?
+
     @@index([projectId])
     @@index([milestoneId])
     @@map("feature")
@@ -514,6 +521,9 @@ model Milestone {
     // Dependencies
     dependsOn MilestoneDependency[] @relation("Dependants")
     blocking  MilestoneDependency[] @relation("Dependencies")
+
+    // Documents
+    document Document?
 
     @@index([projectId])
     @@index([organizationId])
@@ -605,4 +615,23 @@ model AssetDownload {
     @@index([downloadedAt])
     @@index([assetId, downloadedAt])
     @@map("asset_download")
+}
+
+model Document {
+    id          String     @id @default(uuid())
+    content     Json
+    version     Int        @default(1)
+    project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId   String?    @unique
+    issue       Issue?     @relation(fields: [issueId], references: [id], onDelete: Cascade)
+    issueId     String?    @unique
+    feature     Feature?   @relation(fields: [featureId], references: [id], onDelete: Cascade)
+    featureId   String?    @unique
+    milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+    milestoneId String?    @unique
+
+    @@index([projectId])
+    @@index([issueId])
+    @@index([featureId])
+    @@index([milestoneId])
 }

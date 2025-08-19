@@ -7,9 +7,7 @@ export const getCustomerNeedAnalysis = async ({ ideaId }: { ideaId: string }) =>
   await getSession();
   return await prisma.customerNeedAnalysis.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       customerNeeds: true,

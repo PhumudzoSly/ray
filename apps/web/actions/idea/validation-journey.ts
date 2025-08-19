@@ -7,9 +7,7 @@ export const getCustomerJourneyMapping = async ({ ideaId }: { ideaId: string }) 
   await getSession();
   return await prisma.customerJourneyMapping.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       journeyStages: true,

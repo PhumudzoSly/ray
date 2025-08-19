@@ -7,9 +7,7 @@ export const getPricingValidation = async ({ ideaId }: { ideaId: string }) => {
   await getSession();
   return await prisma.pricingStrategyAnalysis.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       pricingTiers: true,

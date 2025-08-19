@@ -5,6 +5,7 @@ import * as projectActions from "@/actions/project";
 import { ProjectInfo } from "./project-info";
 import { ProjectTabs } from "./tabs";
 import { ReactNode } from "react";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 interface ProjectContentProps {
   projectId: string;
@@ -23,7 +24,11 @@ export function ProjectContent({
   });
 
   if (!project) {
-    return <div className="p-4">Loading...</div>;
+    return (
+      <div className="p-4">
+        <LoadingSpinner variant="card" />
+      </div>
+    );
   }
   return (
     <>
@@ -37,7 +42,7 @@ export function ProjectContent({
         />
       </div>
       <ProjectTabs projectId={project.id} />
-      <div className="p-4">{children}</div>
+      <div>{children}</div>
     </>
   );
 }

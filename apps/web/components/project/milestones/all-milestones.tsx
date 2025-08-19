@@ -78,7 +78,6 @@ export function AllMilestones() {
     queryFn: async () => {
       const raw = await getAllMilestones();
       return raw ?? [];
-
     },
   });
 
@@ -138,9 +137,6 @@ export function AllMilestones() {
 
     return data;
   }, [milestones, searchParams]);
-
-    },
-  });
 
   const mutation = useMutation({
     mutationFn: async (data: { milestoneId: string; status: string }) =>
@@ -294,7 +290,7 @@ export function AllMilestones() {
             New
           </Button>
         </div>
-        </div>
+      </div>
 
       {/* Filters indicator and controls */}
       <div className="px-4 py-2 bg-muted/50 border-b -mx-4">

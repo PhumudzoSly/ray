@@ -110,6 +110,8 @@ export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizati
 
 export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','downloadedAt']);
 
+export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId']);
+
 export const UserScalarFieldEnumSchema = z.enum(['id','name','email','emailVerified','image','role','createdAt','updatedAt','twoFactorEnabled']);
 
 export const SessionScalarFieldEnumSchema = z.enum(['id','expiresAt','ipAddress','userAgent','userId','activeOrganizationId','token','createdAt','updatedAt']);
@@ -1199,6 +1201,32 @@ export const AssetDownloadOptionalDefaultsSchema = AssetDownloadSchema.merge(z.o
 }))
 
 export type AssetDownloadOptionalDefaults = z.infer<typeof AssetDownloadOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// DOCUMENT SCHEMA
+/////////////////////////////////////////
+
+export const DocumentSchema = z.object({
+  id: z.string().uuid(),
+  content: JsonValueSchema,
+  version: z.number().int(),
+  projectId: z.string().nullish(),
+  issueId: z.string().nullish(),
+  featureId: z.string().nullish(),
+  milestoneId: z.string().nullish(),
+})
+
+export type Document = z.infer<typeof DocumentSchema>
+
+// DOCUMENT OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const DocumentOptionalDefaultsSchema = DocumentSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  version: z.number().int().optional(),
+}))
+
+export type DocumentOptionalDefaults = z.infer<typeof DocumentOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // USER SCHEMA

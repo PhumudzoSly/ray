@@ -43,7 +43,7 @@ interface PricingValidationPageProps {
 }
 
 async function PricingValidationContent({ ideaId }: { ideaId: string }) {
-  const pricingValidation = await getPricingValidation({ ideaId });
+  const pricingValidation = await getPricingValidation({ ideaId: ideaId });
 
   if (!pricingValidation) {
     return (

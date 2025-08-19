@@ -142,7 +142,7 @@ const getThreatLevelIcon = (threatLevel: string) => {
   }
 };
 
-const formatCurrency = (amount: number | null) => {
+const formatCurrency = (amount: number | null | undefined) => {
   if (!amount) return "N/A";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -151,7 +151,7 @@ const formatCurrency = (amount: number | null) => {
   }).format(amount);
 };
 
-const formatPercentage = (value: number | null) => {
+const formatPercentage = (value: number | null | undefined) => {
   if (value === null || value === undefined) return "N/A";
   return `${value}%`;
 };
@@ -490,7 +490,7 @@ export function CompetitorDetailsSheet({
                   />
                   <MetricCard
                     title="Employees"
-                    value={formatEmployeeCount(competitor.employeeCount)}
+                    value={formatEmployeeCount(competitor.employeeCount?.toString() ?? null)}
                     icon={Users}
                   />
                   <MetricCard
@@ -547,7 +547,7 @@ export function CompetitorDetailsSheet({
                   />
                   <ProgressMetricCard
                     title="Market Share"
-                    value={competitor.marketShare}
+                    value={competitor.marketShare ?? null}
                     max={100}
                     icon={BarChart3}
                     tooltip="Percentage of market share"
@@ -562,7 +562,7 @@ export function CompetitorDetailsSheet({
                 <div className="grid grid-cols-1 gap-4">
                   <ProgressMetricCard
                     title="Customer Satisfaction"
-                    value={competitor.customerSatisfaction}
+                    value={competitor.customerSatisfaction ?? null}
                     max={10}
                     icon={Star}
                     variant="success"

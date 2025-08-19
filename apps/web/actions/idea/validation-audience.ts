@@ -7,9 +7,7 @@ export const getAudienceValidation = async ({ ideaId }: { ideaId: string }) => {
   await getSession();
   return await prisma.targetAudienceSegmentation.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       audienceSegments: true,

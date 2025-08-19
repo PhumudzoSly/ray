@@ -20,9 +20,7 @@ import {
   Pie,
   Cell,
   ScatterChart,
-  Scatter,
-  BubbleChart,
-  Bubble
+  Scatter
 } from "recharts";
 import { 
   JourneyOverview, 
@@ -43,9 +41,9 @@ interface AudienceValidationPageProps {
 
 async function AudienceValidationContent({ ideaId }: { ideaId: string }) {
   const [audienceValidation, journeyMapping, needAnalysis] = await Promise.all([
-    getAudienceValidation({ ideaId }),
-    getCustomerJourneyMapping({ ideaId }),
-    getCustomerNeedAnalysis({ ideaId })
+    getAudienceValidation({ ideaId: ideaId }),
+    getCustomerJourneyMapping({ ideaId: ideaId }),
+    getCustomerNeedAnalysis({ ideaId: ideaId })
   ]);
 
   if (!audienceValidation && !journeyMapping && !needAnalysis) {

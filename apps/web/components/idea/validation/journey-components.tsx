@@ -284,7 +284,7 @@ export function PainPointHeatmap({ painPoints = [] }: PainPointHeatmapProps) {
     if (!stagePainPoints[pp.journeyStage]) {
       stagePainPoints[pp.journeyStage] = [];
     }
-    stagePainPoints[pp.journeyStage].push({
+    stagePainPoints[pp.journeyStage]?.push({
       name: pp.painPointName,
       severity: pp.severityScore ?? 0,
       frequency: pp.frequencyScore ?? 0

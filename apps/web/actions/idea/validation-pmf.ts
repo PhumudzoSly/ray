@@ -7,9 +7,7 @@ export const getProductMarketFitAnalysis = async ({ ideaId }: { ideaId: string }
   await getSession();
   return await prisma.productMarketFitAnalysis.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       metrics: true,

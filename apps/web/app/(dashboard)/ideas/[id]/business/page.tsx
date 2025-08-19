@@ -37,10 +37,10 @@ interface BusinessValidationPageProps {
 
 async function BusinessValidationContent({ ideaId }: { ideaId: string }) {
   const [businessValidation, marketValidation, riskValidation, trendValidation] = await Promise.all([
-    getBusinessValidation({ ideaId }),
-    getMarketValidation({ ideaId }),
-    getRiskValidation({ ideaId }),
-    getMarketTrendAnalysis({ ideaId })
+    getBusinessValidation({ ideaId: ideaId }),
+    getMarketValidation({ ideaId: ideaId }),
+    getRiskValidation({ ideaId: ideaId }),
+    getMarketTrendAnalysis({ ideaId: ideaId })
   ]);
 
   if (!businessValidation && !marketValidation && !riskValidation && !trendValidation) {
@@ -365,7 +365,7 @@ async function BusinessValidationContent({ ideaId }: { ideaId: string }) {
                     <ChartContainer config={{}} className="h-full w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <FunnelChart>
-                          <Tooltip content={<ChartTooltipContent />} />
+                          <ChartTooltip content={<ChartTooltipContent />} />
                           <Funnel
                             dataKey="value"
                             data={marketSizeData}

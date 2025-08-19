@@ -1,27 +1,44 @@
-import { Comments } from "@/components/liveblocks/comments";
-import { Room } from "@/components/liveblocks/room";
-import Editor from "@/components/shared/editor";
-import { Inbox } from "lucide-react";
+import { CollaborativeEditor } from "@/components/collaborative-editor";
+import { getSession } from "@/actions/account/user";
+import { getEntityDocumentContent } from "@/actions/documents/document";
+import { Separator } from "@workspace/ui/components/separator";
 
+// This comment is added to trigger a re-compilation and ensure type resolution.
 interface DocPageProps {
   params: Promise<{ id: string }>;
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  const id = (await params).id;
+  const session = await getSession();
+  const projectId = (await params).id;
+
+  // Load existing document content if it exists
+  const documentResult = await getEntityDocumentContent({
+    entityType: "project",
+    entityId: projectId,
+  });
+
+  const initialContent = documentResult.success
+    ? documentResult.document.content
+    : undefined;
 
   return (
-    <div>
-      <Room id={id}>
-        <Editor />
-      </Room>
-      <Room id={`${id}-comments`}>
-        <div className="flex items-center gap-2 mt-10 mb-4">
-          <Inbox size={18} />
-          <h6>Comments</h6>
-        </div>
-        <Comments id={`${id}-comments`} />
-      </Room>
+    <div className=" mx-auto">
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold">Project Documentation</h1>
+        <p>Collaborate with your team on the requirements of this project</p>
+      </div>
+      <Separator />
+      <CollaborativeEditor
+        user={{
+          id: session.userId,
+          name: session.name,
+        }}
+        entityType="project"
+        entityId={projectId}
+        roomName={`project-${projectId}`}
+        initialContent={initialContent}
+      />
     </div>
   );
 }

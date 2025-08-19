@@ -7,9 +7,7 @@ export const getMarketTrendAnalysis = async ({ ideaId }: { ideaId: string }) => 
   await getSession();
   return await prisma.marketTrendAnalysis.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       marketTrends: {

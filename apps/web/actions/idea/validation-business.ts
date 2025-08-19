@@ -7,9 +7,7 @@ export const getBusinessValidation = async ({ ideaId }: { ideaId: string }) => {
   await getSession();
   return await prisma.businessValidation.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       businessInsights: true,

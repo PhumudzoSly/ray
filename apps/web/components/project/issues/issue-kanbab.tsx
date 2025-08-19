@@ -34,7 +34,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       status: IssueStatus;
     }) => {
       // Only pass the status field to avoid Prisma validation errors
-      const result = await issueActions.updateIssue(issueId, { status });
+      const result = await issueActions.updateIssue(issueId, { status } as any);
       
       // Check if the update was successful
       if (!result.success) {
@@ -139,7 +139,7 @@ export function IssuesKanban({ issues, showProject }: IssuesKanbanProps) {
       try {
         await updateStatusMutation.mutateAsync({
           issueId: draggableId,
-          status: destinationStatus,
+          status: destinationStatus as IssueStatus,
         });
       } catch (error) {
         // Error handling is done in the mutation's onError callback

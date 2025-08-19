@@ -90,18 +90,14 @@ export default async function ProjectLayout({
               <ExpandedLayoutContainer
                 sidebar={
                   <ErrorBoundary>
-                    <Suspense
-                      fallback={<div className="p-4">Loading sidebar...</div>}
-                    >
+                    <Suspense fallback={<LoadingSpinner variant="text" />}>
                       <ProjectSidebar projectId={project.id} />
                     </Suspense>
                   </ErrorBoundary>
                 }
               >
                 <ErrorBoundary>
-                  <Suspense
-                    fallback={<div className="p-4">Loading content...</div>}
-                  >
+                  <Suspense fallback={<LoadingSpinner variant="card" />}>
                     <ProjectContent projectId={project.id} token={token}>
                       {children}
                     </ProjectContent>

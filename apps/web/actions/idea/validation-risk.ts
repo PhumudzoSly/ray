@@ -7,9 +7,7 @@ export const getRiskValidation = async ({ ideaId }: { ideaId: string }) => {
   await getSession();
   return await prisma.riskAnalysis.findUnique({
     where: { 
-      validation: {
-        ideaId: ideaId
-      }
+      validationId: ideaId
     },
     include: {
       riskItems: {
