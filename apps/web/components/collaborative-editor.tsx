@@ -2,12 +2,7 @@
 
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
-import {
-  BlockNoteViewEditor,
-  FloatingComposerController,
-  ThreadsSidebar,
-  useCreateBlockNote,
-} from "@blocknote/react";
+import { BlockNoteViewEditor, useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
@@ -18,11 +13,6 @@ import {
   saveDocumentContent,
   saveEntityDocumentContent,
 } from "../actions/documents/document";
-import {
-  YjsThreadStore,
-  DefaultThreadStoreAuth,
-} from "@blocknote/core/comments";
-import { getUser } from "@/actions/account/user";
 import { useTheme } from "next-themes";
 
 // Custom debounce function
@@ -105,19 +95,6 @@ export function CollaborativeEditor({
       roomName || `${entityType}-${entityId}` || documentId || "default-room"
     );
   }, [roomName, entityType, entityId, documentId]);
-
-  const threadStore = new YjsThreadStore(
-    user.id, // The active user's ID
-    doc.getMap(`${stableRoomId}-threads`), // Y.Map to store threads
-    new DefaultThreadStoreAuth(user.id, "editor") // Authorization information, see below
-  );
-
-  const [commentFilter, setCommentFilter] = useState<
-    "open" | "resolved" | "all"
-  >("open");
-  const [commentSort, setCommentSort] = useState<
-    "position" | "recent-activity" | "oldest"
-  >("position");
 
   // Initialize provider once and handle cleanup
   useEffect(() => {
@@ -248,29 +225,6 @@ export function CollaborativeEditor({
 
   const editor = useCreateBlockNote({
     initialContent,
-    comments: {
-      threadStore,
-    },
-    resolveUsers: async (userIds: string[]) => {
-      const users = await Promise.all(
-        userIds.map(async (userId) => {
-          const user = await getUser(userId);
-          if (user) {
-            return {
-              id: user.id,
-              username: user.name,
-              avatarUrl: user.image || "",
-            };
-          }
-          return null;
-        })
-      );
-
-      return users.filter(
-        (user): user is { id: string; username: string; avatarUrl: string } =>
-          user !== null
-      );
-    },
     collaboration: provider
       ? {
           provider: provider,
@@ -336,13 +290,7 @@ export function CollaborativeEditor({
         theme={theme === "dark" ? "dark" : "light"}
         editor={editor}
         className="min-h-[100px] w-full h-full max-w-none w-full"
-        renderEditor={false}
-        comments={false}
-      >
-        <BlockNoteViewEditor />
-        <FloatingComposerController />
-        <ThreadsSidebar filter={commentFilter} sort={commentSort} />
-      </BlockNoteView>
+      />
     </div>
   );
 }
