@@ -24,21 +24,25 @@ export default async function DocPage({ params }: DocPageProps) {
 
   return (
     <div className=" mx-auto">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold">Project Documentation</h1>
-        <p>Collaborate with your team on the requirements of this project</p>
+      <div className="mb-4 px-4 pt-2.5">
+        <h1 className="text-xl font-bold">Project Documentation</h1>
+        <p className="text-muted-foreground">
+          Collaborate with your team on the requirements of this project
+        </p>
       </div>
       <Separator />
-      <CollaborativeEditor
-        user={{
-          id: session.userId,
-          name: session.name,
-        }}
-        entityType="project"
-        entityId={projectId}
-        roomName={`project-${projectId}`}
-        initialContent={initialContent}
-      />
+      <div className="my-5">
+        <CollaborativeEditor
+          user={{
+            id: session.userId,
+            name: session.name,
+          }}
+          entityType="project"
+          entityId={projectId}
+          roomName={`project-${projectId}`}
+          initialContent={initialContent}
+        />
+      </div>
     </div>
   );
 }

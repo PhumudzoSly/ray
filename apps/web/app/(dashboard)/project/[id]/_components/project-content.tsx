@@ -6,6 +6,7 @@ import { ProjectInfo } from "./project-info";
 import { ProjectTabs } from "./tabs";
 import { ReactNode } from "react";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
+import { usePathname } from "next/navigation";
 
 interface ProjectContentProps {
   projectId: string;
@@ -18,6 +19,7 @@ export function ProjectContent({
   token,
   children,
 }: ProjectContentProps) {
+  const pathname = usePathname();
   const { data: project } = useQuery({
     queryKey: ["project", projectId],
     queryFn: () => projectActions.getProject(projectId),
@@ -42,7 +44,9 @@ export function ProjectContent({
         />
       </div>
       <ProjectTabs projectId={project.id} />
-      <div>{children}</div>
+      <div className={pathname === `/project/${projectId}/doc` ? "" : "p-4"}>
+        {children}
+      </div>
     </>
   );
 }
