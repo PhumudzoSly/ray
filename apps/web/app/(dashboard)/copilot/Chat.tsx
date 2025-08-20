@@ -38,6 +38,9 @@ import { Actions, Action } from "@workspace/ui/components/ai-elements/actions";
 import { RefreshCcwIcon } from "lucide-react";
 import { CopyIcon } from "lucide-react";
 import { UIMessage } from "ai";
+import { IdeaSelector } from "@/components/ui/selectors/idea-selector";
+import { IssueSelector } from "@/components/ui/selectors/issue-selector";
+import { ProjectSelector } from "@/components/ui/selectors";
 
 const Chat = ({
   initialMessages,
@@ -50,13 +53,29 @@ const Chat = ({
 }) => {
   const [input, setInput] = useState("");
   const [webSearch, setWebSearch] = useState(false);
+  const [idea, setIdea] = useState("");
+  const [project, setProject] = useState("");
+  const [issue, setIssue] = useState("");
+  const [waitlist, setWaitlist] = useState("");
+  const [roadmap, setRoadmap] = useState("");
+
   const { messages, sendMessage, status, regenerate } = useChat({
     id: `user:${userId}:org:${org}`,
     messages: initialMessages,
     transport: new DefaultChatTransport({
       api: "/api/chat",
       prepareSendMessagesRequest({ messages, id }) {
-        return { body: { message: messages[messages.length - 1], id } };
+        return {
+          body: {
+            message: messages[messages.length - 1],
+            id,
+            idea,
+            project,
+            issue,
+            waitlist,
+            roadmap,
+          },
+        };
       },
     }),
   });
@@ -69,6 +88,11 @@ const Chat = ({
         {
           body: {
             webSearch: webSearch,
+            idea,
+            project,
+            issue,
+            waitlist,
+            roadmap,
           },
         }
       );
@@ -77,7 +101,7 @@ const Chat = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
+    <div className="max-w-5xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
       <div className="flex flex-col h-full">
         <Conversation className="h-full">
           <ConversationContent>
@@ -168,18 +192,38 @@ const Chat = ({
           <PromptInput onSubmit={handleSubmit} className="mt-4">
             <PromptInputTextarea
               onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask and collaborate with Ray..."
               value={input}
             />
             <PromptInputToolbar>
-              <PromptInputTools>
-                <PromptInputButton
-                  variant={webSearch ? "default" : "ghost"}
-                  onClick={() => setWebSearch(!webSearch)}
-                >
-                  <GlobeIcon size={16} />
-                  <span>Search</span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <PromptInputButton asChild>
+                  <IdeaSelector idea={idea} onChange={setIdea} />
                 </PromptInputButton>
-              </PromptInputTools>
+                <PromptInputButton asChild>
+                  <ProjectSelector
+                    currentProject={project}
+                    onChange={(projectId: string | null) => {
+                      setProject(projectId || "");
+                      setIssue("");
+                    }}
+                  />
+                </PromptInputButton>
+                {project && (
+                  <PromptInputButton asChild>
+                    <IssueSelector
+                      projectId={project}
+                      value={issue}
+                      onChange={(issueId: string | null) =>
+                        setIssue(issueId || "")
+                      }
+                      onValueChange={(issueId: string | null) =>
+                        setIssue(issueId || "")
+                      }
+                    />
+                  </PromptInputButton>
+                )}
+              </div>
               <PromptInputSubmit disabled={!input} status={status} />
             </PromptInputToolbar>
           </PromptInput>

@@ -4,7 +4,6 @@ import Chat from "./Chat";
 import Header from "@/components/shared/header";
 import { redis } from "@/lib/redis";
 import { UIMessage } from "ai";
-import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 
 const AgentPage = async () => {
   const { org, userId } = await getSession();
@@ -17,9 +16,7 @@ const AgentPage = async () => {
   return (
     <>
       <Header crumb={[{ title: "Agent", url: "/agent" }]}>{null}</Header>
-      <ExpandedLayoutContainer sidebar={<></>}>
-        <Chat initialMessages={messages} org={org} userId={userId} />
-      </ExpandedLayoutContainer>
+      <Chat initialMessages={messages} org={org} userId={userId} />
     </>
   );
 };

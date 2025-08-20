@@ -27,12 +27,11 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   // get current message and chat id sent from client
-  const { message, model } = body as {
+  const { message, model, idea, project, issue, waitlist, roadmap } = body as {
     message: UIMessage;
     id: string;
-    model: string;
-    webSearch: boolean;
   };
+
   const { org, userId } = await getSession();
   const key = chatKey(userId, org);
   const searchClient = search.index(key);
@@ -44,7 +43,9 @@ export async function POST(req: Request) {
     history = await redis.get<UIMessage[]>(`chat:history:${userId}-${org}`);
   }
 
-  const messages = [...(history ?? []), message];
+  // Keep only the last 300 messages and add the new message
+  const recentHistory = (history ?? []).slice(-300);
+  const messages = [...recentHistory, message];
 
   const result = streamText({
     model: google("gemini-2.5-flash"),
