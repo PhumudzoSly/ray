@@ -28,6 +28,11 @@ import {
   SourcesContent,
   SourcesTrigger,
 } from "@workspace/ui/components/ai-elements/source";
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@workspace/ui/components/ai-elements/reasoning";
 import { Loader } from "@workspace/ui/components/ai-elements/loader";
 import { Actions, Action } from "@workspace/ui/components/ai-elements/actions";
 import { RefreshCcwIcon } from "lucide-react";
@@ -72,7 +77,7 @@ const Chat = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-2 relative size-full h-[calc(100vh-52px)]">
+    <div className="max-w-7xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
       <div className="flex flex-col h-full">
         <Conversation className="h-full">
           <ConversationContent>
@@ -135,17 +140,17 @@ const Chat = ({
                                 )}
                             </div>
                           );
-                        // case 'reasoning':
-                        //   return (
-                        //     <Reasoning
-                        //       key={`${message.id}-${i}`}
-                        //       className="w-full"
-                        //       isStreaming={status === 'streaming'}
-                        //     >
-                        //       <ReasoningTrigger />
-                        //       <ReasoningContent>{part.text}</ReasoningContent>
-                        //     </Reasoning>
-                        //   );
+                        case "reasoning":
+                          return (
+                            <Reasoning
+                              key={`${message.id}-${i}`}
+                              className="w-full"
+                              isStreaming={status === "streaming"}
+                            >
+                              <ReasoningTrigger />
+                              <ReasoningContent>{part.text}</ReasoningContent>
+                            </Reasoning>
+                          );
                         default:
                           return null;
                       }
@@ -159,24 +164,26 @@ const Chat = ({
           <ConversationScrollButton />
         </Conversation>
 
-        <PromptInput onSubmit={handleSubmit} className="mt-4">
-          <PromptInputTextarea
-            onChange={(e) => setInput(e.target.value)}
-            value={input}
-          />
-          <PromptInputToolbar>
-            <PromptInputTools>
-              <PromptInputButton
-                variant={webSearch ? "default" : "ghost"}
-                onClick={() => setWebSearch(!webSearch)}
-              >
-                <GlobeIcon size={16} />
-                <span>Search</span>
-              </PromptInputButton>
-            </PromptInputTools>
-            <PromptInputSubmit disabled={!input} status={status} />
-          </PromptInputToolbar>
-        </PromptInput>
+        <div className="px-4">
+          <PromptInput onSubmit={handleSubmit} className="mt-4">
+            <PromptInputTextarea
+              onChange={(e) => setInput(e.target.value)}
+              value={input}
+            />
+            <PromptInputToolbar>
+              <PromptInputTools>
+                <PromptInputButton
+                  variant={webSearch ? "default" : "ghost"}
+                  onClick={() => setWebSearch(!webSearch)}
+                >
+                  <GlobeIcon size={16} />
+                  <span>Search</span>
+                </PromptInputButton>
+              </PromptInputTools>
+              <PromptInputSubmit disabled={!input} status={status} />
+            </PromptInputToolbar>
+          </PromptInput>
+        </div>
       </div>
     </div>
   );

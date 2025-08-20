@@ -61,15 +61,6 @@ const data: NavData = {
       url: "/agent",
       icon: Bot,
     },
-    {
-      name: "Inbox",
-      url: "/inbox",
-      icon: MessageCircleCode,
-      badge: {
-        text: "Coming soon",
-        variant: "warning",
-      },
-    },
   ],
   build: [
     {
@@ -81,6 +72,11 @@ const data: NavData = {
       name: "Projects",
       url: "/project",
       icon: TbListDetails,
+    },
+    {
+      name: "Milestones",
+      url: "/milestones",
+      icon: TbProgressCheck,
     },
     {
       name: "Issues",

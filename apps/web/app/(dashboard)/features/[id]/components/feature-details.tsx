@@ -25,6 +25,8 @@ import {
   getFeatureHierarchy,
   updateFeature,
 } from "@/actions/project/features";
+import { CollaborativeEditor } from "@/components/collaborative-editor";
+import { Separator } from "@workspace/ui/components/separator";
 
 const FeatureDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<
@@ -241,14 +243,11 @@ const FeatureDetails = ({ id }: { id: string }) => {
 
       {view === "prd" ? (
         <>
-          <Room id={id}>
-            <div>
-              <Editor />
-            </div>
-          </Room>
-
-          {/* Comments Section */}
-          <div className="mt-10 border rounded-lg p-6 bg-card">
+          <div className="my-5">
+            <CollaborativeEditor entityType="feature" entityId={id} />
+          </div>
+          <Separator />
+          <div className="p-4">
             <CommentThread entityType="feature" entityId={id} />
           </div>
         </>

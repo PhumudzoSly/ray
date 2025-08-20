@@ -56,7 +56,7 @@ export type InputJsonValueType = z.infer<typeof InputJsonValueSchema>;
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const CommentScalarFieldEnumSchema = z.enum(['id','content','organizationId','authorId','parentCommentId','projectId','issueId','featureId','milestoneId','mentionedUserIds','isEdited','isDeleted','createdAt','updatedAt','editedAt']);
+export const CommentScalarFieldEnumSchema = z.enum(['id','content','organizationId','authorId','parentCommentId','projectId','issueId','featureId','milestoneId','boardId','mentionedUserIds','isEdited','isDeleted','createdAt','updatedAt','editedAt']);
 
 export const CommentAttachmentScalarFieldEnumSchema = z.enum(['id','commentId','fileName','originalName','mimeType','fileSize','url','thumbnailUrl','organizationId','uploadedById','createdAt']);
 
@@ -117,6 +117,8 @@ export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizati
 export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','downloadedAt']);
 
 export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId']);
+
+export const BoardScalarFieldEnumSchema = z.enum(['id','content','projectId','createdAt','updatedAt']);
 
 export const UserScalarFieldEnumSchema = z.enum(['id','name','email','emailVerified','image','role','createdAt','updatedAt','twoFactorEnabled']);
 
@@ -374,6 +376,7 @@ export const CommentSchema = z.object({
   issueId: z.string().nullish(),
   featureId: z.string().nullish(),
   milestoneId: z.string().nullish(),
+  boardId: z.string().nullish(),
   mentionedUserIds: z.string().array(),
   isEdited: z.boolean(),
   isDeleted: z.boolean(),
@@ -1325,6 +1328,31 @@ export const DocumentOptionalDefaultsSchema = DocumentSchema.merge(z.object({
 }))
 
 export type DocumentOptionalDefaults = z.infer<typeof DocumentOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// BOARD SCHEMA
+/////////////////////////////////////////
+
+export const BoardSchema = z.object({
+  id: z.string().uuid(),
+  content: z.instanceof(Buffer).nullish(),
+  projectId: z.string(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type Board = z.infer<typeof BoardSchema>
+
+// BOARD OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const BoardOptionalDefaultsSchema = BoardSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type BoardOptionalDefaults = z.infer<typeof BoardOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // USER SCHEMA

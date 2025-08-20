@@ -2,13 +2,14 @@
 
 import "tldraw/tldraw.css";
 import { Tldraw, DefaultStylePanel } from "tldraw";
-import { useStorageStore } from "./useStorageStore";
+import { useYjsStore } from "./useYjsStore";
 import { useSession } from "@/context/session-context";
 import { useTheme } from "next-themes";
 
 export function StorageTldraw({ id }: { id: string }) {
   const { userId, name } = useSession();
-  const store = useStorageStore({
+  const store = useYjsStore({
+    projectId: id,
     user: { id: userId || "", name, color: "#f7f7" },
   });
 

@@ -130,6 +130,7 @@ exports.Prisma.CommentScalarFieldEnum = {
   issueId: 'issueId',
   featureId: 'featureId',
   milestoneId: 'milestoneId',
+  boardId: 'boardId',
   mentionedUserIds: 'mentionedUserIds',
   isEdited: 'isEdited',
   isDeleted: 'isDeleted',
@@ -566,6 +567,14 @@ exports.Prisma.DocumentScalarFieldEnum = {
   issueId: 'issueId',
   featureId: 'featureId',
   milestoneId: 'milestoneId'
+};
+
+exports.Prisma.BoardScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  projectId: 'projectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.UserScalarFieldEnum = {
@@ -1422,6 +1431,7 @@ exports.Prisma.ModelName = {
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
   Document: 'Document',
+  Board: 'Board',
   User: 'User',
   Session: 'Session',
   Account: 'Account',

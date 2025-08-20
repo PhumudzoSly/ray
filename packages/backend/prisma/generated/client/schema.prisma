@@ -20,6 +20,8 @@ model Comment {
   feature     Feature?   @relation(fields: [featureId], references: [id], onDelete: Cascade)
   milestoneId String?
   milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  boardId     String?
+  board       Board?     @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
   // Comment metadata
   mentionedUserIds String[] // Array of user IDs for efficient querying
@@ -39,10 +41,12 @@ model Comment {
   @@index([issueId])
   @@index([featureId])
   @@index([milestoneId])
+  @@index([boardId])
   @@index([organizationId, projectId])
   @@index([organizationId, issueId])
   @@index([organizationId, featureId])
   @@index([organizationId, milestoneId])
+  @@index([organizationId, boardId])
   @@index([createdAt])
   @@index([mentionedUserIds])
   @@index([parentCommentId])
@@ -574,6 +578,7 @@ model Project {
 
   // Comment relations
   comments Comment[]
+  board    Board?
 
   @@index([ideaId])
   @@index([organizationId])
@@ -1185,6 +1190,18 @@ model Document {
   @@index([issueId])
   @@index([featureId])
   @@index([milestoneId])
+}
+
+model Board {
+  id        String    @id @default(uuid())
+  content   Bytes?
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  comments  Comment[]
+
+  @@map("board")
 }
 
 generator client {
