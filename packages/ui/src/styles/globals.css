@@ -178,9 +178,9 @@
 /* Base theme */
 /* Start of Selection */
 .bn-container[data-theming-css-variables-demo][data-color-scheme] {
-  /* --bn-colors-editor-text: var(--foreground); */
+  --bn-colors-editor-text: var(--foreground);
   --bn-colors-editor-background: var(--background);
-  /* --bn-colors-menu-text: var(--popover-foreground); */
+  --bn-colors-menu-text: var(--popover-foreground);
   --bn-colors-menu-background: var(--popover);
   /* --bn-colors-tooltip-text: var(--popover-foreground); */
   /* --bn-colors-tooltip-background: var(--popover); */

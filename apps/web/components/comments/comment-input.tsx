@@ -6,13 +6,14 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Document from "@tiptap/extension-document";
 import Mention from "@tiptap/extension-mention";
-import { Send, Paperclip, Smile } from "lucide-react";
+import { Send, Paperclip, Smile, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 import { suggestion } from "./mention-suggestion";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+import { uploadFiles } from "@/lib/uploadthing";
 
 // Add mention styles
 const mentionStyles = `
@@ -37,8 +38,26 @@ export interface OrganizationMember {
   image?: string;
 }
 
+export interface UploadedCommentFile {
+  key: string;
+  url: string;
+  name: string;
+  size: number;
+  type: string;
+}
+
+interface AttachmentItem {
+  id: string;
+  file: File;
+  progress: number; // 0-100
+  status: "pending" | "uploading" | "success" | "error" | "canceled";
+  error?: string;
+  uploaded?: UploadedCommentFile;
+  controller?: AbortController;
+}
+
 export interface CommentInputProps {
-  onSubmit: (content: string, attachments: File[]) => void;
+  onSubmit: (content: string, attachments: UploadedCommentFile[]) => void;
   organizationMembers?: OrganizationMember[];
   placeholder?: string;
   initialContent?: string;
@@ -98,7 +117,7 @@ export function CommentInput({
   value, // This prop will now be used to control the editor's content
   onChange, // This prop will be used to report content changes
 }: CommentInputProps) {
-  const [attachments, setAttachments] = React.useState<File[]>([]);
+  const [attachments, setAttachments] = React.useState<AttachmentItem[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   // Internal state for editor content, controlled by `value` prop
@@ -217,6 +236,74 @@ export function CommentInput({
     }
   };
 
+  function startSingleFileUpload(file: File) {
+    const id = crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
+    const controller = new AbortController();
+
+    setAttachments((prev) => [
+      ...prev,
+      {
+        id,
+        file,
+        progress: 0,
+        status: "uploading",
+        controller,
+      },
+    ]);
+
+    uploadFiles("fileUpload", {
+      files: [file],
+      onUploadProgress: (opts: { file: File; progress: number; loaded: number; delta: number; totalLoaded: number; totalProgress: number; }) => {
+        setAttachments((prev) =>
+          prev.map((a) => (a.id === id ? { ...a, progress: opts.progress } : a))
+        );
+      },
+      signal: controller.signal as any,
+    })
+      .then((res) => {
+        const uploaded = Array.isArray(res) ? res[0] : undefined;
+        if (!uploaded || !uploaded.url || !uploaded.key) {
+          setAttachments((prev) =>
+            prev.map((a) =>
+              a.id === id
+                ? { ...a, status: "error", error: "Upload failed" }
+                : a
+            )
+          );
+          return;
+        }
+        const uploadedInfo: UploadedCommentFile = {
+          key: uploaded.key,
+          url: uploaded.url,
+          name: uploaded.name || file.name,
+          size: uploaded.size || file.size,
+          type: uploaded.type || file.type,
+        };
+        setAttachments((prev) =>
+          prev.map((a) =>
+            a.id === id
+              ? { ...a, status: "success", progress: 100, uploaded: uploadedInfo }
+              : a
+          )
+        );
+      })
+      .catch((err) => {
+        if (controller.signal.aborted) {
+          // Upload was canceled
+          setAttachments((prev) => prev.filter((a) => a.id !== id));
+          return;
+        }
+        console.error("Upload error:", err);
+        setAttachments((prev) =>
+          prev.map((a) =>
+            a.id === id
+              ? { ...a, status: "error", error: "Upload failed" }
+              : a
+          )
+        );
+      });
+  }
+
   const handleSubmit = React.useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -225,9 +312,10 @@ export function CommentInput({
 
       // Persist mentions as user:{id} while showing names in the editor
       const content = serializeContentWithMentions(editor);
-      if (!content && attachments.length === 0) return;
+      const successful = attachments.filter((a) => a.status === "success" && a.uploaded).map((a) => a.uploaded!)
+      if (!content && successful.length === 0) return;
 
-      onSubmit(content, attachments);
+      onSubmit(content, successful);
 
       // Clear editor and attachments after submit
       editor.commands.clearContent();
@@ -250,7 +338,7 @@ export function CommentInput({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []);
 
-      // Validate file count
+      // Validate file count (count all items including uploading/failed)
       if (attachments.length + files.length > maxAttachments) {
         alert(`Maximum ${maxAttachments} files allowed`);
         return;
@@ -263,7 +351,8 @@ export function CommentInput({
         return;
       }
 
-      setAttachments((prev) => [...prev, ...files]);
+      // Start uploads immediately
+      files.forEach((file) => startSingleFileUpload(file));
 
       // Reset input
       if (fileInputRef.current) {
@@ -274,7 +363,32 @@ export function CommentInput({
   );
 
   const removeAttachment = React.useCallback((index: number) => {
-    setAttachments((prev) => prev.filter((_, i) => i !== index));
+    setAttachments((prev) => {
+      const target = prev[index];
+      if (!target) return prev;
+
+      // Cancel in-progress uploads
+      if (target.status === "uploading" && target.controller) {
+        try {
+          target.controller.abort();
+        } catch {}
+        // Remove immediately from UI
+        return prev.filter((_, i) => i !== index);
+      }
+
+      // Delete already-uploaded file from storage
+      if (target.status === "success" && target.uploaded?.key) {
+        const key = target.uploaded.key;
+        // Fire and forget deletion
+        fetch("/api/uploadthing/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ keys: [key] }),
+        }).catch((e) => console.error("Failed to delete uploaded file", e));
+      }
+
+      return prev.filter((_, i) => i !== index);
+    });
   }, []);
 
   const triggerFileSelect = React.useCallback(() => {
@@ -295,6 +409,8 @@ export function CommentInput({
     );
   }
 
+  const hasSuccessfulAttachment = attachments.some((a) => a.status === "success");
+
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-3", className)}>
       {/* Editor */}
@@ -313,16 +429,42 @@ export function CommentInput({
         <div className="space-y-2">
           <div className="text-sm font-medium text-gray-700">Attachments:</div>
           <div className="space-y-1">
-            {attachments.map((file, index) => (
+            {attachments.map((item, index) => (
               <div
-                key={index}
+                key={item.id}
                 className="flex items-center justify-between p-2 bg-gray-50 rounded-md text-sm"
               >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="truncate">{file.name}</span>
-                  <span className="text-xs text-gray-500 flex-shrink-0">
-                    ({formatFileSize(file.size)})
-                  </span>
+                  {/* Status icon */}
+                  {item.status === "uploading" && (
+                    <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                  )}
+                  {item.status === "success" && (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  )}
+                  {item.status === "error" && (
+                    <XCircle className="h-4 w-4 text-red-500" />
+                  )}
+
+                  <div className="flex flex-col min-w-0">
+                    <div className="truncate">
+                      {item.uploaded?.name || item.file.name}
+                    </div>
+                    <div className="text-xs text-gray-500 flex-shrink-0">
+                      ({formatFileSize(item.uploaded?.size || item.file.size)})
+                    </div>
+                    {item.status === "uploading" && (
+                      <div className="mt-1 h-1 w-40 bg-gray-200 rounded overflow-hidden">
+                        <div
+                          className="h-full bg-blue-500 transition-all"
+                          style={{ width: `${item.progress}%` }}
+                        />
+                      </div>
+                    )}
+                    {item.status === "error" && (
+                      <div className="mt-1 text-xs text-red-600">{item.error || "Upload failed"}</div>
+                    )}
+                  </div>
                 </div>
                 <Button
                   type="button"
@@ -331,6 +473,8 @@ export function CommentInput({
                   onClick={() => removeAttachment(index)}
                   className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
                   disabled={disabled}
+                  aria-label={item.status === "uploading" ? "Cancel upload" : "Remove attachment"}
+                  title={item.status === "uploading" ? "Cancel upload" : "Remove attachment"}
                 >
                   ×
                 </Button>
@@ -393,7 +537,7 @@ export function CommentInput({
             size="icon"
             disabled={
               disabled ||
-              (!serializeContentWithMentions(editor).trim() && attachments.length === 0)
+              (!serializeContentWithMentions(editor).trim() && !hasSuccessfulAttachment)
             }
             className="h-8 w-8"
           >

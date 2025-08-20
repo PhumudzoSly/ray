@@ -1,13 +1,11 @@
 "use client";
 
-"use client";
-
 import * as React from "react";
-import { CommentInput, OrganizationMember } from "./comment-input";
+import { CommentInput, OrganizationMember, UploadedCommentFile } from "./comment-input";
 // import type { OrganizationMember } from "@/actions/comments/users";
 
 export interface CommentEditorProps {
-  onSubmit: (content: string, attachments: File[]) => void;
+  onSubmit: (content: string, attachments: UploadedCommentFile[]) => void;
   organizationMembers: OrganizationMember[];
   placeholder?: string;
   initialContent?: string;
@@ -31,7 +29,7 @@ export function CommentEditor({
 }: CommentEditorProps) {
   const [content, setContent] = React.useState(initialContent);
 
-  const handleSubmit = (content: string, attachments: File[]) => {
+  const handleSubmit = (content: string, attachments: UploadedCommentFile[]) => {
     onSubmit(content, attachments);
     setContent(""); // Clear content after submission
   };

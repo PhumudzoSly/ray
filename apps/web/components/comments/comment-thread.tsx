@@ -21,8 +21,8 @@ import {
   getOrganizationMembers,
   type OrganizationMember,
 } from "@/actions/comments/users";
-import { uploadFiles } from "@/lib/uploadthing";
 import { createCommentAttachment } from "@/actions/comments/attachments";
+import type { UploadedCommentFile } from "./comment-input";
 
 export interface CommentThreadProps {
   entityType: CommentEntityType;
@@ -46,7 +46,6 @@ export function CommentThread({
   const [allComments, setAllComments] = React.useState<CommentData[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
-  const [isUploading, setIsUploading] = React.useState(false);
   const queryClient = useQueryClient();
 
   // Query for comments
@@ -95,9 +94,6 @@ export function CommentThread({
   const hasMore = commentsData?.success
     ? commentsData.pagination?.hasMore
     : false;
-  const totalCount = commentsData?.success
-    ? (commentsData.pagination?.totalCount ?? 0)
-    : 0;
   const isLoading = isLoadingComments || isLoadingMembers;
   const error =
     commentsError ||
@@ -146,29 +142,18 @@ export function CommentThread({
     },
   });
 
-  // Handle new comment submission
-  const handleSubmitComment = async (content: string, attachments: File[]) => {
+  // Handle new comment submission with pre-uploaded attachments
+  const handleSubmitComment = async (
+    content: string,
+    attachments: UploadedCommentFile[]
+  ) => {
     setUploadError(null);
-    // Early exit if nothing to post
-    if (!content && attachments.length === 0) return;
+    const uploaded = attachments.filter((a) => a && a.url && a.key);
+
+    if (!content && uploaded.length === 0) return;
 
     try {
-      setIsUploading(attachments.length > 0);
-
-      // 1) Upload files first to ensure file integrity
-      const uploaded = attachments.length
-        ? await uploadFiles("fileUpload", { files: attachments })
-        : [];
-
-      // If any file missing url, treat as failure
-      const invalid = uploaded.find((u) => !u.url);
-      if (invalid) {
-        setUploadError("One or more files failed to upload. Please try again.");
-        setIsUploading(false);
-        return;
-      }
-
-      // 2) Create the comment
+      // 1) Create the comment
       const created = await createCommentMutation.mutateAsync({
         content,
         entityType,
@@ -178,11 +163,10 @@ export function CommentThread({
 
       if (!created?.success || !created.comment?.id) {
         setUploadError("Failed to create comment. Please try again.");
-        setIsUploading(false);
         return;
       }
 
-      // 3) Persist attachment metadata linked to the comment
+      // 2) Persist attachment metadata linked to the comment (files already uploaded)
       if (uploaded.length) {
         const commentId = created.comment.id as string;
         const results = await Promise.all(
@@ -190,7 +174,7 @@ export function CommentThread({
             createCommentAttachment({
               commentId,
               url: file.url,
-              fileName: (file as any).key ?? file.name,
+              fileName: file.key ?? file.name,
               originalName: file.name,
               mimeType: file.type,
               fileSize: file.size,
@@ -208,9 +192,7 @@ export function CommentThread({
       }
     } catch (e) {
       console.error("Error submitting comment with attachments", e);
-      setUploadError("Unexpected error while uploading files. Please try again.");
-    } finally {
-      setIsUploading(false);
+      setUploadError("Unexpected error while saving comment. Please try again.");
     }
   };
 
@@ -254,10 +236,12 @@ export function CommentThread({
 
   // Load more comments
   const handleLoadMore = () => {
-    if (!isFetching && hasMore) {
-      setCurrentPage(currentPage + 1);
-    }
+    if (!isFetching && hasMore) setCurrentPage(currentPage + 1);
   };
+
+  const totalCount = commentsData?.success
+    ? (commentsData.pagination?.totalCount ?? 0)
+    : 0;
 
   if (isLoading && allComments.length === 0) {
     return (
@@ -305,7 +289,7 @@ export function CommentThread({
       <CommentEditor
         onSubmit={handleSubmitComment}
         organizationMembers={organizationMembers}
-        disabled={createCommentMutation.isPending || isUploading}
+        disabled={createCommentMutation.isPending}
         placeholder={`Add a comment to this ${entityType}...`}
       />
 

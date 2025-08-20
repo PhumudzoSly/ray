@@ -2,7 +2,7 @@
 
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
-import { BlockNoteViewEditor, useCreateBlockNote } from "@blocknote/react";
+import { useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
@@ -289,6 +289,7 @@ export function CollaborativeEditor({
       <BlockNoteView
         theme={theme === "dark" ? "dark" : "light"}
         editor={editor}
+        data-theming-css-variables-demo
         className="min-h-[100px] w-full h-full max-w-none w-full"
       />
     </div>

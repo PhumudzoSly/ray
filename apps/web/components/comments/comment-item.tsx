@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
-import { MoreHorizontal, Edit, Trash2, Plus } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Plus, ExternalLink } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -115,6 +115,14 @@ export function CommentItem({
     });
   };
 
+  function formatFileSize(bytes: number) {
+    if (!bytes) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  }
+
   return (
     <div className={cn("flex gap-3 py-4", className)}>
       {/* Avatar */}
@@ -210,14 +218,31 @@ export function CommentItem({
             {comment.attachments.map((attachment) => (
               <div
                 key={attachment.id}
-                className="flex items-center gap-2 p-2 bg-muted rounded-md text-sm"
+                className="flex items-center justify-between p-2 bg-muted rounded-md text-sm"
               >
-                <span className="text-foreground">
-                  {attachment.originalName}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  ({Math.round(attachment.fileSize / 1024)} KB)
-                </span>
+                <div className="flex items-center gap-2 min-w-0">
+                  <a
+                    href={attachment.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="truncate text-primary hover:underline"
+                    title={attachment.originalName}
+                  >
+                    {attachment.originalName}
+                  </a>
+                  <span className="text-xs text-muted-foreground flex-shrink-0">
+                    ({formatFileSize(attachment.fileSize)} · {attachment.mimeType})
+                  </span>
+                </div>
+                <a
+                  href={attachment.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                  aria-label="Open attachment"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
               </div>
             ))}
           </div>
@@ -248,21 +273,21 @@ export function CommentItem({
                 aria-label="Add reaction"
               >
                 <Plus className="h-3 w-3" />
+                React
               </button>
             </PopoverTrigger>
-            <PopoverContent align="start" className="p-2 w-56">
-              <div className="grid grid-cols-8 gap-1">
+            <PopoverContent className="w-auto p-1" align="start">
+              <div className="grid grid-cols-6 gap-1">
                 {EMOJI_OPTIONS.map((emoji) => (
                   <button
                     key={emoji}
+                    className="px-1 py-0.5 text-sm hover:bg-muted rounded"
                     onClick={() => {
                       onReaction?.(comment.id, emoji);
                       setIsEmojiOpen(false);
                     }}
-                    className="h-8 w-8 flex items-center justify-center rounded border hover:bg-accent"
-                    aria-label={`React with ${emoji}`}
                   >
-                    <span className="text-lg">{emoji}</span>
+                    {emoji}
                   </button>
                 ))}
               </div>
@@ -274,7 +299,6 @@ export function CommentItem({
   );
 }
 
-// Static content
 const EMOJI_OPTIONS = [
   "👍",
   "❤️",
