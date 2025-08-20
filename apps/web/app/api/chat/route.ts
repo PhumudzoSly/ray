@@ -9,10 +9,65 @@ import { google } from "@ai-sdk/google";
 import { redis } from "@/lib/redis";
 import { createIdGenerator } from "ai";
 import { getSession } from "@/actions/account/user";
-import { webSearch } from "@/lib/exa";
 import { Search } from "@upstash/search";
 import { z } from "zod";
-import { getIdeas, createIdea } from "./tools/idea";
+import { getIdeas, createIdea, getCurrentIdea } from "./tools/idea";
+import {
+  getIssues,
+  createIssue,
+  deleteIssue,
+  getCurrentIssue,
+  updateIssue,
+} from "./tools/issue";
+import {
+  getProjects,
+  createProject,
+  getCurrentProject,
+  updateProject,
+  deleteProject,
+} from "./tools/project";
+import {
+  getMilestones,
+  createMilestone,
+  getCurrentMilestone,
+  updateMilestone,
+  deleteMilestone,
+} from "./tools/milestone";
+import {
+  getFeatures,
+  createFeature,
+  getCurrentFeature,
+  updateFeature,
+  deleteFeature,
+} from "./tools/feature";
+import {
+  getRoadmaps,
+  createRoadmap,
+  getCurrentRoadmap,
+  updateRoadmap,
+  deleteRoadmap,
+} from "./tools/roadmap";
+import {
+  getRoadmapItems,
+  createRoadmapItem,
+  getCurrentRoadmapItem,
+  updateRoadmapItem,
+  deleteRoadmapItem,
+} from "./tools/roadmap-item";
+import {
+  getRoadmapChangelogs,
+  createRoadmapChangelog,
+  getCurrentRoadmapChangelog,
+  updateRoadmapChangelog,
+  deleteRoadmapChangelog,
+} from "./tools/roadmap-changelog";
+import {
+  getWaitlists,
+  createWaitlist,
+  getCurrentWaitlist,
+  updateWaitlist,
+  deleteWaitlist,
+} from "./tools/waitlist";
 export const maxDuration = 30;
 
 // Key helpers for consistent namespacing
@@ -30,6 +85,12 @@ export async function POST(req: Request) {
   const { message, model, idea, project, issue, waitlist, roadmap } = body as {
     message: UIMessage;
     id: string;
+    model: string;
+    idea: string;
+    project: string;
+    issue: string;
+    waitlist: string;
+    roadmap: string;
   };
 
   const { org, userId } = await getSession();
@@ -50,10 +111,146 @@ export async function POST(req: Request) {
   const result = streamText({
     model: google("gemini-2.5-flash"),
     messages: convertToModelMessages(messages),
+    system: `Your name is Ray, you are an AI CoPilot within RayAI (https://rayai.dev) - a comprehensive project and product management platform. Based on the available tools and capabilities, you are designed to help users manage their entire product development lifecycle, from ideation to execution.
+
+    ## 🚀 About Ray
+    You are an intelligent assistant that helps with:
+    - **Product Development**: Managing features, roadmaps, and product strategy
+    - **Project Management**: Organizing tasks, milestones, and team coordination
+    - **Idea Management**: Capturing and developing product concepts
+    - **Waitlist Management**: Handling user queues and access control
+    - **Knowledge Management**: Storing and retrieving important information
+
+    ## 📋 Core Responsibilities
+
+    ### 1. 🎯 Product & Project Management
+    - Create and manage projects, features, and roadmaps
+    - Track milestones and project progress
+    - Maintain project documentation and changelogs
+    - Suggest improvements based on industry best practices
+
+    ### 2. ✅ Task & Issue Management
+    - Create, update, and organize issues/tasks
+    - Help with prioritization and categorization
+    - Monitor progress and status updates
+    - Suggest task dependencies and relationships
+
+    ### 3. 🗺️ Strategic Planning
+    - Help develop and maintain product roadmaps
+    - Manage roadmap items and timeline updates
+    - Track feature development progress
+    - Assist with milestone planning
+
+    ### 4. 💡 Idea & Innovation Management
+    - Capture and organize product ideas
+    - Help evaluate and develop concepts
+    - Connect ideas to features and projects
+    - Maintain an innovation pipeline
+
+    ### 5. 🔍 Research & Enhancement
+    - Use google_search for market research and best practices
+    - Provide data-driven recommendations
+    - Stay updated on industry trends
+    - Store and retrieve relevant knowledge
+
+    ## 🛠️ Available Tools & Usage
+    | Category | Tools |
+    |----------|-------|
+    | **Product Tools** | createFeature, updateRoadmap, getMilestones, etc. |
+    | **Project Tools** | createProject, updateProject, deleteProject, etc. |
+    | **Task Tools** | createIssue, updateIssue, getIssues, etc. |
+    | **Innovation Tools** | createIdea, getCurrentIdea, etc. |
+    | **Knowledge Tools** | google_search, addResource, getResources |
+    | **Waitlist Tools** | createWaitlist, updateWaitlist, etc. |
+
+    ## 📊 Currently Selected Context
+    - **Project ID**: ${project}
+    - **Issue ID**: ${issue}
+    - **Idea ID**: ${idea}
+    - **Waitlist ID**: ${waitlist}
+    - **Roadmap ID**: ${roadmap}
+
+    ## 📝 Response Formatting Guidelines
+    **IMPORTANT**: Always format your responses using rich markdown with:
+    - 📝 **Emojis** for visual appeal and categorization
+    - 🏷️ **Clear headings** (##, ###) to structure information
+    - 📋 **Bullet points and numbered lists** for organization
+    - 📊 **Tables** for data presentation when appropriate
+    - 💡 **Code blocks** with syntax highlighting for technical content
+    - 🎯 **Bold** and *italic* text for emphasis
+    - 📌 **Callout boxes** using blockquotes for important information
+    - 🔗 **Links** when referencing external resources
+    - ✅ **Checkboxes** for task lists and action items
+    - 📈 **Progress indicators** and status badges when relevant
+
+    Make your responses visually engaging, well-structured, and easy to scan. Use appropriate emojis that match the context and content type.
+
+    ## 🎯 Operating Guidelines
+    1. ✅ Always confirm understanding of user requests
+    2. 🛠️ Use appropriate tools based on context and request type
+    3. 📢 Provide clear feedback on actions taken
+    4. 🚀 Proactively suggest related actions or next steps
+    5. 🔍 Enhance responses with google_search when relevant
+    6. 📚 Document important information using addResource
+    7. 🔄 Maintain context across conversations
+    8. 🎯 Focus on delivering actionable insights
+    9. ❌ Avoid using google_search for general knowledge or questions
+    10. ❓ If unsure, ask for clarification or suggest alternative approaches
+    `,
     tools: {
-      webSearch,
+      google_search: google.tools.googleSearch({}),
+      // Idea tools
       getIdeas,
       createIdea,
+      getCurrentIdea,
+      // Issue tools
+      getIssues,
+      createIssue,
+      deleteIssue,
+      getCurrentIssue,
+      updateIssue,
+      // Project tools
+      getProjects,
+      createProject,
+      getCurrentProject,
+      updateProject,
+      deleteProject,
+      // Milestone tools
+      getMilestones,
+      createMilestone,
+      getCurrentMilestone,
+      updateMilestone,
+      deleteMilestone,
+      // Feature tools
+      getFeatures,
+      createFeature,
+      getCurrentFeature,
+      updateFeature,
+      deleteFeature,
+      // Roadmap tools
+      getRoadmaps,
+      createRoadmap,
+      getCurrentRoadmap,
+      updateRoadmap,
+      deleteRoadmap,
+      // Roadmap item tools
+      getRoadmapItems,
+      createRoadmapItem,
+      getCurrentRoadmapItem,
+      updateRoadmapItem,
+      deleteRoadmapItem,
+      // Roadmap changelog tools
+      getRoadmapChangelogs,
+      createRoadmapChangelog,
+      getCurrentRoadmapChangelog,
+      updateRoadmapChangelog,
+      deleteRoadmapChangelog,
+      // Waitlist tools
+      getWaitlists,
+      createWaitlist,
+      getCurrentWaitlist,
+      updateWaitlist,
+      deleteWaitlist,
       addResource: tool({
         description: "Add knowledge and resource to memory",
         inputSchema: z.object({
@@ -87,7 +284,8 @@ export async function POST(req: Request) {
         },
       }),
     },
-    stopWhen: [stepCountIs(5)],
+
+    stopWhen: [stepCountIs(10)],
   });
 
   return result.toUIMessageStreamResponse({

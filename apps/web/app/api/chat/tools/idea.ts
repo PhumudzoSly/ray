@@ -76,3 +76,33 @@ export const createIdea = tool({
     return idea;
   },
 });
+
+export const getCurrentIdea = tool({
+  description:
+    "Get the current SaaS idea that belongs to the current organization.",
+  inputSchema: z.object({
+    ideaId: z.string().min(1).max(100).describe("The idea id"),
+  }),
+  execute: async ({ ideaId }: { ideaId: string }) => {
+    const { org } = await getSession();
+    const idea = await prisma.idea.findFirst({
+      where: {
+        id: ideaId,
+        organizationId: org,
+      },
+      include: {
+        projects: true,
+        _count: {
+          select: {
+            Competitor: true,
+            projects: true,
+          },
+        },
+      },
+    });
+
+    if (!idea)
+      return `Idea with the ID of ${ideaId} was not found, the user probably didn't select an idea or something`;
+    return idea;
+  },
+});
