@@ -14,8 +14,6 @@ import { ActivityFeed, NoData } from "@/components/shared";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
-import { Room } from "@/components/liveblocks/room";
-import Editor from "@/components/shared/editor";
 import { CommentThread } from "@/components/comments/comment-thread";
 import { BiInfoCircle } from "react-icons/bi";
 import { cn } from "@/lib/utils";

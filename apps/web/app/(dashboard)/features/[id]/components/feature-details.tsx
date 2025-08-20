@@ -16,7 +16,6 @@ import { PhaseSelector } from "@/components/ui/selectors/phase-selector";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { cn } from "@/lib/utils";
-import { Room } from "@/components/liveblocks/room";
 import Editor from "@/components/shared/editor";
 import { CommentThread } from "@/components/comments/comment-thread";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";

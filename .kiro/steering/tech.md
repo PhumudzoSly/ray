@@ -32,7 +32,6 @@
 
 ## Real-time & Collaboration
 
-- **Liveblocks**: Real-time collaboration features
 - **BlockNote**: Rich text editor with collaboration
 - **React Query**: Server state management
 

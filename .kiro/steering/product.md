@@ -30,7 +30,6 @@ A modern business validation and research platform built as a comprehensive mono
 ### Real-time Collaboration
 
 - **Live Progress Updates**: Real-time research status via streaming
-- **Collaborative Editing**: BlockNote editor with Liveblocks integration
 - **Shared Workspaces**: Team-based research collaboration
 
 ## Design Philosophy

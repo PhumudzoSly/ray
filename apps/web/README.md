@@ -34,8 +34,7 @@ GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
 GITHUB_WEBHOOK_SECRET=your_github_webhook_secret
 
-# Liveblocks
-LIVEBLOCKS_SECRET_KEY=your_liveblocks_secret_key
+
 
 # Redis (Upstash)
 UPSTASH_REDIS_REST_URL=your_redis_url
@@ -93,4 +92,3 @@ pnpm start
 - Roadmap planning
 - Waitlist management
 - GitHub integration
-- Real-time collaboration with Liveblocks 

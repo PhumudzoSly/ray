@@ -1,7 +1,4 @@
 import "@workspace/ui/globals.css";
-import "@liveblocks/react-ui/styles.css";
-import "@liveblocks/react-ui/styles/dark/attributes.css";
-import "@liveblocks/react-blocknote/styles.css";
 import type { Metadata } from "next";
 import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeProvider } from "@/context/theme-provider";
