@@ -8,144 +8,56 @@ import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 import { CommentItem } from "./comment-item";
 import { CommentEditor } from "./comment-editor";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  createComment,
-  getEntityComments,
-  updateComment,
-  deleteComment,
-  type CommentEntityType,
-  type CommentData,
-} from "@/actions/comments/comment";
-import {
-  getOrganizationMembers,
-  type OrganizationMember,
-} from "@/actions/comments/users";
-import { createCommentAttachment } from "@/actions/comments/attachments";
+import { useComments } from "@/hooks/use-comments";
+import type { CommentEntityType } from "@/types/comments";
 import type { UploadedCommentFile } from "./comment-input";
 
 export interface CommentThreadProps {
   entityType: CommentEntityType;
   entityId: string;
-  organizationId: string;
-  currentUser: {
-    id: string;
-    name: string;
-    image?: string;
-  };
   className?: string;
 }
 
 export function CommentThread({
   entityType,
   entityId,
-  organizationId,
-  currentUser,
   className,
 }: CommentThreadProps) {
-  const [allComments, setAllComments] = React.useState<CommentData[]>([]);
-  const [currentPage, setCurrentPage] = React.useState(1);
   const [uploadError, setUploadError] = React.useState<string | null>(null);
-  const queryClient = useQueryClient();
 
-  // Query for comments
+  // Use the optimistic comments hook
   const {
-    data: commentsData,
-    isLoading: isLoadingComments,
-    error: commentsError,
-    isFetching,
-  } = useQuery({
-    queryKey: ["comments", entityType, entityId, currentPage],
-    queryFn: () => getEntityComments(entityType, entityId, currentPage),
-    staleTime: 30 * 1000, // 30 seconds
+    comments,
+    pagination,
+    isLoading,
+    isError,
+    error,
+    organizationMembers,
+    createComment,
+    updateComment,
+    deleteComment,
+    toggleReaction,
+    loadMore,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    isReacting,
+    isLoadingMore,
+    hasMore,
+    refetch,
+  } = useComments({
+    entityType,
+    entityId,
   });
 
-  // Query for organization members
-  const { data: membersData, isLoading: isLoadingMembers } = useQuery({
-    queryKey: ["organization-members"],
-    queryFn: () => getOrganizationMembers(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-
-  // Update comments when data changes
-  React.useEffect(() => {
-    if (commentsData?.success) {
-      if (currentPage === 1) {
-        // First page - replace all comments
-        setAllComments((commentsData.comments || []) as CommentData[]);
-      } else {
-        // Subsequent pages - append comments
-        setAllComments((prev) => [
-          ...prev,
-          ...((commentsData.comments || []) as CommentData[]),
-        ]);
-      }
-    }
-  }, [commentsData, currentPage]);
-
-  // Reset to first page when entity changes
-  React.useEffect(() => {
-    setCurrentPage(1);
-    setAllComments([]);
-  }, [entityType, entityId]);
-
-  const organizationMembers =
-    membersData?.success && membersData.members ? membersData.members : [];
-  const hasMore = commentsData?.success
-    ? commentsData.pagination?.hasMore
-    : false;
-  const isLoading = isLoadingComments || isLoadingMembers;
-  const error =
-    commentsError ||
-    (commentsData?.success === false ? commentsData.error : null);
-
-  // Mutations for comment operations
-  const createCommentMutation = useMutation({
-    mutationFn: createComment,
-    onSuccess: () => {
-      // Reset to first page and invalidate queries
-      setCurrentPage(1);
-      setAllComments([]);
-      queryClient.invalidateQueries({
-        queryKey: ["comments", entityType, entityId],
-      });
-    },
-  });
-
-  const updateCommentMutation = useMutation({
-    mutationFn: ({
-      commentId,
-      content,
-    }: {
-      commentId: string;
-      content: string;
-    }) => updateComment(commentId, content),
-    onSuccess: () => {
-      // Reset to first page and invalidate queries
-      setCurrentPage(1);
-      setAllComments([]);
-      queryClient.invalidateQueries({
-        queryKey: ["comments", entityType, entityId],
-      });
-    },
-  });
-
-  const deleteCommentMutation = useMutation({
-    mutationFn: deleteComment,
-    onSuccess: () => {
-      // Reset to first page and invalidate queries
-      setCurrentPage(1);
-      setAllComments([]);
-      queryClient.invalidateQueries({
-        queryKey: ["comments", entityType, entityId],
-      });
-    },
-  });
+  // hasMore is already available from useComments hook
+  const totalCount = pagination?.totalCount ?? 0;
 
   // Handle new comment submission with pre-uploaded attachments
   const handleSubmitComment = async (
     content: string,
-    attachments: UploadedCommentFile[]
+    attachments: UploadedCommentFile[],
+    parentCommentId?: string
   ) => {
     setUploadError(null);
     const uploaded = attachments.filter((a) => a && a.url && a.key);
@@ -153,97 +65,43 @@ export function CommentThread({
     if (!content && uploaded.length === 0) return;
 
     try {
-      // 1) Create the comment
-      const created = await createCommentMutation.mutateAsync({
+      // Use optimistic mutation for comment creation
+      await createComment({
         content,
-        entityType,
-        entityId,
-        attachmentIds: [],
+        attachments: uploaded,
+        parentCommentId,
       });
-
-      if (!created?.success || !created.comment?.id) {
-        setUploadError("Failed to create comment. Please try again.");
-        return;
-      }
-
-      // 2) Persist attachment metadata linked to the comment (files already uploaded)
-      if (uploaded.length) {
-        const commentId = created.comment.id as string;
-        const results = await Promise.all(
-          uploaded.map((file) =>
-            createCommentAttachment({
-              commentId,
-              url: file.url,
-              fileName: file.key ?? file.name,
-              originalName: file.name,
-              mimeType: file.type,
-              fileSize: file.size,
-            })
-          )
-        );
-
-        const someFailed = results.some((r) => !r?.success);
-        if (someFailed) setUploadError("Some attachments could not be saved.");
-
-        // Ensure comments refetch to include attachments just saved
-        queryClient.invalidateQueries({
-          queryKey: ["comments", entityType, entityId],
-        });
-      }
     } catch (e) {
       console.error("Error submitting comment with attachments", e);
-      setUploadError("Unexpected error while saving comment. Please try again.");
+      setUploadError(
+        "Unexpected error while saving comment. Please try again."
+      );
     }
   };
 
   // Handle comment edit
-  const handleEditComment = async (commentId: string, content: string) => {
-    updateCommentMutation.mutate({ commentId, content });
+  const handleEditComment = (commentId: string, content: string) => {
+    updateComment({ commentId, content });
   };
 
   // Handle comment deletion
-  const handleDeleteComment = async (commentId: string) => {
-    deleteCommentMutation.mutate(commentId);
+  const handleDeleteComment = (commentId: string) => {
+    deleteComment(commentId);
   };
 
-  // Handle reaction
-  const handleReaction = async (commentId: string, emoji: string) => {
-    try {
-      // Import reaction actions dynamically to avoid circular dependencies
-      const { addCommentReaction, removeCommentReaction } = await import(
-        "@/actions/comments/reactions"
-      );
-
-      // Find the comment and check if user has already reacted
-      const comment = allComments.find((c) => c.id === commentId);
-      const reaction = comment?.reactions.find((r) => r.emoji === emoji);
-      const hasReacted = reaction?.hasReacted || false;
-
-      if (hasReacted) {
-        await removeCommentReaction(commentId, emoji);
-      } else {
-        await addCommentReaction(commentId, emoji);
-      }
-
-      // Invalidate and refetch comments to get updated reactions
-      queryClient.invalidateQueries({
-        queryKey: ["comments", entityType, entityId],
-      });
-    } catch (error) {
-      console.error("Error handling reaction:", error);
-    }
+  // Handle reaction with optimistic updates
+  const handleReaction = (commentId: string, emoji: string) => {
+    toggleReaction({ commentId, emoji });
   };
 
   // Load more comments
   const handleLoadMore = () => {
-    if (!isFetching && hasMore) setCurrentPage(currentPage + 1);
+    if (!isLoadingMore && hasMore) {
+      loadMore();
+    }
   };
 
-  const totalCount = commentsData?.success
-    ? (commentsData.pagination?.totalCount ?? 0)
-    : 0;
-
-  if (isLoading && allComments.length === 0) {
+  if (isLoading && comments.length === 0) {
     return (
       <div className={cn("space-y-4", className)}>
         <div className="flex items-center gap-2">
@@ -271,10 +129,12 @@ export function CommentThread({
       </div>
 
       {/* Error Alert */}
-      {error && (
+      {(isError || error) && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error?.toString()}</AlertDescription>
+          <AlertDescription>
+            {error?.toString() || "An error occurred"}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -289,23 +149,24 @@ export function CommentThread({
       <CommentEditor
         onSubmit={handleSubmitComment}
         organizationMembers={organizationMembers}
-        disabled={createCommentMutation.isPending}
+        disabled={false}
         placeholder={`Add a comment to this ${entityType}...`}
       />
 
       {/* Comments List */}
-      {allComments.length > 0 ? (
+      {comments.length > 0 ? (
         <div className="space-y-0">
           <Separator />
           <div className="divide-y divide-gray-100">
-            {allComments.map((comment, index) => (
+            {comments.map((comment, index) => (
               <div key={comment.id} className={cn(index === 0 && "pt-0")}>
                 <CommentItem
                   comment={comment}
-                  currentUser={currentUser}
                   onEdit={handleEditComment}
                   onDelete={handleDeleteComment}
                   onReaction={handleReaction}
+                  onReply={handleSubmitComment}
+                  organizationMembers={organizationMembers}
                 />
               </div>
             ))}
@@ -317,9 +178,9 @@ export function CommentThread({
               <Button
                 variant="outline"
                 onClick={handleLoadMore}
-                disabled={isFetching}
+                disabled={isLoadingMore}
               >
-                {isFetching ? (
+                {isLoadingMore ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" /> Loading...
                   </span>

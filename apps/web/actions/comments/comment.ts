@@ -7,55 +7,14 @@ import {
   extractMentionedUserIds,
   resolveCommentContent,
 } from "@/lib/comments/mentions";
-
-export type CommentEntityType = "project" | "issue" | "feature" | "milestone";
-
-export interface CreateCommentData {
-  content: string; // Content with user:{userId} format
-  entityType: CommentEntityType;
-  entityId: string;
-  attachmentIds?: string[];
-}
-
-export interface CommentData {
-  id: string;
-  content: string; // Raw content with user:{userId}
-  displayContent: string; // Resolved content with @UserName
-  authorId: string | null;
-  author: {
-    id: string;
-    name: string;
-    image?: string;
-  } | null; // Make author nullable
-  mentionedUsers: {
-    id: string;
-    name: string;
-    image?: string;
-  }[];
-  attachments: CommentAttachmentData[];
-  reactions: CommentReactionData[];
-  isEdited: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  editedAt?: Date;
-}
-
-export interface CommentAttachmentData {
-  id: string;
-  fileName: string;
-  originalName: string;
-  mimeType: string;
-  fileSize: number;
-  url: string;
-  thumbnailUrl?: string;
-}
-
-export interface CommentReactionData {
-  emoji: string;
-  count: number;
-  users: { id: string; name: string }[];
-  hasReacted: boolean;
-}
+import type {
+  CommentEntityType,
+  CreateCommentData,
+  CommentData,
+  CommentAttachmentData,
+  CommentReactionData,
+  ResolvedUser,
+} from "@/types/comments";
 
 /**
  * Creates a new comment on an entity (project, issue, feature, or milestone)
@@ -63,7 +22,13 @@ export interface CommentReactionData {
 export async function createComment(data: CreateCommentData) {
   try {
     const { userId, org } = await getSession();
-    const { content, entityType, entityId, attachmentIds = [] } = data;
+    const {
+      content,
+      entityType,
+      entityId,
+      attachmentIds = [],
+      parentCommentId,
+    } = data;
 
     // Extract mentioned user IDs from content
     const mentionedUserIds = extractMentionedUserIds(content);
@@ -72,6 +37,27 @@ export async function createComment(data: CreateCommentData) {
     const entityExists = await validateEntityAccess(entityType, entityId, org);
     if (!entityExists) {
       return { success: false, error: "Entity not found or access denied" };
+    }
+
+    // If this is a reply, validate the parent comment
+    if (parentCommentId) {
+      const parentComment = await prisma.comment.findFirst({
+        where: {
+          id: parentCommentId,
+          organizationId: org,
+          isDeleted: false,
+          parentCommentId: null, // Ensure parent is a top-level comment
+        },
+        select: { id: true, parentCommentId: true },
+      });
+
+      if (!parentComment) {
+        return {
+          success: false,
+          error:
+            "Parent comment not found or replies to replies are not allowed",
+        };
+      }
     }
 
     // Create the comment with entity relationship
@@ -83,6 +69,7 @@ export async function createComment(data: CreateCommentData) {
         organizationId: org,
         authorId: userId,
         mentionedUserIds,
+        parentCommentId,
         ...entityRelation,
       },
       include: {
@@ -90,7 +77,7 @@ export async function createComment(data: CreateCommentData) {
           select: {
             id: true,
             name: true,
-            image: true,
+            email: true,
           },
         },
         attachments: true,
@@ -187,12 +174,13 @@ export async function getEntityComments(
 
     const skip = (page - 1) * limit;
 
-    // Get comments with author, attachments, and reactions
-    const [comments, totalCount] = await Promise.all([
+    // Get parent comments (top-level) with pagination
+    const [parentComments, totalCount] = await Promise.all([
       prisma.comment.findMany({
         where: {
           organizationId: org,
           isDeleted: false,
+          parentCommentId: null, // Only top-level comments
           ...entityWhere,
         },
         include: {
@@ -200,7 +188,7 @@ export async function getEntityComments(
             select: {
               id: true,
               name: true,
-              image: true,
+              email: true,
             },
           },
           attachments: {
@@ -224,6 +212,44 @@ export async function getEntityComments(
               },
             },
           },
+          replies: {
+            where: {
+              isDeleted: false,
+            },
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+              attachments: {
+                select: {
+                  id: true,
+                  fileName: true,
+                  originalName: true,
+                  mimeType: true,
+                  fileSize: true,
+                  url: true,
+                  thumbnailUrl: true,
+                },
+              },
+              reactions: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
         },
         orderBy: {
           createdAt: "asc", // Chronological order as per requirements
@@ -235,15 +261,17 @@ export async function getEntityComments(
         where: {
           organizationId: org,
           isDeleted: false,
+          parentCommentId: null, // Only count top-level comments for pagination
           ...entityWhere,
         },
       }),
     ]);
 
-    // Get all mentioned users for resolution
-    const allMentionedUserIds = comments.flatMap(
-      (comment) => comment.mentionedUserIds
-    );
+    // Get all mentioned users for resolution (including replies)
+    const allMentionedUserIds = parentComments.flatMap((comment) => [
+      ...comment.mentionedUserIds,
+      ...comment.replies.flatMap((reply) => reply.mentionedUserIds),
+    ]);
     const uniqueUserIds = [...new Set(allMentionedUserIds)];
 
     const mentionedUsers =
@@ -255,19 +283,14 @@ export async function getEntityComments(
             select: {
               id: true,
               name: true,
+              email: true,
               image: true,
             },
           })
         : [];
 
-    // Process comments to include resolved content and reaction data
-    const processedComments = comments.map((comment) => {
-      // Resolve mentioned users in content
-      const displayContent = resolveCommentContent(
-        comment.content,
-        mentionedUsers
-      );
-
+    // Helper function to process a single comment (parent or reply)
+    const processComment = (comment: any): CommentData => {
       // Get mentioned users for this comment
       const commentMentionedUsers = mentionedUsers.filter((user) =>
         comment.mentionedUserIds.includes(user.id)
@@ -283,7 +306,7 @@ export async function getEntityComments(
         }
       >();
 
-      comment.reactions.forEach((reaction) => {
+      comment.reactions.forEach((reaction: any) => {
         if (!reactionMap.has(reaction.emoji)) {
           reactionMap.set(reaction.emoji, {
             count: 0,
@@ -314,7 +337,6 @@ export async function getEntityComments(
       return {
         id: comment.id,
         content: comment.content,
-        displayContent,
         authorId: comment.authorId,
         author: comment.author,
         mentionedUsers: commentMentionedUsers,
@@ -324,10 +346,26 @@ export async function getEntityComments(
         createdAt: comment.createdAt,
         updatedAt: comment.updatedAt,
         editedAt: comment.editedAt,
+        parentCommentId: comment.parentCommentId,
+      };
+    };
+
+    // Process parent comments and their replies
+    const processedComments = parentComments.map((comment) => {
+      const processedParent = processComment(comment);
+
+      // Process replies
+      const processedReplies = comment.replies.map((reply: any) =>
+        processComment(reply)
+      );
+
+      return {
+        ...processedParent,
+        replies: processedReplies,
       };
     });
 
-    const hasMore = skip + comments.length < totalCount;
+    const hasMore = skip + parentComments.length < totalCount;
     const totalPages = Math.ceil(totalCount / limit);
 
     return {
@@ -397,6 +435,7 @@ export async function updateComment(commentId: string, content: string) {
           select: {
             id: true,
             name: true,
+            email: true,
             image: true,
           },
         },

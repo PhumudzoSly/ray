@@ -56,7 +56,7 @@ export type InputJsonValueType = z.infer<typeof InputJsonValueSchema>;
 
 export const TransactionIsolationLevelSchema = z.enum(['ReadUncommitted','ReadCommitted','RepeatableRead','Serializable']);
 
-export const CommentScalarFieldEnumSchema = z.enum(['id','content','organizationId','authorId','projectId','issueId','featureId','milestoneId','mentionedUserIds','isEdited','isDeleted','createdAt','updatedAt','editedAt']);
+export const CommentScalarFieldEnumSchema = z.enum(['id','content','organizationId','authorId','parentCommentId','projectId','issueId','featureId','milestoneId','mentionedUserIds','isEdited','isDeleted','createdAt','updatedAt','editedAt']);
 
 export const CommentAttachmentScalarFieldEnumSchema = z.enum(['id','commentId','fileName','originalName','mimeType','fileSize','url','thumbnailUrl','organizationId','uploadedById','createdAt']);
 
@@ -369,6 +369,7 @@ export const CommentSchema = z.object({
   content: z.string(),
   organizationId: z.string(),
   authorId: z.string().nullish(),
+  parentCommentId: z.string().nullish(),
   projectId: z.string().nullish(),
   issueId: z.string().nullish(),
   featureId: z.string().nullish(),

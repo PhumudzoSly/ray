@@ -14,6 +14,10 @@ import {
   saveEntityDocumentContent,
 } from "../actions/documents/document";
 import { useTheme } from "next-themes";
+import { useSession } from "../context/session-context";
+import { useQuery } from "@tanstack/react-query";
+import { getEntityDocumentContent } from "../actions/documents/document";
+import { queryKeys } from "../lib/query-keys";
 
 // Custom debounce function
 function debounce<T extends (...args: any[]) => any>(
@@ -42,13 +46,6 @@ interface CollaborativeEditorProps {
   entityType?: "project" | "issue" | "feature" | "milestone";
   entityId?: string;
   documentId?: string;
-  initialContent?: PartialBlock[];
-  roomName?: string;
-  // User information passed from parent
-  user: {
-    id: string;
-    name: string;
-  };
 }
 
 const USER_COLORS = [
@@ -76,9 +73,6 @@ export function CollaborativeEditor({
   entityType,
   entityId,
   documentId,
-  initialContent,
-  roomName,
-  user,
 }: CollaborativeEditorProps) {
   const { theme } = useTheme();
   const [doc] = useState(() => new Y.Doc());
@@ -88,13 +82,12 @@ export function CollaborativeEditor({
   >("connecting");
   const editorRef = useRef<BlockNoteEditor | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const user = useSession();
 
   // Create stable room ID
   const stableRoomId = useMemo(() => {
-    return (
-      roomName || `${entityType}-${entityId}` || documentId || "default-room"
-    );
-  }, [roomName, entityType, entityId, documentId]);
+    return `${entityType}-${entityId}` || documentId || "default-room";
+  }, [entityType, entityId, documentId]);
 
   // Initialize provider once and handle cleanup
   useEffect(() => {
@@ -223,21 +216,47 @@ export function CollaborativeEditor({
     [entityType, entityId, documentId]
   );
 
-  const editor = useCreateBlockNote({
-    initialContent,
-    collaboration: provider
-      ? {
-          provider: provider,
-          // Use a single XmlFragment name to avoid type conflicts
-          fragment: doc.getXmlFragment("document-store"),
-          user: {
-            name: user.name,
-            color: getUserColor(user.id),
-          },
-          showCursorLabels: "always",
-        }
-      : undefined,
+  const { data: initialContent, isLoading: isFetchingInitialContent } = useQuery({
+    queryKey: queryKeys.documents.entity(entityType, entityId),
+    queryFn: async () => {
+      if (!entityType || !entityId) return null;
+      const result = await getEntityDocumentContent({ entityType, entityId });
+      if (result.success) {
+        return result.document.content as PartialBlock[];
+      }
+      return null;
+    },
+    enabled: !!entityType && !!entityId,
   });
+
+  const editor = useCreateBlockNote(
+    {
+      collaboration:
+        provider && user
+          ? {
+              provider: provider,
+              fragment: doc.getXmlFragment("document-store"),
+              user: {
+                name: user.name,
+                color: getUserColor(user.userId),
+              },
+              showCursorLabels: "always",
+            }
+          : undefined,
+    },
+    [provider, user]
+  );
+
+  // State to track if initial content has been loaded
+  const [initialContentLoaded, setInitialContentLoaded] = useState(false);
+
+  // Effect to load initial content into the editor
+  useEffect(() => {
+    if (editor && initialContent && !initialContentLoaded) {
+      editor.replaceBlocks(editor.document, initialContent);
+      setInitialContentLoaded(true);
+    }
+  }, [editor, initialContent, initialContentLoaded]);
 
   useEffect(() => {
     editorRef.current = editor;
@@ -271,17 +290,19 @@ export function CollaborativeEditor({
     };
   }, [doc]);
 
+  const isEditorLoading = isFetchingInitialContent || !initialContentLoaded;
+
   return (
     <div className="relative">
-      {connectionStatus !== "connected" && (
+      {(connectionStatus !== "connected" || isEditorLoading) && (
         <div
           className={`absolute top-2 right-2 text-sm px-2 py-1 rounded z-10 ${
-            connectionStatus === "connecting"
+            connectionStatus === "connecting" || isEditorLoading
               ? "text-amber-600 bg-amber-50"
               : "text-red-600 bg-red-50"
           }`}
         >
-          {connectionStatus === "connecting"
+          {connectionStatus === "connecting" || isEditorLoading
             ? "Connecting..."
             : "Reconnecting..."}
         </div>
@@ -289,6 +310,7 @@ export function CollaborativeEditor({
       <BlockNoteView
         theme={theme === "dark" ? "dark" : "light"}
         editor={editor}
+        editable={!isEditorLoading}
         data-theming-css-variables-demo
         className="min-h-[100px] w-full h-full max-w-none w-full"
       />

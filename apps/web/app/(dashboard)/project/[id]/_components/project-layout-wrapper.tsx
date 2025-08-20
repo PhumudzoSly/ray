@@ -9,12 +9,16 @@ interface ProjectLayoutWrapperProps {
   fallback: ReactNode;
 }
 
-export function ProjectLayoutWrapper({ children, projectId, fallback }: ProjectLayoutWrapperProps) {
+export function ProjectLayoutWrapper({
+  children,
+  projectId,
+  fallback,
+}: ProjectLayoutWrapperProps) {
   const pathname = usePathname();
-  
+
   // Early return for special routes
   if (pathname === `/project/${projectId}/flow`) return children;
   if (pathname === `/project/${projectId}/board`) return children;
-  
+
   return fallback;
-} 
+}

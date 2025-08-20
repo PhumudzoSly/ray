@@ -20,6 +20,9 @@ import { CommentThread } from "@/components/comments/comment-thread";
 import { BiInfoCircle } from "react-icons/bi";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
+import { CollaborativeEditor } from "@/components/collaborative-editor";
+import { useSession } from "@/context/session-context";
+import { Separator } from "@workspace/ui/components/separator";
 
 const IssueDetails = ({
   id,
@@ -39,6 +42,7 @@ const IssueDetails = ({
   );
 
   const queryClient = useQueryClient();
+  const session = useSession();
 
   // Fetch issue details
   const { data: issue, isLoading: isPending } = useQuery({
@@ -195,20 +199,12 @@ const IssueDetails = ({
 
       {view === "details" ? (
         <>
-          <Room id={id}>
-            <div>
-              <Editor />
-            </div>
-          </Room>
-
-          {/* Comments Section */}
-          <div className="mt-10 border rounded-lg p-6 bg-card">
-            <CommentThread
-              entityType="issue"
-              entityId={id}
-              organizationId={organizationId}
-              currentUser={currentUser}
-            />
+          <div className="my-5">
+            <CollaborativeEditor entityType="issue" entityId={id} />
+          </div>
+          <Separator />
+          <div className="p-4">
+            <CommentThread entityType="issue" entityId={id} />
           </div>
         </>
       ) : null}

@@ -249,16 +249,7 @@ const FeatureDetails = ({ id }: { id: string }) => {
 
           {/* Comments Section */}
           <div className="mt-10 border rounded-lg p-6 bg-card">
-            <CommentThread
-              entityType="feature"
-              entityId={id}
-              organizationId={session.org}
-              currentUser={{
-                id: session.userId,
-                name: session.name,
-                image: session.image || undefined,
-              }}
-            />
+            <CommentThread entityType="feature" entityId={id} />
           </div>
         </>
       ) : null}

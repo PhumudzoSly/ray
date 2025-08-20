@@ -6,6 +6,11 @@ model Comment {
     authorId       String?
     author         User?        @relation("AuthoredComments", fields: [authorId], references: [id], onDelete: SetNull)
 
+    // Reply relationships
+    parentCommentId String?
+    parentComment   Comment? @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+    replies         Comment[] @relation("CommentReplies")
+
     // Entity relationships (similar to Document model)
     projectId   String?
     project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -40,6 +45,8 @@ model Comment {
     @@index([organizationId, milestoneId])
     @@index([createdAt])
     @@index([mentionedUserIds])
+    @@index([parentCommentId])
+    @@index([organizationId, parentCommentId])
     @@map("comment")
 }
 

@@ -2,7 +2,16 @@
 
 import * as React from "react";
 import { formatDistanceToNow } from "date-fns";
-import { MoreHorizontal, Edit, Trash2, Plus, ExternalLink } from "lucide-react";
+import { resolveCommentContent } from "@/lib/comments/mentions";
+import { useSession } from "@/context/session-context";
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Plus,
+  ExternalLink,
+  Reply,
+} from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -16,37 +25,57 @@ import {
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
 import { cn } from "@workspace/ui/lib/utils";
-import type { CommentData } from "@/actions/comments/comment";
+import type { CommentData } from "@/types/comments";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@workspace/ui/components/popover";
+import {
+  CommentInput,
+  type OrganizationMember,
+  type UploadedCommentFile,
+} from "./comment-input";
 
 export interface CommentItemProps {
   comment: CommentData;
-  currentUser: { id: string };
   onEdit?: (commentId: string, content: string) => void;
   onDelete?: (commentId: string) => void;
   onReaction?: (commentId: string, emoji: string) => void;
+  onReply?: (
+    content: string,
+    attachments: UploadedCommentFile[],
+    parentCommentId?: string
+  ) => void;
+  organizationMembers?: OrganizationMember[];
   className?: string;
 }
 
 export function CommentItem({
   comment,
-  currentUser,
   onEdit,
   onDelete,
   onReaction,
+  onReply,
+  organizationMembers = [],
   className,
 }: CommentItemProps) {
+  const session = useSession();
+
+  // Create currentUser object from session context
+  const currentUser = {
+    id: session.userId,
+    name: session.name,
+  };
   const [isEditing, setIsEditing] = React.useState(false);
   const [editContent, setEditContent] = React.useState(comment.content);
   const [isEmojiOpen, setIsEmojiOpen] = React.useState(false);
+  const [isReplying, setIsReplying] = React.useState(false);
 
   const isAuthor = comment.authorId === currentUser.id;
   const canEdit = isAuthor && onEdit;
   const canDelete = isAuthor && onDelete;
+  const canReply = !comment.parentCommentId && onReply; // Only allow replies to top-level comments
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -56,8 +85,10 @@ export function CommentItem({
   const handleSaveEdit = () => {
     if (onEdit && editContent.trim() !== comment.content) {
       onEdit(comment.id, editContent.trim());
+      setIsEditing(false);
+    } else {
+      setIsEditing(false);
     }
-    setIsEditing(false);
   };
 
   const handleCancelEdit = () => {
@@ -72,6 +103,24 @@ export function CommentItem({
     ) {
       onDelete(comment.id);
     }
+  };
+
+  const handleReply = () => {
+    setIsReplying(true);
+  };
+
+  const handleReplySubmit = async (
+    content: string,
+    attachments: UploadedCommentFile[]
+  ) => {
+    if (onReply) {
+      await onReply(content, attachments, comment.id);
+      setIsReplying(false);
+    }
+  };
+
+  const handleReplyCancel = () => {
+    setIsReplying(false);
   };
 
   const getInitials = (name: string) => {
@@ -91,21 +140,35 @@ export function CommentItem({
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
+  // Function to render mentions in comment content
   const renderMentions = (content: string) => {
-    // Highlight mentions using the resolved names from mentionedUsers so we can support spaces
-    const names = comment.mentionedUsers?.map((u) => `@${u.name}`) || [];
-    if (names.length === 0) return content;
+    if (!comment.mentionedUsers || comment.mentionedUsers.length === 0) {
+      return content;
+    }
 
-    const pattern = names.map(escapeRegExp).join("|");
-    const regex = new RegExp(`(${pattern})`, "g");
-    const parts = content.split(regex);
+    // Use the resolveCommentContent utility to replace user:{id} with @UserName
+    const resolvedContent = resolveCommentContent(
+      content,
+      comment.mentionedUsers
+    );
 
-    return parts.map((part, index) => {
-      if (names.includes(part)) {
+    // Split content by @mentions and render with proper styling
+    const mentionPattern = new RegExp(
+      `(@(${comment.mentionedUsers.map((u) => escapeRegExp(u.name)).join("|")}))`,
+      "g"
+    );
+    const parts = resolvedContent.split(mentionPattern);
+
+    const userNames = new Set(comment.mentionedUsers.map((u) => u.name));
+
+    return parts
+      .filter((part) => part !== undefined && !userNames.has(part))
+      .map((part, index) => {
+      if (part.startsWith("@")) {
         return (
           <span
             key={index}
-            className="text-blue-500 mr-1 hover:text-primary/90 font-medium cursor-pointer"
+            className="text-blue-600 font-medium bg-blue-50 px-1 rounded"
           >
             {part}
           </span>
@@ -114,6 +177,25 @@ export function CommentItem({
       return <React.Fragment key={index}>{part}</React.Fragment>;
     });
   };
+
+  const EMOJI_OPTIONS = [
+    "👍",
+    "❤️",
+    "🎉",
+    "🚀",
+    "👏",
+    "🔥",
+    "😄",
+    "🙌",
+    "👀",
+    "😕",
+    "💯",
+    "✅",
+    "❌",
+    "⭐",
+    "🧠",
+    "📝",
+  ];
 
   function formatFileSize(bytes: number) {
     if (!bytes) return "0 B";
@@ -124,7 +206,9 @@ export function CommentItem({
   }
 
   return (
-    <div className={cn("flex gap-3 py-4", className)}>
+    <div
+      className={cn("flex gap-3 py-4 transition-all duration-200", className)}
+    >
       {/* Avatar */}
       <Avatar className="h-8 w-8 flex-shrink-0">
         <AvatarImage
@@ -198,7 +282,11 @@ export function CommentItem({
               autoFocus
             />
             <div className="flex gap-2">
-              <Button size="sm" onClick={handleSaveEdit}>
+              <Button
+                size="sm"
+                onClick={handleSaveEdit}
+                disabled={editContent.trim() === comment.content}
+              >
                 Save
               </Button>
               <Button size="sm" variant="outline" onClick={handleCancelEdit}>
@@ -208,7 +296,7 @@ export function CommentItem({
           </div>
         ) : (
           <div className="text-sm text-foreground whitespace-pre-wrap">
-            {renderMentions(comment.displayContent)}
+            {renderMentions(comment.content)}
           </div>
         )}
 
@@ -226,12 +314,13 @@ export function CommentItem({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="truncate text-primary hover:underline"
-                    title={attachment.originalName}
+                    title={attachment.fileName}
                   >
-                    {attachment.originalName}
+                    {attachment.fileName}
                   </a>
                   <span className="text-xs text-muted-foreground flex-shrink-0">
-                    ({formatFileSize(attachment.fileSize)} · {attachment.mimeType})
+                    ({formatFileSize(attachment.fileSize)} ·{" "}
+                    {attachment.mimeType})
                   </span>
                 </div>
                 <a
@@ -248,7 +337,7 @@ export function CommentItem({
           </div>
         )}
 
-        {/* Reactions */}
+        {/* Reactions and Actions */}
         <div className="flex items-center gap-1 mt-2">
           {comment.reactions.map((reaction) => (
             <button
@@ -293,27 +382,58 @@ export function CommentItem({
               </div>
             </PopoverContent>
           </Popover>
+
+          {/* Reply Button - Only show for top-level comments */}
+          {canReply && (
+            <button
+              onClick={handleReply}
+              className="flex items-center gap-1.5 px-2 py-1 text-sm text-muted-foreground hover:text-foreground hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-all duration-200"
+              aria-label="Reply to comment"
+            >
+              <Reply className="h-3.5 w-3.5" />
+              Reply
+            </button>
+          )}
         </div>
+
+        {/* Reply Input */}
+        {isReplying && (
+          <div className="mt-3 pl-4 border-l-2 border-muted">
+            <CommentInput
+              onSubmit={handleReplySubmit}
+              organizationMembers={organizationMembers}
+              placeholder={`Reply to ${comment.author?.name}...`}
+              className="mb-2"
+            />
+            <div className="flex gap-2 mb-2">
+              <Button size="sm" variant="outline" onClick={handleReplyCancel}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Replies */}
+        {comment.replies && comment.replies.length > 0 && (
+          <div className="mt-4">
+            <div className="ml-6 border-l-2 border-gray-200 dark:border-gray-700 pl-6 space-y-3">
+              {comment.replies.map((reply) => (
+                <div key={reply.id} className="relative">
+                  <div className="absolute -left-6 top-4 w-4 h-px bg-gray-200 dark:bg-gray-700"></div>
+                  <CommentItem
+                    comment={reply}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                    onReaction={onReaction}
+                    organizationMembers={organizationMembers}
+                    className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-3"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
-const EMOJI_OPTIONS = [
-  "👍",
-  "❤️",
-  "🎉",
-  "🚀",
-  "👏",
-  "🔥",
-  "😄",
-  "🙌",
-  "👀",
-  "😕",
-  "💯",
-  "✅",
-  "❌",
-  "⭐",
-  "🧠",
-  "📝",
-];

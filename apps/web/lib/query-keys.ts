@@ -23,4 +23,10 @@ export const queryKeys = {
 
   // All waitlists
   waitlists: () => ["waitlists"] as const,
+
+  // Documents keys
+  documents: {
+    entity: (entityType?: string, entityId?: string) =>
+      ["documents", entityType, entityId] as const,
+  },
 } as const;

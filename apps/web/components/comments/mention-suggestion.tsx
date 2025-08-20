@@ -1,21 +1,21 @@
-import { ReactRenderer } from "@tiptap/react"
-import tippy from "tippy.js"
-import { SuggestionOptions } from "@tiptap/suggestion"
-import MentionList, { MentionListRef } from "./mention-list"
-import type { OrganizationMember } from "./comment-input"
+import { ReactRenderer } from "@tiptap/react";
+import tippy from "tippy.js";
+import { SuggestionOptions } from "@tiptap/suggestion";
+import MentionList, { MentionListRef } from "./mention-list";
+import type { OrganizationMember } from "./comment-input";
 
 export const suggestion = (
   getMembers: () => OrganizationMember[]
 ): Omit<SuggestionOptions, "editor"> => ({
   items: ({ query }) => {
-    const members = getMembers()
+    const members = getMembers();
     return members
       .filter(
         (member) =>
           member.name.toLowerCase().startsWith(query.toLowerCase()) ||
           member.email.toLowerCase().startsWith(query.toLowerCase())
       )
-      .slice(0, 5)
+      .slice(0, 5);
   },
 
   command: ({ editor, range, props }) => {
@@ -36,22 +36,22 @@ export const suggestion = (
           text: " ",
         },
       ])
-      .run()
+      .run();
   },
 
   render: () => {
-    let component: ReactRenderer
-    let popup: any
+    let component: ReactRenderer;
+    let popup: any;
 
     return {
       onStart: (props) => {
         component = new ReactRenderer(MentionList, {
           props,
           editor: props.editor,
-        })
+        });
 
         if (!props.clientRect) {
-          return
+          return;
         }
 
         popup = tippy("body", {
@@ -62,34 +62,34 @@ export const suggestion = (
           interactive: true,
           trigger: "manual",
           placement: "bottom-start",
-        })
+        });
       },
 
       onUpdate(props) {
-        component.updateProps(props)
+        component.updateProps(props);
 
         if (!props.clientRect) {
-          return
+          return;
         }
 
         popup[0].setProps({
           getReferenceClientRect: () => props.clientRect?.() || new DOMRect(),
-        })
+        });
       },
 
       onKeyDown(props) {
         if (props.event.key === "Escape") {
-          popup[0].hide()
-          return true
+          popup[0].hide();
+          return true;
         }
 
-        return (component.ref as MentionListRef)?.onKeyDown(props)
+        return (component.ref as MentionListRef)?.onKeyDown(props);
       },
 
       onExit() {
-        popup[0].destroy()
-        component.destroy()
+        popup[0].destroy();
+        component.destroy();
       },
-    }
+    };
   },
-})
+});

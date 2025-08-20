@@ -34,28 +34,13 @@ export default async function DocPage({ params }: DocPageProps) {
       <Separator />
       <div className="my-5">
         <CollaborativeEditor
-          user={{
-            id: session.userId,
-            name: session.name,
-          }}
           entityType="project"
           entityId={projectId}
-          roomName={`project-${projectId}`}
-          initialContent={initialContent}
         />
       </div>
       <Separator />
       <div className="p-4">
-        <CommentThread
-          entityType="project"
-          entityId={projectId}
-          organizationId={session.org}
-          currentUser={{
-            id: session.userId,
-            name: session.name,
-            image: session.image || undefined,
-          }}
-        />
+        <CommentThread entityType="project" entityId={projectId} />
       </div>
     </div>
   );

@@ -2,20 +2,7 @@
 
 import { prisma } from "@workspace/backend";
 import { getSession } from "@/actions/account/user";
-
-export interface OrganizationMember {
-  id: string;
-  name: string;
-  email: string;
-  image?: string;
-}
-
-export interface ResolvedUser {
-  id: string;
-  name: string;
-  image?: string;
-  isActive: boolean;
-}
+import type { OrganizationMember, ResolvedUser } from "@/types/comments";
 
 /**
  * Batch resolves user information from user IDs

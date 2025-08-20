@@ -32,9 +32,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   ]);
 
   if (!insights) {
-    return <div>Project not found</div>;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] p-8">
+        <div className="text-4xl mb-4">🔍</div>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          Project Not Found
+        </h2>
+        <p className="text-gray-500 dark:text-gray-400 text-center">
+          We couldn't find the project you're looking for.
+        </p>
+      </div>
+    );
   }
-
   const getHealthStatusColor = (status: string) => {
     switch (status) {
       case "excellent":
@@ -186,20 +195,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
 
         <UpcomingDeadlines projectId={id} />
-
-        {/* Comments Section */}
-        <div className="border rounded-lg p-6 bg-card">
-          <CommentThread
-            entityType="project"
-            entityId={id}
-            organizationId={session.org}
-            currentUser={{
-              id: session.userId,
-              name: session.name,
-              image: session.image || undefined,
-            }}
-          />
-        </div>
       </div>
     </>
   );

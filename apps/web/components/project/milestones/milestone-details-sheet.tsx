@@ -575,16 +575,7 @@ export function MilestoneDetailsSheet({
           <div className="space-y-4">
             <h3 className="text-sm font-medium text-foreground">Comments</h3>
             <div className="border rounded-lg p-4 bg-background/50">
-              <CommentThread
-                entityType="milestone"
-                entityId={milestoneId}
-                organizationId={session.org}
-                currentUser={{
-                  id: session.userId,
-                  name: session.name,
-                  image: session.image || undefined,
-                }}
-              />
+              <CommentThread entityType="milestone" entityId={milestoneId} />
             </div>
           </div>
         </div>

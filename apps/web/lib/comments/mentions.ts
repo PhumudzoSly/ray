@@ -14,7 +14,9 @@ export function extractMentionedUserIds(content: string): string[] {
   let match;
 
   while ((match = mentionRegex.exec(content)) !== null) {
-    userIds.push(match[1]);
+    if (match[1]) {
+      userIds.push(match[1]);
+    }
   }
 
   return [...new Set(userIds)]; // Remove duplicates

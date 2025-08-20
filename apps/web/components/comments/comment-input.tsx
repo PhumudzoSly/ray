@@ -6,13 +6,24 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Document from "@tiptap/extension-document";
 import Mention from "@tiptap/extension-mention";
-import { Send, Paperclip, Smile, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import {
+  Send,
+  Paperclip,
+  Smile,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 import { suggestion } from "./mention-suggestion";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
 import { uploadFiles } from "@/lib/uploadthing";
 
 // Add mention styles
@@ -253,7 +264,14 @@ export function CommentInput({
 
     uploadFiles("fileUpload", {
       files: [file],
-      onUploadProgress: (opts: { file: File; progress: number; loaded: number; delta: number; totalLoaded: number; totalProgress: number; }) => {
+      onUploadProgress: (opts: {
+        file: File;
+        progress: number;
+        loaded: number;
+        delta: number;
+        totalLoaded: number;
+        totalProgress: number;
+      }) => {
         setAttachments((prev) =>
           prev.map((a) => (a.id === id ? { ...a, progress: opts.progress } : a))
         );
@@ -282,7 +300,12 @@ export function CommentInput({
         setAttachments((prev) =>
           prev.map((a) =>
             a.id === id
-              ? { ...a, status: "success", progress: 100, uploaded: uploadedInfo }
+              ? {
+                  ...a,
+                  status: "success",
+                  progress: 100,
+                  uploaded: uploadedInfo,
+                }
               : a
           )
         );
@@ -296,9 +319,7 @@ export function CommentInput({
         console.error("Upload error:", err);
         setAttachments((prev) =>
           prev.map((a) =>
-            a.id === id
-              ? { ...a, status: "error", error: "Upload failed" }
-              : a
+            a.id === id ? { ...a, status: "error", error: "Upload failed" } : a
           )
         );
       });
@@ -312,7 +333,9 @@ export function CommentInput({
 
       // Persist mentions as user:{id} while showing names in the editor
       const content = serializeContentWithMentions(editor);
-      const successful = attachments.filter((a) => a.status === "success" && a.uploaded).map((a) => a.uploaded!)
+      const successful = attachments
+        .filter((a) => a.status === "success" && a.uploaded)
+        .map((a) => a.uploaded!);
       if (!content && successful.length === 0) return;
 
       onSubmit(content, successful);
@@ -409,19 +432,24 @@ export function CommentInput({
     );
   }
 
-  const hasSuccessfulAttachment = attachments.some((a) => a.status === "success");
+  const hasSuccessfulAttachment = attachments.some(
+    (a) => a.status === "success"
+  );
 
   return (
     <form onSubmit={handleSubmit} className={cn("space-y-3", className)}>
       {/* Editor */}
       <div
         className={cn(
-          "border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+          "border rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1",
           disabled && "opacity-50 pointer-events-none"
         )}
         onKeyDown={handleKeyDown}
       >
-        <EditorContent editor={editor} />
+        <EditorContent
+          editor={editor}
+          placeholder="Write a comment, type @ to mention someone"
+        />
       </div>
 
       {/* Attachments */}
@@ -462,7 +490,9 @@ export function CommentInput({
                       </div>
                     )}
                     {item.status === "error" && (
-                      <div className="mt-1 text-xs text-red-600">{item.error || "Upload failed"}</div>
+                      <div className="mt-1 text-xs text-red-600">
+                        {item.error || "Upload failed"}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -473,8 +503,16 @@ export function CommentInput({
                   onClick={() => removeAttachment(index)}
                   className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
                   disabled={disabled}
-                  aria-label={item.status === "uploading" ? "Cancel upload" : "Remove attachment"}
-                  title={item.status === "uploading" ? "Cancel upload" : "Remove attachment"}
+                  aria-label={
+                    item.status === "uploading"
+                      ? "Cancel upload"
+                      : "Remove attachment"
+                  }
+                  title={
+                    item.status === "uploading"
+                      ? "Cancel upload"
+                      : "Remove attachment"
+                  }
                 >
                   ×
                 </Button>
@@ -488,7 +526,8 @@ export function CommentInput({
       <div className="flex items-center justify-between">
         {/* Keyboard shortcut hint */}
         <span className="text-xs text-gray-500">
-          {/Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? "⌘" : "Ctrl"} + Enter to submit
+          {/Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? "⌘" : "Ctrl"} +
+          Enter to submit
         </span>
 
         {/* Action buttons */}
@@ -537,7 +576,8 @@ export function CommentInput({
             size="icon"
             disabled={
               disabled ||
-              (!serializeContentWithMentions(editor).trim() && !hasSuccessfulAttachment)
+              (!serializeContentWithMentions(editor).trim() &&
+                !hasSuccessfulAttachment)
             }
             className="h-8 w-8"
           >
