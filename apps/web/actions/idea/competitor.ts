@@ -8,12 +8,21 @@ import {
 } from "@workspace/backend";
 import { getSession } from "../account/user";
 
+export const getAllCompetitors = async (ideaId: string) => {
+  await getSession();
+  return await prisma.competitor.findMany({
+    where: {
+      ideaId,
+    },
+  });
+};
+
 export const createCompetitor = async ({
   competitor,
 }: {
   competitor: CompetitorOptionalDefaults;
 }) => {
-  const { org } = await getSession();
+  await getSession();
   return await prisma.competitor.create({
     data: {
       ...competitor,

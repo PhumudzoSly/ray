@@ -1,14 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@workspace/ui/components/table";
+import React from "react";
+
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -16,17 +9,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@workspace/ui/components/avatar";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { useGetCompetitorValidation } from "@/lib/queries/idea";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import { CompetitorDetailsSheet } from "./competitor-details-sheet";
 import {
-  Building2,
   Calendar,
   Users,
   DollarSign,
@@ -35,31 +20,13 @@ import {
   MapPin,
   Eye,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCompetitors } from "@/actions/idea/competitor";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface CompetitorsTableProps {
   ideaId: string;
-}
-
-interface Competitor {
-  id: string;
-  name: string;
-  website?: string | null;
-  description?: string | null;
-  logoUrl?: string | null;
-  marketShare?: number | null;
-  annualRevenue?: number | null;
-  employeeCount?: string | null;
-  foundedYear?: number | null;
-  headquarters?: string | null;
-  targetAudience?: string | null;
-  threatLevel: string;
-  userGrowthRate?: number | null;
-  churnRate?: number | null;
-  customerSatisfaction?: number | null;
-  marketCap?: number | null;
-  lastUpdated: Date;
-  createdAt: Date;
-  isActive: boolean;
 }
 
 const getThreatLevelColor = (threatLevel: string) => {
@@ -122,24 +89,65 @@ const getCompanyInitials = (name: string) => {
 };
 
 export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
-  const { data: idea, isLoading, isError } = useGetCompetitorValidation(ideaId);
-  const [selectedCompetitor, setSelectedCompetitor] =
-    useState<Competitor | null>(null);
+  //
+
+  const router = useRouter();
+
+  const {
+    data: competitors,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["idea-competitors", ideaId],
+    queryFn: () => getAllCompetitors(ideaId),
+  });
 
   if (isLoading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Competitors</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[400px] w-full" />
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Card key={i} className="border-0 ring-1 ring-border/50 bg-card/50">
+            <CardContent className="p-6">
+              {/* Header Section Skeleton */}
+              <div className="mb-6">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-12 w-12 rounded-xl flex-shrink-0" />
+                  <div className="min-w-0 flex-1 space-y-3">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-full" />
+                    <Skeleton className="h-3 w-2/3" />
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-border/30">
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+
+              {/* Metrics Section Skeleton */}
+              <div className="mb-6">
+                <div className="grid grid-cols-2 gap-6">
+                  {Array.from({ length: 4 }).map((_, j) => (
+                    <div key={j} className="space-y-2">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer Section Skeleton */}
+              <div className="pt-4 border-t border-border/30 flex items-center justify-between">
+                <Skeleton className="h-5 w-20 rounded-full" />
+                <Skeleton className="h-7 w-7 rounded-lg" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     );
   }
 
-  if (isError || !idea) {
+  if (isError) {
     return (
       <Card>
         <CardContent className="py-8 text-center">
@@ -150,8 +158,6 @@ export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
       </Card>
     );
   }
-
-  const competitors = idea.Competitor;
 
   if (!competitors || competitors.length === 0) {
     return (
@@ -165,127 +171,133 @@ export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
 
   return (
     <>
-      <Card className="py-0">
-        <div className="overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-b">
-                <TableHead className="w-[300px]">Company</TableHead>
-                <TableHead className="text-center">Founded</TableHead>
-                <TableHead className="text-center">Employees</TableHead>
-                <TableHead className="text-center">Revenue</TableHead>
-                <TableHead className="text-center">Market Share</TableHead>
-                <TableHead className="text-center">Threat Level</TableHead>
-                <TableHead className="w-[100px] text-center">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {competitors.map((competitor) => {
-                const ThreatIcon = getThreatLevelIcon(competitor.threatLevel);
-                return (
-                  <TableRow
-                    key={competitor.id}
-                    className="group hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => setSelectedCompetitor(competitor)}
-                  >
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage
-                            src={competitor.logoUrl || ""}
-                            alt={competitor.name}
-                          />
-                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
-                            {getCompanyInitials(competitor.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                          <div className="font-semibold text-sm group-hover:text-primary transition-colors">
-                            {competitor.name}
-                          </div>
-                          {competitor.description && (
-                            <div className="text-xs text-muted-foreground truncate max-w-[200px]">
-                              {competitor.description}
-                            </div>
-                          )}
-                          {competitor.headquarters && (
-                            <div className="flex items-center gap-1 mt-1">
-                              <MapPin className="h-3 w-3 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">
-                                {competitor.headquarters}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Calendar className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-sm">
-                          {competitor.foundedYear || "N/A"}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Users className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-sm">
-                          {formatEmployeeCount(competitor.employeeCount)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <DollarSign className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-sm font-medium">
-                          {formatCurrency(competitor.annualRevenue)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <BarChart3 className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-sm">
-                          {formatPercentage(competitor.marketShare)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge
-                        variant={getThreatLevelColor(competitor.threatLevel)}
-                        className="gap-1"
-                      >
-                        <ThreatIcon className="h-3 w-3" />
-                        {competitor.threatLevel}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedCompetitor(competitor);
-                        }}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+        {competitors?.map((competitor) => {
+          const ThreatIcon = getThreatLevelIcon(competitor.threatLevel);
+          return (
+            <Card
+              key={competitor.id}
+              className="group hover:shadow-lg hover:shadow-black/5 transition-all duration-300 cursor-pointer border-0 bg-card/50 hover:bg-card ring-1 ring-border/50 hover:ring-border"
+              onClick={() => router.push(`/competitor/${competitor.id}`)}
+            >
+              <CardContent className="px-6">
+                {/* Header Section */}
+                <div className="mb-6">
+                  <div className="flex items-start gap-4">
+                    <Avatar className="h-12 w-12 flex-shrink-0 ring-1 ring-border/30 rounded-xl">
+                      <AvatarImage
+                        src={competitor.logoUrl || ""}
+                        alt={competitor.name}
+                        className="object-cover rounded-xl"
+                      />
+                      <AvatarFallback className="bg-muted/50 text-muted-foreground font-medium text-xs rounded-xl">
+                        {getCompanyInitials(competitor.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-base leading-tight group-hover:text-foreground transition-colors line-clamp-1 mb-2">
+                        {competitor.name}
+                      </h3>
+                      {competitor.description && (
+                        <p className="text-sm text-muted-foreground/70 line-clamp-1 leading-relaxed">
+                          {competitor.description} lorem ipsum dolor sit amet,
+                          consectetur adipiscing elit.
+                        </p>
+                      )}
+                    </div>
+                  </div>
 
-      <CompetitorDetailsSheet
+                  {/* Location */}
+                  {competitor.headquarters && (
+                    <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/30">
+                      <MapPin className="h-3 w-3 text-muted-foreground/50 flex-shrink-0" />
+                      <span className="text-xs text-muted-foreground/70 font-medium">
+                        {competitor.headquarters}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Metrics Section */}
+                <div className="mb-6">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="h-3 w-3 text-muted-foreground/50" />
+                        <span className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">
+                          Founded
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground/90">
+                        {competitor.foundedYear || "—"}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <Users className="h-3 w-3 text-muted-foreground/50" />
+                        <span className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">
+                          Team
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground/90">
+                        {formatEmployeeCount(competitor.employeeCount)}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <DollarSign className="h-3 w-3 text-muted-foreground/50" />
+                        <span className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">
+                          Revenue
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground/90">
+                        {formatCurrency(competitor.annualRevenue)}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-1.5">
+                        <BarChart3 className="h-3 w-3 text-muted-foreground/50" />
+                        <span className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">
+                          Share
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-foreground/90">
+                        {formatPercentage(competitor.marketShare)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Section */}
+                <div className="pt-4 border-t border-border/30 flex items-center justify-between">
+                  <Badge
+                    variant={getThreatLevelColor(competitor.threatLevel)}
+                    className="gap-1.5 font-medium text-xs px-2.5 py-1"
+                  >
+                    <ThreatIcon className="h-3 w-3" />
+                    {competitor.threatLevel}
+                  </Badge>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link
+                      href={`/competitor/${competitor.id}`}
+                      className="flex items-center gap-2"
+                    >
+                      Manage
+                      <Eye className="h-3.5 w-3.5" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* <CompetitorDetailsSheet
         competitor={selectedCompetitor}
         open={!!selectedCompetitor}
         onOpenChange={(open) => !open && setSelectedCompetitor(null)}
-      />
+      /> */}
     </>
   );
 }
