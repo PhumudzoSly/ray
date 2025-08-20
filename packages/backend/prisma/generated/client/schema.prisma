@@ -1257,6 +1257,10 @@ model User {
   uploadedCommentAttachments CommentAttachment[] @relation("UploadedCommentAttachments")
   commentReactions           CommentReaction[]   @relation("CommentReactions")
 
+  // Chat relations
+  chatMessages ChatMessage[]
+  chatMemories ChatMemory[]
+
   @@unique([email])
   @@map("user")
 }
@@ -1345,6 +1349,10 @@ model Organization {
   CommentAttachment   CommentAttachment[]
   CommentReaction     CommentReaction[]
 
+  // Chat relations
+  chatMessages ChatMessage[]
+  chatMemories ChatMemory[]
+
   @@unique([slug])
   @@map("organization")
 }
@@ -1423,6 +1431,54 @@ model Subscription {
 
   @@index([organisation_id])
   @@map("subscription")
+}
+
+// Chat System Models
+model ChatMessage {
+  id             String        @id @default(cuid())
+  chatId         String // External chat identifier (from Redis key)
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Message content stored as JSON (compatible with AI SDK UIMessage format)
+  role      String // 'user', 'assistant', 'system', 'tool'
+  parts     Json? // Message parts for complex messages (tool calls, etc.)
+  metadata  Json?
+  // Timestamps
+  createdAt DateTime @default(now())
+
+  @@index([chatId, createdAt])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([createdAt])
+  @@map("chat_message")
+}
+
+model ChatMemory {
+  id             String        @id @default(cuid())
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Memory content
+  type    String // 'resource', 'knowledge', 'context', etc.
+  content Json // Flexible content structure
+  query   String? // Optional search query for retrieval
+
+  // Metadata for search and organization
+  metadata Json?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, type])
+  @@index([organizationId, type])
+  @@index([userId, createdAt])
+  @@map("chat_memory")
 }
 
 model Integration {

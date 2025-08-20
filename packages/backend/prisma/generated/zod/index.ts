@@ -140,6 +140,10 @@ export const TwoFactorScalarFieldEnumSchema = z.enum(['id','secret','backupCodes
 
 export const SubscriptionScalarFieldEnumSchema = z.enum(['id','status','organisation_id','subscription_id','product_id','userId','createdAt','updatedAt']);
 
+export const ChatMessageScalarFieldEnumSchema = z.enum(['id','chatId','userId','organizationId','role','parts','metadata','createdAt']);
+
+export const ChatMemoryScalarFieldEnumSchema = z.enum(['id','userId','organizationId','type','content','query','metadata','createdAt','updatedAt']);
+
 export const IntegrationScalarFieldEnumSchema = z.enum(['id','name','type','config','isActive','organizationId','createdAt','updatedAt','createdById']);
 
 export const IntegrationUsageScalarFieldEnumSchema = z.enum(['id','integrationId','entityType','entityId','purpose','isActive','createdAt','updatedAt']);
@@ -207,6 +211,8 @@ export const PricingStrategyAnalysisScalarFieldEnumSchema = z.enum(['id','valida
 export const SortOrderSchema = z.enum(['asc','desc']);
 
 export const JsonNullValueInputSchema = z.enum(['JsonNull',]).transform((value) => (value === 'JsonNull' ? Prisma.JsonNull : value));
+
+export const NullableJsonNullValueInputSchema = z.enum(['DbNull','JsonNull',]).transform((value) => value === 'JsonNull' ? Prisma.JsonNull : value === 'DbNull' ? Prisma.DbNull : value);
 
 export const QueryModeSchema = z.enum(['default','insensitive']);
 
@@ -1616,6 +1622,62 @@ export const SubscriptionOptionalDefaultsSchema = SubscriptionSchema.merge(z.obj
 }))
 
 export type SubscriptionOptionalDefaults = z.infer<typeof SubscriptionOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CHAT MESSAGE SCHEMA
+/////////////////////////////////////////
+
+export const ChatMessageSchema = z.object({
+  id: z.string().cuid(),
+  chatId: z.string(),
+  userId: z.string(),
+  organizationId: z.string().nullish(),
+  role: z.string(),
+  parts: JsonValueSchema.nullable(),
+  metadata: JsonValueSchema.nullable(),
+  createdAt: z.coerce.date(),
+})
+
+export type ChatMessage = z.infer<typeof ChatMessageSchema>
+
+// CHAT MESSAGE OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ChatMessageOptionalDefaultsSchema = ChatMessageSchema.merge(z.object({
+  id: z.string().cuid().optional(),
+  createdAt: z.coerce.date().optional(),
+}))
+
+export type ChatMessageOptionalDefaults = z.infer<typeof ChatMessageOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// CHAT MEMORY SCHEMA
+/////////////////////////////////////////
+
+export const ChatMemorySchema = z.object({
+  id: z.string().cuid(),
+  userId: z.string(),
+  organizationId: z.string().nullish(),
+  type: z.string(),
+  content: JsonValueSchema,
+  query: z.string().nullish(),
+  metadata: JsonValueSchema.nullable(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+})
+
+export type ChatMemory = z.infer<typeof ChatMemorySchema>
+
+// CHAT MEMORY OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ChatMemoryOptionalDefaultsSchema = ChatMemorySchema.merge(z.object({
+  id: z.string().cuid().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ChatMemoryOptionalDefaults = z.infer<typeof ChatMemoryOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // INTEGRATION SCHEMA

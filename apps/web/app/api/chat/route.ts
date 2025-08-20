@@ -68,6 +68,7 @@ import {
   updateWaitlist,
   deleteWaitlist,
 } from "./tools/waitlist";
+import { deepSearch, webSearch } from "@/lib/exa";
 export const maxDuration = 30;
 
 // Key helpers for consistent namespacing
@@ -82,10 +83,9 @@ export async function POST(req: Request) {
   const body = await req.json();
 
   // get current message and chat id sent from client
-  const { message, model, idea, project, issue, waitlist, roadmap } = body as {
+  const { message, idea, project, issue, waitlist, roadmap } = body as {
     message: UIMessage;
     id: string;
-    model: string;
     idea: string;
     project: string;
     issue: string;
@@ -97,14 +97,14 @@ export async function POST(req: Request) {
   const key = chatKey(userId, org);
   const searchClient = search.index(key);
 
-  // get existing chat history (fully type-safe)
+  // // get existing chat history (fully type-safe)
   let history = await redis.get<UIMessage[]>(key);
-  // legacy fallback (pre-migration keys)
+  // // legacy fallback (pre-migration keys)
   if (!history) {
     history = await redis.get<UIMessage[]>(`chat:history:${userId}-${org}`);
   }
 
-  // Keep only the last 300 messages and add the new message
+  // // Keep only the last 300 messages and add the new message
   const recentHistory = (history ?? []).slice(-300);
   const messages = [...recentHistory, message];
 
@@ -182,6 +182,10 @@ export async function POST(req: Request) {
     - 🔗 **Links** when referencing external resources
     - ✅ **Checkboxes** for task lists and action items
     - 📈 **Progress indicators** and status badges when relevant
+    - **Spacing** (2-3 line breaks) for readability
+    - **Consistency** in using emojis and markdown formatting
+    - **Clarity** in language and structure
+
 
     Make your responses visually engaging, well-structured, and easy to scan. Use appropriate emojis that match the context and content type.
 
@@ -198,7 +202,8 @@ export async function POST(req: Request) {
     10. ❓ If unsure, ask for clarification or suggest alternative approaches
     `,
     tools: {
-      google_search: google.tools.googleSearch({}),
+      deepSearch,
+      webSearch,
       // Idea tools
       getIdeas,
       createIdea,
