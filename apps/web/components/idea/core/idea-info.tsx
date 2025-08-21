@@ -104,35 +104,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
 
   const confirm = useConfirm();
 
-  // Delete mutation
-  const deleteMutation = useMutation({
-    mutationFn: async () => {
-      return await deleteIdea(id);
-    },
-    onSuccess: () => {
-      toast.success("Idea deleted successfully");
-      // Invalidate ideas list and redirect
-      queryClient.invalidateQueries({ queryKey: ["ideas"] });
-      router.push("/ideas");
-    },
-    onError: (error) => {
-      console.error("Error deleting idea:", error);
-      toast.error("Failed to delete idea. Please try again.");
-    },
-  });
-
-  const handleDelete = async () => {
-    const isConfirmed = await confirm({
-      title: "Delete idea?",
-      description:
-        "This action will permanently remove your idea and everything related to it.",
-    });
-
-    if (isConfirmed) {
-      deleteMutation.mutate();
-    }
-  };
-
   if (isPending) return <LoadingSpinner />;
 
   return (
@@ -181,22 +152,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
             {idea?.status && (
               <IdeaStatus refetch={() => {}} id={id} status={idea.status} />
             )}
-            <div className="flex items-center gap-4">
-              <UpdateIdea id={id} idea={idea} onSuccess={() => {}}>
-                <Button variant="outline" className="w-full">
-                  Edit Idea
-                </Button>
-              </UpdateIdea>
-              <Button
-                variant="destructive"
-                className="w-full"
-                size="sm"
-                onClick={handleDelete}
-                disabled={deleteMutation.isPending}
-              >
-                {deleteMutation.isPending ? "Deleting..." : "Delete"}
-              </Button>
-            </div>
           </div>
         </div>
       </div>

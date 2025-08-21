@@ -17,6 +17,7 @@ import {
   isUserMemberOfOtherOrgs,
 } from "@workspace/backend";
 import { revalidatePath } from "next/cache";
+import { composio, composioConfigs } from "../../lib/composio";
 
 export async function createOrg({ name }: { name: string }) {
   const headersList = await headers();
@@ -390,3 +391,38 @@ export async function deactivateApiKey(keyId: string) {
     };
   }
 }
+
+export const getComposioAccount = async ({
+  userIdentifier,
+  authConfigId,
+}: {
+  userIdentifier: string;
+  authConfigId: string;
+}) => {
+
+  let appName:string = "";
+  switch (authConfigId) {
+    case "slack":
+      appName = composioConfigs.slack
+      break;
+  
+    default:
+      break;
+  }
+
+  await getSession();
+
+  const connectionRequest = await composio.connectedAccounts.initiate(
+    userIdentifier,
+    appName
+  );
+
+  // redirect the user to the OAuth flow
+  const redirectUrl = connectionRequest.redirectUrl;
+  console.log(redirectUrl);
+
+  // wait for connection to be established
+  const connectedAccount = await connectionRequest.waitForConnection();
+
+  return {connectedAccount,redirectUrl};
+};

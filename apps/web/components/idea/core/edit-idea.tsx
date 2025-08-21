@@ -18,14 +18,10 @@ import IdeaForm from "./idea-form";
 const UpdateIdea = ({
   id,
   idea,
-  onOpenChange,
-  onSuccess,
   children,
 }: {
   id: string;
   idea: any;
-  onOpenChange?: (open: boolean) => void;
-  onSuccess?: () => void;
   children?: React.ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
@@ -64,14 +60,14 @@ const UpdateIdea = ({
     },
     onSuccess: (data, variables) => {
       toast.success("Idea updated successfully");
-      
+
       // Update the cache with the server response
       queryClient.setQueryData(["idea", id], data);
-      
+
       // Invalidate related queries to ensure consistency
       queryClient.invalidateQueries({ queryKey: ["ideas"] });
       queryClient.invalidateQueries({ queryKey: ["idea", id] });
-      
+
       if (onSuccess) onSuccess();
       setOpen(false);
       if (onOpenChange) onOpenChange(false);

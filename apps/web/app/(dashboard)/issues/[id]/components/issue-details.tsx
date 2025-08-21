@@ -10,7 +10,7 @@ import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import { GitBranch, Clock, Inbox, Plug } from "lucide-react";
 import { NewIssue } from "@/components/project/issues/new-issue";
-import { ActivityFeed, NoData } from "@/components/shared";
+import { ActivityFeed } from "@/components/shared/activity-feed";
 import { PrioritySelector } from "@/components/ui/selectors/priority-selector";
 import { StatusSelector } from "@/components/ui/selectors/status-selector";
 import { AssigneeSelector } from "@/components/ui/selectors/assignee-selector";
@@ -21,6 +21,7 @@ import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
 import { useSession } from "@/context/session-context";
 import { Separator } from "@workspace/ui/components/separator";
+import NoData from "@/components/shared/no-data";
 
 const IssueDetails = ({
   id,

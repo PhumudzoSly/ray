@@ -8,6 +8,7 @@ import { IdeaTabs } from "@/components/idea/core/tabs";
 import Header from "@/components/shared/header";
 import getQueryClient from "@/lib/query/getQueryClient";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
+import IdeaSidebar from "./sidebar";
 
 const IdeaLayout = async ({
   params,
@@ -74,11 +75,13 @@ const IdeaLayout = async ({
       >
         {null}
       </Header>
-      <div className="container">
-        <IdeaInfo id={id} />
-        <IdeaTabs tabs={tabsMenu} ideaId={id} />
-        {children}
-      </div>
+      <ExpandedLayoutContainer sidebar={<IdeaSidebar id={id} />}>
+        <div className="container">
+          <IdeaInfo id={id} />
+          <IdeaTabs tabs={tabsMenu} ideaId={id} />
+          {children}
+        </div>
+      </ExpandedLayoutContainer>
     </div>
   );
 };
