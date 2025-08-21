@@ -68,9 +68,7 @@ const UpdateIdea = ({
       queryClient.invalidateQueries({ queryKey: ["ideas"] });
       queryClient.invalidateQueries({ queryKey: ["idea", id] });
 
-      if (onSuccess) onSuccess();
       setOpen(false);
-      if (onOpenChange) onOpenChange(false);
     },
     onSettled: () => {
       // Always refetch after error or success to ensure we have the latest data
@@ -89,7 +87,6 @@ const UpdateIdea = ({
 
   const handleCancel = () => {
     setOpen(false);
-    if (onOpenChange) onOpenChange(false);
   };
 
   return (

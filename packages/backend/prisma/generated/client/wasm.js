@@ -686,29 +686,6 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.ChatMessageScalarFieldEnum = {
-  id: 'id',
-  chatId: 'chatId',
-  userId: 'userId',
-  organizationId: 'organizationId',
-  role: 'role',
-  parts: 'parts',
-  metadata: 'metadata',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ChatMemoryScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  organizationId: 'organizationId',
-  type: 'type',
-  content: 'content',
-  query: 'query',
-  metadata: 'metadata',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.IntegrationScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1160,11 +1137,6 @@ exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
-};
-
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -1470,8 +1442,6 @@ exports.Prisma.ModelName = {
   Passkey: 'Passkey',
   TwoFactor: 'TwoFactor',
   Subscription: 'Subscription',
-  ChatMessage: 'ChatMessage',
-  ChatMemory: 'ChatMemory',
   Integration: 'Integration',
   IntegrationUsage: 'IntegrationUsage',
   ApiKey: 'ApiKey',
