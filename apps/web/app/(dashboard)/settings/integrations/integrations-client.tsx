@@ -58,7 +58,6 @@ export function IntegrationsClient({
         className="flex items-center justify-between p-4 border-b border-border hover:bg-muted/50 transition-colors"
       >
         <div className="flex items-center gap-4 flex-1 min-w-0">
-          <div className="text-2xl flex-shrink-0">{integrationDef.icon}</div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h3 className="font-medium text-sm sm:text-base truncate">

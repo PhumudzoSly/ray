@@ -159,10 +159,10 @@ export function LoopsIntegrationModal({
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -311,7 +311,6 @@ export function LoopsIntegrationModal({
               </div>
             ) : !loopsIntegrations || loopsIntegrations.length === 0 ? (
               <div className="text-center py-8">
-                <div className="text-4xl mb-4">🔄</div>
                 <p className="text-muted-foreground mb-2">
                   No Loops integrations found
                 </p>
