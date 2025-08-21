@@ -16,6 +16,8 @@ export const redis = new Redis({
     retries: 3,
     backoff: (retryCount) => Math.exp(retryCount) * 50,
   },
+  // Add connection pooling and timeout optimizations
+  keepAlive: true,
 });
 
 // Test Redis connection

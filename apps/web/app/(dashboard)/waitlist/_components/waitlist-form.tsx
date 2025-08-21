@@ -16,12 +16,11 @@ import {
 } from "@workspace/ui/components/select";
 import { toast } from "sonner";
 import { ProjectSelector } from "@/components/ui/selectors/project-selector";
-import { Badge } from "@workspace/ui/components/badge";
-import { Copy, Key, Mail, Loader2, Check, X } from "lucide-react";
+import { Mail, Loader2, Check, X } from "lucide-react";
 import * as waitlistActions from "@/actions/waitlist";
-import { getIntegrationsByPurpose } from "@/actions/integration";
+import { getResendIntegrations } from "@/actions/integration/resend-actions";
+import { getLoopsIntegrations } from "@/actions/integration/loops-actions";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
-import { NoData } from "@/components/shared";
 import { useDebounce } from "@/hooks/use-debounce";
 import APIDocs from "./api-docs";
 
@@ -694,13 +693,41 @@ export default function WaitlistForm({
   );
 }
 function IntegrationOptions() {
-  // Use useQuery to fetch integrations for email_sync
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["integrations", "email_sync"],
+  // Fetch both Resend and Loops integrations
+  const {
+    data: resendData,
+    isLoading: resendLoading,
+    isError: resendError,
+  } = useQuery({
+    queryKey: ["integrations", "resend"],
     queryFn: async () => {
-      return getIntegrationsByPurpose("email_sync");
+      try {
+        return await getResendIntegrations();
+      } catch (error) {
+        console.error("Error fetching Resend integrations:", error);
+        return [];
+      }
     },
   });
+
+  const {
+    data: loopsData,
+    isLoading: loopsLoading,
+    isError: loopsError,
+  } = useQuery({
+    queryKey: ["integrations", "loops"],
+    queryFn: async () => {
+      try {
+        return await getLoopsIntegrations();
+      } catch (error) {
+        console.error("Error fetching Loops integrations:", error);
+        return [];
+      }
+    },
+  });
+
+  const isLoading = resendLoading || loopsLoading;
+  const isError = resendError && loopsError;
 
   if (isLoading) {
     return (
@@ -710,13 +737,19 @@ function IntegrationOptions() {
     );
   }
 
-  if (
-    isError ||
-    !data ||
-    !data.success ||
-    !data.data ||
-    data.data.length === 0
-  ) {
+  // Combine both integration types
+  const allIntegrations = [
+    ...(resendData || []).map((integration) => ({
+      ...integration,
+      displayName: `${integration.name} (Resend)`,
+    })),
+    ...(loopsData || []).map((integration) => ({
+      ...integration,
+      displayName: `${integration.name} (Loops)`,
+    })),
+  ];
+
+  if (allIntegrations.length === 0) {
     return (
       <SelectItem value="no-integrations" disabled>
         No email integrations found
@@ -726,9 +759,9 @@ function IntegrationOptions() {
 
   return (
     <>
-      {data.data.map((integration: any) => (
+      {allIntegrations.map((integration: any) => (
         <SelectItem key={integration.id} value={integration.id}>
-          {integration.name}
+          {integration.displayName}
         </SelectItem>
       ))}
     </>

@@ -6,7 +6,6 @@ import {
 } from "@tanstack/react-query";
 import Header from "@/components/shared/header";
 import * as waitlistActions from "@/actions/waitlist";
-import { getIntegrationUsage } from "@/actions/integration/usage";
 import WaitlistForm from "../../_components/waitlist-form";
 
 interface EditWaitlistPageProps {
@@ -29,19 +28,6 @@ export default async function EditWaitlistPage({
         throw new Error("Waitlist not found");
       }
       return res.data;
-    },
-  });
-
-  // Get email sync integration usage
-  await queryClient.prefetchQuery({
-    queryKey: ["waitlist-email-sync", waitlistId],
-    queryFn: async () => {
-      const res = await getIntegrationUsage(
-        "waitlist",
-        waitlistId,
-        "email_sync"
-      );
-      return res.success ? res.data : null;
     },
   });
 

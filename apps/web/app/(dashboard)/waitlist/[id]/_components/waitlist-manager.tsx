@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@workspace/ui/components/button";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { ExternalLink, Users, BarChart3, Loader2, Edit2 } from "lucide-react";
+import { Users, BarChart3, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import { toast } from "sonner";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
-import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 import { queryKeys } from "@/lib/query-keys";
 import { getWaitlist, updateWaitlist } from "@/actions/waitlist";
 import WaitlistOverview from "./waitlist-overview";
