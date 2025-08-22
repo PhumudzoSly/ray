@@ -251,7 +251,7 @@ export function IdeasTable() {
             <TableHead className="w-[40px] [&:has([role=checkbox])]:pl-3">
               #
             </TableHead>
-            <TableHead className="min-w-[200px] max-w-[360px]">
+            <TableHead className="min-w-[200px] max-w-[380px]">
               <Button
                 variant="ghost"
                 className="font-medium p-0 hover:bg-transparent"

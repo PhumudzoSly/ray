@@ -109,7 +109,6 @@ export function IntegrationsClient({
           <TabsTrigger value="communication">Communication</TabsTrigger>
           <TabsTrigger value="developer-tools">Developer</TabsTrigger>
           <TabsTrigger value="productivity">Productivity</TabsTrigger>
-          <TabsTrigger value="browser-tools">Browser</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-6">

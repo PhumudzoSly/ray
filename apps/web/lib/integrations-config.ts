@@ -2,11 +2,7 @@ export interface IntegrationDefinition {
   id: string;
   name: string;
   description: string;
-  category:
-    | "communication"
-    | "developer-tools"
-    | "productivity"
-    | "browser-tools";
+  category: "communication" | "developer-tools" | "productivity";
   website: string;
   isActive?: boolean;
   hasModal: boolean;

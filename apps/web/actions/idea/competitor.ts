@@ -95,3 +95,39 @@ export const deleteCompetitorSwot = async ({ id }: { id: string }) => {
   await getSession();
   return await prisma.competitorSwot.delete({ where: { id } });
 };
+
+export const getCompetitor = async ({ id }: { id: string }) => {
+  await getSession();
+  return await prisma.competitor.findUnique({
+    where: { id },
+    include: { idea: true },
+  });
+};
+
+export const getCompetitiveMoves = async (competitorId: string) => {
+  await getSession();
+  return await prisma.competitiveMove.findMany({
+    where: {
+      competitorId,
+    },
+  });
+};
+
+export const getCompetitiveMove = async ({ id }: { id: string }) => {
+  await getSession();
+  return await prisma.competitiveMove.findUnique({ where: { id } });
+};
+
+export const getCompetitorSwots = async (competitorId: string) => {
+  await getSession();
+  return await prisma.competitorSwot.findMany({
+    where: {
+      competitorId,
+    },
+  });
+};
+
+export const getCompetitorSwot = async ({ id }: { id: string }) => {
+  await getSession();
+  return await prisma.competitorSwot.findUnique({ where: { id } });
+};

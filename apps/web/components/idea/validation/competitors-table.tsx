@@ -190,7 +190,7 @@ export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
                         alt={competitor.name}
                         className="object-cover rounded-xl"
                       />
-                      <AvatarFallback className="bg-muted/50 text-muted-foreground font-medium text-xs rounded-xl">
+                      <AvatarFallback className="bg-muted border text-muted-foreground font-medium text-xs rounded-xl">
                         {getCompanyInitials(competitor.name)}
                       </AvatarFallback>
                     </Avatar>
