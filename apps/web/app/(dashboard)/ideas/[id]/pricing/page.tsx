@@ -1,42 +1,35 @@
 import React from "react";
 import { getPricingValidation } from "@/actions/idea/validation-pricing";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
-import { 
-  ChartContainer, 
-  ChartTooltip, 
-  ChartTooltipContent 
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   ResponsiveContainer,
   ScatterChart,
   Scatter,
   LineChart,
-  Line
+  Line,
 } from "recharts";
-import { 
-  TierStructureDiagram 
-} from "@/components/idea/validation/tier-structure-diagram";
-import { 
-  RevenueDistributionChart 
-} from "@/components/idea/validation/revenue-distribution-chart";
-import { 
-  FeatureMatrixTable 
-} from "@/components/idea/validation/feature-matrix-table";
-import { 
-  TierRevenueWaterfall 
-} from "@/components/idea/validation/tier-revenue-waterfall";
-import { 
-  PriceSensitivityCurve 
-} from "@/components/idea/validation/price-sensitivity-curve";
-import { 
-  RevenueProjectionTimeline 
-} from "@/components/idea/validation/revenue-projection-timeline";
+import { TierStructureDiagram } from "@/components/idea/validation/tier-structure-diagram";
+import { RevenueDistributionChart } from "@/components/idea/validation/revenue-distribution-chart";
+import { FeatureMatrixTable } from "@/components/idea/validation/feature-matrix-table";
+import { TierRevenueWaterfall } from "@/components/idea/validation/tier-revenue-waterfall";
+import { PriceSensitivityCurve } from "@/components/idea/validation/price-sensitivity-curve";
+import { RevenueProjectionTimeline } from "@/components/idea/validation/revenue-projection-timeline";
 
 interface PricingValidationPageProps {
   params: Promise<{ id: string }>;
@@ -49,108 +42,128 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <p className="text-muted-foreground">Pricing validation data not found.</p>
+          <p className="text-muted-foreground">
+            Pricing validation data not found.
+          </p>
         </CardContent>
       </Card>
     );
   }
 
   // Format primary strategy
-  const primaryStrategy = pricingValidation.primaryStrategy
-    ?.replace("_", " ")
-    ?.toLowerCase()
-    ?.replace(/\b\w/g, l => l.toUpperCase()) || "N/A";
+  const primaryStrategy =
+    pricingValidation.primaryStrategy
+      ?.replace("_", " ")
+      ?.toLowerCase()
+      ?.replace(/\b\w/g, (l) => l.toUpperCase()) || "N/A";
 
   // Prepare pricing tier data
-  const tierData = pricingValidation.pricingTiers.map(tier => ({
+  const tierData = pricingValidation.pricingTiers.map((tier) => ({
     name: tier.tierName,
     price: tier.tierPrice,
     conversion: tier.conversionRate,
     popularity: tier.popularityScore,
-    profit: tier.profitMargin
+    profit: tier.profitMargin,
   }));
 
   // Prepare competitor pricing data
-  const competitorData = pricingValidation.competitorPricing.map(comp => ({
+  const competitorData = pricingValidation.competitorPricing.map((comp) => ({
     name: comp.competitorName,
     price: comp.basePrice,
     value: comp.valueComparison,
-    marketPosition: comp.marketPosition
+    marketPosition: comp.marketPosition,
   }));
 
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold">Pricing Strategy</h1>
-      
+
       {/* Strategy Overview */}
       <section>
         <h2 className="text-xl font-semibold mb-4">Strategy Overview</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Primary Strategy</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Primary Strategy
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <Badge variant="secondary">{primaryStrategy}</Badge>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Recommended Price</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Recommended Price
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {pricingValidation.recommendedPrice ? 
-                  `$${pricingValidation.recommendedPrice.toFixed(2)}` : "N/A"}
+                {pricingValidation.recommendedPrice
+                  ? `$${pricingValidation.recommendedPrice.toFixed(2)}`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Pricing Score</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Pricing Score
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-center py-2">
-                {pricingValidation.overallPricingScore ? 
-                  `${pricingValidation.overallPricingScore.toFixed(0)}/100` : "N/A"}
+                {pricingValidation.overallPricingScore
+                  ? `${pricingValidation.overallPricingScore.toFixed(0)}/100`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Price Acceptance</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Price Acceptance
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-center">
-                {pricingValidation.priceAcceptance ? 
-                  `${pricingValidation.priceAcceptance.toFixed(0)}/100` : "N/A"}
+                {pricingValidation.priceAcceptance
+                  ? `${pricingValidation.priceAcceptance.toFixed(0)}/100`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Competitiveness</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Competitiveness
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-center">
-                {pricingValidation.competitivenessScore ? 
-                  `${pricingValidation.competitivenessScore.toFixed(0)}/100` : "N/A"}
+                {pricingValidation.competitivenessScore
+                  ? `${pricingValidation.competitivenessScore.toFixed(0)}/100`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Profitability</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Profitability
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-center">
-                {pricingValidation.profitabilityScore ? 
-                  `${pricingValidation.profitabilityScore.toFixed(0)}/100` : "N/A"}
+                {pricingValidation.profitabilityScore
+                  ? `${pricingValidation.profitabilityScore.toFixed(0)}/100`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
@@ -161,12 +174,14 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
       {pricingValidation.pricingTiers.length > 0 && (
         <section>
           <h2 className="text-xl font-semibold mb-4">Pricing Tiers</h2>
-          
+
           {/* Tier Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Total Tiers Analyzed</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Total Tiers Analyzed
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-center py-2">
@@ -174,67 +189,89 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card className="md:col-span-2">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Tier Structure</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Tier Structure
+                </CardTitle>
               </CardHeader>
               <CardContent className="h-40">
-                <TierStructureDiagram 
-                  tiers={pricingValidation.pricingTiers.map(tier => ({
+                <TierStructureDiagram
+                  tiers={pricingValidation.pricingTiers.map((tier) => ({
                     id: tier.id,
                     tierName: tier.tierName,
                     tierPrice: tier.tierPrice,
-                    targetSegment: tier.targetSegment || ""
+                    targetSegment: tier.targetSegment || "",
                   }))}
                 />
               </CardContent>
             </Card>
           </div>
-          
+
           {/* Revenue Distribution */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Revenue Distribution by Tier</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Revenue Distribution by Tier
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-64">
-              <RevenueDistributionChart 
-                tiers={pricingValidation.pricingTiers.map(tier => ({
+              <RevenueDistributionChart
+                tiers={pricingValidation.pricingTiers.map((tier) => ({
                   id: tier.id,
                   tierName: tier.tierName,
                   expectedRevenue: tier.tierPrice * 1000, // Mock revenue calculation
-                  conversionRate: tier.conversionRate
+                  conversionRate: tier.conversionRate,
                 }))}
               />
             </CardContent>
           </Card>
-          
+
           {/* Individual Pricing Tiers */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {pricingValidation.pricingTiers.map((tier) => (
               <Card key={tier.id}>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">{tier.tierName}</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    {tier.tierName}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <div className="text-2xl font-bold">${tier.tierPrice.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">
+                      ${tier.tierPrice.toFixed(2)}
+                    </div>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div>
-                        <span className="text-muted-foreground">Conversion: </span>
-                        <span className="font-medium">{tier.conversionRate.toFixed(0)}%</span>
+                        <span className="text-muted-foreground">
+                          Conversion:{" "}
+                        </span>
+                        <span className="font-medium">
+                          {tier.conversionRate.toFixed(0)}%
+                        </span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Popularity: </span>
-                        <span className="font-medium">{tier.popularityScore.toFixed(0)}/100</span>
+                        <span className="text-muted-foreground">
+                          Popularity:{" "}
+                        </span>
+                        <span className="font-medium">
+                          {tier.popularityScore.toFixed(0)}/100
+                        </span>
                       </div>
                       <div>
                         <span className="text-muted-foreground">Profit: </span>
-                        <span className="font-medium">{tier.profitMargin.toFixed(0)}/100</span>
+                        <span className="font-medium">
+                          {tier.profitMargin.toFixed(0)}/100
+                        </span>
                       </div>
                       <div>
-                        <span className="text-muted-foreground">Competitive: </span>
-                        <span className="font-medium">{tier.competitiveScore.toFixed(0)}/100</span>
+                        <span className="text-muted-foreground">
+                          Competitive:{" "}
+                        </span>
+                        <span className="font-medium">
+                          {tier.competitiveScore.toFixed(0)}/100
+                        </span>
                       </div>
                     </div>
                     {tier.targetSegment && (
@@ -247,29 +284,39 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
               </Card>
             ))}
           </div>
-          
+
           {/* Feature Matrix */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Feature Matrix</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Feature Matrix
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <FeatureMatrixTable 
-                features={["Feature 1", "Feature 2", "Feature 3", "Feature 4", "Feature 5"]}
-                tiers={pricingValidation.pricingTiers.map(tier => ({
+              <FeatureMatrixTable
+                features={[
+                  "Feature 1",
+                  "Feature 2",
+                  "Feature 3",
+                  "Feature 4",
+                  "Feature 5",
+                ]}
+                tiers={pricingValidation.pricingTiers.map((tier) => ({
                   id: tier.id,
                   tierName: tier.tierName,
-                  tierFeatures: tier.tierFeatures
+                  tierFeatures: tier.tierFeatures,
                 }))}
               />
             </CardContent>
           </Card>
-          
+
           {/* Tier Performance Metrics */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Conversion Rate by Tier</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Conversion Rate by Tier
+                </CardTitle>
               </CardHeader>
               <CardContent className="h-64">
                 <ChartContainer config={{}} className="h-full w-full">
@@ -279,24 +326,31 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
                       <XAxis dataKey="name" />
                       <YAxis domain={[0, 100]} />
                       <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="conversion" fill="hsl(var(--chart-1))" name="Conversion Rate" radius={[4, 4, 0, 0]} />
+                      <Bar
+                        dataKey="conversion"
+                        fill="hsl(var(--chart-1))"
+                        name="Conversion Rate"
+                        radius={[4, 4, 0, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Tier Revenue Waterfall</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Tier Revenue Waterfall
+                </CardTitle>
               </CardHeader>
               <CardContent className="h-64">
-                <TierRevenueWaterfall 
-                  tiers={pricingValidation.pricingTiers.map(tier => ({
+                <TierRevenueWaterfall
+                  tiers={pricingValidation.pricingTiers.map((tier) => ({
                     id: tier.id,
                     tierName: tier.tierName,
                     expectedRevenue: tier.tierPrice * 1000, // Mock calculation
-                    cumulativeRevenue: null // This would be calculated in the component
+                    cumulativeRevenue: null, // This would be calculated in the component
                   }))}
                 />
               </CardContent>
@@ -312,7 +366,9 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium">Our Pricing vs Competitors</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Our Pricing vs Competitors
+                </CardTitle>
               </CardHeader>
               <CardContent className="h-80">
                 <ChartContainer config={{}} className="h-full w-full">
@@ -326,84 +382,124 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
                       }}
                     >
                       <CartesianGrid />
-                      <XAxis 
-                        type="number" 
-                        dataKey="price" 
-                        name="Price" 
-                        unit="$" 
+                      <XAxis
+                        type="number"
+                        dataKey="price"
+                        name="Price"
+                        unit="$"
                         label={{ value: "Price ($)", position: "bottom" }}
                       />
-                      <YAxis 
-                        type="number" 
-                        dataKey="value" 
-                        name="Value" 
+                      <YAxis
+                        type="number"
+                        dataKey="value"
+                        name="Value"
                         domain={[0, 100]}
-                        label={{ value: "Value Comparison", angle: -90, position: "left" }}
+                        label={{
+                          value: "Value Comparison",
+                          angle: -90,
+                          position: "left",
+                        }}
                       />
                       <ChartTooltip content={<ChartTooltipContent />} />
-                      <Scatter 
-                        name="Competitors" 
-                        data={competitorData} 
-                        fill="hsl(var(--chart-2))" 
+                      <Scatter
+                        name="Competitors"
+                        data={competitorData}
+                        fill="hsl(var(--chart-2))"
                       />
                     </ScatterChart>
                   </ResponsiveContainer>
                 </ChartContainer>
               </CardContent>
             </Card>
-            
+
             <div className="space-y-6">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Market Price Range</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Market Price Range
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <div className="text-sm text-muted-foreground">Lowest Price</div>
+                      <div className="text-sm text-muted-foreground">
+                        Lowest Price
+                      </div>
                       <div className="text-lg font-semibold">
-                        ${Math.min(...pricingValidation.competitorPricing.map(c => c.basePrice)).toFixed(2)}
+                        $
+                        {Math.min(
+                          ...pricingValidation.competitorPricing.map(
+                            (c) => c.basePrice
+                          )
+                        ).toFixed(2)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Highest Price</div>
+                      <div className="text-sm text-muted-foreground">
+                        Highest Price
+                      </div>
                       <div className="text-lg font-semibold">
-                        ${Math.max(...pricingValidation.competitorPricing.map(c => c.basePrice)).toFixed(2)}
+                        $
+                        {Math.max(
+                          ...pricingValidation.competitorPricing.map(
+                            (c) => c.basePrice
+                          )
+                        ).toFixed(2)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground">Average Price</div>
+                      <div className="text-sm text-muted-foreground">
+                        Average Price
+                      </div>
                       <div className="text-lg font-semibold">
-                        ${(pricingValidation.competitorPricing.reduce((sum, c) => sum + c.basePrice, 0) / 
-                          pricingValidation.competitorPricing.length).toFixed(2)}
+                        $
+                        {(
+                          pricingValidation.competitorPricing.reduce(
+                            (sum, c) => sum + c.basePrice,
+                            0
+                          ) / pricingValidation.competitorPricing.length
+                        ).toFixed(2)}
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium">Competitor Pricing Details</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    Competitor Pricing Details
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {pricingValidation.competitorPricing.slice(0, 5).map((competitor) => (
-                      <div key={competitor.id} className="flex justify-between items-center border-b pb-2 last:border-0 last:pb-0">
-                        <div>
-                          <div className="font-medium">{competitor.competitorName}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {competitor.pricingModel}
+                    {pricingValidation.competitorPricing
+                      .slice(0, 5)
+                      .map((competitor) => (
+                        <div
+                          key={competitor.id}
+                          className="flex justify-between items-center border-b pb-2 last:border-0 last:pb-0"
+                        >
+                          <div>
+                            <div className="font-medium">
+                              {competitor.competitorName}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {competitor.pricingModel}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-medium">
+                              ${competitor.basePrice.toFixed(2)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {competitor.marketPosition
+                                ?.replace("_", " ")
+                                .toLowerCase() || "N/A"}
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-medium">${competitor.basePrice.toFixed(2)}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {competitor.marketPosition?.replace("_", " ").toLowerCase() || "N/A"}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </CardContent>
               </Card>
@@ -418,34 +514,68 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Price Sensitivity Analysis</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Price Sensitivity Analysis
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-64">
-              <PriceSensitivityCurve 
+              <PriceSensitivityCurve
                 data={[
                   { price: 10, demand: 90, elasticity: -1.2 },
                   { price: 20, demand: 75, elasticity: -0.8 },
                   { price: 30, demand: 60, elasticity: -0.6 },
                   { price: 40, demand: 45, elasticity: -0.4 },
-                  { price: 50, demand: 30, elasticity: -0.3 }
+                  { price: 50, demand: 30, elasticity: -0.3 },
                 ]}
               />
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Revenue Projections</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Revenue Projections
+              </CardTitle>
             </CardHeader>
             <CardContent className="h-64">
-              <RevenueProjectionTimeline 
+              <RevenueProjectionTimeline
                 data={[
-                  { month: "Month 1", optimistic: 10000, expected: 8000, pessimistic: 6000 },
-                  { month: "Month 2", optimistic: 15000, expected: 12000, pessimistic: 9000 },
-                  { month: "Month 3", optimistic: 20000, expected: 16000, pessimistic: 12000 },
-                  { month: "Month 4", optimistic: 25000, expected: 20000, pessimistic: 15000 },
-                  { month: "Month 5", optimistic: 30000, expected: 24000, pessimistic: 18000 },
-                  { month: "Month 6", optimistic: 35000, expected: 28000, pessimistic: 21000 }
+                  {
+                    month: "Month 1",
+                    optimistic: 10000,
+                    expected: 8000,
+                    pessimistic: 6000,
+                  },
+                  {
+                    month: "Month 2",
+                    optimistic: 15000,
+                    expected: 12000,
+                    pessimistic: 9000,
+                  },
+                  {
+                    month: "Month 3",
+                    optimistic: 20000,
+                    expected: 16000,
+                    pessimistic: 12000,
+                  },
+                  {
+                    month: "Month 4",
+                    optimistic: 25000,
+                    expected: 20000,
+                    pessimistic: 15000,
+                  },
+                  {
+                    month: "Month 5",
+                    optimistic: 30000,
+                    expected: 24000,
+                    pessimistic: 18000,
+                  },
+                  {
+                    month: "Month 6",
+                    optimistic: 35000,
+                    expected: 28000,
+                    pessimistic: 21000,
+                  },
                 ]}
               />
             </CardContent>
@@ -459,7 +589,9 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Pricing Strategy</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Pricing Strategy
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -469,10 +601,12 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Implementation</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Implementation
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -482,10 +616,12 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Success Metrics</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Success Metrics
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -501,7 +637,9 @@ async function PricingValidationContent({ ideaId }: { ideaId: string }) {
   );
 }
 
-export default async function PricingValidationPage({ params }: PricingValidationPageProps) {
+export default async function PricingValidationPage({
+  params,
+}: PricingValidationPageProps) {
   const { id } = await params;
 
   return (

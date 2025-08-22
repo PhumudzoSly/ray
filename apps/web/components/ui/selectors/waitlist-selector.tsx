@@ -47,7 +47,7 @@ export function WaitlistSelector({
   const waitlists = waitlistsResponse?.success ? waitlistsResponse.data : [];
 
   const selectedWaitlist = waitlists?.find(
-    (waitlist: Waitlist) => waitlist.id === currentWaitlist
+    (waitlist) => waitlist.id === currentWaitlist
   );
 
   return (

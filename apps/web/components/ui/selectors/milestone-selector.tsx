@@ -63,7 +63,9 @@ export function MilestoneSelector({
     enabled: !!token && !!projectId,
   });
 
-  const selectedMilestone = (milestones ?? []).find((milestone: Milestone) => milestone.id === value);
+  const selectedMilestone = (milestones ?? []).find(
+    (milestone) => milestone.id === value
+  );
 
   return (
     <div className={className}>
@@ -83,7 +85,9 @@ export function MilestoneSelector({
                     {selectedMilestone.name}
                   </span>
                 </div>
-                <MilestoneStatusBadge status={selectedMilestone.status as MilestoneStatus} />
+                <MilestoneStatusBadge
+                  status={selectedMilestone.status as MilestoneStatus}
+                />
               </>
             ) : (
               <div className="flex items-center gap-2 text-muted-foreground">
@@ -98,7 +102,7 @@ export function MilestoneSelector({
             <CommandInput placeholder="Search milestones..." />
             <CommandEmpty>No milestones found.</CommandEmpty>
             <CommandGroup>
-              {(milestones ?? []).map((milestone: Milestone) => (
+              {(milestones ?? []).map((milestone) => (
                 <CommandItem
                   key={milestone.id}
                   value={milestone.name}
@@ -119,7 +123,9 @@ export function MilestoneSelector({
                       <span className="truncate">{milestone.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <MilestoneStatusBadge status={milestone.status as MilestoneStatus} />
+                      <MilestoneStatusBadge
+                        status={milestone.status as MilestoneStatus}
+                      />
                       {milestone.progress > 0 && (
                         <Badge variant="outline" className="text-xs">
                           {milestone.progress}%

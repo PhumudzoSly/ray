@@ -83,9 +83,13 @@ export function IssueSelector({
     : excludeIssueId
       ? [excludeIssueId]
       : [];
-  const filteredIssues = (issues ?? []).filter((issue: Issue) => !excludedIds.includes(issue.id));
+  const filteredIssues = (issues ?? []).filter(
+    (issue) => !excludedIds.includes(issue.id)
+  );
 
-  const selectedIssue = filteredIssues.find((issue: Issue) => issue.id === selectedValue);
+  const selectedIssue = filteredIssues.find(
+    (issue) => issue.id === selectedValue
+  );
 
   return (
     <div className="*:not-first:mt-2">
@@ -147,7 +151,7 @@ export function IssueSelector({
                     <CheckIcon size={16} className="ml-auto" />
                   )}
                 </CommandItem>
-                {filteredIssues.map((issue: Issue) => {
+                {filteredIssues.map((issue) => {
                   const issueType = projectTypes.find(
                     (type) => type.id === issue.title
                   );

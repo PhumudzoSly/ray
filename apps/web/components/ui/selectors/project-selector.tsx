@@ -62,7 +62,7 @@ export function ProjectSelector({
   });
 
   const selectedProject = (projects ?? []).find(
-    (project: Project) => project.id === currentProject
+    (project) => project.id === currentProject
   );
 
   // Find the project type configuration for the selected project
@@ -122,7 +122,7 @@ export function ProjectSelector({
                 )}
               </CommandEmpty>
               <CommandGroup>
-                {(projects ?? []).map((project: Project) => {
+                {(projects ?? []).map((project) => {
                   const projectType = projectTypes.find(
                     (type) => type.id === project.platform
                   );
