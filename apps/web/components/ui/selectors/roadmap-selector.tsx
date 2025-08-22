@@ -47,7 +47,7 @@ export function RoadmapSelector({
   const roadmaps = roadmapsResponse?.success ? roadmapsResponse.data : [];
 
   const selectedRoadmap = roadmaps?.find(
-    (roadmap: Roadmap) => roadmap.id === currentRoadmap
+    (roadmap) => roadmap.id === currentRoadmap
   );
 
   return (

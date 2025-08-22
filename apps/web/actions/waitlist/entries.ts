@@ -2,7 +2,7 @@
 import { prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
 import { syncWaitlistEntryToEmail } from "./email-sync";
-import { getIntegrationUsage } from "../integration/usage";
+import { getWaitlistEmailIntegration } from "../integration/usage";
 
 /**
  * Create a new waitlist entry
@@ -41,15 +41,12 @@ export const createWaitlistEntry = async (data: {
     const entry = await prisma.waitlistEntry.create({ data });
 
     // Check for email sync integration usage
-    const emailSyncUsage = await getIntegrationUsage(
-      "waitlist",
-      data.waitlistId,
-      "email_sync"
-    );
+    const emailSyncUsage = await getWaitlistEmailIntegration(data.waitlistId);
     if (
       emailSyncUsage.success &&
       emailSyncUsage.data &&
-      emailSyncUsage.data.isActive
+      emailSyncUsage.data.isActive &&
+      emailSyncUsage.data.integration
     ) {
       try {
         // Get referral count for the entry
@@ -63,9 +60,23 @@ export const createWaitlistEntry = async (data: {
           referralCount,
         };
 
+        // Convert the integration to the expected format for email sync
+        const integration = emailSyncUsage.data.integration;
+        const integrationForSync = {
+          id: integration.id,
+          name: integration.name,
+          type: integration.type,
+          config: integration.config,
+          isActive: integration.isActive,
+          organizationId: integration.organizationId,
+          createdAt: new Date(), // Default for Redis-based integrations
+          updatedAt: new Date(), // Default for Redis-based integrations
+          createdById: null, // Default for Redis-based integrations
+        };
+
         await syncWaitlistEntryToEmail(
           entryWithReferralCount,
-          emailSyncUsage.data.integration
+          integrationForSync
         );
       } catch (syncError) {
         console.error("Email sync failed:", syncError);

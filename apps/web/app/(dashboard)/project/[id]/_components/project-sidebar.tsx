@@ -17,7 +17,7 @@ import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { DateSelector } from "@/components/ui/selectors";
 import { INFRASTRUCTURE_PROVIDERS } from "@/utils/constants/sources/infrastructure";
 import { ProjectStatusSelector } from "@/components/ui/selectors/project-status-selector";
-import { ActivityFeed } from "@/components/shared";
+import { ActivityFeed } from "@/components/shared/activity-feed";
 import { ORM_PLATFORMS } from "@/utils/constants/sources/orms";
 import { AI_PLATFORMS } from "@/utils/constants/sources/ai";
 

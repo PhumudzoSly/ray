@@ -43,7 +43,7 @@ import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { toast } from "sonner";
 import { safeFormatDistanceToNow, safeFormatDate } from "@/utils/date-utils";
 import NewRoadmap from "./components/new-roadmap";
-import { NoData } from "@/components/shared";
+import NoData from "@/components/shared/no-data";
 
 export default function RoadmapClient() {
   const router = useRouter();

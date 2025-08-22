@@ -9,4 +9,3 @@ export { prisma } from "./prisma/prisma";
 
 // Export services
 export * from "./services/demo-data-seeder";
-export * from "./services/document";

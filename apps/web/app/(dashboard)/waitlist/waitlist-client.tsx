@@ -39,10 +39,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Separator } from "@workspace/ui/components/separator";
 import PageHeader from "@/components/shared/page-header";
 import { useSession } from "@/context/session-context";
-import { NoData } from "@/components/shared";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { toast } from "sonner";
 import { formatDistanceToNow, format } from "date-fns";
+import NoData from "@/components/shared/no-data";
 
 export default function WaitlistClient() {
   const router = useRouter();

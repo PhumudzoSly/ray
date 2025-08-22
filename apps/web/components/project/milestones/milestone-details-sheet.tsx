@@ -570,14 +570,6 @@ export function MilestoneDetailsSheet({
               </Tabs>
             </div>
           )}
-
-          {/* Comments Section */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-foreground">Comments</h3>
-            <div className="border rounded-lg p-4 bg-background/50">
-              <CommentThread entityType="milestone" entityId={milestoneId} />
-            </div>
-          </div>
         </div>
       </SheetContent>
     </Sheet>

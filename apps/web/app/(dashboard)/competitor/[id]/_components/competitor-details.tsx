@@ -155,9 +155,7 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
         </ScrollArea>
       </div>
 
-      {view === "details" && (
-        <CompetitorDetailsView competitorId={id} />
-      )}
+      {view === "details" && <CompetitorDetailsView competitorId={id} />}
       {view === "swot" && <CompetitorSwotView competitorId={id} />}
       {view === "moves" && <CompetitorMovesView competitorId={id} />}
     </div>

@@ -6,7 +6,7 @@ import { getAllFeatureRequests } from "@/actions/roadmap/feature-requests";
 import { getRoadmap } from "@/actions/roadmap";
 import { FeatureRequestsTable } from "./feature-requests-table";
 import { FeatureRequestSheet } from "./feature-request-sheet";
-import { NoData } from "@/components/shared";
+import NoData from "@/components/shared/no-data";
 
 interface FeatureRequestsClientProps {
   roadmapId: string;
