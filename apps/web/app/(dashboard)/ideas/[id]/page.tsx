@@ -7,7 +7,12 @@ import { RiskAnalysis } from "@/components/idea/validation/risk-analysis";
 import { ActionItemsSummary } from "@/components/idea/validation/action-items-summary";
 import { QualitativeFeedbackSummary } from "@/components/idea/validation/qualitative-feedback-summary";
 import { ProgressIndicators } from "@/components/idea/validation/progress-indicators";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
 interface ValidationOverviewPageProps {
@@ -82,19 +87,23 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
 
   // Prepare data for components
   const pmfMetrics = validation.productMarketFitAnalysis?.metrics || [];
-  const npsMetric = pmfMetrics.find(metric => metric.name === "NPS");
-  const retentionMetrics = pmfMetrics.filter(metric => metric.name.startsWith("Retention"));
-  
+  const npsMetric = pmfMetrics.find((metric) => metric.name === "NPS");
+  const retentionMetrics = pmfMetrics.filter((metric) =>
+    metric.name.startsWith("Retention")
+  );
+
   // Format retention data for chart
-  const retentionRateData = retentionMetrics.map(metric => ({
+  const retentionRateData = retentionMetrics.map((metric) => ({
     month: metric.name.replace("Retention ", ""),
-    rate: metric.value
+    rate: metric.value,
   }));
 
   // Get "Must-have" score from market validation insights
   const mustHaveInsight = validation.marketValidation?.marketInsights.find(
-    insight => insight.category === "success_factor" && 
-    (insight.label?.toLowerCase().includes("must") || insight.label?.toLowerCase().includes("essential"))
+    (insight) =>
+      insight.category === "success_factor" &&
+      (insight.label?.toLowerCase().includes("must") ||
+        insight.label?.toLowerCase().includes("essential"))
   );
 
   // Prepare module status data
@@ -103,38 +112,38 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
       title: "Market Validation",
       status: validation.marketValidation?.status,
       score: validation.marketValidation?.overallMarketScore,
-      progress: undefined
+      progress: undefined,
     },
     {
       title: "Business Validation",
       status: validation.businessValidation?.status,
       score: validation.businessValidation?.overallBusinessScore,
-      progress: undefined
+      progress: undefined,
     },
     {
       title: "Risk Analysis",
       status: validation.riskAnalysis?.status,
       score: validation.riskAnalysis?.overallRiskScore,
-      progress: undefined
+      progress: undefined,
     },
     {
       title: "Product-Market Fit",
       status: validation.productMarketFitAnalysis?.status,
       score: validation.productMarketFitAnalysis?.pmfScore,
-      progress: undefined
+      progress: undefined,
     },
     {
       title: "Audience Segmentation",
       status: undefined, // TargetAudienceSegmentation model doesn't have status property
       score: validation.TargetAudienceSegmentation?.overallSegmentationScore,
-      progress: undefined
+      progress: undefined,
     },
     {
       title: "Pricing Strategy",
       status: undefined, // PricingStrategyAnalysis model doesn't have status property
       score: validation.PricingStrategyAnalysis?.overallPricingScore,
-      progress: undefined
-    }
+      progress: undefined,
+    },
   ];
 
   // Prepare progress indicators data
@@ -142,33 +151,33 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
     {
       title: "Market Validation",
       progress: validation.marketValidation?.overallMarketScore,
-      status: validation.marketValidation?.status
+      status: validation.marketValidation?.status,
     },
     {
       title: "Business Validation",
       progress: validation.businessValidation?.overallBusinessScore,
-      status: validation.businessValidation?.status
+      status: validation.businessValidation?.status,
     },
     {
       title: "Risk Analysis",
       progress: validation.riskAnalysis?.overallRiskScore,
-      status: validation.riskAnalysis?.status
+      status: validation.riskAnalysis?.status,
     },
     {
       title: "Product-Market Fit",
       progress: validation.productMarketFitAnalysis?.pmfScore,
-      status: validation.productMarketFitAnalysis?.status
+      status: validation.productMarketFitAnalysis?.status,
     },
     {
       title: "Audience Segmentation",
       progress: validation.TargetAudienceSegmentation?.overallSegmentationScore,
-      status: undefined // TargetAudienceSegmentation model doesn't have status property
+      status: undefined, // TargetAudienceSegmentation model doesn't have status property
     },
     {
       title: "Pricing Strategy",
       progress: validation.PricingStrategyAnalysis?.overallPricingScore,
-      status: undefined // PricingStrategyAnalysis model doesn't have status property
-    }
+      status: undefined, // PricingStrategyAnalysis model doesn't have status property
+    },
   ];
 
   // Prepare action items data
@@ -180,7 +189,9 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
   const feedbackItems: any[] = [];
 
   // Get DAU/MAU ratio from metrics
-  const dauMauMetric = pmfMetrics.find(metric => metric.name === "DAU_MAU_Ratio");
+  const dauMauMetric = pmfMetrics.find(
+    (metric) => metric.name === "DAU_MAU_Ratio"
+  );
 
   return (
     <div className="space-y-8">
@@ -192,7 +203,9 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
           overallStatus={validation.overallStatus}
           confidenceLevel={validation.confidenceLevel}
           validationProgress={validation.validationProgress}
-          overallStrengthScore={validation.validationMetrics?.overallStrengthScore}
+          overallStrengthScore={
+            validation.validationMetrics?.overallStrengthScore
+          }
           overallRiskScore={validation.validationMetrics?.overallRiskScore}
           timeToMarket={validation.validationMetrics?.timeToMarket}
           fundingRequired={validation.validationMetrics?.fundingRequired}
@@ -205,28 +218,36 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
 
       {/* Key Performance Indicators */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Key Performance Indicators</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Key Performance Indicators
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Customer Payback Period</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Customer Payback Period
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {validation.validationMetrics?.customerPayback ? 
-                  `${validation.validationMetrics.customerPayback} months` : "N/A"}
+                {validation.validationMetrics?.customerPayback
+                  ? `${validation.validationMetrics.customerPayback} months`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Market Penetration</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Market Penetration
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {validation.validationMetrics?.marketPenetration ? 
-                  `${validation.validationMetrics.marketPenetration.toFixed(1)}%` : "N/A"}
+                {validation.validationMetrics?.marketPenetration
+                  ? `${validation.validationMetrics.marketPenetration.toFixed(1)}%`
+                  : "N/A"}
               </div>
             </CardContent>
           </Card>
@@ -251,7 +272,11 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
           pmfScore={validation.productMarketFitAnalysis?.pmfScore}
           npsScore={npsMetric?.value}
           retentionRateData={retentionRateData}
-          mustHaveScore={mustHaveInsight ? parseFloat(mustHaveInsight.impact.toFixed(0)) : undefined}
+          mustHaveScore={
+            mustHaveInsight
+              ? parseFloat(mustHaveInsight.impact.toFixed(0))
+              : undefined
+          }
           dauMauRatio={dauMauMetric?.value}
         />
       </section>
@@ -281,12 +306,12 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
         <h2 className="text-xl font-semibold mb-4">Risk Analysis</h2>
         <RiskAnalysis
           overallRiskScore={validation.riskAnalysis?.overallRiskScore}
-          riskItems={validation.riskAnalysis?.riskItems.map(item => ({
+          riskItems={validation.riskAnalysis?.riskItems.map((item) => ({
             id: item.id,
             category: item.category,
             description: item.description,
             impact: item.impact,
-            probability: item.probability
+            probability: item.probability,
           }))}
         />
       </section>
@@ -294,7 +319,9 @@ async function ValidationOverviewContent({ ideaId }: { ideaId: string }) {
   );
 }
 
-const ValidationOverviewPage = async ({ params }: ValidationOverviewPageProps) => {
+const ValidationOverviewPage = async ({
+  params,
+}: ValidationOverviewPageProps) => {
   const { id } = await params;
 
   return (
