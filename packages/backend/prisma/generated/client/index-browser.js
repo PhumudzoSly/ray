@@ -1328,7 +1328,8 @@ exports.IntegrationType = exports.$Enums.IntegrationType = {
   SENDGRID: 'SENDGRID',
   MAILCHIMP: 'MAILCHIMP',
   CONVERTKIT: 'CONVERTKIT',
-  GITHUB: 'GITHUB'
+  GITHUB: 'GITHUB',
+  VERCEL: 'VERCEL'
 };
 
 exports.ApiPermission = exports.$Enums.ApiPermission = {

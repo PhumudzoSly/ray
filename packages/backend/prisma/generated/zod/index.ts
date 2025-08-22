@@ -278,7 +278,7 @@ export const MilestoneStatusSchema = z.enum(['NOT_STARTED','IN_PROGRESS','AT_RIS
 
 export type MilestoneStatusType = `${z.infer<typeof MilestoneStatusSchema>}`
 
-export const IntegrationTypeSchema = z.enum(['RESEND','LOOPS','SENDGRID','MAILCHIMP','CONVERTKIT','GITHUB']);
+export const IntegrationTypeSchema = z.enum(['RESEND','LOOPS','SENDGRID','MAILCHIMP','CONVERTKIT','GITHUB','VERCEL']);
 
 export type IntegrationTypeType = `${z.infer<typeof IntegrationTypeSchema>}`
 

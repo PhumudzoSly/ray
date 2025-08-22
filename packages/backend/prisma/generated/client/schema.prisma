@@ -253,6 +253,7 @@ enum IntegrationType {
   MAILCHIMP
   CONVERTKIT
   GITHUB
+  VERCEL
 }
 
 enum ApiPermission {
