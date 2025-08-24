@@ -43,7 +43,15 @@ function debounce<T extends (...args: any[]) => any>(
 
 interface CollaborativeEditorProps {
   // New API: save by entity type and id
-  entityType?: "project" | "issue" | "feature" | "milestone";
+  entityType?:
+    | "project"
+    | "issue"
+    | "feature"
+    | "milestone"
+    | "competitor"
+    | "competitorSwot"
+    | "competitiveMove"
+    | "roadmapItem";
   entityId?: string;
   documentId?: string;
 }
@@ -59,6 +67,26 @@ const USER_COLORS = [
   "#F7DC6F",
   "#BB8FCE",
   "#85C1E9",
+  "#FF9F43",
+  "#54A0FF",
+  "#5F27CD",
+  "#00D2D3",
+  "#FF9FF3",
+  "#54A0FF",
+  "#1DD1A1",
+  "#FD79A8",
+  "#FDCB6E",
+  "#6C5CE7",
+  "#A29BFE",
+  "#FD79A8",
+  "#E17055",
+  "#00B894",
+  "#00CEC9",
+  "#E84393",
+  "#FDCB6E",
+  "#6C5CE7",
+  "#74B9FF",
+  "#55A3FF",
 ];
 
 function getUserColor(userId: string): string {
@@ -133,7 +161,7 @@ export function CollaborativeEditor({
             if (mounted) {
               setConnectionStatus("connected");
             }
-          }, 2000);
+          }, 1000);
         }
       } catch (e) {
         console.error("Failed to create WebrtcProvider:", e);
@@ -161,7 +189,15 @@ export function CollaborativeEditor({
     debounce(async (content: PartialBlock[]) => {
       // Determine save strategy: entity-based preferred, fallback to legacy documentId
       const resolved: {
-        type?: "project" | "issue" | "feature" | "milestone";
+        type?:
+          | "project"
+          | "issue"
+          | "feature"
+          | "milestone"
+          | "competitor"
+          | "competitorSwot"
+          | "competitiveMove"
+          | "roadmapItem";
         id?: string;
       } = {
         type: entityType,
@@ -170,9 +206,10 @@ export function CollaborativeEditor({
 
       // Backward compatibility: parse legacy documentId pattern like "project-<id>"
       if (!resolved.type && !resolved.id && documentId) {
-        const match = /^(project|issue|feature|milestone)-(\w[\w-]*)$/.exec(
-          documentId
-        );
+        const match =
+          /^(project|issue|feature|milestone|competitor|competitorSwot|competitiveMove|roadmapItem)-(\w[\w-]*)$/.exec(
+            documentId
+          );
         if (match) {
           resolved.type = match[1] as any;
           resolved.id = match[2];
@@ -216,18 +253,21 @@ export function CollaborativeEditor({
     [entityType, entityId, documentId]
   );
 
-  const { data: initialContent, isLoading: isFetchingInitialContent } = useQuery({
-    queryKey: queryKeys.documents.entity(entityType, entityId),
-    queryFn: async () => {
-      if (!entityType || !entityId) return null;
-      const result = await getEntityDocumentContent({ entityType, entityId });
-      if (result.success) {
-        return result.document.content as PartialBlock[];
-      }
-      return null;
-    },
-    enabled: !!entityType && !!entityId,
-  });
+  const { data: initialContent, isLoading: isFetchingInitialContent } =
+    useQuery({
+      queryKey: queryKeys.documents.entity(entityType, entityId),
+      queryFn: async () => {
+        if (!entityType || !entityId) return null;
+        console.log("Fetching document for:", { entityType, entityId });
+        const result = await getEntityDocumentContent({ entityType, entityId });
+        console.log("Document fetch result:", result);
+        if (result.success) {
+          return result.document.content as PartialBlock[];
+        }
+        return null;
+      },
+      enabled: !!entityType && !!entityId,
+    });
 
   const editor = useCreateBlockNote(
     {
@@ -247,16 +287,52 @@ export function CollaborativeEditor({
     [provider, user]
   );
 
+  // Fallback: if editor is created but no provider, still mark as connected
+  useEffect(() => {
+    if (editor && !provider && connectionStatus === "connecting") {
+      // Editor works without collaboration, so we're "connected" for editing purposes
+      setTimeout(() => setConnectionStatus("connected"), 500);
+    }
+  }, [editor, provider, connectionStatus]);
+
   // State to track if initial content has been loaded
   const [initialContentLoaded, setInitialContentLoaded] = useState(false);
 
   // Effect to load initial content into the editor
   useEffect(() => {
+    console.log("Content loading effect:", {
+      hasEditor: !!editor,
+      hasInitialContent: !!initialContent,
+      initialContentLoaded,
+      entityType,
+      entityId,
+    });
+
     if (editor && initialContent && !initialContentLoaded) {
+      console.log("Loading initial content into editor");
       editor.replaceBlocks(editor.document, initialContent);
       setInitialContentLoaded(true);
+      // If we successfully load content, we're effectively "connected"
+      setConnectionStatus("connected");
+    } else if (
+      editor &&
+      !initialContent &&
+      !initialContentLoaded &&
+      !isFetchingInitialContent
+    ) {
+      // No initial content but editor is ready - mark as loaded and connected
+      console.log("No initial content, marking as loaded");
+      setInitialContentLoaded(true);
+      setConnectionStatus("connected");
     }
-  }, [editor, initialContent, initialContentLoaded]);
+  }, [
+    editor,
+    initialContent,
+    initialContentLoaded,
+    isFetchingInitialContent,
+    entityType,
+    entityId,
+  ]);
 
   useEffect(() => {
     editorRef.current = editor;
@@ -291,6 +367,15 @@ export function CollaborativeEditor({
   }, [doc]);
 
   const isEditorLoading = isFetchingInitialContent || !initialContentLoaded;
+
+  console.log("Editor loading state:", {
+    isFetchingInitialContent,
+    initialContentLoaded,
+    isEditorLoading,
+    connectionStatus,
+    entityType,
+    entityId,
+  });
 
   return (
     <div className="relative">

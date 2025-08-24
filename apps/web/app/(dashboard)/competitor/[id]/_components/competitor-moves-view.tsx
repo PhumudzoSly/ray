@@ -4,51 +4,70 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getCompetitiveMoves,
-  createCompetitiveMove,
-  updateCompetitiveMove,
   deleteCompetitiveMove,
 } from "@/actions/idea/competitor";
-import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { Input } from "@workspace/ui/components/input";
-import { Textarea } from "@workspace/ui/components/textarea";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@workspace/ui/components/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@workspace/ui/components/dialog";
-import { Label } from "@workspace/ui/components/label";
-import { Checkbox } from "@workspace/ui/components/checkbox";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@workspace/ui/components/sheet";
+import { Badge } from "@workspace/ui/components/badge";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { toast } from "sonner";
 import {
-  Plus,
-  Edit,
   Trash2,
   TrendingUp,
   Calendar,
-  Target,
   AlertTriangle,
   CheckCircle,
   Clock,
+  Eye,
+  MoreHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { AddCompetitiveMove } from "./add-competitive-move";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu";
+import { Separator } from "@workspace/ui/components/separator";
+import { CollaborativeEditor } from "@/components/collaborative-editor";
+
+function getStatusIcon(
+  move: Pick<CompetitiveMove, "announcedDate" | "launchDate" | "completionDate">
+) {
+  if (move.completionDate)
+    return (
+      <CheckCircle className="h-3.5 w-3.5 text-green-600 dark:text-green-400" />
+    );
+  if (move.launchDate)
+    return <Clock className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />;
+  if (move.announcedDate)
+    return <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />;
+  return <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />;
+}
+
+function getStatusText(
+  move: Pick<CompetitiveMove, "announcedDate" | "launchDate" | "completionDate">
+) {
+  if (move.completionDate) return "Completed";
+  if (move.launchDate) return "Launching";
+  if (move.announcedDate) return "Announced";
+  return "Planned";
+}
 
 interface CompetitorMovesViewProps {
   competitorId: string;
@@ -58,7 +77,7 @@ type Importance = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
 
 interface CompetitiveMove {
   id: string;
-  competitorId: string;
+  competitorId: string | null;
   moveType: string;
   title: string;
   description: string;
@@ -77,79 +96,79 @@ interface CompetitiveMove {
   createdAt: Date;
 }
 
-const impactColors = {
-  LOW: "bg-gray-100 text-gray-800",
-  MEDIUM: "bg-yellow-100 text-yellow-800",
-  HIGH: "bg-orange-100 text-orange-800",
-  CRITICAL: "bg-red-100 text-red-800",
+const impactConfig = {
+  LOW: {
+    label: "Low",
+    color: "text-muted-foreground",
+    bgColor: "bg-muted-foreground/10",
+  },
+  MEDIUM: {
+    label: "Medium",
+    color: "text-yellow-600 dark:text-yellow-400",
+    bgColor: "bg-yellow-500/10 dark:bg-yellow-400/10",
+  },
+  HIGH: {
+    label: "High",
+    color: "text-orange-600 dark:text-orange-400",
+    bgColor: "bg-orange-500/10 dark:bg-orange-400/10",
+  },
+  CRITICAL: {
+    label: "Critical",
+    color: "text-red-600 dark:text-red-400",
+    bgColor: "bg-red-500/10 dark:bg-red-400/10",
+  },
 };
 
-const moveTypeColors = {
-  "Product Launch": "bg-blue-100 text-blue-800",
-  "Feature Update": "bg-green-100 text-green-800",
-  "Pricing Change": "bg-purple-100 text-purple-800",
-  "Market Expansion": "bg-indigo-100 text-indigo-800",
-  Partnership: "bg-pink-100 text-pink-800",
-  Acquisition: "bg-red-100 text-red-800",
-  Other: "bg-gray-100 text-gray-800",
+const moveTypeConfig = {
+  "Product Launch": {
+    label: "Product Launch",
+    color: "text-blue-600 dark:text-blue-400",
+    bgColor: "bg-blue-500/10 dark:bg-blue-400/10",
+  },
+  "Feature Update": {
+    label: "Feature Update",
+    color: "text-green-600 dark:text-green-400",
+    bgColor: "bg-green-500/10 dark:bg-green-400/10",
+  },
+  "Pricing Change": {
+    label: "Pricing Change",
+    color: "text-purple-600 dark:text-purple-400",
+    bgColor: "bg-purple-500/10 dark:bg-purple-400/10",
+  },
+  "Market Expansion": {
+    label: "Market Expansion",
+    color: "text-indigo-600 dark:text-indigo-400",
+    bgColor: "bg-indigo-500/10 dark:bg-indigo-400/10",
+  },
+  Partnership: {
+    label: "Partnership",
+    color: "text-pink-600 dark:text-pink-400",
+    bgColor: "bg-pink-500/10 dark:bg-pink-400/10",
+  },
+  Acquisition: {
+    label: "Acquisition",
+    color: "text-red-600 dark:text-red-400",
+    bgColor: "bg-red-500/10 dark:bg-red-400/10",
+  },
+  Other: {
+    label: "Other",
+    color: "text-muted-foreground",
+    bgColor: "bg-muted-foreground/10",
+  },
 };
 
 export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
   competitorId,
 }) => {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [editingMove, setEditingMove] = useState<CompetitiveMove | null>(null);
-  const [newMove, setNewMove] = useState({
-    moveType: "",
-    title: "",
-    description: "",
-    impactLevel: "MEDIUM" as Importance,
-    targetAudience: "",
-    affectedFeatures: [] as string[],
-    announcedDate: "",
-    launchDate: "",
-    completionDate: "",
-    opportunities: [] as string[],
-    threats: [] as string[],
-    responseRequired: false,
-    responseStrategy: "",
-  });
-
+  const [selectedMove, setSelectedMove] = useState<CompetitiveMove | null>(
+    null
+  );
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: competitiveMoves, isLoading } = useQuery({
     queryKey: ["competitiveMoves", competitorId],
     queryFn: () => getCompetitiveMoves(competitorId),
-  });
-
-  const createMutation = useMutation({
-    mutationFn: createCompetitiveMove,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["competitiveMoves", competitorId],
-      });
-      setIsCreateDialogOpen(false);
-      resetNewMove();
-      toast.success("Competitive move created successfully");
-    },
-    onError: () => {
-      toast.error("Failed to create competitive move");
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, move }: { id: string; move: any }) =>
-      updateCompetitiveMove({ id, move }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["competitiveMoves", competitorId],
-      });
-      setEditingMove(null);
-      toast.success("Competitive move updated successfully");
-    },
-    onError: () => {
-      toast.error("Failed to update competitive move");
-    },
   });
 
   const deleteMutation = useMutation({
@@ -159,77 +178,16 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
         queryKey: ["competitiveMoves", competitorId],
       });
       toast.success("Competitive move deleted successfully");
+      setIsSheetOpen(false);
     },
     onError: () => {
       toast.error("Failed to delete competitive move");
     },
   });
 
-  const resetNewMove = () => {
-    setNewMove({
-      moveType: "",
-      title: "",
-      description: "",
-      impactLevel: "MEDIUM",
-      targetAudience: "",
-      affectedFeatures: [],
-      announcedDate: "",
-      launchDate: "",
-      completionDate: "",
-      opportunities: [],
-      threats: [],
-      responseRequired: false,
-      responseStrategy: "",
-    });
-  };
-
-  const handleCreate = () => {
-    if (!newMove.title.trim() || !newMove.moveType.trim()) {
-      toast.error("Please provide title and move type");
-      return;
-    }
-
-    const moveData: any = {
-      competitorId,
-      moveType: newMove.moveType,
-      title: newMove.title,
-      description: newMove.description,
-      impactLevel: newMove.impactLevel,
-      targetAudience: newMove.targetAudience || null,
-      affectedFeatures: newMove.affectedFeatures,
-      opportunities: newMove.opportunities,
-      threats: newMove.threats,
-      responseRequired: newMove.responseRequired,
-      responseStrategy: newMove.responseStrategy || null,
-    };
-
-    if (newMove.announcedDate)
-      moveData.announcedDate = new Date(newMove.announcedDate);
-    if (newMove.launchDate) moveData.launchDate = new Date(newMove.launchDate);
-    if (newMove.completionDate)
-      moveData.completionDate = new Date(newMove.completionDate);
-
-    createMutation.mutate({ move: moveData });
-  };
-
-  const handleUpdate = (move: CompetitiveMove) => {
-    const updateData: any = {
-      moveType: move.moveType,
-      title: move.title,
-      description: move.description,
-      impactLevel: move.impactLevel,
-      targetAudience: move.targetAudience,
-      affectedFeatures: move.affectedFeatures,
-      opportunities: move.opportunities,
-      threats: move.threats,
-      responseRequired: move.responseRequired,
-      responseStrategy: move.responseStrategy,
-      announcedDate: move.announcedDate,
-      launchDate: move.launchDate,
-      completionDate: move.completionDate,
-    };
-
-    updateMutation.mutate({ id: move.id, move: updateData });
+  const handleViewDetails = (move: CompetitiveMove) => {
+    setSelectedMove(move);
+    setIsSheetOpen(true);
   };
 
   const handleDelete = (id: string) => {
@@ -238,357 +196,362 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
     }
   };
 
-  const addArrayItem = (
-    field: "affectedFeatures" | "opportunities" | "threats",
-    value: string
-  ) => {
-    if (value.trim()) {
-      setNewMove((prev) => ({
-        ...prev,
-        [field]: [...prev[field], value.trim()],
-      }));
-    }
-  };
-
-  const removeArrayItem = (
-    field: "affectedFeatures" | "opportunities" | "threats",
-    index: number
-  ) => {
-    setNewMove((prev) => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index),
-    }));
-  };
-
-  const getStatusIcon = (move: CompetitiveMove) => {
-    if (move.completionDate)
-      return <CheckCircle className="h-4 w-4 text-green-600" />;
-    if (move.launchDate && new Date(move.launchDate) <= new Date())
-      return <Target className="h-4 w-4 text-blue-600" />;
-    if (move.announcedDate)
-      return <Clock className="h-4 w-4 text-yellow-600" />;
-    return <AlertTriangle className="h-4 w-4 text-gray-400" />;
-  };
-
-  const getStatusText = (move: CompetitiveMove) => {
-    if (move.completionDate) return "Completed";
-    if (move.launchDate && new Date(move.launchDate) <= new Date())
-      return "Launched";
-    if (move.announcedDate) return "Announced";
-    return "Planned";
-  };
-
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-20">
+      <div className="flex items-center justify-center py-32">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-lg font-semibold">Competitive Moves</h3>
-          <Badge variant="outline" className="ml-2">
-            {competitiveMoves?.length || 0} moves
-          </Badge>
+    <>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-lg font-medium">Competitive Moves</h2>
+            <p className="text-sm text-muted-foreground">
+              Track competitor activities, product launches, and strategic moves
+            </p>
+          </div>
+          <AddCompetitiveMove competitorId={competitorId} />
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Move
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Competitive Move</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="moveType">Move Type</Label>
-                  <Select
-                    value={newMove.moveType}
-                    onValueChange={(value) =>
-                      setNewMove({ ...newMove, moveType: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select move type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Product Launch">
-                        Product Launch
-                      </SelectItem>
-                      <SelectItem value="Feature Update">
-                        Feature Update
-                      </SelectItem>
-                      <SelectItem value="Pricing Change">
-                        Pricing Change
-                      </SelectItem>
-                      <SelectItem value="Market Expansion">
-                        Market Expansion
-                      </SelectItem>
-                      <SelectItem value="Partnership">Partnership</SelectItem>
-                      <SelectItem value="Acquisition">Acquisition</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="impactLevel">Impact Level</Label>
-                  <Select
-                    value={newMove.impactLevel}
-                    onValueChange={(value: Importance) =>
-                      setNewMove({ ...newMove, impactLevel: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="LOW">Low</SelectItem>
-                      <SelectItem value="MEDIUM">Medium</SelectItem>
-                      <SelectItem value="HIGH">High</SelectItem>
-                      <SelectItem value="CRITICAL">Critical</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
 
-              <div>
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter move title..."
-                  value={newMove.title}
-                  onChange={(e) =>
-                    setNewMove({ ...newMove, title: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  placeholder="Describe the competitive move..."
-                  value={newMove.description}
-                  onChange={(e) =>
-                    setNewMove({ ...newMove, description: e.target.value })
-                  }
-                  rows={3}
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="announcedDate">Announced Date</Label>
-                  <Input
-                    id="announcedDate"
-                    type="date"
-                    value={newMove.announcedDate}
-                    onChange={(e) =>
-                      setNewMove({ ...newMove, announcedDate: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="launchDate">Launch Date</Label>
-                  <Input
-                    id="launchDate"
-                    type="date"
-                    value={newMove.launchDate}
-                    onChange={(e) =>
-                      setNewMove({ ...newMove, launchDate: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="completionDate">Completion Date</Label>
-                  <Input
-                    id="completionDate"
-                    type="date"
-                    value={newMove.completionDate}
-                    onChange={(e) =>
-                      setNewMove({ ...newMove, completionDate: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="responseRequired"
-                  checked={newMove.responseRequired}
-                  onCheckedChange={(checked) =>
-                    setNewMove({ ...newMove, responseRequired: !!checked })
-                  }
-                />
-                <Label htmlFor="responseRequired">Response Required</Label>
-              </div>
-
-              {newMove.responseRequired && (
-                <div>
-                  <Label htmlFor="responseStrategy">Response Strategy</Label>
-                  <Textarea
-                    id="responseStrategy"
-                    placeholder="Describe the response strategy..."
-                    value={newMove.responseStrategy}
-                    onChange={(e) =>
-                      setNewMove({
-                        ...newMove,
-                        responseStrategy: e.target.value,
-                      })
-                    }
-                    rows={2}
-                  />
-                </div>
-              )}
-
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsCreateDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleCreate}
-                  disabled={createMutation.isPending}
-                >
-                  {createMutation.isPending ? "Creating..." : "Create"}
-                </Button>
+        {!competitiveMoves || competitiveMoves.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="space-y-3">
+              <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground/40" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium">No competitive moves yet</p>
+                <p className="text-sm text-muted-foreground">
+                  Track competitor activities, product launches, and strategic
+                  moves
+                </p>
               </div>
             </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-
-      <div className="space-y-4">
-        {!competitiveMoves || competitiveMoves.length === 0 ? (
-          <div className="text-center py-12">
-            <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">
-              No competitive moves yet
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Track competitor activities, product launches, and strategic
-              moves.
-            </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add First Move
-            </Button>
           </div>
         ) : (
-          competitiveMoves.map((move) => (
-            <Card key={move.id} className="hover:shadow-md transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {getStatusIcon({
-                        ...move,
-                        competitorId: move.competitorId || "",
-                      })}
-                      <CardTitle className="text-lg">{move.title}</CardTitle>
-                      <Badge
-                        className={cn(
-                          "text-xs",
-                          moveTypeColors[
-                            move.moveType as keyof typeof moveTypeColors
-                          ] || moveTypeColors.Other
+          <div className="border rounded-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[40px]"></TableHead>
+                  <TableHead>Move</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Impact</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="w-[70px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {competitiveMoves.map((move) => {
+                  const moveTypeInfo =
+                    moveTypeConfig[
+                      move.moveType as keyof typeof moveTypeConfig
+                    ] || moveTypeConfig.Other;
+                  const impactInfo = impactConfig[move.impactLevel];
+                  const statusText = getStatusText({
+                    announcedDate: move.announcedDate,
+                    launchDate: move.launchDate,
+                    completionDate: move.completionDate,
+                  });
+                  const statusIcon = getStatusIcon({
+                    announcedDate: move.announcedDate,
+                    launchDate: move.launchDate,
+                    completionDate: move.completionDate,
+                  });
+
+                  return (
+                    <TableRow key={move.id} className="group">
+                      <TableCell>
+                        {move.responseRequired && (
+                          <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
                         )}
-                      >
-                        {move.moveType}
-                      </Badge>
-                      <Badge
-                        className={cn(
-                          "text-xs",
-                          impactColors[move.impactLevel]
-                        )}
-                      >
-                        {move.impactLevel} Impact
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        {getStatusIcon({
-                          ...move,
-                          competitorId: move.competitorId || "",
-                        })}
-                        {getStatusText({
-                          ...move,
-                          competitorId: move.competitorId || "",
-                        })}
-                      </span>
-                      {move.announcedDate && (
-                        <span className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          Announced{" "}
-                          {format(new Date(move.announcedDate), "MMM dd, yyyy")}
-                        </span>
-                      )}
-                    </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="font-medium text-sm">
+                            {move.title}
+                          </div>
+                          <div className="text-xs text-muted-foreground line-clamp-2">
+                            {move.description}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className={cn("text-xs", moveTypeInfo.bgColor)}
+                        >
+                          {moveTypeInfo.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className={cn("text-xs", impactInfo.bgColor)}
+                        >
+                          {impactInfo.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {statusIcon}
+                          <span className="text-sm">{statusText}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm text-muted-foreground">
+                          {move.completionDate
+                            ? format(new Date(move.completionDate), "MMM dd")
+                            : move.launchDate
+                              ? format(new Date(move.launchDate), "MMM dd")
+                              : move.announcedDate
+                                ? format(new Date(move.announcedDate), "MMM dd")
+                                : "—"}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => handleViewDetails(move)}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(move.id)}
+                              className="text-red-600 dark:text-red-400"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+
+      {/* Detail Sheet */}
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent className="w-full md:w-[600px sm:max-w-[600px]">
+          {selectedMove && (
+            <>
+              <SheetHeader>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon({
+                      announcedDate: selectedMove.announcedDate,
+                      launchDate: selectedMove.launchDate,
+                      completionDate: selectedMove.completionDate,
+                    })}
+                    <SheetTitle className="text-lg">
+                      {selectedMove.title}
+                    </SheetTitle>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() =>
-                        setEditingMove({
-                          ...move,
-                          competitorId: move.competitorId || "",
-                        })
-                      }
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="secondary"
+                      className={cn(
+                        "text-xs",
+                        moveTypeConfig[
+                          selectedMove.moveType as keyof typeof moveTypeConfig
+                        ]?.bgColor || moveTypeConfig.Other.bgColor
+                      )}
                     >
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => handleDelete(move.id)}
+                      {moveTypeConfig[
+                        selectedMove.moveType as keyof typeof moveTypeConfig
+                      ]?.label || moveTypeConfig.Other.label}
+                    </Badge>
+                    <Badge
+                      variant="secondary"
+                      className={cn(
+                        "text-xs",
+                        impactConfig[selectedMove.impactLevel].bgColor
+                      )}
                     >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                      {impactConfig[selectedMove.impactLevel].label} Impact
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {getStatusText({
+                        announcedDate: selectedMove.announcedDate,
+                        launchDate: selectedMove.launchDate,
+                        completionDate: selectedMove.completionDate,
+                      })}
+                    </Badge>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm">{move.description}</p>
+              </SheetHeader>
 
-                {(move.opportunities.length > 0 || move.threats.length > 0) && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {move.opportunities.length > 0 && (
-                      <div>
-                        <h4 className="text-sm font-medium text-green-700 mb-2">
+              <div className="mt-6 space-y-6">
+                {/* Description */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Description</h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedMove.description}
+                  </p>
+                </div>
+
+                {/* Timeline */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium">Timeline</h4>
+                  <div className="space-y-2 text-sm">
+                    {selectedMove.announcedDate && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                          Announced{" "}
+                          {format(
+                            new Date(selectedMove.announcedDate),
+                            "MMM dd, yyyy"
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {selectedMove.launchDate && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Clock className="h-4 w-4" />
+                        <span>
+                          Launches{" "}
+                          {format(
+                            new Date(selectedMove.launchDate),
+                            "MMM dd, yyyy"
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {selectedMove.completionDate && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>
+                          Completed{" "}
+                          {format(
+                            new Date(selectedMove.completionDate),
+                            "MMM dd, yyyy"
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Target Audience */}
+                {selectedMove.targetAudience && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Target Audience</h4>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedMove.targetAudience}
+                    </p>
+                  </div>
+                )}
+
+                {/* Affected Features */}
+                {selectedMove.affectedFeatures.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Affected Features</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedMove.affectedFeatures.map((feature, index) => (
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* User Feedback */}
+                {selectedMove.userFeedback && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">User Feedback</h4>
+                    <blockquote className="text-sm text-muted-foreground italic border-l-2 border-muted pl-4">
+                      "{selectedMove.userFeedback}"
+                    </blockquote>
+                  </div>
+                )}
+
+                {/* Press Coverage */}
+                {selectedMove.pressCoverage.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Press Coverage</h4>
+                    <div className="space-y-1">
+                      {selectedMove.pressCoverage.map((coverage, index) => (
+                        <a
+                          key={index}
+                          href={coverage}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-600 dark:text-blue-400 hover:underline block"
+                        >
+                          {coverage}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Opportunities & Threats */}
+                {(selectedMove.opportunities.length > 0 ||
+                  selectedMove.threats.length > 0) && (
+                  <div className="grid grid-cols-1 gap-6">
+                    {selectedMove.opportunities.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium text-green-600 dark:text-green-400">
                           Opportunities
                         </h4>
-                        <ul className="text-xs space-y-1">
-                          {move.opportunities.map((opportunity, index) => (
-                            <li key={index} className="flex items-start gap-1">
-                              <span className="text-green-600 mt-0.5">•</span>
-                              {opportunity}
-                            </li>
-                          ))}
+                        <ul className="text-sm space-y-1">
+                          {selectedMove.opportunities.map(
+                            (opportunity, index) => (
+                              <li
+                                key={index}
+                                className="flex items-start gap-2"
+                              >
+                                <span className="text-green-600 dark:text-green-400 mt-1.5 text-xs">
+                                  •
+                                </span>
+                                <span className="text-muted-foreground">
+                                  {opportunity}
+                                </span>
+                              </li>
+                            )
+                          )}
                         </ul>
                       </div>
                     )}
-                    {move.threats.length > 0 && (
-                      <div>
-                        <h4 className="text-sm font-medium text-red-700 mb-2">
+                    {selectedMove.threats.length > 0 && (
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-medium text-red-600 dark:text-red-400">
                           Threats
                         </h4>
-                        <ul className="text-xs space-y-1">
-                          {move.threats.map((threat, index) => (
-                            <li key={index} className="flex items-start gap-1">
-                              <span className="text-red-600 mt-0.5">•</span>
-                              {threat}
+                        <ul className="text-sm space-y-1">
+                          {selectedMove.threats.map((threat, index) => (
+                            <li key={index} className="flex items-start gap-2">
+                              <span className="text-red-600 dark:text-red-400 mt-1.5 text-xs">
+                                •
+                              </span>
+                              <span className="text-muted-foreground">
+                                {threat}
+                              </span>
                             </li>
                           ))}
                         </ul>
@@ -597,41 +560,33 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
                   </div>
                 )}
 
-                {move.responseRequired && (
-                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                {/* Response Required */}
+                {selectedMove.responseRequired && (
+                  <div className="p-4 bg-yellow-500/10 dark:bg-yellow-400/10 rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                      <span className="text-sm font-medium text-yellow-800">
+                      <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                      <span className="text-sm font-medium">
                         Response Required
                       </span>
                     </div>
-                    {move.responseStrategy && (
-                      <p className="text-sm text-yellow-700">
-                        {move.responseStrategy}
+                    {selectedMove.responseStrategy && (
+                      <p className="text-sm text-muted-foreground">
+                        {selectedMove.responseStrategy}
                       </p>
                     )}
                   </div>
                 )}
 
-                <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
-                  <span>
-                    Added {format(new Date(move.createdAt), "MMM dd, yyyy")}
-                  </span>
-                  {(move.launchDate || move.completionDate) && (
-                    <span>
-                      {move.completionDate
-                        ? `Completed ${format(new Date(move.completionDate), "MMM dd, yyyy")}`
-                        : move.launchDate
-                          ? `Launches ${format(new Date(move.launchDate), "MMM dd, yyyy")}`
-                          : ""}
-                    </span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        )}
-      </div>
-    </div>
+                <Separator />
+                <CollaborativeEditor
+                  entityId={selectedMove.id}
+                  entityType="competitiveMove"
+                />
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };

@@ -57,6 +57,7 @@ model Competitor {
     // Relations
     competitiveMoves CompetitiveMove[]
     CompetitorSwot   CompetitorSwot[]
+    document         Document?
 
     @@index([ideaId])
     @@index([name])
@@ -92,7 +93,8 @@ model CompetitiveMove {
     responseRequired Boolean  @default(false)
     responseStrategy String?
 
-    createdAt DateTime @default(now())
+    createdAt DateTime  @default(now())
+    document  Document?
 
     @@index([competitorId])
     @@index([moveType])
@@ -107,6 +109,7 @@ model CompetitorSwot {
 
     competitorId String?
     competitor   Competitor? @relation(fields: [competitorId], references: [id], onDelete: SetNull)
+    document     Document?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

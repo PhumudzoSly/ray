@@ -116,7 +116,7 @@ export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizati
 
 export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','downloadedAt']);
 
-export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId']);
+export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId','competitorId','competitorSwotId','competitiveMoveId','roadmapItemId']);
 
 export const BoardScalarFieldEnumSchema = z.enum(['id','content','projectId','createdAt','updatedAt']);
 
@@ -1315,6 +1315,10 @@ export const DocumentSchema = z.object({
   issueId: z.string().nullish(),
   featureId: z.string().nullish(),
   milestoneId: z.string().nullish(),
+  competitorId: z.string().nullish(),
+  competitorSwotId: z.string().nullish(),
+  competitiveMoveId: z.string().nullish(),
+  roadmapItemId: z.string().nullish(),
 })
 
 export type Document = z.infer<typeof DocumentSchema>

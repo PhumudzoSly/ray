@@ -11,12 +11,47 @@ import NoData from "@/components/shared/no-data";
 import { toast } from "sonner";
 import Link from "next/link";
 import { BiInfoCircle } from "react-icons/bi";
-import { TrendingUp, Target } from "lucide-react";
+import { TrendingUp, Target, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
 import { CompetitorDetailsView } from "./competitor-details-view";
 import { CompetitorSwotView } from "./competitor-swot-view";
 import { CompetitorMovesView } from "./competitor-moves-view";
+
+interface CompanyDetailProps {
+  label: string;
+  value: string | null;
+  href?: string;
+}
+
+function CompanyDetail({ label, value, href }: CompanyDetailProps) {
+  const displayValue = value || "Not specified";
+
+  return (
+    <div className="space-y-2 py-4">
+      <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+        {label}
+      </p>
+      {href && value ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1.5"
+        >
+          {value.replace(/^https?:\/\//, "")}
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      ) : (
+        <p
+          className={`text-sm font-medium ${!value ? "text-muted-foreground" : ""}`}
+        >
+          {displayValue}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export const CompetitorDetails = ({ id }: { id: string }) => {
   const [view, setView] = useState<"details" | "swot" | "moves">("details");
@@ -69,7 +104,7 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
 
   return (
     <div className="container space-y-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 p-4">
         <Badge variant="dark" className="text-xs font-medium px-2 py-0.5">
           Competitor
         </Badge>
@@ -81,7 +116,14 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
         </Link>
       </div>
 
-      <div className="p-1.5">
+      <div className="px-4 flex items-center">
+        {competitor.logoUrl && (
+          <img
+            src={competitor.logoUrl}
+            alt={`${competitor.name} logo`}
+            className="w-12 h-12 rounded-lg object-contain bg-muted/30 p-2"
+          />
+        )}
         <InlineEditField
           value={competitor.name}
           onSave={async (value) => {
@@ -99,7 +141,7 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
         />
       </div>
 
-      <div className="mt-2">
+      <div className="mt-2 p-4">
         <InlineEditTextArea
           value={competitor.description || ""}
           onSave={async (value) => {
@@ -109,6 +151,25 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
             });
           }}
           placeholder="No description provided."
+        />
+      </div>
+
+      {/* Company Details */}
+      <div className="px-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <CompanyDetail
+          label="Website"
+          value={competitor.website}
+          href={competitor.website || "#"}
+        />
+        <CompanyDetail
+          label="Founded"
+          value={competitor.foundedYear?.toString() || ""}
+        />
+        <CompanyDetail label="Location" value={competitor.headquarters} />
+        <CompanyDetail label="Team Size" value={competitor.employeeCount} />
+        <CompanyDetail
+          label="Target audience"
+          value={competitor.targetAudience || "Not defined"}
         />
       </div>
 
@@ -155,9 +216,11 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
         </ScrollArea>
       </div>
 
-      {view === "details" && <CompetitorDetailsView competitorId={id} />}
-      {view === "swot" && <CompetitorSwotView competitorId={id} />}
-      {view === "moves" && <CompetitorMovesView competitorId={id} />}
+      <div className="p-4">
+        {view === "details" && <CompetitorDetailsView competitorId={id} />}
+        {view === "swot" && <CompetitorSwotView competitorId={id} />}
+        {view === "moves" && <CompetitorMovesView competitorId={id} />}
+      </div>
     </div>
   );
 };

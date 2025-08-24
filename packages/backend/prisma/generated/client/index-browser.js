@@ -566,7 +566,11 @@ exports.Prisma.DocumentScalarFieldEnum = {
   projectId: 'projectId',
   issueId: 'issueId',
   featureId: 'featureId',
-  milestoneId: 'milestoneId'
+  milestoneId: 'milestoneId',
+  competitorId: 'competitorId',
+  competitorSwotId: 'competitorSwotId',
+  competitiveMoveId: 'competitiveMoveId',
+  roadmapItemId: 'roadmapItemId'
 };
 
 exports.Prisma.BoardScalarFieldEnum = {

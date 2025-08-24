@@ -1,5 +1,6 @@
 import Header from "@/components/shared/header";
 import { DeleteCompetitor } from "./_components/delete-competitor";
+import { EditCompetitor } from "./_components/edit-competitor";
 import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
 import CompetitorSidebar from "./_components/sidebar";
 import getQueryClient from "@/lib/query/getQueryClient";
@@ -42,7 +43,10 @@ const CompetitorPage = async ({
           },
         ]}
       >
-        <DeleteCompetitor id={id} />
+        <div className="flex items-center gap-2">
+          <EditCompetitor id={id} />
+          <DeleteCompetitor id={id} />
+        </div>
       </Header>
       <ExpandedLayoutContainer
         hideScroll

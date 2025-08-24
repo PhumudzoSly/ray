@@ -224,6 +224,7 @@ model RoadmapItem {
 
     // Feature request conversion
     convertedFromFeatureRequest FeatureRequest[] @relation("FeatureRequestToRoadmapItem")
+    Document                    Document?
 
     @@index([roadmapId])
     @@index([roadmapId, status])
@@ -625,22 +626,34 @@ model AssetDownload {
 }
 
 model Document {
-    id          String     @id @default(uuid())
-    content     Json
-    version     Int        @default(1)
-    project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-    projectId   String?    @unique
-    issue       Issue?     @relation(fields: [issueId], references: [id], onDelete: Cascade)
-    issueId     String?    @unique
-    feature     Feature?   @relation(fields: [featureId], references: [id], onDelete: Cascade)
-    featureId   String?    @unique
-    milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
-    milestoneId String?    @unique
+    id                String           @id @default(uuid())
+    content           Json
+    version           Int              @default(1)
+    project           Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    projectId         String?          @unique
+    issue             Issue?           @relation(fields: [issueId], references: [id], onDelete: Cascade)
+    issueId           String?          @unique
+    feature           Feature?         @relation(fields: [featureId], references: [id], onDelete: Cascade)
+    featureId         String?          @unique
+    milestone         Milestone?       @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+    milestoneId       String?          @unique
+    competitor        Competitor?      @relation(fields: [competitorId], references: [id], onDelete: Cascade)
+    competitorId      String?          @unique
+    competitorSwot    CompetitorSwot?  @relation(fields: [competitorSwotId], references: [id], onDelete: Cascade)
+    competitorSwotId  String?          @unique
+    competitiveMove   CompetitiveMove? @relation(fields: [competitiveMoveId], references: [id], onDelete: Cascade)
+    competitiveMoveId String?          @unique
+    roadmapItem       RoadmapItem?     @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
+    roadmapItemId     String?          @unique
 
     @@index([projectId])
     @@index([issueId])
     @@index([featureId])
     @@index([milestoneId])
+    @@index([competitorId])
+    @@index([competitorSwotId])
+    @@index([competitiveMoveId])
+    @@index([roadmapItemId])
 }
 
 model Board {

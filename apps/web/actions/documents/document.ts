@@ -1,39 +1,14 @@
 "use server";
 
-import { prisma } from "@workspace/backend";
+import { DocumentOptionalDefaults, prisma } from "@workspace/backend";
 import { revalidatePath } from "next/cache";
 
-export interface DocumentData {
-  id: string;
-  content: any;
-  version: number;
-  projectId?: string;
-  issueId?: string;
-  featureId?: string;
-  milestoneId?: string;
-}
-
-export async function createDocument({
-  content,
-  projectId,
-  issueId,
-  featureId,
-  milestoneId,
-}: {
-  content: any;
-  projectId?: string;
-  issueId?: string;
-  featureId?: string;
-  milestoneId?: string;
-}) {
+export async function createDocument(data: DocumentOptionalDefaults) {
   try {
     const document = await prisma.document.create({
       data: {
-        content,
-        projectId,
-        issueId,
-        featureId,
-        milestoneId,
+        ...data,
+        content: data.content as any,
       },
     });
 
@@ -117,80 +92,6 @@ export async function updateDocument({
   }
 }
 
-export async function deleteDocument(documentId: string) {
-  try {
-    // Check if document exists
-    const existingDocument = await prisma.document.findFirst({
-      where: {
-        id: documentId,
-      },
-    });
-
-    if (!existingDocument) {
-      return { success: false, error: "Document not found" };
-    }
-
-    await prisma.document.delete({
-      where: {
-        id: documentId,
-      },
-    });
-
-    revalidatePath("/documents");
-    return { success: true };
-  } catch (error) {
-    console.error("Failed to delete document:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to delete document",
-    };
-  }
-}
-
-export async function listDocuments({
-  projectId,
-  issueId,
-  featureId,
-  milestoneId,
-  limit = 50,
-  offset = 0,
-}: {
-  projectId?: string;
-  issueId?: string;
-  featureId?: string;
-  milestoneId?: string;
-  limit?: number;
-  offset?: number;
-} = {}) {
-  try {
-    const where: any = {};
-
-    if (projectId) where.projectId = projectId;
-    if (issueId) where.issueId = issueId;
-    if (featureId) where.featureId = featureId;
-    if (milestoneId) where.milestoneId = milestoneId;
-
-    const [documents, total] = await Promise.all([
-      prisma.document.findMany({
-        where,
-        take: limit,
-        skip: offset,
-      }),
-      prisma.document.count({ where }),
-    ]);
-
-    return { success: true, documents, total };
-  } catch (error) {
-    console.error("Failed to list documents:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to list documents",
-    };
-  }
-}
-
 export async function saveDocumentContent({
   documentId,
   content,
@@ -235,7 +136,15 @@ export async function saveDocumentContent({
   }
 }
 
-export type DocumentEntityType = "project" | "issue" | "feature" | "milestone";
+export type DocumentEntityType =
+  | "project"
+  | "issue"
+  | "feature"
+  | "milestone"
+  | "competitor"
+  | "competitorSwot"
+  | "competitiveMove"
+  | "roadmapItem";
 
 /**
  * Get document content by entity type and id.
@@ -261,7 +170,17 @@ export async function getEntityDocumentContent({
           ? { issueId: entityId }
           : entityType === "feature"
             ? { featureId: entityId }
-            : { milestoneId: entityId };
+            : entityType === "milestone"
+              ? { milestoneId: entityId }
+              : entityType === "competitor"
+                ? { competitorId: entityId }
+                : entityType === "competitorSwot"
+                  ? { competitorSwotId: entityId }
+                  : entityType === "roadmapItem"
+                    ? { roadmapItemId: entityId }
+                    : entityType === "competitiveMove"
+                      ? { competitiveMoveId: entityId }
+                      : { roadmapItemId: entityId };
 
     const document = await prisma.document.findFirst({
       where,
@@ -311,7 +230,17 @@ export async function saveEntityDocumentContent({
           ? { issueId: entityId }
           : entityType === "feature"
             ? { featureId: entityId }
-            : { milestoneId: entityId };
+            : entityType === "milestone"
+              ? { milestoneId: entityId }
+              : entityType === "competitor"
+                ? { competitorId: entityId }
+                : entityType === "competitorSwot"
+                  ? { competitorSwotId: entityId }
+                  : entityType === "roadmapItem"
+                    ? { roadmapItemId: entityId }
+                    : entityType === "competitiveMove"
+                      ? { competitiveMoveId: entityId }
+                      : { roadmapItemId: entityId };
 
     // First, try to find existing document
     const existingDocument = await prisma.document.findFirst({ where });
@@ -338,7 +267,17 @@ export async function saveEntityDocumentContent({
             ? { issueId: entityId }
             : entityType === "feature"
               ? { featureId: entityId }
-              : { milestoneId: entityId }),
+              : entityType === "milestone"
+                ? { milestoneId: entityId }
+                : entityType === "competitor"
+                  ? { competitorId: entityId }
+                  : entityType === "competitorSwot"
+                    ? { competitorSwotId: entityId }
+                    : entityType === "roadmapItem"
+                      ? { roadmapItemId: entityId }
+                      : entityType === "competitiveMove"
+                        ? { competitiveMoveId: entityId }
+                        : { roadmapItemId: entityId }),
       };
 
       document = await prisma.document.create({
