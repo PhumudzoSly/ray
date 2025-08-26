@@ -39,7 +39,7 @@ export default function TotalPagination({
     setPage(newPage);
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());
-    router.push(`/${route}?${params.toString()}`);
+    router.push(`/${route}?${params.toString()}` as any);
   };
 
   const renderPageNumbers = () => {

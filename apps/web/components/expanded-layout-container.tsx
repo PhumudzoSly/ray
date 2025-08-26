@@ -35,10 +35,7 @@ export function ExpandedLayoutContainer({
       )}
       style={{ height: "calc(100vh - 54px)" }}
     >
-      <ScrollArea
-        className="w-full overflow-y-auto"
-        style={{ height: "calc(100vh - 54px)" }}
-      >
+      <ScrollArea className="w-full" style={{ height: "calc(100vh - 54px)" }}>
         {children}
       </ScrollArea>
 

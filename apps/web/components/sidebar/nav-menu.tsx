@@ -54,7 +54,7 @@ export function NavMenu({ items, title, collapsible = false }: NavMenuProps) {
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton isActive={isActive} asChild>
                 <Link
-                  href={item.url}
+                  href={item.url as any}
                   className={cn(
                     "group relative mb-0.5 flex w-full items-center gap-3 rounded-4xl transition-colors",
                     isActive &&

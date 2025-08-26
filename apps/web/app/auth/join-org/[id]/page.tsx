@@ -41,7 +41,7 @@ const JoinOrganization = async ({
               organization administrator for a new invitation.
             </p>
             <Button asChild className="w-full">
-              <Link href="/auth/signin">Back to Sign In</Link>
+              <Link href="/auth/sign-in">Back to Sign In</Link>
             </Button>
           </CardContent>
         </Card>

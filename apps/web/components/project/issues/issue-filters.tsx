@@ -314,7 +314,7 @@ export function IssuesFilters() {
     const currentPath = window.location.pathname;
 
     // Push to the same path but without query parameters
-    router.push(currentPath, { scroll: false });
+    router.push(currentPath as any, { scroll: false });
   };
 
   // Enhanced search handler
@@ -685,8 +685,8 @@ export function IssuesFilters() {
                       placeholder={
                         selectedCategory
                           ? `Search ${filterCategories
-                            .find((c) => c.id === selectedCategory)
-                            ?.name.toLowerCase()}...`
+                              .find((c) => c.id === selectedCategory)
+                              ?.name.toLowerCase()}...`
                           : "Search all filters..."
                       }
                       className="h-11"

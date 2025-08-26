@@ -121,7 +121,7 @@ export function NavUser() {
               <DropdownMenuItem asChild>
                 <Link
                   className="flex items-center gap-2 rounded-md px-2 py-1.5"
-                  href="/billing/subscription"
+                  href="/settings/subscription"
                 >
                   <CreditCard className="size-4 text-violet-500" />
                   <span>Billing & Subscription</span>

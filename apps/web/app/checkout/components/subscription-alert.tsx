@@ -53,7 +53,7 @@ export function SubscriptionAlert({ portalUrl }: SubscriptionAlertProps) {
             aria-label="Open Customer Portal"
           >
             <Link
-              href={portalUrl}
+              href={portalUrl as any}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2"

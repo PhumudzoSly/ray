@@ -4,7 +4,6 @@ import "tldraw/tldraw.css";
 import { Tldraw, DefaultStylePanel } from "tldraw";
 import { useYjsStore } from "./useYjsStore";
 import { useSession } from "@/context/session-context";
-import { useTheme } from "next-themes";
 
 export function StorageTldraw({ id }: { id: string }) {
   const { userId, name } = useSession();
@@ -13,7 +12,20 @@ export function StorageTldraw({ id }: { id: string }) {
     user: { id: userId || "", name, color: "#f7f7" },
   });
 
-  const { theme } = useTheme();
+  // Show loading state while store is loading
+  if (store.status === "loading") {
+    return (
+      <div
+        style={{ height: "calc(100vh - 54px)" }}
+        className="flex items-center justify-center bg-background"
+      >
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading board...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height: "calc(100vh - 54px)" }} className="tldraw__editor">

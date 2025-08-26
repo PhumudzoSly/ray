@@ -37,7 +37,7 @@ export function LinkPreview({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link
-        href={url}
+        href={url as any}
         target="_blank"
         rel="noopener noreferrer"
         className="block"

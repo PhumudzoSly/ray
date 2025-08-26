@@ -23,30 +23,30 @@ export async function saveBoard(projectId: string, content: number[]) {
 }
 
 export async function getOrCreateBoard(projectId: string) {
-    if (!projectId) {
-        throw new Error('Missing projectId');
+  if (!projectId) {
+    throw new Error("Missing projectId");
+  }
+
+  try {
+    let board = await prisma.board.findUnique({
+      where: { projectId },
+    });
+
+    if (!board) {
+      board = await prisma.board.create({
+        data: { projectId, content: null },
+      });
     }
 
-    try {
-        let board = await prisma.board.findUnique({
-            where: { projectId },
-        });
-
-        if (!board) {
-            board = await prisma.board.create({
-                data: { projectId, content: Buffer.from([]) },
-            });
-        }
-
-        if (board && board.content) {
-            return { ...board, content: Array.from(board.content) };
-        }
-
-        return board;
-    } catch (error) {
-        console.error('Failed to get or create board:', error);
-        throw new Error('Failed to get or create board');
+    if (board && board.content) {
+      return { ...board, content: Array.from(board.content) };
     }
+
+    return { ...board, content: [] };
+  } catch (error) {
+    console.error("Failed to get or create board:", error);
+    throw new Error("Failed to get or create board");
+  }
 }
 
 export async function getBoard(projectId: string) {

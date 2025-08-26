@@ -10,7 +10,7 @@ interface BackButtonProps {
 const BackButton: FC<BackButtonProps> = ({ href, label }) => {
   return (
     <Link
-      href={href}
+      href={href as any}
       className={buttonVariants({
         variant: "link",
         className: "font-normal w-full",

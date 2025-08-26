@@ -23,7 +23,6 @@ const Header = ({ children, crumb }: HeaderProps) => {
   return (
     <header className="flex pr-3.5  h-14 shrink-0 w-full justify-between border-b border-border items-center gap-2 sticky top-0 bg-card z-50">
       <div className="flex items-center gap-2 rounded-2xl px-4">
-        <Badge>Beta</Badge>
         <SidebarTrigger className="-ml-1 md:hidden" />
         <Separator orientation="vertical" className="mr-2 h-4 md:hidden" />
         <Breadcrumb>
@@ -38,7 +37,7 @@ const Header = ({ children, crumb }: HeaderProps) => {
                   <BreadcrumbItem
                     className={!shouldShowOnMobile ? "hidden md:block" : ""}
                   >
-                    <Link href={c.url || "#"}>{c.title}</Link>
+                    <Link href={(c.url as any) || "#"}>{c.title}</Link>
                   </BreadcrumbItem>
                   {index < crumb.length - 1 && (
                     <BreadcrumbSeparator className="hidden md:block" />

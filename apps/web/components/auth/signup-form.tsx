@@ -51,7 +51,7 @@ const SignUpForm = () => {
       }
       if (data) {
         toast.success("Account created successfully");
-        router.push(redirectURL);
+        router.push(redirectURL as any);
       }
     });
   };

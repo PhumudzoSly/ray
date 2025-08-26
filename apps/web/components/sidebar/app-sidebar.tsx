@@ -115,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   className="h-9 w-9 bg-white object-contain aspect-square transition-transform duration-200"
                   alt=""
                 />
-                <Badge className="text-sm font-medium">RayAI</Badge>
+                <Badge>Beta</Badge>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -135,7 +135,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter className="bg-gray-50 dark:bg-inherit">
         <div className="flex flex-col gap-4 p-3">
           <Link
-            href="/settings/teams"
+            href="/settings/organization"
             className="flex text-xs items-center gap-2"
           >
             <Users className="text-muted-foreground" size={15} /> Teams

@@ -256,7 +256,7 @@ const AllIssues = () => {
             <Button
               variant="outline"
               onClick={() => {
-                router.push(pathname);
+                router.push(pathname as any);
               }}
             >
               Clear all filters
