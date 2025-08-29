@@ -374,10 +374,6 @@ export const createNewCompetitor = tool({
       .enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"])
       .describe("Threat level of the competitor"),
     marketShare: z.number().optional().describe("Market share percentage"),
-    annualRevenue: z
-      .number()
-      .optional()
-      .describe("Annual revenue in millions USD"),
     employeeCount: z.string().optional().describe("Number of employees"),
     foundedYear: z.number().optional().describe("Year the company was founded"),
     headquarters: z
@@ -396,7 +392,6 @@ export const createNewCompetitor = tool({
     description,
     threatLevel,
     marketShare,
-    annualRevenue,
     employeeCount,
     foundedYear,
     headquarters,
@@ -408,7 +403,6 @@ export const createNewCompetitor = tool({
     description?: string;
     threatLevel: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
     marketShare?: number;
-    annualRevenue?: number;
     employeeCount?: string;
     foundedYear?: number;
     headquarters?: string;
@@ -422,7 +416,6 @@ export const createNewCompetitor = tool({
         description,
         threatLevel,
         marketShare,
-        annualRevenue,
         employeeCount,
         foundedYear,
         headquarters,
@@ -462,10 +455,6 @@ export const editCurrentCompetitor = tool({
       .optional()
       .describe("Threat level of the competitor"),
     marketShare: z.number().optional().describe("Market share percentage"),
-    annualRevenue: z
-      .number()
-      .optional()
-      .describe("Annual revenue in millions USD"),
     employeeCount: z.string().optional().describe("Number of employees"),
     foundedYear: z.number().optional().describe("Year the company was founded"),
     headquarters: z
@@ -484,7 +473,6 @@ export const editCurrentCompetitor = tool({
     description,
     threatLevel,
     marketShare,
-    annualRevenue,
     employeeCount,
     foundedYear,
     headquarters,
@@ -496,7 +484,6 @@ export const editCurrentCompetitor = tool({
     description?: string;
     threatLevel?: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
     marketShare?: number;
-    annualRevenue?: number;
     employeeCount?: string;
     foundedYear?: number;
     headquarters?: string;
@@ -508,7 +495,6 @@ export const editCurrentCompetitor = tool({
     if (description !== undefined) updateData.description = description;
     if (threatLevel !== undefined) updateData.threatLevel = threatLevel;
     if (marketShare !== undefined) updateData.marketShare = marketShare;
-    if (annualRevenue !== undefined) updateData.annualRevenue = annualRevenue;
     if (employeeCount !== undefined) updateData.employeeCount = employeeCount;
     if (foundedYear !== undefined) updateData.foundedYear = foundedYear;
     if (headquarters !== undefined) updateData.headquarters = headquarters;

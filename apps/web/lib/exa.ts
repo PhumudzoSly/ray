@@ -10,7 +10,6 @@ export const webSearch = tool({
   inputSchema: z.object({
     query: z.string().min(1).max(100).describe("The search query"),
   }),
-  //@ts-ignore
   execute: async ({ query }: { query: string }) => {
     const { results } = await exa.searchAndContents(query, {
       livecrawl: "always",
@@ -30,7 +29,6 @@ export const deepSearch = tool({
   inputSchema: z.object({
     query: z.string().min(1).max(100).describe("The research topic or query"),
   }),
-  //@ts-ignore
   execute: async ({ query }: { query: string }) => {
     const task = await exa.research.createTask({
       model: "exa-research",

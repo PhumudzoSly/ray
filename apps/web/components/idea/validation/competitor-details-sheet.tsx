@@ -22,7 +22,6 @@ import {
   Building2,
   Calendar,
   Users,
-  DollarSign,
   TrendingUp,
   Star,
   ExternalLink,
@@ -75,16 +74,14 @@ interface Competitor {
   description?: string | null;
   logoUrl?: string | null;
   marketShare?: number | null;
-  annualRevenue?: number | null;
+
   employeeCount?: string | null;
   foundedYear?: number | null;
   headquarters?: string | null;
   targetAudience?: string | null;
   threatLevel: string;
-  userGrowthRate?: number | null;
-  churnRate?: number | null;
-  customerSatisfaction?: number | null;
-  marketCap?: number | null;
+
+
   lastUpdated: Date;
   createdAt: Date;
   isActive: boolean;
@@ -142,14 +139,7 @@ const getThreatLevelIcon = (threatLevel: string) => {
   }
 };
 
-const formatCurrency = (amount: number | null | undefined) => {
-  if (!amount) return "N/A";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-  }).format(amount);
-};
+
 
 const formatPercentage = (value: number | null | undefined) => {
   if (value === null || value === undefined) return "N/A";
@@ -533,18 +523,7 @@ export function CompetitorDetailsSheet({
               {/* Financial Metrics */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <MetricCard
-                    title="Annual Revenue"
-                    value={formatCurrency(competitor.annualRevenue)}
-                    icon={DollarSign}
-                    tooltip="Annual revenue in USD"
-                  />
-                  <MetricCard
-                    title="Market Cap"
-                    value={formatCurrency(competitor.marketCap)}
-                    icon={BarChart3}
-                    tooltip="Market capitalization in USD"
-                  />
+
                   <ProgressMetricCard
                     title="Market Share"
                     value={competitor.marketShare ?? null}
@@ -560,26 +539,7 @@ export function CompetitorDetailsSheet({
               {/* Performance Metrics */}
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4">
-                  <ProgressMetricCard
-                    title="Customer Satisfaction"
-                    value={competitor.customerSatisfaction ?? null}
-                    max={10}
-                    icon={Star}
-                    variant="success"
-                    tooltip="Customer satisfaction score out of 10"
-                  />
-                  <MetricCard
-                    title="User Growth Rate"
-                    value={formatPercentage(competitor.userGrowthRate)}
-                    icon={TrendingUp}
-                    tooltip="Monthly user growth percentage"
-                  />
-                  <MetricCard
-                    title="Churn Rate"
-                    value={formatPercentage(competitor.churnRate)}
-                    icon={AlertTriangle}
-                    tooltip="Monthly customer churn percentage"
-                  />
+
                 </div>
               </div>
             </TabsContent>

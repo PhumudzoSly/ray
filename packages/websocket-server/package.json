@@ -1,7 +1,7 @@
 {
   "name": "@workspace/websocket-server",
   "version": "1.0.0",
-  "description": "Y.js WebSocket server with authentication for collaborative editing",
+  "description": "Enhanced WebSocket server supporting Y.js collaborative editing and general-purpose real-time functionality with presence management and Pusher-like channels",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -32,7 +32,13 @@
     "yjs",
     "websocket",
     "collaborative",
-    "real-time"
+    "real-time",
+    "presence",
+    "channels",
+    "pusher",
+    "broadcasting",
+    "chat",
+    "messaging"
   ],
   "license": "MIT"
 }

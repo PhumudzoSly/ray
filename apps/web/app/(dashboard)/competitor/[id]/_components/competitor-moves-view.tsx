@@ -34,7 +34,7 @@ import {
   Eye,
   MoreHorizontal,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+
 import { format } from "date-fns";
 import { AddCompetitiveMove } from "./add-competitive-move";
 import {
@@ -96,66 +96,45 @@ interface CompetitiveMove {
   createdAt: Date;
 }
 
-const impactConfig = {
-  LOW: {
-    label: "Low",
-    color: "text-muted-foreground",
-    bgColor: "bg-muted-foreground/10",
-  },
-  MEDIUM: {
-    label: "Medium",
-    color: "text-yellow-600 dark:text-yellow-400",
-    bgColor: "bg-yellow-500/10 dark:bg-yellow-400/10",
-  },
-  HIGH: {
-    label: "High",
-    color: "text-orange-600 dark:text-orange-400",
-    bgColor: "bg-orange-500/10 dark:bg-orange-400/10",
-  },
-  CRITICAL: {
-    label: "Critical",
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-500/10 dark:bg-red-400/10",
-  },
-};
+// Variant mapping functions
+function getMoveTypeVariant(moveType: string): "default" | "secondary" | "destructive" | "outline" {
+  switch (moveType) {
+    case "Acquisition":
+      return "destructive";
+    default:
+      return "secondary";
+  }
+}
 
-const moveTypeConfig = {
-  "Product Launch": {
-    label: "Product Launch",
-    color: "text-blue-600 dark:text-blue-400",
-    bgColor: "bg-blue-500/10 dark:bg-blue-400/10",
-  },
-  "Feature Update": {
-    label: "Feature Update",
-    color: "text-green-600 dark:text-green-400",
-    bgColor: "bg-green-500/10 dark:bg-green-400/10",
-  },
-  "Pricing Change": {
-    label: "Pricing Change",
-    color: "text-purple-600 dark:text-purple-400",
-    bgColor: "bg-purple-500/10 dark:bg-purple-400/10",
-  },
-  "Market Expansion": {
-    label: "Market Expansion",
-    color: "text-indigo-600 dark:text-indigo-400",
-    bgColor: "bg-indigo-500/10 dark:bg-indigo-400/10",
-  },
-  Partnership: {
-    label: "Partnership",
-    color: "text-pink-600 dark:text-pink-400",
-    bgColor: "bg-pink-500/10 dark:bg-pink-400/10",
-  },
-  Acquisition: {
-    label: "Acquisition",
-    color: "text-red-600 dark:text-red-400",
-    bgColor: "bg-red-500/10 dark:bg-red-400/10",
-  },
-  Other: {
-    label: "Other",
-    color: "text-muted-foreground",
-    bgColor: "bg-muted-foreground/10",
-  },
-};
+function getImpactVariant(impactLevel: Importance): "default" | "secondary" | "destructive" | "outline" {
+  switch (impactLevel) {
+    case "LOW":
+      return "default";
+    case "MEDIUM":
+      return "secondary";
+    case "HIGH":
+      return "outline";
+    case "CRITICAL":
+      return "destructive";
+    default:
+      return "default";
+  }
+}
+
+function getImpactLabel(impactLevel: Importance): string {
+  switch (impactLevel) {
+    case "LOW":
+      return "Low";
+    case "MEDIUM":
+      return "Medium";
+    case "HIGH":
+      return "High";
+    case "CRITICAL":
+      return "Critical";
+    default:
+      return "Low";
+  }
+}
 
 export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
   competitorId,
@@ -246,11 +225,6 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
               </TableHeader>
               <TableBody>
                 {competitiveMoves.map((move) => {
-                  const moveTypeInfo =
-                    moveTypeConfig[
-                      move.moveType as keyof typeof moveTypeConfig
-                    ] || moveTypeConfig.Other;
-                  const impactInfo = impactConfig[move.impactLevel];
                   const statusText = getStatusText({
                     announcedDate: move.announcedDate,
                     launchDate: move.launchDate,
@@ -281,18 +255,18 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant="secondary"
-                          className={cn("text-xs", moveTypeInfo.bgColor)}
+                          variant={getMoveTypeVariant(move.moveType)}
+                          className="text-xs"
                         >
-                          {moveTypeInfo.label}
+                          {move.moveType}
                         </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge
-                          variant="secondary"
-                          className={cn("text-xs", impactInfo.bgColor)}
+                          variant={getImpactVariant(move.impactLevel)}
+                          className="text-xs"
                         >
-                          {impactInfo.label}
+                          {getImpactLabel(move.impactLevel)}
                         </Badge>
                       </TableCell>
                       <TableCell>
@@ -368,26 +342,16 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant="secondary"
-                      className={cn(
-                        "text-xs",
-                        moveTypeConfig[
-                          selectedMove.moveType as keyof typeof moveTypeConfig
-                        ]?.bgColor || moveTypeConfig.Other.bgColor
-                      )}
+                      variant={getMoveTypeVariant(selectedMove.moveType)}
+                      className="text-xs"
                     >
-                      {moveTypeConfig[
-                        selectedMove.moveType as keyof typeof moveTypeConfig
-                      ]?.label || moveTypeConfig.Other.label}
+                      {selectedMove.moveType}
                     </Badge>
                     <Badge
-                      variant="secondary"
-                      className={cn(
-                        "text-xs",
-                        impactConfig[selectedMove.impactLevel].bgColor
-                      )}
+                      variant={getImpactVariant(selectedMove.impactLevel)}
+                      className="text-xs"
                     >
-                      {impactConfig[selectedMove.impactLevel].label} Impact
+                      {getImpactLabel(selectedMove.impactLevel)} Impact
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       {getStatusText({

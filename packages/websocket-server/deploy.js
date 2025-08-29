@@ -39,7 +39,6 @@ function checkEnvFile() {
 JWT_SECRET=your-development-jwt-secret-change-in-production
 NODE_ENV=development
 PORT=8080
-HEALTH_PORT=8081
 `
     fs.writeFileSync(envPath, envContent)
     console.log('✅ Created .env file. Please update JWT_SECRET for production!')
@@ -70,7 +69,7 @@ async function deployDocker() {
     console.log('✅ Docker image built')
     
     console.log('🔧 Starting Docker container...')
-    await runCommand('docker', ['run', '-p', '8080:8080', '-p', '8081:8081', 
+    await runCommand('docker', ['run', '-p', '8080:8080', 
       '-e', 'JWT_SECRET=development-secret',
       '-e', 'NODE_ENV=production',
       'websocket-server'

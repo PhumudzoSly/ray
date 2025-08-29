@@ -64,7 +64,7 @@ export const CommentReactionScalarFieldEnumSchema = z.enum(['id','commentId','us
 
 export const IdeaScalarFieldEnumSchema = z.enum(['id','name','description','industry','ownerId','organizationId','internal','openSource','status','aiOverallValidation','problemSolved','solutionOffered','createdAt','updatedAt']);
 
-export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','website','description','logoUrl','marketShare','annualRevenue','employeeCount','foundedYear','headquarters','targetAudience','threatLevel','userGrowthRate','churnRate','customerSatisfaction','marketCap','lastUpdated','createdAt','isActive']);
+export const CompetitorScalarFieldEnumSchema = z.enum(['id','ideaId','name','website','description','logoUrl','marketShare','employeeCount','foundedYear','headquarters','targetAudience','threatLevel','lastUpdated','createdAt','isActive']);
 
 export const CompetitiveMoveScalarFieldEnumSchema = z.enum(['id','competitorId','moveType','title','description','impactLevel','targetAudience','affectedFeatures','announcedDate','launchDate','completionDate','userFeedback','pressCoverage','opportunities','threats','responseRequired','responseStrategy','createdAt']);
 
@@ -502,15 +502,10 @@ export const CompetitorSchema = z.object({
   description: z.string().nullish(),
   logoUrl: z.string().nullish(),
   marketShare: z.number().nullish(),
-  annualRevenue: z.number().nullish(),
   employeeCount: z.string().nullish(),
   foundedYear: z.number().int().nullish(),
   headquarters: z.string().nullish(),
   targetAudience: z.string().nullish(),
-  userGrowthRate: z.number().nullish(),
-  churnRate: z.number().nullish(),
-  customerSatisfaction: z.number().nullish(),
-  marketCap: z.number().nullish(),
   lastUpdated: z.coerce.date(),
   createdAt: z.coerce.date(),
   isActive: z.boolean(),

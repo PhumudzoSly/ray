@@ -37,9 +37,22 @@ import { Loader } from "@workspace/ui/components/ai-elements/loader";
 import { Actions, Action } from "@workspace/ui/components/ai-elements/actions";
 import { RefreshCcwIcon } from "lucide-react";
 import { CopyIcon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import { UIMessage } from "ai";
 import { useQuery } from "@tanstack/react-query";
 import { getCompetitor } from "@/actions/idea/competitor";
+import { Button } from "@workspace/ui/components/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@workspace/ui/components/alert-dialog";
 
 const CompetitorSidebar = ({
   initialMessages,
@@ -53,13 +66,14 @@ const CompetitorSidebar = ({
   userId: string;
 }) => {
   const [input, setInput] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
 
   const { data: competitor } = useQuery({
     queryKey: ["competitor", competitorId],
     queryFn: () => getCompetitor({ id: competitorId }),
   });
 
-  const { messages, sendMessage, status, regenerate } = useChat({
+  const { messages, sendMessage, status, regenerate, setMessages } = useChat({
     id: `chat:history:competitor:${userId}:org:${org}:${competitorId}`,
     messages: initialMessages,
     transport: new DefaultChatTransport({
@@ -90,6 +104,29 @@ const CompetitorSidebar = ({
         }
       );
       setInput("");
+    }
+  };
+
+  const handleResetChat = async () => {
+    setIsResetting(true);
+    try {
+      const response = await fetch("/api/chat/competitor", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ competitorId }),
+      });
+
+      if (response.ok) {
+        setMessages([]);
+      } else {
+        console.error("Failed to reset chat");
+      }
+    } catch (error) {
+      console.error("Error resetting chat:", error);
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -182,6 +219,38 @@ const CompetitorSidebar = ({
         </Conversation>
 
         <div className="px-4">
+          <div className="flex justify-end mb-2">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive"
+                  disabled={isResetting || messages.length === 0}
+                >
+                  <Trash2Icon className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Reset Chat History</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all chat messages for this competitor analysis.
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleResetChat}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {isResetting ? "Resetting..." : "Reset Chat"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
           <PromptInput onSubmit={handleSubmit}>
             <PromptInputTextarea
               onChange={(e) => setInput(e.target.value)}

@@ -34,7 +34,6 @@ model Competitor {
 
     // Market Position (AI-generated)
     marketShare   Float? // Percentage
-    annualRevenue Float? // In millions USD
     employeeCount String?
     foundedYear   Int?
     headquarters  String?
@@ -43,11 +42,7 @@ model Competitor {
 
     threatLevel Importance
 
-    // Performance Metrics (AI-generated)
-    userGrowthRate       Float?
-    churnRate            Float?
-    customerSatisfaction Float?
-    marketCap            Float? // If public company
+
 
     // Tracking
     lastUpdated DateTime @updatedAt

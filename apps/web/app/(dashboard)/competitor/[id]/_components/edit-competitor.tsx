@@ -53,24 +53,12 @@ export const EditCompetitor = ({ id }: { id: string }) => {
         foundedYear: formData.get("foundedYear")
           ? parseInt(formData.get("foundedYear") as string)
           : null,
-        annualRevenue: formData.get("annualRevenue")
-          ? parseFloat(formData.get("annualRevenue") as string)
-          : null,
+
         marketShare: formData.get("marketShare")
           ? parseFloat(formData.get("marketShare") as string)
           : null,
-        userGrowthRate: formData.get("userGrowthRate")
-          ? parseFloat(formData.get("userGrowthRate") as string)
-          : null,
-        churnRate: formData.get("churnRate")
-          ? parseFloat(formData.get("churnRate") as string)
-          : null,
-        customerSatisfaction: formData.get("customerSatisfaction")
-          ? parseFloat(formData.get("customerSatisfaction") as string)
-          : null,
-        marketCap: formData.get("marketCap")
-          ? parseFloat(formData.get("marketCap") as string)
-          : null,
+
+
         threatLevel: formData.get("threatLevel") as
           | "LOW"
           | "MEDIUM"
@@ -203,33 +191,7 @@ export const EditCompetitor = ({ id }: { id: string }) => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-sm font-medium">Financial Metrics</h4>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="annualRevenue">Annual Revenue (M)</Label>
-                <Input
-                  id="annualRevenue"
-                  name="annualRevenue"
-                  type="number"
-                  step="0.1"
-                  defaultValue={competitor.annualRevenue || ""}
-                  placeholder="100"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="marketCap">Market Cap (M)</Label>
-                <Input
-                  id="marketCap"
-                  name="marketCap"
-                  type="number"
-                  step="0.1"
-                  defaultValue={competitor.marketCap || ""}
-                  placeholder="1000"
-                />
-              </div>
-            </div>
-          </div>
+
 
           <div className="space-y-4">
             <h4 className="text-sm font-medium">Performance Metrics</h4>
@@ -245,43 +207,7 @@ export const EditCompetitor = ({ id }: { id: string }) => {
                   placeholder="15.5"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="userGrowthRate">Growth Rate (%)</Label>
-                <Input
-                  id="userGrowthRate"
-                  name="userGrowthRate"
-                  type="number"
-                  step="0.1"
-                  defaultValue={competitor.userGrowthRate || ""}
-                  placeholder="25.0"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="churnRate">Churn Rate (%)</Label>
-                <Input
-                  id="churnRate"
-                  name="churnRate"
-                  type="number"
-                  step="0.1"
-                  defaultValue={competitor.churnRate || ""}
-                  placeholder="5.0"
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="customerSatisfaction">
-                Customer Satisfaction (1-10)
-              </Label>
-              <Input
-                id="customerSatisfaction"
-                name="customerSatisfaction"
-                type="number"
-                step="0.1"
-                min="1"
-                max="10"
-                defaultValue={competitor.customerSatisfaction || ""}
-                placeholder="8.5"
-              />
+
             </div>
           </div>
 
