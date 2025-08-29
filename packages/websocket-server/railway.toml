@@ -4,8 +4,9 @@
 
 [deploy]
   startCommand = "node server.js"
-  healthcheckPath = "/health"
-  healthcheckTimeout = 300
+  # Disable health check to avoid 426 errors
+  # healthcheckPath = "/health"
+  # healthcheckTimeout = 300
   restartPolicyType = "ON_FAILURE"
   restartPolicyMaxRetries = 10
 
