@@ -78,11 +78,6 @@ export const ProjectInfo = ({
             />
           </div>
         </div>
-        <div className="flex items-center  gap-4">
-          <Button variant={"dark"} asChild>
-            <Link href={`/project/${id}/board`}>Project Board</Link>
-          </Button>
-        </div>
       </div>
 
       <InlineEditTextArea
