@@ -4,7 +4,9 @@ import { getServerStats } from './monitoring.js'
 import { logWarning, logError } from './logging.js'
 
 // Create health check and monitoring server
-function createHealthServer(port = 3005) {
+function createHealthServer(port = 3005, context = {}) {
+  const { connectionManager, channelManager, presenceManager, eventEmitter, config } = context
+  
   const healthServer = http.createServer((req, res) => {
     const origin = req.headers.origin
     
@@ -30,10 +32,23 @@ function createHealthServer(port = 3005) {
     }
     
     try {
-      if (req.url === '/health') {
+      const url = new URL(req.url, `http://localhost:${port}`)
+      const pathname = url.pathname
+      
+      if (pathname === '/health') {
         handleHealthCheck(req, res)
-      } else if (req.url === '/metrics' || req.url === '/stats') {
+      } else if (pathname === '/metrics' || pathname === '/stats') {
         handleMetrics(req, res)
+      } else if (pathname === '/channels') {
+        handleChannels(req, res, channelManager)
+      } else if (pathname.startsWith('/channels/') && pathname.endsWith('/users')) {
+        const channel = pathname.split('/')[2]
+        handleChannelUsers(req, res, channelManager, channel)
+      } else if (pathname.startsWith('/channels/') && pathname.endsWith('/broadcast')) {
+        const channel = pathname.split('/')[2]
+        handleChannelBroadcast(req, res, channelManager, channel)
+      } else if (pathname === '/presence') {
+        handlePresence(req, res, presenceManager)
       } else {
         handleNotFound(req, res)
       }
@@ -70,6 +85,114 @@ function handleMetrics(req, res) {
 function handleNotFound(req, res) {
   res.writeHead(404, { 'Content-Type': 'application/json' })
   res.end(JSON.stringify({ error: 'Not found' }))
+}
+
+// Handle channels endpoint - GET /channels
+function handleChannels(req, res, channelManager) {
+  if (req.method !== 'GET') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Method not allowed' }))
+    return
+  }
+  
+  if (!channelManager) {
+    res.writeHead(503, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Channel manager not available' }))
+    return
+  }
+  
+  const channels = channelManager.getAllChannels()
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ channels }))
+}
+
+// Handle channel users endpoint - GET /channels/:channel/users
+function handleChannelUsers(req, res, channelManager, channel) {
+  if (req.method !== 'GET') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Method not allowed' }))
+    return
+  }
+  
+  if (!channelManager || !channel) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid request' }))
+    return
+  }
+  
+  const users = channelManager.getChannelSubscribers(channel)
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ channel, users }))
+}
+
+// Handle channel broadcast endpoint - POST /channels/:channel/broadcast
+function handleChannelBroadcast(req, res, channelManager, channel) {
+  if (req.method !== 'POST') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Method not allowed' }))
+    return
+  }
+  
+  if (!channelManager || !channel) {
+    res.writeHead(400, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Invalid request' }))
+    return
+  }
+  
+  let body = ''
+  req.on('data', chunk => {
+    body += chunk.toString()
+  })
+  
+  req.on('end', () => {
+    try {
+      const { message, event } = JSON.parse(body)
+      
+      if (!message) {
+        res.writeHead(400, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify({ error: 'Message is required' }))
+        return
+      }
+      
+      const result = channelManager.broadcast(channel, {
+          type: 'broadcast',
+          event: event || 'message',
+          data: message,
+          timestamp: Date.now()
+        })
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ 
+        success: true, 
+        channel, 
+        messagesSent: result.messagesSent,
+        subscriberCount: result.subscriberCount
+      }))
+    } catch (error) {
+      logError('BROADCAST_ERROR', error, { channel })
+      res.writeHead(400, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ error: 'Invalid JSON' }))
+    }
+  })
+}
+
+// Handle presence endpoint - GET /presence
+function handlePresence(req, res, presenceManager) {
+  if (req.method !== 'GET') {
+    res.writeHead(405, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Method not allowed' }))
+    return
+  }
+  
+  if (!presenceManager) {
+    res.writeHead(503, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ error: 'Presence manager not available' }))
+    return
+  }
+  
+  const presence = presenceManager.getAllUsersPresence()
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  res.end(JSON.stringify({ presence }))
 }
 
 export {

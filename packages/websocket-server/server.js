@@ -22,8 +22,33 @@ import {
 } from './src/monitoring.js'
 import { validateWebSocketOrigin, getClientIP, CORS_CONFIG } from './src/security.js'
 import { createHealthServer } from './src/health-server.js'
+import { ConnectionManager } from './src/connection-manager.js'
+import { ChannelManager } from './src/channel-manager.js'
+import { PresenceManager } from './src/presence-manager.js'
+import { MessageHandler } from './src/message-handler.js'
+import { CustomEventEmitter } from './src/event-emitter.js'
+import { CONFIG, validateConfig, printConfigSummary } from './src/config.js'
 
-const PORT = process.env.PORT || 1234
+// Validate configuration on startup
+const configErrors = validateConfig()
+if (configErrors.length > 0) {
+  console.error('❌ Configuration errors:')
+  configErrors.forEach(error => console.error(`   - ${error}`))
+  process.exit(1)
+}
+
+// Print configuration summary
+printConfigSummary()
+
+const PORT = CONFIG.port
+const HEALTH_PORT = CONFIG.healthPort
+
+// Initialize managers
+const eventEmitter = new CustomEventEmitter()
+const connectionManager = new ConnectionManager(eventEmitter, CONFIG)
+const channelManager = new ChannelManager(eventEmitter, CONFIG)
+const presenceManager = new PresenceManager(eventEmitter, CONFIG)
+const messageHandler = new MessageHandler(connectionManager, channelManager, presenceManager, eventEmitter, CONFIG)
 
 // Initialize background processes
 startRateLimitCleanup()
@@ -64,120 +89,143 @@ const wss = new WebSocketServer({
   }
 })
 
+// Pass managers to health server for API endpoints
+const healthServerContext = {
+  connectionManager,
+  channelManager,
+  presenceManager,
+  eventEmitter,
+  config: CONFIG
+}
+
 // Handle WebSocket connections
 wss.on('connection', (ws, request) => {
-  try {
-    // Get client IP address
-    const clientIP = getClientIP(request)
-    
-    logInfo('CONNECTION_ATTEMPT', 'New WebSocket connection attempt', { clientIP })
-    
-    // Skip IP rate limiting for development
-    // Rate limiting disabled
-    
-    // Skip authentication for development
-    const auth = { userId: 'dev-user', org: 'dev-org' }
-    
-    logInfo('CONNECTION_AUTHENTICATED', 'Connection authenticated successfully (dev mode)', {
-      clientIP,
-      userId: auth.userId,
-      org: auth.org
+  const clientIP = getClientIP(request)
+  
+  logInfo('NEW_CONNECTION_ATTEMPT', 'New WebSocket connection attempt', {
+    clientIP,
+    origin: request.headers.origin,
+    userAgent: request.headers['user-agent']
+  })
+
+  // Validate origin
+  if (!validateWebSocketOrigin(request.headers.origin)) {
+    logWarning('ORIGIN_REJECTED', 'Connection rejected due to invalid origin', {
+      origin: request.headers.origin,
+      clientIP
     })
-    
-    // Update metrics
-    serverMetrics.totalConnections++
-    updateMetrics()
-    
-    // Increment user connection count
-    incrementUserConnections(auth.userId)
-    
-    // Extract room name from URL path
-    const url = new URL(request.url, `http://localhost:${PORT}`)
-    const roomName = url.pathname.slice(1) // Remove leading slash
-    
-    if (!roomName) {
-      closeConnectionWithError(ws, 'INVALID_ROOM', {
-        clientIP,
-        userId: auth.userId,
-        reason: 'No room specified'
-      })
-      return
-    }
-    
-    // Skip room access validation for development
-    // Room access validation disabled
-    
-    logInfo('ROOM_JOIN', 'User joined room successfully', {
-      userId: auth.userId,
+    ws.close(1008, 'Origin not allowed')
+    return
+  }
+
+  // Apply rate limiting
+   if (!rateLimitMiddleware(clientIP)) {
+     logWarning('RATE_LIMITED', 'Connection rejected due to rate limiting', {
+       clientIP
+     })
+     ws.close(1008, 'Rate limit exceeded')
+     return
+   }
+
+  // Authenticate connection (currently in dev mode)
+  const authResult = authenticateConnection(request)
+  if (!authResult.success) {
+    logWarning('AUTH_FAILED', 'Connection authentication failed', {
+      reason: authResult.reason,
+      clientIP
+    })
+    ws.close(1008, 'Authentication failed')
+    return
+  }
+
+  // Update metrics
+   updateMetrics('connection')
+   
+   // Extract room name from URL path
+   const url = new URL(request.url, `http://${request.headers.host}`)
+   const roomName = url.pathname.slice(1) || 'default'
+   
+   logInfo('CONNECTION_ESTABLISHED', 'WebSocket connection established', {
+     roomName,
+     userId: authResult.userId,
+     clientIP,
+     enableYjs: CONFIG.enableYjs,
+     enableGeneralWS: CONFIG.enableGeneralWS
+   })
+
+   // Add connection to room tracking (legacy)
+   addConnectionToRoom(roomName, ws)
+  
+  // Add connection to new connection manager
+  const connectionId = connectionManager.addConnection(ws, {
+    userId: authResult.userId,
+    roomName,
+    clientIP,
+    userAgent: request.headers['user-agent'],
+    origin: request.headers.origin
+  })
+  
+  // Set user online in presence manager
+  presenceManager.setUserOnline(authResult.userId, {
+    connectionId,
+    roomName,
+    clientIP,
+    connectedAt: Date.now()
+  })
+  
+  // Set up Y.js WebSocket connection if enabled (backward compatibility)
+  if (CONFIG.enableYjs) {
+    setupWSConnection(ws, request, { docName: roomName })
+  }
+  
+  // Set up general WebSocket message handling if enabled
+  if (CONFIG.enableGeneralWS) {
+    ws.on('message', async (data) => {
+      try {
+        await messageHandler.handleMessage(connectionId, data)
+      } catch (error) {
+        logError('MESSAGE_HANDLING_ERROR', error, {
+          connectionId,
+          userId: authResult.userId,
+          roomName
+        })
+      }
+    })
+  }
+
+  // Handle connection close
+  ws.on('close', (code, reason) => {
+    logInfo('CONNECTION_CLOSED', 'WebSocket connection closed', {
+      connectionId,
       roomName,
-      org: auth.org,
+      userId: authResult.userId,
+      code,
+      reason: reason?.toString(),
       clientIP
     })
     
-    // Store auth info on the WebSocket for later use
-    ws.auth = auth
-    ws.roomName = roomName
-    
-    // Track active connection and add to room
-    activeConnections.set(ws, {
-      ip: clientIP,
-      userId: auth.userId,
-      timestamp: Date.now()
+    // Remove from room tracking (legacy)
+     removeConnectionFromRoom(roomName, ws)
+     
+     // Remove from connection manager
+     connectionManager.removeConnection(connectionId)
+     
+     // Set user offline in presence manager
+     presenceManager.setUserOffline(authResult.userId)
+     
+     // Update metrics
+     updateMetrics('disconnection')
+  })
+
+  // Handle connection errors
+  ws.on('error', (error) => {
+    logError('CONNECTION_ERROR', error, {
+      connectionId,
+      roomName,
+      userId: authResult.userId,
+      clientIP
     })
-    addToRoom(roomName, ws)
-    
-    // Setup Y.js WebSocket connection with room isolation
-    try {
-      setupWSConnection(ws, request, {
-        docName: roomName,
-        gc: true // Enable garbage collection
-      })
-    } catch (setupError) {
-      logError('Y_WEBSOCKET_SETUP', setupError, {
-        userId: auth.userId,
-        roomName,
-        clientIP
-      })
-      closeConnectionWithError(ws, 'SERVER_ERROR', {
-        userId: auth.userId,
-        roomName
-      })
-      return
-    }
-    
-    // Handle connection close
-    ws.on('close', (code, reason) => {
-      logInfo('CONNECTION_CLOSE', 'User disconnected', {
-        userId: auth.userId,
-        roomName,
-        code,
-        reason: reason.toString(),
-        clientIP
-      })
-      
-      // Update metrics
-      serverMetrics.totalDisconnections++
-      updateMetrics()
-      
-      // Clean up tracking
-      decrementUserConnections(auth.userId)
-      activeConnections.delete(ws)
-      removeFromRoom(roomName, ws)
-    })
-    
-    // Handle errors
-    ws.on('error', (error) => {
-      logError('WEBSOCKET_ERROR', error, {
-        userId: auth.userId,
-        roomName,
-        clientIP
-      })
-    })
-    
-  } catch (connectionError) {
-    logError('CONNECTION_HANDLER', connectionError, { clientIP: getClientIP(request) })
-    closeConnectionWithError(ws, 'SERVER_ERROR', { clientIP: getClientIP(request) })
-  }
+  })
 })
 
 // Handle WebSocket server errors
@@ -185,29 +233,43 @@ wss.on('error', (error) => {
   logError('WEBSOCKET_SERVER', error, { port: PORT })
 })
 
-// Create and start health check server
-const healthServer = createHealthServer()
-const healthPort = process.env.HEALTH_PORT || 3005
-healthServer.listen(healthPort, () => {
-  console.log(`🏥 Health server running on port ${healthPort}`)
-  console.log(`   Health: http://localhost:${healthPort}/health`)
-  console.log(`   Metrics: http://localhost:${healthPort}/metrics`)
+// Start health server with context
+const healthServer = createHealthServer(HEALTH_PORT, healthServerContext)
+healthServer.listen(HEALTH_PORT, () => {
+  logInfo('HEALTH_SERVER_STARTED', `Health server listening on port ${HEALTH_PORT}`)
 })
 
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('\n🛑 Shutting down WebSocket server...')
+logInfo('SERVERS_STARTED', 'WebSocket and Health servers started successfully', {
+  websocketPort: PORT,
+  healthPort: HEALTH_PORT,
+  corsEnabled: true,
+  yjsEnabled: CONFIG.enableYjs,
+  generalWSEnabled: CONFIG.enableGeneralWS
+})
+
+// Graceful shutdown handling
+process.on('SIGTERM', gracefulShutdown)
+process.on('SIGINT', gracefulShutdown)
+
+function gracefulShutdown() {
+  logInfo('SHUTDOWN_INITIATED', 'Graceful shutdown initiated')
+  
+  // Close WebSocket server
   wss.close(() => {
-    healthServer.close(() => {
-      console.log('✅ Server shutdown complete')
-      process.exit(0)
-    })
+    logInfo('WEBSOCKET_SERVER_CLOSED', 'WebSocket server closed')
   })
-})
-
-// Server startup logging
-console.log(`🚀 WebSocket server starting on port ${PORT}`)
-console.log('Environment:', process.env.NODE_ENV || 'development')
-console.log('Allowed Origins:', CORS_CONFIG.allowedOrigins.join(', '))
-console.log('Security Headers:', process.env.NODE_ENV === 'production' ? 'Enabled' : 'Development mode')
-console.log('\n📊 Server ready for connections!')
+  
+  // Close health server
+  healthServer.close(() => {
+    logInfo('HEALTH_SERVER_CLOSED', 'Health server closed')
+  })
+  
+  // Shutdown managers
+  connectionManager.shutdown()
+  channelManager.shutdown()
+  presenceManager.shutdown()
+  eventEmitter.shutdown()
+  
+  logInfo('SHUTDOWN_COMPLETE', 'Graceful shutdown complete')
+  process.exit(0)
+}
