@@ -14,11 +14,13 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   Calendar,
   Users,
-  DollarSign,
   BarChart3,
-  AlertTriangle,
   MapPin,
   Eye,
+  AlertTriangle,
+  Shield,
+  Zap,
+  Skull,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCompetitors } from "@/actions/idea/competitor";
@@ -243,17 +245,7 @@ export function CompetitorsTable({ ideaId }: CompetitorsTableProps) {
                         {formatEmployeeCount(competitor.employeeCount)}
                       </p>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5">
-                        <DollarSign className="h-3 w-3 text-muted-foreground/50" />
-                        <span className="text-xs text-muted-foreground/60 font-medium uppercase tracking-wider">
-                          Revenue
-                        </span>
-                      </div>
-                      <p className="text-sm font-semibold text-foreground/90">
-                        {formatCurrency(competitor.annualRevenue)}
-                      </p>
-                    </div>
+
                     <div className="space-y-2">
                       <div className="flex items-center gap-1.5">
                         <BarChart3 className="h-3 w-3 text-muted-foreground/50" />

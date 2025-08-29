@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCompetitor } from "@/actions/idea/competitor";
 import { Badge } from "@workspace/ui/components/badge";
-import { Users, DollarSign, TrendingUp, Star } from "lucide-react";
+import { Users, TrendingUp, Star } from "lucide-react";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { Separator } from "@workspace/ui/components/separator";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
@@ -103,15 +103,7 @@ export function CompetitorDetailsView({
     );
   }
 
-  const formatCurrency = (amount: number | null) => {
-    if (!amount) return "Not disclosed";
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount * 1000000);
-  };
+
 
   const formatPercentage = (value: number | null) => {
     if (!value) return "Not available";
@@ -172,49 +164,13 @@ export function CompetitorDetailsView({
 
   return (
     <div className="mx-auto space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
-          label="Annual Revenue"
-          value={formatCurrency(competitor.annualRevenue)}
-          icon={<DollarSign className="h-4 w-4" />}
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <MetricCard
           label="Market Share"
           value={formatPercentage(competitor.marketShare)}
           icon={<Star className="h-4 w-4" />}
         />
-        <MetricCard
-          label="User Growth Rate"
-          value={formatPercentage(competitor.userGrowthRate)}
-          icon={<Users className="h-4 w-4" />}
-          trend={
-            competitor.userGrowthRate
-              ? competitor.userGrowthRate > 15
-                ? "positive"
-                : competitor.userGrowthRate < 0
-                  ? "negative"
-                  : "neutral"
-              : "neutral"
-          }
-        />
-        <MetricCard
-          label="Customer Satisfaction"
-          value={
-            competitor.customerSatisfaction
-              ? `${competitor.customerSatisfaction.toFixed(1)}/10`
-              : "Not rated"
-          }
-          icon={<Star className="h-4 w-4" />}
-          trend={
-            competitor.customerSatisfaction
-              ? competitor.customerSatisfaction > 8
-                ? "positive"
-                : competitor.customerSatisfaction < 6
-                  ? "negative"
-                  : "neutral"
-              : "neutral"
-          }
-        />
+
       </div>
 
       <Separator />

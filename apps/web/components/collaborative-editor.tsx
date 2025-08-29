@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  BlockNoteEditor,
-  PartialBlock,
-  createInlineContentSpec,
-} from "@blocknote/core";
+import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
 import "@blocknote/core/fonts/inter.css";
@@ -22,7 +18,6 @@ import { useSession } from "../context/session-context";
 import { useQuery } from "@tanstack/react-query";
 import { getEntityDocumentContent } from "../actions/documents/document";
 import { queryKeys } from "../lib/query-keys";
-import { getOrgMembers } from "../actions/account/user";
 
 // Custom debounce function
 function debounce<T extends (...args: any[]) => any>(
@@ -100,20 +95,6 @@ function getUserColor(userId: string): string {
     hash = userId.charCodeAt(i) + ((hash << 5) - hash);
   }
   return USER_COLORS[Math.abs(hash) % USER_COLORS.length] || "#000000";
-}
-
-// Define member type based on actual API response
-interface OrgMember {
-  id: string;
-  organizationId: string;
-  role: "member" | "owner" | "admin";
-  createdAt: Date;
-  userId: string;
-  user: {
-    email: string;
-    name: string;
-    image?: string;
-  };
 }
 
 export function CollaborativeEditor({
@@ -300,9 +281,7 @@ export function CollaborativeEditor({
       queryKey: queryKeys.documents.entity(entityType, entityId),
       queryFn: async () => {
         if (!entityType || !entityId) return null;
-        console.log("Fetching document for:", { entityType, entityId });
         const result = await getEntityDocumentContent({ entityType, entityId });
-        console.log("Document fetch result:", result);
         if (result.success) {
           return result.document.content as PartialBlock[];
         }
@@ -310,15 +289,6 @@ export function CollaborativeEditor({
       },
       enabled: !!entityType && !!entityId,
     });
-
-  // Fetch organization members for mentions
-  const { data: orgMembers } = useQuery({
-    queryKey: ["orgMembers"],
-    queryFn: async () => {
-      const members = await getOrgMembers();
-      return members || [];
-    },
-  });
 
   const editor = useCreateBlockNote(
     {
@@ -351,14 +321,6 @@ export function CollaborativeEditor({
 
   // Effect to load initial content into the editor
   useEffect(() => {
-    console.log("Content loading effect:", {
-      hasEditor: !!editor,
-      hasInitialContent: !!initialContent,
-      initialContentLoaded,
-      entityType,
-      entityId,
-    });
-
     if (editor && initialContent && !initialContentLoaded) {
       console.log("Loading initial content into editor");
       editor.replaceBlocks(editor.document, initialContent);
@@ -372,7 +334,6 @@ export function CollaborativeEditor({
       !isFetchingInitialContent
     ) {
       // No initial content but editor is ready - mark as loaded and connected
-      console.log("No initial content, marking as loaded");
       setInitialContentLoaded(true);
       setConnectionStatus("connected");
     }
@@ -419,161 +380,6 @@ export function CollaborativeEditor({
 
   const isEditorLoading = isFetchingInitialContent || !initialContentLoaded;
 
-  // State for mention menu
-  const [showMentionMenu, setShowMentionMenu] = useState(false);
-  const [mentionQuery, setMentionQuery] = useState("");
-  const [mentionMenuPosition, setMentionMenuPosition] = useState({
-    x: 0,
-    y: 0,
-  });
-
-  // Filter members based on query
-  const filteredMembers = useMemo(() => {
-    if (!orgMembers || !mentionQuery) return orgMembers || [];
-
-    return orgMembers
-      .filter(
-        (member: OrgMember) =>
-          member.user.name.toLowerCase().includes(mentionQuery.toLowerCase()) ||
-          member.user.email.toLowerCase().includes(mentionQuery.toLowerCase())
-      )
-      .slice(0, 10);
-  }, [orgMembers, mentionQuery]);
-
-  // Handle mention insertion
-  const insertMention = useCallback(
-    (member: OrgMember) => {
-      if (!editor) return;
-
-      // For now, just insert the mention as regular text
-      // We'll enhance this with proper inline content later
-      const mentionText = `@${member.user.name} `;
-
-      // Insert the mention by manipulating the DOM directly
-      // This is a workaround until we implement proper BlockNote inline content
-      try {
-        const editorElement = document.querySelector(
-          '.bn-editor [contenteditable="true"]'
-        );
-        if (editorElement) {
-          const selection = window.getSelection();
-          if (selection && selection.rangeCount > 0) {
-            const range = selection.getRangeAt(0);
-
-            // Delete the @ and query text
-            const textNode = range.startContainer;
-            if (textNode.nodeType === Node.TEXT_NODE && textNode.textContent) {
-              const text = textNode.textContent;
-              const atIndex = text.lastIndexOf("@");
-              if (atIndex !== -1) {
-                // Replace from @ to cursor with the mention
-                const beforeAt = text.substring(0, atIndex);
-                const afterCursor = text.substring(range.startOffset);
-                textNode.textContent = beforeAt + mentionText + afterCursor;
-
-                // Set cursor after the mention
-                const newRange = document.createRange();
-                newRange.setStart(
-                  textNode,
-                  beforeAt.length + mentionText.length
-                );
-                newRange.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(newRange);
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error("Error inserting mention:", error);
-        // Fallback: just log the mention
-        console.log(`Mentioning: ${member.user.name}`);
-      }
-
-      setShowMentionMenu(false);
-      setMentionQuery("");
-    },
-    [editor, mentionQuery]
-  );
-
-  // Handle keyboard events for mention detection
-  useEffect(() => {
-    if (!editor) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (showMentionMenu) {
-        if (event.key === "Escape") {
-          setShowMentionMenu(false);
-          setMentionQuery("");
-          event.preventDefault();
-          return;
-        }
-
-        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-          // Handle arrow navigation in mention menu
-          event.preventDefault();
-          return;
-        }
-
-        if (event.key === "Enter" && filteredMembers.length > 0) {
-          insertMention(filteredMembers[0]!);
-          event.preventDefault();
-          return;
-        }
-      }
-    };
-
-    const handleInput = () => {
-      const selection = editor.getTextCursorPosition();
-      if (!selection) return;
-
-      const block = selection.block;
-      const content = block.content;
-
-      // Check if we're typing after an @
-      if (Array.isArray(content)) {
-        const textContent = content
-          .filter((item) => typeof item === "string")
-          .join("");
-
-        const atIndex = textContent.lastIndexOf("@");
-        if (atIndex !== -1) {
-          const afterAt = textContent.slice(atIndex + 1);
-
-          // If there's no space after @, we're in mention mode
-          if (!afterAt.includes(" ") && afterAt.length <= 20) {
-            setMentionQuery(afterAt);
-            setShowMentionMenu(true);
-
-            // Get cursor position for menu placement
-            const editorElement = document.querySelector(".bn-editor");
-            if (editorElement) {
-              const rect = editorElement.getBoundingClientRect();
-              setMentionMenuPosition({
-                x: rect.left,
-                y: rect.top + 30,
-              });
-            }
-            return;
-          }
-        }
-      }
-
-      // Hide mention menu if not in mention mode
-      if (showMentionMenu) {
-        setShowMentionMenu(false);
-        setMentionQuery("");
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    editor.onChange(handleInput);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [editor, showMentionMenu, filteredMembers, insertMention]);
-
   return (
     <div className="relative">
       {(connectionStatus !== "connected" || isEditorLoading) && (
@@ -587,45 +393,6 @@ export function CollaborativeEditor({
           {connectionStatus === "connecting" || isEditorLoading
             ? "Connecting..."
             : "Reconnecting..."}
-        </div>
-      )}
-
-      {/* Mention Menu */}
-      {showMentionMenu && filteredMembers.length > 0 && (
-        <div
-          className="absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto min-w-64"
-          style={{
-            left: mentionMenuPosition.x,
-            top: mentionMenuPosition.y,
-          }}
-        >
-          {filteredMembers.map((member: OrgMember, index: number) => (
-            <div
-              key={member.id}
-              className="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center gap-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-              onClick={() => insertMention(member)}
-            >
-              {member.user.image ? (
-                <img
-                  src={member.user.image}
-                  alt={member.user.name}
-                  className="w-6 h-6 rounded-full"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-medium">
-                  {member.user.name.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                  {member.user.name}
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {member.user.email}
-                </div>
-              </div>
-            </div>
-          ))}
         </div>
       )}
 

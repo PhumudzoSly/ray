@@ -28,7 +28,7 @@ interface JourneyOverviewProps {
   averageJourneyTime?: number | null;
   conversionRate?: number | null;
   dropOffRate?: number | null;
-  customerSatisfaction?: number | null;
+
 }
 
 export function JourneyOverview({ 
@@ -37,7 +37,7 @@ export function JourneyOverview({
   averageJourneyTime,
   conversionRate,
   dropOffRate,
-  customerSatisfaction
+
 }: JourneyOverviewProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -107,8 +107,7 @@ export function JourneyOverview({
         </CardHeader>
         <CardContent>
           <div className="text-3xl font-bold text-center py-2">
-            {customerSatisfaction !== null && customerSatisfaction !== undefined ? 
-              `${customerSatisfaction.toFixed(0)}/100` : "N/A"}
+            "N/A"
           </div>
         </CardContent>
       </Card>
