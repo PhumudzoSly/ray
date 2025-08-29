@@ -1,0 +1,22 @@
+[build]
+  builder = "NIXPACKS"
+  buildCommand = "npm install"
+
+[deploy]
+  startCommand = "node server.js"
+  healthcheckPath = "/health"
+  healthcheckTimeout = 300
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 10
+
+[env]
+  NODE_ENV = "production"
+  PORT = { default = "8080" }
+  HEALTH_PORT = { default = "8081" }
+
+# Railway will automatically set these from your environment variables
+# JWT_SECRET = "your-jwt-secret"
+
+[networking]
+  # Railway will automatically assign a domain
+  # The WebSocket server will be available at wss://your-app.railway.app

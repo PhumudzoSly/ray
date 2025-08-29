@@ -11,7 +11,7 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
+import { WebsocketProvider } from "y-websocket";
 import { toast } from "sonner";
 import {
   saveDocumentContent,
@@ -123,7 +123,7 @@ export function CollaborativeEditor({
 }: CollaborativeEditorProps) {
   const { theme } = useTheme();
   const [doc] = useState(() => new Y.Doc());
-  const [provider, setProvider] = useState<WebrtcProvider | null>(null);
+  const [provider, setProvider] = useState<WebsocketProvider | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<
     "connecting" | "connected" | "disconnected"
   >("connecting");
@@ -131,61 +131,84 @@ export function CollaborativeEditor({
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const user = useSession();
 
-  // Create stable room ID
+  // Create stable room ID (org scoping disabled for dev mode)
   const stableRoomId = useMemo(() => {
-    return `${entityType}-${entityId}` || documentId || "default-room";
+    const baseRoomId =
+      `${entityType}-${entityId}` || documentId || "default-room";
+    // Organization scoping disabled for development
+    return baseRoomId;
   }, [entityType, entityId, documentId]);
 
   // Initialize provider once and handle cleanup
   useEffect(() => {
-    let webrtcProvider: WebrtcProvider | null = null;
+    // WebSocket initialization (authentication disabled for dev mode)
+
+    let websocketProvider: WebsocketProvider | null = null;
     let mounted = true;
 
     const initProvider = async () => {
       try {
-        webrtcProvider = new WebrtcProvider(stableRoomId, doc, {
-          signaling: [
-            "wss://signaling.yjs.dev",
-            "wss://y-webrtc-signaling-eu.herokuapp.com",
-            "wss://y-webrtc-signaling-us.herokuapp.com",
-          ],
-          filterBcConns: false,
-          maxConns: 5000000000000,
-          peerOpts: {},
-        });
+        // Build WebSocket URL with room path (dev mode)
+        const baseUrl =
+          process.env.NEXT_PUBLIC_WEBSOCKET_URL || "ws://localhost:1234";
+        const wsUrl = `${baseUrl}/${stableRoomId}`;
+
+        websocketProvider = new WebsocketProvider(wsUrl, stableRoomId, doc);
 
         // Add connection event listeners for debugging
-        webrtcProvider.on("status", (event: any) => {
-          console.log("WebRTC status:", event.status);
+        websocketProvider.on("status", (event: any) => {
+          console.log("WebSocket status:", event.status);
+          if (mounted) {
+            if (event.status === "connected") {
+              setConnectionStatus("connected");
+            } else if (event.status === "disconnected") {
+              setConnectionStatus("disconnected");
+            }
+            // Don't change to "connecting" for intermediate states to prevent blinking
+          }
         });
 
-        webrtcProvider.on("peers", (event: any) => {
-          console.log(
-            "Connected peers:",
-            event.added,
-            "Disconnected:",
-            event.removed
-          );
+        websocketProvider.on("connection-close", (event: any) => {
+          console.log("WebSocket connection closed:", event);
+          if (mounted) {
+            setConnectionStatus("disconnected");
+            // Auto-reconnect after a delay
+            reconnectTimeoutRef.current = setTimeout(() => {
+              if (mounted && websocketProvider) {
+                console.log("Attempting to reconnect WebSocket...");
+                setConnectionStatus("connecting");
+                websocketProvider.connect();
+              }
+            }, 3000); // Reconnect after 3 seconds
+          }
         });
 
-        // Small delay to allow initial connection
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        websocketProvider.on("connection-error", (event: any) => {
+          console.error("WebSocket connection error:", event);
+          if (mounted) {
+            setConnectionStatus("disconnected");
+            // Auto-reconnect after a delay on error
+            reconnectTimeoutRef.current = setTimeout(() => {
+              if (mounted && websocketProvider) {
+                console.log("Attempting to reconnect after error...");
+                setConnectionStatus("connecting");
+                websocketProvider.connect();
+              }
+            }, 5000); // Longer delay for errors
+          }
+        });
+
+        // Small delay to allow initial connection and prevent rapid reconnection cycles
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         if (mounted) {
-          setProvider(webrtcProvider);
-
-          // Set connected status after a reasonable delay
-          // The provider is working if we can set it up successfully
-          setTimeout(() => {
-            if (mounted) {
-              setConnectionStatus("connected");
-            }
-          }, 1000);
+          setProvider(websocketProvider);
         }
       } catch (e) {
-        console.error("Failed to create WebrtcProvider:", e);
+        console.error("Failed to create WebsocketProvider:", e);
         if (mounted) {
           setProvider(null);
+          setConnectionStatus("disconnected");
         }
       }
     };
@@ -197,8 +220,8 @@ export function CollaborativeEditor({
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
-      if (webrtcProvider) {
-        webrtcProvider.destroy();
+      if (websocketProvider) {
+        websocketProvider.destroy();
       }
     };
   }, [stableRoomId, doc]);
@@ -550,15 +573,6 @@ export function CollaborativeEditor({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [editor, showMentionMenu, filteredMembers, insertMention]);
-
-  console.log("Editor loading state:", {
-    isFetchingInitialContent,
-    initialContentLoaded,
-    isEditorLoading,
-    connectionStatus,
-    entityType,
-    entityId,
-  });
 
   return (
     <div className="relative">

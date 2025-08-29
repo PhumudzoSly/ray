@@ -1,0 +1,38 @@
+{
+  "name": "@workspace/websocket-server",
+  "version": "1.0.0",
+  "description": "Y.js WebSocket server with authentication for collaborative editing",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "echo 'No build step required'",
+    "deploy:local": "node deploy.js --local",
+    "deploy:docker": "node deploy.js --docker",
+    "deploy:railway": "node deploy.js --railway",
+    "deploy:help": "node deploy.js --help"
+  },
+  "dependencies": {
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.27",
+    "ws": "^8.18.0",
+    "jsonwebtoken": "^9.0.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/ws": "^8.5.10",
+    "@types/jsonwebtoken": "^9.0.6"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "yjs",
+    "websocket",
+    "collaborative",
+    "real-time"
+  ],
+  "license": "MIT"
+}
