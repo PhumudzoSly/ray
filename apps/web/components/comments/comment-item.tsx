@@ -314,9 +314,9 @@ export function CommentItem({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="truncate text-primary hover:underline"
-                    title={attachment.fileName}
+                    title={attachment.originalName}
                   >
-                    {attachment.fileName}
+                    {attachment.originalName}
                   </a>
                   <span className="text-xs text-muted-foreground flex-shrink-0">
                     ({formatFileSize(attachment.fileSize)} ·{" "}
