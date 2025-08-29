@@ -13,7 +13,6 @@
 [env]
   NODE_ENV = "production"
   PORT = { default = "8080" }
-  HEALTH_PORT = { default = "8081" }
 
 # Railway will automatically set these from your environment variables
 # JWT_SECRET = "your-jwt-secret"
