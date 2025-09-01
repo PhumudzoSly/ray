@@ -1,31 +1,35 @@
 "use client";
 
 import React from "react";
-import { 
-  ChartContainer, 
-  ChartTooltip, 
-  ChartTooltipContent 
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   ResponsiveContainer,
-  Cell
+  Cell,
 } from "recharts";
 
 interface TierRevenueWaterfallProps {
-  tiers?: {
-    id: string;
-    tierName: string;
-    expectedRevenue?: number | null;
-    cumulativeRevenue?: number | null;
-  }[] | null;
+  tiers?:
+    | {
+        id: string;
+        tierName: string;
+        expectedRevenue?: number | null;
+        cumulativeRevenue?: number | null;
+      }[]
+    | null;
 }
 
-export function TierRevenueWaterfall({ tiers = [] }: TierRevenueWaterfallProps) {
+export function TierRevenueWaterfall({
+  tiers = [],
+}: TierRevenueWaterfallProps) {
   if (!tiers || tiers.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -36,16 +40,16 @@ export function TierRevenueWaterfall({ tiers = [] }: TierRevenueWaterfallProps) 
 
   // Prepare data for waterfall chart
   let cumulative = 0;
-  const chartData = tiers.map(tier => {
+  const chartData = tiers.map((tier) => {
     const revenue = tier.expectedRevenue || 0;
     const previousCumulative = cumulative;
     cumulative += revenue;
-    
+
     return {
       name: tier.tierName,
       revenue: revenue,
       cumulative: cumulative,
-      previousCumulative: previousCumulative
+      previousCumulative: previousCumulative,
     };
   });
 
@@ -55,7 +59,7 @@ export function TierRevenueWaterfall({ tiers = [] }: TierRevenueWaterfallProps) 
     "hsl(var(--chart-2))",
     "hsl(var(--chart-3))",
     "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))"
+    "hsl(var(--chart-5))",
   ];
 
   return (
@@ -73,27 +77,29 @@ export function TierRevenueWaterfall({ tiers = [] }: TierRevenueWaterfallProps) 
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
           <YAxis />
-          <ChartTooltip 
+          <ChartTooltip
             content={
-              <ChartTooltipContent 
+              <ChartTooltipContent
                 formatter={(value, name) => {
-                  if (name === 'revenue') return [`$${Number(value).toLocaleString()}`, 'Revenue'];
-                  if (name === 'cumulative') return [`$${Number(value).toLocaleString()}`, 'Cumulative'];
+                  if (name === "revenue")
+                    return [`$${Number(value).toLocaleString()}`, "Revenue"];
+                  if (name === "cumulative")
+                    return [`$${Number(value).toLocaleString()}`, "Cumulative"];
                   return [value, name];
                 }}
               />
-            } 
+            }
           />
-          <Bar 
-            dataKey="cumulative" 
-            fill="hsl(var(--chart-1))" 
+          <Bar
+            dataKey="cumulative"
+            fill="hsl(var(--chart-1))"
             name="Cumulative Revenue"
             radius={[4, 4, 0, 0]}
           >
             {chartData.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={COLORS[index % COLORS.length]} 
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
               />
             ))}
           </Bar>

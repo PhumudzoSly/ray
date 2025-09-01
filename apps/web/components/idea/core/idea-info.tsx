@@ -22,6 +22,8 @@ import {
   deleteIdea,
 } from "@/actions/idea";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 
 const IdeaInfo = ({ id }: { id: string }) => {
   const router = useRouter();
@@ -111,10 +113,23 @@ const IdeaInfo = ({ id }: { id: string }) => {
       <div className="flex justify-between w-full flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-start justify-between w-full">
           <div>
-            <InlineEditField
-              value={`${idea?.name}` || ""}
-              onSave={(value) => handleUpdateField("name", value)}
-              className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
+            <div className="flex mb-2.5 justify-between items-center gap-2">
+              <InlineEditField
+                value={`💡 ${idea?.name}` || ""}
+                onSave={(value) => handleUpdateField("name", value)}
+                className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
+                disabled={updateFieldMutation.isPending}
+              />
+              <Button asChild>
+                <Link href={`/ideas/${id}/report` as any}>
+                  Validation Report
+                </Link>
+              </Button>
+            </div>
+            <InlineEditTextArea
+              value={`${idea?.description}` || ""}
+              className="w-full"
+              onSave={(value) => handleUpdateField("description", value)}
               disabled={updateFieldMutation.isPending}
             />
             <div className="flex flex-wrap gap-6 py-2 text-sm text-muted-foreground">
@@ -147,11 +162,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {idea?.status && (
-              <IdeaStatus refetch={() => {}} id={id} status={idea.status} />
-            )}
           </div>
         </div>
       </div>

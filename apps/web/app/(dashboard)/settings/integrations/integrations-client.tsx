@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/tabs";
 import { Plus, ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   AVAILABLE_INTEGRATIONS,
@@ -19,6 +20,7 @@ import {
 } from "@/lib/integrations-config";
 import { ResendIntegrationModal } from "@/components/settings/resend-integration-modal";
 import { LoopsIntegrationModal } from "@/components/settings/loops-integration-modal";
+import { VercelIntegrationModal } from "@/components/settings/vercel-integration-modal";
 
 interface IntegrationsClientProps {
   success?: string;
@@ -30,6 +32,7 @@ export function IntegrationsClient({
   error,
 }: IntegrationsClientProps) {
   const [activeModal, setActiveModal] = useState<string | null>(null);
+  const queryClient = useQueryClient();
 
   // Show success/error messages
   if (success) {
@@ -47,6 +50,7 @@ export function IntegrationsClient({
 
   const closeModal = () => {
     setActiveModal(null);
+    queryClient.invalidateQueries({ queryKey: ["integrations"] });
   };
 
   // Connection status will be handled within individual modals
@@ -84,15 +88,12 @@ export function IntegrationsClient({
             className="text-xs sm:text-sm"
           >
             <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Manage</span>
-            <span className="sm:hidden">Open</span>
+            Manage
           </Button>
         </div>
       </div>
     );
   };
-
-  // No loading states needed - static list
 
   return (
     <div className="space-y-6">
@@ -163,6 +164,9 @@ export function IntegrationsClient({
       )}
       {activeModal === "loops" && (
         <LoopsIntegrationModal isOpen={true} onClose={closeModal} />
+      )}
+      {activeModal === "vercel" && (
+        <VercelIntegrationModal isOpen={true} onClose={closeModal} />
       )}
     </div>
   );

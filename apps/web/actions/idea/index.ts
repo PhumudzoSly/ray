@@ -46,6 +46,16 @@ export const getSingleIdea = async (id: string) => {
   const { org } = await getSession();
   const idea = await prisma.idea.findFirst({
     where: { id, organizationId: org },
+    include: {
+      _count: {
+        select: {
+          projects: true,
+          Competitor: true,
+        },
+      },
+      validation: true,
+      owner: true,
+    },
   });
   return idea;
 };

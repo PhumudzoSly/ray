@@ -41,6 +41,9 @@ import { UIMessage } from "ai";
 import { IdeaSelector } from "@/components/ui/selectors/idea-selector";
 import { IssueSelector } from "@/components/ui/selectors/issue-selector";
 import { ProjectSelector } from "@/components/ui/selectors";
+import { ExpandedLayoutContainer } from "@/components/expanded-layout-container";
+import { Button } from "@workspace/ui/components/button";
+import { Separator } from "@workspace/ui/components/separator";
 
 const Chat = ({
   initialMessages,
@@ -101,135 +104,171 @@ const Chat = ({
   };
 
   return (
-    <div className="max-w-5xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
-      <div className="flex flex-col h-full">
-        <Conversation className="h-full">
-          <ConversationContent>
-            {messages.map((message) => (
-              <div key={message.id}>
-                {message.role === "assistant" && (
-                  <Sources>
-                    {message.parts.map((part, i) => {
-                      switch (part.type) {
-                        case "source-url":
-                          return (
-                            <>
-                              <SourcesTrigger
-                                count={
-                                  message.parts.filter(
-                                    (part) => part.type === "source-url"
-                                  ).length
-                                }
-                              />
-                              <SourcesContent key={`${message.id}-${i}`}>
-                                <Source
-                                  key={`${message.id}-${i}`}
-                                  href={part.url}
-                                  title={part.url}
-                                />
-                              </SourcesContent>
-                            </>
-                          );
-                      }
-                    })}
-                  </Sources>
-                )}
-                <Message from={message.role} key={message.id}>
-                  <MessageContent>
-                    {message.parts.map((part, i) => {
-                      switch (part.type) {
-                        case "text":
-                          const isLastMessage = i === messages.length - 1;
-                          return (
-                            <div key={`${message.id}-${i}`}>
-                              <Response>{part.text}</Response>
-                              {message.role === "assistant" &&
-                                isLastMessage && (
-                                  <Actions className="mt-2">
-                                    <Action
-                                      onClick={() => regenerate()}
-                                      label="Retry"
-                                    >
-                                      <RefreshCcwIcon className="size-3" />
-                                    </Action>
-                                    <Action
-                                      onClick={() =>
-                                        navigator.clipboard.writeText(part.text)
-                                      }
-                                      label="Copy"
-                                    >
-                                      <CopyIcon className="size-3" />
-                                    </Action>
-                                  </Actions>
-                                )}
-                            </div>
-                          );
-                        case "reasoning":
-                          return (
-                            <Reasoning
-                              key={`${message.id}-${i}`}
-                              className="w-full"
-                              isStreaming={status === "streaming"}
-                            >
-                              <ReasoningTrigger />
-                              <ReasoningContent>{part.text}</ReasoningContent>
-                            </Reasoning>
-                          );
-                        default:
-                          return null;
-                      }
-                    })}
-                  </MessageContent>
-                </Message>
-              </div>
-            ))}
-            {status === "submitted" && <Loader />}
-          </ConversationContent>
-          <ConversationScrollButton />
-        </Conversation>
+    <ExpandedLayoutContainer
+      sidebar={
+        <div>
+          <div className="p-4">
+            <h1 className="font-bold text-lg">CoPilot Toolbox</h1>
+            <p className="text-xs text-muted-foreground">
+              Configure tools and services that Co-Pilot must have access to and
+              focus on.
+            </p>
+          </div>
+          <Separator />
+          <div className="p-4">
+            <h2 className="text-lg font-bold mb-4">Internal</h2>
+            <div className="grid grid-cols-[120px_1fr] gap-y-4">
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Ideas
+              </h3>
+              <IdeaSelector idea={idea} onChange={setIdea} />
 
-        <div className="px-4">
-          <PromptInput onSubmit={handleSubmit} className="mt-4">
-            <PromptInputTextarea
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask and collaborate with Ray..."
-              value={input}
-            />
-            <PromptInputToolbar>
-              <div className="flex items-center gap-2 flex-wrap">
-                <PromptInputButton asChild>
-                  <IdeaSelector idea={idea} onChange={setIdea} />
-                </PromptInputButton>
-                <PromptInputButton asChild>
-                  <ProjectSelector
-                    currentProject={project}
-                    onChange={(projectId: string | null) => {
-                      setProject(projectId || "");
-                      setIssue("");
-                    }}
-                  />
-                </PromptInputButton>
-                {project && (
-                  <PromptInputButton asChild>
-                    <IssueSelector
-                      projectId={project}
-                      value={issue}
-                      onChange={(issueId: string | null) =>
-                        setIssue(issueId || "")
-                      }
-                      onValueChange={(issueId: string | null) =>
-                        setIssue(issueId || "")
-                      }
-                    />
-                  </PromptInputButton>
-                )}
-              </div>
-              <PromptInputSubmit disabled={!input} status={status} />
-            </PromptInputToolbar>
-          </PromptInput>
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Project
+              </h3>
+              <ProjectSelector
+                currentProject={project}
+                onChange={(projectId: string | null) => {
+                  setProject(projectId || "");
+                  setIssue("");
+                }}
+              />
+              {project && (
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Issue
+                </h3>
+              )}
+              {project && (
+                <IssueSelector
+                  projectId={project}
+                  value={issue}
+                  onChange={(issueId: string | null) => setIssue(issueId || "")}
+                  onValueChange={(issueId: string | null) =>
+                    setIssue(issueId || "")
+                  }
+                />
+              )}
+            </div>
+
+            <h2 className="text-lg font-bold my-4">External</h2>
+            <div className="bg-muted p-4">
+              <h1 className="font-medium">⭐ Coming soon</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                We are currently setting up external tools such as Stripe,
+                Polar, Resend, Vercel and more.
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <div className="max-w-5xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
+        <div className="flex flex-col h-full">
+          <Conversation className="h-full">
+            <ConversationContent>
+              {messages.map((message) => (
+                <div key={message.id}>
+                  {message.role === "assistant" && (
+                    <Sources>
+                      {message.parts.map((part, i) => {
+                        switch (part.type) {
+                          case "source-url":
+                            return (
+                              <>
+                                <SourcesTrigger
+                                  count={
+                                    message.parts.filter(
+                                      (part) => part.type === "source-url"
+                                    ).length
+                                  }
+                                />
+                                <SourcesContent key={`${message.id}-${i}`}>
+                                  <Source
+                                    key={`${message.id}-${i}`}
+                                    href={part.url}
+                                    title={part.url}
+                                  />
+                                </SourcesContent>
+                              </>
+                            );
+                        }
+                      })}
+                    </Sources>
+                  )}
+                  <Message from={message.role} key={message.id}>
+                    <MessageContent>
+                      {message.parts.map((part, i) => {
+                        switch (part.type) {
+                          case "text":
+                            const isLastMessage = i === messages.length - 1;
+                            return (
+                              <div key={`${message.id}-${i}`}>
+                                <Response>{part.text}</Response>
+                                {message.role === "assistant" &&
+                                  isLastMessage && (
+                                    <Actions className="mt-2">
+                                      <Action
+                                        onClick={() => regenerate()}
+                                        label="Retry"
+                                      >
+                                        <RefreshCcwIcon className="size-3" />
+                                      </Action>
+                                      <Action
+                                        onClick={() =>
+                                          navigator.clipboard.writeText(
+                                            part.text
+                                          )
+                                        }
+                                        label="Copy"
+                                      >
+                                        <CopyIcon className="size-3" />
+                                      </Action>
+                                    </Actions>
+                                  )}
+                              </div>
+                            );
+                          case "reasoning":
+                            return (
+                              <Reasoning
+                                key={`${message.id}-${i}`}
+                                className="w-full"
+                                isStreaming={status === "streaming"}
+                              >
+                                <ReasoningTrigger />
+                                <ReasoningContent>{part.text}</ReasoningContent>
+                              </Reasoning>
+                            );
+                          default:
+                            return null;
+                        }
+                      })}
+                    </MessageContent>
+                  </Message>
+                </div>
+              ))}
+              {status === "submitted" && <Loader />}
+            </ConversationContent>
+            <ConversationScrollButton />
+          </Conversation>
+
+          <div className="px-4">
+            <PromptInput onSubmit={handleSubmit} className="mt-4">
+              <PromptInputTextarea
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask and collaborate with Ray..."
+                value={input}
+              />
+              <PromptInputToolbar>
+                <div>
+                  <Button size="xs">Clear Chat</Button>
+                </div>
+                <PromptInputSubmit disabled={!input} status={status} />
+              </PromptInputToolbar>
+            </PromptInput>
+          </div>
         </div>
       </div>
-    </div>
+    </ExpandedLayoutContainer>
   );
 };
 

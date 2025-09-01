@@ -1,31 +1,35 @@
 "use client";
 
 import React from "react";
-import { 
-  ChartContainer, 
-  ChartTooltip, 
-  ChartTooltipContent 
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   ResponsiveContainer,
-  Legend
+  Legend,
 } from "recharts";
 
 interface RevenueProjectionTimelineProps {
-  data?: {
-    month: string;
-    optimistic: number;
-    expected: number;
-    pessimistic: number;
-  }[] | null;
+  data?:
+    | {
+        month: string;
+        optimistic: number;
+        expected: number;
+        pessimistic: number;
+      }[]
+    | null;
 }
 
-export function RevenueProjectionTimeline({ data = [] }: RevenueProjectionTimelineProps) {
+export function RevenueProjectionTimeline({
+  data = [],
+}: RevenueProjectionTimelineProps) {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground">
@@ -47,46 +51,49 @@ export function RevenueProjectionTimeline({ data = [] }: RevenueProjectionTimeli
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="month" 
+          <XAxis
+            dataKey="month"
             label={{ value: "Time", position: "bottom" }}
           />
-          <YAxis 
+          <YAxis
             label={{ value: "Revenue ($)", angle: -90, position: "left" }}
           />
-          <ChartTooltip 
+          <ChartTooltip
             content={
-              <ChartTooltipContent 
-                formatter={(value) => [`$${Number(value).toLocaleString()}`, "Revenue"]}
+              <ChartTooltipContent
+                formatter={(value) => [
+                  `$${Number(value).toLocaleString()}`,
+                  "Revenue",
+                ]}
               />
-            } 
+            }
           />
           <Legend />
-          <Line 
-            type="monotone" 
-            dataKey="optimistic" 
-            stroke="hsl(var(--chart-1))" 
-            strokeWidth={2} 
+          <Line
+            type="monotone"
+            dataKey="optimistic"
+            stroke="hsl(var(--chart-1))"
+            strokeWidth={2}
             dot={{ r: 4 }}
-            activeDot={{ r: 6 }} 
+            activeDot={{ r: 6 }}
             name="Optimistic"
           />
-          <Line 
-            type="monotone" 
-            dataKey="expected" 
-            stroke="hsl(var(--chart-2))" 
-            strokeWidth={2} 
+          <Line
+            type="monotone"
+            dataKey="expected"
+            stroke="hsl(var(--chart-2))"
+            strokeWidth={2}
             dot={{ r: 4 }}
-            activeDot={{ r: 6 }} 
+            activeDot={{ r: 6 }}
             name="Expected"
           />
-          <Line 
-            type="monotone" 
-            dataKey="pessimistic" 
-            stroke="hsl(var(--chart-3))" 
-            strokeWidth={2} 
+          <Line
+            type="monotone"
+            dataKey="pessimistic"
+            stroke="hsl(var(--chart-3))"
+            strokeWidth={2}
             dot={{ r: 4 }}
-            activeDot={{ r: 6 }} 
+            activeDot={{ r: 6 }}
             name="Pessimistic"
           />
         </LineChart>

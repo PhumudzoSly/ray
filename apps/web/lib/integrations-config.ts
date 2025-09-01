@@ -10,6 +10,16 @@ export interface IntegrationDefinition {
 }
 
 export const AVAILABLE_INTEGRATIONS: IntegrationDefinition[] = [
+  // Developer Tools
+  {
+    id: "vercel",
+    name: "Vercel",
+    description: "Platform for frontend developers to build and deploy web applications.",
+    category: "developer-tools",
+    website: "vercel.com",
+    hasModal: true,
+    modalType: "api-key",
+  },
   // Communication
   {
     id: "resend",

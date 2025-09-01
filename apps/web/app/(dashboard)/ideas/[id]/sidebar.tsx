@@ -1,25 +1,24 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { getSingleIdea } from "@/actions/idea";
 import UpdateIdea from "@/components/idea/core/edit-idea";
 import { Button } from "@workspace/ui/components/button";
 import DeleteIdea from "@/components/idea/core/delete-idea";
 import { Separator } from "@workspace/ui/components/separator";
-import { composio } from "@/lib/composio";
-import { Badge } from "@workspace/ui/components/badge";
 import moment from "moment";
-import Image from "next/image";
-import EditIntegration, {
-  DeleteIntegration,
-} from "@/components/idea/core/edit-integration";
-import AddIdeaIntegrations from "@/components/idea/core/add-integration";
+import { Building2, Shield, ShieldCheck } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
+import StatusSelector from "@/components/idea/core/status";
+import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
+import { getInitials } from "@/utils/helpers";
 
 const IdeaSidebar = async ({ id }: { id: string }) => {
   const idea = await getSingleIdea(id);
-
-  const connections = await composio.connectedAccounts.list({
-    // userIds: [`idea-${id}`],
-  });
+  if (!idea) return null;
 
   return (
     <div className="divide-y">
@@ -35,50 +34,69 @@ const IdeaSidebar = async ({ id }: { id: string }) => {
         </div>
       </div>
       <Separator />
-      <div className="p-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <h1 className="text-lg font-bold">Integrations</h1>
-            <p className="text-sm font-muted-foreground">
-              Manage all idea related integrations.
-            </p>
+      <TooltipProvider>
+        <div className="grid grid-cols-[120px_1fr] gap-y-6 p-4">
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Added by
+          </h3>
+          <div className="text-sm flex items-center gap-2">
+            <Avatar>
+              <AvatarFallback>
+                {getInitials(idea?.owner?.name || "")}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p>{idea?.owner?.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {idea?.owner?.email}
+              </p>
+            </div>
           </div>
-          <AddIdeaIntegrations id={id} />
+
+          <h3 className="text-sm font-medium text-muted-foreground">Added</h3>
+          <p className="text-sm text-muted-foreground">
+            {moment(idea.createdAt).format("MMMM Do, YYYY")}
+          </p>
+
+          <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
+          <StatusSelector id={id} status={idea?.status} />
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Industry
+          </h3>
+
+          <Tooltip>
+            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+              <Building2 className="h-4 w-4 text-indigo-500" />
+              {idea?.industry}
+            </TooltipTrigger>
+            <TooltipContent>Industry classification</TooltipContent>
+          </Tooltip>
+
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Ownership
+          </h3>
+
+          <Tooltip>
+            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+              <Shield className="h-4 w-4 text-blue-500" />
+              {idea?.internal ? "Internal idea" : "Client/external idea"}
+            </TooltipTrigger>
+            <TooltipContent>Idea ownership type</TooltipContent>
+          </Tooltip>
+
+          <h3 className="text-sm font-medium text-muted-foreground">
+            Accessibility
+          </h3>
+
+          <Tooltip>
+            <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
+              <ShieldCheck className="h-4 w-4 text-purple-500" />
+              {idea?.openSource ? "Open source" : "Closed source"}
+            </TooltipTrigger>
+            <TooltipContent>Source code accessibility</TooltipContent>
+          </Tooltip>
         </div>
-        <br />
-        <div>
-          {connections.items.map((item) => {
-            return (
-              <div className="mb-1 bg-muted p-1.5" key={item.id}>
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-2">
-                        <Image
-                          height={14}
-                          width={14}
-                          src={`/logos/${item.toolkit.slug}.svg`}
-                          alt={item.toolkit.slug || "Integration logo"}
-                        />
-                        <h1 className="capitalize font-bold">
-                          {item.toolkit.slug}{" "}
-                        </h1>
-                      </div>
-                      <Badge variant="neutral">
-                        {item.status.toLocaleLowerCase()}
-                      </Badge>
-                    </div>
-                    <span className="text-xs">
-                      {moment(item.updatedAt).fromNow()}
-                    </span>
-                  </div>
-                  <DeleteIntegration id={item.id} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      </TooltipProvider>
     </div>
   );
 };

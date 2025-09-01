@@ -1,35 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@workspace/ui/components/dialog";
+import { useId, useState } from "react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import {
-  CheckCircle2,
-  CircleDot,
-  Loader2,
-  PencilIcon,
-  XCircle,
-} from "lucide-react";
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@workspace/ui/components/command";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
-import { Card } from "@workspace/ui/components/card";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
+import { Badge } from "@workspace/ui/components/badge";
+import { CheckCircle2, CircleDot, Loader2, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as ideaActions from "@/actions/idea";
-import { useSession } from "@/context/session-context";
 import { toast } from "sonner";
+import { role } from "better-auth/plugins";
 
 export type IdeaStatus =
   | "INVALIDATED"
@@ -38,86 +31,85 @@ export type IdeaStatus =
   | "IN_PROGRESS"
   | "LAUNCHED";
 
-const statusConfig = {
-  INVALIDATED: {
-    label: "Invalidated",
+const statusOptions = [
+  {
+    id: "INVALIDATED",
+    name: "Invalidated",
     icon: CircleDot,
     description: "Idea has not been validated with potential customers",
-    color: "text-yellow-500",
-    bgColor: "bg-yellow-500/10",
-    borderColor: "border-yellow-500/20",
+    colorClass: "text-yellow-500",
   },
-  VALIDATED: {
-    label: "Validated",
+  {
+    id: "VALIDATED",
+    name: "Validated",
     icon: CheckCircle2,
     description: "Idea has been validated with potential customers",
-    color: "text-green-500",
-    bgColor: "bg-green-500/10",
-    borderColor: "border-green-500/20",
+    colorClass: "text-green-500",
   },
-  FAILED: {
-    label: "Failed",
+  {
+    id: "FAILED",
+    name: "Failed",
     icon: XCircle,
     description: "Idea validation failed or was abandoned",
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
-    borderColor: "border-red-500/20",
+    colorClass: "text-red-500",
   },
-  IN_PROGRESS: {
-    label: "In Progress",
+  {
+    id: "IN_PROGRESS",
+    name: "In Progress",
     icon: Loader2,
     description: "Idea is currently being developed",
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/20",
+    colorClass: "text-blue-500",
   },
-  LAUNCHED: {
-    label: "Launched",
+  {
+    id: "LAUNCHED",
+    name: "Launched",
     icon: CheckCircle2,
     description: "Idea has been launched to market",
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/20",
+    colorClass: "text-emerald-500",
   },
-};
+];
 
-const IdeaStatus = ({
+interface StatusSelectorProps {
+  status: IdeaStatus;
+  id: string;
+  refetch?: () => void;
+  disabled?: boolean;
+  iconOnly?: boolean;
+}
+
+export function StatusSelector({
   status,
   id,
   refetch,
-}: {
-  status: IdeaStatus;
-  id: string;
-  refetch: any;
-}) => {
-  const [currentStatus, setCurrentStatus] = useState<IdeaStatus>(status);
+  disabled = false,
+  iconOnly = false,
+}: StatusSelectorProps) {
+  const componentId = useId();
+  const [open, setOpen] = useState<boolean>(false);
+  const [value, setValue] = useState<IdeaStatus>(status);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const config = statusConfig[status];
-  const initConfig = statusConfig[status];
 
   const queryClient = useQueryClient();
   const changeStatusMutation = useMutation({
     mutationFn: async (data: { id: string; status: string }) =>
       ideaActions.changeStatus(data as any),
     onSuccess: () => {
-      queryClient.invalidateQueries(); // Optionally, scope to idea queries
+      queryClient.invalidateQueries();
     },
   });
 
-  async function handleSubmit() {
-    if (currentStatus === status) {
-      setIsOpen(false);
-      return;
-    }
+  const handleStatusChange = async (statusId: IdeaStatus) => {
+    if (statusId === value || isSubmitting) return;
 
+    setValue(statusId);
+    setOpen(false);
     setIsSubmitting(true);
+
     try {
       await toast.promise(
         changeStatusMutation.mutateAsync({
           id,
-          status: currentStatus,
+          status: statusId,
         }),
         {
           error: "Failed to update idea status",
@@ -125,127 +117,108 @@ const IdeaStatus = ({
           success: "Idea status updated",
         }
       );
-      setIsOpen(false);
-      await refetch();
+      refetch?.();
     } catch (error) {
       console.error("Error updating status:", error);
+      setValue(status); // Revert on error
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          id={componentId}
+          className="flex items-center justify-start gap-2"
           size="sm"
-          className={cn(
-            "gap-2 transition-all hover:bg-transparent",
-            initConfig.color,
-            initConfig.bgColor
-          )}
+          variant="secondary"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled || isSubmitting}
         >
-          <PencilIcon className="h-4 w-4" />
-          <span>{initConfig.label}</span>
+          {(() => {
+            const selectedItem = statusOptions.find(
+              (item) => item.id === value
+            );
+            if (selectedItem) {
+              const Icon = selectedItem.icon;
+              return (
+                <>
+                  <Icon className={cn("size-4", selectedItem.colorClass)} />
+                  {!iconOnly && <span>{selectedItem.name}</span>}
+                </>
+              );
+            }
+            return null;
+          })()}
+          {isSubmitting && <Loader2 className="size-4 animate-spin" />}
         </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex flex-col items-center gap-4">
-            <div
-              className={cn(
-                "p-3 rounded-full",
-                config.bgColor,
-                config.borderColor,
-                "border-2"
-              )}
-            >
-              <PencilIcon className={cn("h-6 w-6", config.color)} />
-            </div>
-            <span>Update Idea Status</span>
-          </DialogTitle>
-          <DialogDescription className="text-center pt-2 pb-4">
-            Make sure this aligns with where your idea is during the validation
-            or development stage.
-          </DialogDescription>
-        </DialogHeader>
-
-        <Card className="p-0 bg-transparent border-0 space-y-4">
-          <div className="space-y-4">
-            <div
-              className={cn(
-                "p-2 rounded-lg border",
-                config.bgColor,
-                config.borderColor
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <config.icon className={cn("h-4 w-4", config.color)} />
-                <span className={cn("font-medium", config.color)}>
-                  {config.label}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground mt-1">
-                {config.description}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              New Status
-            </label>
-            <Select
-              value={currentStatus}
-              onValueChange={(e: IdeaStatus) => setCurrentStatus(e)}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select idea validation status" />
-              </SelectTrigger>
-              <SelectContent className="w-full">
-                {Object.entries(statusConfig).map(([key, value]) => (
-                  <SelectItem key={key} value={key}>
-                    <div className="flex items-center gap-2">
-                      <value.icon
-                        // @ts-ignore
-                        className={cn("h-4 w-4", statusConfig[key].color)}
-                      />
-                      <span>{value.label}</span>
+      </PopoverTrigger>
+      <PopoverContent
+        className="border-input w-full min-w-[var(--radix-popper-anchor-width)] p-0"
+        align="start"
+      >
+        <Command>
+          <CommandInput placeholder="Set status..." />
+          <CommandList>
+            <CommandEmpty>No status found.</CommandEmpty>
+            <CommandGroup>
+              {statusOptions.map((item) => (
+                <CommandItem
+                  key={item.id}
+                  value={item.id}
+                  onSelect={() => handleStatusChange(item.id as IdeaStatus)}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <item.icon className={cn("size-4", item.colorClass)} />
+                    <div className="flex flex-col">
+                      <span>{item.name}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {item.description}
+                      </span>
                     </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </Card>
-
-        <div className="flex-col space-y-3 gap-2 sm:flex-col sm:gap-2">
-          <Button
-            onClick={handleSubmit}
-            className="w-full"
-            disabled={isSubmitting || currentStatus === status}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
-              </>
-            ) : (
-              "Update Status"
-            )}
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-            className="w-full"
-          >
-            Cancel
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+                  </div>
+                  {value === item.id && (
+                    <CheckIcon size={16} className="ml-auto" />
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
-};
+}
 
-export default IdeaStatus;
+export function getStatusBadge(status: IdeaStatus) {
+  const statusData = statusOptions.find((s) => s.id === status);
+  if (!statusData) return null;
+
+  const colorClasses = {
+    "text-yellow-500":
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    "text-green-500":
+      "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    "text-red-500": "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+    "text-blue-500":
+      "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+    "text-emerald-500":
+      "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
+  };
+
+  return (
+    <Badge
+      variant="secondary"
+      className={`${colorClasses[statusData.colorClass as keyof typeof colorClasses]} text-xs`}
+    >
+      {statusData.name}
+    </Badge>
+  );
+}
+
+// Legacy export for backward compatibility
+export default StatusSelector;
