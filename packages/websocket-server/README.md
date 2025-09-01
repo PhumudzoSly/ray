@@ -1,78 +1,83 @@
 # WebSocket Server for Collaborative Editing
 
-A Y.js WebSocket server with authentication and organization-based room isolation for real-time collaborative editing.
+A rebuilt Y.js WebSocket server for real-time collaborative editing with improved reliability, monitoring, and TypeScript support.
 
 ## Features
 
 - **Y.js Integration**: Full support for Y.js collaborative editing protocol
-- **Authentication**: JWT token validation with user and organization verification
-- **Room Isolation**: Organization-scoped rooms prevent cross-organization access
-- **Auto-reconnection**: Robust connection handling with proper error recovery
-- **Railway Ready**: Configured for easy deployment on Railway
+- **TypeScript**: Complete TypeScript implementation with type safety
+- **Robust Error Handling**: Comprehensive error handling and recovery mechanisms
+- **Security**: Origin validation and connection security
+- **Monitoring**: Health checks, logging, and performance metrics
+- **Room Management**: Automatic room cleanup and connection management
+- **Railway Ready**: Optimized for Railway deployment with health checks
 
-## Local Development
+## Quick Start
 
 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
-2. Start the development server:
+2. Build the TypeScript code:
+
+```bash
+pnpm build
+```
+
+3. Start the development server:
+
 ```bash
 pnpm dev
 ```
 
-The server will run on `http://localhost:3001` by default.
+The server will run on `ws://localhost:1234` by default (compatible with existing collaborative editor).
 
 ## Environment Variables
 
-- `PORT`: Server port (default: 3001)
-- `JWT_SECRET`: Secret key for JWT token verification (required in production)
+### Core Settings
+
 - `NODE_ENV`: Environment mode (development/production)
-- `HEALTH_PORT`: Health check endpoint port (default: 3002, production only)
+- `WS_PORT`: WebSocket server port (default: 1234)
+- `HEALTH_PORT`: Health check endpoint port (default: 1235)
+- `LOG_LEVEL`: Logging level (debug/info/warn/error, default: info)
 
-## Authentication
+### Security Settings
 
-Clients must provide the following query parameters when connecting:
+- `ALLOWED_ORIGINS`: Comma-separated list of allowed origins for CORS
+- `MAX_CONNECTIONS_PER_IP`: Maximum connections per IP address (default: 10)
 
-- `token`: JWT token containing nested session data
-- `userId`: User ID (must match `session.session.userId` or `session.user.id` in token)
-- `org`: Organization ID (must match `session.session.activeOrganizationId` in token)
+### Performance Settings
 
-**JWT Token Structure Expected:**
-```json
-{
-  "session": {
-    "session": {
-      "userId": "rlUBuMQ3Rx9KdpYkhhqGzAF6d5WSPGUO",
-      "activeOrganizationId": "9TxaoZ8NuBIUuN2BfejcTAhqewJRAtcK",
-      "expiresAt": "2025-09-05T07:02:03.272Z",
-      // ... other session data
-    },
-    "user": {
-      "id": "rlUBuMQ3Rx9KdpYkhhqGzAF6d5WSPGUO",
-      "email": "user@example.com",
-      // ... other user data
-    }
-  },
-  "expiresAt": 1756454676233,
-  "signature": "..."
-}
+- `CONNECTION_TIMEOUT`: Connection timeout in milliseconds (default: 300000)
+- `ROOM_CLEANUP_INTERVAL`: Room cleanup interval in milliseconds (default: 3600000)
+
+## Connection Format
+
+The server accepts WebSocket connections in the format:
+
+```
+ws://localhost:1234/{roomName}
 ```
 
-Example connection URL:
+Where `roomName` is extracted from the URL path. The server is compatible with the existing collaborative editor component.
+
+Example connection URLs:
+
 ```
-ws://localhost:3001/my-org-document-123?token=jwt_token&userId=rlUBuMQ3Rx9KdpYkhhqGzAF6d5WSPGUO&org=9TxaoZ8NuBIUuN2BfejcTAhqewJRAtcK
+ws://localhost:1234/document-123
+ws://localhost:1234/my-collaborative-doc
+ws://localhost:1234/project-notes
 ```
 
-## Room Format
+## Room Management
 
-Rooms follow the format: `{org}-{entityType}-{entityId}`
-
-Examples:
-- `acme-document-456`
-- `startup-board-789`
-- `company-note-123`
+- Rooms are created automatically when clients connect
+- Empty rooms are cleaned up after the configured interval (default: 1 hour)
+- Each room maintains its own Y.js document instance
+- Connection metadata is tracked for monitoring and debugging
+- Supports multiple clients per room with real-time synchronization
 
 ## Railway Deployment
 
@@ -88,11 +93,14 @@ Examples:
    - Railway will automatically detect the `railway.toml` configuration
 
 3. **Set environment variables**
+
    ```
-   JWT_SECRET=your-super-secret-jwt-key-here
    NODE_ENV=production
+   ALLOWED_ORIGINS=https://app.rayai.app
+   LOG_LEVEL=info
    ```
-   (PORT and HEALTH_PORT are set automatically by railway.toml)
+
+   (WS_PORT and HEALTH_PORT are set automatically by railway.toml)
 
 4. **Deploy**
    - Railway will build and deploy your WebSocket server
@@ -110,8 +118,11 @@ Examples:
    cd packages/websocket-server
    docker build -t websocket-server .
    docker run -p 8080:8080 -p 8081:8081 \
-     -e JWT_SECRET=your-secret \
      -e NODE_ENV=production \
+     -e WS_PORT=8080 \
+     -e HEALTH_PORT=8081 \
+     -e LOG_LEVEL=info \
+     -e ALLOWED_ORIGINS=https://app.rayai.app \
      websocket-server
    ```
 
@@ -131,61 +142,68 @@ If you prefer to deploy as a separate repository:
 
 ### Environment Variables Reference
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `JWT_SECRET` | ✅ | - | Secret key for JWT token validation |
-| `NODE_ENV` | ✅ | `development` | Set to `production` for Railway |
-| `PORT` | ❌ | `8080` | Main server port (auto-set by Railway) |
-| `HEALTH_PORT` | ❌ | `8081` | Health check port |
+| Variable                 | Required | Default       | Description                                 |
+| ------------------------ | -------- | ------------- | ------------------------------------------- |
+| `NODE_ENV`               | ✅       | `development` | Set to `production` for Railway             |
+| `WS_PORT`                | ❌       | `1234`        | WebSocket server port (auto-set by Railway) |
+| `HEALTH_PORT`            | ❌       | `1235`        | Health check port                           |
+| `LOG_LEVEL`              | ❌       | `info`        | Logging level (debug/info/warn/error)       |
+| `ALLOWED_ORIGINS`        | ❌       | -             | Comma-separated list of allowed origins     |
+| `MAX_CONNECTIONS_PER_IP` | ❌       | `10`          | Maximum connections per IP address          |
 
 ### Troubleshooting
 
-- **Build fails**: Check that `package.json` dependencies are correct
-- **Health check fails**: Ensure `HEALTH_PORT` is accessible
-- **WebSocket connection fails**: Verify JWT_SECRET matches your client
-- **Authentication errors**: Check token, userId, and org parameters
+- **Build fails**: Check that TypeScript compiles successfully with `npm run build`
+- **Health check fails**: Ensure `HEALTH_PORT` is accessible and server is running
+- **WebSocket connection fails**: Verify `ALLOWED_ORIGINS` includes your client domain
+- **Connection rejected**: Check origin validation and CORS settings
+- **Room sync issues**: Check Y.js protocol compatibility and network connectivity
 
 ### Railway Configuration
 
 The server includes:
-- Health check endpoint at `/health` (production only)
-- Graceful shutdown handling
-- WebSocket compression for better performance
-- Proper error handling and logging
+
+- Health check endpoint at `/health` for load balancer monitoring
+- Graceful shutdown handling with proper cleanup
+- TypeScript compilation with optimized build process
+- Comprehensive error handling and structured logging
+- Room management with automatic cleanup
+- Origin validation for security
 
 ## Client Integration
 
-Update your client-side WebSocket provider to connect to the deployed server:
+The server is compatible with the existing collaborative editor. For local development:
+
+```typescript
+const provider = new WebSocketProvider("ws://localhost:1234", roomName, doc);
+```
+
+For production deployment:
 
 ```typescript
 const provider = new WebSocketProvider(
-  'wss://your-railway-app.railway.app',
+  "wss://your-railway-app.railway.app",
   roomName,
-  doc,
-  {
-    params: {
-      token: userToken,
-      userId: user.id,
-      org: user.org
-    }
-  }
-)
+  doc
+);
 ```
 
 ## Security
 
-- JWT tokens are verified in production mode
-- Room access is restricted by organization
+- Origin validation prevents unauthorized connections
+- Connection rate limiting per IP address
 - Invalid connections are immediately closed
-- All authentication attempts are logged
+- All connection attempts are logged for security monitoring
 
 ## Monitoring
 
 The server provides detailed logging for:
-- Connection attempts and authentication
-- Room access validation
-- User join/leave events
+
+- Connection attempts and validation
+- Room creation and cleanup events
+- Y.js document synchronization
 - WebSocket errors and disconnections
+- Performance metrics and server statistics
 
 ## Performance
 

@@ -4,13 +4,19 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package files
-COPY package.json ./
+COPY package.json tsconfig.json ./
 
-# Install dependencies using npm (since we're in an isolated container)
-RUN npm install --only=production
+# Install all dependencies (including dev dependencies for build)
+RUN npm install
 
-# Copy server code
-COPY server.js ./
+# Copy source code
+COPY src/ ./src/
+
+# Build TypeScript to JavaScript
+RUN npm run build
+
+# Remove dev dependencies to reduce image size
+RUN npm prune --production
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
@@ -21,11 +27,11 @@ RUN chown -R websocket:nodejs /app
 USER websocket
 
 # Expose ports
-EXPOSE 8080
+EXPOSE 8080 8081
 
-# Health check disabled to avoid 426 errors with Railway
-# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-#   CMD wget --no-verbose --tries=1 --spider http://localhost:8081/health || exit 1
+# Health check for the health endpoint
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8081/health || exit 1
 
 # Start the server
-CMD ["node", "server.js"]
+CMD ["npm", "start"]

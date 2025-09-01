@@ -1,21 +1,24 @@
 [build]
   builder = "NIXPACKS"
-  buildCommand = "npm install"
+  buildCommand = "npm install && npm run build"
 
 [deploy]
-  startCommand = "node server.js"
-  # Disable health check to avoid 426 errors
-  # healthcheckPath = "/health"
-  # healthcheckTimeout = 300
+  startCommand = "npm start"
+  healthcheckPath = "/health"
+  healthcheckTimeout = 300
   restartPolicyType = "ON_FAILURE"
   restartPolicyMaxRetries = 10
 
 [env]
   NODE_ENV = "production"
-  PORT = { default = "8080" }
+  WS_PORT = { default = "8080" }
+  HEALTH_PORT = { default = "8081" }
+  LOG_LEVEL = { default = "info" }
+  ALLOWED_ORIGINS = { default = "https://app.rayai.app" }
 
-# Railway will automatically set these from your environment variables
-# JWT_SECRET = "your-jwt-secret"
+# Set these environment variables in Railway dashboard:
+# JWT_SECRET = "your-production-jwt-secret"
+# ALLOWED_ORIGINS = "https://app.rayai.app,https://staging.rayai.app"
 
 [networking]
   # Railway will automatically assign a domain

@@ -1,13 +1,18 @@
 {
   "name": "@workspace/websocket-server",
-  "version": "1.0.0",
-  "description": "Enhanced WebSocket server supporting Y.js collaborative editing and general-purpose real-time functionality with presence management and Pusher-like channels",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "Rebuilt WebSocket server for Y.js collaborative editing with improved reliability and monitoring",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "build": "echo 'No build step required'",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc --watch & node --watch dist/server.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "lint": "biome check src/",
+    "format": "biome format --write src/",
+    "clean": "rm -rf dist/",
     "deploy:local": "node deploy.js --local",
     "deploy:docker": "node deploy.js --docker",
     "deploy:railway": "node deploy.js --railway",
@@ -16,14 +21,13 @@
   "dependencies": {
     "y-websocket": "^2.0.4",
     "yjs": "^13.6.27",
-    "ws": "^8.18.0",
-    "jsonwebtoken": "^9.0.2",
-    "cors": "^2.8.5"
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/ws": "^8.5.10",
-    "@types/jsonwebtoken": "^9.0.6"
+    "typescript": "^5.8.3",
+    "vitest": "^2.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -33,12 +37,7 @@
     "websocket",
     "collaborative",
     "real-time",
-    "presence",
-    "channels",
-    "pusher",
-    "broadcasting",
-    "chat",
-    "messaging"
+    "typescript"
   ],
   "license": "MIT"
 }
