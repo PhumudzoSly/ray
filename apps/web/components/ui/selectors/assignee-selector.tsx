@@ -99,7 +99,7 @@ export function AssigneeSelector({
       <PopoverTrigger asChild>
         <Button
           id={id}
-          className="flex items-center max-w-[200px] truncate"
+          className="flex items-center justify-start max-w-[200px] truncate"
           size={iconOnly ? "icon-sm" : "xs"}
           variant="secondary"
           role="combobox"

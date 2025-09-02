@@ -90,16 +90,12 @@ export function IssueDueDateField({
           }
           role="combobox"
           aria-expanded={open}
-          size="sm"
-          className={cn(
-            "justify-start text-sm hover:bg-transparent px-0 font-normal",
-            "opacity-100 hover:opacity-70 transition-opacity",
-            disabled && "opacity-50 cursor-not-allowed"
-          )}
+          size="xs"
+          className={cn(disabled && "opacity-50 cursor-not-allowed")}
           disabled={disabled}
         >
           <Calendar className="h-4 w-4 text-sm opacity-50 mr-2" />
-          {displayValue ? format(displayValue, "MMM d, yy") : "Set due date"}
+          {displayValue ? format(displayValue, "MMM d") : "Set due date"}
         </Button>
       </PopoverTrigger>
       <PopoverContent

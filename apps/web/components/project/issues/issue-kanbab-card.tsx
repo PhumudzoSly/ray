@@ -32,7 +32,11 @@ export function IssueKanbanCard({
     }: {
       issueId: string;
       userId: string;
-    }) => issueActions.updateIssue(issueId, { assignedToId: userId } as any),
+    }) =>
+      issueActions.updateIssueLeader({
+        id: issueId,
+        assignedToId: userId,
+      }),
     onMutate: async ({ issueId, userId }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["issues"] });
@@ -144,26 +148,10 @@ export function IssueKanbanCard({
         )}
       </div>
 
-      {/* Core Fields: Priority, Label, Assignee */}
       <div
         className="flex items-center flex-wrap gap-2"
         onClick={handleInteractiveClick}
       >
-        <AssigneeSelector
-          assignee={(issue.assignedTo as string) || ""}
-          iconOnly
-          onChange={async (userId) => {
-            try {
-              await changeLeaderMutation.mutateAsync({
-                issueId: issue.id,
-                userId: userId as string,
-              });
-            } catch (error) {
-              // Error handling is done in the mutation's onError callback
-              console.error("Assignee update failed:", error);
-            }
-          }}
-        />
         <IssueLabelField issueId={issue.id} value={issue.label} align="end" />
 
         <IssueDueDateField

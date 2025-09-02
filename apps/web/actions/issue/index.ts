@@ -67,15 +67,13 @@ export const getIssue = async (id: string) => {
  */
 export const getAllIssues = async () => {
   const { org } = await getSession();
-  try {
-    const issues = await prisma.issue.findMany({
-      where: { organizationId: org },
-      include: { project: true, assignedTo: true },
-    });
-    return { success: true, data: issues };
-  } catch (error) {
-    return { success: false, error };
-  }
+
+  const issues = await prisma.issue.findMany({
+    where: { organizationId: org },
+    include: { project: true, assignedTo: true },
+  });
+
+  return issues;
 };
 
 export const getUpcomingDeadlines = async (projectId: string) => {
@@ -261,6 +259,22 @@ export const updateIssue = async (id: string, data: IssueOptionalDefaults) => {
   } catch (error) {
     return { success: false, error };
   }
+};
+
+export const updateIssueLeader = async ({
+  id,
+  assignedToId,
+}: {
+  id: string;
+  assignedToId: string;
+}) => {
+  await getSession();
+  const updatedIssue = await prisma.issue.update({
+    where: { id },
+    data: { assignedToId },
+  });
+
+  return { success: true, data: updatedIssue };
 };
 
 export const updateIssueLabel = async (id: string, label: IssueLabel) => {

@@ -5,16 +5,14 @@ import { Button } from "@workspace/ui/components/button";
 import { LayoutGrid, List } from "lucide-react";
 import React from "react";
 import { IssuesKanban } from "@/components/project/issues/issue-kanbab";
-import {
-  IssuesGroupedList,
-  IssueGroup,
-  IssueItem,
-} from "./issues-grouped-list";
+import { IssuesGroupedList, IssueGroup } from "./issues-grouped-list";
 import { useQuery } from "@tanstack/react-query";
 import * as issueActions from "@/actions/issue";
 
 // Use any type for now to avoid type conflicts
-type CustomIssue = any;
+type CustomIssue = Awaited<
+  ReturnType<typeof issueActions.getAllIssues>
+>[number];
 
 type ViewMode = "list" | "kanban";
 
@@ -33,7 +31,7 @@ const AllIssues = () => {
     queryKey: ["issues"],
     queryFn: async () => {
       const res = await issueActions.getAllIssues();
-      return res?.data || [];
+      return res;
     },
   });
   const router = useRouter();
@@ -135,7 +133,7 @@ const AllIssues = () => {
 
   // Group issues by status
   const groupedIssues = React.useMemo(() => {
-    const groups: IssueGroup[] = [];
+    const groups: any[] = [];
 
     // Group issues by status
     const issuesByStatus = filteredIssues.reduce(
@@ -162,7 +160,7 @@ const AllIssues = () => {
     statusOrder.forEach((status) => {
       const statusIssues = issuesByStatus[status] || [];
       if (statusIssues.length > 0) {
-        const items: IssueItem[] = statusIssues.map((issue: any) => ({
+        const items = statusIssues.map((issue) => ({
           id: issue.id,
           title: issue.title,
           description: issue.description,
@@ -170,7 +168,7 @@ const AllIssues = () => {
           priority: issue.priority,
           label: issue.label,
           dueDate: issue.dueDate,
-          assignedTo: issue.assignedTo,
+          assignedTo: issue?.assignedTo?.id,
           project: issue.project,
         }));
 
@@ -187,8 +185,8 @@ const AllIssues = () => {
     return groups;
   }, [filteredIssues]);
 
-  const handleIssueClick = (item: IssueItem) => {
-    router.push(`/issues/${item.id}`);
+  const handleIssueClick = (item: string) => {
+    router.push(`/issues/${item}`);
   };
 
   // Show filtered results message if filters are applied
@@ -310,7 +308,7 @@ const AllIssues = () => {
           <div className="w-full">
             <IssuesGroupedList
               groups={groupedIssues}
-              onItemClick={handleIssueClick}
+              onItemClick={(e) => handleIssueClick(e.id)}
             />
           </div>
         </div>

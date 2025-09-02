@@ -29,7 +29,9 @@ export function IssuePriorityField({
           await onChange(newValue);
         } else {
           // Fallback to direct API call if no onChange provided
-          await issueActions.updateIssue(issueId, { priority: newValue } as any);
+          await issueActions.updateIssue(issueId, {
+            priority: newValue,
+          } as any);
         }
       }}
       options={priorities.map((p) => ({

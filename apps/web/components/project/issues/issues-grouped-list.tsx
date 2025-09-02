@@ -35,7 +35,7 @@ interface IssueItem {
   priority: string;
   label: string;
   dueDate?: string;
-  assignedTo?: any;
+  assignedTo?: string | undefined;
   project?: {
     id: string;
     name: string;
@@ -110,6 +110,90 @@ function IssueItemComponent({
   const router = useRouter();
   const queryClient = useQueryClient();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
+
+  const changeLeaderMutation = useMutation({
+    mutationFn: async ({
+      issueId,
+      userId,
+    }: {
+      issueId: string;
+      userId: string;
+    }) =>
+      issueActions.updateIssueLeader({
+        id: issueId,
+        assignedToId: userId,
+      }),
+    onMutate: async ({ issueId, userId }) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["issues"] });
+      await queryClient.cancelQueries({ queryKey: ["issues-grouped"] });
+
+      // Snapshot the previous values
+      const previousIssues = queryClient.getQueryData(["issues"]);
+      const previousGroupedIssues = queryClient.getQueryData([
+        "issues-grouped",
+      ]);
+
+      // Optimistically update the grouped issues structure
+      queryClient.setQueryData(["issues-grouped"], (old: any[] | undefined) => {
+        if (!old) return old;
+        return old.map((group) => ({
+          ...group,
+          items: group.items.map((issue: any) =>
+            issue.id === issueId
+              ? {
+                  ...issue,
+                  assignedToId: userId,
+                  assignedTo: { id: userId, name: "Loading..." },
+                }
+              : issue
+          ),
+        }));
+      });
+
+      // Also update the flat issues array if it exists
+      queryClient.setQueryData(["issues"], (old: any[] | undefined) => {
+        if (!old) return old;
+        return old.map((issue: any) =>
+          issue.id === issueId
+            ? {
+                ...issue,
+                assignedToId: userId,
+                assignedTo: { id: userId, name: "Loading..." },
+              }
+            : issue
+        );
+      });
+
+      return { previousIssues, previousGroupedIssues };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      if (context?.previousIssues) {
+        queryClient.setQueryData(["issues"], context.previousIssues);
+      }
+      if (context?.previousGroupedIssues) {
+        queryClient.setQueryData(
+          ["issues-grouped"],
+          context.previousGroupedIssues
+        );
+      }
+
+      console.error("Failed to change issue assignee:", err);
+      toast.error("Failed to change issue assignee");
+    },
+    onSuccess: (data, variables) => {
+      // Show success message
+      toast.success("Assignee updated successfully");
+
+      // Refresh the route to get the latest data
+      router.refresh();
+
+      // Invalidate and refetch issues
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issues-grouped"] });
+    },
+  });
 
   // Optimistic update mutation for issue
   const updateIssueMutation = useMutation({
@@ -238,12 +322,15 @@ function IssueItemComponent({
 
   const handleAssigneeChange = async (assignee: any) => {
     try {
-      await updateIssueMutation.mutateAsync({
+      await changeLeaderMutation.mutateAsync({
         issueId: item.id,
-        updates: {
-          assignedToId: assignee,
-        },
+        userId: assignee as string,
       });
+      setIsUpdating(null);
+      toast.success("Assignee updated successfully");
+      router.refresh();
+      queryClient.invalidateQueries({ queryKey: ["issues"] });
+      queryClient.invalidateQueries({ queryKey: ["issues-grouped"] });
     } catch (error) {
       // Error handling is done in the mutation's onError callback
       console.error("Assignee update failed:", error);
@@ -307,10 +394,9 @@ function IssueItemComponent({
         <IssueLabelField issueId={item.id} value={item?.label as IssueLabel} />
         <AssigneeSelector
           onChange={async (e) => {
-            await handleAssigneeChange(e)
+            await handleAssigneeChange(e);
           }}
-          
-          assignee={item.assignedTo}
+          assignee={item.assignedTo || ""}
         />
       </div>
     </div>

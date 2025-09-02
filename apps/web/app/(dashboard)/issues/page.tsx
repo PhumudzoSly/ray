@@ -15,7 +15,7 @@ const IssuesPage = async () => {
     queryKey: ["issues"],
     queryFn: async () => {
       const res = await issueActions.getAllIssues();
-      return res?.data || [];
+      return res;
     },
   });
 

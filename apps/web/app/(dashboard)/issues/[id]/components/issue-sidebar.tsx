@@ -110,8 +110,8 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
       userId: string;
     }) => {
       if (!issue?.status) return;
-      return issueActions.updateIssue(issueId, {
-        ...issue,
+      return issueActions.updateIssueLeader({
+        id: issueId,
         assignedToId: userId,
       });
     },
@@ -390,11 +390,7 @@ const IssueSidebar = ({ issueId }: { issueId: string }) => {
             Assignee
           </h3>
           <AssigneeSelector
-            assignee={
-              typeof issue.assignedTo === "string"
-                ? issue.assignedTo
-                : issue.assignedTo?.id || ""
-            }
+            assignee={issue.assignedToId}
             onChange={async (e) => {
               changeLeaderMutation.mutate({
                 issueId,
