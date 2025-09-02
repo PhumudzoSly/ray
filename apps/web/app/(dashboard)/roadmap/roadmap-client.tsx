@@ -272,20 +272,15 @@ export default function RoadmapClient() {
                 </TableCell>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">
-                    <div className="size-6">
-                      {roadmap.isPublic ? (
-                        <Globe className="h-4 w-4 text-blue-500" />
-                      ) : (
-                        <Settings className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </div>
+                    {roadmap.isPublic ? (
+                      <Globe className="h-4 w-4 text-blue-500" />
+                    ) : (
+                      <Settings className="h-4 w-4 text-muted-foreground" />
+                    )}
                     <div>
                       <span className="hover:underline underline-offset-1">
                         {roadmap.name}
                       </span>
-                      <p className="text-muted-foreground text-sm line-clamp-1">
-                        {roadmap.description}
-                      </p>
                     </div>
                   </div>
                 </TableCell>
@@ -298,7 +293,7 @@ export default function RoadmapClient() {
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-blue-500" />
                     <span className="font-medium">
-                      {roadmap.stats.totalItems}
+                      {roadmap.stats.totalItems} items
                     </span>
                   </div>
                 </TableCell>
@@ -306,7 +301,7 @@ export default function RoadmapClient() {
                   <div className="flex items-center gap-2">
                     <ThumbsUp className="h-4 w-4 text-green-500" />
                     <span className="font-medium">
-                      {roadmap.stats.totalVotes || 0}
+                      {roadmap.stats.totalVotes || 0} votes
                     </span>
                   </div>
                 </TableCell>
@@ -314,7 +309,7 @@ export default function RoadmapClient() {
                   <div className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4 text-purple-500" />
                     <span className="font-medium">
-                      {roadmap.stats.totalFeedback || 0}
+                      {roadmap.stats.totalFeedback || 0} provided
                     </span>
                   </div>
                 </TableCell>
@@ -348,7 +343,7 @@ export default function RoadmapClient() {
                     <Link
                       href={`/roadmap/${roadmap.id}`}
                       className={buttonVariants({
-                        size: "icon",
+                        size: "icon-sm",
                         variant: "outline",
                       })}
                     >
@@ -358,7 +353,7 @@ export default function RoadmapClient() {
                       href={`https://rayai.dev/rm/${roadmap.slug}`}
                       target="_blank"
                       className={buttonVariants({
-                        size: "icon",
+                        size: "icon-sm",
                         variant: "outline",
                       })}
                     >
@@ -366,7 +361,7 @@ export default function RoadmapClient() {
                     </Link>
                     <Button
                       variant="destructive"
-                      size="icon"
+                      size="icon-sm"
                       onClick={() =>
                         handleDeleteRoadmap(roadmap.id, roadmap.name)
                       }

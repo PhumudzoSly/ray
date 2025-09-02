@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 interface DateSelectorProps {
   value?: Date | null;
   onChange: (date: Date | null) => void;
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "icon" | "lg" | "default";
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -43,6 +43,7 @@ export function DateSelector({
   sideOffset = 8,
   allowClear = false,
   disabledDates,
+  size = "xs",
 }: DateSelectorProps) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
@@ -71,7 +72,7 @@ export function DateSelector({
               !value && "text-muted-foreground",
               className
             )}
-            size={"xs"}
+            size={size}
             variant={isOld ? "error" : "secondary"}
             role="combobox"
             aria-expanded={open}

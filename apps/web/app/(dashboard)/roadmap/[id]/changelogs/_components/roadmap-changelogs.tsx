@@ -12,31 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@workspace/ui/components/collapsible";
-import {
-  Plus,
-  Edit,
-  Calendar,
-  Globe,
-  ChevronDown,
-  ChevronRight,
-  ListPlus,
-  Trash2,
-} from "lucide-react";
+import { Plus, Edit, Globe, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import NoData from "@/components/shared/no-data";
 import {
   updateRoadmapChangelog,
   deleteRoadmapChangelog,
-  deleteChangelogEntry,
 } from "@/actions/roadmap/changelogs";
 import { ChangelogDialog } from "./changelog-dialog";
-import { ChangelogEntryDialog } from "./changelog-entry-dialog";
+import { ChangelogDetailSheet } from "./changelog-detail-sheet";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 
 interface RoadmapChangelogsProps {
@@ -46,59 +31,18 @@ interface RoadmapChangelogsProps {
   projectId: string;
 }
 
-const CHANGELOG_ENTRY_TYPES = [
-  { value: "FEATURE", label: "Feature", color: "bg-green-500" },
-  { value: "FIX", label: "Fix", color: "bg-blue-500" },
-  { value: "IMPROVEMENT", label: "Improvement", color: "bg-purple-500" },
-  { value: "BREAKING", label: "Breaking Change", color: "bg-red-500" },
-];
-
 export function RoadmapChangelogs({
   changelogs,
   onCreateChangelog,
   roadmapId,
   projectId,
 }: RoadmapChangelogsProps) {
-  //
   const confirm = useConfirm();
   const queryClient = useQueryClient();
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingChangelog, setEditingChangelog] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [addingEntryToChangelog, setAddingEntryToChangelog] =
-    useState<any>(null);
-  const [isEntryDialogOpen, setIsEntryDialogOpen] = useState(false);
-
-  const toggleRow = (id: string) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedRows(newExpanded);
-  };
-
-  const getTypeColor = (type: string) => {
-    const typeConfig = CHANGELOG_ENTRY_TYPES.find((t) => t.value === type);
-    return typeConfig?.color || "bg-gray-500";
-  };
-
-  const getTypeLabel = (type: string) => {
-    const typeConfig = CHANGELOG_ENTRY_TYPES.find((t) => t.value === type);
-    return typeConfig?.label || type;
-  };
-
-  const groupEntriesByType = (entries: any[]) => {
-    const grouped: { [key: string]: any[] } = {};
-    entries.forEach((entry) => {
-      if (!grouped[entry.type]) {
-        grouped[entry.type] = [];
-      }
-      grouped[entry.type]?.push(entry);
-    });
-    return grouped;
-  };
+  const [selectedChangelog, setSelectedChangelog] = useState<any>(null);
+  const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
   // Publish mutation
   const publishMutation = useMutation({
@@ -142,27 +86,6 @@ export function RoadmapChangelogs({
     },
   });
 
-  // Delete entry mutation
-  const deleteEntryMutation = useMutation({
-    mutationFn: async (entryId: string) => {
-      return deleteChangelogEntry(entryId);
-    },
-    onSuccess: (result) => {
-      if (result.success) {
-        toast.success("Entry deleted successfully!");
-        queryClient.invalidateQueries({
-          queryKey: ["roadmapChangelogs", roadmapId],
-        });
-      } else {
-        toast.error("Failed to delete entry");
-      }
-    },
-    onError: (error) => {
-      toast.error("Failed to delete entry");
-      console.error("Delete entry error:", error);
-    },
-  });
-
   // Handle edit
   const handleEdit = (changelog: any) => {
     setEditingChangelog(changelog);
@@ -172,12 +95,6 @@ export function RoadmapChangelogs({
   // Handle publish
   const handlePublish = (changelogId: string) => {
     publishMutation.mutate(changelogId);
-  };
-
-  // Handle add entry
-  const handleAddEntry = (changelog: any) => {
-    setAddingEntryToChangelog(changelog);
-    setIsEntryDialogOpen(true);
   };
 
   // Handle delete changelog
@@ -192,27 +109,22 @@ export function RoadmapChangelogs({
     }
   };
 
-  // Handle delete entry
-  const handleDeleteEntry = async (entryId: string, entryTitle: string) => {
-    const isConfirmed = await confirm({
-      title: "Delete Entry",
-      description: `Are you sure you want to delete "${entryTitle}"? This action cannot be undone.`,
-    });
-    if (isConfirmed) {
-      deleteEntryMutation.mutate(entryId);
-    }
+  // Handle open detail sheet
+  const handleOpenDetail = (changelog: any) => {
+    setSelectedChangelog(changelog);
+    setIsDetailSheetOpen(true);
+  };
+
+  // Handle close detail sheet
+  const handleCloseDetailSheet = () => {
+    setSelectedChangelog(null);
+    setIsDetailSheetOpen(false);
   };
 
   // Handle edit dialog close
   const handleEditDialogClose = () => {
     setEditingChangelog(null);
     setIsEditDialogOpen(false);
-  };
-
-  // Handle entry dialog close
-  const handleEntryDialogClose = () => {
-    setAddingEntryToChangelog(null);
-    setIsEntryDialogOpen(false);
   };
 
   if (changelogs === undefined) {
@@ -278,214 +190,92 @@ export function RoadmapChangelogs({
         <Table>
           <TableHeader className="border-b">
             <TableRow>
-              <TableHead className="w-8"></TableHead>
+              <TableHead className="w-20">Version</TableHead>
               <TableHead>Title</TableHead>
-              <TableHead>Version</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Changes</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-40">Actions</TableHead>
+              <TableHead className="w-28 text-right">Date</TableHead>
+              <TableHead className="w-20 text-right">Status</TableHead>
+              <TableHead className="w-20 text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {changelogs.map((changelog) => {
-              const isExpanded = expandedRows.has(changelog.id);
-              const hasEntries =
-                changelog.entries && changelog.entries.length > 0;
-              const groupedEntries = hasEntries
-                ? groupEntriesByType(changelog.entries)
-                : {};
-
-              return (
-                <>
-                  <TableRow
-                    key={changelog.id}
-                    className="cursor-pointer hover:bg-muted/50"
-                    onClick={() => toggleRow(changelog.id)}
-                  >
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Collapsible>
-                        <CollapsibleTrigger className="p-1 hover:bg-muted rounded">
-                          {isExpanded ? (
-                            <ChevronDown className="w-4 h-4" />
-                          ) : (
-                            <ChevronRight className="w-4 h-4" />
-                          )}
-                        </CollapsibleTrigger>
-                      </Collapsible>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">{changelog.title}</div>
-                      <div className="text-sm text-muted-foreground line-clamp-1">
-                        {changelog.description}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {changelog.version && (
-                        <Badge variant="outline" className="text-xs">
-                          {changelog.version}
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {format(new Date(changelog.publishDate), "MMM d, yyyy")}
-                    </TableCell>
-                    <TableCell>
-                      {hasEntries ? (
-                        <Badge variant="secondary" className="text-xs">
-                          {changelog.entries.length} items
-                        </Badge>
-                      ) : (
-                        <span className="text-sm text-muted-foreground">0</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          changelog.isPublished ? "default" : "secondary"
-                        }
-                        className="text-xs"
-                      >
-                        {changelog.isPublished ? "Published" : "Draft"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleAddEntry(changelog)}
-                          title="Add Entry"
-                        >
-                          <ListPlus className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleEdit(changelog)}
-                          title="Edit Changelog"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        {!changelog.isPublished && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handlePublish(changelog.id)}
-                            disabled={publishMutation.isPending}
-                            title="Publish Changelog"
-                          >
-                            <Globe className="w-4 h-4" />
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={async () => await handleDelete(changelog.id)}
-                          disabled={deleteMutation.isPending}
-                          title="Delete Changelog"
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-
-                  {isExpanded && (
-                    <TableRow>
-                      <TableCell colSpan={7} className="p-0">
-                        <Collapsible open={isExpanded}>
-                          <CollapsibleContent className="p-6 bg-muted/20">
-                            {hasEntries ? (
-                              <div className="space-y-4">
-                                {Object.entries(groupedEntries).map(
-                                  ([type, entries]) => (
-                                    <div key={type} className="space-y-2">
-                                      <div className="flex items-center gap-2">
-                                        <div
-                                          className={`w-2 h-2 rounded-full ${getTypeColor(type)}`}
-                                        />
-                                        <span className="font-medium text-sm">
-                                          {getTypeLabel(type)}
-                                        </span>
-                                        <Badge
-                                          variant="outline"
-                                          className="text-xs"
-                                        >
-                                          {entries.length}
-                                        </Badge>
-                                      </div>
-                                      <div className="ml-4 space-y-1">
-                                        {entries.map(
-                                          (entry: any, index: number) => (
-                                            <div
-                                              key={entry.id || index}
-                                              className="py-2 group"
-                                            >
-                                              <div className="flex items-start justify-between gap-2">
-                                                <div className="flex-1">
-                                                  <div className="font-medium text-sm">
-                                                    {entry.title}
-                                                  </div>
-                                                  {entry.description && (
-                                                    <div className="text-sm text-muted-foreground mt-1">
-                                                      {entry.description}
-                                                    </div>
-                                                  )}
-                                                  {(entry.issue ||
-                                                    entry.feature) && (
-                                                    <div className="text-xs text-muted-foreground mt-1">
-                                                      {entry.issue &&
-                                                        `Issue: ${entry.issue.title}`}
-                                                      {entry.issue &&
-                                                        entry.feature &&
-                                                        " • "}
-                                                      {entry.feature &&
-                                                        `Feature: ${entry.feature.name}`}
-                                                    </div>
-                                                  )}
-                                                </div>
-                                                <Button
-                                                  variant="ghost"
-                                                  size="sm"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteEntry(
-                                                      entry.id,
-                                                      entry.title
-                                                    );
-                                                  }}
-                                                  disabled={
-                                                    deleteEntryMutation.isPending
-                                                  }
-                                                  className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive"
-                                                  title="Delete Entry"
-                                                >
-                                                  <Trash2 className="w-3 h-3" />
-                                                </Button>
-                                              </div>
-                                            </div>
-                                          )
-                                        )}
-                                      </div>
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                            ) : (
-                              <div className="text-sm text-muted-foreground">
-                                No entries in this changelog
-                              </div>
-                            )}
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </TableCell>
-                    </TableRow>
+            {changelogs.map((changelog) => (
+              <TableRow
+                key={changelog.id}
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleOpenDetail(changelog)}
+              >
+                <TableCell>
+                  {changelog.version && (
+                    <Badge variant="outline" className="text-xs font-mono">
+                      {changelog.version}
+                    </Badge>
                   )}
-                </>
-              );
-            })}
+                </TableCell>
+                <TableCell>
+                  <div className="font-medium truncate pr-4">
+                    {changelog.title}
+                  </div>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground text-right">
+                  {format(new Date(changelog.publishDate), "MMM d")}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Badge
+                    variant={changelog.isPublished ? "default" : "secondary"}
+                    className="text-xs"
+                  >
+                    {changelog.isPublished ? "Published" : "Draft"}
+                  </Badge>
+                </TableCell>
+                <TableCell
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-right"
+                >
+                  <div className="flex items-center justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(changelog);
+                      }}
+                      title="Edit Changelog"
+                      className="h-8 w-8 p-0"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Button>
+                    {!changelog.isPublished && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePublish(changelog.id);
+                        }}
+                        disabled={publishMutation.isPending}
+                        title="Publish Changelog"
+                        className="h-8 w-8 p-0"
+                      >
+                        <Globe className="w-4 h-4" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        await handleDelete(changelog.id);
+                      }}
+                      disabled={deleteMutation.isPending}
+                      title="Delete Changelog"
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
@@ -497,17 +287,6 @@ export function RoadmapChangelogs({
           onClose={handleEditDialogClose}
           roadmapId={roadmapId}
           editingChangelog={editingChangelog}
-        />
-      )}
-
-      {/* Add Entry Dialog */}
-      {addingEntryToChangelog && (
-        <ChangelogEntryDialog
-          isOpen={isEntryDialogOpen}
-          onClose={handleEntryDialogClose}
-          changelog={addingEntryToChangelog}
-          roadmapId={roadmapId}
-          projectId={projectId}
         />
       )}
     </div>

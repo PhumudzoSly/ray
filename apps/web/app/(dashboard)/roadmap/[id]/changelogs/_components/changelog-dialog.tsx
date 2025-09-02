@@ -8,20 +8,20 @@ import {
 } from "@/actions/roadmap/changelogs";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import { Textarea } from "@workspace/ui/components/textarea";
 import { Label } from "@workspace/ui/components/label";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@workspace/ui/components/dialog";
-import { toast } from "sonner";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@workspace/ui/components/sheet";
 import { DateSelector } from "@/components/ui/selectors";
+import { Editor } from "@/components/editor";
+import { toast } from "sonner";
+import { PartialBlock } from "@blocknote/core";
 
-interface ChangelogDialogProps {
+interface ChangelogSheetProps {
   isOpen: boolean;
   onClose: () => void;
   roadmapId: string;
@@ -33,28 +33,45 @@ export function ChangelogDialog({
   onClose,
   roadmapId,
   editingChangelog,
-}: ChangelogDialogProps) {
+}: ChangelogSheetProps) {
   const queryClient = useQueryClient();
   const isEditing = !!editingChangelog;
 
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
     version: "",
     publishDate: new Date(),
     isPublished: false,
   });
+  const [richDescription, setRichDescription] = useState<
+    PartialBlock[] | undefined
+  >(undefined);
 
   // Initialize form with editing data
   useEffect(() => {
     if (editingChangelog) {
       setFormData({
         title: editingChangelog.title || "",
-        description: editingChangelog.description || "",
         version: editingChangelog.version || "",
         publishDate: new Date(editingChangelog.publishDate),
         isPublished: editingChangelog.isPublished || false,
       });
+
+      // Initialize rich description
+      if (editingChangelog.description) {
+        try {
+          const parsed = JSON.parse(editingChangelog.description);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setRichDescription(parsed);
+          } else {
+            setRichDescription(undefined);
+          }
+        } catch {
+          setRichDescription(undefined);
+        }
+      } else {
+        setRichDescription(undefined);
+      }
     } else {
       resetForm();
     }
@@ -127,15 +144,15 @@ export function ChangelogDialog({
   const resetForm = () => {
     setFormData({
       title: "",
-      description: "",
       version: "",
       publishDate: new Date(),
       isPublished: false,
     });
+    setRichDescription(undefined);
   };
 
   const handleSubmit = async () => {
-    if (!formData.title || !formData.description) {
+    if (!formData.title || !richDescription || richDescription.length === 0) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -144,9 +161,15 @@ export function ChangelogDialog({
       ? new Date(formData.publishDate).getTime()
       : Date.now();
 
+    // Convert rich content to JSON string for storage
+    const descriptionToSave =
+      richDescription && richDescription.length > 0
+        ? JSON.stringify(richDescription)
+        : "";
+
     const submitData = {
       title: formData.title,
-      description: formData.description,
+      description: descriptionToSave,
       version: formData.version,
       publishDate: new Date(publishDate),
       isPublished: formData.isPublished,
@@ -174,23 +197,38 @@ export function ChangelogDialog({
     createChangelogMutation.isPending || updateChangelogMutation.isPending;
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>
-            {isEditing ? "Edit Changelog" : "Create Changelog"}
-          </DialogTitle>
-          <DialogDescription>
-            {isEditing
-              ? "Update your changelog details"
-              : "Create a new changelog entry for your roadmap"}
-          </DialogDescription>
-        </DialogHeader>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
+      <SheetContent className="w-full max-w-3xl sm:max-w-4xl overflow-hidden flex flex-col">
+        <SheetHeader className="flex-shrink-0 border-b pb-4">
+          <div className="flex items-center gap-3 flex-wrap justify-between">
+            <div>
+              <SheetTitle className="text-xl">
+                {isEditing ? "Edit Changelog" : "Create Changelog"}
+              </SheetTitle>
+              <SheetDescription className="mt-1">
+                {isEditing
+                  ? "Update your changelog details"
+                  : "Create a new changelog entry for your roadmap"}
+              </SheetDescription>
+            </div>
+            <Button onClick={handleSubmit} disabled={isLoading} size="sm">
+              {isLoading
+                ? isEditing
+                  ? "Updating..."
+                  : "Creating..."
+                : isEditing
+                  ? "Update Changelog"
+                  : "Create Changelog"}
+            </Button>
+          </div>
+        </SheetHeader>
 
-        <div className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="flex-1 px-4 overflow-hidden flex flex-col space-y-6 pt-6">
+          <div className="flex-shrink-0 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title" className="text-sm font-medium">
+                Title *
+              </Label>
               <Input
                 id="title"
                 value={formData.title}
@@ -201,7 +239,9 @@ export function ChangelogDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="version">Version</Label>
+              <Label htmlFor="version" className="text-sm font-medium">
+                Version
+              </Label>
               <Input
                 id="version"
                 value={formData.version}
@@ -211,52 +251,34 @@ export function ChangelogDialog({
                 placeholder="1.2.0"
               />
             </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description *</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  description: e.target.value,
-                })
-              }
-              placeholder="Describe the changes in this release"
-              rows={4}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="publishDate">Publish Date</Label>
+              <Label htmlFor="publishDate" className="text-sm font-medium">
+                Date
+              </Label>
               <DateSelector
                 value={formData.publishDate}
                 onChange={(date) =>
                   setFormData({ ...formData, publishDate: date || new Date() })
                 }
+                size="default"
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col space-y-3 overflow-hidden">
+            <Label className="text-sm font-medium flex-shrink-0">
+              Description *
+            </Label>
+            <div className="flex-1 overflow-hidden">
+              <Editor
+                content={richDescription}
+                editable={true}
+                onChange={(content) => setRichDescription(content)}
               />
             </div>
           </div>
         </div>
-
-        <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit} disabled={isLoading}>
-            {isLoading
-              ? isEditing
-                ? "Updating..."
-                : "Creating..."
-              : isEditing
-                ? "Update Changelog"
-                : "Create Changelog"}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
