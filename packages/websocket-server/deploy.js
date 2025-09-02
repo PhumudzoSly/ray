@@ -36,15 +36,12 @@ function checkEnvFile() {
   if (!fs.existsSync(envPath)) {
     console.log('Creating .env file with default values...')
     const envContent = `# WebSocket Server Environment Variables
+JWT_SECRET=your-development-jwt-secret-change-in-production
 NODE_ENV=development
-WS_PORT=1234
-HEALTH_PORT=1235
-LOG_LEVEL=debug
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002
-MAX_CONNECTIONS_PER_IP=10
+PORT=8080
 `
     fs.writeFileSync(envPath, envContent)
-    console.log('✅ Created .env file with development defaults!')
+    console.log('✅ Created .env file. Please update JWT_SECRET for production!')
   }
 }
 
@@ -55,10 +52,6 @@ async function deployLocal() {
   try {
     await runCommand('npm', ['install'])
     console.log('✅ Dependencies installed')
-    
-    console.log('🔧 Building TypeScript...')
-    await runCommand('npm', ['run', 'build'])
-    console.log('✅ TypeScript compiled')
     
     console.log('🔧 Starting server in development mode...')
     await runCommand('npm', ['run', 'dev'])
@@ -76,12 +69,9 @@ async function deployDocker() {
     console.log('✅ Docker image built')
     
     console.log('🔧 Starting Docker container...')
-    await runCommand('docker', ['run', '-p', '8080:8080', '-p', '8081:8081',
+    await runCommand('docker', ['run', '-p', '8080:8080', 
+      '-e', 'JWT_SECRET=development-secret',
       '-e', 'NODE_ENV=production',
-      '-e', 'WS_PORT=8080',
-      '-e', 'HEALTH_PORT=8081',
-      '-e', 'LOG_LEVEL=info',
-      '-e', 'ALLOWED_ORIGINS=http://localhost:3000',
       'websocket-server'
     ])
   } catch (error) {
@@ -98,19 +88,15 @@ function deployRailway() {
   console.log('3. Create new project → Deploy from GitHub repo')
   console.log('4. Set Root Directory to: packages/websocket-server')
   console.log('5. Add environment variables:')
+  console.log('   - JWT_SECRET=your-production-secret')
   console.log('   - NODE_ENV=production')
-  console.log('   - ALLOWED_ORIGINS=https://app.rayai.app')
-  console.log('   - LOG_LEVEL=info')
   console.log('6. Deploy!')
   console.log('')
   console.log('📋 Files ready for Railway deployment:')
-  console.log('   ✅ railway.toml (with TypeScript build)')
-  console.log('   ✅ Dockerfile (with multi-stage build)')
-  console.log('   ✅ package.json (with build scripts)')
-  console.log('   ✅ TypeScript source code')
-  console.log('')
-  console.log('🔍 Health check available at: /health')
-  console.log('🌐 WebSocket endpoint: wss://your-app.railway.app')
+  console.log('   ✅ railway.toml')
+  console.log('   ✅ Dockerfile')
+  console.log('   ✅ package.json')
+  console.log('   ✅ server.js')
 }
 
 function showHelp() {
@@ -123,14 +109,6 @@ function showHelp() {
   console.log('  --docker   Build and run Docker container')
   console.log('  --railway  Show Railway deployment instructions')
   console.log('  --help     Show this help message')
-  console.log('')
-  console.log('Environment Variables:')
-  console.log('  NODE_ENV          Environment mode (development/production)')
-  console.log('  WS_PORT           WebSocket server port (default: 1234)')
-  console.log('  HEALTH_PORT       Health check port (default: 1235)')
-  console.log('  LOG_LEVEL         Logging level (debug/info/warn/error)')
-  console.log('  ALLOWED_ORIGINS   Comma-separated list of allowed origins')
-  console.log('  MAX_CONNECTIONS_PER_IP  Maximum connections per IP (default: 10)')
 }
 
 // Main execution
