@@ -1,4 +1,4 @@
-import { setupWSConnection } from "y-websocket/bin/utils.js";
+import { setupWSConnection } from "y-websocket/bin/utils";
 import type { WebSocket } from "ws";
 import type { IncomingMessage } from "http";
 import { logger } from "./logger.js";
@@ -58,7 +58,7 @@ export class YjsConnectionHandler {
           roomName,
           dataLength: Buffer.isBuffer(data)
             ? data.length
-            : data.byteLength || 0,
+            : (data as ArrayBuffer)?.byteLength || 0,
           type: this.getMessageType(data),
         });
       });

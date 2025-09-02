@@ -43,7 +43,7 @@ export class CollaborativeWebSocketServer {
             clientMaxWindowBits: 15,
             serverMaxWindowBits: 15,
             serverNoContextTakeover: false,
-            clientMaxNoContextTakeover: false,
+            clientNoContextTakeover: false,
             zlibInflateOptions: {
               chunkSize: 1024,
             },

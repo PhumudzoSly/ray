@@ -148,7 +148,7 @@ export class HealthServer {
       },
       system: {
         loadAverage:
-          process.platform === "win32" ? [0, 0, 0] : process.loadavg(),
+          process.platform === "win32" ? [0, 0, 0] : (process as any).loadavg(),
         cpuUsage: process.cpuUsage(),
       },
     };

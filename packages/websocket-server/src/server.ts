@@ -59,7 +59,10 @@ async function main() {
 }
 
 // Only run if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (
+  import.meta.url.endsWith("server.js") &&
+  process.argv[1]?.endsWith("server.js")
+) {
   main().catch((error) => {
     console.error("Unhandled error in main:", error);
     process.exit(1);

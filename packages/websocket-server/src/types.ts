@@ -1,6 +1,5 @@
 import type { WebSocket } from "ws";
 import type { IncomingMessage } from "http";
-import type * as Y from "yjs";
 
 export interface ConnectionInfo {
   origin?: string;
@@ -21,7 +20,7 @@ export interface ClientConnection {
 export interface Room {
   name: string;
   clients: Set<WebSocket>;
-  document: Y.Doc;
+  document?: any; // Y.js document managed by y-websocket utils
   lastActivity: Date;
 }
 

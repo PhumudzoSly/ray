@@ -63,7 +63,7 @@ export class RoomManager {
     return {
       name: roomName,
       clients: new Set(),
-      document: new (require("yjs").Doc)(), // Create Y.Doc for the room
+      document: null as any, // Y.js document will be managed by y-websocket utils
       lastActivity: new Date(),
     };
   }
@@ -91,8 +91,7 @@ export class RoomManager {
     for (const roomName of roomsToDelete) {
       const room = this.rooms.get(roomName);
       if (room) {
-        // Clean up Y.Doc to free memory
-        room.document.destroy();
+        // Y.js documents are managed by y-websocket utils, no manual cleanup needed
         this.rooms.delete(roomName);
 
         logger.info("Empty room cleaned up", {
@@ -185,9 +184,8 @@ export class RoomManager {
       this.cleanupInterval = null;
     }
 
-    // Clean up all rooms and their documents
-    for (const [roomName, room] of this.rooms.entries()) {
-      room.document.destroy();
+    // Clean up all rooms - Y.js documents are managed by y-websocket utils
+    for (const [roomName] of this.rooms.entries()) {
       logger.debug("Room destroyed during shutdown", { roomName });
     }
 
