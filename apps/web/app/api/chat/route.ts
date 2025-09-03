@@ -82,16 +82,29 @@ const search = Search.fromEnv();
 export async function POST(req: Request) {
   const body = await req.json();
 
+  console.log("BODY", body);
+
   // get current message and chat id sent from client
-  const { message, idea, project, issue, waitlist, roadmap } = body as {
+  const {
+    message,
+    messages: bodyMessages,
+    idea,
+    project,
+    issue,
+  } = body as {
     message: UIMessage;
+    messages?: UIMessage[];
     id: string;
     idea: string;
     project: string;
     issue: string;
-    waitlist: string;
-    roadmap: string;
   };
+
+  console.log("Chat request received with context:", {
+    idea: idea || "(empty)",
+    project: project || "(empty)",
+    issue: issue || "(empty)",
+  });
 
   const { org, userId } = await getSession();
   const key = chatKey(userId, org);
@@ -106,7 +119,31 @@ export async function POST(req: Request) {
 
   // // Keep only the last 300 messages and add the new message
   const recentHistory = (history ?? []).slice(-300);
-  const messages = [...recentHistory, message];
+  console.log("RECENT HISTORY", recentHistory);
+
+  // Build messages array: prioritize history, fallback to body messages, add new message if exists
+  let messages: UIMessage[];
+  if (recentHistory.length > 0) {
+    // Use history and add new message if exists
+    messages = message ? [...recentHistory, message] : recentHistory;
+  } else if (bodyMessages && bodyMessages.length > 0) {
+    // No history, use body messages and add new message if exists
+    messages = message ? [...bodyMessages, message] : bodyMessages;
+  } else if (message) {
+    // No history, no body messages, but we have a new message
+    messages = [message];
+  } else {
+    // No messages at all - create a default greeting message
+    messages = [
+      {
+        id: "welcome-msg",
+        role: "user",
+        parts: [{ type: "text", text: "Hello, I need help with my project." }],
+      },
+    ];
+  }
+
+  console.log("MESSAGES", messages);
 
   const result = streamText({
     model: google("gemini-2.5-flash"),
@@ -167,9 +204,7 @@ export async function POST(req: Request) {
     - **Project ID**: ${project}
     - **Issue ID**: ${issue}
     - **Idea ID**: ${idea}
-    - **Waitlist ID**: ${waitlist}
-    - **Roadmap ID**: ${roadmap}
-
+   
     ## 📝 Response Formatting Guidelines
     **IMPORTANT**: Always format your responses using rich markdown with:
     - 📝 **Emojis** for visual appeal and categorization

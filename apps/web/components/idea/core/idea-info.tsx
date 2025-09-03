@@ -1,31 +1,18 @@
 "use client";
-import moment from "moment";
 import { toast } from "sonner";
-import IdeaStatus from "./status";
-import { Building2, Shield, ShieldCheck } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@workspace/ui/components/tooltip";
 import { useConfirm } from "@workspace/ui/components/confirm-dialog";
 import { Button } from "@workspace/ui/components/button";
-import UpdateIdea from "./edit-idea";
 import { InlineEditField } from "@workspace/ui/components/inline-field";
 import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getSingleIdea,
-  updateName,
-  updateDescription,
-  deleteIdea,
-} from "@/actions/idea";
+import { getSingleIdea, updateName, updateDescription } from "@/actions/idea";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { InlineEditTextArea } from "@workspace/ui/components/inline-textarea";
 
 const IdeaInfo = ({ id }: { id: string }) => {
+  //
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -132,36 +119,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
               onSave={(value) => handleUpdateField("description", value)}
               disabled={updateFieldMutation.isPending}
             />
-            <div className="flex flex-wrap gap-6 py-2 text-sm text-muted-foreground">
-              <div className="text-muted-foreground text-sm">
-                Added {moment(idea?.createdAt).fromNow()}
-              </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-                    <Building2 className="h-4 w-4 text-indigo-500" />
-                    {idea?.industry}
-                  </TooltipTrigger>
-                  <TooltipContent>Industry classification</TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-                    <Shield className="h-4 w-4 text-blue-500" />
-                    {idea?.internal ? "Internal idea" : "Client/external idea"}
-                  </TooltipTrigger>
-                  <TooltipContent>Idea ownership type</TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger className="flex items-center gap-2 hover:text-foreground transition-colors">
-                    <ShieldCheck className="h-4 w-4 text-purple-500" />
-                    {idea?.openSource ? "Open source" : "Closed source"}
-                  </TooltipTrigger>
-                  <TooltipContent>Source code accessibility</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
           </div>
         </div>
       </div>

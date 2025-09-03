@@ -245,12 +245,17 @@ export const deleteEntry = async (data: { entryId: string }) => {
 };
 
 /**
- * Get filtered waitlist entries with search and status filtering
+ * Get filtered waitlist entries with search, status filtering, sorting, and pagination
  */
 export const getFilteredWaitlistEntries = async (data: {
   waitlistId: string;
   search?: string;
   status?: string;
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  // Legacy support
   limit?: number;
   offset?: number;
 }) => {
@@ -282,32 +287,63 @@ export const getFilteredWaitlistEntries = async (data: {
       where.status = data.status;
     }
 
-    // Get entries with pagination
+    // Calculate pagination parameters
+    const page = data.page || 1;
+    const pageSize = data.pageSize || data.limit || 10;
+    const skip = data.offset !== undefined ? data.offset : (page - 1) * pageSize;
+    const take = pageSize;
+
+    // Build orderBy clause
+    let orderBy: any = { position: "asc" }; // Default sort by position
+    if (data.sortBy) {
+      const validSortFields = ["email", "name", "status", "position", "createdAt", "joinedAt", "verifiedAt"];
+      if (validSortFields.includes(data.sortBy)) {
+        orderBy = { [data.sortBy]: data.sortOrder || "asc" };
+      }
+    }
+
+    // Get entries with pagination and includes
     const entries = await prisma.waitlistEntry.findMany({
       where,
       include: {
-        referrals: true,
+        _count: {
+          select: { referrals: true },
+        },
       },
-      orderBy: { createdAt: "desc" },
-      take: data.limit || 100,
-      skip: data.offset || 0,
+      orderBy,
+      take,
+      skip,
     });
 
     // Get total count for pagination
     const totalCount = await prisma.waitlistEntry.count({ where });
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
 
     return {
       success: true,
       data: {
         entries: entries.map((entry) => ({
           ...entry,
+          _count: entry._count,
           createdAt: entry.createdAt.toISOString(),
+          updatedAt: entry.updatedAt.toISOString(),
           verifiedAt: entry.verifiedAt?.toISOString(),
           invitedAt: entry.invitedAt?.toISOString(),
           joinedAt: entry.joinedAt?.toISOString(),
         })),
+        pagination: {
+          page,
+          pageSize,
+          totalCount,
+          totalPages,
+          hasNextPage,
+          hasPreviousPage,
+        },
+        // Legacy fields for backward compatibility
         totalCount,
-        hasMore: (data.offset || 0) + (data.limit || 100) < totalCount,
+        hasMore: hasNextPage,
       },
     };
   } catch (error) {

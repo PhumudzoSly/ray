@@ -9,6 +9,11 @@ export const queryKeys = {
     waitlistId: string,
     search?: string,
     status?: string,
+    page?: number,
+    pageSize?: number,
+    sortBy?: string,
+    sortOrder?: "asc" | "desc",
+    // Legacy support
     limit?: number,
     offset?: number
   ) =>
@@ -17,6 +22,10 @@ export const queryKeys = {
       waitlistId,
       search,
       status,
+      page,
+      pageSize,
+      sortBy,
+      sortOrder,
       limit,
       offset,
     ] as const,

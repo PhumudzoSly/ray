@@ -55,14 +55,29 @@ const Chat = ({
   userId: string;
 }) => {
   const [input, setInput] = useState("");
-  const [webSearch, setWebSearch] = useState(false);
   const [idea, setIdea] = useState("");
   const [project, setProject] = useState("");
   const [issue, setIssue] = useState("");
-  const [waitlist, setWaitlist] = useState("");
-  const [roadmap, setRoadmap] = useState("");
 
-  const { messages, sendMessage, status, regenerate } = useChat({
+  const handleClearChat = async () => {
+    // Clear local messages
+    setMessages([]);
+
+    // Clear server-side chat history
+    try {
+      await fetch("/api/chat", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ scope: "self" }),
+      });
+    } catch (error) {
+      console.error("Failed to clear chat history:", error);
+    }
+  };
+
+  const { messages, sendMessage, status, regenerate, setMessages } = useChat({
     id: `user:${userId}:org:${org}`,
     messages: initialMessages,
     transport: new DefaultChatTransport({
@@ -71,12 +86,8 @@ const Chat = ({
         return {
           body: {
             message: messages[messages.length - 1],
+            messages,
             id,
-            idea,
-            project,
-            issue,
-            waitlist,
-            roadmap,
           },
         };
       },
@@ -90,12 +101,9 @@ const Chat = ({
         { text: input },
         {
           body: {
-            webSearch: webSearch,
             idea,
             project,
             issue,
-            waitlist,
-            roadmap,
           },
         }
       );
@@ -121,14 +129,21 @@ const Chat = ({
               <h3 className="text-sm font-medium text-muted-foreground">
                 Ideas
               </h3>
-              <IdeaSelector idea={idea} onChange={setIdea} />
+              <IdeaSelector
+                idea={idea || undefined}
+                onChange={(e) => {
+                  console.log("Idea selected:", e);
+                  setIdea(e || "");
+                }}
+              />
 
               <h3 className="text-sm font-medium text-muted-foreground">
                 Project
               </h3>
               <ProjectSelector
-                currentProject={project}
+                currentProject={project || undefined}
                 onChange={(projectId: string | null) => {
+                  console.log("Project selected:", projectId);
                   setProject(projectId || "");
                   setIssue("");
                 }}
@@ -142,10 +157,14 @@ const Chat = ({
                 <IssueSelector
                   projectId={project}
                   value={issue}
-                  onChange={(issueId: string | null) => setIssue(issueId || "")}
-                  onValueChange={(issueId: string | null) =>
-                    setIssue(issueId || "")
-                  }
+                  onChange={(issueId: string | null) => {
+                    console.log("Issue selected:", issueId);
+                    setIssue(issueId || "");
+                  }}
+                  onValueChange={(issueId: string | null) => {
+                    console.log("Issue value changed:", issueId);
+                    setIssue(issueId || "");
+                  }}
                 />
               )}
             </div>
@@ -260,7 +279,9 @@ const Chat = ({
               />
               <PromptInputToolbar>
                 <div>
-                  <Button size="xs">Clear Chat</Button>
+                  <Button size="xs" onClick={handleClearChat} variant="outline">
+                    Clear Chat
+                  </Button>
                 </div>
                 <PromptInputSubmit disabled={!input} status={status} />
               </PromptInputToolbar>
