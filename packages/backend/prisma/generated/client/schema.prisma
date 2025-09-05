@@ -157,6 +157,13 @@ enum IssueStatus {
   CANCELLED
 }
 
+enum ActionItemStatus {
+  BACKLOG
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
 enum IssueLabel {
   UI
   BUG
@@ -450,6 +457,7 @@ model Idea {
   problemSolved       String?
   solutionOffered     String?
   projects            Project[]
+  actionItems         ActionItem[]
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
   Competitor          Competitor[]
@@ -544,6 +552,36 @@ model CompetitorSwot {
   updatedAt DateTime @updatedAt
 }
 
+model ActionItem {
+  id          String           @id @default(uuid())
+  name        String
+  description String?
+  status      ActionItemStatus @default(BACKLOG)
+  priority    Importance       @default(MEDIUM)
+  order       Int              @default(0)
+
+  // Relationships
+  ideaId     String
+  idea       Idea      @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+  documentId String?   @unique
+  document   Document?
+
+  // Assignee (optional)
+  assigneeId String?
+  assignee   User?   @relation("ActionItemAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  // Timestamps
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+
+  @@index([ideaId])
+  @@index([status])
+  @@index([priority])
+  @@index([assigneeId])
+  @@map("action_item")
+}
+
 model Project {
   id             String          @id @default(uuid())
   name           String
@@ -621,9 +659,6 @@ model Issue {
   // Feedback conversion
   convertedFromFeedback       RoadmapFeedback[] @relation("FeedbackToIssue")
   convertedFromFeatureRequest FeatureRequest[]  @relation("FeatureRequestToIssue")
-
-  // Changelog entries
-  changelogEntries ChangelogEntry[]
 
   // Documents
   document Document?
@@ -829,42 +864,9 @@ model RoadmapChangelog {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  // Enhanced relationships
-  entries ChangelogEntry[]
-
-  // Legacy fields for backward compatibility
-  fixes       String[] @default([])
-  newFeatures String[] @default([])
-
   @@index([roadmapId])
   @@index([publishDate])
   @@index([version])
-}
-
-model ChangelogEntry {
-  id          String             @id @default(uuid())
-  changelog   RoadmapChangelog   @relation(fields: [changelogId], references: [id], onDelete: Cascade)
-  changelogId String
-  type        ChangelogEntryType
-  title       String
-  description String?
-
-  // Link to actual items (optional)
-  issueId   String?
-  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: SetNull)
-  featureId String?
-  feature   Feature? @relation(fields: [featureId], references: [id], onDelete: SetNull)
-
-  // Metadata
-  priority  Importance?
-  category  String?
-  breaking  Boolean     @default(false)
-  createdAt DateTime    @default(now())
-
-  @@index([changelogId])
-  @@index([type])
-  @@index([issueId])
-  @@index([featureId])
 }
 
 model FeatureRequest {
@@ -1001,9 +1003,6 @@ model Feature {
   // Feedback conversion
   convertedFromFeedback       RoadmapFeedback[] @relation("FeedbackToFeature")
   convertedFromFeatureRequest FeatureRequest[]  @relation("FeatureRequestToFeature")
-
-  // Changelog entries
-  changelogEntries ChangelogEntry[]
 
   // Documents
   document Document?
@@ -1191,6 +1190,8 @@ model Document {
   competitiveMoveId String?          @unique
   roadmapItem       RoadmapItem?     @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
   roadmapItemId     String?          @unique
+  actionItem        ActionItem?      @relation(fields: [actionItemId], references: [documentId], onDelete: Cascade)
+  actionItemId      String?          @unique
 
   @@index([projectId])
   @@index([issueId])
@@ -1200,6 +1201,7 @@ model Document {
   @@index([competitorSwotId])
   @@index([competitiveMoveId])
   @@index([roadmapItemId])
+  @@index([actionItemId])
 }
 
 model Board {
@@ -1234,33 +1236,34 @@ datasource db {
 }
 
 model User {
-  id               String          @id
-  name             String
-  email            String
-  emailVerified    Boolean
-  image            String?
-  role             String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  twoFactorEnabled Boolean?
-  sessions         Session[]
-  accounts         Account[]
-  members          Member[]
-  invitations      Invitation[]
-  passkeys         Passkey[]
-  twofactors       TwoFactor[]
-  subscription     Subscription?
-  project          Project[]       @relation("CreatedProjects")
-  idea             Idea[]          @relation("IdeaOwner")
-  issue            Issue[]         @relation("AssignedIssues")
-  asset            Asset[]         @relation("UploadedAssets")
-  waitlist         Waitlist[]      @relation("CreatedWaitlists")
-  integration      Integration[]   @relation("CreatedIntegrations")
-  activityFeed     ActivityFeed[]
-  feature          Feature[]
-  milestone        Milestone[]     @relation("MilestoneOwner")
-  assetViews       AssetView[]
-  assetDownloads   AssetDownload[]
+  id                  String          @id
+  name                String
+  email               String
+  emailVerified       Boolean
+  image               String?
+  role                String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  twoFactorEnabled    Boolean?
+  sessions            Session[]
+  accounts            Account[]
+  members             Member[]
+  invitations         Invitation[]
+  passkeys            Passkey[]
+  twofactors          TwoFactor[]
+  subscription        Subscription?
+  project             Project[]       @relation("CreatedProjects")
+  idea                Idea[]          @relation("IdeaOwner")
+  issue               Issue[]         @relation("AssignedIssues")
+  asset               Asset[]         @relation("UploadedAssets")
+  waitlist            Waitlist[]      @relation("CreatedWaitlists")
+  integration         Integration[]   @relation("CreatedIntegrations")
+  activityFeed        ActivityFeed[]
+  feature             Feature[]
+  milestone           Milestone[]     @relation("MilestoneOwner")
+  assetViews          AssetView[]
+  assetDownloads      AssetDownload[]
+  assignedActionItems ActionItem[]    @relation("ActionItemAssignee")
 
   // Comment relations
   authoredComments           Comment[]           @relation("AuthoredComments")

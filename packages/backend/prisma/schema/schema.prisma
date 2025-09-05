@@ -18,33 +18,34 @@ datasource db {
 }
 
 model User {
-    id               String          @id
-    name             String
-    email            String
-    emailVerified    Boolean
-    image            String?
-    role             String?
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
-    twoFactorEnabled Boolean?
-    sessions         Session[]
-    accounts         Account[]
-    members          Member[]
-    invitations      Invitation[]
-    passkeys         Passkey[]
-    twofactors       TwoFactor[]
-    subscription     Subscription?
-    project          Project[]       @relation("CreatedProjects")
-    idea             Idea[]          @relation("IdeaOwner")
-    issue            Issue[]         @relation("AssignedIssues")
-    asset            Asset[]         @relation("UploadedAssets")
-    waitlist         Waitlist[]      @relation("CreatedWaitlists")
-    integration      Integration[]   @relation("CreatedIntegrations")
-    activityFeed     ActivityFeed[]
-    feature          Feature[]
-    milestone        Milestone[]     @relation("MilestoneOwner")
-    assetViews       AssetView[]
-    assetDownloads   AssetDownload[]
+    id                  String          @id
+    name                String
+    email               String
+    emailVerified       Boolean
+    image               String?
+    role                String?
+    createdAt           DateTime        @default(now())
+    updatedAt           DateTime        @updatedAt
+    twoFactorEnabled    Boolean?
+    sessions            Session[]
+    accounts            Account[]
+    members             Member[]
+    invitations         Invitation[]
+    passkeys            Passkey[]
+    twofactors          TwoFactor[]
+    subscription        Subscription?
+    project             Project[]       @relation("CreatedProjects")
+    idea                Idea[]          @relation("IdeaOwner")
+    issue               Issue[]         @relation("AssignedIssues")
+    asset               Asset[]         @relation("UploadedAssets")
+    waitlist            Waitlist[]      @relation("CreatedWaitlists")
+    integration         Integration[]   @relation("CreatedIntegrations")
+    activityFeed        ActivityFeed[]
+    feature             Feature[]
+    milestone           Milestone[]     @relation("MilestoneOwner")
+    assetViews          AssetView[]
+    assetDownloads      AssetDownload[]
+    assignedActionItems ActionItem[]    @relation("ActionItemAssignee")
 
     // Comment relations
     authoredComments           Comment[]           @relation("AuthoredComments")

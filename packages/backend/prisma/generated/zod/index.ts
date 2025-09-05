@@ -70,6 +70,8 @@ export const CompetitiveMoveScalarFieldEnumSchema = z.enum(['id','competitorId',
 
 export const CompetitorSwotScalarFieldEnumSchema = z.enum(['id','impact','type','swotAnalysis','competitorId','createdAt','updatedAt']);
 
+export const ActionItemScalarFieldEnumSchema = z.enum(['id','name','description','status','priority','order','ideaId','documentId','assigneeId','createdAt','updatedAt','completedAt']);
+
 export const ProjectScalarFieldEnumSchema = z.enum(['id','name','description','platform','ai','orm','database','auth','framework','infrastructure','dueDate','status','ideaId','createdAt','updatedAt','organizationId','createdById']);
 
 export const IssueScalarFieldEnumSchema = z.enum(['id','title','description','organizationId','projectId','milestoneId','featureId','parentIssueId','status','priority','label','dueDate','assignedToId','achieved','isPublic','sourceType','sourceFeedbackId']);
@@ -90,9 +92,7 @@ export const RoadmapVoteScalarFieldEnumSchema = z.enum(['id','roadmapItemId','us
 
 export const RoadmapFeedbackScalarFieldEnumSchema = z.enum(['id','roadmapItemId','userId','ipAddress','content','sentiment','isApproved','convertedToFeatureId','convertedToIssueId','convertedAt','convertedBy','conversionNotes','createdAt']);
 
-export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','version','publishDate','isPublished','createdAt','updatedAt','fixes','newFeatures']);
-
-export const ChangelogEntryScalarFieldEnumSchema = z.enum(['id','changelogId','type','title','description','issueId','featureId','priority','category','breaking','createdAt']);
+export const RoadmapChangelogScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','version','publishDate','isPublished','createdAt','updatedAt']);
 
 export const FeatureRequestScalarFieldEnumSchema = z.enum(['id','roadmapId','title','description','category','email','name','ipAddress','status','priority','isPublic','adminNotes','createdAt','updatedAt','convertedToFeatureId','convertedToIssueId','convertedToRoadmapItemId','convertedAt','convertedBy','conversionNotes']);
 
@@ -116,7 +116,7 @@ export const AssetViewScalarFieldEnumSchema = z.enum(['id','assetId','organizati
 
 export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organizationId','userId','ipAddress','userAgent','referrer','downloadedAt']);
 
-export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId','competitorId','competitorSwotId','competitiveMoveId','roadmapItemId']);
+export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId','competitorId','competitorSwotId','competitiveMoveId','roadmapItemId','actionItemId']);
 
 export const BoardScalarFieldEnumSchema = z.enum(['id','content','projectId','createdAt','updatedAt']);
 
@@ -241,6 +241,10 @@ export type ProjectStatusType = `${z.infer<typeof ProjectStatusSchema>}`
 export const IssueStatusSchema = z.enum(['BACKLOG','IN_PROGRESS','IN_REVIEW','DONE','BLOCKED','CANCELLED']);
 
 export type IssueStatusType = `${z.infer<typeof IssueStatusSchema>}`
+
+export const ActionItemStatusSchema = z.enum(['BACKLOG','IN_PROGRESS','COMPLETED','BLOCKED']);
+
+export type ActionItemStatusType = `${z.infer<typeof ActionItemStatusSchema>}`
 
 export const IssueLabelSchema = z.enum(['UI','BUG','FEATURE','IMPROVEMENT','TASK','DOCUMENTATION','REFACTOR','PERFORMANCE','DESIGN','SECURITY','ACCESSIBILITY','TESTING','INTERNATIONALIZATION']);
 
@@ -592,6 +596,41 @@ export const CompetitorSwotOptionalDefaultsSchema = CompetitorSwotSchema.merge(z
 export type CompetitorSwotOptionalDefaults = z.infer<typeof CompetitorSwotOptionalDefaultsSchema>
 
 /////////////////////////////////////////
+// ACTION ITEM SCHEMA
+/////////////////////////////////////////
+
+export const ActionItemSchema = z.object({
+  status: ActionItemStatusSchema,
+  priority: ImportanceSchema,
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string().nullish(),
+  order: z.number().int(),
+  ideaId: z.string(),
+  documentId: z.string().nullish(),
+  assigneeId: z.string().nullish(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
+  completedAt: z.coerce.date().nullish(),
+})
+
+export type ActionItem = z.infer<typeof ActionItemSchema>
+
+// ACTION ITEM OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const ActionItemOptionalDefaultsSchema = ActionItemSchema.merge(z.object({
+  status: ActionItemStatusSchema.optional(),
+  priority: ImportanceSchema.optional(),
+  id: z.string().uuid().optional(),
+  order: z.number().int().optional(),
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
+}))
+
+export type ActionItemOptionalDefaults = z.infer<typeof ActionItemOptionalDefaultsSchema>
+
+/////////////////////////////////////////
 // PROJECT SCHEMA
 /////////////////////////////////////////
 
@@ -911,8 +950,6 @@ export const RoadmapChangelogSchema = z.object({
   isPublished: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  fixes: z.string().array(),
-  newFeatures: z.string().array(),
 })
 
 export type RoadmapChangelog = z.infer<typeof RoadmapChangelogSchema>
@@ -925,42 +962,9 @@ export const RoadmapChangelogOptionalDefaultsSchema = RoadmapChangelogSchema.mer
   isPublished: z.boolean().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  fixes: z.string().array().optional(),
-  newFeatures: z.string().array().optional(),
 }))
 
 export type RoadmapChangelogOptionalDefaults = z.infer<typeof RoadmapChangelogOptionalDefaultsSchema>
-
-/////////////////////////////////////////
-// CHANGELOG ENTRY SCHEMA
-/////////////////////////////////////////
-
-export const ChangelogEntrySchema = z.object({
-  type: ChangelogEntryTypeSchema,
-  priority: ImportanceSchema.nullish(),
-  id: z.string().uuid(),
-  changelogId: z.string(),
-  title: z.string(),
-  description: z.string().nullish(),
-  issueId: z.string().nullish(),
-  featureId: z.string().nullish(),
-  category: z.string().nullish(),
-  breaking: z.boolean(),
-  createdAt: z.coerce.date(),
-})
-
-export type ChangelogEntry = z.infer<typeof ChangelogEntrySchema>
-
-// CHANGELOG ENTRY OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const ChangelogEntryOptionalDefaultsSchema = ChangelogEntrySchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  breaking: z.boolean().optional(),
-  createdAt: z.coerce.date().optional(),
-}))
-
-export type ChangelogEntryOptionalDefaults = z.infer<typeof ChangelogEntryOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // FEATURE REQUEST SCHEMA
@@ -1314,6 +1318,7 @@ export const DocumentSchema = z.object({
   competitorSwotId: z.string().nullish(),
   competitiveMoveId: z.string().nullish(),
   roadmapItemId: z.string().nullish(),
+  actionItemId: z.string().nullish(),
 })
 
 export type Document = z.infer<typeof DocumentSchema>

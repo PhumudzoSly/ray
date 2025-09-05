@@ -606,6 +606,8 @@ model Document {
     competitiveMoveId String?          @unique
     roadmapItem       RoadmapItem?     @relation(fields: [roadmapItemId], references: [id], onDelete: Cascade)
     roadmapItemId     String?          @unique
+    actionItem        ActionItem?      @relation(fields: [actionItemId], references: [documentId], onDelete: Cascade)
+    actionItemId      String?          @unique
 
     @@index([projectId])
     @@index([issueId])
@@ -615,6 +617,7 @@ model Document {
     @@index([competitorSwotId])
     @@index([competitiveMoveId])
     @@index([roadmapItemId])
+    @@index([actionItemId])
 }
 
 model Board {

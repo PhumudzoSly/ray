@@ -228,6 +228,21 @@ exports.Prisma.CompetitorSwotScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ActionItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  order: 'order',
+  ideaId: 'ideaId',
+  documentId: 'documentId',
+  assigneeId: 'assigneeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -381,23 +396,7 @@ exports.Prisma.RoadmapChangelogScalarFieldEnum = {
   publishDate: 'publishDate',
   isPublished: 'isPublished',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  fixes: 'fixes',
-  newFeatures: 'newFeatures'
-};
-
-exports.Prisma.ChangelogEntryScalarFieldEnum = {
-  id: 'id',
-  changelogId: 'changelogId',
-  type: 'type',
-  title: 'title',
-  description: 'description',
-  issueId: 'issueId',
-  featureId: 'featureId',
-  priority: 'priority',
-  category: 'category',
-  breaking: 'breaking',
-  createdAt: 'createdAt'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.FeatureRequestScalarFieldEnum = {
@@ -565,7 +564,8 @@ exports.Prisma.DocumentScalarFieldEnum = {
   competitorId: 'competitorId',
   competitorSwotId: 'competitorSwotId',
   competitiveMoveId: 'competitiveMoveId',
-  roadmapItemId: 'roadmapItemId'
+  roadmapItemId: 'roadmapItemId',
+  actionItemId: 'actionItemId'
 };
 
 exports.Prisma.BoardScalarFieldEnum = {
@@ -1173,6 +1173,13 @@ exports.SwotType = exports.$Enums.SwotType = {
   Threat: 'Threat'
 };
 
+exports.ActionItemStatus = exports.$Enums.ActionItemStatus = {
+  BACKLOG: 'BACKLOG',
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  BLOCKED: 'BLOCKED'
+};
+
 exports.ProjectPlatform = exports.$Enums.ProjectPlatform = {
   web: 'web',
   mobile: 'mobile',
@@ -1273,17 +1280,6 @@ exports.RoadmapFeedbackSentiment = exports.$Enums.RoadmapFeedbackSentiment = {
   positive: 'positive',
   neutral: 'neutral',
   negative: 'negative'
-};
-
-exports.ChangelogEntryType = exports.$Enums.ChangelogEntryType = {
-  FEATURE: 'FEATURE',
-  FIX: 'FIX',
-  IMPROVEMENT: 'IMPROVEMENT',
-  BREAKING: 'BREAKING',
-  SECURITY: 'SECURITY',
-  DEPRECATION: 'DEPRECATION',
-  DOCUMENTATION: 'DOCUMENTATION',
-  PERFORMANCE: 'PERFORMANCE'
 };
 
 exports.FeatureRequestStatus = exports.$Enums.FeatureRequestStatus = {
@@ -1407,6 +1403,7 @@ exports.Prisma.ModelName = {
   Competitor: 'Competitor',
   CompetitiveMove: 'CompetitiveMove',
   CompetitorSwot: 'CompetitorSwot',
+  ActionItem: 'ActionItem',
   Project: 'Project',
   Issue: 'Issue',
   IssueDependency: 'IssueDependency',
@@ -1418,7 +1415,6 @@ exports.Prisma.ModelName = {
   RoadmapVote: 'RoadmapVote',
   RoadmapFeedback: 'RoadmapFeedback',
   RoadmapChangelog: 'RoadmapChangelog',
-  ChangelogEntry: 'ChangelogEntry',
   FeatureRequest: 'FeatureRequest',
   Waitlist: 'Waitlist',
   WaitlistEntry: 'WaitlistEntry',

@@ -61,6 +61,13 @@ enum IssueStatus {
     CANCELLED
 }
 
+enum ActionItemStatus {
+    BACKLOG
+    IN_PROGRESS
+    COMPLETED
+    BLOCKED
+}
+
 enum IssueLabel {
     UI
     BUG
