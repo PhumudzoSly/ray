@@ -21,7 +21,6 @@ model Comment {
     milestoneId String?
     milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
     boardId     String?
-    board       Board?     @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
     // Comment metadata
     mentionedUserIds String[] // Array of user IDs for efficient querying

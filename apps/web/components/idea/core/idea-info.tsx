@@ -16,7 +16,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: idea, isPending } = useQuery({
+  const { data: idea } = useQuery({
     queryKey: ["idea", id],
     queryFn: async () => {
       return await getSingleIdea(id);
@@ -92,8 +92,6 @@ const IdeaInfo = ({ id }: { id: string }) => {
   };
 
   const confirm = useConfirm();
-
-  if (isPending) return <LoadingSpinner />;
 
   return (
     <div className="h-full flex flex-col p-6">

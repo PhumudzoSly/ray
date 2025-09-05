@@ -8,16 +8,25 @@ import "@blocknote/mantine/style.css";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
-import { toast } from "sonner";
 import {
-  saveDocumentContent,
   saveEntityDocumentContent,
+  getEntityDocumentContent,
 } from "../actions/documents/document";
 import { useTheme } from "next-themes";
 import { useSession } from "../context/session-context";
 import { useQuery } from "@tanstack/react-query";
-import { getEntityDocumentContent } from "../actions/documents/document";
 import { queryKeys } from "../lib/query-keys";
+
+type DocumentEntityType =
+  | "project"
+  | "issue"
+  | "feature"
+  | "milestone"
+  | "competitor"
+  | "competitorSwot"
+  | "competitiveMove"
+  | "roadmapItem"
+  | "actionItem";
 
 // Custom debounce function
 function debounce<T extends (...args: any[]) => any>(
@@ -43,17 +52,8 @@ function debounce<T extends (...args: any[]) => any>(
 
 interface CollaborativeEditorProps {
   // New API: save by entity type and id
-  entityType?:
-    | "project"
-    | "issue"
-    | "feature"
-    | "milestone"
-    | "competitor"
-    | "competitorSwot"
-    | "competitiveMove"
-    | "roadmapItem";
+  entityType?: DocumentEntityType;
   entityId?: string;
-  documentId?: string;
 }
 
 const USER_COLORS = [
@@ -100,7 +100,6 @@ function getUserColor(userId: string): string {
 export function CollaborativeEditor({
   entityType,
   entityId,
-  documentId,
 }: CollaborativeEditorProps) {
   const { theme } = useTheme();
   const [doc] = useState(() => new Y.Doc());
@@ -114,11 +113,10 @@ export function CollaborativeEditor({
 
   // Create stable room ID (org scoping disabled for dev mode)
   const stableRoomId = useMemo(() => {
-    const baseRoomId =
-      `${entityType}-${entityId}` || documentId || "default-room";
+    const baseRoomId = `${entityType}-${entityId}` || "default-room";
     // Organization scoping disabled for development
     return baseRoomId;
-  }, [entityType, entityId, documentId]);
+  }, [entityType, entityId]);
 
   // Initialize provider once and handle cleanup
   useEffect(() => {
@@ -145,7 +143,6 @@ export function CollaborativeEditor({
             } else if (event.status === "disconnected") {
               setConnectionStatus("disconnected");
             }
-            // Don't change to "connecting" for intermediate states to prevent blinking
           }
         });
 
@@ -212,32 +209,12 @@ export function CollaborativeEditor({
     debounce(async (content: PartialBlock[]) => {
       // Determine save strategy: entity-based preferred, fallback to legacy documentId
       const resolved: {
-        type?:
-          | "project"
-          | "issue"
-          | "feature"
-          | "milestone"
-          | "competitor"
-          | "competitorSwot"
-          | "competitiveMove"
-          | "roadmapItem";
+        type?: DocumentEntityType;
         id?: string;
       } = {
         type: entityType,
         id: entityId,
       };
-
-      // Backward compatibility: parse legacy documentId pattern like "project-<id>"
-      if (!resolved.type && !resolved.id && documentId) {
-        const match =
-          /^(project|issue|feature|milestone|competitor|competitorSwot|competitiveMove|roadmapItem)-(\w[\w-]*)$/.exec(
-            documentId
-          );
-        if (match) {
-          resolved.type = match[1] as any;
-          resolved.id = match[2];
-        }
-      }
 
       try {
         let result:
@@ -250,14 +227,7 @@ export function CollaborativeEditor({
             entityId: resolved.id,
             content,
           });
-        } else if (documentId) {
-          // Fallback to legacy save if only documentId is present
-          result = await saveDocumentContent({
-            documentId,
-            content,
-          });
         } else {
-          toast.error("Missing entity reference to save document");
           return;
         }
 
@@ -265,15 +235,13 @@ export function CollaborativeEditor({
           console.log("Document saved successfully:", result.document.id);
         } else {
           console.error("Failed to save document:", result.error);
-          toast.error(result.error || "Failed to save document");
         }
       } catch (error) {
         console.error("Auto-save failed:", error);
-        toast.error("Failed to save document");
       } finally {
       }
     }, 2000),
-    [entityType, entityId, documentId]
+    [entityType, entityId]
   );
 
   const { data: initialContent, isLoading: isFetchingInitialContent } =
