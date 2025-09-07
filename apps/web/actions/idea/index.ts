@@ -51,6 +51,7 @@ export const getSingleIdea = async (id: string) => {
         select: {
           projects: true,
           Competitor: true,
+          actionItems: true,
         },
       },
       validation: true,

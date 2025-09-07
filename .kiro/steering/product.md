@@ -25,7 +25,7 @@ A modern business validation and research platform built as a comprehensive mono
 - **Multi-phase Research**: Market scan → Competitive analysis → Customer validation → Business modeling
 - **Configurable Depth**: Quick scans (5-10 min) to exhaustive analysis (hours)
 - **AI-Powered**: OpenAI and Google AI integration for intelligent research
-- **Workflow Orchestration**: Inngest handles complex, long-running research processes
+- **Workflow Orchestration**: Upstash Workflows handles complex, long-running research processes
 
 ### Real-time Collaboration
 

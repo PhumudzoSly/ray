@@ -7,7 +7,6 @@ import {
   ActivityType,
   EntityType,
 } from "@workspace/backend/prisma/generated/client/client";
-import { inngestClient } from "@/lib/inngest";
 
 // ============================================================================
 // TYPES
@@ -81,10 +80,11 @@ export const createFeature = async (data: FeatureOptionalDefaults) => {
 export const generateFeatures = async (projectId: string) => {
   const { org } = await getSession();
   try {
-    await inngestClient.send({
-      name: "project/generate-feature",
-      data: { projectId, org },
-    });
+    // TODO replace with upstash workflows
+    // await inngestClient.send({
+    //   name: "project/generate-feature",
+    //   data: { projectId, org },
+    // });
     return {
       success: true,
       data: "Features are being generated in the background",

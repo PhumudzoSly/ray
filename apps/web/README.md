@@ -9,8 +9,6 @@ Create a `.env.local` file in the `apps/web` directory with the following variab
 ### Required for Production
 
 ```bash
-# Inngest Configuration
-INNGEST_EVENT_KEY=your_inngest_event_key_here
 
 # Database
 DATABASE_URL=your_database_url_here
@@ -57,15 +55,6 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 AUTH_GOOGLE_ID=your_google_client_id
 AUTH_GOOGLE_SECRET=your_google_client_secret
 ```
-
-## Inngest Configuration
-
-The app uses Inngest for background job processing. In development mode, Inngest can run without an event key for local testing. In production, you need to:
-
-1. Sign up for Inngest Cloud at https://cloud.inngest.com
-2. Create a new app
-3. Get your event key from the dashboard
-4. Set the `INNGEST_EVENT_KEY` environment variable
 
 ## Running the App
 

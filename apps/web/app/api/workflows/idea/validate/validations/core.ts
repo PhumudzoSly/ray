@@ -4,6 +4,19 @@ import { IdeaValidationOptionalDefaults, prisma } from "@workspace/backend";
 import { generateText } from "ai";
 
 export const initValidation = async (ideaId: string) => {
+  // Check if validation already exists for this idea
+  const existingValidation = await prisma.ideaValidation.findFirst({
+    where: { ideaId },
+  });
+
+  // If it exists, delete it first
+  if (existingValidation) {
+    await prisma.ideaValidation.delete({
+      where: { id: existingValidation.id },
+    });
+  }
+
+  // Create new validation
   const validation = await prisma.ideaValidation.create({
     data: {
       ideaId,
@@ -65,7 +78,7 @@ export const runResearch = async (prompt: string) => {
   let data = await exa.research.getTask(task.id);
 
   while (data.status !== "completed" && data.status !== "failed") {
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 30 seconds before checking again
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     data = await exa.research.getTask(task.id);
   }
 

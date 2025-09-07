@@ -1,5 +1,5 @@
 export const MarketValidation = `
-    Validate 2025 SaaS idea market data:
+    Validate ${new Date().getFullYear()} SaaS idea market data:
     - totalAddressableMarket
     - serviceableAddressableMarket
     - serviceableObtainableMarket
@@ -17,7 +17,7 @@ export const MarketValidation = `
 `;
 
 export const BusinessValidation = `
-    Analyze 2025 SaaS business viability:
+    Analyze ${new Date().getFullYear()} SaaS business viability:
 
     REVENUE & PRICING:
     - primaryRevenueModel (subscription/usage/freemium)
@@ -44,7 +44,7 @@ export const BusinessValidation = `
 `;
 
 export const CustomerJourneyMapping = `
-    Map 2025 SaaS customer journey:
+    Map ${new Date().getFullYear()} SaaS customer journey:
 
     OVERVIEW:
     - Journey stages and duration
@@ -70,7 +70,7 @@ export const CustomerJourneyMapping = `
 `;
 
 export const TargetAudienceSegmentation = `
-    Segment 2025 SaaS target audience:
+    Segment ${new Date().getFullYear()} SaaS target audience:
 
     OVERVIEW:
     - Primary segments
@@ -95,7 +95,7 @@ export const TargetAudienceSegmentation = `
 `;
 
 export const MarketTrendAnalysis = `
-    Analyze 2025 SaaS market trends:
+    Analyze ${new Date().getFullYear()} SaaS market trends:
 
     OVERVIEW:
     - Key trends and timeline
@@ -117,7 +117,7 @@ export const MarketTrendAnalysis = `
 `;
 
 export const CustomerNeedAnalysis = `
-    Analyze 2025 SaaS customer needs:
+    Analyze ${new Date().getFullYear()} SaaS customer needs:
 
     OVERVIEW:
     - Primary needs
@@ -144,7 +144,7 @@ export const CustomerNeedAnalysis = `
 `;
 
 export const PricingStrategyAnalysis = `
-    Develop 2025 SaaS pricing strategy:
+    Develop ${new Date().getFullYear()} SaaS pricing strategy:
 
     OVERVIEW:
     - Strategy recommendation
@@ -171,7 +171,7 @@ export const PricingStrategyAnalysis = `
 `;
 
 export const FinalVerdict = `
-    As a principal investor, provide a final verdict on this 2025 SaaS idea based on the comprehensive research data provided.
+    As a principal investor, provide a final verdict on this ${new Date().getFullYear()} SaaS idea based on the comprehensive research data provided.
 
     SYNTHESIZE AND VALIDATE:
     - Review all previous validation modules (Market, Business, Customer Journey, etc.).
@@ -196,7 +196,7 @@ export const FinalVerdict = `
 `;
 
 export const RiskAnalysis = `
-    Analyze 2025 SaaS idea risks:
+    Analyze ${new Date().getFullYear()} SaaS idea risks:
 
     OVERVIEW:
     - overallRiskScore (0-100)
@@ -219,7 +219,7 @@ export const RiskAnalysis = `
 `;
 
 export const ProductMarketFitAnalysis = `
-    Analyze 2025 SaaS product-market fit:
+    Analyze ${new Date().getFullYear()} SaaS product-market fit:
 
     OVERVIEW:
     - pmfScore (0-100)

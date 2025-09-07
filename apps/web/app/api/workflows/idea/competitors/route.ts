@@ -11,6 +11,7 @@ interface WorkflowPayload {
 }
 
 export const { POST } = serve(async (context) => {
+  //
   const payload = context.requestPayload as WorkflowPayload;
 
   const competitors = await context.run("research-competitors", async () => {
