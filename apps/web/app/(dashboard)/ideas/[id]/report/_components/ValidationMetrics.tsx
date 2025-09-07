@@ -228,7 +228,7 @@ export function ValidationMetrics({ ideaId }: ValidationMetricsProps) {
                 <ReportMetric
                   label="Time to Market"
                   value={
-                    metrics?.timeToMarket > 0
+                    metrics?.timeToMarket && metrics.timeToMarket > 0
                       ? `${metrics.timeToMarket} months`
                       : "TBD"
                   }
@@ -237,7 +237,7 @@ export function ValidationMetrics({ ideaId }: ValidationMetricsProps) {
                 <ReportMetric
                   label="Break Even Point"
                   value={
-                    metrics?.breakEvenMonth > 0
+                    metrics?.breakEvenMonth && metrics.breakEvenMonth > 0
                       ? `Month ${metrics.breakEvenMonth}`
                       : "TBD"
                   }
@@ -246,7 +246,7 @@ export function ValidationMetrics({ ideaId }: ValidationMetricsProps) {
                 <ReportMetric
                   label="Customer Payback"
                   value={
-                    metrics?.customerPayback > 0
+                    metrics?.customerPayback && metrics.customerPayback > 0
                       ? `${metrics.customerPayback} months`
                       : "TBD"
                   }
@@ -273,19 +273,21 @@ export function ValidationMetrics({ ideaId }: ValidationMetricsProps) {
                 <strong>
                   {" "}
                   $
-                  {metrics?.fundingRequired > 0
+                  {metrics?.fundingRequired && metrics.fundingRequired > 0
                     ? Math.round(metrics?.fundingRequired / 1000)
                     : "TBD"}
                   K
                 </strong>
-                {metrics?.timeToMarket > 0 && (
-                  <>
-                    {" "}
-                    with a projected time-to-market of{" "}
-                    <strong>{metrics.timeToMarket} months</strong>
-                  </>
-                )}
-                {metrics?.breakEvenMonth > 0 && (
+                {metrics &&
+                  metrics.timeToMarket &&
+                  metrics.timeToMarket > 0 && (
+                    <>
+                      {" "}
+                      with a projected time-to-market of{" "}
+                      <strong>{metrics.timeToMarket} months</strong>
+                    </>
+                  )}
+                {metrics?.breakEvenMonth && metrics.breakEvenMonth > 0 && (
                   <>
                     {" "}
                     and break-even target by{" "}
@@ -299,7 +301,7 @@ export function ValidationMetrics({ ideaId }: ValidationMetricsProps) {
                 <ReportMetric
                   label="Funding Required"
                   value={
-                    metrics?.fundingRequired > 0
+                    metrics?.fundingRequired && metrics.fundingRequired > 0
                       ? `$${Math.round(metrics?.fundingRequired / 1000)}K`
                       : "TBD"
                   }

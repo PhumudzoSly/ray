@@ -44,11 +44,6 @@ export const getRoadmapChangelogs = tool({
       },
       include: {
         roadmap: true,
-        _count: {
-          select: {
-            entries: true,
-          },
-        },
       },
       orderBy: {
         publishDate: "desc",
@@ -78,14 +73,6 @@ export const createRoadmapChangelog = tool({
       .boolean()
       .optional()
       .describe("Whether the changelog is published"),
-    fixes: z
-      .array(z.string())
-      .optional()
-      .describe("Array of bug fixes (legacy field)"),
-    newFeatures: z
-      .array(z.string())
-      .optional()
-      .describe("Array of new features (legacy field)"),
   }),
   execute: async ({
     roadmapId,
@@ -94,8 +81,6 @@ export const createRoadmapChangelog = tool({
     version,
     publishDate,
     isPublished,
-    fixes,
-    newFeatures,
   }) => {
     const { org } = await getSession();
 
@@ -123,8 +108,6 @@ export const createRoadmapChangelog = tool({
         version,
         publishDate: new Date(publishDate),
         isPublished: isPublished ?? false,
-        fixes: fixes ?? [],
-        newFeatures: newFeatures ?? [],
       },
     });
 
@@ -151,11 +134,6 @@ export const getCurrentRoadmapChangelog = tool({
       },
       include: {
         roadmap: true,
-        _count: {
-          select: {
-            entries: true,
-          },
-        },
       },
     });
 
@@ -191,14 +169,6 @@ export const updateRoadmapChangelog = tool({
       .boolean()
       .optional()
       .describe("Whether the changelog is published"),
-    fixes: z
-      .array(z.string())
-      .optional()
-      .describe("Array of bug fixes (legacy field)"),
-    newFeatures: z
-      .array(z.string())
-      .optional()
-      .describe("Array of new features (legacy field)"),
   }),
   execute: async ({
     changelogId,
@@ -207,8 +177,6 @@ export const updateRoadmapChangelog = tool({
     version,
     publishDate,
     isPublished,
-    fixes,
-    newFeatures,
   }) => {
     const { org } = await getSession();
 
@@ -237,8 +205,6 @@ export const updateRoadmapChangelog = tool({
     if (publishDate !== undefined)
       updateData.publishDate = new Date(publishDate);
     if (isPublished !== undefined) updateData.isPublished = isPublished;
-    if (fixes !== undefined) updateData.fixes = fixes;
-    if (newFeatures !== undefined) updateData.newFeatures = newFeatures;
 
     const updatedChangelog = await prisma.roadmapChangelog.update({
       where: {
@@ -279,13 +245,6 @@ export const deleteRoadmapChangelog = tool({
           },
         },
       },
-      include: {
-        _count: {
-          select: {
-            entries: true,
-          },
-        },
-      },
     });
 
     if (!existingChangelog) {
@@ -303,7 +262,7 @@ export const deleteRoadmapChangelog = tool({
 
     return {
       success: true,
-      message: `Changelog "${existingChangelog.title}" (${existingChangelog.version || "no version"}) has been deleted successfully. This included ${existingChangelog._count.entries} entries.`,
+      message: `Changelog "${existingChangelog.title}" (${existingChangelog.version || "no version"}) has been deleted successfully.`,
     };
   },
 });

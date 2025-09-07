@@ -118,8 +118,6 @@ export const AssetDownloadScalarFieldEnumSchema = z.enum(['id','assetId','organi
 
 export const DocumentScalarFieldEnumSchema = z.enum(['id','content','version','projectId','issueId','featureId','milestoneId','competitorId','competitorSwotId','competitiveMoveId','roadmapItemId','actionItemId']);
 
-export const BoardScalarFieldEnumSchema = z.enum(['id','content','projectId','createdAt','updatedAt']);
-
 export const UserScalarFieldEnumSchema = z.enum(['id','name','email','emailVerified','image','role','createdAt','updatedAt','twoFactorEnabled']);
 
 export const SessionScalarFieldEnumSchema = z.enum(['id','expiresAt','ipAddress','userAgent','userId','activeOrganizationId','token','createdAt','updatedAt']);
@@ -148,9 +146,9 @@ export const ApiKeyScalarFieldEnumSchema = z.enum(['id','organizationId','name',
 
 export const ApiCallScalarFieldEnumSchema = z.enum(['id','organizationId','apiKeyId','endpoint','method','statusCode','responseTime','userAgent','ipAddress','createdAt']);
 
-export const IdeaValidationScalarFieldEnumSchema = z.enum(['id','ideaId','overallScore','overallStatus','confidenceLevel','validationProgress','startedAt','completedAt','lastUpdatedAt','version','parentValidationId','isLatest','revalidationReason','dataSourcesUpdated','lastDataRefresh','nextRevalidationDue']);
+export const IdeaValidationScalarFieldEnumSchema = z.enum(['id','ideaId','overallScore','overallStatus','confidenceLevel','validationProgress','startedAt','completedAt','lastUpdatedAt','parentValidationId','isLatest','revalidationReason','dataSourcesUpdated','lastDataRefresh','nextRevalidationDue']);
 
-export const ValidationMetricsScalarFieldEnumSchema = z.enum(['id','validationId','overallStrengthScore','overallRiskScore','timeToMarket','fundingRequired','breakEvenMonth','customerPayback','marketPenetration','immediateActions','shortTermActions','longTermActions','createdAt','updatedAt']);
+export const ValidationMetricsScalarFieldEnumSchema = z.enum(['id','validationId','overallStrengthScore','overallRiskScore','timeToMarket','fundingRequired','breakEvenMonth','customerPayback','marketPenetration','createdAt','updatedAt']);
 
 export const MarketValidationScalarFieldEnumSchema = z.enum(['id','validationId','totalAddressableMarket','serviceableAddressableMarket','serviceableObtainableMarket','marketGrowthRate','primaryCustomerSegment','customerInterviews','surveyResponses','overallMarketScore','primaryRegions','status','createdAt','updatedAt']);
 
@@ -1334,31 +1332,6 @@ export const DocumentOptionalDefaultsSchema = DocumentSchema.merge(z.object({
 export type DocumentOptionalDefaults = z.infer<typeof DocumentOptionalDefaultsSchema>
 
 /////////////////////////////////////////
-// BOARD SCHEMA
-/////////////////////////////////////////
-
-export const BoardSchema = z.object({
-  id: z.string().uuid(),
-  content: z.instanceof(Buffer).nullish(),
-  projectId: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
-})
-
-export type Board = z.infer<typeof BoardSchema>
-
-// BOARD OPTIONAL DEFAULTS SCHEMA
-//------------------------------------------------------
-
-export const BoardOptionalDefaultsSchema = BoardSchema.merge(z.object({
-  id: z.string().uuid().optional(),
-  createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-}))
-
-export type BoardOptionalDefaults = z.infer<typeof BoardOptionalDefaultsSchema>
-
-/////////////////////////////////////////
 // USER SCHEMA
 /////////////////////////////////////////
 
@@ -1753,7 +1726,6 @@ export const IdeaValidationSchema = z.object({
   startedAt: z.coerce.date(),
   completedAt: z.coerce.date().nullish(),
   lastUpdatedAt: z.coerce.date(),
-  version: z.number().int(),
   parentValidationId: z.string().nullish(),
   isLatest: z.boolean(),
   revalidationReason: z.string().nullish(),
@@ -1775,7 +1747,6 @@ export const IdeaValidationOptionalDefaultsSchema = IdeaValidationSchema.merge(z
   validationProgress: z.number().optional(),
   startedAt: z.coerce.date().optional(),
   lastUpdatedAt: z.coerce.date().optional(),
-  version: z.number().int().optional(),
   isLatest: z.boolean().optional(),
 }))
 
@@ -1795,9 +1766,6 @@ export const ValidationMetricsSchema = z.object({
   breakEvenMonth: z.number().int().nullish(),
   customerPayback: z.number().int().nullish(),
   marketPenetration: z.number().nullish(),
-  immediateActions: z.number().int(),
-  shortTermActions: z.number().int(),
-  longTermActions: z.number().int(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -1811,9 +1779,6 @@ export const ValidationMetricsOptionalDefaultsSchema = ValidationMetricsSchema.m
   id: z.string().uuid().optional(),
   overallStrengthScore: z.number().optional(),
   overallRiskScore: z.number().optional(),
-  immediateActions: z.number().int().optional(),
-  shortTermActions: z.number().int().optional(),
-  longTermActions: z.number().int().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 }))

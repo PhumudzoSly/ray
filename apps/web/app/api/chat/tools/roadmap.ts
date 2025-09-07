@@ -212,14 +212,6 @@ export const getCurrentRoadmap = tool({
             version: true,
             publishDate: true,
             isPublished: true,
-            entries: {
-              select: {
-                id: true,
-                type: true,
-                title: true,
-                description: true,
-              },
-            },
           },
         },
         featureRequests: {

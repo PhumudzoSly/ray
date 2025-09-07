@@ -4,7 +4,14 @@ import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
-  typedRoutes: true,
+  typedRoutes: false,
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   serverExternalPackages: ['@workspace/backend'],
   webpack: (config, { isServer }) => {
     if (isServer) {

@@ -30,7 +30,6 @@ export async function saveFinalVerdictData(
         lastUpdatedAt: true,
         startedAt: true,
         dataSourcesUpdated: true,
-        version: true,
         parentValidationId: true,
         ideaId: true,
       }),

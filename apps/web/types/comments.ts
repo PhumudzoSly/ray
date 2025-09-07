@@ -11,7 +11,7 @@ export interface ResolvedUser {
   image?: string | null;
 }
 
-export type CommentEntityType = "project" | "issue" | "feature" | "board";
+export type CommentEntityType = "project" | "issue" | "feature";
 
 export interface CreateCommentData {
   content: string;

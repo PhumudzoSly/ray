@@ -21,7 +21,6 @@ model Comment {
   milestoneId String?
   milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
   boardId     String?
-  board       Board?     @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
   // Comment metadata
   mentionedUserIds String[] // Array of user IDs for efficient querying
@@ -613,7 +612,6 @@ model Project {
 
   // Comment relations
   comments Comment[]
-  board    Board?
 
   @@index([ideaId])
   @@index([organizationId])
@@ -1204,18 +1202,6 @@ model Document {
   @@index([actionItemId])
 }
 
-model Board {
-  id        String    @id @default(uuid())
-  content   Bytes?
-  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  projectId String    @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  comments  Comment[]
-
-  @@map("board")
-}
-
 generator client {
   provider      = "prisma-client-js"
   output        = "../generated/client"
@@ -1534,7 +1520,6 @@ model IdeaValidation {
   lastUpdatedAt DateTime  @updatedAt
 
   // Revalidation support fields
-  version             Int              @default(1) // Version number for tracking changes
   parentValidationId  String? // Reference to previous validation version
   parentValidation    IdeaValidation?  @relation("ValidationHistory", fields: [parentValidationId], references: [id])
   childValidations    IdeaValidation[] @relation("ValidationHistory")
@@ -1579,11 +1564,6 @@ model ValidationMetrics {
   breakEvenMonth    Int? // Months
   customerPayback   Int? // Months
   marketPenetration Float? // Percentage
-
-  // Action priority counts
-  immediateActions Int @default(0)
-  shortTermActions Int @default(0)
-  longTermActions  Int @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

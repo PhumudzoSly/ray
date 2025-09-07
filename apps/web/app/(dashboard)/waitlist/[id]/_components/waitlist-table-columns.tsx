@@ -4,7 +4,11 @@ import { createColumnHelper, type ColumnMeta } from "@tanstack/react-table";
 import { Button } from "@workspace/ui/components/button";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import { Badge } from "@workspace/ui/components/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,17 +59,17 @@ const columnHelper = createColumnHelper<WaitlistEntry>();
 // Utility functions
 const generateGravatarUrl = (email: string, size: number = 32) => {
   const hash = crypto
-    .createHash('md5')
+    .createHash("md5")
     .update(email.toLowerCase().trim())
-    .digest('hex');
+    .digest("hex");
   return `https://www.gravatar.com/avatar/${hash}?s=${size}&d=identicon`;
 };
 
 const getInitials = (name: string) => {
   return name
-    .split(' ')
-    .map(word => word.charAt(0))
-    .join('')
+    .split(" ")
+    .map((word) => word.charAt(0))
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 };
@@ -80,7 +84,9 @@ const getStatusBadge = (status: string) => {
       return <Badge variant="outline">Invited</Badge>;
     case "joined":
       return (
-        <Badge className="bg-green-500 hover:bg-green-600 text-white">Joined</Badge>
+        <Badge className="bg-green-500 hover:bg-green-600 text-white">
+          Joined
+        </Badge>
       );
     case "bounced":
       return <Badge variant="destructive">Bounced</Badge>;
@@ -90,17 +96,26 @@ const getStatusBadge = (status: string) => {
 };
 
 // Column header with sorting
-const DataTableColumnHeader = ({ 
-  column, 
-  title, 
-  className 
-}: { 
-  column: any; 
-  title: string; 
-  className?: string; 
+const DataTableColumnHeader = ({
+  column,
+  title,
+  className,
+}: {
+  column: any;
+  title: string;
+  className?: string;
 }) => {
   if (!column.getCanSort()) {
-    return <div className={cn("text-xs font-medium text-muted-foreground uppercase tracking-wide", className)}>{title}</div>;
+    return (
+      <div
+        className={cn(
+          "text-xs font-medium text-muted-foreground uppercase tracking-wide",
+          className
+        )}
+      >
+        {title}
+      </div>
+    );
   }
 
   return (
@@ -111,7 +126,9 @@ const DataTableColumnHeader = ({
         className="h-8 data-[state=open]:bg-accent -ml-3"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</span>
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          {title}
+        </span>
         {column.getIsSorted() === "desc" ? (
           <ChevronDown className="ml-2 h-3 w-3" />
         ) : column.getIsSorted() === "asc" ? (
@@ -125,10 +142,10 @@ const DataTableColumnHeader = ({
 };
 
 // User Avatar Component
-const UserAvatar = ({ 
-  email, 
-  name, 
-  size = 32 
+const UserAvatar = ({
+  email,
+  name,
+  size = 32,
 }: {
   email: string;
   name?: string | null;
@@ -138,19 +155,19 @@ const UserAvatar = ({
   const initials = getInitials(name || email);
 
   return (
-    <Avatar className={cn("shrink-0", {
-      "h-6 w-6": size <= 24,
-      "h-8 w-8": size <= 32,
-      "h-10 w-10": size > 32
-    })}>
+    <Avatar
+      className={cn("shrink-0", {
+        "h-6 w-6": size <= 24,
+        "h-8 w-8": size <= 32,
+        "h-10 w-10": size > 32,
+      })}
+    >
       <AvatarImage
         src={avatarUrl}
         alt={name || email}
         className="object-cover"
       />
-      <AvatarFallback className="text-xs bg-muted">
-        {initials}
-      </AvatarFallback>
+      <AvatarFallback className="text-xs bg-muted">{initials}</AvatarFallback>
     </Avatar>
   );
 };
@@ -162,10 +179,10 @@ interface WaitlistEntryActionsProps {
   onDelete: (entryId: string) => Promise<void>;
 }
 
-const WaitlistEntryActions = ({ 
-  entry, 
-  onStatusChange, 
-  onDelete 
+const WaitlistEntryActions = ({
+  entry,
+  onStatusChange,
+  onDelete,
 }: WaitlistEntryActionsProps) => {
   return (
     <DropdownMenu>
@@ -224,7 +241,7 @@ export const createWaitlistTableColumns = (
 ) => [
   // Selection column - narrow left
   columnHelper.display({
-    id: 'select',
+    id: "select",
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
@@ -241,11 +258,11 @@ export const createWaitlistTableColumns = (
       />
     ),
     enableSorting: false,
-    size: 40
+    size: 40,
   }),
 
   // Position column - narrow left with font-mono styling
-  columnHelper.accessor('position', {
+  columnHelper.accessor("position", {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="#" className="w-20" />
     ),
@@ -263,7 +280,7 @@ export const createWaitlistTableColumns = (
 
   // User info column - flexible middle with avatar, name, and email
   columnHelper.display({
-    id: 'user',
+    id: "user",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User" />
     ),
@@ -298,7 +315,7 @@ export const createWaitlistTableColumns = (
   }),
 
   // Referrals column - compact right-aligned
-  columnHelper.accessor('_count.referrals', {
+  columnHelper.accessor("_count.referrals", {
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
@@ -320,7 +337,7 @@ export const createWaitlistTableColumns = (
   }),
 
   // Source column - compact right-aligned
-  columnHelper.accessor('utmSource', {
+  columnHelper.accessor("utmSource", {
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
@@ -343,7 +360,7 @@ export const createWaitlistTableColumns = (
   }),
 
   // Date column - compact right-aligned
-  columnHelper.accessor('joinedAt', {
+  columnHelper.accessor("joinedAt", {
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
@@ -367,7 +384,7 @@ export const createWaitlistTableColumns = (
   }),
 
   // Status column - compact right-aligned
-  columnHelper.accessor('status', {
+  columnHelper.accessor("status", {
     header: ({ column }) => (
       <DataTableColumnHeader
         column={column}
@@ -376,11 +393,9 @@ export const createWaitlistTableColumns = (
       />
     ),
     cell: ({ getValue }) => (
-      <div className="w-24 flex justify-end">
-        {getStatusBadge(getValue())}
-      </div>
+      <div className="w-24 flex justify-end">{getStatusBadge(getValue())}</div>
     ),
-    filterFn: 'equals',
+    filterFn: "equals",
     size: 96,
     enableSorting: true,
     meta: {
@@ -390,12 +405,12 @@ export const createWaitlistTableColumns = (
 
   // Actions column - narrow right with square buttons
   columnHelper.display({
-    id: 'actions',
-    header: '',
+    id: "actions",
+    header: "",
     cell: ({ row }) => (
       <div className="flex justify-end">
-        <WaitlistEntryActions 
-          entry={row.original} 
+        <WaitlistEntryActions
+          entry={row.original}
           onStatusChange={onStatusChange}
           onDelete={onDelete}
         />
@@ -406,8 +421,7 @@ export const createWaitlistTableColumns = (
     meta: {
       className: "w-12",
     } as WaitlistColumnMeta,
-  })
+  }),
 ];
 
-export type { WaitlistEntry };
 export { DataTableColumnHeader, UserAvatar, WaitlistEntryActions };

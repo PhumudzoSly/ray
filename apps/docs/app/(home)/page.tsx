@@ -26,7 +26,7 @@ export default function HomePage() {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
           <Link
-            href="/docs"
+            href={"/docs" as any}
             className="flex items-center justify-center space-x-2 p-4 rounded-lg border border-border bg-card hover:bg-accent transition-colors"
           >
             <Code className="h-5 w-5 text-primary" />

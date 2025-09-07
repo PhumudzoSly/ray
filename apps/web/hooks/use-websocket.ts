@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface WebSocketMessage {
   type: string;
@@ -29,7 +29,7 @@ interface UseWebSocketReturn {
 }
 
 export const useWebSocket = ({
-  url = 'ws://localhost:3001',
+  url = "ws://localhost:3001",
   onMessage,
   onConnect,
   onDisconnect,
@@ -51,13 +51,15 @@ export const useWebSocket = ({
         setIsConnected(true);
         reconnectCount.current = 0;
         onConnect?.();
-        
+
         // Re-subscribe to channels after reconnection
-        subscribedChannels.current.forEach(channel => {
-          websocket.send(JSON.stringify({
-            type: 'subscribe',
-            channel
-          }));
+        subscribedChannels.current.forEach((channel) => {
+          websocket.send(
+            JSON.stringify({
+              type: "subscribe",
+              channel,
+            })
+          );
         });
       };
 
@@ -66,7 +68,7 @@ export const useWebSocket = ({
           const message: WebSocketMessage = JSON.parse(event.data);
           onMessage?.(message);
         } catch (error) {
-          console.error('Failed to parse WebSocket message:', error);
+          console.error("Failed to parse WebSocket message:", error);
         }
       };
 
@@ -90,9 +92,17 @@ export const useWebSocket = ({
 
       setWs(websocket);
     } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
+      console.error("Failed to create WebSocket connection:", error);
     }
-  }, [url, onMessage, onConnect, onDisconnect, onError, reconnectAttempts, reconnectInterval]);
+  }, [
+    url,
+    onMessage,
+    onConnect,
+    onDisconnect,
+    onError,
+    reconnectAttempts,
+    reconnectInterval,
+  ]);
 
   const disconnect = useCallback(() => {
     if (reconnectTimer.current) {
@@ -104,31 +114,44 @@ export const useWebSocket = ({
     }
   }, [ws]);
 
-  const subscribe = useCallback((channel: string) => {
-    subscribedChannels.current.add(channel);
-    if (ws && isConnected) {
-      ws.send(JSON.stringify({
-        type: 'subscribe',
-        channel
-      }));
-    }
-  }, [ws, isConnected]);
+  const subscribe = useCallback(
+    (channel: string) => {
+      subscribedChannels.current.add(channel);
+      if (ws && isConnected) {
+        ws.send(
+          JSON.stringify({
+            type: "subscribe",
+            channel,
+          })
+        );
+      }
+    },
+    [ws, isConnected]
+  );
 
-  const unsubscribe = useCallback((channel: string) => {
-    subscribedChannels.current.delete(channel);
-    if (ws && isConnected) {
-      ws.send(JSON.stringify({
-        type: 'unsubscribe',
-        channel
-      }));
-    }
-  }, [ws, isConnected]);
+  const unsubscribe = useCallback(
+    (channel: string) => {
+      subscribedChannels.current.delete(channel);
+      if (ws && isConnected) {
+        ws.send(
+          JSON.stringify({
+            type: "unsubscribe",
+            channel,
+          })
+        );
+      }
+    },
+    [ws, isConnected]
+  );
 
-  const send = useCallback((message: WebSocketMessage) => {
-    if (ws && isConnected) {
-      ws.send(JSON.stringify(message));
-    }
-  }, [ws, isConnected]);
+  const send = useCallback(
+    (message: WebSocketMessage) => {
+      if (ws && isConnected) {
+        ws.send(JSON.stringify(message));
+      }
+    },
+    [ws, isConnected]
+  );
 
   const reconnect = useCallback(() => {
     disconnect();
@@ -138,4 +161,15 @@ export const useWebSocket = ({
 
   useEffect(() => {
     connect();
-    return disconnect
+    return disconnect;
+  }, [connect, disconnect]);
+
+  return {
+    ws,
+    isConnected,
+    subscribe,
+    unsubscribe,
+    send,
+    reconnect,
+  };
+};

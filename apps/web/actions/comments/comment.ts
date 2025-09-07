@@ -135,13 +135,6 @@ async function validateEntityAccess(
         });
         return !!feature;
 
-      case "board":
-        const board = await prisma.board.findFirst({
-          where: { id: entityId },
-          select: { id: true },
-        });
-        return !!board;
-
       default:
         return false;
     }
@@ -407,7 +400,6 @@ export async function updateComment(commentId: string, content: string) {
         issueId: true,
         featureId: true,
         milestoneId: true,
-        boardId: true,
       },
     });
 
@@ -477,9 +469,6 @@ export async function updateComment(commentId: string, content: string) {
     } else if (existingComment.featureId) {
       entityType = "feature";
       entityId = existingComment.featureId;
-    } else if (existingComment.boardId) {
-      entityType = "board";
-      entityId = existingComment.boardId;
     } else {
       throw new Error("Comment is not associated with any entity");
     }
@@ -514,7 +503,6 @@ export async function deleteComment(commentId: string) {
         projectId: true,
         issueId: true,
         featureId: true,
-        boardId: true,
       },
     });
 
@@ -554,9 +542,6 @@ export async function deleteComment(commentId: string) {
     } else if (existingComment.featureId) {
       entityType = "feature";
       entityId = existingComment.featureId;
-    } else if (existingComment.boardId) {
-      entityType = "board";
-      entityId = existingComment.boardId;
     } else {
       throw new Error("Comment is not associated with any entity");
     }
@@ -582,8 +567,6 @@ function getEntityWhere(entityType: CommentEntityType, entityId: string) {
       return { issueId: entityId };
     case "feature":
       return { featureId: entityId };
-    case "board":
-      return { boardId: entityId };
     default:
       throw new Error(`Invalid entity type: ${entityType}`);
   }
@@ -600,8 +583,6 @@ function getEntityRelation(entityType: CommentEntityType, entityId: string) {
       return { issueId: entityId };
     case "feature":
       return { featureId: entityId };
-    case "board":
-      return { boardId: entityId };
     default:
       throw new Error(`Invalid entity type: ${entityType}`);
   }

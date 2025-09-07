@@ -568,14 +568,6 @@ exports.Prisma.DocumentScalarFieldEnum = {
   actionItemId: 'actionItemId'
 };
 
-exports.Prisma.BoardScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  projectId: 'projectId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -745,7 +737,6 @@ exports.Prisma.IdeaValidationScalarFieldEnum = {
   startedAt: 'startedAt',
   completedAt: 'completedAt',
   lastUpdatedAt: 'lastUpdatedAt',
-  version: 'version',
   parentValidationId: 'parentValidationId',
   isLatest: 'isLatest',
   revalidationReason: 'revalidationReason',
@@ -764,9 +755,6 @@ exports.Prisma.ValidationMetricsScalarFieldEnum = {
   breakEvenMonth: 'breakEvenMonth',
   customerPayback: 'customerPayback',
   marketPenetration: 'marketPenetration',
-  immediateActions: 'immediateActions',
-  shortTermActions: 'shortTermActions',
-  longTermActions: 'longTermActions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1427,7 +1415,6 @@ exports.Prisma.ModelName = {
   AssetView: 'AssetView',
   AssetDownload: 'AssetDownload',
   Document: 'Document',
-  Board: 'Board',
   User: 'User',
   Session: 'Session',
   Account: 'Account',

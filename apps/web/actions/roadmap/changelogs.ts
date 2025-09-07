@@ -23,8 +23,6 @@ export const createRoadmapChangelog = async (
     const changelog = await prisma.roadmapChangelog.create({
       data: {
         ...data,
-        fixes: data.fixes || [],
-        newFeatures: data.newFeatures || [],
       },
     });
     return { success: true, data: changelog };
