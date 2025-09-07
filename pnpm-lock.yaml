@@ -694,9 +694,6 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
-      bufferutil:
-        specifier: ^4.0.9
-        version: 4.0.9
       prisma:
         specifier: ^6.14.0
         version: 6.14.0(typescript@5.9.2)
@@ -13028,6 +13025,7 @@ snapshots:
   bufferutil@4.0.9:
     dependencies:
       node-gyp-build: 4.8.4
+    optional: true
 
   bytes@3.1.2:
     optional: true
@@ -16436,7 +16434,8 @@ snapshots:
   node-gyp-build@4.1.1:
     optional: true
 
-  node-gyp-build@4.8.4: {}
+  node-gyp-build@4.8.4:
+    optional: true
 
   node-plop@0.26.3:
     dependencies:
