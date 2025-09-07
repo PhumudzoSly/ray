@@ -9,6 +9,8 @@ import { CompetitorDetails } from "./_components/competitor-details";
 import { getSession } from "@/actions/account/user";
 import { redis } from "@/lib/redis";
 import { UIMessage } from "ai";
+import { Suspense } from "react";
+import LoadingSpinner from "@workspace/ui/components/loading-spinner";
 
 const CompetitorPage = async ({
   params,
@@ -48,21 +50,23 @@ const CompetitorPage = async ({
           <DeleteCompetitor id={id} />
         </div>
       </Header>
-      <ExpandedLayoutContainer
-        hideScroll
-        sidebar={
-          <CompetitorSidebar
-            org={org}
-            userId={userId}
-            initialMessages={messages}
-            competitorId={id}
-          />
-        }
-      >
-        <div>
-          <CompetitorDetails id={id} />
-        </div>
-      </ExpandedLayoutContainer>
+      <Suspense fallback={<LoadingSpinner variant="card" />}>
+        <ExpandedLayoutContainer
+          hideScroll
+          sidebar={
+            <CompetitorSidebar
+              org={org}
+              userId={userId}
+              initialMessages={messages}
+              competitorId={id}
+            />
+          }
+        >
+          <div>
+            <CompetitorDetails id={id} />
+          </div>
+        </ExpandedLayoutContainer>
+      </Suspense>
     </>
   );
 };

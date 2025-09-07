@@ -70,6 +70,7 @@ export function ExpandedLayoutContainer({
         <div
           className={cn(
             isCollapsed ? "opacity-0 invisible" : "opacity-100 visible",
+            hideScroll ? "overflow-y-hidden" : "overflow-y-auto",
             "shadow-lg xl:shadow-none" // Add shadow below xl screens
           )}
         >

@@ -45,6 +45,19 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { Separator } from "@workspace/ui/components/separator";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
+import { FaMagic } from "react-icons/fa";
+import { runWorkflow } from "@/lib/upstash";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Label } from "@workspace/ui/components/label";
 
 function getStatusIcon(
   move: Pick<CompetitiveMove, "announcedDate" | "launchDate" | "completionDate">
@@ -97,7 +110,9 @@ interface CompetitiveMove {
 }
 
 // Variant mapping functions
-function getMoveTypeVariant(moveType: string): "default" | "secondary" | "destructive" | "outline" {
+function getMoveTypeVariant(
+  moveType: string
+): "default" | "secondary" | "destructive" | "outline" {
   switch (moveType) {
     case "Acquisition":
       return "destructive";
@@ -106,7 +121,9 @@ function getMoveTypeVariant(moveType: string): "default" | "secondary" | "destru
   }
 }
 
-function getImpactVariant(impactLevel: Importance): "default" | "secondary" | "destructive" | "outline" {
+function getImpactVariant(
+  impactLevel: Importance
+): "default" | "secondary" | "destructive" | "outline" {
   switch (impactLevel) {
     case "LOW":
       return "default";
@@ -143,6 +160,9 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
     null
   );
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [userInstructions, setUserInstructions] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: competitiveMoves, isLoading } = useQuery({
@@ -175,13 +195,33 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const handleAIDiscovery = async () => {
+    if (isGenerating) return;
+
+    setIsGenerating(true);
+
+    try {
+      const body = {
+        competitorId,
+        ...(userInstructions.trim() && {
+          userInstructions: userInstructions.trim(),
+        }),
+      };
+
+      await toast.promise(runWorkflow({ url: "/competitor/moves", body }), {
+        loading: "Analyzing competitor moves...",
+        success: "AI agent is discovering competitive moves...",
+        error: "Failed to start AI analysis",
+      });
+
+      setIsAIModalOpen(false);
+      setUserInstructions("");
+    } catch (error) {
+      console.error("Error running AI discovery:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <>
@@ -193,133 +233,192 @@ export const CompetitorMovesView: React.FC<CompetitorMovesViewProps> = ({
               Track competitor activities, product launches, and strategic moves
             </p>
           </div>
-          <AddCompetitiveMove competitorId={competitorId} />
+          <div className="flex items-center gap-2">
+            <Dialog open={isAIModalOpen} onOpenChange={setIsAIModalOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="fancy" className="gap-2">
+                  <FaMagic className="h-4 w-4" />
+                  AI Discovery
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[520px]">
+                <DialogHeader className="space-y-3">
+                  <DialogTitle className="text-xl font-semibold">
+                    AI Competitive Moves Discovery
+                  </DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Let AI analyze this competitor's recent activities, product
+                    launches, strategic moves, and market positioning changes.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-6 py-2">
+                  <div className="space-y-3">
+                    <Label
+                      htmlFor="instructions"
+                      className="text-sm font-medium"
+                    >
+                      Additional Instructions
+                    </Label>
+                    <Textarea
+                      id="instructions"
+                      placeholder="Focus on recent product launches, acquisitions, partnerships, market expansions, pricing changes..."
+                      value={userInstructions}
+                      onChange={(e) => setUserInstructions(e.target.value)}
+                      className="min-h-[120px] resize-none border-muted-foreground/20 focus:border-primary"
+                      maxLength={500}
+                    />
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">
+                        Optional but recommended for better results
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {userInstructions.length}/500
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <DialogFooter className="gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setIsAIModalOpen(false);
+                      setUserInstructions("");
+                    }}
+                    disabled={isGenerating}
+                    className="px-6"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleAIDiscovery}
+                    disabled={isGenerating}
+                    variant="fancy"
+                    className="px-6"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <FaMagic className="mr-2" />
+                        Discover Moves
+                      </>
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <AddCompetitiveMove competitorId={competitorId} />
+          </div>
         </div>
 
-        {!competitiveMoves || competitiveMoves.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="space-y-3">
-              <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground/40" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium">No competitive moves yet</p>
-                <p className="text-sm text-muted-foreground">
-                  Track competitor activities, product launches, and strategic
-                  moves
-                </p>
-              </div>
-            </div>
-          </div>
+        {isLoading ? (
+          <LoadingSpinner variant="text" />
         ) : (
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[40px]"></TableHead>
-                  <TableHead>Move</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Impact</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="w-[70px]"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {competitiveMoves.map((move) => {
-                  const statusText = getStatusText({
-                    announcedDate: move.announcedDate,
-                    launchDate: move.launchDate,
-                    completionDate: move.completionDate,
-                  });
-                  const statusIcon = getStatusIcon({
-                    announcedDate: move.announcedDate,
-                    launchDate: move.launchDate,
-                    completionDate: move.completionDate,
-                  });
-
-                  return (
-                    <TableRow key={move.id} className="group">
-                      <TableCell>
-                        {move.responseRequired && (
-                          <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="font-medium text-sm">
-                            {move.title}
-                          </div>
-                          <div className="text-xs text-muted-foreground line-clamp-2">
-                            {move.description}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={getMoveTypeVariant(move.moveType)}
-                          className="text-xs"
-                        >
-                          {move.moveType}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={getImpactVariant(move.impactLevel)}
-                          className="text-xs"
-                        >
-                          {getImpactLabel(move.impactLevel)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          {statusIcon}
-                          <span className="text-sm">{statusText}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-muted-foreground">
-                          {move.completionDate
-                            ? format(new Date(move.completionDate), "MMM dd")
-                            : move.launchDate
-                              ? format(new Date(move.launchDate), "MMM dd")
-                              : move.announcedDate
-                                ? format(new Date(move.announcedDate), "MMM dd")
-                                : "—"}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleViewDetails(move)}
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(move.id)}
-                              className="text-red-600 dark:text-red-400"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+          <>
+            {!competitiveMoves || competitiveMoves.length === 0 ? (
+              <div className="text-center py-20">
+                <div className="space-y-3">
+                  <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground/40" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">
+                      No competitive moves yet
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Track competitor activities, product launches, and
+                      strategic moves
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[40px]"></TableHead>
+                      <TableHead>Move</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Impact</TableHead>
+                      <TableHead className="w-[70px]"></TableHead>
                     </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {competitiveMoves.map((move) => {
+                      return (
+                        <TableRow key={move.id} className="group">
+                          <TableCell>
+                            {move.responseRequired && (
+                              <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              <div className="font-medium text-sm">
+                                {move.title}
+                              </div>
+                              <div className="text-xs text-muted-foreground line-clamp-2">
+                                {move.description}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={getMoveTypeVariant(move.moveType)}
+                              className="text-xs"
+                            >
+                              {move.moveType}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={getImpactVariant(move.impactLevel)}
+                              className="text-xs"
+                            >
+                              {getImpactLabel(move.impactLevel)}
+                            </Badge>
+                          </TableCell>
+
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => handleViewDetails(move)}
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleDelete(move.id)}
+                                  className="text-red-600 dark:text-red-400"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </>
         )}
       </div>
 

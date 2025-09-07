@@ -37,6 +37,19 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CollaborativeEditor } from "@/components/collaborative-editor";
 import { AddCompetitorSwot } from "./add-competitor-swot";
+import { FaMagic } from "react-icons/fa";
+import { runWorkflow } from "@/lib/upstash";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Label } from "@workspace/ui/components/label";
 
 interface CompetitorSwotViewProps {
   competitorId: string;
@@ -111,6 +124,9 @@ export const CompetitorSwotView: React.FC<CompetitorSwotViewProps> = ({
   // removed isCreateDialogOpen
   const [selectedEntry, setSelectedEntry] = useState<SwotEntry | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [userInstructions, setUserInstructions] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   // counterAction generation removed; no UI currently triggers it
 
   const queryClient = useQueryClient();
@@ -149,13 +165,34 @@ export const CompetitorSwotView: React.FC<CompetitorSwotViewProps> = ({
     setIsSheetOpen(true);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-32">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const handleAIDiscovery = async () => {
+    if (isGenerating) return;
+
+    setIsGenerating(true);
+
+    try {
+      const body = {
+        competitorId,
+        ...(userInstructions.trim() && {
+          userInstructions: userInstructions.trim(),
+        }),
+      };
+
+      toast.promise(runWorkflow({ url: "/competitor/swot", body }), {
+        loading: "Analyzing competitor SWOT...",
+        success:
+          "AI agent is analyzing competitor strengths, weaknesses, opportunities, and threats...",
+        error: "Failed to start AI analysis",
+      });
+
+      setIsAIModalOpen(false);
+      setUserInstructions("");
+    } catch (error) {
+      console.error("Error running AI discovery:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
@@ -166,105 +203,191 @@ export const CompetitorSwotView: React.FC<CompetitorSwotViewProps> = ({
             Analyze competitor strengths, weaknesses, opportunities, and threats
           </p>
         </div>
-        {/* Replaced inline dialog with extracted component */}
-        <AddCompetitorSwot competitorId={competitorId} />
+        <div className="flex items-center gap-2">
+          <Dialog open={isAIModalOpen} onOpenChange={setIsAIModalOpen}>
+            <DialogTrigger asChild>
+              <Button variant="fancy" size="sm" className="gap-2">
+                <FaMagic className="h-4 w-4" />
+                AI Analysis
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[520px]">
+              <DialogHeader className="space-y-3">
+                <DialogTitle className="text-xl font-semibold">
+                  AI SWOT Analysis
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground">
+                  Let AI perform a comprehensive SWOT analysis of this
+                  competitor, identifying their strengths, weaknesses,
+                  opportunities, and threats.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6 py-2">
+                <div className="space-y-3">
+                  <Label htmlFor="instructions" className="text-sm font-medium">
+                    Additional Instructions
+                  </Label>
+                  <Textarea
+                    id="instructions"
+                    placeholder="Focus on specific areas like technology stack, market position, financial health, team expertise, product portfolio..."
+                    value={userInstructions}
+                    onChange={(e) => setUserInstructions(e.target.value)}
+                    className="min-h-[120px] resize-none border-muted-foreground/20 focus:border-primary"
+                    maxLength={500}
+                  />
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">
+                      Optional but recommended for better results
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {userInstructions.length}/500
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsAIModalOpen(false);
+                    setUserInstructions("");
+                  }}
+                  disabled={isGenerating}
+                  className="px-6"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAIDiscovery}
+                  disabled={isGenerating}
+                  variant="fancy"
+                  className="px-6"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <FaMagic className="mr-2" />
+                      Analyze SWOT
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {/* Replaced inline dialog with extracted component */}
+          <AddCompetitorSwot competitorId={competitorId} />
+        </div>
       </div>
 
-      {swotEntries.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="space-y-3">
-            <Target className="h-12 w-12 mx-auto text-muted-foreground/40" />
-            <div className="space-y-1">
-              <p className="text-sm font-medium">
-                No SWOT analysis entries yet
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Add your first entry to start analyzing the competitor
-              </p>
-            </div>
-          </div>
-        </div>
+      {isLoading ? (
+        <LoadingSpinner variant="text" />
       ) : (
-        <div className="rounded-lg border border-border/40">
-          <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-[140px]">Type</TableHead>
-                <TableHead>Analysis</TableHead>
-                <TableHead className="w-[100px]">Impact</TableHead>
-                <TableHead className="w-[120px]">Date</TableHead>
-                <TableHead className="w-[80px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {swotEntries.map((entry) => {
-                const config = swotTypeConfig[entry.type as SwotType];
-                const impactInfo = impactConfig[entry.impact];
-                if (!config) {
-                  console.warn(`Unknown SWOT type: ${entry.type}`);
-                  return null;
-                }
-                const Icon = config.icon;
-
-                return (
-                  <TableRow
-                    key={entry.id}
-                    className="cursor-pointer hover:bg-muted/30"
-                    onClick={() =>
-                      handleRowClick({
-                        ...entry,
-                        competitorId: entry.competitorId || "",
-                      })
-                    }
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Icon className={cn("h-3.5 w-3.5", config.color)} />
-                        <span
-                          className={cn(
-                            "text-sm font-medium px-2 py-1 rounded-md",
-                            config.bgColor
-                          )}
-                        >
-                          {config.label}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="max-w-[400px]">
-                      <p className="truncate text-sm">{entry.swotAnalysis}</p>
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={cn(
-                          "text-xs font-medium px-2 py-1 rounded-md",
-                          impactInfo.bgColor
-                        )}
-                      >
-                        {impactInfo.label}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {new Date(entry.createdAt).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(entry.id);
-                        }}
-                        className="h-8 w-8 p-0"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </TableCell>
+        <>
+          {swotEntries.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="space-y-3">
+                <Target className="h-12 w-12 mx-auto text-muted-foreground/40" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium">
+                    No SWOT analysis entries yet
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Add your first entry to start analyzing the competitor
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-border/40">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-[140px]">Type</TableHead>
+                    <TableHead>Analysis</TableHead>
+                    <TableHead className="w-[100px]">Impact</TableHead>
+                    <TableHead className="w-[120px]">Date</TableHead>
+                    <TableHead className="w-[80px]">Actions</TableHead>
                   </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
+                </TableHeader>
+                <TableBody>
+                  {swotEntries.map((entry) => {
+                    const config = swotTypeConfig[entry.type as SwotType];
+                    const impactInfo = impactConfig[entry.impact];
+                    if (!config) {
+                      console.warn(`Unknown SWOT type: ${entry.type}`);
+                      return null;
+                    }
+                    const Icon = config.icon;
+
+                    return (
+                      <TableRow
+                        key={entry.id}
+                        className="cursor-pointer hover:bg-muted/30"
+                        onClick={() =>
+                          handleRowClick({
+                            ...entry,
+                            competitorId: entry.competitorId || "",
+                          })
+                        }
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Icon className={cn("h-3.5 w-3.5", config.color)} />
+                            <span
+                              className={cn(
+                                "text-sm font-medium px-2 py-1 rounded-md",
+                                config.bgColor
+                              )}
+                            >
+                              {config.label}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="max-w-[400px]">
+                          <p className="truncate text-sm">
+                            {entry.swotAnalysis}
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <span
+                            className={cn(
+                              "text-xs font-medium px-2 py-1 rounded-md",
+                              impactInfo.bgColor
+                            )}
+                          >
+                            {impactInfo.label}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-sm text-muted-foreground">
+                          {new Date(entry.createdAt).toLocaleDateString()}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(entry.id);
+                            }}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </>
       )}
 
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>

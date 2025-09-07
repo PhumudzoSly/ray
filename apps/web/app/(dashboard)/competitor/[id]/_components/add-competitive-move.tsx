@@ -1,444 +1,245 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCompetitiveMove } from "@/actions/idea/competitor";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@workspace/ui/components/select";
-import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@workspace/ui/components/dialog";
-import { Label } from "@workspace/ui/components/label";
-import { Checkbox } from "@workspace/ui/components/checkbox";
-import { DateInput } from "@workspace/ui/components/date-input";
-import { Separator } from "@workspace/ui/components/separator";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { MoveTypeSelector } from "./move-type-selector";
+import { ImpactLevelSelector } from "./impact-level-selector";
+import { DateSelector } from "@/components/ui/selectors/date-selector";
 
 export function AddCompetitiveMove({ competitorId }: AddCompetitiveMoveProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [newMove, setNewMove] = useState<NewMoveState>({
-    moveType: "",
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState<FormState>({
     title: "",
     description: "",
+    moveType: "PRODUCT_LAUNCH",
     impactLevel: "MEDIUM",
-    targetAudience: "",
-    affectedFeatures: [],
     announcedDate: null,
     launchDate: null,
-    completionDate: null,
-    userFeedback: "",
-    pressCoverage: [],
-    opportunities: [],
-    threats: [],
+    targetAudience: "",
+    affectedFeatures: "",
+    opportunities: "",
+    threats: "",
     responseRequired: false,
     responseStrategy: "",
   });
 
   const queryClient = useQueryClient();
-
   const createMutation = useMutation({
-    mutationFn: createCompetitiveMove,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["competitiveMoves", competitorId],
-      });
-      setIsOpen(false);
-      resetNewMove();
-      toast.success("Competitive move created successfully");
-    },
-    onError: () => {
-      toast.error("Failed to create competitive move");
-    },
+    mutationFn: async (data: any) => createCompetitiveMove(data),
   });
 
-  function resetNewMove() {
-    setNewMove({
-      moveType: "",
-      title: "",
-      description: "",
-      impactLevel: "MEDIUM",
-      targetAudience: "",
-      affectedFeatures: [],
-      announcedDate: null,
-      launchDate: null,
-      completionDate: null,
-      userFeedback: "",
-      pressCoverage: [],
-      opportunities: [],
-      threats: [],
-      responseRequired: false,
-      responseStrategy: "",
-    });
-  }
+  // Utility function to validate form fields
+  const validateForm = (form: FormState) => {
+    const requiredStringFields: (keyof FormState)[] = ["title", "description"];
+    for (const key of requiredStringFields) {
+      if (typeof form[key] === "string" && !form[key].trim()) {
+        toast.error(
+          `${key.charAt(0).toUpperCase() + key.slice(1)} is required`
+        );
+        return false;
+      }
+    }
+    return true;
+  };
 
-  function handleCreate() {
-    if (!newMove.title.trim() || !newMove.moveType.trim()) {
-      toast.error("Please provide title and move type");
+  async function handleSubmit() {
+    if (!validateForm(form)) {
       return;
     }
+    setOpen(false);
 
-    const moveData: any = {
-      competitorId,
-      moveType: newMove.moveType,
-      title: newMove.title,
-      description: newMove.description,
-      impactLevel: newMove.impactLevel,
-      targetAudience: newMove.targetAudience || null,
-      affectedFeatures: newMove.affectedFeatures,
-      userFeedback: newMove.userFeedback || null,
-      pressCoverage: newMove.pressCoverage,
-      opportunities: newMove.opportunities,
-      threats: newMove.threats,
-      responseRequired: newMove.responseRequired,
-      responseStrategy: newMove.responseStrategy || null,
-    };
+    try {
+      const result = await createMutation.mutateAsync({
+        move: {
+          competitorId,
+          title: form.title,
+          description: form.description,
+          moveType: form.moveType,
+          impactLevel: form.impactLevel,
+          announcedDate: form.announcedDate,
+          launchDate: form.launchDate,
+          targetAudience: form.targetAudience || null,
+          affectedFeatures: form.affectedFeatures
+            ? [form.affectedFeatures]
+            : [],
+          opportunities: form.opportunities ? [form.opportunities] : [],
+          threats: form.threats ? [form.threats] : [],
+          responseRequired: form.responseRequired,
+          responseStrategy: form.responseStrategy || null,
+          pressCoverage: [],
+          userFeedback: null,
+        },
+      });
 
-    if (newMove.announcedDate) moveData.announcedDate = newMove.announcedDate;
-    if (newMove.launchDate) moveData.launchDate = newMove.launchDate;
-    if (newMove.completionDate)
-      moveData.completionDate = newMove.completionDate;
+      if (result) {
+        toast.success("Competitive move created successfully");
 
-    createMutation.mutate({ move: moveData });
+        // Invalidate competitive moves queries
+        queryClient.invalidateQueries({
+          queryKey: ["competitiveMoves", competitorId],
+        });
+        queryClient.invalidateQueries({ queryKey: ["competitiveMoves"] });
+      } else {
+        toast.error("Failed to create competitive move");
+      }
+    } catch (error) {
+      console.error("Error creating competitive move:", error);
+      toast.error("Failed to create competitive move");
+    }
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button size="sm" className="flex items-center gap-1.5">
+          <Plus className="h-4 w-4" />
           Add Move
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl h-[85vh] flex flex-col p-0">
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle className="text-lg font-semibold">
-            Add New Competitive Move
-          </DialogTitle>
+      <DialogContent className="w-full sm:max-w-[750px] shadow-xl">
+        <DialogHeader>
+          <DialogTitle>New Competitive Move</DialogTitle>
+          <DialogDescription>
+            Track competitor activities and strategic moves
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <div className="space-y-8">
-            {/* Basic Information */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-4">
-                  Basic Information
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="moveType"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Move Type
-                    </Label>
-                    <Select
-                      value={newMove.moveType}
-                      onValueChange={(value) =>
-                        setNewMove({ ...newMove, moveType: value })
-                      }
-                    >
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Select move type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.entries(moveTypeConfig).map(([key, config]) => (
-                          <SelectItem key={key} value={key}>
-                            {config.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+        <div className="pb-0 space-y-3 w-full">
+          <Input
+            placeholder="Move title"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+          />
 
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="impactLevel"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Impact Level
-                    </Label>
-                    <Select
-                      value={newMove.impactLevel}
-                      onValueChange={(value: Importance) =>
-                        setNewMove({ ...newMove, impactLevel: value })
-                      }
-                    >
-                      <SelectTrigger className="h-11">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="LOW">Low</SelectItem>
-                        <SelectItem value="MEDIUM">Medium</SelectItem>
-                        <SelectItem value="HIGH">High</SelectItem>
-                        <SelectItem value="CRITICAL">Critical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+          <Textarea
+            placeholder="Add description..."
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
 
-                <div className="space-y-2 mt-6">
-                  <Label
-                    htmlFor="title"
-                    className="text-sm font-medium text-foreground"
-                  >
-                    Title
-                  </Label>
-                  <Input
-                    id="title"
-                    placeholder="Enter move title"
-                    value={newMove.title}
-                    onChange={(e) =>
-                      setNewMove({ ...newMove, title: e.target.value })
-                    }
-                    className="h-11"
-                  />
-                </div>
+          <Input
+            placeholder="Target audience (optional)"
+            value={form.targetAudience}
+            onChange={(e) =>
+              setForm({ ...form, targetAudience: e.target.value })
+            }
+          />
 
-                <div className="space-y-2 mt-6">
-                  <Label
-                    htmlFor="description"
-                    className="text-sm font-medium text-foreground"
-                  >
-                    Description
-                  </Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Describe the competitive move in detail"
-                    value={newMove.description}
-                    onChange={(e) =>
-                      setNewMove({ ...newMove, description: e.target.value })
-                    }
-                    rows={4}
-                    className="resize-none"
-                  />
-                </div>
-              </div>
-            </div>
+          <Input
+            placeholder="Affected features (optional)"
+            value={form.affectedFeatures}
+            onChange={(e) =>
+              setForm({ ...form, affectedFeatures: e.target.value })
+            }
+          />
 
-            <Separator />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Input
+              placeholder="Opportunities this creates"
+              value={form.opportunities}
+              onChange={(e) =>
+                setForm({ ...form, opportunities: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Threats this poses"
+              value={form.threats}
+              onChange={(e) => setForm({ ...form, threats: e.target.value })}
+            />
+          </div>
 
-            {/* Market & Audience */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-4">
-                  Market & Audience
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="targetAudience"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      Target Audience
-                    </Label>
-                    <Input
-                      id="targetAudience"
-                      placeholder="Who is this move targeting"
-                      value={newMove.targetAudience}
-                      onChange={(e) =>
-                        setNewMove({
-                          ...newMove,
-                          targetAudience: e.target.value,
-                        })
-                      }
-                      className="h-11"
-                    />
-                  </div>
+          {form.responseRequired && (
+            <Textarea
+              placeholder="Response strategy..."
+              value={form.responseStrategy}
+              onChange={(e) =>
+                setForm({ ...form, responseStrategy: e.target.value })
+              }
+            />
+          )}
 
-                  <div className="space-y-2">
-                    <Label
-                      htmlFor="userFeedback"
-                      className="text-sm font-medium text-foreground"
-                    >
-                      User Feedback
-                    </Label>
-                    <Textarea
-                      id="userFeedback"
-                      placeholder="User reactions and feedback"
-                      value={newMove.userFeedback}
-                      onChange={(e) =>
-                        setNewMove({ ...newMove, userFeedback: e.target.value })
-                      }
-                      rows={3}
-                      className="resize-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Timeline */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-4">
-                  Timeline
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-foreground">
-                      Announced Date
-                    </Label>
-                    <DateInput
-                      value={newMove.announcedDate || new Date()}
-                      onChange={(date) =>
-                        setNewMove({ ...newMove, announcedDate: date })
-                      }
-                      placeholder="Select announcement date"
-                      className="h-11"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-foreground">
-                      Launch Date
-                    </Label>
-                    <DateInput
-                      value={newMove.launchDate || new Date()}
-                      onChange={(date) =>
-                        setNewMove({ ...newMove, launchDate: date })
-                      }
-                      placeholder="Select launch date"
-                      className="h-11"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium text-foreground">
-                      Completion Date
-                    </Label>
-                    <DateInput
-                      value={newMove.completionDate || new Date()}
-                      onChange={(date) =>
-                        setNewMove({ ...newMove, completionDate: date })
-                      }
-                      placeholder="Select completion date"
-                      className="h-11"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Response Strategy */}
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-foreground mb-4">
-                  Response Strategy
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Checkbox
-                      id="responseRequired"
-                      checked={newMove.responseRequired}
-                      onCheckedChange={(checked) =>
-                        setNewMove({ ...newMove, responseRequired: !!checked })
-                      }
-                    />
-                    <Label
-                      htmlFor="responseRequired"
-                      className="text-sm font-medium cursor-pointer text-foreground"
-                    >
-                      Response Required
-                    </Label>
-                  </div>
-
-                  {newMove.responseRequired && (
-                    <div className="space-y-2 ml-7">
-                      <Label
-                        htmlFor="responseStrategy"
-                        className="text-sm font-medium text-foreground"
-                      >
-                        Response Strategy
-                      </Label>
-                      <Textarea
-                        id="responseStrategy"
-                        placeholder="Describe your strategic response to this competitive move"
-                        value={newMove.responseStrategy}
-                        onChange={(e) =>
-                          setNewMove({
-                            ...newMove,
-                            responseStrategy: e.target.value,
-                          })
-                        }
-                        rows={3}
-                        className="resize-none"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="w-full flex items-center justify-start gap-1.5 flex-wrap">
+            <MoveTypeSelector
+              moveType={form.moveType}
+              onChange={(moveType: string) => setForm({ ...form, moveType })}
+            />
+            <ImpactLevelSelector
+              impactLevel={form.impactLevel}
+              onChange={(impactLevel: string) =>
+                setForm({ ...form, impactLevel: impactLevel as Importance })
+              }
+            />
+            <DateSelector
+              value={form.announcedDate}
+              onChange={(date) => setForm({ ...form, announcedDate: date })}
+              placeholder="Announced date"
+              size="xs"
+            />
+            <DateSelector
+              value={form.launchDate}
+              onChange={(date) => setForm({ ...form, launchDate: date })}
+              placeholder="Launch date"
+              size="xs"
+            />
           </div>
         </div>
 
-        <div className="flex justify-end gap-3 px-6 py-4 border-t bg-muted/20">
-          <Button
-            variant="outline"
-            onClick={() => setIsOpen(false)}
-            className="h-11 px-8"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleCreate}
-            disabled={createMutation.isPending}
-            className="h-11 px-8"
-          >
-            {createMutation.isPending ? "Creating..." : "Create Move"}
-          </Button>
+        <div className="flex items-center justify-between py-2.5 px-4 w-full border-t">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="response-required"
+              checked={form.responseRequired}
+              onChange={(e) =>
+                setForm({ ...form, responseRequired: e.target.checked })
+              }
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <label
+              htmlFor="response-required"
+              className="text-sm text-muted-foreground cursor-pointer"
+            >
+              Response required
+            </label>
+          </div>
+          <Button onClick={handleSubmit}>Create Move</Button>
         </div>
       </DialogContent>
     </Dialog>
   );
 }
 
-// Types and UI config
 interface AddCompetitiveMoveProps {
   competitorId: string;
 }
 
-interface NewMoveState {
-  moveType: string;
+type FormState = {
   title: string;
   description: string;
+  moveType: string;
   impactLevel: Importance;
-  targetAudience: string;
-  affectedFeatures: string[];
   announcedDate: Date | null;
   launchDate: Date | null;
-  completionDate: Date | null;
-  userFeedback: string;
-  pressCoverage: string[];
-  opportunities: string[];
-  threats: string[];
+  targetAudience: string;
+  affectedFeatures: string;
+  opportunities: string;
+  threats: string;
   responseRequired: boolean;
   responseStrategy: string;
-}
+};
 
 type Importance = "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
-
-const moveTypeConfig = {
-  "Product Launch": { label: "Product Launch" },
-  "Feature Update": { label: "Feature Update" },
-  "Pricing Change": { label: "Pricing Change" },
-  "Market Expansion": { label: "Market Expansion" },
-  Partnership: { label: "Partnership" },
-  Acquisition: { label: "Acquisition" },
-  Other: { label: "Other" },
-} as const;

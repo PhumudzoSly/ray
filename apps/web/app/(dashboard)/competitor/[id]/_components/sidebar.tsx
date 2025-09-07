@@ -132,7 +132,7 @@ const CompetitorSidebar = ({
 
   return (
     <div className="max-w-5xl mx-auto pb-2 relative size-full h-[calc(100vh-54px)]">
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full overflow-hidden">
         <Conversation className="h-full">
           <ConversationContent>
             {messages.map((message) => (
@@ -235,8 +235,8 @@ const CompetitorSidebar = ({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Reset Chat History</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete all chat messages for this competitor analysis.
-                    This action cannot be undone.
+                    This will permanently delete all chat messages for this
+                    competitor analysis. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

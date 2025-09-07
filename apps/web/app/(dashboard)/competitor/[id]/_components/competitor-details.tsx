@@ -11,12 +11,24 @@ import NoData from "@/components/shared/no-data";
 import { toast } from "sonner";
 import Link from "next/link";
 import { BiInfoCircle } from "react-icons/bi";
-import { TrendingUp, Target, ExternalLink } from "lucide-react";
+import {
+  TrendingUp,
+  Target,
+  ExternalLink,
+  AlertTriangle,
+  AlertCircle,
+  AlertOctagon,
+  Minus,
+} from "lucide-react";
+import {
+  ThreatLevelSelector,
+  ThreatLevel,
+} from "@/components/ui/selectors/threat-level-selector";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@workspace/ui/components/scroll-area";
-import { CompetitorDetailsView } from "./competitor-details-view";
 import { CompetitorSwotView } from "./competitor-swot-view";
 import { CompetitorMovesView } from "./competitor-moves-view";
+import { CollaborativeEditor } from "@/components/collaborative-editor";
 
 interface CompanyDetailProps {
   label: string;
@@ -116,14 +128,10 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
         </Link>
       </div>
 
-      <div className="px-4 flex items-center">
-        {competitor.logoUrl && (
-          <img
-            src={competitor.logoUrl}
-            alt={`${competitor.name} logo`}
-            className="w-12 h-12 rounded-lg object-contain bg-muted/30 p-2"
-          />
-        )}
+      <div className="px-4 flex items-center gap-4">
+        {/* Threat Level Icon and Selector */}
+
+        {/* Company Name */}
         <InlineEditField
           value={competitor.name}
           onSave={async (value) => {
@@ -139,6 +147,57 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
           }
           className="text-2xl md:text-3xl font-bold"
         />
+
+        {(() => {
+          const getThreatLevelIcon = (threatLevel: string) => {
+            switch (threatLevel.toLowerCase()) {
+              case "critical":
+                return AlertOctagon;
+              case "high":
+                return AlertTriangle;
+              case "medium":
+                return AlertCircle;
+              case "low":
+                return Minus;
+              default:
+                return Minus;
+            }
+          };
+
+          const getThreatLevelColor = (threatLevel: string) => {
+            switch (threatLevel.toLowerCase()) {
+              case "critical":
+                return "text-red-600 dark:text-red-400";
+              case "high":
+                return "text-orange-600 dark:text-orange-400";
+              case "medium":
+                return "text-yellow-600 dark:text-yellow-400";
+              case "low":
+                return "text-green-600 dark:text-green-400";
+              default:
+                return "text-muted-foreground";
+            }
+          };
+
+          const ThreatIcon = getThreatLevelIcon(competitor.threatLevel);
+          const threatColor = getThreatLevelColor(competitor.threatLevel);
+
+          return (
+            <div className="flex items-center gap-3">
+              <div className="flex flex-col">
+                <ThreatLevelSelector
+                  threatLevel={competitor.threatLevel as ThreatLevel}
+                  onChange={async (newThreatLevel) => {
+                    await updateCompetitorFieldMutation.mutateAsync({
+                      competitorId: id,
+                      threatLevel: newThreatLevel,
+                    });
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       <div className="mt-2 p-4">
@@ -155,7 +214,7 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
       </div>
 
       {/* Company Details */}
-      <div className="px-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div className="px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         <CompanyDetail
           label="Website"
           value={competitor.website}
@@ -165,7 +224,6 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
           label="Founded"
           value={competitor.foundedYear?.toString() || ""}
         />
-        <CompanyDetail label="Location" value={competitor.headquarters} />
         <CompanyDetail label="Team Size" value={competitor.employeeCount} />
         <CompanyDetail
           label="Target audience"
@@ -217,7 +275,9 @@ export const CompetitorDetails = ({ id }: { id: string }) => {
       </div>
 
       <div className="p-4">
-        {view === "details" && <CompetitorDetailsView competitorId={id} />}
+        {view === "details" && (
+          <CollaborativeEditor entityId={id} entityType="competitor" />
+        )}
         {view === "swot" && <CompetitorSwotView competitorId={id} />}
         {view === "moves" && <CompetitorMovesView competitorId={id} />}
       </div>
