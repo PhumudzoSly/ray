@@ -1,9 +1,9 @@
 export enum GeneralFeature {
-  Agent = "agent",
   Inbox = "inbox",
   Feedback = "feedback",
   Analytics = "analytics",
   Integration = "integration",
+  CoPilot = "copilot",
 }
 
 export type Feature = GeneralFeature;

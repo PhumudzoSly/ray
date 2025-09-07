@@ -22,20 +22,16 @@ export const getPlanNameByProductId = (productId: string): string | null => {
 const PLAN_HIERARCHY = [START_PLAN, BUSINESS_PLAN, ENTERPRISE_PLAN];
 
 export const featureAccessConfig: { [productId: string]: Feature[] } = {
-  [START_PLAN]: [
-    GeneralFeature.Agent,
-    GeneralFeature.Inbox,
-    GeneralFeature.Feedback,
-  ],
+  [START_PLAN]: [GeneralFeature.Inbox, GeneralFeature.Feedback],
   [BUSINESS_PLAN]: [
-    GeneralFeature.Agent,
+    GeneralFeature.CoPilot,
     GeneralFeature.Inbox,
     GeneralFeature.Feedback,
     GeneralFeature.Analytics,
     GeneralFeature.Integration,
   ],
   [ENTERPRISE_PLAN]: [
-    GeneralFeature.Agent,
+    GeneralFeature.CoPilot,
     GeneralFeature.Inbox,
     GeneralFeature.Feedback,
     GeneralFeature.Analytics,

@@ -255,21 +255,21 @@ export async function checkFeatureAccess(feature: GeneralFeature) {
   // Define which features are available per subscription tier
   const featureAvailability = {
     starter: {
-      [GeneralFeature.Agent]: true,
-      [GeneralFeature.Inbox]: true,
+      [GeneralFeature.CoPilot]: false,
+      [GeneralFeature.Inbox]: false,
+      [GeneralFeature.Integration]: false,
       [GeneralFeature.Feedback]: true,
       [GeneralFeature.Analytics]: false,
-      [GeneralFeature.Integration]: false,
     },
     pro: {
-      [GeneralFeature.Agent]: true,
+      [GeneralFeature.CoPilot]: true,
       [GeneralFeature.Inbox]: true,
       [GeneralFeature.Feedback]: true,
       [GeneralFeature.Analytics]: true,
       [GeneralFeature.Integration]: true,
     },
     enterprise: {
-      [GeneralFeature.Agent]: true,
+      [GeneralFeature.CoPilot]: true,
       [GeneralFeature.Inbox]: true,
       [GeneralFeature.Feedback]: true,
       [GeneralFeature.Analytics]: true,

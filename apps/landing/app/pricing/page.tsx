@@ -24,7 +24,6 @@ export const metadata: Metadata = {
     "product management pricing",
     "startup plans",
     "enterprise SaaS",
-    "free tier",
     "subscription plans",
     "Ray AI cost",
   ],

@@ -50,7 +50,7 @@ export const PROJECTS_LIMITS: { [productId: string]: ProjectLimits } = {
     maxProject: 25,
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
-    maxProject: 50,
+    maxProject: 150,
   },
 };
 
@@ -68,13 +68,13 @@ export const AI_LIMITS: { [productId: string]: AILimits } = {
 
 export const IDEAS_LIMITS: { [productId: string]: IdeasLimits } = {
   [process.env.POLAR_STARTER_PRICING!]: {
-    maxIdeas: 2,
+    maxIdeas: 3,
   },
   [process.env.POLAR_BUSINESS_PRICING!]: {
-    maxIdeas: 5,
+    maxIdeas: 10,
   },
   [process.env.POLAR_ENTERPRICE_PRICING!]: {
-    maxIdeas: 10,
+    maxIdeas: 50,
   },
 };
 
