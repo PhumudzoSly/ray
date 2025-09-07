@@ -8,12 +8,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-   functions: {
-    "api/**": {
-      excludeFiles: "{.next,*.cache,node_modules,public,app}/**"
-    }
-  },
-  
   serverExternalPackages: [
     '@opentelemetry/instrumentation',
     'import-in-the-middle'

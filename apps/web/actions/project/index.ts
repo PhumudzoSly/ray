@@ -2,7 +2,6 @@
 
 import { ProjectOptionalDefaults, prisma } from "@workspace/backend";
 import { getSession } from "../account/user";
-import { checkProjectLimit } from "../account/limits";
 
 // Health score calculation types
 interface ProjectHealthMetrics {
@@ -135,7 +134,11 @@ function calculateProjectHealth(
   // Penalize too many features in planning (lack of execution)
   // Only penalize if there are actually features in planning AND they represent more than 50% of total features
   // Also require at least 2 total features to avoid false positives with single features
-  if (planningFeatures > 0 && totalFeatures >= 2 && planningFeatures > totalFeatures * 0.5) {
+  if (
+    planningFeatures > 0 &&
+    totalFeatures >= 2 &&
+    planningFeatures > totalFeatures * 0.5
+  ) {
     featureHealth -= 10;
     healthFactors.push("Too many features in planning");
   }
@@ -556,15 +559,6 @@ async function getRecentProjectActivity(projectId: string) {
 
 export const createProject = async (data: ProjectOptionalDefaults) => {
   const { org } = await getSession();
-
-  // Check project limits before creating
-  const projectLimit = await checkProjectLimit();
-
-  if (projectLimit.limitReached) {
-    throw new Error(
-      `Project limit reached. You have ${projectLimit.currentCount}/${projectLimit.maxAllowed} projects. Please upgrade your subscription to create more projects.`
-    );
-  }
 
   const project = await prisma.project.create({
     data: {

@@ -324,7 +324,7 @@ export async function listApiKeys() {
     });
 
     // Transform the data to match the expected interface
-    const transformedApiKeys = apiKeys.map((key) => ({
+    const transformedApiKeys = apiKeys.map((key: any) => ({
       ...key,
       createdAt: key.createdAt.getTime(),
       lastUsed: key.lastUsed?.getTime(),
