@@ -102,7 +102,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
               <InlineEditField
                 value={`💡 ${idea?.name}` || ""}
                 onSave={(value) => handleUpdateField("name", value)}
-                className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
+                className="text-3xl font-bold hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
                 disabled={updateFieldMutation.isPending}
               />
             </div>

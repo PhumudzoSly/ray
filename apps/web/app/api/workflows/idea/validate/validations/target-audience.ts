@@ -37,23 +37,22 @@ Ensure all numeric scores are between 0-100 and segment sizes are realistic mark
 
   const { targetAudienceSegmentation, audienceSegments } = object;
 
-  // Save target audience segmentation and segments in parallel
-  const [savedTargetAudienceSegmentation] = await Promise.all([
-    prisma.targetAudienceSegmentation.create({
+  // Save target audience segmentation first, then segments
+  const savedTargetAudienceSegmentation =
+    await prisma.targetAudienceSegmentation.create({
       data: {
         ...targetAudienceSegmentation,
         validationId,
       },
-    }),
-    ...audienceSegments.map((segment) =>
-      prisma.audienceSegment.create({
-        data: {
-          ...segment,
-          targetAudienceSegmentationId: validationId,
-        },
-      })
-    ),
-  ]);
+    });
+
+  // Create audience segments with correct foreign key reference
+  await prisma.audienceSegment.createMany({
+    data: audienceSegments.map((segment) => ({
+      ...segment,
+      targetAudienceSegmentationId: savedTargetAudienceSegmentation.id,
+    })),
+  });
 
   return savedTargetAudienceSegmentation;
 }
