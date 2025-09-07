@@ -13,6 +13,7 @@ const nextConfig = {
       excludeFiles: "{.next,*.cache,node_modules,public,app}/**"
     }
   },
+  
   serverExternalPackages: [
     '@opentelemetry/instrumentation',
     'import-in-the-middle'

@@ -4,10 +4,15 @@
   "framework": "nextjs",
   "functions": {
     "apps/web/app/api/**/*.ts": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "excludeFiles": "{apps/web/.next,apps/web/.next/**,node_modules,pnpm-lock.yaml,packages/backend/prisma/generated/**}/**"
     },
     "apps/landing/app/api/**/*.ts": {
-      "maxDuration": 60
+      "maxDuration": 60,
+      "excludeFiles": "{apps/landing/.next,apps/landing/.next/**,node_modules,pnpm-lock.yaml}/**"
+    },
+    "api/**": {
+      "excludeFiles": "{.next,.next/**,node_modules,pnpm-lock.yaml}/**"
     }
   }
-} 
+}
