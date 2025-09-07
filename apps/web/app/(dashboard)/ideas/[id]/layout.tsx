@@ -28,20 +28,12 @@ const IdeaLayout = async ({
       href: `/ideas/${id}`,
     },
     {
-      title: "Business",
-      href: `/ideas/${id}/business`,
-    },
-    {
-      title: "Audience",
-      href: `/ideas/${id}/audience`,
+      title: "Validation Report",
+      href: `/ideas/${id}/report`,
     },
     {
       title: "Competitors",
       href: `/ideas/${id}/competitors`,
-    },
-    {
-      title: "Pricing",
-      href: `/ideas/${id}/pricing`,
     },
   ];
 

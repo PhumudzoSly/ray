@@ -15,10 +15,31 @@ import {
 import StatusSelector from "@/components/idea/core/status";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { getInitials } from "@/utils/helpers";
+import getQueryClient from "@/lib/query/client";
+import { getValidation } from "@/actions/idea/validation";
+import Validation from "./_overview/validation";
 
 const IdeaSidebar = async ({ id }: { id: string }) => {
   const idea = await getSingleIdea(id);
+
   if (!idea) return null;
+
+  const queryClient = getQueryClient();
+
+  await Promise.all([
+    queryClient.fetchQuery({
+      queryKey: ["idea", id],
+      queryFn: async () => {
+        return await getSingleIdea(id);
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ["idea-validation", id],
+      queryFn: async () => {
+        return await getValidation({ id });
+      },
+    }),
+  ]);
 
   return (
     <div className="divide-y">
@@ -34,7 +55,18 @@ const IdeaSidebar = async ({ id }: { id: string }) => {
         </div>
       </div>
       <Separator />
+      <Validation id={id} />
+      <Separator />
+
       <TooltipProvider>
+        <div className="gap-2 flex items-center justify-between p-4">
+          <div>
+            <h1 className="font-medium">Details</h1>
+            <p className="text-xs text-muted-foreground">
+              Idea details and status
+            </p>
+          </div>
+        </div>
         <div className="grid grid-cols-[120px_1fr] gap-y-6 p-4">
           {idea.owner && (
             <h3 className="text-sm font-medium text-muted-foreground">
