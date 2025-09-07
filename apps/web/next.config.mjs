@@ -6,11 +6,12 @@ const nextConfig = {
   transpilePackages: ["@workspace/ui"],
   typedRoutes: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   serverExternalPackages: [
     '@opentelemetry/instrumentation',
-    'import-in-the-middle'
+    'import-in-the-middle', 
+    '@prisma/client'
   ],
   webpack: (config, { isServer }) => {
     if (isServer) {
