@@ -367,7 +367,7 @@ export function CustomerNeeds({ ideaId }: CustomerNeedsProps) {
                         .map((painPoint) => (
                           <div
                             key={painPoint.id}
-                            className="p-3 border-l-4 border-l-red-500 bg-red-50 rounded-r"
+                            className="p-3 border-l-4 border-l-red-500 bg-muted rounded-r"
                           >
                             <div className="flex items-center justify-between mb-2">
                               <h5 className="font-medium text-sm">

@@ -5,7 +5,7 @@
   "functions": {
     "apps/web/app/api/**/*.ts": {
       "maxDuration": 60,
-      "excludeFiles": "{apps/web/.next,apps/web/.next/**,node_modules,pnpm-lock.yaml,packages/backend/prisma/generated/**}/**"
+      "excludeFiles": "{apps/web/.next,apps/web/.next/**,node_modules,pnpm-lock.yaml}/**"
     },
     "apps/landing/app/api/**/*.ts": {
       "maxDuration": 60,

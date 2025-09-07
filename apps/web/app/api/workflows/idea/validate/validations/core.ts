@@ -1,7 +1,7 @@
-import { exa } from "@/lib/exa";
+import { exa, webSearch } from "@/lib/exa";
 import { google } from "@ai-sdk/google";
 import { IdeaValidationOptionalDefaults, prisma } from "@workspace/backend";
-import { generateText } from "ai";
+import { generateText, stepCountIs } from "ai";
 
 export const initValidation = async (ideaId: string) => {
   // Check if validation already exists for this idea
@@ -57,7 +57,8 @@ export const summarizeIdea = async (id: string) => {
 
   const { text } = await generateText({
     prompt: `Given the following SaaS idea, 
-    I need you to summarize the entire SaaS in less than 500 characters, be concise and don't leave out anything important.
+    I need you to summarize the entire SaaS in less than 2500 characters, be concise and don't leave out anything important.
+    I want the SaaS idea, the core problems, what it solves, how and so on... all real info based on the main idea.
     The SaaS idea is 
 
     ${JSON.stringify(validation.idea)}
@@ -70,21 +71,14 @@ export const summarizeIdea = async (id: string) => {
 
 export const runResearch = async (prompt: string) => {
   //
-  const task = await exa.research.createTask({
-    model: "exa-research-pro",
-    instructions: prompt,
+  const { text } = await generateText({
+    prompt,
+    model: google("gemini-2.0-flash-lite"),
+    tools: {
+      webSearch,
+    },
+    stopWhen: [stepCountIs(25)],
   });
 
-  let data = await exa.research.getTask(task.id);
-
-  while (data.status !== "completed" && data.status !== "failed") {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    data = await exa.research.getTask(task.id);
-  }
-
-  if (data.status === "failed") {
-    throw new Error("Research task failed");
-  }
-
-  return data.data;
+  return text;
 };

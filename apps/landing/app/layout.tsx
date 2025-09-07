@@ -7,6 +7,7 @@ import Footer from "@/components/main/footer";
 import CTA from "@/components/main/cta";
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Ray - AI-powered Product Management",
@@ -44,6 +45,7 @@ export default function RootLayout({
           {children}
           <CTA />
           <Toaster richColors />
+          <Analytics />
           <Footer
             data={[
               {
