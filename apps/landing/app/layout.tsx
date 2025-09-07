@@ -8,26 +8,50 @@ import CTA from "@/components/main/cta";
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "Ray - AI-powered Product Management",
+  title: {
+    default: "Ray - AI-Powered Product Management Tool",
+    template: "%s | Ray AI",
+  },
   description:
-    "Ray is an AI-powered product management tool that helps you build better products faster. From idea validation to roadmap planning, Ray streamlines your product development workflow.",
+    "Ray is an AI-powered product management platform that accelerates your product development lifecycle. Validate ideas, create roadmaps, and streamline workflows with intelligent automation.",
   keywords: [
-    "AI",
-    "Product Management",
-    "Roadmap",
-    "Idea Validation",
-    "Product Development",
-    "SaaS",
+    "AI product management",
+    "product roadmap tool",
+    "idea validation software",
+    "product development platform",
+    "SaaS product management",
+    "AI-powered planning",
+    "product workflow automation",
+    "startup product tools",
   ],
   authors: [
     {
       name: "Ray AI",
+      url: "https://rayai.dev",
     },
   ],
   creator: "Ray AI",
   publisher: "Ray AI",
+  metadataBase: new URL("https://rayai.dev"),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://rayai.dev",
+    title: "Ray - AI-Powered Product Management Tool",
+    description:
+      "Accelerate your product development with Ray's AI-powered management platform. From idea to launch, streamline your entire workflow.",
+    siteName: "Ray AI",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ray - AI-Powered Product Management Tool",
+    description:
+      "Accelerate your product development with Ray's AI-powered management platform. From idea to launch, streamline your entire workflow.",
+    creator: "@rayai",
+  },
 };
 
 export default function RootLayout({
@@ -46,6 +70,7 @@ export default function RootLayout({
           <CTA />
           <Toaster richColors />
           <Analytics />
+          <SpeedInsights />
           <Footer
             data={[
               {
