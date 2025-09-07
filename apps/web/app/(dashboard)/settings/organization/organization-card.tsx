@@ -127,7 +127,7 @@ export function OrganizationCard(props: { session: Session | null }) {
     <div className="space-y-6">
       {/* Organization Header */}
       <Card>
-        <CardContent >
+        <CardContent>
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="flex items-center gap-4">
               <div className="relative">
@@ -145,9 +145,7 @@ export function OrganizationCard(props: { session: Session | null }) {
                 </div>
               </div>
               <div className="space-y-1">
-                <h1 className="text-2xl font-semibold">
-                  {activeOrg?.name}
-                </h1>
+                <h1 className="text-2xl font-semibold">{activeOrg?.name}</h1>
                 <div className="flex items-center gap-4 text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4" />

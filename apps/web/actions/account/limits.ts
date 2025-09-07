@@ -57,92 +57,6 @@ export async function checkTeamMemberLimit() {
 }
 
 /**
- * Checks if the organization has reached its project limit based on subscription
- * @returns Object containing limit information and whether the limit is reached
- */
-export async function checkProjectLimit() {
-  const { org } = await getSession();
-  const subscription = await getSubscription();
-
-  if (!subscription) {
-    return {
-      currentCount: 0,
-      maxAllowed: 0,
-      limitReached: true,
-    };
-  }
-
-  const projectLimits = PROJECTS_LIMITS[subscription.productId];
-
-  if (!projectLimits) {
-    return {
-      currentCount: 0,
-      maxAllowed: 0,
-      limitReached: true,
-    };
-  }
-
-  const projectCount = await prisma.project.count({
-    where: { organizationId: org },
-  });
-
-  return {
-    currentCount: projectCount,
-    maxAllowed: projectLimits.maxProject,
-    limitReached: projectCount >= projectLimits.maxProject,
-  };
-}
-
-/**
- * Checks if the organization has reached its AI validation limit based on subscription
- * @returns Object containing limit information and whether the limit is reached
- */
-export async function checkAIValidationLimit() {
-  const { org } = await getSession();
-  const subscription = await getSubscription();
-
-  if (!subscription) {
-    return {
-      currentCount: 0,
-      maxAllowed: 0,
-      limitReached: true,
-    };
-  }
-
-  const aiLimits = AI_LIMITS[subscription.productId];
-
-  if (!aiLimits) {
-    return {
-      currentCount: 0,
-      maxAllowed: 0,
-      limitReached: true,
-    };
-  }
-
-  // Get current month's validation count
-  const startOfMonth = new Date();
-  startOfMonth.setDate(1);
-  startOfMonth.setHours(0, 0, 0, 0);
-
-  const validationCount = await prisma.ideaValidation.count({
-    where: {
-      idea: {
-        organizationId: org,
-      },
-      startedAt: {
-        gte: startOfMonth,
-      },
-    },
-  });
-
-  return {
-    currentCount: validationCount,
-    maxAllowed: aiLimits.maxValidations,
-    limitReached: validationCount >= aiLimits.maxValidations,
-  };
-}
-
-/**
  * Checks if the organization has reached its ideas limit based on subscription
  * @returns Object containing limit information and whether the limit is reached
  */
@@ -344,27 +258,20 @@ export async function getAllLimits() {
   if (!allLimits) {
     return {
       teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
-      projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
-      aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
       ideas: { currentCount: 0, maxAllowed: 0, limitReached: true },
       apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
     };
   }
 
   // Get all current counts
-  const [teamMembers, projects, aiValidations, ideas, apiCalls] =
-    await Promise.all([
-      checkTeamMemberLimit(),
-      checkProjectLimit(),
-      checkAIValidationLimit(),
-      checkIdeasLimit(),
-      checkAPICallLimit(),
-    ]);
+  const [teamMembers, ideas, apiCalls] = await Promise.all([
+    checkTeamMemberLimit(),
+    checkIdeasLimit(),
+    checkAPICallLimit(),
+  ]);
 
   return {
     teamMembers,
-    projects,
-    aiValidations,
     ideas,
     apiCalls,
   };
@@ -382,8 +289,6 @@ export async function getCompleteAccessOverview() {
       subscription: null,
       limits: {
         teamMembers: { currentCount: 0, maxAllowed: 0, limitReached: true },
-        projects: { currentCount: 0, maxAllowed: 0, limitReached: true },
-        aiValidations: { currentCount: 0, maxAllowed: 0, limitReached: true },
         ideas: { currentCount: 0, maxAllowed: 0, limitReached: true },
         apiCalls: { currentCount: 0, maxAllowed: 0, limitReached: true },
       },

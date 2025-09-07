@@ -399,13 +399,12 @@ export const getComposioAccount = async ({
   userIdentifier: string;
   authConfigId: string;
 }) => {
-
-  let appName:string = "";
+  let appName: string = "";
   switch (authConfigId) {
     case "slack":
-      appName = composioConfigs.slack
+      appName = composioConfigs.slack;
       break;
-  
+
     default:
       break;
   }
@@ -424,5 +423,5 @@ export const getComposioAccount = async ({
   // wait for connection to be established
   const connectedAccount = await connectionRequest.waitForConnection();
 
-  return {connectedAccount,redirectUrl};
+  return { connectedAccount, redirectUrl };
 };
