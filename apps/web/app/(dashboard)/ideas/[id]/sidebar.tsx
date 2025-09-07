@@ -36,22 +36,26 @@ const IdeaSidebar = async ({ id }: { id: string }) => {
       <Separator />
       <TooltipProvider>
         <div className="grid grid-cols-[120px_1fr] gap-y-6 p-4">
-          <h3 className="text-sm font-medium text-muted-foreground">
-            Added by
-          </h3>
-          <div className="text-sm flex items-center gap-2">
-            <Avatar>
-              <AvatarFallback>
-                {getInitials(idea?.owner?.name || "")}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <p>{idea?.owner?.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {idea?.owner?.email}
-              </p>
+          {idea.owner && (
+            <h3 className="text-sm font-medium text-muted-foreground">
+              Added by
+            </h3>
+          )}
+          {idea.owner && (
+            <div className="text-sm flex items-center gap-2">
+              <Avatar>
+                <AvatarFallback>
+                  {getInitials(idea?.owner?.name || "")}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <p>{idea?.owner?.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {idea?.owner?.email}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <h3 className="text-sm font-medium text-muted-foreground">Added</h3>
           <p className="text-sm text-muted-foreground">

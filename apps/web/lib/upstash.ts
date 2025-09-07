@@ -12,7 +12,7 @@ export const runWorkflow = async ({
 }) => {
   try {
     await workflowClient.trigger({
-      url: `http://short-spoons-float.loca.lt/api/workflows${url}`,
+      url: `http://floppy-doors-prove.loca.lt/api/workflows${url}`,
       body,
       headers: {
         "Content-Type": "application/json",

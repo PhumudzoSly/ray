@@ -105,7 +105,7 @@ const IdeaInfo = ({ id }: { id: string }) => {
                 className="text-2xl font-medium hover:bg-transparent focus:ring-2 focus:ring-offset-2 focus:ring-primary/20 rounded px-2 -ml-2"
                 disabled={updateFieldMutation.isPending}
               />
-              <Button asChild>
+              <Button asChild variant="fancy">
                 <Link href={`/ideas/${id}/report` as any}>
                   Validation Report
                 </Link>

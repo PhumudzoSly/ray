@@ -17,7 +17,6 @@ model IdeaValidation {
     lastUpdatedAt DateTime  @updatedAt
 
     // Revalidation support fields
-    version             Int              @default(1) // Version number for tracking changes
     parentValidationId  String? // Reference to previous validation version
     parentValidation    IdeaValidation?  @relation("ValidationHistory", fields: [parentValidationId], references: [id])
     childValidations    IdeaValidation[] @relation("ValidationHistory")
@@ -62,11 +61,6 @@ model ValidationMetrics {
     breakEvenMonth    Int? // Months
     customerPayback   Int? // Months
     marketPenetration Float? // Percentage
-
-    // Action priority counts
-    immediateActions Int @default(0)
-    shortTermActions Int @default(0)
-    longTermActions  Int @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

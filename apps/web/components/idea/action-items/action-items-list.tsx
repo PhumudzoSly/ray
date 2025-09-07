@@ -89,113 +89,115 @@ export function ActionItemsList({
 
   return (
     <div className="border rounded-lg overflow-hidden bg-card">
-      <Table>
-        <TableBody>
-          {actionItems.map((actionItem) => {
-            const priorityConfig = actionItemPriority.find(
-              (p) => p.id === actionItem.priority
-            );
+      <div className="overflow-x-auto">
+        <Table>
+          <TableBody>
+            {actionItems.map((actionItem) => {
+              const priorityConfig = actionItemPriority.find(
+                (p) => p.id === actionItem.priority
+              );
 
-            return (
-              <TableRow
-                key={actionItem.id}
-                className={cn(
-                  "group cursor-pointer transition-colors hover:bg-muted/50",
-                  actionItem.status === "COMPLETED" && "opacity-60"
-                )}
-                onClick={() => onActionItemClick?.(actionItem)}
-              >
-                {/* Priority indicator */}
-                <TableCell className="w-8 p-0">
-                  <div className="h-full flex items-center">
-                    <div
-                      className={cn(
-                        "w-1 h-8 rounded-r",
-                        priorityConfig?.id === "CRITICAL"
-                          ? "bg-red-500"
-                          : priorityConfig?.id === "HIGH"
-                            ? "bg-orange-500"
-                            : priorityConfig?.id === "MEDIUM"
-                              ? "bg-yellow-500"
-                              : "bg-muted-foreground/20"
-                      )}
-                    />
-                  </div>
-                </TableCell>
-
-                {/* Name & Description */}
-                <TableCell className="py-3">
-                  <div className="space-y-1">
-                    <div
-                      className={cn(
-                        "font-medium text-sm line-clamp-1 leading-tight text-foreground"
-                      )}
-                    >
-                      {actionItem.name}
-                    </div>
-                    {actionItem.description && (
-                      <div className="text-xs text-muted-foreground line-clamp-1">
-                        {actionItem.description}
-                      </div>
-                    )}
-                  </div>
-                </TableCell>
-
-                {/* Priority */}
-                <TableCell className="w-20 text-center p-2">
-                  <PrioritySelector priority={actionItem.priority} disabled />
-                </TableCell>
-
-                {/* Status */}
-                <TableCell className="w-24 text-center p-2">
-                  <ActionItemStatusSelector
-                    status={actionItem.status}
-                    disabled
-                  />
-                </TableCell>
-
-                {/* Assignee */}
-                <TableCell className="w-20 text-center p-2">
-                  {actionItem.assignee ? (
-                    <AssigneeSelector
-                      disabled
-                      assignee={actionItem.assignee.id}
-                    />
-                  ) : (
-                    <span className="text-xs text-muted-foreground">—</span>
+              return (
+                <TableRow
+                  key={actionItem.id}
+                  className={cn(
+                    "group cursor-pointer transition-colors hover:bg-muted/50",
+                    actionItem.status === "COMPLETED" && "opacity-60"
                   )}
-                </TableCell>
+                  onClick={() => onActionItemClick?.(actionItem)}
+                >
+                  {/* Priority indicator */}
+                  <TableCell className="w-8 p-0">
+                    <div className="h-full flex items-center">
+                      <div
+                        className={cn(
+                          "w-1 h-8 rounded-r",
+                          priorityConfig?.id === "CRITICAL"
+                            ? "bg-red-500"
+                            : priorityConfig?.id === "HIGH"
+                              ? "bg-orange-500"
+                              : priorityConfig?.id === "MEDIUM"
+                                ? "bg-yellow-500"
+                                : "bg-muted-foreground/20"
+                        )}
+                      />
+                    </div>
+                  </TableCell>
 
-                {/* Actions */}
-                <TableCell className="w-8 p-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => e.stopPropagation()}
+                  {/* Name & Description */}
+                  <TableCell className="py-3 min-w-[200px]">
+                    <div className="space-y-1">
+                      <div
+                        className={cn(
+                          "font-medium text-sm line-clamp-1 leading-tight text-foreground"
+                        )}
                       >
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-32">
-                      <DropdownMenuItem
-                        onClick={(e) => handleDelete(e, actionItem.id)}
-                        className="text-destructive focus:text-destructive"
-                        disabled={deleteActionItemMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                        {actionItem.name}
+                      </div>
+                      {actionItem.description && (
+                        <div className="text-xs text-muted-foreground line-clamp-1 hidden sm:block">
+                          {actionItem.description}
+                        </div>
+                      )}
+                    </div>
+                  </TableCell>
+
+                  {/* Priority */}
+                  <TableCell className="w-20 text-center p-2 hidden md:table-cell">
+                    <PrioritySelector priority={actionItem.priority} disabled />
+                  </TableCell>
+
+                  {/* Status */}
+                  <TableCell className="w-24 text-center p-2">
+                    <ActionItemStatusSelector
+                      status={actionItem.status}
+                      disabled
+                    />
+                  </TableCell>
+
+                  {/* Assignee */}
+                  <TableCell className="w-20 text-center p-2 hidden lg:table-cell">
+                    {actionItem.assignee ? (
+                      <AssigneeSelector
+                        disabled
+                        assignee={actionItem.assignee.id}
+                      />
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
+
+                  {/* Actions */}
+                  <TableCell className="w-8 p-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-32">
+                        <DropdownMenuItem
+                          onClick={(e) => handleDelete(e, actionItem.id)}
+                          className="text-destructive focus:text-destructive"
+                          disabled={deleteActionItemMutation.isPending}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
