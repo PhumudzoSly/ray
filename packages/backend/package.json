@@ -25,19 +25,19 @@
     "@neondatabase/serverless": "^1.0.1",
     "@prisma/adapter-neon": "^6.15.0",
     "@prisma/adapter-pg": "^6.15.0",
-    "@prisma/client": "^6.14.0",
+    "@prisma/client": "^6.15.0",
     "ai": "5.0.0-beta.27",
     "axios": "^1.11.0",
     "cheerio": "^1.1.2",
     "jsdom": "^26.1.0",
     "resend": "^4.8.0",
-    "ws": "^8.18.0",
+    "ws": "^8.18.3",
     "zod": "3.25.76",
     "zod-prisma-types": "^3.2.4"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
-    "prisma": "^6.14.0"
+    "prisma": "^6.15.0"
   },
   "prisma": {
     "schema": "./prisma/schema",
