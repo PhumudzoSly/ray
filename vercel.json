@@ -4,12 +4,10 @@
   "framework": "nextjs",
   "functions": {
     "apps/web/app/api/**/*.ts": {
-      "maxDuration": 60,
-      "excludeFiles": "{apps/web/.next,apps/web/.next/**,node_modules,pnpm-lock.yaml}/**"
+      "maxDuration": 60
     },
     "apps/landing/app/api/**/*.ts": {
-      "maxDuration": 60,
-      "excludeFiles": "{apps/landing/.next,apps/landing/.next/**,node_modules,pnpm-lock.yaml}/**"
+      "maxDuration": 60
     }
   }
-}
+} 
