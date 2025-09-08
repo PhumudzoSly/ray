@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3000",
-    "build": "pnpm db:push && next build",
+    "build": "pnpm db:push:force && next build",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",

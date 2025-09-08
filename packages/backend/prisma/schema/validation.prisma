@@ -134,7 +134,6 @@ model MarketRegionScore {
 
     createdAt DateTime @default(now())
 
-    @@unique([marketValidationId, region])
     @@map("market_region_scores")
 }
 
@@ -266,7 +265,6 @@ model PMFMetric {
 
     createdAt DateTime @default(now())
 
-    @@unique([productMarketFitAnalysisId, name])
     @@map("pmf_metrics")
 }
 
@@ -299,7 +297,6 @@ model MonthlyProjection {
 
     createdAt DateTime @default(now())
 
-    @@unique([businessValidationId, month])
     @@map("monthly_projections")
 }
 
@@ -315,7 +312,6 @@ model AcquisitionChannel {
 
     createdAt DateTime @default(now())
 
-    @@unique([businessValidationId, channel])
     @@map("acquisition_channels")
 }
 
@@ -342,7 +338,6 @@ model PricingTier {
 
     createdAt DateTime @default(now())
 
-    @@unique([pricingStrategyAnalysisId, tierName])
     @@map("pricing_tiers")
 }
 
@@ -368,7 +363,6 @@ model CompetitorPricing {
 
     createdAt DateTime @default(now())
 
-    @@unique([pricingStrategyAnalysisId, competitorName])
     @@map("competitor_pricing")
 }
 
@@ -429,7 +423,6 @@ model JourneyStage {
 
     createdAt DateTime @default(now())
 
-    @@unique([customerJourneyMappingId, stageName])
     @@map("journey_stages")
 }
 
@@ -461,7 +454,6 @@ model Touchpoint {
 
     createdAt DateTime @default(now())
 
-    @@unique([customerJourneyMappingId, touchpointName])
     @@map("touchpoints")
 }
 
@@ -492,7 +484,6 @@ model JourneyPainPoint {
 
     createdAt DateTime @default(now())
 
-    @@unique([customerJourneyMappingId, painPointName])
     @@map("journey_pain_points")
 }
 
@@ -543,7 +534,6 @@ model AudienceSegment {
 
     createdAt DateTime @default(now())
 
-    @@unique([targetAudienceSegmentationId, segmentName])
     @@map("audience_segments")
 }
 
@@ -594,7 +584,6 @@ model MarketTrend {
 
     createdAt DateTime @default(now())
 
-    @@unique([marketTrendAnalysisId, trendName])
     @@map("market_trends")
 }
 
@@ -646,7 +635,6 @@ model CustomerNeed {
 
     createdAt DateTime @default(now())
 
-    @@unique([customerNeedAnalysisId, needName])
     @@map("customer_needs")
 }
 
@@ -673,7 +661,6 @@ model PainPoint {
 
     createdAt DateTime @default(now())
 
-    @@unique([customerNeedAnalysisId, painName])
     @@map("pain_points")
 }
 
