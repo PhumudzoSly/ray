@@ -1203,9 +1203,10 @@ model Document {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  output        = "../generated/client"
-  binaryTargets = ["native", "linux-arm64-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x", "linux-musl", "rhel-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  output          = "../generated/client"
+  binaryTargets   = ["native", "rhel-openssl-3.0.x"]
+  previewFeatures = ["queryCompiler", "driverAdapters"]
 }
 
 generator zod {
