@@ -24,7 +24,7 @@ export default function ComingSoon() {
           </CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      {/* <CardContent className="space-y-4">
         <div className="h-[200px] bg-muted/30 rounded-lg flex items-center justify-center">
           <img
             src="/coming-soon.jpg"
@@ -32,7 +32,7 @@ export default function ComingSoon() {
             className="h-full w-full object-cover rounded-lg"
           />
         </div>
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 }

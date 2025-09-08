@@ -37,8 +37,8 @@ export default async function Page() {
 
         <PricingPlans products={sortedProducts} org={org} email={email} />
       </div>
-
-      <div className="container px-4">
+      <br />
+      <div className="container mt-4 px-4">
         <div className="space-y-4 mb-16 text-center">
           <h1 className="text-xl font-bold tracking-tight">
             Need full pricing?

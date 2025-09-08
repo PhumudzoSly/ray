@@ -2,11 +2,8 @@ import { WebSocketServer } from 'ws'
 import { setupWSConnection } from 'y-websocket/bin/utils'
 
 // Import modular components
-import { authenticateConnection, validateRoomAccess } from './src/auth.js'
 import { logError, logWarning, logInfo, closeConnectionWithError } from './src/logging.js'
 import { 
-  checkIPRateLimit, 
-  checkUserRateLimit, 
   incrementUserConnections, 
   decrementUserConnections,
   startRateLimitCleanup 
@@ -17,7 +14,6 @@ import {
   updateMetrics, 
   addToRoom, 
   removeFromRoom, 
-  getServerStats,
   startStatsLogging 
 } from './src/monitoring.js'
 import { validateWebSocketOrigin, getClientIP, CORS_CONFIG } from './src/security.js'
@@ -75,7 +71,7 @@ wss.on('connection', (ws, request) => {
     // Skip IP rate limiting for development
     // Rate limiting disabled
     
-    // Skip authentication for development
+    // Simple authentication for development (no external auth needed)
     const auth = { userId: 'dev-user', org: 'dev-org' }
     
     logInfo('CONNECTION_AUTHENTICATED', 'Connection authenticated successfully (dev mode)', {
