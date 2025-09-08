@@ -1,8 +1,8 @@
 generator client {
-    provider        = "prisma-client-js"
-    output          = "../generated/client"
-    binaryTargets   = ["native", "rhel-openssl-3.0.x"]
-    previewFeatures = ["queryCompiler", "driverAdapters"]
+    provider      = "prisma-client"
+    output        = "../generated/client"
+    binaryTargets = ["native", "rhel-openssl-3.0.x"]
+    // previewFeatures = ["queryCompiler", "driverAdapters"]
 }
 
 generator zod {
