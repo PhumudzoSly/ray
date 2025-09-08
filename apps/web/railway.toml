@@ -1,6 +1,6 @@
 [build]
   builder = "NIXPACKS"
-  buildCommand = "pnpm build"
+  buildCommand = "corepack enable && pnpm install && pnpm build"
 
 [deploy]
   startCommand = "pnpm start"
