@@ -15,7 +15,7 @@ const SocialAuth = () => {
   //
   return (
     <div className="flex flex-col items-center w-full gap-2">
-      <Button
+      {/* <Button
         size={"lg"}
         className="w-full"
         variant={"outline"}
@@ -30,7 +30,7 @@ const SocialAuth = () => {
         }}
       >
         <FcGoogle className="h-5 w-5" /> Continue with Google
-      </Button>
+      </Button> */}
 
       <Button
         size={"lg"}
