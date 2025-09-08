@@ -9,7 +9,8 @@ const nextConfig = {
   },
   serverExternalPackages: [
     '@opentelemetry/instrumentation',
-    'import-in-the-middle'
+    'import-in-the-middle',
+    '@workspace/backend'
   ],
   webpack: (config, { isServer }) => {
     if (isServer) {

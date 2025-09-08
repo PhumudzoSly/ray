@@ -3,4 +3,3 @@
 node_modules
 
 # Generated Prisma client
-prisma/generated
