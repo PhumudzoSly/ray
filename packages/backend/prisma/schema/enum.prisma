@@ -226,14 +226,6 @@ enum MarketGrowthRate {
     EXPLOSIVE_GROWTH
 }
 
-enum MarketMaturity {
-    EMERGING
-    GROWTH
-    MATURE
-    DECLINING
-    TRANSFORMING
-}
-
 enum CompetitionLevel {
     NONE
     LOW
