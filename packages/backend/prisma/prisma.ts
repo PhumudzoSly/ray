@@ -1,15 +1,13 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "./generated/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+const connectionString = `${process.env.DATABASE_URL}`;
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    errorFormat: "pretty",
-  });
+const adapter =
+  process.env.NODE_ENV === "development"
+    ? new PrismaPg({ connectionString })
+    : new PrismaNeon({ connectionString });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+// @ts-expect-error: prisma adapter is not typed
+export const prisma = new PrismaClient({ adapter });
