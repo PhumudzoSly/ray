@@ -20,6 +20,7 @@
     "db:migrate": "pnpm --filter @workspace/backend prisma:migrate",
     "db:migrate:deploy": "pnpm --filter @workspace/backend prisma:migrate:deploy",
     "db:push": "pnpm --filter @workspace/backend prisma:db:push",
+    "db:push:force": "pnpm --filter @workspace/backend prisma:db:push -- --accept-data-loss",
     "db:studio": "pnpm --filter @workspace/backend prisma:studio"
   },
   "devDependencies": {

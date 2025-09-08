@@ -6,13 +6,14 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "build": "prisma generate && prisma db push",
+    "build": "prisma db push --accept-data-loss",
     "postinstall": "prisma generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:db:push": "prisma db push",
+    "prisma:db:push:force": "prisma db push --accept-data-loss",
     "prisma:db:seed": "prisma db seed"
   },
   "keywords": [],

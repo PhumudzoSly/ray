@@ -5,12 +5,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3000",
-    "build": "next build",
+    "build": "pnpm db:push:force && next build",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "format": "biome format . --write",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:generate": "pnpm --filter @workspace/backend prisma:generate",
+    "db:push": "pnpm --filter @workspace/backend prisma:db:push",
+    "db:push:force": "pnpm --filter @workspace/backend prisma:db:push --accept-data-loss"
   },
   "dependencies": {
     "@ai-sdk/google": "2.0.0-beta.15",
