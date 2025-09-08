@@ -296,7 +296,7 @@ export const SwotTypeSchema = z.enum(['Strength','Weakness','Opportunity','Threa
 
 export type SwotTypeType = `${z.infer<typeof SwotTypeSchema>}`
 
-export const ValidationStatusSchema = z.enum(['PENDING','IN_PROGRESS','COMPLETED','FAILED','REQUIRES_REVIEW']);
+export const ValidationStatusSchema = z.enum(['PENDING','IN_PROGRESS','COMPLETED','FAILED','REQUIRES_REVIEW','VALIDATED','NEEDS_IMPROVEMENT']);
 
 export type ValidationStatusType = `${z.infer<typeof ValidationStatusSchema>}`
 
@@ -311,10 +311,6 @@ export type MarketSizeType = `${z.infer<typeof MarketSizeSchema>}`
 export const MarketGrowthRateSchema = z.enum(['DECLINING','STAGNANT','SLOW_GROWTH','MODERATE_GROWTH','RAPID_GROWTH','EXPLOSIVE_GROWTH']);
 
 export type MarketGrowthRateType = `${z.infer<typeof MarketGrowthRateSchema>}`
-
-export const MarketMaturitySchema = z.enum(['EMERGING','GROWTH','MATURE','DECLINING','TRANSFORMING']);
-
-export type MarketMaturityType = `${z.infer<typeof MarketMaturitySchema>}`
 
 export const CompetitionLevelSchema = z.enum(['NONE','LOW','MODERATE','HIGH','SATURATED']);
 
@@ -332,7 +328,7 @@ export const PricingStrategySchema = z.enum(['PENETRATION','SKIMMING','COMPETITI
 
 export type PricingStrategyType = `${z.infer<typeof PricingStrategySchema>}`
 
-export const RiskLevelSchema = z.enum(['MINIMAL','LOW','MODERATE','HIGH','EXTREME']);
+export const RiskLevelSchema = z.enum(['MINIMAL','LOW','MODERATE','HIGH','EXTREME','MEDIUM','CRITICAL']);
 
 export type RiskLevelType = `${z.infer<typeof RiskLevelSchema>}`
 

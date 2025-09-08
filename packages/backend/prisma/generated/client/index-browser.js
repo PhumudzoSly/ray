@@ -1327,7 +1327,9 @@ exports.ValidationStatus = exports.$Enums.ValidationStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   FAILED: 'FAILED',
-  REQUIRES_REVIEW: 'REQUIRES_REVIEW'
+  REQUIRES_REVIEW: 'REQUIRES_REVIEW',
+  VALIDATED: 'VALIDATED',
+  NEEDS_IMPROVEMENT: 'NEEDS_IMPROVEMENT'
 };
 
 exports.CustomerSegment = exports.$Enums.CustomerSegment = {

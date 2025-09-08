@@ -294,6 +294,8 @@ enum ValidationStatus {
   COMPLETED
   FAILED
   REQUIRES_REVIEW
+  VALIDATED
+  NEEDS_IMPROVEMENT
 }
 
 enum ValidationScore {
@@ -319,14 +321,6 @@ enum MarketGrowthRate {
   MODERATE_GROWTH
   RAPID_GROWTH
   EXPLOSIVE_GROWTH
-}
-
-enum MarketMaturity {
-  EMERGING
-  GROWTH
-  MATURE
-  DECLINING
-  TRANSFORMING
 }
 
 enum CompetitionLevel {
@@ -374,6 +368,8 @@ enum RiskLevel {
   MODERATE
   HIGH
   EXTREME
+  MEDIUM
+  CRITICAL
 }
 
 enum RiskCategory {

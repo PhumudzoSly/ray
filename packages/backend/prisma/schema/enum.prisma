@@ -199,6 +199,8 @@ enum ValidationStatus {
     COMPLETED
     FAILED
     REQUIRES_REVIEW
+    VALIDATED
+    NEEDS_IMPROVEMENT
 }
 
 enum ValidationScore {
@@ -271,6 +273,8 @@ enum RiskLevel {
     MODERATE
     HIGH
     EXTREME
+    MEDIUM
+    CRITICAL
 }
 
 enum RiskCategory {
