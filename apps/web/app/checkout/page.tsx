@@ -43,7 +43,7 @@ export default async function Page() {
           <h1 className="text-xl font-bold tracking-tight">
             Need full pricing?
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
             Visit{" "}
             <a
               className="underline text-blue-500"

@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils";
 import type { Product } from "@polar-sh/sdk/models/components/product.js";
-import { Sparkles } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import Subscribe from "../Subscribe";
 import { Badge } from "@workspace/ui/components/badge";
+import { Button } from "@workspace/ui/components/button";
 
 interface PricingPlansProps {
   products: Product[];
@@ -30,15 +31,15 @@ export function PricingPlans({ products, org, email }: PricingPlansProps) {
           <div
             key={product.id}
             className={cn(
-              "relative rounded-xl border bg-card shadow-sm transition-all duration-200 hover:shadow-md overflow-hidden",
-              isPopular && "ring-2 ring-primary"
+              "relative rounded-2xl bg-background p-6 border border-border shadow-sm transition-all duration-300 hover:shadow-md",
+              isPopular && "border-primary ring-1 ring-primary/20"
             )}
           >
             {isPopular && (
-              <div className="absolute top-4 right-4 z-10">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <Badge
                   variant="default"
-                  className="px-3 py-1 font-medium shadow-sm"
+                  className="px-3 py-1 font-medium shadow-sm rounded-full"
                 >
                   <Sparkles className="mr-1 h-3.5 w-3.5" />
                   Popular
@@ -46,20 +47,20 @@ export function PricingPlans({ products, org, email }: PricingPlansProps) {
               </div>
             )}
 
-            <div className="p-8 flex flex-col h-full">
-              <div className="mb-auto">
+            <div className="flex flex-col h-full pt-4">
+              <div className="mb-6">
                 <h3 className="text-xl font-semibold tracking-tight mb-2">
                   {product.name}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-6">
+                <p className="text-muted-foreground text-sm">
                   {product.description ||
                     `Perfect for ${product.name.toLowerCase()} users who need essential features.`}
                 </p>
               </div>
 
-              <div className="mt-auto">
+              <div className="mb-8">
                 <div className="flex items-baseline mb-6">
-                  <span className="text-3xl font-bold">{price}</span>
+                  <span className="text-4xl font-bold">{price}</span>
                   {product.prices[0]?.amountType === "fixed" && (
                     <span className="text-muted-foreground text-sm ml-1.5">
                       /month
@@ -67,6 +68,22 @@ export function PricingPlans({ products, org, email }: PricingPlansProps) {
                   )}
                 </div>
 
+                <div className="space-y-3">
+                  {product.benefits.map((value) => {
+                    return (
+                      <div
+                        key={value.description}
+                        className="flex items-start text-muted-foreground text-sm"
+                      >
+                        <Check className="mr-2 h-4 w-4 mt-0.5 flex-shrink-0 text-primary" />
+                        <span>{value.description}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-auto">
                 <Subscribe
                   products={[product.id]}
                   isPopular={isPopular}

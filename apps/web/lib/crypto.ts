@@ -1,26 +1,7 @@
 import crypto from "crypto";
 
-/**
- * Crypto utilities for encrypting/decrypting sensitive data like API keys
- *
- * SETUP:
- * Set the ENCRYPTION_KEY environment variable to a secure 32+ character string
- * Example: ENCRYPTION_KEY="your-super-secure-32-char-key-here"
- *
- * USAGE:
- * - encrypt(apiKey) before saving to database
- * - decrypt(encryptedApiKey) when retrieving for API calls
- */
-
-const ENCRYPTION_KEY =
-  process.env.ENCRYPTION_KEY || "your-32-character-secret-key-here!";
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
 const ALGORITHM = "aes-256-cbc";
-
-if (!process.env.ENCRYPTION_KEY) {
-  console.warn(
-    "ENCRYPTION_KEY environment variable not set. Using default key for development."
-  );
-}
 
 /**
  * Encrypts a string using AES-256-CBC encryption
