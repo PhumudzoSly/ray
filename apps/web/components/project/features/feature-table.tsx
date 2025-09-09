@@ -22,6 +22,18 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "@workspace/ui/components/avatar";
 import { useRouter } from "next/navigation";
 import { FaMagic } from "react-icons/fa";
+import { runWorkflow } from "@/lib/upstash";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@workspace/ui/components/dialog";
+import { Textarea } from "@workspace/ui/components/textarea";
+import { Label } from "@workspace/ui/components/label";
 
 interface FeatureTableProps {
   projectId: string;
@@ -36,6 +48,9 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     assignee: "all",
   });
   const [viewMode, setViewMode] = useState<"grid" | "grouped">("grouped");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+  const [userInstructions, setUserInstructions] = useState("");
 
   const queryClient = useQueryClient();
   // TanStack mutation for updating a feature (phase change)
@@ -275,6 +290,34 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
     });
   };
 
+  const handleGenerateFeatures = async () => {
+    if (isGenerating) return;
+
+    setIsGenerating(true);
+
+    try {
+      const body = {
+        projectId,
+        ...(userInstructions.trim() && {
+          userInstructions: userInstructions.trim(),
+        }),
+      };
+
+      await toast.promise(runWorkflow({ url: "/project/features", body }), {
+        loading: "Generating features...",
+        success: "Features are being generated! They will appear shortly.",
+        error: "Failed to generate features",
+      });
+
+      setIsGenerateModalOpen(false);
+      setUserInstructions("");
+    } catch (error) {
+      console.error("Error generating features:", error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   if (isPending) {
     return (
       <div className="space-y-6">
@@ -340,19 +383,89 @@ export function FeatureTable({ projectId }: FeatureTableProps) {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="fancy"
-            onClick={() => {
-              toast.promise(featureActions.generateFeatures(projectId), {
-                loading: "Generating features...",
-                success: "Features generated successfully",
-                error: "Failed to generate features",
-              });
-            }}
+          <Dialog
+            open={isGenerateModalOpen}
+            onOpenChange={setIsGenerateModalOpen}
           >
-            <FaMagic className="h-4 w-4" />
-            Generate
-          </Button>
+            <DialogTrigger asChild>
+              <Button
+                variant="fancy"
+                onClick={() => setIsGenerateModalOpen(true)}
+                className="gap-2"
+              >
+                <FaMagic className="h-4 w-4" />
+                Generate
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[520px]">
+              <DialogHeader className="space-y-3">
+                <DialogTitle className="text-xl font-semibold">
+                  AI Feature Generation
+                </DialogTitle>
+                <DialogDescription className="text-muted-foreground">
+                  Describe the features you want to generate for this project.
+                  The AI will create relevant features based on your project
+                  context.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-6 py-2">
+                <div className="space-y-3">
+                  <Label htmlFor="instructions" className="text-sm font-medium">
+                    Additional Instructions
+                  </Label>
+                  <Textarea
+                    id="instructions"
+                    placeholder="Focus on specific functionality, user needs, or business goals..."
+                    value={userInstructions}
+                    onChange={(e) => setUserInstructions(e.target.value)}
+                    className="min-h-[120px] resize-none border-muted-foreground/20 focus:border-primary"
+                    maxLength={500}
+                  />
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">
+                      Optional but recommended for better results
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {userInstructions.length}/500
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsGenerateModalOpen(false);
+                    setUserInstructions("");
+                  }}
+                  disabled={isGenerating}
+                  className="px-6"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleGenerateFeatures}
+                  disabled={isGenerating}
+                  variant="fancy"
+                  className="px-6"
+                >
+                  {isGenerating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <FaMagic className="mr-2" />
+                      Generate Features
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           <NewFeature projectId={projectId} />
         </div>
       </div>
