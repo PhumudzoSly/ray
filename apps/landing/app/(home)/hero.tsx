@@ -19,7 +19,7 @@ const transitionVariants = {
       transition: {
         type: "spring" as const,
         bounce: 0.3,
-        duration: 1.5,
+        duration: 0.5,
       },
     },
   },
@@ -40,7 +40,7 @@ export default function Hero() {
                       visible: {
                         transition: {
                           staggerChildren: 0.05,
-                          delayChildren: 0.75,
+                          delayChildren: 0.2,
                         },
                       },
                     },

@@ -146,7 +146,7 @@ export async function POST(req: Request) {
   console.log("MESSAGES", messages);
 
   const result = streamText({
-    model: google("gemini-2.5-flash"),
+    model: "google/gemini-2.5-flash-lite",
     messages: convertToModelMessages(messages),
     system: `Your name is Ray, you are an AI CoPilot within RayAI (https://rayai.dev) - a comprehensive project and product management platform. Based on the available tools and capabilities, you are designed to help users manage their entire product development lifecycle, from ideation to execution.
 

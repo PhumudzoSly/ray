@@ -16,7 +16,7 @@ export const saveProductMarketFitAnalysisData = async ({
   data: any;
 }) => {
   const { object } = await generateObject({
-    model: google("models/gemini-2.0-flash-lite"),
+    model: "google/gemini-2.5-flash-lite",
     prompt: `
     As a product-market fit analysis expert, analyze and structure the following data into a comprehensive report. 
     

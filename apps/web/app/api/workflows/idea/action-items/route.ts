@@ -62,7 +62,7 @@ ${
     console.log("prompt", prompt);
 
     const { text, sources } = await generateText({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       prompt,
       tools: {
         webSearch,
@@ -75,7 +75,7 @@ ${
 
   const items = await context.run("generate-action-items", async () => {
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       schema: z.object({
         items: z.array(
           z.object({

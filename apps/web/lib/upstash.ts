@@ -14,7 +14,7 @@ export const runWorkflow = async ({
     const baseUrl =
       process.env.NODE_ENV === "production"
         ? "https://app.rayai.dev"
-        : "http://slow-seals-drive.loca.lt";
+        : "http://many-cities-teach.loca.lt";
     const fullUrl = `${baseUrl}/api/workflows${url}`;
 
     await workflowClient.trigger({

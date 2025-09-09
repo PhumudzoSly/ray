@@ -97,7 +97,7 @@ export const generateQuestions = tool({
   //@ts-ignore
   execute: async ({ query }: { query: string }) => {
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       schema: z.object({
         questions: z.array(z.string().min(1).max(100)),
       }),

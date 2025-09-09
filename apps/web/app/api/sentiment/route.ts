@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await generateText({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       prompt: `Analyze the sentiment of this feedback text and return ONLY one of these three values: "positive", "negative", or "neutral".
 
 Text: "${content}"

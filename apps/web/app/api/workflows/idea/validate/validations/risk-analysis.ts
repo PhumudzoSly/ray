@@ -15,7 +15,7 @@ export const saveRiskAnalysisData = async ({
   data: any;
 }) => {
   const { object } = await generateObject({
-    model: google("models/gemini-1.5-pro-latest"),
+    model: "google/gemini-2.5-flash-lite",
     prompt: `
     As a risk analysis expert, analyze and structure the following data into a comprehensive report. 
     

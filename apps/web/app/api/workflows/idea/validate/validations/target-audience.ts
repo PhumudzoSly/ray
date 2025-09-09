@@ -19,7 +19,7 @@ export async function saveTargetAudienceData({
   validationId: string;
   data: any;
 }) {
-  const model = google("gemini-2.0-flash-lite");
+  const model = "google/gemini-2.5-flash-lite";
 
   const { object } = await generateObject({
     model,

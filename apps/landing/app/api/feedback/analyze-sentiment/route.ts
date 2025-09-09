@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
 
     // Analyze feedback comprehensively using AI
     const analysis = await generateObject({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       schema: FeedbackAnalysisSchema,
       prompt: `Analyze this user feedback comprehensively for a roadmap item. Extract actionable insights and determine if an issue should be generated.
 

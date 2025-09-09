@@ -12,7 +12,7 @@ export async function saveFinalVerdictData(
 ) {
   try {
     const { object: validationMetrics } = await generateObject({
-      model: google("gemini-2.0-flash-lite"),
+      model: "google/gemini-2.5-flash-lite",
       schema: ValidationMetricsOptionalDefaultsSchema.omit({
         id: true,
         createdAt: true,
@@ -23,7 +23,7 @@ export async function saveFinalVerdictData(
     });
 
     const { object: ideaValidation } = await generateObject({
-      model: google("gemini-2.0-flash-lite"),
+      model: "google/gemini-2.5-flash-lite",
       schema: IdeaValidationOptionalDefaultsSchema.omit({
         id: true,
         completedAt: true,

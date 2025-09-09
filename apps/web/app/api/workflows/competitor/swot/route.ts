@@ -94,7 +94,7 @@ ${
     console.log("SWOT analysis research prompt", prompt);
 
     const { text, sources } = await generateText({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       prompt,
       tools: {
         webSearch,
@@ -107,7 +107,7 @@ ${
 
   const swotData = await context.run("generate-swot-analysis", async () => {
     const { object } = await generateObject({
-      model: google("gemini-2.0-flash"),
+      model: "google/gemini-2.5-flash-lite",
       schema: z.object({
         swotEntries: z.array(
           z.object({

@@ -15,7 +15,7 @@ export const saveMarketTrendAnalysisData = async ({
   data: any;
 }) => {
   const { object } = await generateObject({
-    model: google("gemini-2.0-flash-lite"),
+    model: "google/gemini-2.5-flash-lite",
     prompt: `
     As a market analysis expert, analyze and structure the following data into a comprehensive market trend analysis report. 
     

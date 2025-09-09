@@ -51,7 +51,7 @@ export async function POST(req: Request) {
   const messages = [...recentHistory, message];
 
   const result = streamText({
-    model: google("gemini-2.5-flash"),
+    model: "google/gemini-2.5-flash-lite",
     messages: convertToModelMessages(messages),
     tools: {
       deepSearch,
