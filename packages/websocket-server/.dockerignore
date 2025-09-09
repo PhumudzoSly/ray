@@ -75,8 +75,5 @@ jspm_packages/
 .cache
 .parcel-cache
 
-# Railway specific
-railway.toml
-
 # Deployment scripts
 deploy.js

@@ -97,6 +97,7 @@ function deployRailway() {
   console.log('   ✅ Dockerfile')
   console.log('   ✅ package.json')
   console.log('   ✅ server.js')
+  console.log('   ✅ src/ directory')
 }
 
 function showHelp() {

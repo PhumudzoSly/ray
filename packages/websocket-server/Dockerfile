@@ -9,8 +9,9 @@ COPY package.json ./
 # Install dependencies using npm (since we're in an isolated container)
 RUN npm install --only=production
 
-# Copy server code
+# Copy server code and src directory
 COPY server.js ./
+COPY src ./src
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
@@ -21,11 +22,11 @@ RUN chown -R websocket:nodejs /app
 USER websocket
 
 # Expose ports
-EXPOSE 8080
+EXPOSE 8080 8081
 
-# Health check disabled to avoid 426 errors with Railway
-# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-#   CMD wget --no-verbose --tries=1 --spider http://localhost:8081/health || exit 1
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8081/health || exit 1
 
 # Start the server
 CMD ["node", "server.js"]
