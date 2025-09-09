@@ -2,12 +2,8 @@
 
 import React from "react";
 import Link from "next/link";
-import { ChevronRight, Menu, X } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { AnimatedGroup } from "@workspace/ui/components/animated-group";
-import { useScroll } from "framer-motion";
-import { cn } from "@workspace/ui/lib/utils";
-import { SparklesText } from "./_components/sparkles-text";
 
 const transitionVariants = {
   item: {
@@ -51,11 +47,22 @@ export default function Hero() {
                     ...transitionVariants,
                   }}
                 >
-                  <SparklesText className="text-base font-medium mt-10 mb-2 bg-orange-500/10 px-8 max-w-fit py-1">
-                    Just Launched
-                  </SparklesText>
-                  <h1 className="max-w-3xl text-balance text-5xl font-medium md:text-6xl">
-                    Build your SaaS.{" "}
+                  <div className="mt-12 mb-4">
+                    <a
+                      href="https://www.producthunt.com/products/your-ai-co-founder-for-building-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-your&#0045;ai&#0045;co&#0045;founder&#0045;for&#0045;building&#0045;saas"
+                      target="_blank"
+                    >
+                      <img
+                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1014495&theme=light&t=1757411339217"
+                        alt="Your&#0032;AI&#0032;co&#0045;founder&#0032;for&#0032;building&#0032;SaaS - Build&#0032;with&#0032;confidence&#0044;&#0032;ship&#0032;SaaS&#0032;that&#0032;users&#0032;want&#0046; | Product Hunt"
+                        style={{ width: "180px", height: "54px" }}
+                        width="250"
+                        height="54"
+                      />
+                    </a>
+                  </div>
+                  <h1 className="max-w-6xl text-balance text-5xl font-semibold md:text-5xl">
+                    Your AI co-founder and product manager for{" "}
                     <span
                       className="font-bold"
                       style={{
@@ -67,21 +74,18 @@ export default function Hero() {
                         letterSpacing: "0.01em",
                       }}
                     >
-                      Faster. Smarter. First.
+                      modern SaaS.
                     </span>
                   </h1>
                   <p className="mt-8 max-w-3xl text-pretty text-lg">
-                    Instantly turn your SaaS idea into reality. Validate the
-                    idea, research, plan the product, grow your waitlist, and
-                    launch, and iterate from user's feedback. <br /> <br />{" "}
-                    <span className="text-orange-500 font-bold">
-                      All in one place.
+                    <span className="text-orange-500 font-medium">
+                      Instantly turn your SaaS idea into reality.
                     </span>{" "}
-                    <span className="font-semibold">
-                      Join RayAI and get ahead of the crowd.
-                    </span>
+                    Validate product ideas, research, plan the product, collect
+                    feedback & waitlist, launch, and iterate from user's
+                    feedback.
                   </p>
-                  <div className="mt-12 flex items-center gap-2">
+                  <div className="mt-6 flex items-center gap-2">
                     <div
                       key={1}
                       className="bg-foreground/10 rounded-[14px] border p-0.5"
@@ -97,20 +101,6 @@ export default function Hero() {
                         <span className="text-nowrap">Features</span>
                       </Link>
                     </Button>
-                  </div>
-                  <div className="mt-8">
-                    <a
-                      href="https://www.producthunt.com/products/your-ai-co-founder-for-building-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-your&#0045;ai&#0045;co&#0045;founder&#0045;for&#0045;building&#0045;saas"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1014495&theme=light&t=1757411339217"
-                        alt="Your&#0032;AI&#0032;co&#0045;founder&#0032;for&#0032;building&#0032;SaaS - Build&#0032;with&#0032;confidence&#0044;&#0032;ship&#0032;SaaS&#0032;that&#0032;users&#0032;want&#0046; | Product Hunt"
-                        style={{ width: "250px", height: "54px" }}
-                        width="250"
-                        height="54"
-                      />
-                    </a>
                   </div>
                 </AnimatedGroup>
               </div>
@@ -128,7 +118,7 @@ export default function Hero() {
                 ...transitionVariants,
               }}
             >
-              <div className="relative -mr-56 mt-8 overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
+              <div className="relative -mr-56  overflow-hidden px-2 sm:mr-0 sm:mt-12 md:mt-20">
                 <div
                   aria-hidden
                   className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
@@ -136,14 +126,14 @@ export default function Hero() {
                 <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-7xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
                   <img
                     className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
-                    src="/app/dashboard-2.png"
+                    src="/app/dashboard-3.png"
                     alt="app screen"
                     width="2700"
                     height="1440"
                   />
                   <img
                     className="z-2 border-border/25 aspect-15/8 relative rounded-2xl border dark:hidden"
-                    src="/app/dashboard-2.png"
+                    src="/app/dashboard-3.png"
                     alt="app screen"
                     width="2700"
                     height="1440"

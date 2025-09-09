@@ -1,10 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 import { Badge } from "@workspace/ui/components/badge";
-import { CreditCard, ExternalLink, Loader2, Calendar, DollarSign } from "lucide-react";
+import {
+  CreditCard,
+  ExternalLink,
+  Loader2,
+  Calendar,
+  DollarSign,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface Subscription {
@@ -12,8 +24,8 @@ interface Subscription {
   userId: string;
   status: string;
   priceId: string;
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
+  currentPeriodStart: Date | string;
+  currentPeriodEnd: Date | string;
   cancelAtPeriodEnd: boolean;
   customerId?: string;
   amount?: number;
@@ -27,12 +39,16 @@ interface SubscriptionCardProps {
   generateCustomerURL: () => Promise<string>;
 }
 
-export function SubscriptionCard({ subscription, currentUserId, generateCustomerURL }: SubscriptionCardProps) {
+export function SubscriptionCard({
+  subscription,
+  currentUserId,
+  generateCustomerURL,
+}: SubscriptionCardProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleManageSubscription = async () => {
     setIsLoading(true);
-    
+
     try {
       const customerURL = await generateCustomerURL();
       window.open(customerURL, "_blank");
@@ -46,7 +62,14 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
-        return <Badge variant="default" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Active</Badge>;
+        return (
+          <Badge
+            variant="default"
+            className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+          >
+            Active
+          </Badge>
+        );
       case "canceled":
         return <Badge variant="destructive">Canceled</Badge>;
       case "past_due":
@@ -58,19 +81,43 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
     }
   };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
+  const formatDate = (date: Date | string | null | undefined) => {
+    // Handle null or undefined dates
+    if (!date) return "N/A";
+    
+    try {
+      // Convert string dates to Date objects if needed
+      const dateObj = typeof date === 'string' ? new Date(date) : date;
+      
+      // Check if date is valid
+      if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
+        return "Invalid Date";
+      }
+      
+      return new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(dateObj);
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "Invalid Date";
+    }
   };
 
-  const formatAmount = (amount: number, currency: string) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency.toUpperCase(),
-    }).format(amount / 100);
+  const formatAmount = (amount: number | null | undefined, currency: string | null | undefined) => {
+    // Handle null or undefined values
+    if (!amount || !currency) return "N/A";
+    
+    try {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: currency?.toUpperCase() || "USD",
+      }).format(amount / 100);
+    } catch (error) {
+      console.error("Error formatting amount:", error);
+      return "Invalid Amount";
+    }
   };
 
   if (!subscription) {
@@ -88,12 +135,11 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
         <CardContent>
           <div className="text-center py-8">
             <p className="text-muted-foreground mb-4">
-              No active subscription found. Subscribe to access premium features.
+              No active subscription found. Subscribe to access premium
+              features.
             </p>
             <Button asChild>
-              <a href="/checkout">
-                Subscribe Now
-              </a>
+              <a href="/checkout">Subscribe Now</a>
             </Button>
           </div>
         </CardContent>
@@ -119,7 +165,9 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-medium">Current Status</h3>
-            <p className="text-sm text-muted-foreground">Your subscription is currently {subscription.status.toLowerCase()}</p>
+            <p className="text-sm text-muted-foreground">
+              Your subscription is currently {subscription.status.toLowerCase()}
+            </p>
           </div>
           {getStatusBadge(subscription.status)}
         </div>
@@ -156,11 +204,13 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
         <div className="p-4 bg-muted/50 rounded-lg">
           <h4 className="font-medium mb-2">Current Billing Period</h4>
           <p className="text-sm text-muted-foreground">
-            {formatDate(subscription.currentPeriodStart)} - {formatDate(subscription.currentPeriodEnd)}
+            {formatDate(subscription.currentPeriodStart)} -{" "}
+            {formatDate(subscription.currentPeriodEnd)}
           </p>
           {subscription.cancelAtPeriodEnd && (
             <p className="text-sm text-orange-600 dark:text-orange-400 mt-2">
-              ⚠️ Your subscription will be cancelled at the end of this billing period.
+              ⚠️ Your subscription will be cancelled at the end of this billing
+              period.
             </p>
           )}
         </div>
@@ -168,7 +218,7 @@ export function SubscriptionCard({ subscription, currentUserId, generateCustomer
         {/* Management Actions */}
         {canManageSubscription && (
           <div className="pt-4 border-t">
-            <Button 
+            <Button
               onClick={handleManageSubscription}
               disabled={isLoading}
               className="w-full sm:w-auto"

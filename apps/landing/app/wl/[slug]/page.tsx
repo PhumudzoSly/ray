@@ -37,7 +37,7 @@ export default async function PublicWaitlistPage({
     <div className="h-screen bg-background overflow-hidden">
       <div className="flex h-full">
         {/* Left Side - Form */}
-        <div className="flex-1 overflow-y-auto bg-gray-100">
+        <div className="flex-1 overflow-y-auto">
           <div className="min-h-full flex items-center justify-center p-8 lg:px-16">
             <div className="w-full max-w-md space-y-8">
               {/* Header */}
@@ -185,10 +185,6 @@ export default async function PublicWaitlistPage({
 
         {/* Right Side - Image */}
         <div className="hidden bg-[#F8F8F8] border-l lg:flex flex-1 items-center justify-center relative">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-muted/20" />
-
           {/* Placeholder Illustration */}
           <div className="relative z-10 max-w-xl mx-auto">
             <img

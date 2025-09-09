@@ -9,7 +9,7 @@ export default function Features() {
         {/* Header */}
         <div className="mb-16 max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl mb-6">
-            Your next SaaS... <br />
+            Your next product... <br />
             <span className="text-muted-foreground">
               Does not have to fail.
             </span>
