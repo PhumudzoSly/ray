@@ -103,7 +103,7 @@ export const { POST } = serve(async (context) => {
           estimatedEffort: feature.estimatedEffort,
           businessValue: feature.businessValue,
           projectId: payload.projectId,
-          organizationId: projectContext.organizationId,
+          organizationId: projectContext.organizationId || "",
           phase: "DISCOVERY", // Default phase for new features
         },
       });
