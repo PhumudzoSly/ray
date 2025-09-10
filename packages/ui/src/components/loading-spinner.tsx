@@ -14,9 +14,9 @@ export default function LoadingSpinner({
   // Enhanced dual-ring spinner with smoother animation and better visual design
   const DualRingSpinner = () => (
     <div className="relative inline-flex">
-      <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/20 dark:border-muted-foreground/30"></div>
+      <div className="w-6 h-6 rounded-full border-2 border-muted-foreground/20 dark:border-muted-foreground/30"></div>
       <div
-        className="absolute top-0 left-0 w-5 h-5 rounded-full border-2 border-primary animate-spin"
+        className="absolute top-0 left-0 w-6 h-6 rounded-full border-2 border-primary animate-spin"
         style={{
           borderTopColor: "transparent",
           borderRightColor: "transparent",
@@ -53,7 +53,9 @@ export default function LoadingSpinner({
 
   if (variant === "text") {
     return (
-      <div className={cn("flex items-center gap-3", className)}>
+      <div
+        className={cn("flex items-center gap-3 w-full max-w-7xl", className)}
+      >
         <DualRingSpinner />
         <span className="text-sm text-muted-foreground font-medium">
           Loading...
@@ -66,7 +68,7 @@ export default function LoadingSpinner({
     return (
       <div
         className={cn(
-          "flex flex-col items-center justify-center p-8 rounded-lg border border-muted/30 bg-muted/20 dark:bg-muted/10",
+          "flex flex-col items-center justify-center p-8 bg-muted/20 dark:bg-muted/10 w-full",
           className
         )}
       >
@@ -74,7 +76,7 @@ export default function LoadingSpinner({
         <p className="mt-4 text-sm text-muted-foreground font-medium">
           Loading content...
         </p>
-        <div className="mt-6 w-full max-w-sm">
+        <div className="mt-6 w-full max-w-6xl">
           <PulseLoader variant="card" />
         </div>
       </div>
