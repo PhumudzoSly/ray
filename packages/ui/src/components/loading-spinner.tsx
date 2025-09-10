@@ -11,32 +11,80 @@ export default function LoadingSpinner({
   className,
   variant = "card",
 }: LoadingSpinnerProps) {
+  // Enhanced dual-ring spinner with smoother animation and better visual design
+  const DualRingSpinner = () => (
+    <div className="relative inline-flex">
+      <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/20 dark:border-muted-foreground/30"></div>
+      <div
+        className="absolute top-0 left-0 w-5 h-5 rounded-full border-2 border-primary animate-spin"
+        style={{
+          borderTopColor: "transparent",
+          borderRightColor: "transparent",
+          animationDuration: "0.8s",
+          animationTimingFunction: "cubic-bezier(0.4, 0, 0.6, 1)",
+        }}
+      ></div>
+    </div>
+  );
+
+  // Enhanced pulse loader for text and card variants with more realistic content simulation
+  const PulseLoader = ({ variant }: { variant: "text" | "card" }) => (
+    <div className={cn("space-y-2", variant === "card" ? "p-4" : "")}>
+      <div
+        className={cn(
+          "bg-muted-foreground/10 dark:bg-muted-foreground/20 rounded-md animate-pulse",
+          variant === "card" ? "h-5" : "h-4"
+        )}
+      />
+      <div
+        className={cn(
+          "bg-muted-foreground/10 dark:bg-muted-foreground/20 rounded-md animate-pulse",
+          variant === "card" ? "h-4 w-5/6" : "h-3 w-3/4"
+        )}
+      />
+      {variant === "card" && (
+        <>
+          <div className="bg-muted-foreground/10 dark:bg-muted-foreground/20 rounded-md animate-pulse h-4 w-4/6 mt-1" />
+          <div className="bg-muted-foreground/10 dark:bg-muted-foreground/20 rounded-md animate-pulse h-10 w-full mt-3" />
+        </>
+      )}
+    </div>
+  );
+
   if (variant === "text") {
     return (
-      <div className={cn("space-y-2", className)}>
-        <div className="h-3 bg-muted rounded animate-pulse" />
-        <div className="h-3 bg-muted rounded w-3/4 animate-pulse" />
+      <div className={cn("flex items-center gap-3", className)}>
+        <DualRingSpinner />
+        <span className="text-sm text-muted-foreground font-medium">
+          Loading...
+        </span>
       </div>
     );
   }
 
   if (variant === "card") {
     return (
-      <div className={cn("space-y-3 p-3", className)}>
-        <div className="h-4 bg-muted rounded animate-pulse" />
-        <div className="space-y-2">
-          <div className="h-3 bg-muted rounded animate-pulse" />
-          <div className="h-3 bg-muted rounded w-5/6 animate-pulse" />
+      <div
+        className={cn(
+          "flex flex-col items-center justify-center p-8 rounded-lg border border-muted/30 bg-muted/20 dark:bg-muted/10",
+          className
+        )}
+      >
+        <DualRingSpinner />
+        <p className="mt-4 text-sm text-muted-foreground font-medium">
+          Loading content...
+        </p>
+        <div className="mt-6 w-full max-w-sm">
+          <PulseLoader variant="card" />
         </div>
       </div>
     );
   }
 
-  // Default minimal skeleton
+  // Default minimal spinner
   return (
-    <div className={cn("flex items-center space-x-2 p-2", className)}>
-      <div className="h-3 w-3 bg-muted rounded-full animate-pulse" />
-      <div className="h-3 bg-muted rounded flex-1 animate-pulse" />
+    <div className={cn("flex items-center justify-center", className)}>
+      <DualRingSpinner />
     </div>
   );
 }

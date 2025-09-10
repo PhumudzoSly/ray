@@ -471,15 +471,19 @@ function InviteMemberDialog({
     maxAllowed: number;
     limitReached: boolean;
   } | null>(null);
+  const [checkingLimits, setCheckingLimits] = useState(false);
 
   // Check team member limits when dialog opens
   const checkLimits = async () => {
     try {
+      setCheckingLimits(true);
       const limits = await checkTeamMemberLimit();
       setLimitInfo(limits);
     } catch (error) {
       console.error("Failed to check team member limits:", error);
       toast.error("Failed to check team member limits");
+    } finally {
+      setCheckingLimits(false);
     }
   };
 
@@ -496,7 +500,10 @@ function InviteMemberDialog({
       }}
     >
       <DialogTrigger asChild>
-        <Button className="gap-2 h-9 px-4">
+        <Button
+          className="gap-2 h-9 px-4"
+          disabled={checkingLimits || limitInfo?.limitReached}
+        >
           <UserPlus className="h-4 w-4" />
           Invite Member
         </Button>
@@ -585,7 +592,9 @@ function InviteMemberDialog({
             Cancel
           </Button>
           <Button
-            disabled={loading || !email}
+            disabled={
+              loading || !email || checkingLimits || limitInfo?.limitReached
+            }
             onClick={async () => {
               setLoading(true);
               const invite = organization.inviteMember({
@@ -612,10 +621,10 @@ function InviteMemberDialog({
             }}
             className="gap-2"
           >
-            {loading ? (
+            {loading || checkingLimits ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Sending...
+                {checkingLimits ? "Checking..." : "Sending..."}
               </>
             ) : (
               <>

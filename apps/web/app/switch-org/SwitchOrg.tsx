@@ -76,8 +76,67 @@ function SwitchOrg({ orgs, invitations }: SwitchOrgProps) {
     }
   };
 
+  const hasOrgs = orgs && orgs.length > 0;
   const hasInvitations = invitations && invitations.length > 0;
 
+  // If user has no organizations, show simplified view
+  if (!hasOrgs) {
+    return (
+      <div className="container max-w-md mx-auto py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Create Organisation</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Get started by creating your first organisation.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <CreateOrg orgSwitch />
+
+            {hasInvitations && (
+              <div className="mt-8">
+                <div className="flex items-center mb-4">
+                  <Mail className="w-4 h-4 mr-2" />
+                  <h3 className="font-medium">Pending Invitations</h3>
+                  <Badge variant="secondary" className="ml-2">
+                    {invitations.length}
+                  </Badge>
+                </div>
+
+                <div className="space-y-3">
+                  {invitations.map((invitation) => (
+                    <Card key={invitation.id} className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-medium">
+                            {invitation.organization.name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Role: {invitation.role}
+                          </p>
+                        </div>
+                        <Button
+                          onClick={() => handleAcceptInvitation(invitation.id)}
+                          disabled={acceptingInvitation === invitation.id}
+                          size="sm"
+                        >
+                          {acceptingInvitation === invitation.id
+                            ? "Accepting..."
+                            : "Accept"}
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // If user has organizations, show the existing tabbed UI
   return (
     <div className="container max-w-md mx-auto py-8">
       <Card>
