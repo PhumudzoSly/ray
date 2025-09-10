@@ -2,17 +2,11 @@
 
 import { DocumentOptionalDefaults, prisma } from "@workspace/backend";
 import { revalidatePath } from "next/cache";
-
-type DocumentEntityType =
-  | "project"
-  | "issue"
-  | "feature"
-  | "milestone"
-  | "competitor"
-  | "competitorSwot"
-  | "competitiveMove"
-  | "roadmapItem"
-  | "actionItem";
+import {
+  DocumentEntityType,
+  EntityDocumentContentParams,
+  SaveEntityDocumentContentParams,
+} from "../../components/editor/index";
 
 /**
  * Get document content by entity type and id.
@@ -20,10 +14,7 @@ type DocumentEntityType =
 export async function getEntityDocumentContent({
   entityType,
   entityId,
-}: {
-  entityType: DocumentEntityType;
-  entityId: string;
-}): Promise<
+}: EntityDocumentContentParams): Promise<
   { success: true; document: any } | { success: false; error: string }
 > {
   if (!entityType || !entityId)
@@ -81,11 +72,7 @@ export async function saveEntityDocumentContent({
   entityType,
   entityId,
   content,
-}: {
-  entityType: DocumentEntityType;
-  entityId: string;
-  content: any;
-}): Promise<
+}: SaveEntityDocumentContentParams): Promise<
   { success: true; document: any } | { success: false; error: string }
 > {
   if (!entityType || !entityId)
@@ -124,14 +111,14 @@ export async function saveEntityDocumentContent({
       document = await prisma.document.update({
         where: { id: existingDocument.id },
         data: {
-          content,
+          content: content as any,
           version: existingDocument.version + 1,
         },
       });
     } else {
       // Create new document
       const createData = {
-        content,
+        content: content as any,
         version: 1,
         ...(entityType === "project"
           ? { projectId: entityId }
@@ -155,7 +142,7 @@ export async function saveEntityDocumentContent({
       };
 
       document = await prisma.document.create({
-        data: createData,
+        data: createData as any,
       });
     }
 

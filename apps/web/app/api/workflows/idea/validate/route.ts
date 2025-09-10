@@ -28,7 +28,7 @@ export const { POST } = serve(async (context) => {
     return summary;
   });
 
-  await context.sleep("rest-0", 60);
+  await context.sleep("rest-0", 360);
 
   await context.run("validate-market", async () => {
     await marketValidator({
@@ -37,7 +37,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-1", 60);
+  await context.sleep("rest-1", 360);
 
   await context.run("validate-business", async () => {
     await businessValidator({
@@ -46,7 +46,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-2", 60);
+  await context.sleep("rest-2", 360);
 
   await context.run("validate-customer-journey", async () => {
     await customerJourneyValidator({
@@ -55,7 +55,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-3", 60);
+  await context.sleep("rest-3", 360);
 
   await context.run("validate-target-audience", async () => {
     await targetAudienceValidator({
@@ -64,7 +64,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-4", 60);
+  await context.sleep("rest-4", 360);
 
   await context.run("validate-market-trends", async () => {
     await marketTrendAnalysisValidator({
@@ -73,7 +73,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-5", 60);
+  await context.sleep("rest-5", 360);
 
   await context.run("validate-customer-needs", async () => {
     await customerNeedAnalysisValidator({
@@ -82,7 +82,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-6", 60);
+  await context.sleep("rest-6", 360);
 
   await context.run("validate-pricing-strategy", async () => {
     await pricingStrategyAnalysisValidator({
@@ -91,7 +91,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-7", 60);
+  await context.sleep("rest-7", 360);
 
   await context.run("validate-risk-analysis", async () => {
     await riskAnalysisValidator({
@@ -100,7 +100,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-8", 60);
+  await context.sleep("rest-8", 360);
 
   await context.run("validate-product-market-fit", async () => {
     await productMarketFitAnalysisValidator({
@@ -109,7 +109,7 @@ export const { POST } = serve(async (context) => {
     });
   });
 
-  await context.sleep("rest-9", 60);
+  await context.sleep("rest-9", 360);
 
   await context.run("generate-final-verdict", async () => {
     await finalVerdictValidator({
