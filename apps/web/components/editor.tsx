@@ -7,6 +7,8 @@ import "@blocknote/core/fonts/inter.css";
 import "@blocknote/mantine/style.css";
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
+import { uploadFiles } from "@/lib/uploadthing";
+import { debounce } from "./editor/index";
 
 export function Editor({
   content,
@@ -19,20 +21,43 @@ export function Editor({
 }) {
   const { theme } = useTheme();
 
+  // Upload function for BlockNote editor
+  const uploadFile = async (file: File) => {
+    try {
+      const res = await uploadFiles("fileUpload", { files: [file] });
+      const uploaded = Array.isArray(res) ? res[0] : res;
+      return uploaded?.ufsUrl || "";
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      return "";
+    }
+  };
+
   const editor = useCreateBlockNote({
     initialContent: content,
+    uploadFile,
   });
 
   // Handle content changes
   useEffect(() => {
     if (!editor || !onChange) return;
 
-    const unsubscribe = editor.onChange(() => {
+    // Create a debounced version of the onChange callback
+    const debouncedOnChange = debounce(() => {
       const newContent = editor.document;
       onChange(newContent);
+    }, 500); // 500ms debounce
+
+    const unsubscribe = editor.onChange(() => {
+      debouncedOnChange();
     });
 
-    return unsubscribe;
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+      debouncedOnChange.cancel();
+    };
   }, [editor, onChange]);
 
   // Update editor content when content prop changes
