@@ -74,7 +74,7 @@ export default function Hero() {
                     </a>
                   </div>
                   <h1 className="max-w-6xl mt-12 text-balance text-5xl font-semibold md:text-5xl">
-                    Your AI co-founder and product manager for{" "}
+                    Build, validate, and launch SaaS products with{" "}
                     <span
                       className="font-bold"
                       style={{
@@ -86,16 +86,16 @@ export default function Hero() {
                         letterSpacing: "0.01em",
                       }}
                     >
-                      modern SaaS.
+                      AI-powered confidence.
                     </span>
                   </h1>
                   <p className="mt-8 max-w-3xl text-pretty text-lg">
                     <span className="text-orange-500 font-medium">
-                      Instantly turn your SaaS idea into reality.
+                      Transform your SaaS idea into a successful business.
                     </span>{" "}
-                    Validate product ideas, research, plan the product, collect
-                    feedback & waitlist, launch, and iterate from user's
-                    feedback.
+                    Validate market demand, research competitors, plan your
+                    product, collect feedback & waitlist, manage your roadmap,
+                    and launch with precision - all powered by AI.
                   </p>
                   <div className="mt-6 flex items-center gap-2">
                     <div
@@ -109,13 +109,13 @@ export default function Hero() {
                           href="https://app.arcade.software/share/y5weeFpG3hJ7A0VfZWXe"
                         >
                           <PlayIcon />{" "}
-                          <span className="text-nowrap">See our demo</span>
+                          <span className="text-nowrap">See how it works</span>
                         </Link>
                       </Button>
                     </div>
                     <Button key={2} asChild size="lg" variant="secondary">
                       <Link href="/features">
-                        <span className="text-nowrap">Features</span>
+                        <span className="text-nowrap">Explore features</span>
                       </Link>
                     </Button>
                   </div>

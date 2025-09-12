@@ -84,16 +84,16 @@ export function SubscriptionCard({
   const formatDate = (date: Date | string | null | undefined) => {
     // Handle null or undefined dates
     if (!date) return "N/A";
-    
+
     try {
       // Convert string dates to Date objects if needed
-      const dateObj = typeof date === 'string' ? new Date(date) : date;
-      
+      const dateObj = typeof date === "string" ? new Date(date) : date;
+
       // Check if date is valid
       if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
         return "Invalid Date";
       }
-      
+
       return new Intl.DateTimeFormat("en-US", {
         year: "numeric",
         month: "long",
@@ -105,10 +105,13 @@ export function SubscriptionCard({
     }
   };
 
-  const formatAmount = (amount: number | null | undefined, currency: string | null | undefined) => {
+  const formatAmount = (
+    amount: number | null | undefined,
+    currency: string | null | undefined
+  ) => {
     // Handle null or undefined values
     if (!amount || !currency) return "N/A";
-    
+
     try {
       return new Intl.NumberFormat("en-US", {
         style: "currency",
