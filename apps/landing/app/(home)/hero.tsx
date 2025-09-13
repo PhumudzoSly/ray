@@ -6,6 +6,7 @@ import { Button } from "@workspace/ui/components/button";
 import { AnimatedGroup } from "@workspace/ui/components/animated-group";
 import { Dialog, DialogContent } from "@workspace/ui/components/dialog";
 import { PlayIcon } from "lucide-react";
+import { Badge } from "@workspace/ui/components/badge";
 
 const transitionVariants = {
   item: {
@@ -59,6 +60,7 @@ export default function Hero() {
                     ...transitionVariants,
                   }}
                 >
+                  <Badge className="mt-10">Build products users want</Badge>
                   <h1 className="max-w-6xl mt-12 text-balance text-5xl font-semibold md:text-5xl">
                     Build, validate, and launch SaaS products with{" "}
                     <span

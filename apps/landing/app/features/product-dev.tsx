@@ -27,37 +27,8 @@ export default function ProductDev() {
             entire product development process with AI-powered intelligence.
           </p>
         </div>
-        <div className="relative -mx-4 rounded-3xl p-3 md:-mx-12 lg:col-span-3">
-          <div className="[perspective:800px]">
-            <div className="[transform:skewY(-2deg)skewX(-2deg)rotateX(6deg)]">
-              <div className="aspect-[88/36] relative">
-                <div className="[background-image:radial-gradient(var(--tw-gradient-stops,at_75%_25%))] to-background z-1 -inset-[4.25rem] absolute from-transparent to-75%"></div>
-                <img
-                  src="/app/project-manage.png"
-                  className="absolute inset-0 z-10"
-                  alt="product development illustration dark"
-                  width={2797}
-                  height={1137}
-                />
-                <img
-                  src="/app/project-manage.png"
-                  className="hidden dark:block"
-                  alt="product development illustration dark"
-                  width={2797}
-                  height={1137}
-                />
-                <img
-                  src="/app/project-manage.png"
-                  className="dark:hidden"
-                  alt="product development illustration light"
-                  width={2797}
-                  height={1137}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="relative mx-auto grid grid-cols-2 gap-x-4 gap-y-6 sm:gap-8 lg:grid-cols-4">
+
+        <div className="relative mx-auto grid grid-cols-2 gap-x-4 gap-y-6 sm:gap-8 lg:grid-cols-4 mt-8">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Target className="size-4" />

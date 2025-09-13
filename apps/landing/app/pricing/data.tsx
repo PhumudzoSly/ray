@@ -14,7 +14,7 @@ export const plans = [
     name: "Starter",
     price: "$19",
     period: "/month",
-    description: "Perfect for solo founders.",
+    description: "Perfect for solo founders. Includes 3-day free trial.",
     icon: <Zap className="w-6 h-6 text-blue-500" />,
     features: {
       core: [
@@ -36,8 +36,8 @@ export const plans = [
       "Inbox (Coming soon)",
       "Custom integrations",
     ],
-    cta: "Get Started",
-    href: "https://app.rayai.dev/auth/sign-in",
+    cta: "Start Trial",
+    href: "https://app.rayai.dev/auth/sign-up",
     popular: false,
     savings: "$150+",
     gradient: "from-blue-50 to-indigo-50",
@@ -46,7 +46,8 @@ export const plans = [
     name: "Pro",
     price: "$49",
     period: "/month",
-    description: "For growing teams and serious builders",
+    description:
+      "For growing teams and serious builders. Includes 3-day free trial.",
     icon: <Star className="w-6 h-6 text-amber-500" />,
     features: {
       core: [
@@ -68,8 +69,8 @@ export const plans = [
       ],
       support: ["Priority support"],
     },
-    cta: "Get Started",
-    href: "https://app.rayai.dev/auth/sign-in",
+    cta: "Start Trial",
+    href: "https://app.rayai.dev/auth/sign-up",
     popular: true,
     savings: "$300+",
     gradient: "from-amber-50 via-orange-50 to-red-50",
@@ -78,7 +79,8 @@ export const plans = [
     name: "Enterprise",
     price: "$199",
     period: "/month",
-    description: "For established teams and organizations",
+    description:
+      "For established teams and organizations. Includes 3-day free trial.",
     icon: <Users className="w-6 h-6 text-emerald-500" />,
     features: {
       core: [
@@ -101,8 +103,8 @@ export const plans = [
       support: ["Priority support"],
     },
     notAvailable: [],
-    cta: "Start Building",
-    href: "https://app.rayai.dev/auth/sign-in",
+    cta: "Start Trial",
+    href: "https://app.rayai.dev/auth/sign-up",
     popular: false,
     savings: "$1000+",
     gradient: "from-emerald-50 to-teal-50",
@@ -144,6 +146,11 @@ export const comparisonData = [
 
 export const faqs = [
   {
+    question: "Do you offer a free trial?",
+    answer:
+      "Yes! All plans include a 3-day free trial with full access to all features. No credit card required to start your trial.",
+  },
+  {
     question: "How much would this cost if I bought each tool separately?",
     answer:
       "Building this stack with separate tools would cost $200-400/month for a small team. Our all-in-one platform eliminates the complexity of managing multiple tools while providing seamless integration and powerful features.",
@@ -158,12 +165,12 @@ export const faqs = [
     answer:
       "Simply upgrade to a higher plan that meets your needs. We'll notify you when you're approaching your limits, and upgrades take effect immediately with prorated billing.",
   },
+
   {
     question: "Can I change plans at any time?",
     answer:
       "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and we'll prorate any billing adjustments.",
   },
-
   {
     question: "Can I cancel anytime?",
     answer:

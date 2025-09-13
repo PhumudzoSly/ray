@@ -77,17 +77,16 @@ export default function PricingPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b border-border/50">
-        <div className="max-w-4xl mx-auto px-6 py-12 text-center">
-          <Badge variant="secondary" className="mb-4">
-            <Sparkles className="w-3 h-3 mr-1" />
-            All-in-one platform
-          </Badge>
+        <div className="max-w-4xl mx-auto px-6 py-20 text-center">
           <h1 className="text-4xl font-bold text-foreground mb-4 tracking-tight">
             Pricing that scales with you
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             All-in-one SaaS management platform. Everything you need to build,
-            validate, and scale your product.
+            validate, and scale your product.{" "}
+            <span className="text-pink-600 font-medium">
+              Try it free for 3 days.
+            </span>
           </p>
         </div>
       </div>
@@ -99,7 +98,8 @@ export default function PricingPage() {
             Choose your plan
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Start building your SaaS empire with the right tools
+            Start building your SaaS empire with the right tools. All plans
+            include a 3-day free trial.
           </p>
         </div>
 

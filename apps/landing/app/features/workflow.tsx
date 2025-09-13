@@ -21,7 +21,7 @@ export function Workflow() {
   return (
     <section className="py-12 md:py-20">
       <div className="mx-auto max-w-7xl space-y-8 px-6 md:space-y-16">
-        <div className="relative z-10 mx-auto max-w-3xl space-y-6 text-center md:space-y-12">
+        <div className="relative z-10  max-w-3xl space-y-6  md:space-y-12">
           <h2 className="text-balance text-4xl font-medium lg:text-5xl">
             Workflow Automation That Connects Everything
           </h2>
@@ -33,7 +33,7 @@ export function Workflow() {
           </p>
         </div>
 
-        <div className="relative mx-auto grid max-w-4xl lg:max-w-6xl divide-x divide-y border *:p-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative mx-auto grid max-w-4xl lg:max-w-7xl divide-x divide-y border *:p-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <RefreshCw className="size-4" />

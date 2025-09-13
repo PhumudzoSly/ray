@@ -84,9 +84,6 @@ const Features = () => {
             confidence.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button asChild>
-              <Link href="/features/saas-validation">SaaS Validation</Link>
-            </Button>
             <Button asChild variant="outline">
               <Link href="#idea-validation">Idea Validation</Link>
             </Button>
