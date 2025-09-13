@@ -31,82 +31,82 @@ export interface AllLimits {
 }
 
 export const TEAM_LIMITS: { [productId: string]: TeamLimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxTeamMembers: 1,
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxTeamMembers: 5,
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxTeamMembers: 50,
   },
 };
 
 export const PROJECTS_LIMITS: { [productId: string]: ProjectLimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxProject: 5,
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxProject: 25,
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxProject: 150,
   },
 };
 
 export const AI_LIMITS: { [productId: string]: AILimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxValidations: 3,
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxValidations: 8,
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxValidations: 15,
   },
 };
 
 export const IDEAS_LIMITS: { [productId: string]: IdeasLimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxIdeas: 3,
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxIdeas: 10,
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxIdeas: 50,
   },
 };
 
 export const API_LIMITS: { [productId: string]: APILimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxCalls: 10000, // 10K API calls/month
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxCalls: 100000, // 100K API calls/month
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxCalls: 1000000, // 1M API calls/month
   },
 };
 
 // Combined limits for easy access
 export const ALL_LIMITS: { [productId: string]: AllLimits } = {
-  [process.env.POLAR_STARTER_PRICING!]: {
+  [process.env.DODO_STARTER_PLAN!]: {
     maxTeamMembers: 1,
     maxProject: 5,
     maxValidations: 3,
     maxIdeas: 2,
     maxCalls: 10000,
   },
-  [process.env.POLAR_BUSINESS_PRICING!]: {
+  [process.env.DODO_PRO_PLAN!]: {
     maxTeamMembers: 5,
     maxProject: 25,
     maxValidations: 8,
     maxIdeas: 5,
     maxCalls: 100000,
   },
-  [process.env.POLAR_ENTERPRICE_PRICING!]: {
+  [process.env.DODO_ENTERPRISE_PLAN!]: {
     maxTeamMembers: 50,
     maxProject: 50,
     maxValidations: 15,

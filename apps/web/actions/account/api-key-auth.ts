@@ -3,7 +3,7 @@ import { prisma } from "@workspace/backend";
 import { hashApiKey, verifyApiKey } from "@/lib/api-key-utils";
 import { headers } from "next/headers";
 import { getPublicSubscription } from "./subscription";
-import { polarClient } from "@/lib/auth";
+import { dodoPayments } from "@/lib/auth";
 import { redis } from "@/lib/redis";
 
 const CACHE_TTL = 300; // 5 minutes in seconds
@@ -179,25 +179,7 @@ export async function authenticateApiKey(
         };
       }
 
-      // Execute Polar event ingestion and database updates concurrently
       await Promise.allSettled([
-        // Record Polar event (fire and forget)
-        polarClient.events
-          .ingest({
-            events: [
-              {
-                name: "api_call",
-                customerId: subscription.customerId,
-                metadata: {
-                  api_call: true,
-                },
-              },
-            ],
-          })
-          .catch((error) => {
-            // Log error but don't fail the request
-            console.error("Failed to record Polar event:", error);
-          }),
         // Update database in transaction
         prisma.$transaction([
           // Update last used timestamp

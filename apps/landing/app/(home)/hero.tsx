@@ -59,20 +59,6 @@ export default function Hero() {
                     ...transitionVariants,
                   }}
                 >
-                  <div className="mt-12">
-                    <a
-                      href="https://www.producthunt.com/products/your-ai-co-founder-for-building-saas?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-your&#0045;ai&#0045;co&#0045;founder&#0045;for&#0045;building&#0045;saas"
-                      target="_blank"
-                    >
-                      <img
-                        src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1014495&theme=light&t=1757411339217"
-                        alt="Your&#0032;AI&#0032;co&#0045;founder&#0032;for&#0032;building&#0032;SaaS - Build&#0032;with&#0032;confidence&#0044;&#0032;ship&#0032;SaaS&#0032;that&#0032;users&#0032;want&#0046; | Product Hunt"
-                        style={{ width: "180px", height: "54px" }}
-                        width="250"
-                        height="54"
-                      />
-                    </a>
-                  </div>
                   <h1 className="max-w-6xl mt-12 text-balance text-5xl font-semibold md:text-5xl">
                     Build, validate, and launch SaaS products with{" "}
                     <span

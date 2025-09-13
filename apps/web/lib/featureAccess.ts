@@ -2,9 +2,9 @@ import { GeneralFeature } from "@/types/features";
 
 // Demo Product IDs - Replace with actual Polar product IDs later
 
-const START_PLAN = process.env.POLAR_STARTER_PRICING!;
-const BUSINESS_PLAN = process.env.POLAR_BUSINESS_PRICING!;
-const ENTERPRISE_PLAN = process.env.POLAR_PRICE_ENTERPRISE!;
+const START_PLAN = process.env.DODO_STARTER_PLAN!;
+const BUSINESS_PLAN = process.env.DODO_PRO_PLAN!;
+const ENTERPRISE_PLAN = process.env.DODO_ENTERPRISE_PLAN!;
 
 type Feature = GeneralFeature;
 

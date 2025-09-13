@@ -4,14 +4,20 @@ import { organization, twoFactor, magicLink } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
 import { APP_NAME } from "@/utils/config";
-import { Polar } from "@polar-sh/sdk";
-import { polar, portal, webhooks, checkout } from "@polar-sh/better-auth";
+import {
+  dodopayments,
+  checkout,
+  portal,
+  webhooks,
+} from "@dodopayments/better-auth";
+import DodoPayments from "dodopayments";
 import { prisma } from "@workspace/backend";
 import { loops } from "./loops";
 
-export const polarClient = new Polar({
-  accessToken: process.env.POLAR_TOKEN,
-  server: process.env.NODE_ENV === "production" ? "production" : "sandbox",
+export const dodoPayments = new DodoPayments({
+  bearerToken: process.env.DODO_PAYMENTS_API_KEY!,
+  environment:
+    process.env.NODE_ENV === "production" ? "live_mode" : "test_mode",
 });
 
 export const auth = betterAuth({
@@ -20,48 +26,51 @@ export const auth = betterAuth({
   }),
   plugins: [
     nextCookies(),
-    polar({
-      client: polarClient,
-      createCustomerOnSignUp: process.env.NODE_ENV === "production",
+    dodopayments({
+      client: dodoPayments,
+      createCustomerOnSignUp: true,
       use: [
-        portal(),
         checkout({
-          authenticatedUsersOnly: true,
+          products: [
+            {
+              productId: "pdt_xxxxxxxxxxxxxxxxxxxxx",
+              slug: "premium-plan",
+            },
+          ],
           successUrl: "/dashboard",
+          authenticatedUsersOnly: true,
         }),
+        portal(),
         webhooks({
-          secret: process.env.POLAR_WEBHOOK_SECRET || "", // We need to enable webhooks on Polar as well
-          onPayload: async ({ data, type }) => {
+          webhookKey: process.env.DODO_PAYMENTS_WEBHOOK_SECRET!,
+          onPayload: async (payload) => {
             if (
-              type === "subscription.created" ||
-              type === "subscription.active" ||
-              type === "subscription.canceled" ||
-              type === "subscription.revoked" ||
-              type === "subscription.uncanceled" ||
-              type === "subscription.updated"
+              payload.type === "subscription.active" ||
+              payload.type === "subscription.cancelled" ||
+              payload.type === "subscription.expired" ||
+              payload.type === "subscription.failed" ||
+              payload.type === "subscription.plan_changed" ||
+              payload.type === "subscription.on_hold" ||
+              payload.type === "subscription.paused" ||
+              payload.type === "subscription.renewed"
             ) {
-              const org = await prisma.organization.findUnique({
-                where: { id: data.metadata.org as string },
-              });
-
-              if (!org) throw new Error("Error, something happened");
               await prisma.subscription.upsert({
                 create: {
-                  status: data.status,
-                  organisation_id: org?.id,
-                  subscription_id: data.id,
-                  product_id: data.productId,
-                  userId: data.customer.externalId,
+                  userId: payload?.data?.metadata?.userId!,
+                  organisation_id: payload?.data?.metadata?.orgId!,
+                  product_id: payload.data.product_id,
+                  subscription_id: payload.data.subscription_id,
+                  status: payload.data.status,
                 },
                 update: {
-                  status: data.status,
-                  organisation_id: org?.id,
-                  subscription_id: data.id,
-                  product_id: data.productId,
-                  userId: data.customer.externalId,
+                  userId: payload?.data?.metadata?.userId!,
+                  organisation_id: payload?.data?.metadata?.orgId!,
+                  product_id: payload.data.product_id,
+                  subscription_id: payload.data.subscription_id,
+                  status: payload.data.status,
                 },
                 where: {
-                  organisation_id: org.id,
+                  organisation_id: payload?.data?.metadata?.orgId!,
                 },
               });
             }

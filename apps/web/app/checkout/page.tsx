@@ -2,21 +2,23 @@ import { StoreSwitch } from "./components/store-switch";
 import { SubscriptionAlert } from "./components/subscription-alert";
 import { PricingPlans } from "./components/pricing-plans";
 import { getSession } from "@/actions/account/user";
-import { polarClient } from "@/lib/auth";
+import { dodoPayments } from "@/lib/auth";
 import { generateCustomerURL } from "@/actions/account/subscription";
 
 export default async function Page() {
+  //
   const { org, email } = await getSession();
-  const [{ result }, portalUrl] = await Promise.all([
-    polarClient.products.list({ isArchived: false }),
+
+  const [result, portalUrl] = await Promise.all([
+    dodoPayments.products.list({ archived: false }),
     generateCustomerURL(),
   ]);
 
   const sortedProducts = [...result.items].sort((a, b) => {
     // @ts-ignore
-    const priceA = a.prices[0]?.priceAmount || 0;
+    const priceA = a.price || 0;
     // @ts-ignore
-    const priceB = b.prices[0]?.priceAmount || 0;
+    const priceB = b.price || 0;
     return priceA - priceB;
   });
 
@@ -29,9 +31,11 @@ export default async function Page() {
         </div>
 
         <div className="space-y-4 mb-16 text-center">
-          <h1 className="text-4xl font-bold tracking-tight">Join RayAI</h1>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Try RayAI for Free
+          </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that's right for you
+            Choose the plan that's right for you.
           </p>
         </div>
 

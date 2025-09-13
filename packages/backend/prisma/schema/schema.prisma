@@ -33,7 +33,7 @@ model User {
     invitations         Invitation[]
     passkeys            Passkey[]
     twofactors          TwoFactor[]
-    subscription        Subscription?
+    subscription        Subscription[]
     project             Project[]       @relation("CreatedProjects")
     idea                Idea[]          @relation("IdeaOwner")
     issue               Issue[]         @relation("AssignedIssues")
@@ -210,7 +210,7 @@ model Subscription {
     organization    Organization @relation(fields: [organisation_id], references: [id], onDelete: Cascade)
     subscription_id String?
     product_id      String?
-    userId          String?      @unique
+    userId          String?
     user            User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
     createdAt DateTime @default(now())

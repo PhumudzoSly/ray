@@ -18,20 +18,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { toast } from "sonner";
-
-interface Subscription {
-  id: string;
-  userId: string;
-  status: string;
-  priceId: string;
-  currentPeriodStart: Date | string;
-  currentPeriodEnd: Date | string;
-  cancelAtPeriodEnd: boolean;
-  customerId?: string;
-  amount?: number;
-  currency?: string;
-  interval?: string;
-}
+import { Subscription } from "dodopayments/resources/subscriptions.mjs";
 
 interface SubscriptionCardProps {
   subscription: Subscription | null;
@@ -150,7 +137,7 @@ export function SubscriptionCard({
     );
   }
 
-  const canManageSubscription = subscription.userId === currentUserId;
+  const canManageSubscription = subscription.metadata.userId === currentUserId;
 
   return (
     <Card>
@@ -173,49 +160,6 @@ export function SubscriptionCard({
             </p>
           </div>
           {getStatusBadge(subscription.status)}
-        </div>
-
-        {/* Subscription Details */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {subscription.amount && subscription.currency && (
-            <div className="flex items-center gap-3">
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium">
-                  {formatAmount(subscription.amount, subscription.currency)}
-                  {subscription.interval && ` / ${subscription.interval}`}
-                </p>
-                <p className="text-xs text-muted-foreground">Billing amount</p>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center gap-3">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <div>
-              <p className="text-sm font-medium">
-                {formatDate(subscription.currentPeriodEnd)}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {subscription.cancelAtPeriodEnd ? "Cancels on" : "Renews on"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Billing Period */}
-        <div className="p-4 bg-muted/50 rounded-lg">
-          <h4 className="font-medium mb-2">Current Billing Period</h4>
-          <p className="text-sm text-muted-foreground">
-            {formatDate(subscription.currentPeriodStart)} -{" "}
-            {formatDate(subscription.currentPeriodEnd)}
-          </p>
-          {subscription.cancelAtPeriodEnd && (
-            <p className="text-sm text-orange-600 dark:text-orange-400 mt-2">
-              ⚠️ Your subscription will be cancelled at the end of this billing
-              period.
-            </p>
-          )}
         </div>
 
         {/* Management Actions */}

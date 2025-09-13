@@ -39,7 +39,7 @@ import {
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
 import { Session } from "@/lib/auth-types";
-import DeleteAccount from "./delete-account";
+// import DeleteAccount from "./delete-account";
 
 export default function UserCard(props: {
   session: Session | null;
@@ -151,7 +151,7 @@ export default function UserCard(props: {
       <Tabs defaultValue="sessions" className="w-full">
         <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
           <TabsTrigger value="sessions">Sessions</TabsTrigger>
-          <TabsTrigger value="account">Delete Account</TabsTrigger>
+          {/* <TabsTrigger value="account">Delete Account</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="sessions">
@@ -246,9 +246,9 @@ export default function UserCard(props: {
             </Card>
           </div>
         </TabsContent>
-        <TabsContent value="account">
+        {/* <TabsContent value="account">
           <DeleteAccount />
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
     </div>
   );

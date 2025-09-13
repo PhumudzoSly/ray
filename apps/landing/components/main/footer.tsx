@@ -69,12 +69,12 @@ const Footer = ({ data }: FooterLinksProps) => {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="text-sm font-medium">Payments by Polar</h4>
+              <h4 className="text-sm font-medium">Payments by DodoPayments</h4>
               <p className="text-xs text-muted-foreground">
                 We do not store any payment details. All payments are securely
                 handled by{" "}
-                <a href="https://polar.sh" className="underline">
-                  Polar
+                <a href="https://dodopayments.com" className="underline">
+                  DodoPayments
                 </a>
                 .
               </p>

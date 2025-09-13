@@ -4,14 +4,14 @@ import {
   passkeyClient,
   twoFactorClient,
 } from "better-auth/client/plugins";
-import { polarClient } from "@polar-sh/better-auth";
+import { dodopaymentsClient } from "@dodopayments/better-auth";
 
 export const client = createAuthClient({
   plugins: [
     passkeyClient(),
     organizationClient(),
     twoFactorClient(),
-    polarClient(),
+    dodopaymentsClient(),
   ],
 });
 
@@ -43,7 +43,7 @@ export const {
   unlinkAccount,
   twoFactor,
   $Infer,
-  polar,
-  checkout,
-  customer,
+  getAccessToken,
+  dodopayments,
+  accountInfo,
 } = client;

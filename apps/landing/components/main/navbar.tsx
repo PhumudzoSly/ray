@@ -26,22 +26,57 @@ import { Badge } from "@workspace/ui/components/badge";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home" },
+  {
+    href: "/",
+    label: "Home",
+    description: "Return to the homepage",
+  },
   {
     label: "Features",
     href: "/features",
+    description: "Explore all Ray AI features",
+    subItems: [
+      {
+        label: "Overview",
+        href: "/features",
+        description: "Overview of all features",
+      },
+      {
+        label: "SaaS Validation",
+        href: "/features/saas-validation",
+        description: "Validate your SaaS ideas with AI",
+      },
+      {
+        label: "Product Development",
+        href: "/features/product-dev",
+        description: "Streamline your product development",
+      },
+      {
+        label: "Customer Engagement",
+        href: "/features/engagement",
+        description: "Enhance customer interactions",
+      },
+      {
+        label: "Workflow Automation",
+        href: "/features/workflow",
+        description: "Automate your business processes",
+      },
+    ],
   },
   {
     label: "Pricing",
     href: "/pricing",
+    description: "View our pricing plans",
   },
   {
     label: "Docs",
     href: "https://docs.rayai.dev",
+    description: "Access documentation and guides",
   },
   {
     label: "Help",
     href: "/help",
+    description: "Get help and support",
   },
 ];
 
@@ -106,17 +141,60 @@ export default function Navbar() {
             <NavigationMenuList className="gap-2">
               {navigationLinks.map((link, index) => (
                 <NavigationMenuItem key={index}>
-                  <Link
-                    href={link.href || ""}
-                    className={cn(
-                      "text-sm px-3 py-2 font-medium transition-colors",
-                      isActive(link.href)
-                        ? "text-primary font-semibold border-b-2 border-primary"
-                        : "text-muted-foreground hover:text-primary"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
+                  {link.subItems ? (
+                    <>
+                      <NavigationMenuTrigger
+                        className={cn(
+                          "text-sm px-3 py-2 font-medium transition-colors",
+                          isActive(link.href)
+                            ? "text-primary font-semibold"
+                            : "text-muted-foreground hover:text-primary"
+                        )}
+                      >
+                        {link.label}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                          {link.subItems.map((subItem, subIndex) => (
+                            <li key={subIndex}>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={subItem.href}
+                                  className={cn(
+                                    "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+                                    isActive(subItem.href)
+                                      ? "bg-accent text-accent-foreground"
+                                      : "text-foreground"
+                                  )}
+                                >
+                                  <div className="text-sm font-medium leading-none">
+                                    {subItem.label}
+                                  </div>
+                                  {subItem.description && (
+                                    <p className="text-sm leading-snug text-muted-foreground">
+                                      {subItem.description}
+                                    </p>
+                                  )}
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </>
+                  ) : (
+                    <Link
+                      href={link.href || ""}
+                      className={cn(
+                        "text-sm px-3 py-2 font-medium transition-colors",
+                        isActive(link.href)
+                          ? "text-primary font-semibold border-b-2 border-primary"
+                          : "text-muted-foreground hover:text-primary"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -156,17 +234,57 @@ export default function Navbar() {
                   <ul className="space-y-1">
                     {navigationLinks.map((link, index) => (
                       <li key={index}>
-                        <Link
-                          href={link.href || ""}
-                          className={cn(
-                            "block px-2 py-1.5 text-sm rounded-md transition-colors",
-                            isActive(link.href)
-                              ? "bg-accent text-accent-foreground font-semibold"
-                              : "hover:bg-accent hover:text-accent-foreground"
-                          )}
-                        >
-                          {link.label}
-                        </Link>
+                        {link.subItems ? (
+                          <div>
+                            <div className="px-2 py-1.5 text-sm font-medium text-foreground">
+                              {link.label}
+                              {link.description && (
+                                <p className="text-xs text-muted-foreground font-normal">
+                                  {link.description}
+                                </p>
+                              )}
+                            </div>
+                            <ul className="ml-4 mt-1 space-y-1">
+                              {link.subItems.map((subItem, subIndex) => (
+                                <li key={subIndex}>
+                                  <Link
+                                    href={subItem.href}
+                                    className={cn(
+                                      "block px-2 py-1.5 text-sm rounded-md transition-colors",
+                                      isActive(subItem.href)
+                                        ? "bg-accent text-accent-foreground font-semibold"
+                                        : "hover:bg-accent hover:text-accent-foreground"
+                                    )}
+                                  >
+                                    {subItem.label}
+                                    {subItem.description && (
+                                      <p className="text-xs text-muted-foreground font-normal">
+                                        {subItem.description}
+                                      </p>
+                                    )}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          <Link
+                            href={link.href || ""}
+                            className={cn(
+                              "block px-2 py-1.5 text-sm rounded-md transition-colors",
+                              isActive(link.href)
+                                ? "bg-accent text-accent-foreground font-semibold"
+                                : "hover:bg-accent hover:text-accent-foreground"
+                            )}
+                          >
+                            {link.label}
+                            {link.description && (
+                              <p className="text-xs text-muted-foreground font-normal">
+                                {link.description}
+                              </p>
+                            )}
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -179,7 +297,9 @@ export default function Navbar() {
                     variant="ghost"
                     className="w-full justify-start"
                   >
-                    <Link href="https://rayai.dev/auth/sign-in">Sign In</Link>
+                    <Link href="https://app.rayai.dev/auth/sign-in">
+                      Sign In
+                    </Link>
                   </Button>
                   <Button asChild className="w-full">
                     <Link href="https://app.rayai.dev/auth/sign-up">

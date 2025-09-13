@@ -51,7 +51,7 @@ const Subscribe = ({
         </div>
       ) : (
         <div className="flex items-center justify-center gap-2">
-          Get Started
+          Start For Free
           <ArrowRight className="h-4 w-4" />
         </div>
       )}

@@ -174,7 +174,7 @@ const Chat = ({
               <h1 className="font-medium">⭐ Coming soon</h1>
               <p className="text-sm text-muted-foreground mt-1">
                 We are currently setting up external tools such as Stripe,
-                Polar, Resend, Vercel and more.
+                Polar, DodoPayments, Resend, Vercel and more.
               </p>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import type { z } from "zod";
 import type { bugReportSchema } from "@/app/report-bugs/_components/bug-report-form";
 import type { supportFormSchema } from "@/app/support/_components/support-form";
-import { auth, polarClient } from "@/lib/auth";
+import { auth, dodoPayments } from "@/lib/auth";
 import {
   generateApiKey,
   hashApiKey,
@@ -238,18 +238,6 @@ export async function getSingleInvitation(id: string) {
 
 export async function deleteAccount() {
   const { userId } = await getSession();
-  const sub = await polarClient.customers.getStateExternal({
-    externalId: userId,
-  });
-
-  if (sub && sub.activeSubscriptions.length !== 0) {
-    const subscriptions = sub.activeSubscriptions;
-    subscriptions.forEach(async (activeSub) => {
-      await polarClient.subscriptions.revoke({
-        id: activeSub.id,
-      });
-    });
-  }
 }
 
 export async function reportBug({

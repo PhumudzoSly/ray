@@ -17,12 +17,12 @@ DATABASE_URL=your_database_url_here
 AUTH_GOOGLE_ID=your_google_client_id
 AUTH_GOOGLE_SECRET=your_google_client_secret
 
-# Polar (Billing)
-POLAR_ACCESS_TOKEN=your_polar_access_token
-POLAR_WEBHOOK_SECRET=your_polar_webhook_secret
-POLAR_STARTER_PRICING=your_starter_plan_id
-POLAR_BUSINESS_PRICING=your_business_plan_id
-POLAR_PRICE_ENTERPRISE=your_enterprise_plan_id
+# Dodo (Billing)
+DODO_PAYMENTS_API_KEY=dodo_payments_api_key
+DODO_WEBHOOK_SECRET=your_dodo_webhook_secret
+DODO_STARTER_PLAN=your_starter_plan_id
+DODO_PRO_PLAN=your_business_plan_id
+DODO_ENTERPRISE_PLAN=your_enterprise_plan_id
 
 # App Configuration
 NEXT_PUBLIC_APP_URL=https://your-domain.com

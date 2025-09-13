@@ -1,7 +1,7 @@
 "use server";
 
 import { getSession } from "./user";
-import { auth, polarClient } from "@/lib/auth";
+import { auth, dodoPayments } from "@/lib/auth";
 import { featureAccessConfig } from "@/lib/featureAccess";
 import { prisma } from "@workspace/backend";
 import { redirect } from "next/navigation";
@@ -15,21 +15,21 @@ export async function getSubscription() {
   const { org } = await getSession();
 
   // Development-only: Check if subscription check should be bypassed
-  if (process.env.NODE_ENV === "development") {
-    return {
-      id: "dev-subscription",
-      status: "active",
-      productId: process.env.POLAR_ENTERPRICE_PRICING!,
-      priceId: "dev-price",
-      customerId: "dev-customer",
-      metadata: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      endsAt: null,
-      canceledAt: null,
-      trialEndsAt: null,
-    };
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   return {
+  //     id: "dev-subscription",
+  //     status: "active",
+  //     productId: process.env.DODO_ENTERPRISE_PLAN!,
+  //     priceId: "dev-price",
+  //     customerId: "dev-customer",
+  //     metadata: {},
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //     endsAt: null,
+  //     canceledAt: null,
+  //     trialEndsAt: null,
+  //   };
+  // }
 
   try {
     // Try to get from cache first
@@ -38,7 +38,6 @@ export async function getSubscription() {
       return cached as any;
     }
 
-    // If not in cache, fetch from database and Polar
     const subscription = await prisma.subscription.findUnique({
       where: {
         organisation_id: org,
@@ -46,9 +45,7 @@ export async function getSubscription() {
     });
 
     const sub = subscription?.subscription_id
-      ? await polarClient.subscriptions.get({
-          id: subscription.subscription_id!,
-        })
+      ? await dodoPayments.subscriptions.retrieve(subscription.subscription_id)
       : await Promise.resolve(null);
 
     if (!sub || sub.status !== "active") redirect("/checkout");
@@ -68,9 +65,7 @@ export async function getSubscription() {
     });
 
     const sub = subscription?.subscription_id
-      ? await polarClient.subscriptions.get({
-          id: subscription.subscription_id!,
-        })
+      ? await dodoPayments.subscriptions.retrieve(subscription.subscription_id)
       : await Promise.resolve(null);
 
     if (!sub || sub.status !== "active") redirect("/checkout");
@@ -161,7 +156,7 @@ export async function getPublicSubscription(organizationId: string) {
     return {
       id: "dev-subscription",
       status: "active",
-      productId: process.env.POLAR_ENTERPRICE_PRICING!,
+      productId: process.env.DODO_ENTERPRISE_PLAN!,
       priceId: "dev-price",
       customerId: "dev-customer",
       metadata: {},
@@ -180,69 +175,12 @@ export async function getPublicSubscription(organizationId: string) {
   });
 
   const sub = subscription?.subscription_id
-    ? await polarClient.subscriptions.get({
-        id: subscription.subscription_id!,
-      })
+    ? await dodoPayments.subscriptions.retrieve(subscription.subscription_id)
     : await Promise.resolve(null);
 
   if (!sub || sub.status !== "active") return null;
 
   return sub;
-}
-
-/**
- * Checks if an organization has access to a specific feature without requiring a session
- * @param organizationId The ID of the organization to check
- * @param feature The feature to check access for
- * @returns Boolean indicating whether the organization has access to the feature
- */
-export async function checkPublicFeatureAccess(
-  organizationId: string,
-  feature: Feature
-): Promise<boolean> {
-  if (process.env.NEXT_PUBLIC_DEV_BYPASS_SUBSCRIPTION === "true") {
-    return true; // Dev bypass grants access to all features
-  }
-
-  try {
-    // Try to get from cache first
-    const cached = await redis.get(
-      `public_feature_access:${organizationId}:${feature}`
-    );
-    if (cached !== null) {
-      return cached as boolean;
-    }
-
-    const subscription = await getPublicSubscription(organizationId);
-    if (!subscription) {
-      return false;
-    }
-
-    const allowedFeatures = featureAccessConfig[subscription.productId];
-    const hasAccess = allowedFeatures
-      ? allowedFeatures.includes(feature)
-      : false;
-
-    // Cache the feature access result
-    await redis.setex(
-      `public_feature_access:${organizationId}:${feature}`,
-      CACHE_TTL,
-      hasAccess
-    );
-
-    return hasAccess;
-  } catch (error) {
-    // If Redis fails, fallback to direct check
-    console.warn("Redis cache failed, falling back to direct check:", error);
-
-    const subscription = await getPublicSubscription(organizationId);
-    if (!subscription) {
-      return false;
-    }
-
-    const allowedFeatures = featureAccessConfig[subscription.productId];
-    return allowedFeatures ? allowedFeatures.includes(feature) : false;
-  }
 }
 
 export async function generateCustomerURL() {
@@ -266,21 +204,22 @@ export async function generateCustomerURL() {
     },
   });
 
-  if (!subscription || subscription.userId !== customerId) return null;
+  if (!subscription?.subscription_id || subscription?.userId !== customerId) {
+    return null;
+  }
 
-  // Fetch the full subscription details from Polar
-  const polarSubscription = await polarClient.subscriptions.get({
-    id: subscription.subscription_id!, // Assert non-null since we found a subscription
-  });
-
-  if (!polarSubscription) return null;
+  const dodoSubscription = await await dodoPayments.subscriptions.retrieve(
+    subscription.subscription_id
+  );
+  if (!dodoSubscription) return null;
 
   // Create a new customer portal session and get the access URL
-  const portalSession = await polarClient.customerSessions.create({
-    customerId: polarSubscription.customerId,
-  });
+  const portalSession =
+    await await dodoPayments.customers.customerPortal.create(
+      dodoSubscription.customer.customer_id
+    );
 
-  const url = portalSession.customerPortalUrl;
+  const url = portalSession.link;
 
   return url;
 }
@@ -288,7 +227,7 @@ export async function generateCustomerURL() {
 // Server action specifically for client components
 export async function generateCustomerPortalURL(): Promise<string> {
   "use server";
-  
+
   const url = await generateCustomerURL();
   if (!url) {
     throw new Error("Failed to generate customer URL");
@@ -366,16 +305,21 @@ export async function subscribeToProduct({
   successUrl: string;
 }) {
   let result;
+  const { userId } = await getSession();
   try {
-    result = await polarClient.checkouts.create({
-      products,
-      customerEmail: email,
-      metadata: { org },
-      successUrl,
+    result = await dodoPayments.checkoutSessions.create({
+      product_cart: products.map((p) => ({
+        product_id: p,
+        quantity: 1,
+      })),
+      metadata: {
+        orgId: org,
+        userId: userId,
+      },
     });
   } catch (error) {
     console.error("Failed to create checkout session:", error);
     throw new Error("Failed to create checkout session.");
   }
-  redirect(result.url);
+  redirect(result.checkout_url);
 }

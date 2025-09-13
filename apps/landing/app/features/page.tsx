@@ -4,6 +4,8 @@ import IdeaValidation from "./idea-validation";
 import ProductDev from "./product-dev";
 import CustomerEngagement from "./engagement";
 import { Workflow } from "./workflow";
+import Link from "next/link";
+import { Button } from "@workspace/ui/components/button";
 
 export const metadata: Metadata = {
   title:
@@ -81,13 +83,38 @@ const Features = () => {
             so you can focus on building, launching, and growing with
             confidence.
           </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Button asChild>
+              <Link href="/features/saas-validation">SaaS Validation</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="#idea-validation">Idea Validation</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="#product-dev">Product Development</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="#customer-engagement">Customer Engagement</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="#workflow">Workflow</Link>
+            </Button>
+          </div>
         </div>
       </section>
 
-      <IdeaValidation />
-      <ProductDev />
-      <CustomerEngagement />
-      <Workflow />
+      <div id="idea-validation">
+        <IdeaValidation />
+      </div>
+      <div id="product-dev">
+        <ProductDev />
+      </div>
+      <div id="customer-engagement">
+        <CustomerEngagement />
+      </div>
+      <div id="workflow">
+        <Workflow />
+      </div>
     </>
   );
 };
