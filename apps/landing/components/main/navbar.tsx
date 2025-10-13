@@ -1,5 +1,11 @@
 "use client";
-import { BookOpenIcon, InfoIcon, LifeBuoyIcon, Menu } from "lucide-react";
+import {
+  BookOpenIcon,
+  InfoIcon,
+  LifeBuoyIcon,
+  Menu,
+  Github,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -141,6 +147,16 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           {/* Desktop buttons (hidden on mobile) */}
           <div className="hidden md:flex items-center gap-2">
+            <Button asChild variant="outline" size="icon">
+              <Link 
+                href="https://github.com/PhumudzoSly/ray" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="GitHub Repository"
+              >
+                <Github className="h-4 w-4" />
+              </Link>
+            </Button>
             <Button asChild variant="secondary" className="text-sm">
               <Link href="https://app.rayai.dev/auth/sign-in">Sign In</Link>
             </Button>
@@ -194,6 +210,21 @@ export default function Navbar() {
 
                 {/* Mobile buttons */}
                 <div className="border-t pt-4 space-y-2">
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full justify-start"
+                    onClick={closeSheet}
+                  >
+                    <Link 
+                      href="https://github.com/PhumudzoSly/ray" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <Github className="h-4 w-4 mr-2" />
+                      GitHub
+                    </Link>
+                  </Button>
                   <Button
                     asChild
                     variant="ghost"

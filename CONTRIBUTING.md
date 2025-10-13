@@ -1,8 +1,8 @@
 # 🚀 Contributing to Ray Monorepo
 
-> **Building world-class software with uncompromising quality**
+> **Building world-class open-source software with uncompromising quality**
 
-Thank you for your interest in contributing! We maintain the highest standards for code quality, developer experience, and UI consistency. This guide will help you contribute effectively to our Linear/Notion-inspired monorepo.
+Thank you for your interest in contributing to Ray! We maintain the highest standards for code quality, developer experience, and UI consistency. This guide will help you contribute effectively to our Linear/Notion-inspired open-source monorepo.
 
 ## 📋 Table of Contents
 
@@ -14,6 +14,7 @@ Thank you for your interest in contributing! We maintain the highest standards f
 - [Quality Assurance](#-quality-assurance)
 - [Package Management](#-package-management)
 - [Pull Request Process](#-pull-request-process)
+- [Community Guidelines](#-community-guidelines)
 - [Troubleshooting](#-troubleshooting)
 
 ## 🏁 Quick Start
@@ -29,7 +30,7 @@ Thank you for your interest in contributing! We maintain the highest standards f
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd Ray
+cd ray
 
 # Install all dependencies (this may take a few minutes)
 pnpm install
@@ -134,13 +135,14 @@ apps/
 
 ### Shadcn/UI Standards
 
-```tsx
+``tsx
 // ✅ Use shadcn color variables
 className = "bg-background text-foreground border-border";
 
 // ❌ Never use custom colors
 className = "bg-blue-500 text-white border-gray-300";
-```
+
+````
 
 ### Component Guidelines
 
@@ -175,7 +177,7 @@ git checkout -b docs/contributing-guide
 
 # Refactoring
 git checkout -b refactor/api-client-structure
-```
+````
 
 ### Commit Convention
 
@@ -280,7 +282,7 @@ pnpm init
 
 ### PR Template
 
-```markdown
+```
 ## 🎯 Purpose
 
 Brief description of what this PR accomplishes.
@@ -353,16 +355,6 @@ pnpm run build --verbose
 - **GitHub Discussions**: For questions and ideas
 - **Code Review**: Tag `@maintainers` for urgent reviews
 
-## 🎖️ Recognition
-
-We appreciate every contribution! Contributors are recognized through:
-
-- **GitHub Contributors**: Listed in repository
-- **Changelog**: Major contributions highlighted
-- **Community**: Shoutouts in project updates
-
----
-
 ## 🌟 Excellence Standards
 
 > "Quality is not an act, it is a habit" - Aristotle
@@ -374,6 +366,33 @@ We don't compromise on quality. Every line of code should reflect our commitment
 - **Developer Experience**: Well-documented, easy to contribute
 - **Performance**: Optimized, efficient, scalable
 - **Security**: Secure by design, regular audits
+
+## 🤝 Community Guidelines
+
+As an open-source project, we welcome contributions from everyone. Please adhere to our community guidelines:
+
+- **Be Respectful**: Treat all contributors with respect and kindness
+- **Be Inclusive**: Welcome people of all backgrounds and identities
+- **Be Constructive**: Provide helpful feedback and criticism
+- **Be Collaborative**: Work together to solve problems
+- **Follow Standards**: Adhere to our coding and contribution standards
+
+### Code of Conduct
+
+By participating in this project, you agree to abide by our Code of Conduct:
+
+- Harassment, discrimination, or offensive behavior will not be tolerated
+- All communication should be appropriate for a professional audience
+- Be respectful of differing viewpoints and experiences
+- Gracefully accept constructive criticism
+
+## 🎖️ Recognition
+
+We appreciate every contribution! Contributors are recognized through:
+
+- **GitHub Contributors**: Listed in repository
+- **Changelog**: Major contributions highlighted
+- **Community**: Shoutouts in project updates
 
 Thank you for helping us build something extraordinary! 🚀
 

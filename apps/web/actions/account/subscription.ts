@@ -293,19 +293,9 @@ export async function invalidateFeatureAccessCache(
 }
 
 // Server action: subscribeToProduct
-export async function subscribeToProduct({
-  products,
-  email,
-  org,
-  successUrl,
-}: {
-  products: string[];
-  email: string;
-  org: string;
-  successUrl: string;
-}) {
+export async function subscribeToProduct({ products }: { products: string[] }) {
   let result;
-  const { userId } = await getSession();
+  const { userId, org } = await getSession();
   try {
     result = await dodoPayments.checkoutSessions.create({
       product_cart: products.map((p) => ({

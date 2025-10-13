@@ -1,6 +1,10 @@
 # Ray Monorepo
 
-A modern monorepo for web, docs, and landing apps, powered by Next.js, TurboRepo, pnpm, and a custom UI package.
+A modern open-source monorepo for web, docs, and landing apps, powered by Next.js, TurboRepo, pnpm, and a custom UI package.
+
+## About
+
+Ray is an open-source SaaS idea validation and product development platform that combines project management with AI-powered market research and validation tools. It helps entrepreneurs and product teams validate their ideas, conduct market research, and build products users love.
 
 ## Monorepo Structure
 
@@ -45,6 +49,10 @@ pnpm --filter landing dev  # Start landing app (http://localhost:3002)
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 

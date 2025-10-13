@@ -1,5 +1,5 @@
 "use client";
-import { Facebook, Twitter } from "lucide-react";
+import { Facebook, Twitter, Github } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Separator } from "@workspace/ui/components/separator";
@@ -22,6 +22,11 @@ const socialLinks = [
     icon: <Facebook className="size-4" />,
     href: "https://facebook.com/rayaiapp",
     label: "Facebook",
+  },
+  {
+    icon: <Github className="size-4" />,
+    href: "https://github.com/PhumudzoSly/ray",
+    label: "GitHub",
   },
 ];
 
@@ -63,6 +68,20 @@ const Footer = ({ data }: FooterLinksProps) => {
               features, get feedback from users and stick the marketing &
               launching part right.
             </p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social, index) => (
+                <Link
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={social.label}
+                >
+                  {social.icon}
+                </Link>
+              ))}
+            </div>
           </div>
 
           {footerGroups}

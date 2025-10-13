@@ -60,7 +60,7 @@ export default function Hero() {
                     ...transitionVariants,
                   }}
                 >
-                  <Badge className="mt-10">Build products users want</Badge>
+                  <Badge className="mt-10">Now Open-Source 🚀</Badge>
                   <h1 className="max-w-6xl mt-12 text-balance text-5xl font-semibold md:text-5xl">
                     Build, validate, and launch SaaS products with{" "}
                     <span
